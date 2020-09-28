@@ -13,6 +13,9 @@ set(SOURCES
     objectregistry.hh
     types.hh
 
+    input/ikeyboard.hh
+    input/key.hh
+
     math/boundingbox.cc
     math/boundingbox.hh
     math/clipper.cc

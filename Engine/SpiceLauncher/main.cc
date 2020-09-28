@@ -1,32 +1,52 @@
 
+#include <SpiceLauncher/window/sdlkeyboard.hh>
+
 #include <iostream>
-#include <SpiceCore/objectregistry.hh>
-#include <SpiceCore/window/iwindow.hh>
-#include <SpiceSDLWindow/sdlwindowmodule.hh>
+#include <SDL.h>
+
+Spice::SDLKeyboard keyboard;
 
 
+void UpdateEvents ()
+{
+    keyboard.Update();
+    SDL_Event evt;
+    while (SDL_PollEvent(&evt))
+    {
+        switch (evt.type)
+        {
+        case SDL_KEYDOWN:
+            keyboard.Update(evt.key.keysym.scancode, true);
+            break;
+        case SDL_KEYUP:
+            keyboard.Update(evt.key.keysym.scancode, false);
+            break;
+        }
+    }
+
+}
 
 int main(int argc, char** argv)
 {
-  Spice::SDLWindowModule::Initialize (argc, argv);
 
-  Spice::iWindow *wnd = Spice::ObjectRegistry::Get()->Get<Spice::iWindow>();
-  if (wnd == nullptr)
-  {
-    printf ("Window not registered\n");
-    return -1;
-  }
-  wnd->SetTitle("Spice Window");
-  wnd->SetPosition(50, 50);
-  wnd->SetResolution(1024, 768);
-  wnd->Show();
-
-  while (true)
-  {
-    wnd->ProcessUpdates();
-    wnd->Present();
-  }
+    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE);
 
 
-  return 0;
+    SDL_Window* wnd = SDL_CreateWindow("Spice", 25, 25, 1024, 768, SDL_WINDOW_OPENGL);
+    SDL_ShowWindow(wnd);
+
+
+    while (true)
+    {
+        UpdateEvents();
+
+        if (keyboard.IsKeyPressed(Spice::eKey::eK_Escape))
+        {
+            break;
+        }
+
+    }
+
+
+    return 0;
 }

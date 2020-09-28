@@ -6,7 +6,6 @@ function(SPICE_MOC trgt prefix)
 
 	set(FILENAME "${MOC_DIRECTORY}/${prefix}/.spicemoc")
 	file(REMOVE "${FILENAME}")
-        message ("FILENAME ${FILENAME}")
 
 	set (EXEC_PATH "")
 	if (SpiceEngine_BINARY_DIR) 
@@ -35,7 +34,6 @@ function(SPICE_MOC trgt prefix)
 	add_dependencies(${trgt} ${TARGET_NAME})
 
 
-        message("target_include_directories(${trgt} PUBLIC ${MOC_DIRECTORY})")
         target_include_directories(${trgt} PUBLIC ${MOC_DIRECTORY})
 
 	

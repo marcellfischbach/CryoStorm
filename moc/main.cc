@@ -206,7 +206,6 @@ void generate_list(const std::string & path, const std::string & exp, const std:
       neededRevalidation = true;
       try
       {
-        std::cout << "csmoc: " << filename << std::endl;
         generate(
           &cache,
           filename,
@@ -264,11 +263,6 @@ int main(int argc, char** argv)
   path = "C:\\Users\\MCEL\\CMakeBuilds\\d5ee80a5-d1ee-2937-85d1-86f3b75e756d\\build\\x64-Release\\src\\test";
 
 
-  for (int i = 0; i < argc; i++)
-  {
-  printf ("%s ", argv[i]);
-  }
-  printf ("\n");
   for (int i = 1; i < argc; i++)
   {
     printf ("%s ", argv[i]);
