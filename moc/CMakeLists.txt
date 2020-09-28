@@ -30,4 +30,4 @@ add_executable(SpiceMOC
 
 
 
-install(TARGETS (SpiceMOCRUNTIME DESTINATION bin)
+install(TARGETS SpiceMOC RUNTIME DESTINATION bin)

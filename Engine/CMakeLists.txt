@@ -2,7 +2,8 @@
 
 add_subdirectory(SpiceCore)
 add_subdirectory(SpiceLauncher)
-add_subdirectory(SpiceSDL)
+add_subdirectory(SpiceRefl)
+add_subdirectory(SpiceSDLWindow)
 #add_subdirectory(csfile)
 #add_subdirectory(csrefl)
 #add_subdirectory(graphicsgl4)

@@ -1,16 +1,38 @@
 #pragma once
 
-#include <cecore/cetypes.hh>
+#include <SpiceCore/coreexport.hh>
+#include <SpiceCore/types.hh>
+#include <SpiceRefl/class.hh>
+#include <SpiceCore/window/iwindow.refl.hh>
 
-struct iWindow
+#include <string>
+
+
+namespace Spice
 {
-  virtual void Set(const csWndDesc& desc) = 0;
 
-  virtual void Create() = 0;
 
-  virtual void SetVisible(bool visible) = 0;
+struct WndDesc;
+SPICE_CLASS()
+struct SPICE_CORE_API iWindow : public iObject
+{
+  SPICE_CLASS_GEN;
 
-  virtual void Update() = 0;
+  virtual ~iWindow() {  }
 
-  virtual void Present() = 0;
+  virtual void SetTitle(const std::string& title) = 0;
+
+  virtual void SetPosition (Int16 x, Int16 y) = 0;
+
+  virtual void SetResolution(UInt16 width, UInt16 height) = 0;
+
+  virtual void Show () = 0;
+
+  virtual void Present () = 0;
+
+  virtual void ProcessUpdates() = 0;
+
 };
+
+}
+

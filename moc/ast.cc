@@ -4,7 +4,7 @@
 #include <algorithm>
 
 
-namespace cs::moc
+namespace Spice::moc
 {
 
 ASTNode::ASTNode(ASTNodeType type)

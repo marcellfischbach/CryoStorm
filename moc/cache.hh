@@ -7,7 +7,7 @@
 
 #include <Windows.h>
 
-namespace cs::moc
+namespace Spice::moc
 {
 
 

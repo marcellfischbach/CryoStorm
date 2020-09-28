@@ -4,7 +4,7 @@
 #include <exception>
 #include <string>
 
-namespace cs::moc
+namespace Spice::moc
 {
 
 

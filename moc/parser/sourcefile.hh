@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-namespace cs::moc
+namespace Spice::moc
 {
 
 class SourceFile;

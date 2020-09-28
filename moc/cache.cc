@@ -11,13 +11,13 @@
 #include <Windows.h>
 
 
-namespace cs::moc
+namespace Spice::moc
 {
 
 
 void Cache::Load(const std::string& path)
 {
-  std::ifstream stream(path + "/.cscache");
+  std::ifstream stream(path + "/.spacecache");
   std::string line;
   int l = 1;
   while (std::getline(stream, line))
@@ -81,7 +81,7 @@ void Cache::Load(const std::string& path)
 
 void Cache::Store(const std::string& path)
 {
-  std::ofstream stream(path + "/.cscache");
+  std::ofstream stream(path + "/.spacecache");
   for (auto it: m_fileCache)
   {
     Data& data = it.second;

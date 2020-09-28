@@ -7,7 +7,7 @@
 #include <string>
 #include <parser/token.hh>
 
-namespace cs::moc
+namespace Spice::moc
 {
 
 enum ASTNodeType

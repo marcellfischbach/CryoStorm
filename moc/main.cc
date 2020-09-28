@@ -38,7 +38,7 @@ void print_usage(char* name)
   printf("    --export <export>      <export> the name of the export api name\n");
 }
 
-class StdOutOutput : public cs::moc::iOutput
+class StdOutOutput : public Spice::moc::iOutput
 {
 public:
   StdOutOutput() { }
@@ -50,7 +50,7 @@ public:
 };
 
 
-class FileOutput : public cs::moc::iOutput
+class FileOutput : public Spice::moc::iOutput
 {
 public:
   FileOutput(const std::string& filename)
@@ -72,13 +72,13 @@ private:
   std::string m_filename;
 };
 
-void put_classes_to_cache(cs::moc::Cache& cache, const std::string& sourceName, cs::moc::ASTNode* root)
+void put_classes_to_cache(Spice::moc::Cache& cache, const std::string& sourceName, Spice::moc::ASTNode* root)
 {
-  std::vector<cs::moc::ClassNode*> classes = cs::moc::Generator::FindAllMajorClasses(root);
+  std::vector<Spice::moc::ClassNode*> classes = Spice::moc::Generator::FindAllMajorClasses(root);
   for (auto cls : classes)
   {
-    std::list<cs::moc::NamespaceNode*> nss = cs::moc::Generator::GetAllNamespaces(cls);
-    std::string nsName = cs::moc::Generator::GetFullNamespaceName(nss);
+    std::list<Spice::moc::NamespaceNode*> nss = Spice::moc::Generator::GetAllNamespaces(cls);
+    std::string nsName = Spice::moc::Generator::GetFullNamespaceName(nss);
     std::cout << "  " << nsName + cls->GetName() << std::endl;
 
     cache.Put(sourceName, nsName + cls->GetName());
@@ -86,19 +86,19 @@ void put_classes_to_cache(cs::moc::Cache& cache, const std::string& sourceName, 
 }
 
 void generate(
-  cs::moc::Cache * cache,
+  Spice::moc::Cache * cache,
   const std::string & input,
   const std::string & outputHeader,
   const std::string & outputSource,
   const std::string & exp)
 {
 
-  cs::moc::SourceFile sourceFile;
+  Spice::moc::SourceFile sourceFile;
   sourceFile.Read(input);
-  cs::moc::Tokenizer tokenizer(sourceFile);
+  Spice::moc::Tokenizer tokenizer(sourceFile);
 
-  cs::moc::Parser parser;
-  cs::moc::ASTNode* ns = nullptr;
+  Spice::moc::Parser parser;
+  Spice::moc::ASTNode* ns = nullptr;
   if (cache)
   {
     cache->Clear(input);
@@ -118,7 +118,7 @@ void generate(
     if (!outputHeader.empty())
     {
       FileOutput output(outputHeader);
-      cs::moc::HeaderGenerator hg;
+      Spice::moc::HeaderGenerator hg;
       hg.SetRoot(ns);
       hg.Output(exp, &output);
     }
@@ -126,13 +126,13 @@ void generate(
     if (!outputSource.empty())
     {
       FileOutput output(outputSource);
-      cs::moc::SourceGenerator sg;
+      Spice::moc::SourceGenerator sg;
       sg.SetRoot(ns);
       sg.Output(exp, &output);
     }
     //    ns->DebugNode(0);
   }
-  catch (cs::moc::ParseException & e)
+  catch (Spice::moc::ParseException & e)
   {
     std::cout << "Parse Exception: [" << e.GetFile() << "@" << e.GetLine() << "] '" << e.GetMessage() << "' in " << input << std::endl;
   }
@@ -177,10 +177,10 @@ bool equalsCI(const std::string & str1, const std::string & str2)
 
 void generate_list(const std::string & path, const std::string & exp, const std::string & prefix)
 {
-  cs::moc::Cache cache;
+  Spice::moc::Cache cache;
   cache.Load(path);
 
-  std::ifstream stream(path + "/.csmoc");
+  std::ifstream stream(path + "/.spicemoc");
   std::string filename;
   bool neededRevalidation = false;
   while (std::getline(stream, filename))
@@ -215,7 +215,7 @@ void generate_list(const std::string & path, const std::string & exp, const std:
           exp
         );
       }
-      catch (cs::moc::BaseException & e)
+      catch (Spice::moc::BaseException & e)
       {
         std::cout << "Exception: [" << e.GetFile() << "@" << e.GetLine() << "] '" << e.GetMessage() << "' @ " << filename << std::endl;
       }
@@ -233,7 +233,7 @@ void generate_list(const std::string & path, const std::string & exp, const std:
   std::filesystem::path masterPath(path + "/master.refl.cc");
   if (neededRevalidation || cache.HaveUntouched() || !std::filesystem::exists(masterPath))
   {
-    cs::moc::MasterGenerator masterGenerator;
+    Spice::moc::MasterGenerator masterGenerator;
     FileOutput output(path + "/master.refl.cc");
     masterGenerator.Generate(cache, prefix, &output);
   }
@@ -264,8 +264,14 @@ int main(int argc, char** argv)
   path = "C:\\Users\\MCEL\\CMakeBuilds\\d5ee80a5-d1ee-2937-85d1-86f3b75e756d\\build\\x64-Release\\src\\test";
 
 
+  for (int i = 0; i < argc; i++)
+  {
+  printf ("%s ", argv[i]);
+  }
+  printf ("\n");
   for (int i = 1; i < argc; i++)
   {
+    printf ("%s ", argv[i]);
     std::string arg(argv[i]);
     if (arg == "--file")
     {
@@ -334,8 +340,6 @@ int main(int argc, char** argv)
       return -1;
     }
   }
-
-  
 
   if (!file.empty() && !source.empty() && !header.empty())
   {

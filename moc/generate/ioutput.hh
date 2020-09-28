@@ -2,7 +2,7 @@
 
 #pragma once 
 
-namespace cs::moc
+namespace Spice::moc
 {
 
 

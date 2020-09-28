@@ -6,17 +6,18 @@ set(SOURCES
     main.cc
     )
 
-add_executable(ceLauncher ${SOURCES}
+add_executable(SpiceLauncher ${SOURCES}
     )
 
-add_dependencies(ceLauncher cemoc)
+add_dependencies(SpiceLauncher SpiceMOC)
 
-target_link_libraries(ceLauncher 
-	ceCore
-    ceSDLWindow
+target_link_libraries(SpiceLauncher 
+        SpiceRefl
+        SpiceCore
+    	SpiceSDLWindow
     )
 
 
-CE_MOC(ceLauncher celauncher)
+SPICE_MOC(SpiceLauncher SpiceLauncher)
 
 
