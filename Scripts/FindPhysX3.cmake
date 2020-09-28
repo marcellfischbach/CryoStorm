@@ -1,0 +1,60 @@
+
+
+
+set (PHYSX3_ROOT $ENV{PHYSX3_ROOT})
+
+macro(_FIND_PHYSX3_LIBRARY _var)
+  find_library(${_var}
+     NAMES
+        ${ARGN}
+     HINTS
+        ${PHYSX3_ROOT}
+        ${PHYSX3_ROOT}/Lib/vc14win64
+  )
+  mark_as_advanced(${_var})
+endmacro()
+
+macro(_PHYSX3_APPEND_LIBRARIES _list _release)
+   set(_debug ${_release}_DEBUG)
+   if(${_debug})
+      set(${_list} ${${_list}} optimized ${${_release}} debug ${${_debug}})
+   else()
+      set(${_list} ${${_list}} ${${_release}})
+   endif()
+endmacro()
+
+find_path(PHYSX3_INCLUDE_DIR NAMES PxActor.h
+  HINTS
+    ${PHYSX3_ROOT}/include
+)
+
+# Find the libraries
+
+_FIND_PHYSX3_LIBRARY(PHYSX3_LIBRARY                  PhysX3_x64)
+_FIND_PHYSX3_LIBRARY(PHYSX3_LIBRARY_DEBUG            PhysX3DEBUG_x64)
+_FIND_PHYSX3_LIBRARY(PHYSX3_COMMON_LIBRARY           PhysX3Common_x64)
+_FIND_PHYSX3_LIBRARY(PHYSX3_COMMON_LIBRARY_DEBUG     PhysX3CommonDEBUG_x64)
+_FIND_PHYSX3_LIBRARY(PHYSX3_COOKING_LIBRARY          PhysX3Cooking_x64)
+_FIND_PHYSX3_LIBRARY(PHYSX3_COOKING_LIBRARY_DEBUG    PhysX3CookingDEBUG_x64)
+_FIND_PHYSX3_LIBRARY(PHYSX3_EXTENSIONS_LIBRARY       PhysX3Extensions)
+_FIND_PHYSX3_LIBRARY(PHYSX3_EXTENSIONS_LIBRARY_DEBUG PhysX3ExtensionsDEBUG)
+
+
+# handle the QUIETLY and REQUIRED arguments and set PHYSX3_FOUND to TRUE if
+# all listed variables are TRUE
+# include(${CMAKE_CURRENT_LIST_DIR}/FindPackageHandleStandardArgs.cmake)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(PhysX3 DEFAULT_MSG
+    PHYSX3_LIBRARY 
+		PHYSX3_COMMON_LIBRARY 
+		PHYSX3_COOKING_LIBRARY 
+		PHYSX3_EXTENSIONS_LIBRARY
+		PHYSX3_INCLUDE_DIR)
+
+set(PHYSX3_INCLUDE_DIRS ${PHYSX3_INCLUDE_DIR})
+if(PHYSX3_FOUND)
+   _PHYSX3_APPEND_LIBRARIES(PHYSX3_LIBRARIES PHYSX3_LIBRARY)
+   _PHYSX3_APPEND_LIBRARIES(PHYSX3_LIBRARIES PHYSX3_COMMON_LIBRARY)
+   _PHYSX3_APPEND_LIBRARIES(PHYSX3_LIBRARIES PHYSX3_COOKING_LIBRARY)
+   _PHYSX3_APPEND_LIBRARIES(PHYSX3_LIBRARIES PHYSX3_EXTENSIONS_LIBRARY)
+endif()
+
