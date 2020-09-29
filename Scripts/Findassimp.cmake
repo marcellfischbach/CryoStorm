@@ -4,13 +4,11 @@ FIND_PATH(
 	
 )
 
-MESSAGE("Assimp include dir: ${assimp_INCLUDE_DIRS}")
 
 FIND_LIBRARY(
 	assimp_LIBRARIES
 	NAMES assimp
 )
-MESSAGE("Assimp libraries: ${assimp_LIBRARIES}")
 
 IF (assimp_INCLUDE_DIRS AND assimp_LIBRARIES)
     SET(assimp_FOUND TRUE)

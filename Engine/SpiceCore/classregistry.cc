@@ -1,6 +1,6 @@
 
 
-#include <SpiceRefl/classregistry.hh>
+#include <SpiceCore/classregistry.hh>
 
 
 namespace Spice

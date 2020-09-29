@@ -4,7 +4,7 @@
 namespace Spice
 {
 
-enum eKey
+enum Key
 {
     eK_Escape,
     eK_A,

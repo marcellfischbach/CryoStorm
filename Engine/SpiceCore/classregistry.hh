@@ -1,14 +1,14 @@
 #pragma once
 
 
-#include <SpiceRefl/export.hh>
-#include <SpiceRefl/class.hh>
+#include <SpiceCore/coreexport.hh>
+#include <SpiceCore/class.hh>
 #include <map>
 
 namespace Spice
 {
 
-class SPICE_REFL_API ClassRegistry
+class SPICE_CORE_API ClassRegistry
 {
 public:
   static ClassRegistry* Get();

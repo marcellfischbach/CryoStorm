@@ -2,7 +2,7 @@
 
 #include <SpiceCore/coreexport.hh>
 #include <SpiceCore/types.hh>
-#include <SpiceRefl/class.hh>
+#include <SpiceCore/class.hh>
 #include <SpiceCore/window/iwindow.refl.hh>
 
 #include <string>

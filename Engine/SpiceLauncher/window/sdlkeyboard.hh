@@ -17,11 +17,11 @@ public:
     void Update ();
     void Update (SDL_Scancode scanCode, bool down);
 
-    virtual bool IsKeyDown(eKey key) const;
-    virtual bool IsKeyUp(eKey key) const;
+    virtual bool IsKeyDown(Key key) const;
+    virtual bool IsKeyUp(Key key) const;
 
-    virtual bool IsKeyPressed(eKey key) const;
-    virtual bool IsKeyReleased(eKey key) const;
+    virtual bool IsKeyPressed(Key key) const;
+    virtual bool IsKeyReleased(Key key) const;
 
 private:
     bool m_current[eK_COUNT];

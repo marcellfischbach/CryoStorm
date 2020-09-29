@@ -33,8 +33,10 @@ function(SPICE_MOC trgt prefix)
 	endif()
 	add_dependencies(${trgt} ${TARGET_NAME})
 
+	message("target_include_directories(${trgt} PRIVATE ${MOC_DIRECTORY}")
 
-        target_include_directories(${trgt} PUBLIC ${MOC_DIRECTORY})
+
+    target_include_directories(${trgt} BEFORE PUBLIC ${MOC_DIRECTORY})
 
 	
 endfunction(SPICE_MOC)

@@ -709,7 +709,7 @@ std::string ClassGenerator::GenerateClass(ClassNode * classNode, std::list<Names
   {
     if (super.IsCSSuper())
     {
-      cls += "  AddSuperClass(" + super.GetType().GetTypeName() + "Class::Get());\n";
+      cls += "  AddSuperClass(" + super.GetType().GetTypeName() + "::GetStaticClass());\n";
     }
   }
 

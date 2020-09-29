@@ -4,6 +4,10 @@ add_definitions(-DSPICE_CORE_EXPORT)
 add_definitions(-D_USE_MATH_DEFINES)
 
 set(SOURCES
+    class.cc
+    class.hh
+    classregistry.cc
+    classregistry.hh
     defs.hh
     diamond.hh
     coreexport.hh
@@ -13,7 +17,13 @@ set(SOURCES
     objectregistry.hh
     types.hh
 
+    graphics/igraphics.hh
+
+    input/iinputsystem.hh
     input/ikeyboard.hh
+    input/imouse.hh
+    input/input.cc
+    input/input.hh
     input/key.hh
 
     math/boundingbox.cc
@@ -35,16 +45,16 @@ set(SOURCES
     math/vector3f.hh
     math/vector4f.hh
 
-    window/wnddesc.hh
+    #window/wnddesc.hh
     window/iwindow.hh
     )
+
 
 add_library(SpiceCore SHARED
     ${SOURCES}
     )
 
 target_link_libraries(SpiceCore
-        SpiceRefl
         ${PNG_LIBRARIES}
 
     )
@@ -52,6 +62,10 @@ target_link_libraries(SpiceCore
 add_dependencies(SpiceCore  SpiceMOC)
 SPICE_MOC(SpiceCore SpiceCore)
 
+get_property(dirs TARGET SpiceCore PROPERTY INCLUDE_DIRECTORIES)
+foreach(dir ${dirs})
+  message(STATUS "dir='${dir}'")
+endforeach()
 
 
 install(TARGETS SpiceCore 

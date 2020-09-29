@@ -200,4 +200,3 @@ find_package (PackageHandleStandardArgs)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(SDL
                                   REQUIRED_VARS SDL_LIBRARY SDL_INCLUDE_DIR
                                   VERSION_VAR SDL_VERSION_STRING)
-message ("LIBSDL: ${SDL_LIBRARY}")

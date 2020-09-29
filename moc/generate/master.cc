@@ -41,6 +41,7 @@ void MasterGenerator::Generate(Cache& cache, const std::string& prefix, iOutput*
     size_t idx = data.filename.find_last_of('.');
     std::string filename = data.filename.substr(0, idx);
     headerIncludes += "#include <" + prefix + "/" + data.filename + ">\n";
+    headerIncludes += "#include <" + prefix + "/" + filename + ".refl.hh>\n";
     sourceIncludes += "#include <" + prefix + "/" + filename + ".refl.cc>\n";
 
     register_classes += "  // " + data.filename + "\n";
@@ -59,7 +60,7 @@ void MasterGenerator::Generate(Cache& cache, const std::string& prefix, iOutput*
   source += "\n\n";
   source += sourceIncludes;
   source += "\n\n";
-  source += "#include <SpiceRefl/classregistry.hh>\n\n";
+  source += "#include <SpiceCore/classregistry.hh>\n\n";
   source += register_classes;
   source += unregister_classes;
 

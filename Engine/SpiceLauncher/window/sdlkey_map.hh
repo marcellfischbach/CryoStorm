@@ -7,7 +7,7 @@
 namespace Spice
 {
 
-static eKey Map(SDL_Scancode scanCode)
+static Key Map(SDL_Scancode scanCode)
 {
     switch (scanCode) {
     case SDL_SCANCODE_ESCAPE: return eK_Escape;

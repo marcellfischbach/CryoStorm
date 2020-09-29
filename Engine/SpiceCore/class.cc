@@ -1,5 +1,5 @@
 
-#include <SpiceRefl/class.hh>
+#include <SpiceCore/class.hh>
 
 // ---------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------
@@ -65,40 +65,10 @@ Spice::iObject* iObjectClass::CreateInstance() const
   throw Spice::InstanciationException("Spice::iObject");
 }
 
-
-
-ObjectClass* ObjectClass::Get()
-{
-  static ObjectClass static_class;
-  return &static_class;
-}
-
-ObjectClass::ObjectClass()
-  : Class("Spice::Object")
-{
-}
-
-Spice::iObject* ObjectClass::CreateInstance() const
-{
-  return static_cast<Spice::iObject*>(new Object());
-}
-
-const Class* Object::GetClass() const
-{
-  return ObjectClass::Get();
-}
-
-const Class* Object::GetStaticClass()
-{
-  return ObjectClass::Get();
-}
-
-
-
 Object::Object()
   : Spice::iObject()
 {
-  m_refCount = 1;
+  SPICE_CLASS_GEN_CONSTR;
 }
 
 Object::~Object()
@@ -106,57 +76,6 @@ Object::~Object()
 
 }
 
-void Object::AddRef()
-{
-  m_refCount++;
-}
-
-void Object::Release()
-{
-  --m_refCount;
-  if (m_refCount <= 0)
-  {
-    // this must be last call in this method. otherwise data corruption is a possible situation
-    delete this;
-  }
-}
-
-int64_t Object::RefCount() const
-{
-  return m_refCount;
-}
-
-
-void* Object::QueryClass(const Class* clazz)
-{
-  if (clazz == ObjectClass::Get())
-  {
-    return static_cast<Object*>(this);
-  }
-  void* super = nullptr;
-  super = Spice::iObject::QueryClass(clazz);
-  if (super)
-  {
-    return super;
-  }
-  return nullptr;
-}
-
-
-const void* Object::QueryClass(const Class* clazz) const
-{
-  if (clazz == ObjectClass::Get())
-  {
-    return static_cast<const Object*>(this);
-  }
-  const void* super = nullptr;
-  super = Spice::iObject::QueryClass(clazz);
-  if (super)
-  {
-    return super;
-  }
-  return nullptr;
-}
 
 // ---------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------
@@ -189,17 +108,17 @@ bool Class::IsInstanceOf(const Class* clazz) const
   return false;
 }
 
-void Class::AddSuperClass(Class* parentClass)
+void Class::AddSuperClass(const Class* parentClass)
 {
   m_superClasses.push_back(parentClass);
 }
 
-void Class::AddProperty(Property* prop)
+void Class::AddProperty(const Property* prop)
 {
   m_properties.push_back(prop);
 }
 
-void Class::AddFunction(Function* function)
+void Class::AddFunction(const Function* function)
 {
   m_functions.push_back(function);
 }

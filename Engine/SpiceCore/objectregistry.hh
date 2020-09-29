@@ -3,7 +3,7 @@
 
 #include <SpiceCore/coreexport.hh>
 #include <map>
-#include <SpiceRefl/class.hh>
+#include <SpiceCore/class.hh>
 
 namespace Spice
 {
@@ -12,22 +12,26 @@ namespace Spice
 class SPICE_CORE_API ObjectRegistry
 {
 public:
-    static ObjectRegistry* Get();
 
-    void Register (const Class* cls, iObject *obj);
-    iObject *Get(const Class* cls) const;
+    template<typename T> static void Register(iObject* obj)
+    {
+      Register(T::GetStaticClass(), obj);
+    }
+    static void Register (const Class* cls, iObject *obj);
 
-    template<typename T> T* Get() const
+    template<typename T> static T* Get() 
     {
         iObject *obj = Get(T::GetStaticClass());
         return obj ? static_cast<T*>(obj->QueryClass(T::GetStaticClass())) : nullptr;
     }
+    static iObject* Get(const Class* cls);
 
 private:
     ObjectRegistry();
 
 private:
-    std::map<const Class*, iObject*> m_registry;
+  static ObjectRegistry* Get();
+  std::map<const Class*, iObject*> m_registry;
 };
 
 }

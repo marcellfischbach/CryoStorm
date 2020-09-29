@@ -33,7 +33,7 @@ static SPICE_FORCEINLINE float cesin(float v)
 
 static SPICE_FORCEINLINE double ceabs(double v)
 {
-  return ::abs(v);
+  return ::fabs(v);
 }
 
 

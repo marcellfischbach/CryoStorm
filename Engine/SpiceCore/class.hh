@@ -52,7 +52,7 @@
 #include <string>
 #include <vector>
 #include <stdarg.h>
-#include <SpiceRefl/export.hh>
+#include <SpiceCore/coreexport.hh>
 #include <exception>
 
 namespace Spice
@@ -124,7 +124,7 @@ private:
 
 class Class;
 
-struct SPICE_REFL_API iObject
+struct SPICE_CORE_API iObject
 {
   iObject();
   virtual ~iObject();
@@ -137,7 +137,17 @@ struct SPICE_REFL_API iObject
 
   virtual int64_t RefCount() const = 0;
 
+  template<typename T> T* Query()
+  {
+    return reinterpret_cast<T*>(QueryClass(T::GetStaticClass()));
+  }
+
   virtual void* QueryClass(const Class* clazz);
+
+  template<typename T> const T* Query() const
+  {
+    return reinterpret_cast<T*>(QueryClass(T::GetStaticClass()));
+  }
   virtual const void* QueryClass(const Class* clazz) const;
 };
 
@@ -184,7 +194,7 @@ enum eFunctionVirtuality
 };
 
 
-class SPICE_REFL_API ValueDeclaration
+class SPICE_CORE_API ValueDeclaration
 {
 public:
   ValueDeclaration(eConstness constness = eC_NonConst, const std::string& type = "void", eValueMemoryMode mode = eVMM_Value);
@@ -200,7 +210,7 @@ private:
   eValueMemoryMode m_mode;
 };
 
-class SPICE_REFL_API Property
+class SPICE_CORE_API Property
 {
 public:
   virtual ~Property();
@@ -256,7 +266,7 @@ private:
 };
 
 
-class SPICE_REFL_API FunctionAttribute
+class SPICE_CORE_API FunctionAttribute
 {
 public:
   FunctionAttribute(const ValueDeclaration& type = ValueDeclaration(), const std::string& name = "");
@@ -269,7 +279,7 @@ private:
   std::string m_name;
 };
 
-class SPICE_REFL_API Function
+class SPICE_CORE_API Function
 {
 public:
   virtual ~Function() { }
@@ -360,7 +370,7 @@ private:
 
 
 
-class SPICE_REFL_API Class
+class SPICE_CORE_API Class
 {
 public:
   virtual ~Class();
@@ -412,15 +422,15 @@ public:
 protected:
   Class(const std::string& name);
 
-  void AddSuperClass(Class* parentClass);
-  void AddProperty(Property* prop);
-  void AddFunction(Function* function);
+  void AddSuperClass(const Class* parentClass);
+  void AddProperty(const Property* prop);
+  void AddFunction(const Function* function);
   void AddMeta(const std::string& key, const std::string& value);
 private:
   std::string m_name;
-  std::vector<Class*> m_superClasses;
-  std::vector<Property*> m_properties;
-  std::vector<Function*> m_functions;
+  std::vector<const Class*> m_superClasses;
+  std::vector<const Property*> m_properties;
+  std::vector<const Function*> m_functions;
   std::map<std::string, std::string> m_meta;
 };
 
@@ -431,7 +441,7 @@ T* csNewClassInstance(const Class* clazz)
 }
 
 
-class SPICE_REFL_API iObjectClass : public Class
+class SPICE_CORE_API iObjectClass : public Class
 {
 public:
   iObjectClass();
@@ -443,32 +453,16 @@ public:
 };
 
 
-class SPICE_REFL_API ObjectClass : public Class
-{
-public:
-  ObjectClass();
-
-  static ObjectClass* Get();
-
-  virtual Spice::iObject* CreateInstance() const;
-
-};
 
 SPICE_CLASS()
-class SPICE_REFL_API Object : public Spice::iObject
+class SPICE_CORE_API Object : public SPICE_SUPER(Spice::iObject)
 {
-  SPICE_CLASS_GEN;
+  SPICE_CLASS_GEN_OBJECT;
 
 public:
   Object();
   virtual ~Object();
 
-  virtual void AddRef();
-  virtual void Release();
-  virtual int64_t RefCount() const;
-
-private:
-  int m_refCount;
 
 
 };
