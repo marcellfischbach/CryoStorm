@@ -7,6 +7,8 @@
 #include <SpiceCore/input/input.hh>
 #include <SpiceCore/objectregistry.hh>
 #include <SpiceCore/graphics/igraphics.hh>
+#include <SpiceCore/graphics/shading/ishaderloader.hh>
+#include <SpiceCore/resource/vfs.hh>
 
 #include <SpiceOpenGL/openglmodule.hh>
 
@@ -68,6 +70,8 @@ int main(int argc, char** argv)
     return -1;
   }
 
+  Spice::VFS::Get()->SetBasePath("D:\\DEV\\SpiceEngine\\data");
+
   SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE);
 
   SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
@@ -100,6 +104,9 @@ int main(int argc, char** argv)
     printf("Unable to initialize opengl\n");
     return -1;
   }
+
+  Spice::iShaderLoader* shaderLoader = Spice::ObjectRegistry::Get<Spice::iShaderLoader>();
+  shaderLoader->Load(Spice::ResourceLocator("testprogram.xml"));
 
   Spice::iGraphics* graphics = Spice::ObjectRegistry::Get<Spice::iGraphics>();
 

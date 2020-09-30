@@ -1,0 +1,15 @@
+//
+// Created by mcel on 30.09.2020.
+//
+
+#ifndef SPICEENGINE_GL4SHADERATTRIBUTE_HH
+#define SPICEENGINE_GL4SHADERATTRIBUTE_HH
+
+
+class GL4ShaderAttribute
+{
+
+};
+
+
+#endif //SPICEENGINE_GL4SHADERATTRIBUTE_HH
