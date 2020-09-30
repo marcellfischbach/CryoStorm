@@ -24,7 +24,7 @@ bool GL4Graphics::Initialize()
     return false;
   }
 
-  printf("OpenGL Stats:\n");
+  printf("OpenGL capabilities:\n");
   printf("  Vendor  : %s\n", (const char*)glGetString(GL_VENDOR));
   printf("  Renderer: %s\n", (const char*)glGetString(GL_RENDERER));
   printf("  Version : %s\n", (const char*)glGetString(GL_VERSION));

@@ -47,6 +47,11 @@ GL4Shader::~GL4Shader()
 void GL4Shader::SetSource(const std::string& source)
 {
   m_source = source;
+  const GLchar* sources[1];
+  sources[0] = m_source.c_str();
+  GLint length[1];
+  length[0] = m_source.length();
+  glShaderSource(m_name, 1, sources, length);
 }
 
 UInt32 GL4Shader::GetName() const

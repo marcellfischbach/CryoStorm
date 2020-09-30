@@ -44,7 +44,6 @@ GL4Shader* LoadShader(const std::string& typeText, const ResourceLocator& locato
 
   try 
   {
-    printf("Compile shader:\n%s\n", source.c_str());
     GL4Shader* shader = new GL4Shader(shaderType);
     shader->SetSource(source);
     shader->Compile();
