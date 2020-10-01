@@ -11,13 +11,13 @@
 #include <Windows.h>
 
 
-namespace Spice::moc
+namespace spc::moc
 {
 
 
 void Cache::Load(const std::string& path)
 {
-  std::ifstream stream(path + "/.spacecache");
+  std::ifstream stream(path + "/.spccache");
   std::string line;
   int l = 1;
   while (std::getline(stream, line))

@@ -29,10 +29,10 @@ cmake_policy(SET CMP0100 NEW)
 
 if (WIN32)
 message("Use Win32")
-add_definitions(-DSPICE_WIN32)
+add_definitions(-DSPC_WIN32)
 else()
 message("Use Linux")
-add_definitions(-DSPICE_LINUX)
+add_definitions(-DSPC_LINUX)
 endif()
 
 string( TOLOWER "${CMAKE_BUILD_TYPE}" CMAKE_BUILD_TYPE_LOWER )

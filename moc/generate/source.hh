@@ -6,7 +6,7 @@
 #include <vector>
 #include <list>
 
-namespace Spice::moc
+namespace spc::moc
 {
 
 struct iOutput;

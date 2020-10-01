@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace Spice::moc
+namespace spc::moc
 {
 
 enum TokenType

@@ -3,7 +3,7 @@
 
 #include <generate/generator.hh>
 
-namespace Spice::moc
+namespace spc::moc
 {
 
 struct iOutput;

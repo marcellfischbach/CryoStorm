@@ -7,7 +7,7 @@
 #define PUSH_CH(tkn, ch) PUSH(tkn); tkn += ch; PUSH(tkn)
 
 
-namespace Spice::moc
+namespace spc::moc
 {
 Tokenizer::Tokenizer(const SourceFile& sourceFile)
 {

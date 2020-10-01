@@ -4,7 +4,7 @@
 #include <generate/ioutput.hh>
 #include <cache.hh>
 
-namespace Spice::moc
+namespace spc::moc
 {
 
 MasterGenerator::MasterGenerator()
@@ -23,12 +23,12 @@ void MasterGenerator::Generate(Cache& cache, const std::string& prefix, iOutput*
   std::string register_classes = "";
   register_classes += "static void register_classes()\n";
   register_classes += "{\n";
-  register_classes += "  Spice::ClassRegistry *reg = Spice::ClassRegistry::Get();\n";
+  register_classes += "  spc::ClassRegistry *reg = spc::ClassRegistry::Get();\n";
 
   std::string unregister_classes = "";
   unregister_classes += "static void unregister_classes()\n";
   unregister_classes += "{\n";
-  unregister_classes += "  Spice::ClassRegistry *reg = Spice::ClassRegistry::Get();\n";
+  unregister_classes += "  spc::ClassRegistry *reg = spc::ClassRegistry::Get();\n";
 
   for (auto it : cache.GetFileCache())
   {
@@ -60,7 +60,7 @@ void MasterGenerator::Generate(Cache& cache, const std::string& prefix, iOutput*
   source += "\n\n";
   source += sourceIncludes;
   source += "\n\n";
-  source += "#include <SpiceCore/classregistry.hh>\n\n";
+  source += "#include <spcCore/classregistry.hh>\n\n";
   source += register_classes;
   source += unregister_classes;
 

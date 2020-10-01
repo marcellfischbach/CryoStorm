@@ -3,7 +3,7 @@
 #include <parser/token.hh>
 
 
-namespace Spice::moc
+namespace spc::moc
 {
 
 #define CHECK_TKN(tkn, tknEnum) if (m_token == tkn)  m_type = tknEnum
@@ -42,9 +42,9 @@ Token::Token(const std::string & token)
   E_CHECK_TKN("enum", eTT_Enum);
   E_CHECK_TKN("template", eTT_Template);
   E_CHECK_TKN("friend", eTT_Friend);
-  E_CHECK_TKN("SPICE_CLASS", eTT_CS_CLASS);
-  E_CHECK_TKN("SPICE_PROPERTY", eTT_CS_PROPERTY);
-  E_CHECK_TKN("SPICE_FUNCTION", eTT_CS_FUNCTION);
+  E_CHECK_TKN("SPC_CLASS", eTT_CS_CLASS);
+  E_CHECK_TKN("SPC_PROPERTY", eTT_CS_PROPERTY);
+  E_CHECK_TKN("SPC_FUNCTION", eTT_CS_FUNCTION);
 else if (IsIdentifier())
   {
     m_type = eTT_Identifier;

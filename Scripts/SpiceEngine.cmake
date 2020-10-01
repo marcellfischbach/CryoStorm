@@ -24,12 +24,12 @@ function(SPICE_MOC trgt prefix)
 
 	set(TARGET_NAME "${trgt}-MOC")
 	add_custom_target(${TARGET_NAME}
-                            COMMAND ${EXEC_PATH}SpiceMOC --prefix ${prefix}  --path ${MOC_DIRECTORY}/${prefix} --export ${TARGET_IDENTIFIER}
+                            COMMAND ${EXEC_PATH}spcMOC --prefix ${prefix}  --path ${MOC_DIRECTORY}/${prefix} --export ${TARGET_IDENTIFIER}
 			WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 	)
 	if (SpiceEngine_BINARY_DIR) 
 		# this is an in-engine build
-		add_dependencies(${TARGET_NAME} SpiceMOC)
+		add_dependencies(${TARGET_NAME} spcMOC)
 	endif()
 	add_dependencies(${trgt} ${TARGET_NAME})
 

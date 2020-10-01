@@ -3,7 +3,7 @@
 
 include_directories(${SpiceEngine_SOURCE_DIR}/moc)
 
-add_executable(SpiceMOC
+add_executable(spcMOC
 	ast.cc
 	ast.hh
 	cache.cc
@@ -30,4 +30,4 @@ add_executable(SpiceMOC
 
 
 
-install(TARGETS SpiceMOC RUNTIME DESTINATION bin)
+install(TARGETS spcMOC RUNTIME DESTINATION bin)

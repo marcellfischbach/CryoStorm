@@ -4,7 +4,7 @@
 
 
 
-namespace Spice::moc
+namespace spc::moc
 {
 
 

@@ -38,7 +38,7 @@ void print_usage(char* name)
   printf("    --export <export>      <export> the name of the export api name\n");
 }
 
-class StdOutOutput : public Spice::moc::iOutput
+class StdOutOutput : public spc::moc::iOutput
 {
 public:
   StdOutOutput() { }
@@ -50,7 +50,7 @@ public:
 };
 
 
-class FileOutput : public Spice::moc::iOutput
+class FileOutput : public spc::moc::iOutput
 {
 public:
   FileOutput(const std::string& filename)
@@ -72,13 +72,13 @@ private:
   std::string m_filename;
 };
 
-void put_classes_to_cache(Spice::moc::Cache& cache, const std::string& sourceName, Spice::moc::ASTNode* root)
+void put_classes_to_cache(spc::moc::Cache& cache, const std::string& sourceName, spc::moc::ASTNode* root)
 {
-  std::vector<Spice::moc::ClassNode*> classes = Spice::moc::Generator::FindAllMajorClasses(root);
+  std::vector<spc::moc::ClassNode*> classes = spc::moc::Generator::FindAllMajorClasses(root);
   for (auto cls : classes)
   {
-    std::list<Spice::moc::NamespaceNode*> nss = Spice::moc::Generator::GetAllNamespaces(cls);
-    std::string nsName = Spice::moc::Generator::GetFullNamespaceName(nss);
+    std::list<spc::moc::NamespaceNode*> nss = spc::moc::Generator::GetAllNamespaces(cls);
+    std::string nsName = spc::moc::Generator::GetFullNamespaceName(nss);
     std::cout << "  " << nsName + cls->GetName() << std::endl;
 
     cache.Put(sourceName, nsName + cls->GetName());
@@ -86,19 +86,19 @@ void put_classes_to_cache(Spice::moc::Cache& cache, const std::string& sourceNam
 }
 
 void generate(
-  Spice::moc::Cache * cache,
+  spc::moc::Cache * cache,
   const std::string & input,
   const std::string & outputHeader,
   const std::string & outputSource,
   const std::string & exp)
 {
 
-  Spice::moc::SourceFile sourceFile;
+  spc::moc::SourceFile sourceFile;
   sourceFile.Read(input);
-  Spice::moc::Tokenizer tokenizer(sourceFile);
+  spc::moc::Tokenizer tokenizer(sourceFile);
 
-  Spice::moc::Parser parser;
-  Spice::moc::ASTNode* ns = nullptr;
+  spc::moc::Parser parser;
+  spc::moc::ASTNode* ns = nullptr;
   if (cache)
   {
     cache->Clear(input);
@@ -118,7 +118,7 @@ void generate(
     if (!outputHeader.empty())
     {
       FileOutput output(outputHeader);
-      Spice::moc::HeaderGenerator hg;
+      spc::moc::HeaderGenerator hg;
       hg.SetRoot(ns);
       hg.Output(exp, &output);
     }
@@ -126,13 +126,13 @@ void generate(
     if (!outputSource.empty())
     {
       FileOutput output(outputSource);
-      Spice::moc::SourceGenerator sg;
+      spc::moc::SourceGenerator sg;
       sg.SetRoot(ns);
       sg.Output(exp, &output);
     }
     //    ns->DebugNode(0);
   }
-  catch (Spice::moc::ParseException & e)
+  catch (spc::moc::ParseException & e)
   {
     std::cout << "Parse Exception: [" << e.GetFile() << "@" << e.GetLine() << "] '" << e.GetMessage() << "' in " << input << std::endl;
   }
@@ -177,7 +177,7 @@ bool equalsCI(const std::string & str1, const std::string & str2)
 
 void generate_list(const std::string & path, const std::string & exp, const std::string & prefix)
 {
-  Spice::moc::Cache cache;
+  spc::moc::Cache cache;
   cache.Load(path);
 
   std::ifstream stream(path + "/.spicemoc");
@@ -214,7 +214,7 @@ void generate_list(const std::string & path, const std::string & exp, const std:
           exp
         );
       }
-      catch (Spice::moc::BaseException & e)
+      catch (spc::moc::BaseException & e)
       {
         std::cout << "Exception: [" << e.GetFile() << "@" << e.GetLine() << "] '" << e.GetMessage() << "' @ " << filename << std::endl;
       }
@@ -232,7 +232,7 @@ void generate_list(const std::string & path, const std::string & exp, const std:
   std::filesystem::path masterPath(path + "/master.refl.cc");
   if (neededRevalidation || cache.HaveUntouched() || !std::filesystem::exists(masterPath))
   {
-    Spice::moc::MasterGenerator masterGenerator;
+    spc::moc::MasterGenerator masterGenerator;
     FileOutput output(path + "/master.refl.cc");
     masterGenerator.Generate(cache, prefix, &output);
   }

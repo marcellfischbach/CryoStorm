@@ -1,0 +1,15 @@
+//
+// Created by mcel on 30.09.2020.
+//
+
+#ifndef SPCENGINE_GL4SHADERATTRIBUTE_HH
+#define SPCENGINE_GL4SHADERATTRIBUTE_HH
+
+
+class GL4ShaderAttribute
+{
+
+};
+
+
+#endif //SPCENGINE_GL4SHADERATTRIBUTE_HH

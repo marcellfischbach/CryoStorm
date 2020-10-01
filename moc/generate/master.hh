@@ -4,7 +4,7 @@
 
 #include <string>
 
-namespace Spice::moc
+namespace spc::moc
 {
 
 class Cache;

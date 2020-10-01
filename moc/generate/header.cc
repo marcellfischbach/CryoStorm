@@ -3,7 +3,7 @@
 #include <generate/ioutput.hh>
 #include <ast.hh>
 
-namespace Spice::moc
+namespace spc::moc
 {
 
 
@@ -49,7 +49,7 @@ std::string HeaderGenerator::OutputClass(ClassNode* clsNode, const std::string& 
 
   source += "#pragma once\n";
   source += "\n";
-  source += "#ifdef SPICE_WIN32\n";
+  source += "#ifdef SPC_WIN32\n";
   source += "#  ifdef " + exp + "\n";
   source += "#    define " + exp + "_API __declspec(dllexport)\n";
   source += "#  else\n";
@@ -64,12 +64,12 @@ std::string HeaderGenerator::OutputClass(ClassNode* clsNode, const std::string& 
     source += "{\n";
   }
 
-  source += "\nclass " + exp + "_API " + clsName + " : public Spice::Class\n";
+  source += "\nclass " + exp + "_API " + clsName + " : public spc::Class\n";
   source += "{\n";
   source += "public:\n";
   source += " " + clsName + "();\n";
   source += " static " + clsName  + " *Get();\n";
-  source += " virtual Spice::iObject *CreateInstance() const;\n";
+  source += " virtual spc::iObject *CreateInstance() const;\n";
   source += "};\n";
 
 

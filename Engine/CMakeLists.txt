@@ -1,8 +1,8 @@
 
 
-add_subdirectory(SpiceCore)
-add_subdirectory(SpiceLauncher)
-add_subdirectory(SpiceOpenGL)
+add_subdirectory(spcCore)
+add_subdirectory(spcLauncher)
+add_subdirectory(spcOpenGL)
 #add_subdirectory(SpiceRefl)
 
 #add_subdirectory(SpiceSDLWindow)
