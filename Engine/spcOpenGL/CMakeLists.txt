@@ -12,6 +12,9 @@ set(SOURCES
 		gl4/gl4exceptions.hh
         gl4/gl4graphics.cc
         gl4/gl4graphics.hh
+        gl4/gl4rendermesh.cc
+        gl4/gl4rendermesh.hh
+
 
 		gl4/loading/gl4shaderloader.cc
 		gl4/loading/gl4shaderloader.hh
@@ -46,6 +49,5 @@ install(TARGETS spcOpenGL
         )
 
 install(DIRECTORY . DESTINATION include/spcOpenGL FILES_MATCHING PATTERN "*.hh")
-
 
 
