@@ -8,8 +8,8 @@ enum eVertexStream
 {
   eVS_Vertices,
   eVS_Normals,
-  eVS_Tangent,
-  eVS_UV
+  eVS_Tangents,
+  eVS_UV,
   eVS_UV0 = eVS_UV,
   eVS_UV1,
   eVS_UV2,

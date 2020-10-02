@@ -170,7 +170,7 @@ public:
 
   SPC_FORCEINLINE float Length() const
   {
-    return cesqrt(x * x + y * y);
+    return spcSqrt(x * x + y * y);
   }
 
   SPC_FORCEINLINE Vector2f& Normalize()

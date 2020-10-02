@@ -3,6 +3,7 @@
 #include <spcOpenGL/master.refl.cc>
 #include <spcCore/objectregistry.hh>
 #include <spcOpenGL/gl4/gl4graphics.hh>
+#include <spcOpenGL/gl4/gl4rendermesh.hh>
 #include <spcOpenGL/gl4/loading/gl4shaderloader.hh>
 
 namespace spc
@@ -14,6 +15,7 @@ bool OpenGLModule::Register(int argc, char** argv)
 
   ObjectRegistry::Register<iGraphics>(new GL4Graphics());
   ObjectRegistry::Register<iShaderLoader>(new GL4ShaderLoader());
+  ObjectRegistry::Register<iRenderMeshGeneratorFactory>(new GL4RenderMeshGeneratorFactory());
   return true;
 }
 

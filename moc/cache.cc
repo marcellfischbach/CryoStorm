@@ -81,7 +81,7 @@ void Cache::Load(const std::string& path)
 
 void Cache::Store(const std::string& path)
 {
-  std::ofstream stream(path + "/.spacecache");
+  std::ofstream stream(path + "/.spccache");
   for (auto it: m_fileCache)
   {
     Data& data = it.second;

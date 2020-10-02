@@ -9,88 +9,88 @@
 namespace spc {
 
 
-static SPC_FORCEINLINE double cecos(double v)
+static SPC_FORCEINLINE double spcCos(double v)
 {
   return ::cos(v);
 }
 
 
-static SPC_FORCEINLINE float cecos(float v)
+static SPC_FORCEINLINE float spcCos(float v)
 {
   return ::cosf(v);
 }
 
 
-static SPC_FORCEINLINE double cesin(double v)
+static SPC_FORCEINLINE double spcSin(double v)
 {
   return ::sin(v);
 }
 
-static SPC_FORCEINLINE float cesin(float v)
+static SPC_FORCEINLINE float spcSin(float v)
 {
   return ::sinf(v);
 }
 
-static SPC_FORCEINLINE double ceabs(double v)
+static SPC_FORCEINLINE double spcAbs(double v)
 {
   return ::fabs(v);
 }
 
 
-static SPC_FORCEINLINE float ceabs(float v)
+static SPC_FORCEINLINE float spcAbs(float v)
 {
   return ::fabsf(v);
 }
 
-static SPC_FORCEINLINE double cemod(double x, double y)
+static SPC_FORCEINLINE double spcMod(double x, double y)
 {
   return ::fmod(x, y);
 }
 
 
-static SPC_FORCEINLINE float cemod(float x, float y)
+static SPC_FORCEINLINE float spcMod(float x, float y)
 {
   return ::fmodf(x, y);
 }
 
 
-static SPC_FORCEINLINE double cemin(double x, double y)
+static SPC_FORCEINLINE double spcMin(double x, double y)
 {
   return ::fmin(x, y);
 }
 
-static SPC_FORCEINLINE float cemin(float x, float y)
+static SPC_FORCEINLINE float spcMin(float x, float y)
 {
   return ::fminf(x, y);
 }
 
-static SPC_FORCEINLINE int cemin(int x, int y)
+static SPC_FORCEINLINE int spcMin(int x, int y)
 {
   return x < y ? x : y;
 }
 
 
-static SPC_FORCEINLINE double cemax(double x, double y)
+static SPC_FORCEINLINE double spcMax(double x, double y)
 {
   return ::fmax(x, y);
 }
 
-static SPC_FORCEINLINE float cemax(float x, float y)
+static SPC_FORCEINLINE float spcMax(float x, float y)
 {
   return ::fminf(x, y);
 }
 
-static SPC_FORCEINLINE int cemax(int x, int y)
+static SPC_FORCEINLINE int spcMax(int x, int y)
 {
   return x > y ? x : y;
 }
 
-static SPC_FORCEINLINE double cesqrt(double v)
+static SPC_FORCEINLINE double spcSqrt(double v)
 {
   return ::sqrt(v);
 }
 
-static SPC_FORCEINLINE float cesqrt(float v)
+static SPC_FORCEINLINE float spcSqrt(float v)
 {
   return ::sqrtf(v);
 }

@@ -18,10 +18,17 @@ set(SOURCES
         types.hh
 
         graphics/datatype.hh
+        graphics/graphicsexceptions.cc
+        graphics/graphicsexceptions.hh
         graphics/igraphics.hh
+        graphics/iindexbuffer.hh
+        graphics/irendermesh.hh
+        graphics/ivertexbuffer.hh
         graphics/renderattribute.hh
         graphics/vertexdeclaration.cc
         graphics/vertexdeclaration.hh
+        graphics/renderattribute.hh
+        graphics/renderpass.hh
         graphics/shading/ishader.hh
         graphics/shading/ishaderattribute.hh
         graphics/shading/ishaderloader.hh
