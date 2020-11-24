@@ -5,8 +5,8 @@
 #include <spcCore/class.hh>
 #include <spcCore/types.hh>
 #include <spcCore/graphics/irendermesh.hh>
-#include <spcCore/graphics/datatype.hh>
-#include <spcCore/graphics/primitivetype.hh>
+#include <spcCore/graphics/edatatype.hh>
+#include <spcCore/graphics/eprimitivetype.hh>
 #include <vector>
 
 namespace spc
@@ -25,7 +25,7 @@ public:
 
 
 
-  virtual void Render(iRenderer * renderer, eRenderPass pass);
+  virtual void Render(iGraphics * graphics, eRenderPass pass);
 
 private:
 

@@ -7,13 +7,13 @@
 #include <spcCore/math/vector2f.hh>
 #include <spcCore/math/vector3f.hh>
 #include <spcCore/math/color4f.hh>
-#include <spcCore/graphics/renderpass.hh>>
+#include <spcCore/graphics/renderpass.hh>
 #include <vector>
 
 namespace spc
 {
 
-struct iRenderer;
+struct iGraphics;
 
 SPC_CLASS()
 struct SPC_CORE_API iRenderMesh : public SPC_SUPER(iObject)
@@ -21,7 +21,7 @@ struct SPC_CORE_API iRenderMesh : public SPC_SUPER(iObject)
   SPC_CLASS_GEN;
   virtual ~iRenderMesh() { }
 
-  virtual void Render(iRenderer * renderer, eRenderPass pass) = 0;
+  virtual void Render(iGraphics* graphics, eRenderPass pass) = 0;
 };
 
 

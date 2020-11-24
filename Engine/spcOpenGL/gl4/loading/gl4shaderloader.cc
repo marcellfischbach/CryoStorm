@@ -4,7 +4,10 @@
 #include <spcOpenGL/gl4/shading/gl4shader.hh>
 #include <spcOpenGL/gl4/gl4exceptions.hh>
 #include <spcCore/resource/vfs.hh>
+#include <spcCore/graphics/evertexstream.hh>
 #include <tinyxml2/tinyxml2.h>
+#include <regex>
+#include <iostream>
 
 
 using namespace tinyxml2;
@@ -17,6 +20,57 @@ GL4ShaderLoader::GL4ShaderLoader()
   SPC_CLASS_GEN_CONSTR;
 }
 
+
+bool GL4ShaderLoader::CanLoad(const ResourceLocator& locator) const
+{
+  return true;
+}
+
+
+
+std::vector<std::string> split(const std::string& string)
+{
+  std::vector<std::string> res;
+  size_t offset = 0;
+  size_t idx = 0;
+  while ((idx = string.find('\n', offset)) != std::string::npos)
+  {
+    std::string part = string.substr(offset, idx - offset);
+    res.push_back(part);
+    offset = idx + 1;
+  }
+  std::string part = string.substr(offset, string.length() - offset);
+  res.push_back(part);
+
+  return res;
+}
+
+std::string merge(const std::vector<std::string>& lines)
+{
+  std::string res;
+  for (const std::string& str : lines)
+  {
+    res += str + "\n";
+  }
+  return res;
+}
+
+
+void replace(std::vector<std::string>& lines, const std::string& vertexStreamName, eVertexStream stream)
+{
+  std::regex reg("(.*layout\\s*\\(location\\s*=\\s*)(" + vertexStreamName + ")(\\s*\\).*)");
+  for (std::string& line : lines)
+  {
+    std::smatch sm;
+    if (std::regex_match(line, sm, reg))
+    {
+      std::string part1 = sm[1];
+      std::string part3 = sm[3];
+      line = part1 + std::to_string(stream) + part3;
+    }
+  }
+
+}
 
 GL4Shader* LoadShader(const std::string& typeText, const ResourceLocator& locator)
 {
@@ -39,8 +93,23 @@ GL4Shader* LoadShader(const std::string& typeText, const ResourceLocator& locato
     buffer[read] = '\0';
     source += buffer;
   }
-
   fclose(file);
+
+  std::cout << "Orig source:" << std::endl << source << std::endl;
+
+  std::vector<std::string> lines = split(source);
+  replace(lines, "eVS_Vertices", eVS_Vertices);
+  replace(lines, "eVS_Normals", eVS_Normals);
+  replace(lines, "eVS_Tangents", eVS_Tangents);
+  replace(lines, "eVS_UV0", eVS_UV0);
+  replace(lines, "eVS_UV1", eVS_UV1);
+  replace(lines, "eVS_UV2", eVS_UV2);
+  replace(lines, "eVS_UV3", eVS_UV3);
+  replace(lines, "eVS_UV", eVS_UV);
+  replace(lines, "eVS_Colors", eVS_Colors);
+  source = merge(lines);
+
+  std::cout << "Replaced source:" << std::endl << source << std::endl;
 
   try 
   {
@@ -58,7 +127,7 @@ GL4Shader* LoadShader(const std::string& typeText, const ResourceLocator& locato
 }
 
 
-iShader* GL4ShaderLoader::Load(const ResourceLocator& locator)
+iObject* GL4ShaderLoader::Load(const ResourceLocator& locator) const
 {
 
   XMLDocument doc;

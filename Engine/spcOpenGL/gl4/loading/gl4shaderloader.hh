@@ -2,13 +2,13 @@
 #pragma once
 
 #include <spcOpenGL/openglexport.hh>
-#include <spcCore/graphics/shading/ishaderloader.hh>
+#include <spcCore/resource/iassetloader.hh>
 
 namespace spc
 {
 
 SPC_CLASS()
-class GL4ShaderLoader : public SPC_SUPER(iShaderLoader)
+class GL4ShaderLoader : public SPC_SUPER(iAssetLoader)
 {
   SPC_CLASS_GEN_OBJECT;
 public:
@@ -18,9 +18,9 @@ public:
 
   }
 
+  virtual bool CanLoad(const ResourceLocator& locator) const;
 
-  virtual iShader* Load(const ResourceLocator & locator);
-
+  virtual iObject* Load(const ResourceLocator& locator) const;
 };
 
 

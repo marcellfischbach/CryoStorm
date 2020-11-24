@@ -1,5 +1,6 @@
 #include <spcCore/coremodule.hh>
 #include <spcCore/master.refl.cc>
+#include <spcCore/resource/assetmanager.hh>
 
 namespace spc
 {
@@ -7,6 +8,10 @@ namespace spc
 bool CoreModule::Register(int argc, char** argv)
 {
   register_classes();
+
+  AssetManager::Set(new AssetManager());
+
+
   return true;
 }
 

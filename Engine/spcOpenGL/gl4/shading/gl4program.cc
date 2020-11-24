@@ -79,6 +79,11 @@ void GL4Program::Link()
   }
 }
 
+UInt32 GL4Program::GetName() const
+{
+  return m_name;
+}
+
 
 UInt32 GL4Program::RegisterAttribute(const std::string& attributeName)
 {

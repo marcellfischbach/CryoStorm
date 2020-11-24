@@ -1,5 +1,6 @@
 
 #include <spcOpenGL/gl4/gl4graphics.hh>
+#include <spcOpenGL/gl4/shading/gl4program.hh>
 #include <GL/glew.h>
 
 namespace spc
@@ -57,6 +58,21 @@ void GL4Graphics::Clear(bool clearColor, const Color4f& color, bool clearDepth, 
     glClearStencil(stencil);
   }
   glClear(flags);
+}
+
+void GL4Graphics::SetShader(iShader* shader)
+{
+  if (shader)
+  {
+    GL4Program* program = static_cast<GL4Program*>(shader);
+
+    glUseProgram(program->GetName());
+  }
+  else
+  {
+    glUseProgram(0);
+  }
+
 }
 
 

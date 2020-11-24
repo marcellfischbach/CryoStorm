@@ -10,6 +10,7 @@
 namespace spc
 {
 
+struct iShader;
 
 SPC_CLASS()
 struct SPC_CORE_API iGraphics : public SPC_SUPER(iObject)
@@ -21,6 +22,7 @@ struct SPC_CORE_API iGraphics : public SPC_SUPER(iObject)
   virtual void SetViewport(Int16 x, Int16 y, UInt16 width, UInt16 height) = 0;
   virtual void Clear(bool clearColor, const Color4f& color, bool clearDepth, float depth, bool clearStencil, UInt8 stencil) = 0;
 
+  virtual void SetShader(iShader* shader) = 0;
 };
 
 }

@@ -2,6 +2,7 @@
 #include <spcOpenGL/openglmodule.hh>
 #include <spcOpenGL/master.refl.cc>
 #include <spcCore/objectregistry.hh>
+#include <spcCore/resource/assetmanager.hh>
 #include <spcOpenGL/gl4/gl4graphics.hh>
 #include <spcOpenGL/gl4/gl4rendermesh.hh>
 #include <spcOpenGL/gl4/loading/gl4shaderloader.hh>
@@ -14,7 +15,8 @@ bool OpenGLModule::Register(int argc, char** argv)
   register_classes();
 
   ObjectRegistry::Register<iGraphics>(new GL4Graphics());
-  ObjectRegistry::Register<iShaderLoader>(new GL4ShaderLoader());
+
+  AssetManager::Get()->RegisterLoader<iShader>(new GL4ShaderLoader());
   ObjectRegistry::Register<iRenderMeshGeneratorFactory>(new GL4RenderMeshGeneratorFactory());
   return true;
 }

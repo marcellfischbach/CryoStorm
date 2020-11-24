@@ -47,7 +47,7 @@ GL4RenderMesh::~GL4RenderMesh()
 {
   if (m_vao != 0)
   {
-    glCreateVertexArrays(1, &m_vao);
+    glDeleteVertexArrays(1, &m_vao);
     m_vao = 0;
   }
   SPC_RELEASE(m_vertexBuffer);
@@ -58,7 +58,7 @@ GL4RenderMesh::~GL4RenderMesh()
 }
 
 
-void GL4RenderMesh::Render(iRenderer* renderer, eRenderPass pass)
+void GL4RenderMesh::Render(iGraphics* graphics, eRenderPass pass)
 {
   glBindVertexArray(m_vao);
   glDrawElements(m_primType, m_count, m_indexType, reinterpret_cast<const void*>(0));

@@ -4,7 +4,7 @@
 #include <spcCore/coreexport.hh>
 #include <spcCore/class.hh>
 #include <spcCore/types.hh>
-#include <spcCore/graphics/bufferusage.hh>
+#include <spcCore/graphics/ebufferusage.hh>
 
 
 namespace spc

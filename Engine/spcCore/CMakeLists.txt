@@ -17,11 +17,17 @@ set(SOURCES
         objectregistry.hh
         types.hh
 
-        graphics/datatype.hh
+        graphics/ebufferusage.hh
+        graphics/edatatype.hh
+        graphics/epixelformat.hh
+        graphics/eprimitivetype.hh
+        graphics/evertexstream.hh
         graphics/graphicsexceptions.cc
         graphics/graphicsexceptions.hh
         graphics/igraphics.hh
         graphics/iindexbuffer.hh
+        graphics/image.cc
+        graphics/image.hh
         graphics/irendermesh.hh
         graphics/ivertexbuffer.hh
         graphics/renderattribute.hh
@@ -31,7 +37,6 @@ set(SOURCES
         graphics/renderpass.hh
         graphics/shading/ishader.hh
         graphics/shading/ishaderattribute.hh
-        graphics/shading/ishaderloader.hh
 
         input/iinputsystem.hh
         input/ikeyboard.hh
@@ -59,6 +64,9 @@ set(SOURCES
         math/vector3f.hh
         math/vector4f.hh
 
+        resource/assetmanager.cc
+        resource/assetmanager.hh
+        resource/iassetloader.hh
         resource/resourcelocator.cc
         resource/resourcelocator.hh
         resource/vfs.cc
@@ -68,9 +76,7 @@ set(SOURCES
         window/iwindow.hh
 
         )
-
-
-add_library(spcCore SHARED
+        add_library(spcCore SHARED
         ${SOURCES}
         )
 

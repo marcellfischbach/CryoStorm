@@ -4,8 +4,8 @@
 
 #include <spcCore/coreexport.hh>
 #include <spcCore/types.hh>
-#include <spcCore/graphics/datatype.hh>
-#include <spcCore/graphics/vertexstream.hh>
+#include <spcCore/graphics/edatatype.hh>
+#include <spcCore/graphics/evertexstream.hh>
 #include <vector>
 
 namespace spc

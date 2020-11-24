@@ -35,6 +35,7 @@ message("Use Linux")
 add_definitions(-DSPC_LINUX)
 endif()
 
+
 string( TOLOWER "${CMAKE_BUILD_TYPE}" CMAKE_BUILD_TYPE_LOWER )
 if(NOT Win32)
 	if (CMAKE_BUILD_TYPE_LOWER STREQUAL "debug")

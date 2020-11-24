@@ -23,6 +23,7 @@ public:
 
 	void Link();
 
+	UInt32 GetName() const;
 
 	virtual UInt32 RegisterAttribute(const std::string& attributeName);
 

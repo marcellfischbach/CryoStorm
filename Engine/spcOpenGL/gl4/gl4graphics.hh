@@ -21,6 +21,7 @@ public:
   void SetViewport(Int16 x, Int16 y, UInt16 width, UInt16 height);
   void Clear(bool clearColor, const Color4f & color, bool clearDepth, float depth, bool clearStencil, UInt8 stencil);
 
+  void SetShader(iShader * shader);
 };
 
 
