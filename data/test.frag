@@ -2,12 +2,13 @@
 
 layout(location = 0) out vec4 spc_FragColor;
 
-uniform vec4 spc_Diffuse;
+uniform sampler2D spc_Diffuse;
 
 in vec4 color;
+in vec2 texCoord;
 
 void main()
 {
-  spc_FragColor = color;
+  spc_FragColor = texture(spc_Diffuse, texCoord) * color;
 }
 

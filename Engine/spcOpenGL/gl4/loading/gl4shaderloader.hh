@@ -18,9 +18,9 @@ public:
 
   }
 
-  virtual bool CanLoad(const ResourceLocator& locator) const;
+  virtual bool CanLoad(const Class * cls, const ResourceLocator& locator) const;
 
-  virtual iObject* Load(const ResourceLocator& locator) const;
+  virtual iObject* Load(const Class* cls, const ResourceLocator& locator) const;
 };
 
 

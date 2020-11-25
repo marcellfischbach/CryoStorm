@@ -19,13 +19,8 @@ public:
   static void Set(AssetManager* manager);
   static AssetManager* Get();
 
-  void RegisterLoader(const Class* cls, iAssetLoader* loader);
+  void RegisterLoader(iAssetLoader* loader);
 
-  template<typename T>
-  void RegisterLoader(iAssetLoader* loader)
-  {
-    RegisterLoader(T::GetStaticClass(), loader);
-  }
 
   template<typename T>
   T* Get(const ResourceLocator& locator)
@@ -46,7 +41,7 @@ public:
 protected:
   AssetManager();
 
-  std::map<const Class*, std::vector<iAssetLoader*>> m_loaders;
+  std::vector<iAssetLoader*> m_loaders;
 
 
 private:

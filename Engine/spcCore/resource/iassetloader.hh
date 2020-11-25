@@ -25,9 +25,9 @@ struct SPC_CORE_API iAssetLoader : public iObject
     return DefaultPriority;
   }
 
-  virtual bool CanLoad(const ResourceLocator& locator) const = 0;
+  virtual bool CanLoad(const Class* cls, const ResourceLocator& locator) const = 0;
 
-  virtual iObject* Load(const ResourceLocator& locator) const = 0;
+  virtual iObject* Load(const Class* cls, const ResourceLocator& locator) const = 0;
 
 };
 

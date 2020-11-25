@@ -21,9 +21,13 @@ GL4ShaderLoader::GL4ShaderLoader()
 }
 
 
-bool GL4ShaderLoader::CanLoad(const ResourceLocator& locator) const
+bool GL4ShaderLoader::CanLoad(const Class* cls, const ResourceLocator& locator) const
 {
-  return true;
+  if (cls->IsAssignableFrom<GL4Program>())
+  {
+    return true;
+  }
+  return false;
 }
 
 
@@ -101,6 +105,7 @@ GL4Shader* LoadShader(const std::string& typeText, const ResourceLocator& locato
   replace(lines, "eVS_Vertices", eVS_Vertices);
   replace(lines, "eVS_Normals", eVS_Normals);
   replace(lines, "eVS_Tangents", eVS_Tangents);
+  replace(lines, "eVS_UV", eVS_UV);
   replace(lines, "eVS_UV0", eVS_UV0);
   replace(lines, "eVS_UV1", eVS_UV1);
   replace(lines, "eVS_UV2", eVS_UV2);
@@ -127,7 +132,7 @@ GL4Shader* LoadShader(const std::string& typeText, const ResourceLocator& locato
 }
 
 
-iObject* GL4ShaderLoader::Load(const ResourceLocator& locator) const
+iObject* GL4ShaderLoader::Load(const Class* cls, const ResourceLocator& locator) const
 {
 
   XMLDocument doc;

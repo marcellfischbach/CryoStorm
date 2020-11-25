@@ -3,6 +3,7 @@
 #include <iostream>
 #include <assimp/Importer.hpp>
 #include <spcCore/resource/vfs.hh>
+#include <spcCore/graphics/image.hh>
 #include <png.h>
 
 namespace spc
@@ -14,14 +15,18 @@ AssimpImageLoader::AssimpImageLoader()
 }
 
 
-bool AssimpImageLoader::CanLoad(const ResourceLocator& locator) const
+bool AssimpImageLoader::CanLoad(const Class* cls, const ResourceLocator& locator) const
 {
+  if (cls->IsAssignableFrom<Image>())
+  {
+    return true;
+  }
   return true;
 }
 
 #define PNGSIGSIZE 8
 
-iObject* AssimpImageLoader::Load(const ResourceLocator& locator) const
+iObject* AssimpImageLoader::Load(const Class* cls, const ResourceLocator& locator) const
 {
   FILE* fp = VFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (!fp)

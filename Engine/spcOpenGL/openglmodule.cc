@@ -16,7 +16,7 @@ bool OpenGLModule::Register(int argc, char** argv)
 
   ObjectRegistry::Register<iGraphics>(new GL4Graphics());
 
-  AssetManager::Get()->RegisterLoader<iShader>(new GL4ShaderLoader());
+  AssetManager::Get()->RegisterLoader(new GL4ShaderLoader());
   ObjectRegistry::Register<iRenderMeshGeneratorFactory>(new GL4RenderMeshGeneratorFactory());
   return true;
 }

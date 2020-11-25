@@ -17,7 +17,7 @@
 #include <spcOpenGL/openglmodule.hh>
 #include <GL/glew.h>
 
-#include <spcAssimp/assimpmodule.hh>
+#include <spcPngLoader/pngloadermodule.hh>
 
 #include <iostream>
 #include <SDL.h>
@@ -142,9 +142,9 @@ int main(int argc, char** argv)
     printf("Unable to register opengl\n");
     return -1;
   }
-  if (!spc::AssimpModule::Register(argc, argv))
+  if (!spc::PngLoaderModule::Register(argc, argv))
   {
-    printf("Unable to register assimp\n");
+    printf("Unable to register png loader\n");
     return -1;
   }
 
@@ -182,15 +182,15 @@ int main(int argc, char** argv)
     printf("Unable to initialize opengl\n");
     return -1;
   }
-  if (!spc::AssimpModule::Initialize(argc, argv))
+  if (!spc::PngLoaderModule::Initialize(argc, argv))
   {
-    printf("Unable to initialize assimp\n");
+    printf("Unable to initialize png loader\n");
     return -1;
   }
 
   spc::iShader* shader = spc::AssetManager::Get()->Load<spc::iShader>(spc::ResourceLocator("testprogram.xml"));
 
-  //spc::Image* image = spc::AssetManager::Get()->Load<spc::Image>(spc::ResourceLocator("snowflake_64.png"));
+  spc::Image* image = spc::AssetManager::Get()->Load<spc::Image>(spc::ResourceLocator("colors.png"));
 
   spc::iGraphics* graphics = spc::ObjectRegistry::Get<spc::iGraphics>();
 

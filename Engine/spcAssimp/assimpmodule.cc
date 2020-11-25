@@ -15,7 +15,7 @@ bool AssimpModule::Register(int argc, char** argv)
 {
   register_classes();
 
-  AssetManager::Get()->RegisterLoader<Image>(new AssimpImageLoader());
+  AssetManager::Get()->RegisterLoader(new AssimpImageLoader());
 
 
   return true;

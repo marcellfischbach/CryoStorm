@@ -14,18 +14,21 @@ AssetManager::AssetManager()
 }
 
 
-void AssetManager::RegisterLoader(const Class* cls, iAssetLoader* loader)
+void AssetManager::RegisterLoader(iAssetLoader* loader)
 {
-  if (!cls || !loader)
+  if (!loader)
   {
     return;
   }
+  if (std::find(m_loaders.begin(), m_loaders.end(), loader) != m_loaders.end())
+  {
+    return;
+  }
+
   loader->AddRef();
+  m_loaders.push_back(loader);
 
-  std::vector<iAssetLoader*>& classLoaders = m_loaders[cls];
-  classLoaders.push_back(loader);
-
-  std::sort(classLoaders.begin(), classLoaders.end(), [](iAssetLoader* l0, iAssetLoader* l1) {
+  std::sort(m_loaders.begin(), m_loaders.end(), [](iAssetLoader* l0, iAssetLoader* l1) {
     return l0->Priority() > l1->Priority();
     });
 }
@@ -38,11 +41,11 @@ iObject* AssetManager::Get(const Class* cls, const ResourceLocator& locator)
 
 iObject* AssetManager::Load(const Class* cls, const ResourceLocator& locator)
 {
-  for (iAssetLoader* loader : m_loaders[cls])
+  for (iAssetLoader* loader : m_loaders)
   {
-    if (loader->CanLoad(locator))
+    if (loader->CanLoad(cls, locator))
     {
-      iObject* obj = loader->Load(locator);
+      iObject* obj = loader->Load(cls, locator);
       if (obj)
       {
         return obj;

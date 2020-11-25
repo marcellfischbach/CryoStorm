@@ -1,6 +1,6 @@
 
 
-add_subdirectory(spcAssimp)
+add_subdirectory(spcPngLoader)
 add_subdirectory(spcCore)
 add_subdirectory(spcLauncher)
 add_subdirectory(spcOpenGL)

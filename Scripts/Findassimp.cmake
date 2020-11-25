@@ -4,7 +4,6 @@ FIND_PATH(
 	
 )
 
-
 FIND_LIBRARY(
 	assimp_LIBRARIES
 	NAMES assimp

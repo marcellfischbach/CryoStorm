@@ -108,6 +108,11 @@ bool Class::IsInstanceOf(const Class* clazz) const
   return false;
 }
 
+bool Class::IsAssignableFrom(const Class* clazz) const
+{
+  return clazz->IsInstanceOf(this);
+}
+
 void Class::AddSuperClass(const Class* parentClass)
 {
   m_superClasses.push_back(parentClass);

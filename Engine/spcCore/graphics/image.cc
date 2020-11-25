@@ -83,7 +83,6 @@ void Image::Copy(UInt16 layer, const UInt8* buffer)
     return;
   }
 
-  Layer& l = m_layers[layer];
   if (!l.buffer)
   {
     GenerateLayer(layer);

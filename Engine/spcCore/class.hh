@@ -419,6 +419,14 @@ public:
   }
   bool IsInstanceOf(const Class* clazz) const;
 
+  template<typename T>
+  bool IsAssignableFrom() const
+  {
+    return IsAssignableFrom(T::GetStaticClass());
+  }
+  bool IsAssignableFrom(const Class* clazz) const;
+
+
 protected:
   Class(const std::string& name);
 
