@@ -82,7 +82,7 @@ void Image::Copy(UInt16 layer, const UInt8* buffer)
   {
     return;
   }
-
+  Layer& l = m_layers[layer];
   if (!l.buffer)
   {
     GenerateLayer(layer);
@@ -113,6 +113,16 @@ UInt16 Image::GetHeight(UInt16 layer) const
   }
   return m_layers[layer].height;
 }
+
+const UInt8* Image::GetData(UInt16 layer) const
+{
+  if (layer >= m_numberOfLayers)
+  {
+    return nullptr;
+  }
+  return m_layers[layer].buffer;
+}
+
 
 ePixelFormat Image::GetPixelFormat() const
 {

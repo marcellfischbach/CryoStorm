@@ -94,7 +94,7 @@ public:
     m22 = v.z;
   }
 
-  SPC_FORCEINLINE static ceMatrix3f& Mult(const Matrix3f& m0, const Matrix3f& m1, ceMatrix3f& r)
+  SPC_FORCEINLINE static Matrix3f& Mult(const Matrix3f& m0, const Matrix3f& m1, Matrix3f& r)
   {
     float m00 = m0.m00 * m1.m00 + m0.m10 * m1.m01 + m0.m20 * m1.m02;
     float m01 = m0.m01 * m1.m00 + m0.m11 * m1.m01 + m0.m21 * m1.m02;

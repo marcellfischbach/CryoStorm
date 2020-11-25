@@ -58,7 +58,7 @@ GL4RenderMesh::~GL4RenderMesh()
 }
 
 
-void GL4RenderMesh::Render(iGraphics* graphics, eRenderPass pass)
+void GL4RenderMesh::Render(iDevice* graphics, eRenderPass pass)
 {
   glBindVertexArray(m_vao);
   glDrawElements(m_primType, m_count, m_indexType, reinterpret_cast<const void*>(0));

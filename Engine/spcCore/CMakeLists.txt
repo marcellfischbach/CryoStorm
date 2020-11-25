@@ -21,14 +21,18 @@ set(SOURCES
         graphics/edatatype.hh
         graphics/epixelformat.hh
         graphics/eprimitivetype.hh
+        graphics/etextureunit.hh
+        graphics/etexturetype.hh
         graphics/evertexstream.hh
         graphics/graphicsexceptions.cc
         graphics/graphicsexceptions.hh
-        graphics/igraphics.hh
+        graphics/idevice.hh
         graphics/iindexbuffer.hh
         graphics/image.cc
         graphics/image.hh
         graphics/irendermesh.hh
+        graphics/itexture.hh
+        graphics/itexture2d.hh
         graphics/ivertexbuffer.hh
         graphics/renderattribute.hh
         graphics/vertexdeclaration.cc
@@ -66,7 +70,15 @@ set(SOURCES
 
         resource/assetmanager.cc
         resource/assetmanager.hh
+        resource/eaccessmode.hh
+        resource/eopenmode.hh
+        resource/eseekmode.hh
+        resource/filesystemfile.cc
+        resource/filesystemfile.hh
         resource/iassetloader.hh
+        resource/ifile.hh
+        resource/resourceexceptions.cc
+        resource/resourceexceptions.hh
         resource/resourcelocator.cc
         resource/resourcelocator.hh
         resource/vfs.cc

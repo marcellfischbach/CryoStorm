@@ -89,15 +89,19 @@ GL4Shader* LoadShader(const std::string& typeText, const ResourceLocator& locato
 
 
   std::string source;
-  FILE* file = VFS::Get()->Open(locator, eAM_Read, eOM_Text);
-  while (!feof(file))
+  iFile* file = VFS::Get()->Open(locator, eAM_Read, eOM_Text);
+  if (!file)
+  {
+    return nullptr;
+  }
+  while (!file->IsEOF())
   {
     char buffer[2048];
-    size_t read = fread(buffer, sizeof(char), 2048, file);
+    Size read = file->Read(sizeof(char), 2048, buffer);
     buffer[read] = '\0';
     source += buffer;
   }
-  fclose(file);
+  file->Close();
 
   std::cout << "Orig source:" << std::endl << source << std::endl;
 
@@ -136,11 +140,16 @@ iObject* GL4ShaderLoader::Load(const Class* cls, const ResourceLocator& locator)
 {
 
   XMLDocument doc;
-  FILE* file = VFS::Get()->Open(locator, eAM_Read, eOM_Text);
+  iFile* file = VFS::Get()->Open(locator, eAM_Read, eOM_Text);
+  if (!file)
+  {
+    return nullptr;
+  }
+
   char buffer[2048];
-  size_t read = fread(buffer, sizeof(char), 2048, file);
+  Size read = file->Read(sizeof(char), 2048, buffer);
   buffer[read] = '\0';
-  fclose(file);
+  file->Close();
 
 
   GL4Program* program = new GL4Program();

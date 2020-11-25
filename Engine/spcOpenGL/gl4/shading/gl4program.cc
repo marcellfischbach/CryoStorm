@@ -1,5 +1,7 @@
 #include <spcOpenGL/gl4/shading/gl4program.hh>
 #include <spcOpenGL/gl4/shading/gl4shader.hh>
+#include <spcOpenGL/gl4/shading/gl4shaderattribute.hh>
+#include <spcOpenGL/gl4/shading/gl4shaderattributenull.hh>
 #include <spcOpenGL/gl4/gl4exceptions.hh>
 #include <GL/glew.h>
 
@@ -77,6 +79,9 @@ void GL4Program::Link()
     buffer[length] = '\0';
     throw GL4ProgramLinkException(std::string(buffer));
   }
+
+  m_attributes.clear();
+  RegisterRenderAttributes();
 }
 
 UInt32 GL4Program::GetName() const
@@ -85,25 +90,70 @@ UInt32 GL4Program::GetName() const
 }
 
 
+void GL4Program::RegisterRenderAttributes()
+{
+
+}
+
 UInt32 GL4Program::RegisterAttribute(const std::string& attributeName)
 {
-  return 0;
+  for (UInt32 i = 0; i < m_attributes.size(); i++)
+  {
+    if (m_attributes[i]->GetName() == attributeName)
+    {
+      return i;
+    }
+  }
+
+  std::string locationName = "spc_" + attributeName;
+  GLint location = glGetUniformLocation(m_name, locationName.c_str());
+  iShaderAttribute* attribute = nullptr;
+  if (location != -1) 
+  {
+    attribute = new GL4ShaderAttribute(location, attributeName);
+  }
+  else
+  {
+    attribute = new GL4ShaderAttributeNull(attributeName);
+  }
+  m_attributes.push_back(attribute);
+  return m_attributes.size() - 1;
 }
 
 UInt32 GL4Program::GetAttributeId(const std::string& attributeName)
 {
-  return 0;
+  for (UInt32 i = 0; i < m_attributes.size(); i++)
+  {
+    if (m_attributes[i]->GetName() == attributeName)
+    {
+      return i;
+    }
+  }
+
+  return ~0x00;
 }
 
 
 iShaderAttribute* GL4Program::GetShaderAttribute(UInt32 id)
 {
-  return nullptr;
+  if (id >= m_attributes.size())
+  {
+    return nullptr;
+  }
+  return m_attributes[id];;
 }
 
 
 iShaderAttribute* GL4Program::GetShaderAttribute(const std::string& attributeName)
 {
+  for (UInt32 i = 0; i < m_attributes.size(); i++)
+  {
+    iShaderAttribute* attribute = m_attributes[i];
+    if (attribute->GetName() == attributeName)
+    {
+      return attribute;
+    }
+  }
   return nullptr;
 }
 

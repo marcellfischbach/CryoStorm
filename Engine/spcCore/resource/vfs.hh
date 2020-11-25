@@ -3,24 +3,15 @@
 #pragma once
 
 #include <spcCore/coreexport.hh>
+#include <spcCore/resource/eaccessmode.hh>
+#include <spcCore/resource/eopenmode.hh>
+#include <spcCore/resource/ifile.hh>
 #include <string>
 
 namespace spc
 {
 
 
-enum eOpenMode
-{
-  eOM_Text,
-  eOM_Binary,
-};
-
-enum eAccessMode
-{
-  eAM_Read,
-  eAM_ReadWrite,
-  eAM_Append,
-};
 
 class ResourceLocator;
 class SPC_CORE_API VFS
@@ -30,7 +21,8 @@ public:
   void SetBasePath(const std::string& basePath);
   const std::string& GetBasePath() const;
 
-  FILE* Open(const ResourceLocator& resourceLocator, eAccessMode accessMode, eOpenMode openMode);
+  iFile* Open(const ResourceLocator& resourceLocator, eAccessMode accessMode, eOpenMode openMode);
+  iFile* File(const ResourceLocator& resourceLocator);
 
 private:
   VFS();

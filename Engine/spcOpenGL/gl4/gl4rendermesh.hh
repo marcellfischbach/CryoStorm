@@ -25,7 +25,7 @@ public:
 
 
 
-  virtual void Render(iGraphics * graphics, eRenderPass pass);
+  virtual void Render(iDevice * graphics, eRenderPass pass);
 
 private:
 

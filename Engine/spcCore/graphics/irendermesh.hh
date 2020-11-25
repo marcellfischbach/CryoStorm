@@ -13,7 +13,7 @@
 namespace spc
 {
 
-struct iGraphics;
+struct iDevice;
 
 SPC_CLASS()
 struct SPC_CORE_API iRenderMesh : public SPC_SUPER(iObject)
@@ -21,7 +21,7 @@ struct SPC_CORE_API iRenderMesh : public SPC_SUPER(iObject)
   SPC_CLASS_GEN;
   virtual ~iRenderMesh() { }
 
-  virtual void Render(iGraphics* graphics, eRenderPass pass) = 0;
+  virtual void Render(iDevice* graphics, eRenderPass pass) = 0;
 };
 
 

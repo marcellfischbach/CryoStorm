@@ -26,17 +26,28 @@ bool PngLoader::CanLoad(const Class* cls, const ResourceLocator& locator) const
 #define PNGSIGSIZE 8
 
 
+void read_data_from_i_file(png_structp png_ptr, png_bytep buffer, png_size_t size)
+{
+  png_voidp io_ptr = png_get_io_ptr(png_ptr);
+  if (io_ptr == nullptr)
+  {
+    return; 
+  }
+
+  iFile* file = reinterpret_cast<iFile*>(io_ptr);
+  file->Read(1, size, buffer);
+}
+
 
 iObject* PngLoader::Load(const Class* cls, const ResourceLocator& locator) const
 {
-  FILE* fp = VFS::Get()->Open(locator, eAM_Read, eOM_Binary);
+  iFile* fp = VFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (!fp)
   {
     return nullptr;
   }
-
   png_byte pngsig[PNGSIGSIZE];
-  fread(pngsig, 1, 8, fp);
+  fp->Read(1, PNGSIGSIZE, pngsig);
   int is_png = png_sig_cmp(pngsig, 0, PNGSIGSIZE);
   if (is_png != 0)
   {
@@ -49,7 +60,7 @@ iObject* PngLoader::Load(const Class* cls, const ResourceLocator& locator) const
 
   setjmp(png_jmpbuf(png_ptr));
 
-  png_init_io(png_ptr, fp);
+  png_set_read_fn(png_ptr, fp, read_data_from_i_file);
   png_set_sig_bytes(png_ptr, 8);
   png_read_info(png_ptr, info_ptr);
 
@@ -57,7 +68,6 @@ iObject* PngLoader::Load(const Class* cls, const ResourceLocator& locator) const
   UInt32 height = png_get_image_height(png_ptr, info_ptr);
   UInt8 color_type = png_get_color_type(png_ptr, info_ptr);
   UInt8 bit_depth = png_get_bit_depth(png_ptr, info_ptr);
-  std::cout << "Image: " << width << "x" << height << "  Color: " << std::hex << color_type << "   BPP: " << std::hex << bit_depth << std::endl;
 
   ePixelFormat imageFormat;
   UInt8 bpp = 0;
@@ -97,7 +107,8 @@ iObject* PngLoader::Load(const Class* cls, const ResourceLocator& locator) const
   // convert row by row and delete the buffer
   for (UInt32 y = 0; y < height; y++)
   {
-    png_bytep ptr = row_pointers[y];
+    Size rowId = height - y - 1;
+    png_bytep ptr = row_pointers[rowId];
     switch (color_type)
     {
     case PNG_COLOR_TYPE_GRAY:
@@ -109,8 +120,8 @@ iObject* PngLoader::Load(const Class* cls, const ResourceLocator& locator) const
     case PNG_COLOR_TYPE_GA:
       for (UInt32 x = 0; x < width; x++)
       {
-        *iptr++ = ptr[x*2+0];
-        *iptr++ = ptr[x*2+1];
+        *iptr++ = ptr[x * 2 + 0];
+        *iptr++ = ptr[x * 2 + 1];
       }
       break;
     case PNG_COLOR_TYPE_RGB:
@@ -132,7 +143,7 @@ iObject* PngLoader::Load(const Class* cls, const ResourceLocator& locator) const
       break;
     }
 
-    delete[] row_pointers[y];
+    delete[] row_pointers[rowId];
   }
   delete[] row_pointers;
   row_pointers = nullptr;
@@ -141,6 +152,8 @@ iObject* PngLoader::Load(const Class* cls, const ResourceLocator& locator) const
   img->Copy(0, image_buffer);
   delete[] image_buffer;
 
+  
+  fp->Close();
   return img;
 }
 

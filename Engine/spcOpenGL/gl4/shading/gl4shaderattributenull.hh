@@ -8,10 +8,10 @@ namespace spc
 {
 
 
-class GL4ShaderAttribute : public iShaderAttribute
+class GL4ShaderAttributeNull : public iShaderAttribute
 {
 public:
-	GL4ShaderAttribute(GLint location, const std::string &name);
+	GL4ShaderAttributeNull(const std::string &name);
 
 	const std::string& GetName() const override;
 
@@ -34,9 +34,6 @@ public:
 	void Bind(const Matrix4f& v) override;
 
 private:
-	GLint m_location;
-	GLint m_arrayIndex;
-	GLint m_absLocation;
 	std::string m_name;
 };
 

@@ -6,10 +6,11 @@
 #include <spcCore/coremodule.hh>
 #include <spcCore/input/input.hh>
 #include <spcCore/objectregistry.hh>
-#include <spcCore/graphics/igraphics.hh>
+#include <spcCore/graphics/idevice.hh>
 #include <spcCore/graphics/image.hh>
 #include <spcCore/graphics/irendermesh.hh>
 #include <spcCore/graphics/shading/ishader.hh>
+#include <spcCore/graphics/shading/ishaderattribute.hh>
 #include <spcCore/resource/assetmanager.hh>
 #include <spcCore/resource/vfs.hh>
 
@@ -188,11 +189,22 @@ int main(int argc, char** argv)
     return -1;
   }
 
+  spc::iDevice* graphics = spc::ObjectRegistry::Get<spc::iDevice>();
+
   spc::iShader* shader = spc::AssetManager::Get()->Load<spc::iShader>(spc::ResourceLocator("testprogram.xml"));
+  spc::UInt32 diffuseId = shader->RegisterAttribute("Diffuse");
 
-  spc::Image* image = spc::AssetManager::Get()->Load<spc::Image>(spc::ResourceLocator("colors.png"));
+  spc::Image* image = spc::AssetManager::Get()->Load<spc::Image>(spc::ResourceLocator("2k_earth_daymap.png"));
+  printf("Image: %p\n", image);
 
-  spc::iGraphics* graphics = spc::ObjectRegistry::Get<spc::iGraphics>();
+  spc::iTexture2D::Descriptor desc;
+  desc.Format = image->GetPixelFormat();
+  desc.Width = image->GetWidth();
+  desc.Height = image->GetHeight();
+  desc.MipMaps = false;
+  spc::iTexture2D* texture = graphics->CreateTexture(desc);
+  texture->Data(0, image);
+
 
 
   //
@@ -203,6 +215,11 @@ int main(int argc, char** argv)
   position.push_back(spc::Vector3f(-0.5f, 0.5f, 0.0f));
   position.push_back(spc::Vector3f(0.5f, -0.5f, 0.0f));
   position.push_back(spc::Vector3f(0.5f, 0.5f, 0.0f));
+  std::vector<spc::Vector2f> uv;
+  uv.push_back(spc::Vector2f(0.0f, 0.0f));
+  uv.push_back(spc::Vector2f(0.0f, 1.0f));
+  uv.push_back(spc::Vector2f(1.0f, 0.0f));
+  uv.push_back(spc::Vector2f(1.0f, 1.0f));
   std::vector<spc::UInt32> indices;
   indices.push_back(0);
   indices.push_back(1);
@@ -218,6 +235,7 @@ int main(int argc, char** argv)
   generator->SetVertices(position);
   generator->SetIndices(indices);
   generator->SetColors(colors);
+  generator->SetUV0(uv);
   spc::iRenderMesh* renderMesh = generator->Generate();
   generator->Release();
 
@@ -239,6 +257,9 @@ int main(int argc, char** argv)
     glViewport(0, 0, 1024, 768);
     graphics->Clear(true, spc::Color4f(0.5f, 0.0, 0.0, 0.0f), true, 1.0f, false, 0);
     graphics->SetShader(shader);
+    graphics->ResetTextures();
+    spc::eTextureUnit tu = graphics->BindTexture(texture);
+    shader->GetShaderAttribute(diffuseId)->Bind(tu);
     renderMesh->Render(graphics, spc::eRP_Forward);
 
     SDL_GL_SwapWindow(wnd);

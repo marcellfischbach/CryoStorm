@@ -8,14 +8,17 @@ set(SOURCES
         openglmodule.cc
         openglmodule.hh
 
+        gl4/gl4device.cc
+        gl4/gl4device.hh
 		gl4/gl4exceptions.cc
 		gl4/gl4exceptions.hh
-        gl4/gl4graphics.cc
-        gl4/gl4graphics.hh
         gl4/gl4indexbuffer.cc
         gl4/gl4indexbuffer.hh
+        gl4/gl4pixelformatmap.hh
         gl4/gl4rendermesh.cc
         gl4/gl4rendermesh.hh
+        gl4/gl4texture2d.cc
+        gl4/gl4texture2d.hh
         gl4/gl4vertexbuffer.cc
         gl4/gl4vertexbuffer.hh
 
@@ -29,6 +32,8 @@ set(SOURCES
 		gl4/shading/gl4shader.hh
 		gl4/shading/gl4shaderattribute.cc
 		gl4/shading/gl4shaderattribute.hh
+		gl4/shading/gl4shaderattributenull.cc
+		gl4/shading/gl4shaderattributenull.hh
 		gl4/shading/gl4shadertype.hh
         )
 

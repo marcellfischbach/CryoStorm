@@ -4,6 +4,10 @@
 #include <cstdint>
 
 
+//
+// Meta information for SPC_CLASS definitions
+//  NoInstance - Prevent the spcMOC from implementing CreateInstance 
+
 #define SPC_CLASS(...)
 #define SPC_CLASS(...)
 #define SPC_SUPER(Cls) Cls

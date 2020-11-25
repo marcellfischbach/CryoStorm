@@ -23,6 +23,7 @@ public:
   UInt16 GetNumberOfLayers() const;
   UInt16 GetWidth(UInt16 layer = 0) const;
   UInt16 GetHeight(UInt16 layer = 0) const;
+  const UInt8* GetData(UInt16 layer = 0) const;
   ePixelFormat GetPixelFormat() const;
 
 

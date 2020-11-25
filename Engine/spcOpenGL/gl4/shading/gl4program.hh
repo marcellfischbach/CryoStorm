@@ -37,10 +37,13 @@ public:
 
 
 private:
+	void RegisterRenderAttributes();
+
 	UInt32 m_name;
 
 	std::vector<GL4Shader*> m_shaders;
 
+	std::vector<iShaderAttribute*> m_attributes;
 
 };
 

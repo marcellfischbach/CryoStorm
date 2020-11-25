@@ -1,6 +1,7 @@
 
 #include <spcCore/resource/vfs.hh>
 #include <spcCore/resource/resourcelocator.hh>
+#include <spcCore/resource/filesystemfile.hh>
 
 namespace spc
 {
@@ -27,33 +28,27 @@ const std::string& VFS::GetBasePath() const
   return m_basePath;
 }
 
-FILE* VFS::Open(const ResourceLocator& resourceLocator, eAccessMode accessMode, eOpenMode openMode)
+
+
+iFile* VFS::Open(const ResourceLocator& resourceLocator, eAccessMode accessMode, eOpenMode openMode)
 {
-  std::string flag;
-
-  switch (accessMode)
+  iFile* file = File(resourceLocator);
+  if (!file)
   {
-  case eAM_Read:
-    flag += "r";
-    break;
-  case eAM_ReadWrite:
-    flag += "w";
-    break;
-  case eAM_Append:
-    flag += "a";
-    break;
+    return nullptr;
   }
-
-  switch (openMode)
+  if (!file->Open(accessMode, openMode))
   {
-  case eOM_Binary:
-    flag += "b";
-    break;
-  case eOM_Text:
-    flag += "t";
+    file->Release();
+    return nullptr;
   }
+  return file;
+}
 
-  return fopen((m_basePath + "/" + resourceLocator.GetLocator()).c_str(), flag.c_str());
+
+iFile* VFS::File(const ResourceLocator& resourceLocator)
+{
+  return new FileSystemFile(m_basePath + "/" + resourceLocator.GetLocator());
 }
 
 }

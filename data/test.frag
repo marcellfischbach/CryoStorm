@@ -9,6 +9,6 @@ in vec2 texCoord;
 
 void main()
 {
-  spc_FragColor = texture(spc_Diffuse, texCoord) * color;
+  spc_FragColor = texture(spc_Diffuse, texCoord);
 }
 
