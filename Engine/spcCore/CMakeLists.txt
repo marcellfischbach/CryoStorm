@@ -23,6 +23,7 @@ set(SOURCES
         graphics/edatatype.hh
         graphics/epixelformat.hh
         graphics/eprimitivetype.hh
+        graphics/erenderpass.hh
         graphics/etextureunit.hh
         graphics/etexturetype.hh
         graphics/evertexstream.hh
@@ -40,7 +41,12 @@ set(SOURCES
         graphics/vertexdeclaration.cc
         graphics/vertexdeclaration.hh
         graphics/renderattribute.hh
-        graphics/renderpass.hh
+
+        graphics/material/ematerialattributetype.hh
+        graphics/material/material.cc
+        graphics/material/material.hh
+        graphics/material/materialinstance.cc
+        graphics/material/materialinstance.hh
         graphics/shading/ishader.hh
         graphics/shading/ishaderattribute.hh
 

@@ -12,6 +12,8 @@ enum eRenderPass
   eRP_Forward,
   eRP_ShadowPSSM,
   eRP_ShadowCube,
+
+  eRP_COUNT
 };
 
 }

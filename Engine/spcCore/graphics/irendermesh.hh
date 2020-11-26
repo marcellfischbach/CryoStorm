@@ -7,7 +7,7 @@
 #include <spcCore/math/vector2f.hh>
 #include <spcCore/math/vector3f.hh>
 #include <spcCore/math/color4f.hh>
-#include <spcCore/graphics/renderpass.hh>
+#include <spcCore/graphics/erenderpass.hh>
 #include <vector>
 
 namespace spc
