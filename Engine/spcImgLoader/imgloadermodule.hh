@@ -1,19 +1,19 @@
 
 #pragma once
 
-#include <spcPngLoader/pngloaderexport.hh>
+#include <spcImgLoader/imgloaderexport.hh>
 
 namespace spc
 {
 
-class SPC_PNGLOADER_API PngLoaderModule
+class SPC_IMGLOADER_API ImgLoaderModule
 {
 public:
   static bool Register(int argc, char** argv);
   static bool Initialize(int argc, char** argv);
 
 private:
-  PngLoaderModule() { }
+  ImgLoaderModule() { }
 };
 
 }

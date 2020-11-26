@@ -24,6 +24,8 @@ public:
   Size Write(Size elementSize, Size elementCount, const void* buffer) override;
   void Close() override;
 
+  FILE* GetHandle() const;
+
 private:
   std::string m_path;
   FILE* m_file;

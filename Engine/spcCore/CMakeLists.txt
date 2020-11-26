@@ -15,6 +15,8 @@ set(SOURCES
         coremodule.hh
         objectregistry.cc
         objectregistry.hh
+        string.cc
+        string.hh
         types.hh
 
         graphics/ebufferusage.hh

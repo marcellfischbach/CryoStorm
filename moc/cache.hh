@@ -33,6 +33,7 @@ public:
 
   bool NeedRevalidation(const std::string& filename) const;
   bool HaveUntouched() const;
+  size_t RemoveAllUntouched();
   const std::map<std::string, Data>& GetFileCache() const;
 
 private:

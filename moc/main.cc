@@ -86,11 +86,11 @@ void put_classes_to_cache(spc::moc::Cache& cache, const std::string& sourceName,
 }
 
 void generate(
-  spc::moc::Cache * cache,
-  const std::string & input,
-  const std::string & outputHeader,
-  const std::string & outputSource,
-  const std::string & exp)
+  spc::moc::Cache* cache,
+  const std::string& input,
+  const std::string& outputHeader,
+  const std::string& outputSource,
+  const std::string& exp)
 {
 
   spc::moc::SourceFile sourceFile;
@@ -132,11 +132,11 @@ void generate(
     }
     //    ns->DebugNode(0);
   }
-  catch (spc::moc::ParseException & e)
+  catch (spc::moc::ParseException& e)
   {
     std::cout << "Parse Exception: [" << e.GetFile() << "@" << e.GetLine() << "] '" << e.GetMessage() << "' in " << input << std::endl;
   }
-  catch (std::exception & ex)
+  catch (std::exception& ex)
   {
     std::cout << "Unhandled exception '" << ex.what() << "' in " << input << std::endl;
   }
@@ -168,23 +168,76 @@ bool compareChar(const char& c1, const char& c2)
 /*
  * Case Insensitive String Comparision
  */
-bool equalsCI(const std::string & str1, const std::string & str2)
+bool equalsCI(const std::string& str1, const std::string& str2)
 {
   return ((str1.size() == str2.size()) &&
     std::equal(str1.begin(), str1.end(), str2.begin(), &compareChar));
 }
 
+std::vector<std::string> read_all_filenames(const std::string& spicemoc)
+{
+  std::vector<std::string> all_filenames;
+  std::ifstream stream(spicemoc);
+  std::string filename;
+  while (std::getline(stream, filename))
+  {
+    all_filenames.push_back(filename);
+  }
+  return all_filenames;
+}
 
-void generate_list(const std::string & path, const std::string & exp, const std::string & prefix)
+void scan_directory(const std::filesystem::path& root, const std::filesystem::path& path, std::vector<std::string>& result)
+{
+//  std::cout << "scan_directory: " << path.string() << std::endl;
+  for (std::filesystem::path child : std::filesystem::directory_iterator(path))
+  {
+    if (std::filesystem::is_directory(child))
+    {
+      scan_directory(root, child, result);
+    }
+    else
+    {
+      std::string ext = child.extension().string();
+      if (equalsCI(ext, ".h") ||
+        equalsCI(ext, ".hh") ||
+        equalsCI(ext, ".hpp") ||
+        equalsCI(ext, ".hxx") ||
+        equalsCI(ext, ".c") ||
+        equalsCI(ext, ".cc") ||
+        equalsCI(ext, ".cpp") ||
+        equalsCI(ext, ".cxx")
+        ) {
+        result.push_back(child.lexically_relative(root).string());
+      }
+    }
+  }
+  //std::cout << "scan_directory: " << path.string() << " -- done " << std::endl;
+}
+
+std::vector<std::string> scan_directory()
+{
+  std::vector<std::string> result;
+  std::filesystem::path path = std::filesystem::current_path();
+  scan_directory(path, path, result);
+  return result;
+}
+
+
+void generate_list(const std::string& path, const std::string& exp, const std::string& prefix)
 {
   spc::moc::Cache cache;
   cache.Load(path);
 
-  std::ifstream stream(path + "/.spicemoc");
-  std::string filename;
+  std::vector<std::string> all_filenames = read_all_filenames(path + "/.spicemoc");
+  std::vector<std::string> scanned_filenames = scan_directory();
+  //std::ifstream stream(path + "/.spicemoc");
+  //std::string filename;
   bool neededRevalidation = false;
-  while (std::getline(stream, filename))
+  for (std::string filename : scanned_filenames)
   {
+    //std::cout << "  " << filename << std::endl;
+    //    while (std::getline(stream, filename))
+    //  {
     size_t idx = filename.rfind('.');
     if (idx == std::string::npos)
     {
@@ -214,7 +267,7 @@ void generate_list(const std::string & path, const std::string & exp, const std:
           exp
         );
       }
-      catch (spc::moc::BaseException & e)
+      catch (spc::moc::BaseException& e)
       {
         std::cout << "Exception: [" << e.GetFile() << "@" << e.GetLine() << "] '" << e.GetMessage() << "' @ " << filename << std::endl;
       }
@@ -223,14 +276,12 @@ void generate_list(const std::string & path, const std::string & exp, const std:
         std::cout << "Unhandled exception in " << filename << std::endl;
       }
     }
-    else
-    {
-      cache.Touch(filename);
-    }
+    cache.Touch(filename);
   }
+  size_t removed_entries = cache.RemoveAllUntouched();
 
   std::filesystem::path masterPath(path + "/master.refl.cc");
-  if (neededRevalidation || cache.HaveUntouched() || !std::filesystem::exists(masterPath))
+  if (neededRevalidation || removed_entries != 0 || !std::filesystem::exists(masterPath))
   {
     spc::moc::MasterGenerator masterGenerator;
     FileOutput output(path + "/master.refl.cc");

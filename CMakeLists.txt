@@ -47,8 +47,10 @@ endif()
 
 find_package(OpenGL)
 find_package(PNG)
+find_package(JPEG)
 find_package(Bullet)
 #find_package(GLEW)
+
 
 
 include(${SpiceEngine_SOURCE_DIR}/Scripts/Findassimp.cmake)
@@ -57,9 +59,11 @@ include(${SpiceEngine_SOURCE_DIR}/Scripts/FindSDL2.cmake)
 #include(${SpiceEngine_SOURCE_DIR}/Scripts/FindPhysX3.cmake)
 #include(${SpiceEngine_SOURCE_DIR}/Scripts/FindBullet.cmake)
 
+
 include_directories("3rdparty")
 include_directories(${SDL_INCLUDE_DIR})
 include_directories(${PNG_INCLUDE_DIRS})
+include_directories(${JPEG_INCLUDE_DIRS})
 include_directories(${BULLET_INCLUDE_DIRS})
 include_directories(${SpiceEngine_SOURCE_DIR}/Engine)
 #include_directories(${SpiceEngine_BINARY_DIR}/Engine)

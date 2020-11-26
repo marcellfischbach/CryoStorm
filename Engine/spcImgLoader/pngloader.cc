@@ -1,5 +1,5 @@
 
-#include <spcPngLoader/pngloader.hh>
+#include <spcImgLoader/pngloader.hh>
 #include <iostream>
 #include <spcCore/resource/vfs.hh>
 #include <spcCore/graphics/image.hh>
@@ -11,16 +11,15 @@ namespace spc
 PngLoader::PngLoader()
 {
   SPC_CLASS_GEN_CONSTR;
+
+
 }
 
 
 bool PngLoader::CanLoad(const Class* cls, const ResourceLocator& locator) const
 {
-  if (cls->IsAssignableFrom<Image>())
-  {
-    return true;
-  }
-  return true;
+  return cls->IsAssignableFrom<Image>() 
+    && locator.GetExtension() == "PNG";
 }
 
 #define PNGSIGSIZE 8
@@ -41,6 +40,7 @@ void read_data_from_i_file(png_structp png_ptr, png_bytep buffer, png_size_t siz
 
 iObject* PngLoader::Load(const Class* cls, const ResourceLocator& locator) const
 {
+  std::cout << "Load png: " << locator.GetFilename() << std::endl;
   iFile* fp = VFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (!fp)
   {
@@ -55,9 +55,9 @@ iObject* PngLoader::Load(const Class* cls, const ResourceLocator& locator) const
     return nullptr;
   }
 
+
   png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0);
   png_infop info_ptr = png_create_info_struct(png_ptr);
-
   setjmp(png_jmpbuf(png_ptr));
 
   png_set_read_fn(png_ptr, fp, read_data_from_i_file);
@@ -152,7 +152,9 @@ iObject* PngLoader::Load(const Class* cls, const ResourceLocator& locator) const
   img->Copy(0, image_buffer);
   delete[] image_buffer;
 
-  
+  png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
+
+
   fp->Close();
   return img;
 }

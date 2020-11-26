@@ -101,5 +101,9 @@ void FileSystemFile::Close()
   }
 }
 
+FILE* FileSystemFile::GetHandle() const
+{
+  return m_file;
+}
 
 }

@@ -11,6 +11,7 @@
 namespace spc
 {
 
+
 SPC_CLASS()
 class SPC_OGL_API GL4Device : public SPC_SUPER(iDevice)
 {

@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <spcPngLoader/pngloaderexport.hh>
+#include <spcImgLoader/imgloaderexport.hh>
 #include <spcCore/resource/iassetloader.hh>
 
 namespace spc
@@ -9,7 +9,7 @@ namespace spc
 
 
 SPC_CLASS()
-class SPC_PNGLOADER_API PngLoader: public SPC_SUPER(iAssetLoader)
+class SPC_IMGLOADER_API PngLoader: public SPC_SUPER(iAssetLoader)
 {
   SPC_CLASS_GEN_OBJECT;
 public:
@@ -18,6 +18,7 @@ public:
   virtual bool CanLoad(const Class * cls, const ResourceLocator & locator) const;
 
   virtual iObject* Load(const Class * cls, const ResourceLocator & locator) const;
+
 
 };
 

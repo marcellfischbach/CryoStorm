@@ -142,6 +142,23 @@ void Cache::Touch(const std::string& filename)
   m_fileCache[filename] = data;
 }
 
+size_t Cache::RemoveAllUntouched()
+{
+  std::vector<std::string> delete_keys;
+  for (auto it = m_fileCache.begin(); it != m_fileCache.end(); it++)
+  {
+    if (!it->second.touched)
+    {
+      delete_keys.push_back(it->first);
+    }
+  }
+  for (auto key : delete_keys)
+  {
+    m_fileCache.erase(key);
+  }
+  return delete_keys.size();
+}
+
 bool Cache::NeedRevalidation(const std::string& filename) const
 {
   auto it = m_fileCache.find(filename);

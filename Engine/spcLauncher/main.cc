@@ -18,7 +18,7 @@
 #include <spcOpenGL/openglmodule.hh>
 #include <GL/glew.h>
 
-#include <spcPngLoader/pngloadermodule.hh>
+#include <spcImgLoader/imgloadermodule.hh>
 
 #include <iostream>
 #include <SDL.h>
@@ -123,7 +123,7 @@ int main(int argc, char** argv)
     }
   }
 
- 
+
   if (false)
   {
     return 0;
@@ -143,7 +143,7 @@ int main(int argc, char** argv)
     printf("Unable to register opengl\n");
     return -1;
   }
-  if (!spc::PngLoaderModule::Register(argc, argv))
+  if (!spc::ImgLoaderModule::Register(argc, argv))
   {
     printf("Unable to register png loader\n");
     return -1;
@@ -183,7 +183,7 @@ int main(int argc, char** argv)
     printf("Unable to initialize opengl\n");
     return -1;
   }
-  if (!spc::PngLoaderModule::Initialize(argc, argv))
+  if (!spc::ImgLoaderModule::Initialize(argc, argv))
   {
     printf("Unable to initialize png loader\n");
     return -1;
@@ -194,7 +194,11 @@ int main(int argc, char** argv)
   spc::iShader* shader = spc::AssetManager::Get()->Load<spc::iShader>(spc::ResourceLocator("testprogram.xml"));
   spc::UInt32 diffuseId = shader->RegisterAttribute("Diffuse");
 
-  spc::Image* image = spc::AssetManager::Get()->Load<spc::Image>(spc::ResourceLocator("2k_earth_daymap.png"));
+  spc::Image* image = spc::AssetManager::Get()->Load<spc::Image>(spc::ResourceLocator("2k_earth_daymap.jpg"));
+  if (!image)
+  {
+    image = spc::AssetManager::Get()->Load<spc::Image>(spc::ResourceLocator("snowflake_64.png"));
+  }
   printf("Image: %p\n", image);
 
   spc::iTexture2D::Descriptor desc;

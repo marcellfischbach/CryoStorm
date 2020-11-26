@@ -29,6 +29,6 @@ SPICE_MOC(spcLauncher spcLauncher)
 target_link_libraries(spcLauncher 
         spcCore
         spcOpenGL
-        spcPngLoader
+        spcImgLoader
         ${SDL_LIBRARY}
     )
