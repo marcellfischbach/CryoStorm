@@ -109,7 +109,7 @@ eTextureUnit GL4Device::ShiftTextureUnit()
 
 eTextureUnit GL4Device::BindTexture(iTexture* texture)
 {
-  if (m_nextTextureUnit == eTU_Invalid)
+  if (!texture ||m_nextTextureUnit == eTU_Invalid)
   {
     return eTU_Invalid;
   }

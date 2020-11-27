@@ -11,6 +11,8 @@
 #include <spcCore/graphics/irendermesh.hh>
 #include <spcCore/graphics/shading/ishader.hh>
 #include <spcCore/graphics/shading/ishaderattribute.hh>
+#include <spcCore/graphics/material/material.hh>
+#include <spcCore/graphics/material/materialinstance.hh>
 #include <spcCore/resource/assetmanager.hh>
 #include <spcCore/resource/vfs.hh>
 
@@ -192,7 +194,12 @@ int main(int argc, char** argv)
   spc::iDevice* graphics = spc::ObjectRegistry::Get<spc::iDevice>();
 
   spc::iShader* shader = spc::AssetManager::Get()->Load<spc::iShader>(spc::ResourceLocator("testprogram.xml"));
-  spc::UInt32 diffuseId = shader->RegisterAttribute("Diffuse");
+  shader->RegisterAttribute("Diffuse");
+  shader->RegisterAttribute("Color");
+
+  
+
+
 
   spc::Image* image = spc::AssetManager::Get()->Load<spc::Image>(spc::ResourceLocator("2k_earth_daymap.jpg"));
   if (!image)
@@ -209,6 +216,17 @@ int main(int argc, char** argv)
   spc::iTexture2D* texture = graphics->CreateTexture(desc);
   texture->Data(0, image);
 
+
+  spc::Material material;
+  material.SetShader(spc::eRP_Forward, shader);
+  material.RegisterAttribute("Diffuse");
+  material.RegisterAttribute("Color");
+  material.Set(material.IndexOf("Diffuse"), texture);
+  material.Set(material.IndexOf("Color"), spc::Color4f(1, 0, 1, 1));
+
+  spc::MaterialInstance instance;
+  instance.SetMaterial(&material);
+  instance.Set(instance.IndexOf("Color"), spc::Color4f(0, 1, 1, 1));
 
 
   //
@@ -260,10 +278,9 @@ int main(int argc, char** argv)
 
     glViewport(0, 0, 1024, 768);
     graphics->Clear(true, spc::Color4f(0.5f, 0.0, 0.0, 0.0f), true, 1.0f, false, 0);
-    graphics->SetShader(shader);
     graphics->ResetTextures();
-    spc::eTextureUnit tu = graphics->BindTexture(texture);
-    shader->GetShaderAttribute(diffuseId)->Bind(tu);
+
+    material.Bind(graphics, spc::eRP_Forward);
     renderMesh->Render(graphics, spc::eRP_Forward);
 
     SDL_GL_SwapWindow(wnd);

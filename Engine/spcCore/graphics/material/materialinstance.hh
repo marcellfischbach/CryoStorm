@@ -9,6 +9,7 @@
 #include <spcCore/graphics/erenderpass.hh>
 #include <spcCore/graphics/itexture.hh>
 #include <spcCore/graphics/material/ematerialattributetype.hh>
+#include <spcCore/graphics/material/material.hh>
 #include <spcCore/math/matrix.hh>
 #include <spcCore/math/vector.hh>
 #include <string>
@@ -27,6 +28,9 @@ public:
   MaterialInstance();
   virtual ~MaterialInstance();
 
+  bool Bind(iDevice * device, eRenderPass pass);
+
+
   void SetMaterial(Material * material);
   Material* GetMaterial();
   const Material* GetMaterial() const;
@@ -37,6 +41,7 @@ public:
   void Set(UInt16 idx, const Vector2f & v);
   void Set(UInt16 idx, const Vector3f & v);
   void Set(UInt16 idx, const Vector4f & v);
+  void Set(UInt16 idx, const Color4f& v);
   void Set(UInt16 idx, int value);
   void Set(UInt16 idx, const Matrix3f & m);
   void Set(UInt16 idx, const Matrix4f & m);
@@ -52,7 +57,7 @@ private:
   {
     bool Override;
     float Floats[16];
-    float Ints[4];
+    int Ints[4];
     iTexture* Texture;
   };
 

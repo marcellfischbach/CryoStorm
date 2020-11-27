@@ -27,7 +27,90 @@ Material::~Material()
     m_shader[i] = nullptr;
   }
 
+  for (auto attribute : m_attributes)
+  {
+    SPC_RELEASE(attribute.Texture);
+  }
 }
+
+bool Material::Bind(iDevice* device, eRenderPass pass)
+{
+  if (!BindShader(device, pass))
+  {
+    return false;
+  }
+  for (UInt16 i = 0, in = m_attributes.size(); i < in; ++i)
+  {
+    BindAttribute(device, pass, i);
+  }
+  return true;
+}
+
+bool Material::BindShader(iDevice* device, eRenderPass pass)
+{
+  iShader* shader = m_shader[pass];
+  if (!shader)
+  {
+    return false;
+  }
+
+  device->SetShader(shader);
+  return true;
+}
+
+
+void Material::BindAttribute(iDevice* device, eRenderPass pass, UInt16 idx)
+{
+  Attribute& attr = m_attributes[idx];
+  BindAttribute(device, pass, idx, attr.Floats, attr.Ints, attr.Texture);
+}
+
+void Material::BindAttribute(iDevice *device, eRenderPass pass, UInt16 idx, float *floats, int* ints, iTexture*texture)
+{
+  Attribute& attribute = m_attributes[idx];
+  iShaderAttribute* shaderAttribute = attribute.Attributes[pass];
+  if (shaderAttribute)
+  {
+    switch (attribute.Type)
+    {
+    case eMAT_Float:
+      shaderAttribute->Bind(floats[0]);
+      break;
+    case eMAT_Vec2:
+      shaderAttribute->Bind(*reinterpret_cast<Vector2f*>(floats));
+      break;
+    case eMAT_Vec3:
+      shaderAttribute->Bind(*reinterpret_cast<Vector3f*>(floats));
+      break;
+    case eMAT_Vec4:
+      shaderAttribute->Bind(*reinterpret_cast<Vector4f*>(floats));
+      break;
+    case eMAT_Int:
+      shaderAttribute->Bind(ints[0]);
+      break;
+    case eMAT_IVec2:
+    case eMAT_IVec3:
+    case eMAT_IVec4:
+      // TODO: Need integer based vectors
+      break;
+    case eMAT_Matrix3:
+      shaderAttribute->Bind(*reinterpret_cast<Matrix3f*>(floats));
+      break;
+    case eMAT_Matrix4:
+      shaderAttribute->Bind(*reinterpret_cast<Matrix4f*>(floats));
+      break;
+    case eMAT_Texture:
+      eTextureUnit unit = device->BindTexture(texture);
+      if (unit != eTU_Invalid)
+      {
+        shaderAttribute->Bind(unit);
+      }
+      break;
+    }
+  }
+}
+
+
 
 void Material::SetShader(eRenderPass pass, iShader* shader)
 {
@@ -49,18 +132,21 @@ const iShader* Material::GetShader(eRenderPass pass) const
 
 
 
+
 void Material::RegisterAttribute(const std::string& attributeName)
 {
   Attribute attribute;
+  //memset(&attribute, 0, sizeof(Attribute));
   attribute.Name = attributeName;
+  attribute.Texture = nullptr;
   for (int i = 0; i < eRP_COUNT; ++i)
   {
     attribute.Attributes[i] = m_shader[i] ? m_shader[i]->GetShaderAttribute(attributeName) : nullptr;
   }
   attribute.Type = eMAT_Undefined;
+  m_attributes.push_back(attribute);
 }
 
-UInt16 Material::GetN
 
 void Material::UpdateShaderAttributes(eRenderPass pass)
 {
@@ -143,6 +229,20 @@ void Material::Set(UInt16 idx, const Vector4f& v)
   attr.Floats[1] = v.y;
   attr.Floats[2] = v.z;
   attr.Floats[3] = v.w;
+}
+
+void Material::Set(UInt16 idx, const Color4f& v)
+{
+  if (idx >= m_attributes.size())
+  {
+    return;
+  }
+  Attribute& attr = m_attributes[idx];
+  attr.Type = eMAT_Vec4;
+  attr.Floats[0] = v.r;
+  attr.Floats[1] = v.g;
+  attr.Floats[2] = v.b;
+  attr.Floats[3] = v.a;
 }
 
 

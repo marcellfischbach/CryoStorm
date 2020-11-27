@@ -7,8 +7,10 @@
 #include <spcCore/class.hh>
 #include <spcCore/types.hh>
 #include <spcCore/graphics/erenderpass.hh>
+#include <spcCore/graphics/idevice.hh>
 #include <spcCore/graphics/itexture.hh>
 #include <spcCore/graphics/material/ematerialattributetype.hh>
+#include <spcCore/math/color4f.hh>
 #include <spcCore/math/matrix.hh>
 #include <spcCore/math/vector.hh>
 #include <string>
@@ -24,12 +26,16 @@ struct iTexture;
 SPC_CLASS()
 class SPC_CORE_API Material : public SPC_SUPER(iObject)
 {
+  friend class MaterialInstance;
   SPC_CLASS_GEN_OBJECT;
 public:
   static const UInt16 UndefinedIndex = ~0x00;
 
   Material();
   virtual ~Material();
+
+  bool Bind(iDevice * device, eRenderPass pass);
+
 
   void SetShader(eRenderPass pass, iShader * shader);
   iShader* GetShader(eRenderPass pass);
@@ -46,13 +52,17 @@ public:
   void Set(UInt16 idx, const Vector2f & v);
   void Set(UInt16 idx, const Vector3f & v);
   void Set(UInt16 idx, const Vector4f & v);
+  void Set(UInt16 idx, const Color4f & v);
   void Set(UInt16 idx, int value);
   void Set(UInt16 idx, const Matrix3f & m);
   void Set(UInt16 idx, const Matrix4f & m);
   void Set(UInt16 idx, iTexture * texture);
 
-private:
 
+private:
+  bool BindShader(iDevice * device, eRenderPass pass);
+  void BindAttribute(iDevice * device, eRenderPass pass, UInt16 idx);
+  void BindAttribute(iDevice * device, eRenderPass pass, UInt16 idx, float* floats, int* ints, iTexture * texture);
   void UpdateShaderAttributes(eRenderPass pass);
 
   struct Attribute
@@ -61,7 +71,7 @@ private:
     std::string Name;
     eMaterialAttributeType Type;
     float Floats[16];
-    float Ints[4];
+    int Ints[4];
     iTexture* Texture;
   };
 
