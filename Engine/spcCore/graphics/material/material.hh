@@ -24,14 +24,21 @@ struct iTexture;
 SPC_CLASS()
 class SPC_CORE_API Material : public SPC_SUPER(iObject)
 {
+  SPC_CLASS_GEN_OBJECT;
 public:
-  const UInt16 UndefinedIndex = ~0x00;
+  static const UInt16 UndefinedIndex = ~0x00;
 
   Material();
   virtual ~Material();
 
-  void RegisterAttribute(const std::string & attributeName);
+  void SetShader(eRenderPass pass, iShader * shader);
+  iShader* GetShader(eRenderPass pass);
+  const iShader* GetShader(eRenderPass pass) const;
 
+  void RegisterAttribute(const std::string & attributeName);
+  UInt16 GetNumberOfAttributes() const;
+
+  std::vector<std::string> GetAttributeNames() const;
 
   UInt16 IndexOf(const std::string & attributeName);
 
@@ -46,7 +53,7 @@ public:
 
 private:
 
-
+  void UpdateShaderAttributes(eRenderPass pass);
 
   struct Attribute
   {
