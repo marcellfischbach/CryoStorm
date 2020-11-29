@@ -4,7 +4,7 @@
 #include <spcCore/coreexport.hh>
 #include <spcCore/class.hh>
 #include <spcCore/types.hh>
-#include <spcCore/graphics/renderattribute.hh>
+#include <spcCore/graphics/eshaderattribute.hh>
 #include <string>
 
 namespace spc
@@ -30,7 +30,7 @@ SPC_CLASS_GEN;
 
 	virtual iShaderAttribute* GetShaderAttribute(const std::string& attributeName) = 0;
 
-	virtual iShaderAttribute* GetShaderAttribute(eRenderAttribute renderAttribute) = 0;
+	virtual iShaderAttribute* GetShaderAttribute(eShaderAttribute shaderAttribute) = 0;
 
 };
 

@@ -43,10 +43,15 @@ set(SOURCES
         graphics/renderattribute.hh
 
         graphics/material/ematerialattributetype.hh
+        graphics/material/imaterial.hh
         graphics/material/material.cc
         graphics/material/material.hh
         graphics/material/materialinstance.cc
         graphics/material/materialinstance.hh
+
+        graphics/scene/scenemesh.cc
+        graphics/scene/scenemesh.hh
+
         graphics/shading/ishader.hh
         graphics/shading/ishaderattribute.hh
 

@@ -9,7 +9,7 @@ namespace spc
 
 
 MaterialInstance::MaterialInstance()
-  : iObject()
+  : iMaterial()
   , m_material(nullptr)
 {
   SPC_CLASS_GEN_CONSTR;
@@ -32,6 +32,7 @@ bool MaterialInstance::Bind(iDevice* device, eRenderPass pass)
     return false;
   }
 
+  device->ResetTextures();
   for (UInt16 i = 0, in = m_attributes.size(); i < in; i++)
   {
     Attribute& attribute = m_attributes[i];

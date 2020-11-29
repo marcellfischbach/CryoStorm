@@ -92,7 +92,18 @@ UInt32 GL4Program::GetName() const
 
 void GL4Program::RegisterRenderAttributes()
 {
-
+  RegisterAttribute("ModelMatrix");
+  RegisterAttribute("ViewMatrix");
+  RegisterAttribute("ProjectionMatrix");
+  RegisterAttribute("ModelViewMatrix");
+  RegisterAttribute("ViewProjectionMatrix");
+  RegisterAttribute("ModelViewProjectionMatrix");
+  RegisterAttribute("ModelMatrixInv");
+  RegisterAttribute("ViewMatrixInv");
+  RegisterAttribute("ProjectionMatrixInv");
+  RegisterAttribute("ModelViewMatrixInv");
+  RegisterAttribute("ViewProjectionMatrixInv");
+  RegisterAttribute("ModelViewProjectionMatrixInv");
 }
 
 UInt32 GL4Program::RegisterAttribute(const std::string& attributeName)
@@ -108,13 +119,9 @@ UInt32 GL4Program::RegisterAttribute(const std::string& attributeName)
   std::string locationName = "spc_" + attributeName;
   GLint location = glGetUniformLocation(m_name, locationName.c_str());
   iShaderAttribute* attribute = nullptr;
-  if (location != -1) 
+  if (location != -1)
   {
     attribute = new GL4ShaderAttribute(location, attributeName);
-  }
-  else
-  {
-    attribute = new GL4ShaderAttributeNull(attributeName);
   }
   m_attributes.push_back(attribute);
   return m_attributes.size() - 1;
@@ -124,7 +131,7 @@ UInt32 GL4Program::GetAttributeId(const std::string& attributeName)
 {
   for (UInt32 i = 0; i < m_attributes.size(); i++)
   {
-    if (m_attributes[i]->GetName() == attributeName)
+    if (m_attributes[i] && m_attributes[i]->GetName() == attributeName)
     {
       return i;
     }
@@ -149,7 +156,7 @@ iShaderAttribute* GL4Program::GetShaderAttribute(const std::string& attributeNam
   for (UInt32 i = 0; i < m_attributes.size(); i++)
   {
     iShaderAttribute* attribute = m_attributes[i];
-    if (attribute->GetName() == attributeName)
+    if (attribute && attribute->GetName() == attributeName)
     {
       return attribute;
     }
@@ -158,9 +165,9 @@ iShaderAttribute* GL4Program::GetShaderAttribute(const std::string& attributeNam
 }
 
 
-iShaderAttribute* GL4Program::GetShaderAttribute(eRenderAttribute renderAttribute)
+iShaderAttribute* GL4Program::GetShaderAttribute(eShaderAttribute shaderAttribute)
 {
-  return nullptr;
+  return m_attributes[shaderAttribute];
 }
 
 

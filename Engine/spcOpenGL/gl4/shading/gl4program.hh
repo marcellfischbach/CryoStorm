@@ -33,7 +33,7 @@ public:
 
 	virtual iShaderAttribute* GetShaderAttribute(const std::string& attributeName);
 
-	virtual iShaderAttribute* GetShaderAttribute(eRenderAttribute renderAttribute);
+	virtual iShaderAttribute* GetShaderAttribute(eShaderAttribute shaderAttribute);
 
 
 private:

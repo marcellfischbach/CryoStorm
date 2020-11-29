@@ -10,6 +10,7 @@
 #include <spcCore/graphics/idevice.hh>
 #include <spcCore/graphics/itexture.hh>
 #include <spcCore/graphics/material/ematerialattributetype.hh>
+#include <spcCore/graphics/material/imaterial.hh>
 #include <spcCore/math/color4f.hh>
 #include <spcCore/math/matrix.hh>
 #include <spcCore/math/vector.hh>
@@ -24,7 +25,7 @@ struct iTexture;
 
 
 SPC_CLASS()
-class SPC_CORE_API Material : public SPC_SUPER(iObject)
+class SPC_CORE_API Material : public SPC_SUPER(iMaterial)
 {
   friend class MaterialInstance;
   SPC_CLASS_GEN_OBJECT;
@@ -34,7 +35,7 @@ public:
   Material();
   virtual ~Material();
 
-  bool Bind(iDevice * device, eRenderPass pass);
+  bool Bind(iDevice * device, eRenderPass pass) override;
 
 
   void SetShader(eRenderPass pass, iShader * shader);
@@ -46,17 +47,17 @@ public:
 
   std::vector<std::string> GetAttributeNames() const;
 
-  UInt16 IndexOf(const std::string & attributeName);
+  UInt16 IndexOf(const std::string & attributeName) override;
 
-  void Set(UInt16 idx, float value);
-  void Set(UInt16 idx, const Vector2f & v);
-  void Set(UInt16 idx, const Vector3f & v);
-  void Set(UInt16 idx, const Vector4f & v);
-  void Set(UInt16 idx, const Color4f & v);
-  void Set(UInt16 idx, int value);
-  void Set(UInt16 idx, const Matrix3f & m);
-  void Set(UInt16 idx, const Matrix4f & m);
-  void Set(UInt16 idx, iTexture * texture);
+  void Set(UInt16 idx, float value) override;
+  void Set(UInt16 idx, const Vector2f & v) override;
+  void Set(UInt16 idx, const Vector3f & v) override;
+  void Set(UInt16 idx, const Vector4f & v) override;
+  void Set(UInt16 idx, const Color4f & v) override;
+  void Set(UInt16 idx, int value) override;
+  void Set(UInt16 idx, const Matrix3f & m) override;
+  void Set(UInt16 idx, const Matrix4f & m) override;
+  void Set(UInt16 idx, iTexture * texture) override;
 
 
 private:
