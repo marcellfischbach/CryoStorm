@@ -477,13 +477,10 @@ public:
   SPC_FORCEINLINE Matrix4f& SetLookAt(const Vector3f & eye, const Vector3f & spot, const Vector3f & up)
   {
     Vector3f xAxis, yAxis, zAxis;
-    Vector3f::Sub(eye, spot, zAxis).Normalize();
+
+    Vector3f::Sub(spot, eye, zAxis).Normalize();
     Vector3f::Cross(up, zAxis, xAxis).Normalize();
     Vector3f::Cross(zAxis, xAxis, yAxis);
-
-    Vector3f::Sub(spot, eye, yAxis).Normalize();
-    Vector3f::Cross(yAxis, up, xAxis).Normalize();
-    Vector3f::Cross(xAxis, yAxis, zAxis);
 
     SetXAxis(xAxis.x, yAxis.x, zAxis.x);
     SetYAxis(xAxis.y, yAxis.y, zAxis.y);
@@ -513,8 +510,54 @@ public:
     return *this;
   }
 
+  SPC_FORCEINLINE friend Matrix4f operator*(const Matrix4f& m0, const Matrix4f& m1)
+  {
+    float m00 = m0.m00 * m1.m00 + m0.m10 * m1.m01 + m0.m20 * m1.m02 + m0.m30 * m1.m03;
+    float m01 = m0.m01 * m1.m00 + m0.m11 * m1.m01 + m0.m21 * m1.m02 + m0.m31 * m1.m03;
+    float m02 = m0.m02 * m1.m00 + m0.m12 * m1.m01 + m0.m22 * m1.m02 + m0.m32 * m1.m03;
+    float m03 = m0.m03 * m1.m00 + m0.m13 * m1.m01 + m0.m23 * m1.m02 + m0.m33 * m1.m03;
+
+    float m10 = m0.m00 * m1.m10 + m0.m10 * m1.m11 + m0.m20 * m1.m12 + m0.m30 * m1.m13;
+    float m11 = m0.m01 * m1.m10 + m0.m11 * m1.m11 + m0.m21 * m1.m12 + m0.m31 * m1.m13;
+    float m12 = m0.m02 * m1.m10 + m0.m12 * m1.m11 + m0.m22 * m1.m12 + m0.m32 * m1.m13;
+    float m13 = m0.m03 * m1.m10 + m0.m13 * m1.m11 + m0.m23 * m1.m12 + m0.m33 * m1.m13;
+
+    float m20 = m0.m00 * m1.m20 + m0.m10 * m1.m21 + m0.m20 * m1.m22 + m0.m30 * m1.m23;
+    float m21 = m0.m01 * m1.m20 + m0.m11 * m1.m21 + m0.m21 * m1.m22 + m0.m31 * m1.m23;
+    float m22 = m0.m02 * m1.m20 + m0.m12 * m1.m21 + m0.m22 * m1.m22 + m0.m32 * m1.m23;
+    float m23 = m0.m03 * m1.m20 + m0.m13 * m1.m21 + m0.m23 * m1.m22 + m0.m33 * m1.m23;
+
+    float m30 = m0.m00 * m1.m30 + m0.m10 * m1.m31 + m0.m20 * m1.m32 + m0.m30 * m1.m33;
+    float m31 = m0.m01 * m1.m30 + m0.m11 * m1.m31 + m0.m21 * m1.m32 + m0.m31 * m1.m33;
+    float m32 = m0.m02 * m1.m30 + m0.m12 * m1.m31 + m0.m22 * m1.m32 + m0.m32 * m1.m33;
+    float m33 = m0.m03 * m1.m30 + m0.m13 * m1.m31 + m0.m23 * m1.m32 + m0.m33 * m1.m33;
+
+    return Matrix4f(
+      m00, m01, m02, m03,
+      m10, m11, m12, m13,
+      m20, m21, m22, m23,
+      m30, m31, m32, m33
+      );
+  }
 
 
+  SPC_FORCEINLINE friend Vector3f operator*(const Matrix4f& m, const Vector3f& v)
+  {
+    float x = m.m00 * v.x + m.m10 * v.y + m.m20 * v.z;
+    float y = m.m01 * v.x + m.m11 * v.y + m.m21 * v.z;
+    float z = m.m02 * v.x + m.m12 * v.y + m.m22 * v.z;
+    return Vector3f(x, y, z);
+  }
+
+
+  SPC_FORCEINLINE friend Vector4f operator*(const Matrix4f& m, const Vector4f& v)
+  {
+    float x = m.m00 * v.x + m.m10 * v.y + m.m20 * v.z + m.m30 * v.w;
+    float y = m.m01 * v.x + m.m11 * v.y + m.m21 * v.z + m.m31 * v.w;
+    float z = m.m02 * v.x + m.m12 * v.y + m.m22 * v.z + m.m32 * v.w;
+    float w = m.m03 * v.x + m.m13 * v.y + m.m23 * v.z + m.m33 * v.w;
+    return Vector4f(x, y, z, w);
+  }
 
 
   SPC_FORCEINLINE static Matrix4f& Mult(const Matrix4f & m0, const Matrix4f & m1, Matrix4f & r)
@@ -598,11 +641,11 @@ public:
   {
     if (message)
     {
-      printf("csMatrix: %s\n", message);
+      printf("spc::Matrix4f: %s\n", message);
     }
     else
     {
-      printf("csMatrix:\n");
+      printf("spc::Matrix4f:\n");
     }
 
     printf("  %f %f %f %f\n", m00, m01, m02, m03);

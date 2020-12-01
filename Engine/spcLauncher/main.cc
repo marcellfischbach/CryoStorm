@@ -5,10 +5,13 @@
 #include <spcLauncher/launchermodule.hh>
 #include <spcCore/coremodule.hh>
 #include <spcCore/input/input.hh>
+#include <spcCore/math/math.hh>
 #include <spcCore/objectregistry.hh>
+#include <spcCore/graphics/camera.hh>
 #include <spcCore/graphics/idevice.hh>
 #include <spcCore/graphics/image.hh>
 #include <spcCore/graphics/irendermesh.hh>
+#include <spcCore/graphics/projector.hh>
 #include <spcCore/graphics/shading/ishader.hh>
 #include <spcCore/graphics/shading/ishaderattribute.hh>
 #include <spcCore/graphics/material/material.hh>
@@ -192,7 +195,7 @@ int main(int argc, char** argv)
     return -1;
   }
 
-  spc::iDevice* graphics = spc::ObjectRegistry::Get<spc::iDevice>();
+  spc::iDevice* device = spc::ObjectRegistry::Get<spc::iDevice>();
 
   spc::iShader* shader = spc::AssetManager::Get()->Load<spc::iShader>(spc::ResourceLocator("testprogram.xml"));
   shader->RegisterAttribute("Diffuse");
@@ -214,7 +217,7 @@ int main(int argc, char** argv)
   desc.Width = image->GetWidth();
   desc.Height = image->GetHeight();
   desc.MipMaps = false;
-  spc::iTexture2D* texture = graphics->CreateTexture(desc);
+  spc::iTexture2D* texture = device->CreateTexture(desc);
   texture->Data(0, image);
 
 
@@ -234,10 +237,10 @@ int main(int argc, char** argv)
   // create a render mesh
   spc::iRenderMeshGenerator* generator = spc::ObjectRegistry::Get<spc::iRenderMeshGeneratorFactory>()->Create();
   std::vector<spc::Vector3f> position;
-  position.push_back(spc::Vector3f(-5.0f, -5.0f, 5.0f));
-  position.push_back(spc::Vector3f(-5.0f, 5.0f, 5.0f));
-  position.push_back(spc::Vector3f(5.0f, -5.0f, 5.0f));
-  position.push_back(spc::Vector3f(5.0f, 5.0f, 5.0f));
+  position.push_back(spc::Vector3f(-5.0f, -5.0f, 15.0f));
+  position.push_back(spc::Vector3f(-5.0f, 5.0f, 15.0f));
+  position.push_back(spc::Vector3f(5.0f, -5.0f, 15.0f));
+  position.push_back(spc::Vector3f(5.0f, 5.0f, 15.0f));
   std::vector<spc::Vector2f> uv;
   uv.push_back(spc::Vector2f(0.0f, 0.0f));
   uv.push_back(spc::Vector2f(0.0f, 1.0f));
@@ -267,20 +270,31 @@ int main(int argc, char** argv)
   sceneMesh->SetMesh(renderMesh);
   sceneMesh->SetMaterial(material);
 
+  int width, height;
+  SDL_GetWindowSize(wnd, &width, &height);
 
-
-  //spc::Matrix4f projection = graphics->GetPerspectiveProjection(-1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 100.0f, projection);
-  spc::Matrix4f projection = graphics->GetOrthographicProjection(-10.0f, 10.0f, -10.0f, 10.0f, -10.0f, 10.0f, projection);
-  graphics->SetProjectionMatrix(projection);
+  float aspect = (float)height / (float)width;
+  spc::Matrix4f projection = device->GetPerspectiveProjection(-1.0f, 1.0f, -aspect, aspect, 1.0f, 100.0f, projection);
+  //spc::Matrix4f projection = graphics->GetOrthographicProjection(-20.0f, 20.0f, -20.0f, 20.0f, -100.0f, 100.0f, projection);
+  device->SetProjectionMatrix(projection);
 
   spc::Matrix4f view;
-  view.SetLookAt(spc::Vector3f(10, 10, 10), spc::Vector3f(0, 0, 0), spc::Vector3f(0, 0, 1));
+  view.SetLookAt(spc::Vector3f(20, 20, 20), spc::Vector3f(0, 0, 0), spc::Vector3f(0, 1, 0));
+  device->SetViewMatrix(view);
 
+
+  spc::Camera* camera = new spc::Camera();
+  spc::Projector projector;
+  //camera->SetSpot(spc::Vector3f(0, 0, 0));
+  
+  
 
   float rot = 0.0f;
 
   while (true)
   {
+    projector.UpdatePerspective(3.1415f / 2.0f, aspect, 1.0f, 100.0f);
+
     SDL_GL_MakeCurrent(wnd, context);
     UpdateEvents();
 
@@ -290,15 +304,24 @@ int main(int argc, char** argv)
     }
 
     glViewport(0, 0, 1024, 768);
-    graphics->Clear(true, spc::Color4f(0.5f, 0.0, 0.0, 0.0f), true, 1.0f, false, 0);
+    device->Clear(true, spc::Color4f(0.5f, 0.0, 0.0, 0.0f), true, 1.0f, false, 0);
 
 
     spc::Matrix4f rotMatrix;
     rotMatrix.SetRotationY(rot);
-    rot += 0.01f;
-
     sceneMesh->SetModelMatrix(rotMatrix);
-    sceneMesh->Render(graphics, spc::eRP_Forward);
+
+
+    //camera->SetSpot(spc::Vector3f(0, 20 * -spc::spcCos(rot), 0.0f));
+    //camera->SetEye(spc::Vector3f(20, 20 * spc::spcCos(rot), 20.0f));
+    camera->Bind(device);
+
+    projector.UpdatePerspective(3.1415f / 2.0f, spc::spcCos(rot * 10.0f), 1.0f, 100.0f);
+    projector.Bind(device);
+
+    rot += 0.001f;
+
+    sceneMesh->Render(device, spc::eRP_Forward);
 
     SDL_GL_SwapWindow(wnd);
 

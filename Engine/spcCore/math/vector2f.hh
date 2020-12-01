@@ -94,6 +94,17 @@ public:
     return *this;
   }
 
+
+  SPC_FORCEINLINE Vector2f operator-() const
+  {
+    return Vector2f(-x, -y);
+  }
+
+  SPC_FORCEINLINE Vector2f operator+() const
+  {
+    return Vector2f(x, y);
+  }
+
   SPC_FORCEINLINE static Vector2f& Add(const Vector2f& v0, const Vector2f& v1, Vector2f& r)
   {
     r.x = v0.x + v1.x;

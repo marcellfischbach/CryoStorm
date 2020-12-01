@@ -69,6 +69,8 @@ public:
   }
 
 
+
+
   SPC_FORCEINLINE Vector2f AsVector2f() const
   {
     return Vector2f(x, y);
@@ -180,6 +182,18 @@ public:
     w /= v;
     return *this;
   }
+
+
+  SPC_FORCEINLINE Vector4f operator-() const
+  {
+    return Vector4f(-x, -y, -z, -w);
+  }
+
+  SPC_FORCEINLINE Vector4f operator+() const
+  {
+    return Vector4f(x, y, z, w);
+  }
+
 
   SPC_FORCEINLINE static Vector4f& Add(const Vector4f& v0, const Vector4f& v1, Vector4f& r)
   {

@@ -31,6 +31,17 @@ static SPC_FORCEINLINE float spcSin(float v)
   return ::sinf(v);
 }
 
+
+static SPC_FORCEINLINE double spcTan(double v)
+{
+  return ::tan(v);
+}
+
+static SPC_FORCEINLINE float spcTan(float v)
+{
+  return ::tanf(v);
+}
+
 static SPC_FORCEINLINE double spcAbs(double v)
 {
   return ::fabs(v);

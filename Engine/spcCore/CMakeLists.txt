@@ -19,10 +19,13 @@ set(SOURCES
         string.hh
         types.hh
 
+        graphics/camera.cc
+        graphics/camera.hh
         graphics/ebufferusage.hh
         graphics/edatatype.hh
         graphics/epixelformat.hh
         graphics/eprimitivetype.hh
+        graphics/eprojectionmode.hh
         graphics/erenderpass.hh
         graphics/eshaderattribute.hh
         graphics/etextureunit.hh
@@ -38,6 +41,8 @@ set(SOURCES
         graphics/itexture.hh
         graphics/itexture2d.hh
         graphics/ivertexbuffer.hh
+        graphics/projector.cc
+        graphics/projector.hh
         graphics/vertexdeclaration.cc
         graphics/vertexdeclaration.hh
 

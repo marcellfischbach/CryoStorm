@@ -153,6 +153,21 @@ public:
     return Vector3f(x - o.x, y - o.y, z - o.z);
   }
 
+  SPC_FORCEINLINE Vector3f operator-() const
+  {
+    return Vector3f(-x, -y, -z);
+  }
+
+  SPC_FORCEINLINE Vector3f operator+() const
+  {
+    return Vector3f(x, y, z);
+  }
+
+  SPC_FORCEINLINE friend Vector3f operator%(const Vector3f& v0, const Vector3f& v1)
+  {
+    return Vector3f(v0.y * v1.z - v0.z * v1.y, v0.z * v1.x - v0.x * v1.z, v0.x * v1.y - v0.y * v1.x);
+  }
+
   SPC_FORCEINLINE static Vector3f& Add(const Vector3f & v0, const Vector3f & v1, Vector3f & r)
   {
     r.x = v0.x + v1.x;
@@ -222,8 +237,18 @@ public:
     r.x = v0.x / v1;
     r.y = v0.y / v1;
     r.z = v0.z / v1;
+   
     return r;
   }
+
+  SPC_FORCEINLINE static Vector3f& Neg(const Vector3f& v0, Vector3f& r)
+  {
+    r.x = -v0.x;
+    r.y = -v0.y;
+    r.z = -v0.z;
+    return r;
+  }
+
 
   SPC_FORCEINLINE float Dot() const
   {
