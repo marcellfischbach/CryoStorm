@@ -3,6 +3,7 @@
 
 #include <spcCore/coreexport.hh>
 #include <spcCore/class.hh>
+#include <spcCore/math/matrix4f.hh>
 #include <spcCore/graphics/erenderpass.hh>
 
 namespace spc
@@ -28,6 +29,9 @@ public:
   iRenderMesh* GetMesh();
   const iRenderMesh* GetMesh() const;
 
+  void SetModelMatrix(const Matrix4f & modelMatrix);
+  const Matrix4f& GetModelMatrix() const;
+
   void Render(iDevice * device, eRenderPass pass);
 
 
@@ -35,6 +39,8 @@ private:
 
   iMaterial* m_material;
   iRenderMesh* m_mesh;
+
+  Matrix4f m_modelMatrix;
 
 };
 

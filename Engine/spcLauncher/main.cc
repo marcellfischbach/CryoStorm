@@ -269,8 +269,11 @@ int main(int argc, char** argv)
 
 
 
+  spc::Matrix4f projection = graphics->GetPerspectiveProjection(-1.0f, 1.0f, -1.0f, 1.0f, 0.1f, 100.0f, projection);
+  graphics->SetProjectionMatrix(projection);
 
 
+  float rot = 0.0f;
 
   while (true)
   {
@@ -285,9 +288,16 @@ int main(int argc, char** argv)
     glViewport(0, 0, 1024, 768);
     graphics->Clear(true, spc::Color4f(0.5f, 0.0, 0.0, 0.0f), true, 1.0f, false, 0);
 
+
+    spc::Matrix4f rotMatrix;
+    rotMatrix.SetRotationY(rot);
+    rot += 0.01f;
+
+    sceneMesh->SetModelMatrix(rotMatrix);
     sceneMesh->Render(graphics, spc::eRP_Forward);
 
     SDL_GL_SwapWindow(wnd);
+
   }
 
 

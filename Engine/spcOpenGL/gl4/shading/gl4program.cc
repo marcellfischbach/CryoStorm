@@ -110,7 +110,8 @@ UInt32 GL4Program::RegisterAttribute(const std::string& attributeName)
 {
   for (UInt32 i = 0; i < m_attributes.size(); i++)
   {
-    if (m_attributes[i]->GetName() == attributeName)
+    iShaderAttribute* attribute = m_attributes[i];
+    if (attribute && attribute->GetName() == attributeName)
     {
       return i;
     }
@@ -131,7 +132,9 @@ UInt32 GL4Program::GetAttributeId(const std::string& attributeName)
 {
   for (UInt32 i = 0; i < m_attributes.size(); i++)
   {
-    if (m_attributes[i] && m_attributes[i]->GetName() == attributeName)
+    iShaderAttribute* attribute = m_attributes[i];
+
+    if (attribute && attribute ->GetName() == attributeName)
     {
       return i;
     }

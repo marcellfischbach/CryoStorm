@@ -2,6 +2,7 @@
 #include <spcCore/graphics/scene/scenemesh.hh>
 #include <spcCore/graphics/material/imaterial.hh>
 #include <spcCore/graphics/irendermesh.hh>
+#include <spcCore/graphics/idevice.hh>
 
 
 namespace spc
@@ -24,12 +25,10 @@ SceneMesh::~SceneMesh()
 
 void SceneMesh::Render(iDevice* device, eRenderPass pass)
 {
-  if (m_material && m_mesh)
+  if (device->BindMaterial(m_material, pass))
   {
-    if (m_material->Bind(device, pass))
-    {
-      m_mesh->Render(device, pass);
-    }
+    device->SetModelMatrix(m_modelMatrix);
+    device->Render(m_mesh, pass);
   }
 }
 
@@ -65,5 +64,14 @@ const iRenderMesh* SceneMesh::GetMesh() const
 }
 
 
+void SceneMesh::SetModelMatrix(const Matrix4f& modelMatrix)
+{
+  m_modelMatrix = modelMatrix;
+}
+
+const Matrix4f& SceneMesh::GetModelMatrix()  const
+{
+  return m_modelMatrix;
+}
 
 }

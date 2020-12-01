@@ -11,15 +11,15 @@ namespace spc
 GL4Device::GL4Device()
   : iDevice()
   , m_shader(nullptr)
-  , m_modelViewMatrixDirty (true)
-  , m_viewProjectionMatrixDirty (true)
-  , m_modelViewProjectionMatrixDirty(true)
-  , m_modelMatrixInvDirty (true)
-  , m_viewMatrixInvDirty (true)
-  , m_projectionMatrixInvDirty(true)
-  , m_modelViewMatrixInvDirty(true)
-  , m_viewProjectionMatrixInvDirty(true)
-  , m_modelViewProjectionMatrixInvDirty(true)
+  , m_modelViewMatrixDirty (false)
+  , m_viewProjectionMatrixDirty (false)
+  , m_modelViewProjectionMatrixDirty(false)
+  , m_modelMatrixInvDirty (false)
+  , m_viewMatrixInvDirty (false)
+  , m_projectionMatrixInvDirty(false)
+  , m_modelViewMatrixInvDirty(false)
+  , m_viewProjectionMatrixInvDirty(false)
+  , m_modelViewProjectionMatrixInvDirty(false)
 {
   SPC_CLASS_GEN_CONSTR;
 }
@@ -47,6 +47,19 @@ bool GL4Device::Initialize()
   glPixelStorei(GL_PACK_ALIGNMENT, 1);
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
   glEnable(GL_DEPTH_TEST);
+
+  m_modelMatrix.SetIdentity();
+  m_viewMatrix.SetIdentity();
+  m_projectionMatrix.SetIdentity();
+  m_modelViewMatrix.SetIdentity();
+  m_viewProjectionMatrix.SetIdentity();
+  m_modelViewProjectionMatrix.SetIdentity();
+  m_modelMatrixInv.SetIdentity();
+  m_viewMatrixInv.SetIdentity();
+  m_projectionMatrixInv.SetIdentity();
+  m_modelViewMatrixInv.SetIdentity();
+  m_viewProjectionMatrixInv.SetIdentity();
+  m_modelViewProjectionMatrixInv.SetIdentity();
 
   return true;
 }
@@ -152,6 +165,104 @@ void GL4Device::SetProjectionMatrix(const Matrix4f& projectionMatrix, const Matr
   m_modelViewProjectionMatrixInvDirty = true;
 }
 
+Matrix4f& GL4Device::GetPerspectiveProjection(float l, float r, float b, float t, float n, float f, Matrix4f& m)
+{
+  float z2 = 2.0f * n;
+  float dx = r - l;
+  float dy = t - b;
+  float dz = f - n;
+  float sx = r + l;
+  float sy = t + b;
+  float sz = n + f;
+
+  /*
+  m.m00 = z2 / dx; m.m10 = 0.0f;    m.m20 = sx / dx;  m.m30 = 0.0f;
+  m.m01 = 0.0f;    m.m11 = z2 / dy; m.m21 = sy / dy;  m.m31 = 0.0f;
+  m.m02 = 0.0f;    m.m12 = 0.0f;    m.m22 = -sz / dz; m.m32 = -2.0f*n*f / dz;
+  m.m03 = 0.0f;    m.m13 = 0.0f;    m.m23 = -1.0f;    m.m33 = 0.0f;
+  */
+  m.m00 = z2 / dx; m.m10 = sx / dx; m.m20 = 0.0f;    m.m30 = 0.0f;
+  m.m01 = 0.0f;    m.m11 = sy / dy; m.m21 = z2 / dy; m.m31 = 0.0f;
+  m.m02 = 0.0f;    m.m12 = sz / dz; m.m22 = 0.0f;    m.m32 = -2.0f * n * f / dz;
+  m.m03 = 0.0f;    m.m13 = 1.0f;    m.m23 = 0.0f;    m.m33 = 0.0f;
+
+  return m;
+}
+
+Matrix4f& GL4Device::GetPerspectiveProjectionInv(float l, float r, float b, float t, float n, float f, Matrix4f& m)
+{
+  float z2 = 2.0f * n;
+  float dx = r - l;
+  float dy = t - b;
+  float dz = f - n;
+  float sx = r + l;
+  float sy = t + b;
+  float sz = n + f;
+  float nf2 = z2 * f;
+
+  /*
+  m.m00 = dx / z2; m.m10 = 0.0f;    m.m20 = 0.0f;      m.m30 = sx / z2;
+  m.m01 = 0.0f;    m.m11 = dy / z2; m.m21 = 0.0f;      m.m31 = sy / z2;
+  m.m02 = 0.0f;    m.m12 = 0.0f;    m.m22 = 0.0f;      m.m32 = -1.0f;
+  m.m03 = 0.0f;    m.m13 = 0.0f;    m.m23 = -dz / nf2; m.m33 = sz / nf2;
+  */
+
+  m.m00 = dx / z2; m.m10 = 0.0f;    m.m20 = 0.0f;      m.m30 = sx / z2;
+  m.m01 = 0.0f;    m.m11 = 0.0f;    m.m21 = 0.0f;      m.m31 = 1.0f;
+  m.m02 = 0.0f;    m.m12 = dy / z2; m.m22 = 0.0f;      m.m32 = sy / z2;
+  m.m03 = 0.0f;    m.m13 = 0.0f;    m.m23 = -dz / nf2; m.m33 = sz / nf2;
+
+  return m;
+}
+
+Matrix4f& GL4Device::GetOrthographicProjection(float l, float r, float b, float t, float n, float f, Matrix4f& m)
+{
+  float dx = r - l;
+  float dy = t - b;
+  float dz = f - n;
+  float sx = r + l;
+  float sy = t + b;
+  float sz = f + n;
+
+  /*
+  m.m00 = 2.0f / dx; m.m10 = 0.0f;      m.m20 = 0.0f;      m.m30 = -sx / dx;
+  m.m01 = 0.0f;      m.m11 = 2.0f / dy; m.m21 = 0.0f;      m.m31 = -sy / dy;
+  m.m02 = 0.0f;      m.m12 = 0.0f;      m.m22 = 2.0f / dz; m.m32 = -sz / dz;
+  m.m03 = 0.0f;      m.m13 = 0.0f;      m.m23 = 0.0f;      m.m33 = 1.0;
+  */
+
+  m.m00 = 2.0f / dx; m.m10 = 0.0f;      m.m20 = 0.0f;      m.m30 = -sx / dx;
+  m.m01 = 0.0f;      m.m11 = 0.0f;      m.m21 = 2.0f / dy; m.m31 = -sy / dy;
+  m.m02 = 0.0f;      m.m12 = 2.0f / dz; m.m22 = 0.0f;      m.m32 = -sz / dz;
+  m.m03 = 0.0f;      m.m13 = 0.0f;      m.m23 = 0.0f;      m.m33 = 1.0;
+  return m;
+}
+
+Matrix4f& GL4Device::GetOrthographicProjectionInv(float l, float r, float b, float t, float n, float f, Matrix4f& m)
+{
+  float dx = r - l;
+  float dy = t - b;
+  float dz = f - n;
+  float sx = r + l;
+  float sy = t + b;
+  float sz = n + f;
+
+  /*
+  m.m00 = dx / 2.0f; m.m10 = 0.0f;      m.m20 = 0.0f;       m.m30 = sx / 2.0f;
+  m.m01 = 0.0f;      m.m11 = dy / 2.0f; m.m21 = 0.0f;       m.m31 = sy / 2.0f;
+  m.m02 = 0.0f;      m.m12 = 0.0f;      m.m22 = dz / 2.0f;  m.m32 = sz / 2.0f;
+  m.m03 = 0.0f;      m.m13 = 0.0f;      m.m23 = 0.0f;       m.m33 = 1.0;
+  */
+
+  m.m00 = dx / 2.0f; m.m10 = 0.0f;      m.m20 = 0.0f;       m.m30 = sx / 2.0f;
+  m.m01 = 0.0f;      m.m11 = 0.0f;      m.m21 = dz / 2.0f;  m.m31 = sz / 2.0f;
+  m.m02 = 0.0f;      m.m12 = dy / 2.0f; m.m22 = 0.0f;       m.m32 = sy / 2.0f;
+  m.m03 = 0.0f;      m.m13 = 0.0f;      m.m23 = 0.0f;       m.m33 = 1.0;
+
+  return m;
+}
+
+
 void GL4Device::SetShader(iShader* shader)
 {
   if (shader == m_shader)
@@ -217,6 +328,20 @@ eTextureUnit GL4Device::BindTexture(iTexture* texture)
 
 
   return unit;
+}
+
+bool GL4Device::BindMaterial(iMaterial* material, eRenderPass pass)
+{
+  return material && material->Bind(this, pass);
+}
+
+void GL4Device::Render(iRenderMesh* mesh, eRenderPass pass)
+{
+  if (mesh)
+  {
+    BindMatrices();
+    mesh->Render(this, pass);
+  }
 }
 
 void GL4Device::BindMatrices()
