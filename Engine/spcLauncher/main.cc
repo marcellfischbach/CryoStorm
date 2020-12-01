@@ -234,10 +234,10 @@ int main(int argc, char** argv)
   // create a render mesh
   spc::iRenderMeshGenerator* generator = spc::ObjectRegistry::Get<spc::iRenderMeshGeneratorFactory>()->Create();
   std::vector<spc::Vector3f> position;
-  position.push_back(spc::Vector3f(-0.5f, -0.5f, 0.0f));
-  position.push_back(spc::Vector3f(-0.5f, 0.5f, 0.0f));
-  position.push_back(spc::Vector3f(0.5f, -0.5f, 0.0f));
-  position.push_back(spc::Vector3f(0.5f, 0.5f, 0.0f));
+  position.push_back(spc::Vector3f(-5.0f, -5.0f, 5.0f));
+  position.push_back(spc::Vector3f(-5.0f, 5.0f, 5.0f));
+  position.push_back(spc::Vector3f(5.0f, -5.0f, 5.0f));
+  position.push_back(spc::Vector3f(5.0f, 5.0f, 5.0f));
   std::vector<spc::Vector2f> uv;
   uv.push_back(spc::Vector2f(0.0f, 0.0f));
   uv.push_back(spc::Vector2f(0.0f, 1.0f));
@@ -269,8 +269,12 @@ int main(int argc, char** argv)
 
 
 
-  spc::Matrix4f projection = graphics->GetPerspectiveProjection(-1.0f, 1.0f, -1.0f, 1.0f, 0.1f, 100.0f, projection);
+  //spc::Matrix4f projection = graphics->GetPerspectiveProjection(-1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 100.0f, projection);
+  spc::Matrix4f projection = graphics->GetOrthographicProjection(-10.0f, 10.0f, -10.0f, 10.0f, -10.0f, 10.0f, projection);
   graphics->SetProjectionMatrix(projection);
+
+  spc::Matrix4f view;
+  view.SetLookAt(spc::Vector3f(10, 10, 10), spc::Vector3f(0, 0, 0), spc::Vector3f(0, 0, 1));
 
 
   float rot = 0.0f;

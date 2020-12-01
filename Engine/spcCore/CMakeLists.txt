@@ -24,6 +24,7 @@ set(SOURCES
         graphics/epixelformat.hh
         graphics/eprimitivetype.hh
         graphics/erenderpass.hh
+        graphics/eshaderattribute.hh
         graphics/etextureunit.hh
         graphics/etexturetype.hh
         graphics/evertexstream.hh
@@ -37,10 +38,8 @@ set(SOURCES
         graphics/itexture.hh
         graphics/itexture2d.hh
         graphics/ivertexbuffer.hh
-        graphics/renderattribute.hh
         graphics/vertexdeclaration.cc
         graphics/vertexdeclaration.hh
-        graphics/renderattribute.hh
 
         graphics/material/ematerialattributetype.hh
         graphics/material/imaterial.hh
