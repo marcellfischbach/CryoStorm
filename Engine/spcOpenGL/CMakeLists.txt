@@ -10,11 +10,15 @@ set(SOURCES
 
         gl4/gl4device.cc
         gl4/gl4device.hh
-		gl4/gl4exceptions.cc
+        gl4/gl4directionallight.cc
+        gl4/gl4directionallight.hh
+        gl4/gl4exceptions.cc
 		gl4/gl4exceptions.hh
         gl4/gl4indexbuffer.cc
         gl4/gl4indexbuffer.hh
         gl4/gl4pixelformatmap.hh
+        gl4/gl4pointlight.cc
+        gl4/gl4pointlight.hh
         gl4/gl4rendermesh.cc
         gl4/gl4rendermesh.hh
         gl4/gl4texture2d.cc

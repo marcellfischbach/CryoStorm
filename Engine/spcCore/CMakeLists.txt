@@ -34,9 +34,12 @@ set(SOURCES
         graphics/graphicsexceptions.cc
         graphics/graphicsexceptions.hh
         graphics/idevice.hh
+        graphics/idirectionallight.hh
         graphics/iindexbuffer.hh
+        graphics/ilight.hh
         graphics/image.cc
         graphics/image.hh
+        graphics/ipointlight.hh
         graphics/irendermesh.hh
         graphics/itexture.hh
         graphics/itexture2d.hh

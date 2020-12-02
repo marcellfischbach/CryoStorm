@@ -9,6 +9,8 @@
 #include <spcCore/class.hh>
 #include <spcCore/graphics/erenderpass.hh>
 #include <spcCore/graphics/etextureunit.hh>
+#include <spcCore/graphics/idirectionallight.hh>
+#include <spcCore/graphics/ipointlight.hh>
 #include <spcCore/graphics/irendermesh.hh>
 #include <spcCore/graphics/itexture.hh>
 #include <spcCore/graphics/itexture2d.hh>
@@ -46,6 +48,11 @@ struct SPC_CORE_API iDevice : public SPC_SUPER(iObject)
   virtual void SetShader(iShader* shader) = 0;
 
   virtual iTexture2D* CreateTexture(const iTexture2D::Descriptor& descriptor) = 0;
+  virtual iDirectionalLight* CreateDirectionalLight() = 0;
+  virtual iPointLight* CreatePointLight() = 0;
+
+
+
   virtual void ResetTextures() = 0;
   virtual eTextureUnit BindTexture(iTexture* texture) = 0;
   virtual bool BindMaterial(iMaterial* material, eRenderPass pass) = 0;

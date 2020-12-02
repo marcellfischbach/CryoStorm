@@ -1,5 +1,7 @@
 
 #include <spcOpenGL/gl4/gl4device.hh>
+#include <spcOpenGL/gl4/gl4directionallight.hh>
+#include <spcOpenGL/gl4/gl4pointlight.hh>
 #include <spcOpenGL/gl4/shading/gl4program.hh>
 #include <spcOpenGL/gl4/gl4texture2d.hh>
 #include <spcCore/graphics/shading/ishaderattribute.hh>
@@ -265,6 +267,16 @@ iTexture2D* GL4Device::CreateTexture(const iTexture2D::Descriptor& descriptor)
     descriptor.Format,
     descriptor.MipMaps);
   return texture;
+}
+
+iPointLight* GL4Device::CreatePointLight()
+{
+  return new GL4PointLight();
+}
+
+iDirectionalLight* GL4Device::CreateDirectionalLight()
+{
+  return new GL4DirectionalLight();
 }
 
 void GL4Device::ResetTextures()

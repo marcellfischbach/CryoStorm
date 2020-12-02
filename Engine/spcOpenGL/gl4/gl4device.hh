@@ -42,6 +42,10 @@ public:
   void SetShader(iShader * shader) override;
 
   iTexture2D* CreateTexture(const iTexture2D::Descriptor & descriptor) override;
+  iDirectionalLight* CreateDirectionalLight() override;
+  iPointLight* CreatePointLight() override;
+
+
   void ResetTextures() override;
   eTextureUnit BindTexture(iTexture * texture) override;
   bool BindMaterial(iMaterial * material, eRenderPass pass) override;
