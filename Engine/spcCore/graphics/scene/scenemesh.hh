@@ -5,6 +5,8 @@
 #include <spcCore/class.hh>
 #include <spcCore/math/matrix4f.hh>
 #include <spcCore/graphics/erenderpass.hh>
+#include <spcCore/graphics/ilight.hh>
+#include <vector>
 
 namespace spc
 {
@@ -32,6 +34,10 @@ public:
   void SetModelMatrix(const Matrix4f & modelMatrix);
   const Matrix4f& GetModelMatrix() const;
 
+  void ClearLights();
+  void AddLight(iLight * light);
+  const std::vector<const iLight*>& GetLights() const;
+
   void Render(iDevice * device, eRenderPass pass);
 
 
@@ -41,6 +47,8 @@ private:
   iRenderMesh* m_mesh;
 
   Matrix4f m_modelMatrix;
+
+  std::vector<iLight*> m_lights;
 
 };
 

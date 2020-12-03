@@ -17,6 +17,12 @@ public:
   GL4PointLight();
   virtual ~GL4PointLight();
 
+  eLightType GetType() const
+  {
+    return eLT_Point;
+  }
+
+
   void SetChangeMode(eLightChangeMode changeMode) override;
   eLightChangeMode GetChangeMode() const override;
 

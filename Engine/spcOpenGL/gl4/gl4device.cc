@@ -6,6 +6,9 @@
 #include <spcOpenGL/gl4/gl4texture2d.hh>
 #include <spcCore/graphics/shading/ishaderattribute.hh>
 #include <GL/glew.h>
+#include <iostream>
+
+#define SPC_MAX_LIGHTS 4
 
 namespace spc
 {
@@ -327,6 +330,59 @@ void GL4Device::Render(iRenderMesh* mesh, eRenderPass pass)
   {
     BindMatrices();
     mesh->Render(this, pass);
+  }
+}
+
+
+
+void GL4Device::BindForwardLight(iLight* light, Size idx)
+{
+  if (!m_shader || idx >= SPC_MAX_LIGHTS)
+  {
+    return;
+  }
+
+  iShaderAttribute* lightColor = m_shader->GetShaderAttribute(eSA_LightColor);
+  iShaderAttribute* lightVector = m_shader->GetShaderAttribute(eSA_LightVector);
+  iShaderAttribute* lightRange = m_shader->GetShaderAttribute(eSA_LightRange);
+  if (lightColor) lightColor->SetArrayIndex(idx);
+  if (lightVector) lightVector->SetArrayIndex(idx);
+  if (lightRange) lightRange->SetArrayIndex(idx);
+
+  if (light)
+  {
+
+    if (lightColor) lightColor->Bind(light->GetColor());
+
+    switch (light->GetType())
+    {
+    case eLT_Point:
+    {
+      iPointLight* pointLight = static_cast<iPointLight*>(light);
+      if (lightVector) lightVector->Bind(Vector4f(pointLight->GetPosition(), 1.0f));
+      if (lightRange) lightRange->Bind(pointLight->GetRange());
+    }
+      break;
+    case eLT_Directional:
+    {
+      iDirectionalLight* directionalLight = static_cast<iDirectionalLight*>(light);
+      if (lightVector) lightVector->Bind(Vector4f(directionalLight->GetDirection(), 0.0f));
+    }
+      break;
+    }
+  }
+  else
+  {
+    if (lightColor) lightColor->Bind(Color4f(0.0f, 0.0f, 0.0f));
+    if (lightVector) lightVector->Bind(Vector4f(0.0f, 0.0f, 0.0f, 0.0f));
+  }
+}
+
+void GL4Device::FinishForwardLights(Size numLights)
+{
+  for (Size i = numLights; i < SPC_MAX_LIGHTS; i++)
+  {
+    BindForwardLight(nullptr, i);
   }
 }
 

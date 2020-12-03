@@ -17,6 +17,11 @@ public:
   GL4DirectionalLight();
   virtual ~GL4DirectionalLight();
 
+  eLightType GetType() const
+  {
+    return eLT_Directional;
+  }
+
   void SetChangeMode(eLightChangeMode changeMode) override;
   eLightChangeMode GetChangeMode() const override;
 

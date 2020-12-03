@@ -6,6 +6,7 @@
 #include <spcCore/class.hh>
 #include <spcCore/math/color4f.hh>
 #include <spcCore/graphics/elightchangemode.hh>
+#include <spcCore/graphics/elighttype.hh>
 
 namespace spc
 {
@@ -17,6 +18,8 @@ struct SPC_CORE_API iLight : public SPC_SUPER(iObject)
   SPC_CLASS_GEN;
 
   virtual ~iLight () { }
+
+  virtual eLightType GetType() const = 0;
 
   virtual void SetChangeMode(eLightChangeMode changeMode) = 0;
   virtual eLightChangeMode GetChangeMode() const = 0;

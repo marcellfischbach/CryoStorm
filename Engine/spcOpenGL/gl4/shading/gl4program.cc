@@ -104,6 +104,9 @@ void GL4Program::RegisterRenderAttributes()
   RegisterAttribute("ModelViewMatrixInv");
   RegisterAttribute("ViewProjectionMatrixInv");
   RegisterAttribute("ModelViewProjectionMatrixInv");
+  RegisterAttribute("LightColor");
+  RegisterAttribute("LightVector");
+  RegisterAttribute("LightRange");
 }
 
 UInt32 GL4Program::RegisterAttribute(const std::string& attributeName)

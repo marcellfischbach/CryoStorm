@@ -51,6 +51,9 @@ public:
   bool BindMaterial(iMaterial * material, eRenderPass pass) override;
   void Render(iRenderMesh * mesh, eRenderPass pass) override;
 
+  void BindForwardLight(iLight * light, Size idx);
+  void FinishForwardLights(Size numLights);
+
   void BindMatrices();
 
 private:

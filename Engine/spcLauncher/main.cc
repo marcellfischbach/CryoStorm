@@ -9,7 +9,9 @@
 #include <spcCore/objectregistry.hh>
 #include <spcCore/graphics/camera.hh>
 #include <spcCore/graphics/idevice.hh>
+#include <spcCore/graphics/idirectionallight.hh>
 #include <spcCore/graphics/image.hh>
+#include <spcCore/graphics/ipointlight.hh>
 #include <spcCore/graphics/irendermesh.hh>
 #include <spcCore/graphics/projector.hh>
 #include <spcCore/graphics/shading/ishader.hh>
@@ -78,11 +80,11 @@ std::vector<std::string> split(const std::string& string)
   {
     std::string part = string.substr(offset, idx - offset);
     res.push_back(part);
-    offset = idx+1;
+    offset = idx + 1;
   }
   std::string part = string.substr(offset, string.length() - offset);
   res.push_back(part);
-  
+
   return res;
 }
 
@@ -174,6 +176,9 @@ int main(int argc, char** argv)
 
   SDL_Window* wnd = SDL_CreateWindow("Spice", 25, 25, 1024, 768, SDL_WINDOW_OPENGL);
   SDL_GLContext context = SDL_GL_CreateContext(wnd);
+  bool vsync = false;
+  SDL_GL_SetSwapInterval(vsync ? 1 : 0);
+
   SDL_ShowWindow(wnd);
   SDL_GL_MakeCurrent(wnd, context);
 
@@ -201,7 +206,7 @@ int main(int argc, char** argv)
   shader->RegisterAttribute("Diffuse");
   shader->RegisterAttribute("Color");
 
-  
+
 
 
 
@@ -236,11 +241,16 @@ int main(int argc, char** argv)
   //
   // create a render mesh
   spc::iRenderMeshGenerator* generator = spc::ObjectRegistry::Get<spc::iRenderMeshGeneratorFactory>()->Create();
-  std::vector<spc::Vector3f> position;
-  position.push_back(spc::Vector3f(-5.0f, -5.0f, 15.0f));
-  position.push_back(spc::Vector3f(-5.0f, 5.0f, 15.0f));
-  position.push_back(spc::Vector3f(5.0f, -5.0f, 15.0f));
-  position.push_back(spc::Vector3f(5.0f, 5.0f, 15.0f));
+  std::vector<spc::Vector3f> positions;
+  positions.push_back(spc::Vector3f(-5.0f, 0.0f, -5.0f));
+  positions.push_back(spc::Vector3f(-5.0f, 0.0f, 5.0f));
+  positions.push_back(spc::Vector3f(5.0f, 0.0f, -5.0f));
+  positions.push_back(spc::Vector3f(5.0f, 0.0f, 5.0f));
+  std::vector<spc::Vector3f> normals;
+  normals.push_back(spc::Vector3f(0.0f, 1.0f, 0.0f));
+  normals.push_back(spc::Vector3f(0.0f, 1.0f, 0.0f));
+  normals.push_back(spc::Vector3f(0.0f, 1.0f, 0.0f));
+  normals.push_back(spc::Vector3f(0.0f, 1.0f, 0.0f));
   std::vector<spc::Vector2f> uv;
   uv.push_back(spc::Vector2f(0.0f, 0.0f));
   uv.push_back(spc::Vector2f(0.0f, 1.0f));
@@ -254,11 +264,13 @@ int main(int argc, char** argv)
   indices.push_back(3);
   indices.push_back(2);
   std::vector<spc::Color4f> colors;
-  colors.push_back(spc::Color4f(0.0f, 0.0f, 0.0f, 1.0f));
-  colors.push_back(spc::Color4f(0.0f, 1.0f, 0.0f, 1.0f));
-  colors.push_back(spc::Color4f(0.0f, 0.0f, 1.0f, 1.0f));
-  colors.push_back(spc::Color4f(0.0f, 1.0f, 1.0f, 1.0f));
-  generator->SetVertices(position);
+  spc::Color4f color(1.0f, 1.0f, 1.0f, 1.0f);
+  colors.push_back(color);
+  colors.push_back(color);
+  colors.push_back(color);
+  colors.push_back(color);
+  generator->SetVertices(positions);
+  generator->SetNormals(normals);
   generator->SetIndices(indices);
   generator->SetColors(colors);
   generator->SetUV0(uv);
@@ -286,14 +298,54 @@ int main(int argc, char** argv)
   spc::Camera* camera = new spc::Camera();
   spc::Projector projector;
   //camera->SetSpot(spc::Vector3f(0, 0, 0));
-  
-  
+
+  spc::iPointLight* pointLight0 = device->CreatePointLight();
+  pointLight0->SetColor(spc::Color4f(1.0f, 0.0f, 0.0f, 1.0f));
+  pointLight0->SetPosition(spc::Vector3f(-5.0f, 5.0f, -5.0f));
+  pointLight0->SetRange(10.0f);
+
+  spc::iPointLight* pointLight1 = device->CreatePointLight();
+  pointLight1->SetColor(spc::Color4f(0.0f, 1.0f, 0.0f, 1.0f));
+  pointLight1->SetPosition(spc::Vector3f(-5.0f, 5.0f, 5.0f));
+  pointLight1->SetRange(10.0f);
+
+  spc::iPointLight* pointLight2 = device->CreatePointLight();
+  pointLight2->SetColor(spc::Color4f(0.0f, 0.0f, 1.0f, 1.0f));
+  pointLight2->SetPosition(spc::Vector3f(5.0f, 5.0f, -5.0f));
+  pointLight2->SetRange(10.0f);
+
+  spc::iPointLight* pointLight3 = device->CreatePointLight();
+  pointLight3->SetColor(spc::Color4f(1.0f, 0.0f, 1.0f, 1.0f));
+  pointLight3->SetPosition(spc::Vector3f(5.0f, 5.0f, 5.0f));
+  pointLight3->SetRange(10.0f);
+
+  sceneMesh->ClearLights();
+  sceneMesh->AddLight(pointLight0);
+  sceneMesh->AddLight(pointLight1);
+  sceneMesh->AddLight(pointLight2);
+  sceneMesh->AddLight(pointLight3);
+
 
   float rot = 0.0f;
 
+  spc::UInt32 nextSec = SDL_GetTicks() + 1000;
+  spc::UInt32 frames = 0;
   while (true)
   {
-    projector.UpdatePerspective(3.1415f / 2.0f, aspect, 1.0f, 100.0f);
+    Uint32 time = SDL_GetTicks();
+    if (time > nextSec)
+    {
+      nextSec += 1000;
+      char buffer[1024];
+      sprintf(buffer, "Spice Engine %d FPS", frames);
+      SDL_SetWindowTitle(wnd, buffer);
+      frames = 0;
+    }
+    else
+    {
+      frames++;
+    }
+
 
     SDL_GL_MakeCurrent(wnd, context);
     UpdateEvents();
@@ -303,23 +355,30 @@ int main(int argc, char** argv)
       break;
     }
 
+    if (spc::Input::IsKeyPressed(spc::Key::eK_V))
+    {
+      vsync = !vsync;
+      SDL_GL_SetSwapInterval(vsync ? 1 : 0);
+    }
+
     glViewport(0, 0, 1024, 768);
-    device->Clear(true, spc::Color4f(0.5f, 0.0, 0.0, 0.0f), true, 1.0f, false, 0);
+    device->Clear(true, spc::Color4f(0.0f, 0.0, 0.0, 0.0f), true, 1.0f, false, 0);
 
 
     spc::Matrix4f rotMatrix;
     rotMatrix.SetRotationY(rot);
-    sceneMesh->SetModelMatrix(rotMatrix);
+    //sceneMesh->SetModelMatrix(rotMatrix);
 
 
     //camera->SetSpot(spc::Vector3f(0, 20 * -spc::spcCos(rot), 0.0f));
     //camera->SetEye(spc::Vector3f(20, 20 * spc::spcCos(rot), 20.0f));
+    camera->SetEye(spc::Vector3f(5.0f * spc::spcCos(rot), 5.0f, spc::spcSin(rot) * 5.0f));
+    camera->SetSpot(spc::Vector3f(0.0f, 0.0f, 0.0f));
     camera->Bind(device);
 
-    projector.UpdatePerspective(3.1415f / 2.0f, spc::spcCos(rot * 10.0f), 1.0f, 100.0f);
     projector.Bind(device);
 
-    rot += 0.001f;
+    rot += 0.00005f;
 
     sceneMesh->Render(device, spc::eRP_Forward);
 
