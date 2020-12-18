@@ -15,6 +15,8 @@ set(SOURCES
         coremodule.hh
         objectregistry.cc
         objectregistry.hh
+        outofboundsexception.cc
+        outofboundsexception.hh
         string.cc
         string.hh
         types.hh
@@ -44,10 +46,15 @@ set(SOURCES
         graphics/itexture.hh
         graphics/itexture2d.hh
         graphics/ivertexbuffer.hh
+        graphics/mesh.cc
+        graphics/mesh.hh
         graphics/projector.cc
         graphics/projector.hh
         graphics/vertexdeclaration.cc
         graphics/vertexdeclaration.hh
+
+        graphics/loader/meshloader.cc
+        graphics/loader/meshloader.hh
 
         graphics/material/ematerialattributetype.hh
         graphics/material/imaterial.hh
