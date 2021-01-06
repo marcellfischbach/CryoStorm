@@ -13,7 +13,7 @@ SourceGenerator::SourceGenerator()
 
 }
 
-void SourceGenerator::Output(const std::string&, iOutput* output)
+void SourceGenerator::Output(iOutput* output)
 {
 
   std::vector<ClassNode*> classes = FindAllMajorClasses();

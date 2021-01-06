@@ -8,7 +8,7 @@
 #include <spcCore/graphics/image.hh>
 
 
-namespace spc
+namespace spc::assimp
 {
 
 bool AssimpModule::Register(int argc, char** argv)

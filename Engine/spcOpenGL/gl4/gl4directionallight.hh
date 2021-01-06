@@ -5,7 +5,7 @@
 #include <spcOpenGL/openglexport.hh>
 #include <spcCore/graphics/idirectionallight.hh>
 
-namespace spc
+namespace spc::opengl
 {
 
 

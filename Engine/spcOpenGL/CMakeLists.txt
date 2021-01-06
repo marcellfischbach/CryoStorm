@@ -53,7 +53,7 @@ target_link_libraries(spcOpenGL
         )
 
 add_dependencies(spcOpenGL spcMOC)
-SPICE_MOC(spcOpenGL spcOpenGL)
+SPC_MOC(spcOpenGL)
 
 
 install(TARGETS spcOpenGL

@@ -4,7 +4,7 @@
 #include <spcOpenGL/openglexport.hh>
 #include <spcCore/resource/iassetloader.hh>
 
-namespace spc
+namespace spc::opengl
 {
 
 SPC_CLASS()

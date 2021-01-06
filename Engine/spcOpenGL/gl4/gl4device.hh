@@ -8,7 +8,7 @@
 #include <spcCore/graphics/itexture2d.hh>
 #include <spcCore/graphics/etextureunit.hh>
 
-namespace spc
+namespace spc::opengl
 {
 
 

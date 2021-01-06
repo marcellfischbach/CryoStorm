@@ -146,12 +146,12 @@ int main(int argc, char** argv)
     printf("Unable to register core\n");
     return -1;
   }
-  if (!spc::OpenGLModule::Register(argc, argv))
+  if (!spc::opengl::OpenGLModule::Register(argc, argv))
   {
     printf("Unable to register opengl\n");
     return -1;
   }
-  if (!spc::ImgLoaderModule::Register(argc, argv))
+  if (!spc::img::ImgLoaderModule::Register(argc, argv))
   {
     printf("Unable to register png loader\n");
     return -1;
@@ -189,12 +189,12 @@ int main(int argc, char** argv)
     printf("Unable to initialize core\n");
     return -1;
   }
-  if (!spc::OpenGLModule::Initialize(argc, argv))
+  if (!spc::opengl::OpenGLModule::Initialize(argc, argv))
   {
     printf("Unable to initialize opengl\n");
     return -1;
   }
-  if (!spc::ImgLoaderModule::Initialize(argc, argv))
+  if (!spc::img::ImgLoaderModule::Initialize(argc, argv))
   {
     printf("Unable to initialize png loader\n");
     return -1;
@@ -337,7 +337,7 @@ int main(int argc, char** argv)
     {
       nextSec += 1000;
       char buffer[1024];
-      sprintf(buffer, "Spice Engine %d FPS", frames);
+      sprintf_s<1024>(buffer, "Spice Engine %d FPS", frames);
       SDL_SetWindowTitle(wnd, buffer);
       frames = 0;
     }

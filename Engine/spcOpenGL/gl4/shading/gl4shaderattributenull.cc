@@ -1,7 +1,7 @@
 #include <spcOpenGL/gl4/shading/GL4ShaderAttributeNull.hh>
 
 
-namespace spc
+namespace spc::opengl
 {
 
 GL4ShaderAttributeNull::GL4ShaderAttributeNull( const std::string& name)

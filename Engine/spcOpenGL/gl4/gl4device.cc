@@ -10,7 +10,7 @@
 
 #define SPC_MAX_LIGHTS 4
 
-namespace spc
+namespace spc::opengl
 {
 
 GL4Device::GL4Device()

@@ -5,7 +5,7 @@
 #include <spcCore/math/math.hh>
 #include <GL/glew.h>
 
-namespace spc
+namespace spc::opengl
 {
 GL4Texture2D::GL4Texture2D()
   : iTexture2D()

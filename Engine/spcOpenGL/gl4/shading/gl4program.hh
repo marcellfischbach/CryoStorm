@@ -5,7 +5,7 @@
 #include <spcCore/types.hh>
 #include <vector>
 
-namespace spc
+namespace spc::opengl
 {
 
 class GL4Shader;

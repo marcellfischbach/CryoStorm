@@ -3,7 +3,7 @@
 
 #include <spcAssimp/assimpexport.hh>
 
-namespace spc
+namespace spc::assimp
 {
 
 class SPC_ASSIMP_API AssimpModule

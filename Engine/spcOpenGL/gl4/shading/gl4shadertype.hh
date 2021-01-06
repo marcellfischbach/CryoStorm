@@ -1,6 +1,6 @@
 #pragma once
 
-namespace spc
+namespace spc::opengl
 {
 
 enum eGL4ShaderType

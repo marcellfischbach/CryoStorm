@@ -13,9 +13,9 @@ class HeaderGenerator : public Generator
 public:
   HeaderGenerator();
 
-  void Output(const std::string& exp, iOutput *output);
+  void Output(iOutput *output);
 
 private:
-  std::string OutputClass(ClassNode* classNode, const std::string & exp);
+  std::string OutputClass(ClassNode* classNode);
 };
 }

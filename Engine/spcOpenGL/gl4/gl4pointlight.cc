@@ -2,7 +2,7 @@
 #include <spcOpenGL/gl4/gl4pointlight.hh>
 
 
-namespace spc
+namespace spc::opengl
 {
 
 GL4PointLight::GL4PointLight()

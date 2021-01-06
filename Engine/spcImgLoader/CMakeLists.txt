@@ -24,7 +24,7 @@ target_link_libraries(spcImgLoader
         )
 
 add_dependencies(spcImgLoader spcMOC)
-SPICE_MOC(spcImgLoader spcImgLoader)
+SPC_MOC(spcImgLoader)
 
 
 install(TARGETS spcImgLoader

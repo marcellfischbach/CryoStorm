@@ -125,7 +125,7 @@ target_link_libraries(spcCore
         )
 
 add_dependencies(spcCore spcMOC)
-SPICE_MOC(spcCore spcCore)
+SPC_MOC(spcCore)
 
 
 install(TARGETS spcCore

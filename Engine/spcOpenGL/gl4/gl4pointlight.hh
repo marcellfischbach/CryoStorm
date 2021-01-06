@@ -5,7 +5,7 @@
 #include <spcOpenGL/openglexport.hh>
 #include <spcCore/graphics/ipointlight.hh>
 
-namespace spc
+namespace spc::opengl
 {
 
 

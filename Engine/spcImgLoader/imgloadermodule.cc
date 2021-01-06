@@ -1,6 +1,6 @@
 
 #include <spcImgLoader/imgloadermodule.hh>
-#include <spcImgLoader/master.refl.cc>
+#include <master.refl.cc>
 #include <spcImgLoader/jpegloader.hh>
 #include <spcImgLoader/pngloader.hh>
 
@@ -9,7 +9,7 @@
 #include <spcCore/graphics/image.hh>
 
 
-namespace spc
+namespace spc::img
 {
 
 bool ImgLoaderModule::Register(int argc, char** argv)

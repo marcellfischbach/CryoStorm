@@ -7,7 +7,7 @@
 #include <string>
 
 
-namespace spc
+namespace spc::opengl
 {
 
 SPC_CLASS()

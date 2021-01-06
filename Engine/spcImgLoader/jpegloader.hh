@@ -5,7 +5,7 @@
 #include <spcCore/resource/iassetloader.hh>
 #include <png.h>
 
-namespace spc
+namespace spc::img
 {
 
 

@@ -1,6 +1,6 @@
 
 #include <spcLauncher/launchermodule.hh>
-#include <spcLauncher/master.refl.cc>
+#include <master.refl.cc>
 #include <spcLauncher/window/sdlkeyboard.hh>
 #include <spcLauncher/window/sdlmouse.hh>
 #include <spcCore/objectregistry.hh>

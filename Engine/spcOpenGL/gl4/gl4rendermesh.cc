@@ -6,7 +6,7 @@
 #include <spcCore/graphics/vertexdeclaration.hh>
 #include <gl/glew.h>
 
-namespace spc
+namespace spc::opengl
 {
 
 

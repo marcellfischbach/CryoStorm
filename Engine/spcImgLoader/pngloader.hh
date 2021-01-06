@@ -4,7 +4,7 @@
 #include <spcImgLoader/imgloaderexport.hh>
 #include <spcCore/resource/iassetloader.hh>
 
-namespace spc
+namespace spc::img
 {
 
 

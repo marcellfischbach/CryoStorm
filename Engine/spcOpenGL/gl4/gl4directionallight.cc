@@ -2,7 +2,7 @@
 #include <spcOpenGL/gl4/gl4directionallight.hh>
 
 
-namespace spc
+namespace spc::opengl
 {
 
 GL4DirectionalLight::GL4DirectionalLight()

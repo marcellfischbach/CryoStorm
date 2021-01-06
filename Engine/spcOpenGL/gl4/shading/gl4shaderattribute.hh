@@ -4,7 +4,7 @@
 #include <spcCore/graphics/shading/ishaderattribute.hh>
 #include <GL/glew.h>
 
-namespace spc
+namespace spc::opengl
 {
 
 

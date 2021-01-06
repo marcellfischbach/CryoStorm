@@ -1,13 +1,13 @@
 
 #include <spcOpenGL/openglmodule.hh>
-#include <spcOpenGL/master.refl.cc>
+#include <master.refl.cc>
 #include <spcCore/objectregistry.hh>
 #include <spcCore/resource/assetmanager.hh>
 #include <spcOpenGL/gl4/gl4device.hh>
 #include <spcOpenGL/gl4/gl4rendermesh.hh>
 #include <spcOpenGL/gl4/loading/gl4shaderloader.hh>
 
-namespace spc
+namespace spc::opengl
 {
 
 bool OpenGLModule::Register(int argc, char** argv)

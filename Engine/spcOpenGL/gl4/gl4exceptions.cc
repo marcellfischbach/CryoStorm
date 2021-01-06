@@ -1,7 +1,7 @@
 
 #include <spcOpenGL/gl4/gl4exceptions.hh>
 
-namespace spc
+namespace spc::opengl
 {
 
 GL4ShaderCompileException::GL4ShaderCompileException(const std::string &message, const std::string &source)

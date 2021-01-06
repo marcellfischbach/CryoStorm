@@ -3,7 +3,7 @@
 
 #include <gl/glew.h>
 
-namespace spc
+namespace spc::opengl
 {
 
 

@@ -6,7 +6,7 @@
 #include <GL/glew.h>
 
 
-namespace spc
+namespace spc::opengl
 {
 
 

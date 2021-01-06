@@ -1,7 +1,7 @@
 
 
 
-function(SPICE_MOC trgt prefix)
+function(SPC_MOC trgt)
 
 	set(MOC_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/__cmake__build__moc__")
 
@@ -10,15 +10,14 @@ function(SPICE_MOC trgt prefix)
 		set(EXEC_PATH "${SpiceEngine_BINARY_DIR}/bin/")
 	endif()
 	
-
+	#string(REGEX REPLACE ".*/" "" ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 	string(MAKE_C_IDENTIFIER ${trgt} TARGET_IDENTIFIER)
-	add_definitions(-D${TARGET_IDENTIFIER})
 
 
 	set(TARGET_NAME "${trgt}-MOC")
 	add_custom_target(${TARGET_NAME}
-                            COMMAND ${EXEC_PATH}spcMOC --prefix ${prefix}  --path ${MOC_DIRECTORY}/${prefix} --export ${TARGET_IDENTIFIER}
+                            COMMAND ${EXEC_PATH}spcMOC  --path ${MOC_DIRECTORY}
 			WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 	)
 	if (SpiceEngine_BINARY_DIR) 
@@ -31,4 +30,4 @@ function(SPICE_MOC trgt prefix)
     target_include_directories(${trgt} BEFORE PUBLIC ${MOC_DIRECTORY})
 
 	
-endfunction(SPICE_MOC)
+endfunction(SPC_MOC)

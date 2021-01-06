@@ -35,7 +35,6 @@ void print_usage(char* name)
   printf("    --header <header>      the hh file when a single file is processed\n");
   printf("    --path   <path>        base path that contains the moc file and where to put the files\n");
   printf("    --prefix <prefix>      the inclue prefix where include files are located\n");
-  printf("    --export <export>      <export> the name of the export api name\n");
 }
 
 class StdOutOutput : public spc::moc::iOutput
@@ -89,8 +88,7 @@ void generate(
   spc::moc::Cache* cache,
   const std::string& input,
   const std::string& outputHeader,
-  const std::string& outputSource,
-  const std::string& exp)
+  const std::string& outputSource)
 {
 
   spc::moc::SourceFile sourceFile;
@@ -120,7 +118,7 @@ void generate(
       FileOutput output(outputHeader);
       spc::moc::HeaderGenerator hg;
       hg.SetRoot(ns);
-      hg.Output(exp, &output);
+      hg.Output(&output);
     }
 
     if (!outputSource.empty())
@@ -128,7 +126,7 @@ void generate(
       FileOutput output(outputSource);
       spc::moc::SourceGenerator sg;
       sg.SetRoot(ns);
-      sg.Output(exp, &output);
+      sg.Output(&output);
     }
     //    ns->DebugNode(0);
   }
@@ -223,12 +221,12 @@ std::vector<std::string> scan_directory()
 }
 
 
-void generate_list(const std::string& path, const std::string& exp, const std::string& prefix)
+void generate_list(const std::string& path)
 {
   spc::moc::Cache cache;
   cache.Load(path);
 
-  std::vector<std::string> all_filenames = read_all_filenames(path + "/.spicemoc");
+  //std::vector<std::string> all_filenames = read_all_filenames(path + "/.spicemoc");
   std::vector<std::string> scanned_filenames = scan_directory();
   //std::ifstream stream(path + "/.spicemoc");
   //std::string filename;
@@ -263,8 +261,7 @@ void generate_list(const std::string& path, const std::string& exp, const std::s
           &cache,
           filename,
           path + "/" + plainFilename + ".refl.hh",
-          path + "/" + plainFilename + ".refl.cc",
-          exp
+          path + "/" + plainFilename + ".refl.cc"
         );
       }
       catch (spc::moc::BaseException& e)
@@ -285,7 +282,7 @@ void generate_list(const std::string& path, const std::string& exp, const std::s
   {
     spc::moc::MasterGenerator masterGenerator;
     FileOutput output(path + "/master.refl.cc");
-    masterGenerator.Generate(cache, prefix, &output);
+    masterGenerator.Generate(cache, &output);
   }
   cache.Store(path);
 
@@ -304,12 +301,9 @@ int main(int argc, char** argv)
   std::string source;
   std::string header;
   std::string path;
-  std::string prefix;
-  std::string exp;
 
   header = "header";
   source = "source";
-  exp = "";
   // file = "D:\\DEV\\CobaltSKY\\Engine\\cobalt\\entity\\csdynamiccolliderstate.hh";
   path = "C:\\Users\\MCEL\\CMakeBuilds\\d5ee80a5-d1ee-2937-85d1-86f3b75e756d\\build\\x64-Release\\src\\test";
 
@@ -357,26 +351,6 @@ int main(int argc, char** argv)
       path = std::string(argv[++i]);
       // std::cout << " path: '" << path << "'";
     }
-    else if (arg == "--prefix")
-    {
-      if (i + 1 >= argc)
-      {
-        print_usage(argv[0]);
-        return -1;
-      }
-      prefix = std::string(argv[++i]);
-      //std::cout << " prefix: '" << prefix << "'";
-    }
-    else if (arg == "--export")
-    {
-      if (i + 1 >= argc)
-      {
-        print_usage(argv[0]);
-        return -1;
-      }
-      exp = std::string(argv[++i]);
-      //std::cout << " exp: '" << exp << "'";
-    }
     else
     {
       printf("Invalid arg %s\n", arg.c_str());
@@ -387,12 +361,12 @@ int main(int argc, char** argv)
 
   if (!file.empty() && !source.empty() && !header.empty())
   {
-    generate(nullptr, file, header, source, exp);
+    generate(nullptr, file, header, source);
   }
   else if (!path.empty())
   {
 
-    generate_list(path, exp, prefix);
+    generate_list(path);
   }
 
   return 0;

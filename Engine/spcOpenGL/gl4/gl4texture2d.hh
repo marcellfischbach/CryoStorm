@@ -4,7 +4,9 @@
 #include <spcOpenGL/openglexport.hh>
 #include <spcCore/graphics/itexture2d.hh>
 #include <vector>
-namespace spc
+
+
+namespace spc::opengl
 {
 
 SPC_CLASS()

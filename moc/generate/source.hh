@@ -22,7 +22,7 @@ class SourceGenerator : public Generator
 public:
   SourceGenerator();
 
-  void Output(const std::string& exp, iOutput *output);
+  void Output(iOutput *output);
 
 private:
 };

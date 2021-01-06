@@ -3,7 +3,7 @@
 #include <spcOpenGL/gl4/gl4exceptions.hh>
 #include <GL/glew.h>
 
-namespace spc
+namespace spc::opengl
 {
 
 

@@ -13,7 +13,7 @@ MasterGenerator::MasterGenerator()
 }
 
 
-void MasterGenerator::Generate(Cache& cache, const std::string& prefix, iOutput* output)
+void MasterGenerator::Generate(Cache& cache, iOutput* output)
 {
   std::string headerIncludes;
   std::string sourceIncludes;
@@ -40,9 +40,9 @@ void MasterGenerator::Generate(Cache& cache, const std::string& prefix, iOutput*
 
     size_t idx = data.filename.find_last_of('.');
     std::string filename = data.filename.substr(0, idx);
-    headerIncludes += "#include <" + prefix + "/" + data.filename + ">\n";
-    headerIncludes += "#include <" + prefix + "/" + filename + ".refl.hh>\n";
-    sourceIncludes += "#include <" + prefix + "/" + filename + ".refl.cc>\n";
+    headerIncludes += "#include \"" + data.filename + "\"\n";
+    headerIncludes += "#include \"" + filename + ".refl.hh\"\n";
+    sourceIncludes += "#include \"" + filename + ".refl.cc\"\n";
 
     register_classes += "  // " + data.filename + "\n";
     unregister_classes += "  // " + data.filename + "\n";

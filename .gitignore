@@ -3,5 +3,7 @@
 .vs/
 .user
 out/
+Docs/html
+Docs/latex
 
 *.vpp.bak*

@@ -3,7 +3,6 @@
 #include <spcCore/coreexport.hh>
 #include <spcCore/types.hh>
 #include <spcCore/class.hh>
-#include <spcCore/window/iwindow.refl.hh>
 
 #include <string>
 

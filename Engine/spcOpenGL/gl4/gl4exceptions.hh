@@ -3,7 +3,7 @@
 #include <exception>
 #include <string>
 
-namespace spc
+namespace spc::opengl
 {
 
 

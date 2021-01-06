@@ -22,7 +22,7 @@ target_link_libraries(spcAssimp
         )
 
 add_dependencies(spcAssimp spcMOC)
-SPICE_MOC(spcAssimp spcAssimp)
+SPICE_MOC(spcAssimp)
 
 
 install(TARGETS spcAssimp

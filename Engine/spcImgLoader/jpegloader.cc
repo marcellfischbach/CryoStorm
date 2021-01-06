@@ -8,7 +8,7 @@ extern "C" {
 #include <jpeglib.h>
 }
 
-namespace spc
+namespace spc::img
 {
 
 

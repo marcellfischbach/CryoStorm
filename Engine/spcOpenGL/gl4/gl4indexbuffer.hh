@@ -5,8 +5,7 @@
 #include <spcOpenGL/openglexport.hh>
 #include <spcCore/graphics/iindexbuffer.hh>
 
-
-namespace spc
+namespace spc::opengl
 {
 SPC_CLASS()
 class SPC_OGL_API GL4IndexBuffer : public SPC_SUPER(iIndexBuffer)

@@ -1,5 +1,6 @@
 #include <spcCore/coremodule.hh>
-#include <spcCore/master.refl.cc>
+//#include <spcCore/master.refl.cc>
+#include <master.refl.cc>
 #include <spcCore/resource/assetmanager.hh>
 
 namespace spc

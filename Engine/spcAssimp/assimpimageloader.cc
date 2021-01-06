@@ -6,7 +6,7 @@
 #include <spcCore/graphics/image.hh>
 #include <png.h>
 
-namespace spc
+namespace spc::assimp
 {
 
 AssimpImageLoader::AssimpImageLoader()

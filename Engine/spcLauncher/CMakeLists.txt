@@ -22,7 +22,7 @@ add_executable(spcLauncher ${SOURCES}
 add_dependencies(spcLauncher spcMOC)
 
 
-SPICE_MOC(spcLauncher spcLauncher)
+SPC_MOC(spcLauncher spcLauncher)
 
 
 

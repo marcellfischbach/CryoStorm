@@ -12,7 +12,7 @@ HeaderGenerator::HeaderGenerator()
 
 }
 
-void HeaderGenerator::Output(const std::string& exp, iOutput* output)
+void HeaderGenerator::Output(iOutput* output)
 {
   std::vector<ClassNode*> classes = FindAllMajorClasses();
 
@@ -31,7 +31,7 @@ void HeaderGenerator::Output(const std::string& exp, iOutput* output)
       continue;
     }
 
-    headers += OutputClass(cls, exp);
+    headers += OutputClass(cls);
   }
   if (!classes.empty() && output)
   {
@@ -39,7 +39,7 @@ void HeaderGenerator::Output(const std::string& exp, iOutput* output)
   }
 }
 
-std::string HeaderGenerator::OutputClass(ClassNode* clsNode, const std::string& exp)
+std::string HeaderGenerator::OutputClass(ClassNode* clsNode)
 {
   std::string source;
   ASTNode* parent = clsNode;
@@ -49,22 +49,13 @@ std::string HeaderGenerator::OutputClass(ClassNode* clsNode, const std::string& 
 
   source += "#pragma once\n";
   source += "\n";
-  source += "#ifdef SPC_WIN32\n";
-  source += "#  ifdef " + exp + "\n";
-  source += "#    define " + exp + "_API __declspec(dllexport)\n";
-  source += "#  else\n";
-  source += "#    define " + exp + "_API __declspec(dllimport)\n";
-  source += "#  endif\n";
-  source += "#else\n";
-  source += "#  define " + exp + "_API\n";
-  source += "#endif\n";
   for (auto ns : nss)
   {
     source += "namespace " + ns->GetName() + "\n";
     source += "{\n";
   }
 
-  source += "\nclass " + exp + "_API " + clsName + " : public spc::Class\n";
+  source += "\nclass " + clsName + " : public spc::Class\n";
   source += "{\n";
   source += "public:\n";
   source += " " + clsName + "();\n";

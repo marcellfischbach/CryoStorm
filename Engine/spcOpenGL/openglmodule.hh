@@ -3,7 +3,7 @@
 
 #include <spcOpenGL/openglexport.hh>
 
-namespace spc
+namespace spc::opengl
 {
 
 class SPC_OGL_API OpenGLModule

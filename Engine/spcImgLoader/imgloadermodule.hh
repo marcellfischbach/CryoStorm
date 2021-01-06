@@ -3,7 +3,7 @@
 
 #include <spcImgLoader/imgloaderexport.hh>
 
-namespace spc
+namespace spc::img
 {
 
 class SPC_IMGLOADER_API ImgLoaderModule

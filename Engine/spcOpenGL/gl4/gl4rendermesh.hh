@@ -9,7 +9,7 @@
 #include <spcCore/graphics/eprimitivetype.hh>
 #include <vector>
 
-namespace spc
+namespace spc::opengl
 {
 
 class GL4VertexBuffer;

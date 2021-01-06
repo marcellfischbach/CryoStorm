@@ -6,7 +6,7 @@
 #include <spcCore/graphics/ivertexbuffer.hh>
 
 
-namespace spc
+namespace spc::opengl
 {
 SPC_CLASS()
 class SPC_OGL_API GL4VertexBuffer : public SPC_SUPER(iVertexBuffer)

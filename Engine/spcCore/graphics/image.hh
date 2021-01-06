@@ -8,6 +8,7 @@
 #include <spcCore/types.hh>
 #include <spcCore/graphics/epixelformat.hh>
 
+
 namespace spc
 {
 

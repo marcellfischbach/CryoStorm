@@ -1,7 +1,7 @@
 #include <spcOpenGL/gl4/shading/gl4shaderattribute.hh>
 
 
-namespace spc
+namespace spc::opengl
 {
 
 GL4ShaderAttribute::GL4ShaderAttribute(GLint location, const std::string& name)

@@ -12,7 +12,7 @@
 
 using namespace tinyxml2;
 
-namespace spc
+namespace spc::opengl
 {
 
 GL4ShaderLoader::GL4ShaderLoader()

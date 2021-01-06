@@ -4,7 +4,7 @@
 #include <spcAssimp/assimpexport.hh>
 #include <spcCore/resource/iassetloader.hh>
 
-namespace spc
+namespace spc::assimp
 {
 
 
