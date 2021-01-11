@@ -20,6 +20,7 @@
 #include <spcCore/graphics/material/materialinstance.hh>
 #include <spcCore/graphics/scene/scenemesh.hh>
 #include <spcCore/resource/assetmanager.hh>
+#include <spcCore/resource/binarydata.hh>
 #include <spcCore/resource/vfs.hh>
 
 
@@ -101,6 +102,63 @@ std::string merge(const std::vector<std::string>& lines)
 
 int main(int argc, char** argv)
 {
+
+  {
+
+    spc::BinaryOutputStream bos;
+    bos
+      << (spc::Int8)1
+      << (spc::UInt8)2
+      << (spc::Int16)3
+      << (spc::UInt16)4
+      << (spc::Int32)5
+      << (spc::UInt32)6
+      << (spc::Int64)7
+      << (spc::UInt64)8
+      << (float)9.0f
+      << (double)10.0
+      << (bool)true
+      << std::string("This is a text message");
+
+    FILE* out = fopen("d:\\Dev\\bos.out", "wb");
+    fwrite(bos.GetData(), sizeof(spc::UInt8), bos.GetSize(), out);
+    fclose(out);
+
+    printf("\n");
+    spc::Int8 i8;
+    spc::UInt8 u8;
+    spc::Int16 i16;
+    spc::UInt16 u16;
+    spc::Int32 i32;
+    spc::UInt32 u32;
+    spc::Int64 i64;
+    spc::UInt64 u64;
+    float f;
+    double d;
+    bool b;
+    std::string str;
+    spc::BinaryInputStream bis(bos.GetData(), bos.GetSize());
+    bis >> i8;
+    bis >> u8;
+    bis >> i16;
+    bis >> u16;
+    bis >> i32;
+    bis >> u32;
+    bis >> i64;
+    bis >> u64;
+    bis >> f;
+    bis >> d;
+    bis >> b;
+    bis >> str;
+    printf("%d %u\n", i8, u8);
+    printf("%d %u\n", i16, u16);
+    printf("%d %u\n", i32, u32);
+    printf("%lld %llu\n", i64, u64);
+    printf("%f %f\n", f, d);
+    printf("%d\n", b);
+    printf("%s\n", str.c_str());
+    printf("\n");
+  }
 
   {
 

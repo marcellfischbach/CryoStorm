@@ -2,7 +2,6 @@
 
 
 add_subdirectory(spcCore)
-add_subdirectory(spcFile)
 add_subdirectory(spcLauncher)
 add_subdirectory(spcImgLoader)
 add_subdirectory(spcOpenGL)

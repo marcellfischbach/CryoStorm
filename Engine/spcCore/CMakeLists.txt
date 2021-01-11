@@ -97,9 +97,13 @@ set(SOURCES
 
         resource/assetmanager.cc
         resource/assetmanager.hh
+        resource/binarydata.cc
+        resource/binarydata.hh
         resource/eaccessmode.hh
         resource/eopenmode.hh
         resource/eseekmode.hh
+        resource/file.cc
+        resource/file.hh
         resource/filesystemfile.cc
         resource/filesystemfile.hh
         resource/iassetloader.hh

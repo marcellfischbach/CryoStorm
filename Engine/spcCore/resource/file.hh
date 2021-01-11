@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <spcFile/fileexport.hh>
+#include <spcCore/coreexport.hh>
 #include <string>
 #include <vector>
 
@@ -9,7 +9,7 @@ namespace spc::file
 {
 
 
-class SPC_FILE_API Attribute
+class SPC_CORE_API Attribute
 {
 public:
   enum class AttributeType {
@@ -31,7 +31,7 @@ private:
   AttributeType m_type;
 };
 
-class SPC_FILE_API Element
+class SPC_CORE_API Element
 {
 public:
   Element();
@@ -69,7 +69,7 @@ private:
 
 struct iBuffer;
 
-class SPC_FILE_API File
+class SPC_CORE_API File
 {
 public:
   File();

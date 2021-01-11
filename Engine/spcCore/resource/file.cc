@@ -1,5 +1,5 @@
 
-#include <spcFile/file.hh>
+#include <spcCore/resource/file.hh>
 #include <stdio.h>
 
 
