@@ -131,10 +131,13 @@ public:
 
 public:
   BinaryDictionary();
+  BinaryDictionary(const BinaryInputStream &stream);
   ~BinaryDictionary();
 
   void Write(BinaryOutputStream& stream) const;
-  void Read(const BinaryInputStream& stream);
+  void ReadAll(const BinaryInputStream& stream);
+  void ReadHeader(const BinaryInputStream &stream);
+  const Entry Read(const BinaryInputStream &stream, const std::string &name);
 
   void Put(const std::string& name, const UInt8* data, Size dataSize);
   bool Remove(const std::string &name);
@@ -143,6 +146,7 @@ public:
   const Entry Get(const std::string& name) const;
 
 private:
+    void ReadEntry(const BinaryInputStream &stream, const std::string &name);
 
   struct _Entry
   {
@@ -152,6 +156,7 @@ private:
   };
 
   std::map<std::string, _Entry> m_entries;
+  std::map<std::string, Size> m_header;
 
 };
 

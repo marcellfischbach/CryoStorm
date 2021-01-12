@@ -21,6 +21,16 @@ set(SOURCES
         string.hh
         types.hh
 
+        entity/entity.cc
+        entity/entity.hh
+        entity/entitystate.cc
+        entity/entitystate.hh
+        entity/spatialstate.cc
+        entity/spatialstate.hh
+        entity/world.cc
+        entity/world.hh
+
+
         graphics/camera.cc
         graphics/camera.hh
         graphics/ebufferusage.hh
@@ -63,6 +73,8 @@ set(SOURCES
         graphics/material/materialinstance.cc
         graphics/material/materialinstance.hh
 
+        graphics/scene/scene.cc
+        graphics/scene/scene.hh
         graphics/scene/scenemesh.cc
         graphics/scene/scenemesh.hh
 
@@ -119,7 +131,7 @@ set(SOURCES
         window/iwindow.hh
 
         )
-        add_library(spcCore SHARED
+add_library(spcCore SHARED
         ${SOURCES}
         )
 

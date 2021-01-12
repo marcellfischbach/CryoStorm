@@ -2,7 +2,7 @@
 
 .vs/
 .user
-.idea/
+.idea
 out/
 Docs/html
 Docs/latex
