@@ -12,6 +12,11 @@ BufferExhaustedException::BufferExhaustedException()
 }
 
 
+BinaryEntryAlreadyExistsException::BinaryEntryAlreadyExistsException()
+  : std::exception()
+{
+
+}
 
 /* ************************************************************************
  * ************************************************************************
@@ -21,7 +26,10 @@ BufferExhaustedException::BufferExhaustedException()
  */
 
 BinaryOutputStream::BinaryOutputStream()
-  : m_buffer(nullptr), m_idx(0), m_capacity(0), m_sizeIncrement(256)
+  : m_buffer(nullptr),
+    m_capacity(0),
+    m_idx(0),
+    m_sizeIncrement(256)
 {
 
 }
@@ -142,6 +150,7 @@ BinaryOutputStream& BinaryOutputStream::Write(const UInt8* data, Size size)
   Reserve(size);
   memcpy(m_buffer + m_idx, data, size);
   m_idx += size;
+  return *this;
 }
 
 
@@ -180,7 +189,9 @@ void BinaryOutputStream::Reserve(Size size)
 
 
 BinaryInputStream::BinaryInputStream(const UInt8* buffer, Size bufferSize)
-  : m_buffer(buffer), m_idx(0), m_bufferSize(bufferSize)
+  : m_buffer(buffer),
+    m_bufferSize(bufferSize),
+    m_idx(0)
 {
 
 }
@@ -320,7 +331,7 @@ void BinaryDictionary::Write(BinaryOutputStream& stream) const
   for (auto it = m_entries.begin(); it != m_entries.end(); ++it)
   {
     stream << it->first
-      << it->second.m_dataSize;
+           << it->second.m_dataSize;
     stream.Write(it->second.m_data, it->second.m_dataSize);
   }
 }
@@ -335,13 +346,13 @@ void BinaryDictionary::Read(const BinaryInputStream& stream)
     std::string name;
     Size dataSize;
     stream >> name
-      >> dataSize;
+        >> dataSize;
 
     _Entry entry;
     entry.Name = name;
     entry.m_data = new UInt8[dataSize];
     entry.m_dataSize = dataSize;
-    stream.Read(entry.m_data, dataSize);
+    stream.Read(entry.m_data, entry.m_dataSize);
     m_entries[name] = entry;
   }
 }
@@ -350,10 +361,31 @@ void BinaryDictionary::Put(const std::string& name, const UInt8* data, Size data
 {
   if (Contains(name))
   {
-    return;
+    throw BinaryEntryAlreadyExistsException();
   }
 
+  _Entry entry;
+  entry.Name = name;
+  entry.m_data = new UInt8[dataSize];
+  entry.m_dataSize = dataSize;
+  memcpy(entry.m_data, data, dataSize);
+  m_entries[name] = entry;
+
+
 }
+
+bool BinaryDictionary::Remove(const std::string &name)
+{
+  auto it = m_entries.find(name);
+  if (it == m_entries.end())
+  {
+    return false;
+  }
+
+  delete [] it->second.m_data;
+  m_entries.erase(it);
+}
+
 
 bool BinaryDictionary::Contains(const std::string& name) const
 {
@@ -364,7 +396,7 @@ const BinaryDictionary::Entry BinaryDictionary::Get(const std::string& name) con
 {
   auto it = m_entries.find(name);
   if (it != m_entries.end())
-  { 
+  {
     return Entry(name, it->second.m_data, it->second.m_dataSize);
   }
   return Entry(name, nullptr, 0);

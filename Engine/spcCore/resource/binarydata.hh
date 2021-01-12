@@ -15,7 +15,12 @@ class SPC_CORE_API BufferExhaustedException : public std::exception
 {
 public:
   BufferExhaustedException();
+};
 
+class SPC_CORE_API BinaryEntryAlreadyExistsException : public std::exception
+{
+public:
+  BinaryEntryAlreadyExistsException();
 };
 
 class SPC_CORE_API BinaryOutputStream
@@ -63,10 +68,10 @@ private:
 
   void Reserve(Size size);
 
-  Size m_sizeIncrement;
   UInt8* m_buffer;
   Size m_capacity;
   Size m_idx;
+  Size m_sizeIncrement;
 };
 
 class SPC_CORE_API BinaryInputStream
@@ -132,6 +137,7 @@ public:
   void Read(const BinaryInputStream& stream);
 
   void Put(const std::string& name, const UInt8* data, Size dataSize);
+  bool Remove(const std::string &name);
 
   bool Contains(const std::string& name) const;
   const Entry Get(const std::string& name) const;

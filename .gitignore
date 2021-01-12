@@ -11,3 +11,4 @@ cmake-build-*/
 
 
 *.vpp.bak*
+CMakeLists.txt.user
