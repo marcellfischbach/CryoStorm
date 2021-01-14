@@ -1,5 +1,5 @@
 
-#include <spcCore/graphics/scene/scenemesh.hh>
+#include <spcCore/graphics/scene/gfxscenemesh.hh>
 #include <spcCore/graphics/material/imaterial.hh>
 #include <spcCore/graphics/irendermesh.hh>
 #include <spcCore/graphics/idevice.hh>
@@ -8,7 +8,7 @@
 namespace spc
 {
 
-SceneMesh::SceneMesh()
+GfxSceneMesh::GfxSceneMesh()
   : iObject()
   , m_material(nullptr)
   , m_mesh(nullptr)
@@ -17,14 +17,14 @@ SceneMesh::SceneMesh()
 }
 
 
-SceneMesh::~SceneMesh()
+GfxSceneMesh::~GfxSceneMesh()
 {
   SPC_RELEASE(m_material);
   SPC_RELEASE(m_mesh);
   ClearLights();
 }
 
-void SceneMesh::Render(iDevice* device, eRenderPass pass)
+void GfxSceneMesh::Render(iDevice* device, eRenderPass pass)
 {
   if (device->BindMaterial(m_material, pass))
   {
@@ -43,49 +43,49 @@ void SceneMesh::Render(iDevice* device, eRenderPass pass)
   }
 }
 
-void SceneMesh::SetMaterial(iMaterial* material)
+void GfxSceneMesh::SetMaterial(iMaterial* material)
 {
   SPC_SET(m_material, material);
 }
 
-iMaterial* SceneMesh::GetMaterial()
+iMaterial* GfxSceneMesh::GetMaterial()
 {
   return m_material;
 }
 
-const iMaterial* SceneMesh::GetMaterial() const
+const iMaterial* GfxSceneMesh::GetMaterial() const
 {
   return m_material;
 }
 
 
-void SceneMesh::SetMesh(iRenderMesh* mesh)
+void GfxSceneMesh::SetMesh(iRenderMesh* mesh)
 {
   SPC_SET(m_mesh, mesh);
 }
 
-iRenderMesh* SceneMesh::GetMesh()
+iRenderMesh* GfxSceneMesh::GetMesh()
 {
   return m_mesh;
 }
 
-const iRenderMesh* SceneMesh::GetMesh() const
+const iRenderMesh* GfxSceneMesh::GetMesh() const
 {
   return m_mesh;
 }
 
 
-void SceneMesh::SetModelMatrix(const Matrix4f& modelMatrix)
+void GfxSceneMesh::SetModelMatrix(const Matrix4f& modelMatrix)
 {
   m_modelMatrix = modelMatrix;
 }
 
-const Matrix4f& SceneMesh::GetModelMatrix()  const
+const Matrix4f& GfxSceneMesh::GetModelMatrix()  const
 {
   return m_modelMatrix;
 }
 
-void SceneMesh::ClearLights()
+void GfxSceneMesh::ClearLights()
 {
   for (iLight* light : m_lights)
   {
@@ -94,7 +94,7 @@ void SceneMesh::ClearLights()
   m_lights.clear();
 }
 
-void SceneMesh::AddLight(iLight* light)
+void GfxSceneMesh::AddLight(iLight* light)
 {
   if (light)
   {

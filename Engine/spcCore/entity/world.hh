@@ -7,7 +7,7 @@
 namespace spc
 {
 
-class Scene;
+class GfxScene;
 
 SPC_CLASS()
 class SPC_CORE_API World : public SPC_SUPER(iObject)
@@ -16,12 +16,12 @@ class SPC_CORE_API World : public SPC_SUPER(iObject)
 public:
   World();
   
-  void SetScene(Scene* scene);
-  Scene* GetScene();
-  const Scene* GetScene() const;
+  void SetScene(GfxScene * scene);
+  GfxScene* GetScene();
+  const GfxScene* GetScene() const;
   
 private:
-  Scene* m_scene;
+  GfxScene* m_scene;
   
   
 };

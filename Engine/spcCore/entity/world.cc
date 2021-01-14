@@ -1,6 +1,6 @@
 
 #include <spcCore/entity/world.hh>
-#include <spcCore/graphics/scene/scene.hh>
+#include <spcCore/graphics/scene/gfxscene.hh>
 
 namespace spc
 {
@@ -10,20 +10,20 @@ World::World()
   , m_scene(nullptr)
 {
   SPC_CLASS_GEN_CONSTR;
-  SetScene(new Scene());
+  SetScene(new GfxScene());
 }
 
-void World::SetScene(Scene *scene)
+void World::SetScene(GfxScene *scene)
 {
   SPC_SET(m_scene, scene);
 }
 
-Scene* World::GetScene()
+GfxScene* World::GetScene()
 {
   return m_scene;
 }
 
-const Scene* World::GetScene() const
+const GfxScene* World::GetScene() const
 {
   return m_scene;
 }

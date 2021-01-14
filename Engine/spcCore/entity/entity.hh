@@ -9,6 +9,7 @@
 namespace spc
 {
 
+class World;
 class EntityState;
 class SpatialState;
 
@@ -44,6 +45,7 @@ private:
   SpatialState* m_rootState;
   std::vector<EntityState*> m_states;
   
+  World* m_world;
   
 };
 

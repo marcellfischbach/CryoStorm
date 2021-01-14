@@ -1,19 +1,19 @@
 
-#include <spcCore/graphics/scene/scene.hh>
+#include <spcCore/graphics/scene/gfxscene.hh>
 #include <spcCore/graphics/ilight.hh>
-#include <spcCore/graphics/scene/scenemesh.hh>
+#include <spcCore/graphics/scene/gfxscenemesh.hh>
 
 
 namespace spc
 {
 
-Scene::Scene()
+GfxScene::GfxScene()
 : iObject()
 {
   SPC_CLASS_GEN_CONSTR;
 }
 
-void Scene::Add(SceneMesh *sceneMesh)
+void GfxScene::Add(GfxSceneMesh*sceneMesh)
 {
   if (sceneMesh)
   {
@@ -30,7 +30,7 @@ void Scene::Add(SceneMesh *sceneMesh)
   }
 }
 
-void Scene::Add(iLight *light)
+void GfxScene::Add(iLight *light)
 {
   if (light)
   {
@@ -47,7 +47,7 @@ void Scene::Add(iLight *light)
   }
 }
 
-void Scene::Render(iDevice * device, eRenderPass pass)
+void GfxScene::Render(iDevice * device, eRenderPass pass)
 {
   for (auto mesh : m_meshes)
   {

@@ -16,12 +16,12 @@ struct iMaterial;
 struct iRenderMesh;
 
 SPC_CLASS()
-class SPC_CORE_API SceneMesh : public SPC_SUPER(iObject)
+class SPC_CORE_API GfxSceneMesh : public SPC_SUPER(iObject)
 {
   SPC_CLASS_GEN_OBJECT;
 public:
-  SceneMesh();
-  virtual ~SceneMesh();
+  GfxSceneMesh();
+  virtual ~GfxSceneMesh();
 
   void SetMaterial(iMaterial * material);
   iMaterial* GetMaterial();

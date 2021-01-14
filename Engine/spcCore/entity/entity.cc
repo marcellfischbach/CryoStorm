@@ -13,7 +13,7 @@ Entity::Entity(const std::string &name)
   SPC_CLASS_GEN_CONSTR;
 }
 
-Entity::~Entity() noexcept
+Entity::~Entity()
 {
 
 }

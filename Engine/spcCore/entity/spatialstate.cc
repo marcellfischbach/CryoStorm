@@ -10,7 +10,7 @@ SpatialState::SpatialState(const std::string& name)
 
 }
 
-SpatialState::~SpatialState() noexcept
+SpatialState::~SpatialState() 
 {
 
 }

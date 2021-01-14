@@ -13,7 +13,7 @@ EntityState::EntityState(const std::string &name)
   SPC_CLASS_GEN_CONSTR;
 }
 
-EntityState::~EntityState() noexcept
+EntityState::~EntityState()
 {
 
 }

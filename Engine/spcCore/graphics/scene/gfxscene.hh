@@ -12,24 +12,24 @@ namespace spc
 
 struct iDevice;
 struct iLight;
-class SceneMesh;
+class GfxSceneMesh;
 
 
 SPC_CLASS()
-class SPC_CORE_API Scene : public SPC_SUPER(iObject)
+class SPC_CORE_API GfxScene : public SPC_SUPER(iObject)
 {
   SPC_CLASS_GEN_OBJECT;
 public:
-  Scene();
+  GfxScene();
   
-  void Add(SceneMesh* sceneMesh);
+  void Add(GfxSceneMesh * sceneMesh);
   void Add(iLight* light);
   
   void Render(iDevice * device, eRenderPass pass);
 
 private:
   
-  std::vector<SceneMesh*> m_meshes;
+  std::vector<GfxSceneMesh*> m_meshes;
   std::vector<iLight*> m_lights;
 };
 

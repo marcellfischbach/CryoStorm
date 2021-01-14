@@ -21,8 +21,8 @@
 #include <spcCore/graphics/shading/ishaderattribute.hh>
 #include <spcCore/graphics/material/material.hh>
 #include <spcCore/graphics/material/materialinstance.hh>
-#include <spcCore/graphics/scene/scene.hh>
-#include <spcCore/graphics/scene/scenemesh.hh>
+#include <spcCore/graphics/scene/gfxscene.hh>
+#include <spcCore/graphics/scene/gfxscenemesh.hh>
 #include <spcCore/resource/assetmanager.hh>
 #include <spcCore/resource/binarydata.hh>
 #include <spcCore/resource/vfs.hh>
@@ -269,11 +269,11 @@ int main(int argc, char **argv)
   
   spc::iRenderMesh* renderMesh = create_plane_mesh();
   
-  spc::SceneMesh *sceneMesh = new spc::SceneMesh();
+  spc::GfxSceneMesh *sceneMesh = new spc::GfxSceneMesh();
   sceneMesh->SetMesh(renderMesh);
   sceneMesh->SetMaterial(material);
   
-  spc::Scene* scene = new spc::Scene();
+  spc::GfxScene* scene = new spc::GfxScene();
   scene->Add(sceneMesh);
   
   int width, height;

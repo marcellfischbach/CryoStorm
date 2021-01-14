@@ -73,10 +73,10 @@ set(SOURCES
         graphics/material/materialinstance.cc
         graphics/material/materialinstance.hh
 
-        graphics/scene/scene.cc
-        graphics/scene/scene.hh
-        graphics/scene/scenemesh.cc
-        graphics/scene/scenemesh.hh
+        graphics/scene/gfxscene.cc
+        graphics/scene/gfxscene.hh
+        graphics/scene/gfxscenemesh.cc
+        graphics/scene/gfxscenemesh.hh
 
         graphics/shading/ishader.hh
         graphics/shading/ishaderattribute.hh
