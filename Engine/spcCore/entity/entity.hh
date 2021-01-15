@@ -3,6 +3,7 @@
 
 #include <spcCore/coreexport.hh>
 #include <spcCore/class.hh>
+#include <spcCore/types.hh>
 #include <string>
 #include <vector>
 
@@ -24,13 +25,26 @@ public:
   
   void SetName(const std::string &name);
   const std::string &GetName() const;
+
+  bool Attach(Entity * entity, SpatialState *parentState = nullptr);
+  bool Detach(Entity * entity);
+  Entity* GetParent();
+  const Entity* GetParent() const;
+  Size GetNumberOfChildren() const;
+  Entity* GetChild(Size idx);
+  const Entity* GetChild(Size idx) const;
   
+
+
+
   bool Attach(EntityState* entityState);
   bool Detach(EntityState* entityState);
   
   void SetRoot(SpatialState *rootState);
   SpatialState*GetRoot();
   const SpatialState*GetRoot() const;
+
+
   
   /**
    * Don't use directly will be called by the entity states
@@ -44,6 +58,9 @@ private:
   
   SpatialState* m_rootState;
   std::vector<EntityState*> m_states;
+
+  Entity* m_parent;
+  std::vector<Entity*> m_children;
   
   World* m_world;
   

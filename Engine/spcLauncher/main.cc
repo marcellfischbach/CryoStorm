@@ -221,6 +221,26 @@ spc::iRenderMesh* create_plane_mesh()
   return renderMesh;
 }
 
+void debug(spc::SpatialState* state, int indent) 
+{
+  if (!state)
+  {
+    return;
+  }
+  for (int i = 0; i < indent; i++)
+  {
+    printf("  ");
+  }
+  printf("%s [%s]\n",
+    state->GetName().c_str(),
+    state->GetEntity() ? state->GetEntity()->GetName().c_str() : "n/a"
+  );
+  for (spc::Size i = 0, in = state->GetNumberOfChildren(); i < in; i++)
+  {
+    debug(state->GetChild(i), indent + 1);
+  }
+}
+
 int main(int argc, char **argv)
 {
   if (!register_modules(argc, argv))
@@ -317,26 +337,31 @@ int main(int argc, char **argv)
   pointLight3->SetRange(10.0f);
   scene->Add(pointLight3);
   
-  spc::Entity* entity = new spc::Entity("Entity");
-  spc::SpatialState *rootState = new spc::SpatialState("RootState");
-  spc::SpatialState *childState0 = new spc::SpatialState("Child0");
-  spc::SpatialState *childState1 = new spc::SpatialState("Child1");
-  spc::SpatialState *childState00 = new spc::SpatialState("Child00");
-  spc::SpatialState *childState01 = new spc::SpatialState("Child01");
-  spc::SpatialState *childState10 = new spc::SpatialState("Child10");
-  spc::SpatialState *childState11 = new spc::SpatialState("Child11");
+  spc::Entity* entity0 = new spc::Entity("Entity_0");
+  spc::SpatialState *rootState0 = new spc::SpatialState("RootState0_0");
+  spc::SpatialState *childState00 = new spc::SpatialState("Child0_0");
+  spc::SpatialState *childState10 = new spc::SpatialState("Child1_0");
+  entity0->Attach(rootState0);
+  rootState0->Attach(childState00);
+  rootState0->Attach(childState10);
   
-  rootState->Attach(childState0);
-  rootState->Attach(childState1);
-  childState0->Attach(childState00);
-  childState0->Attach(childState01);
-  childState1->Attach(childState10);
-  childState1->Attach(childState11);
   
-  entity->Attach(rootState);
-  printf("Entity: %p\n", entity);
-  fflush(stdout);
-  
+  spc::Entity* entity1 = new spc::Entity("Entity_1");
+  spc::SpatialState* rootState1 = new spc::SpatialState("RootState0_1");
+  spc::SpatialState* childState01 = new spc::SpatialState("Child0_1");
+  spc::SpatialState* childState11 = new spc::SpatialState("Child1_1");
+  entity1->Attach(rootState1);
+  rootState1->Attach(childState01);
+  rootState1->Attach(childState11);
+
+
+  entity0->Attach(entity1, childState11);
+
+  spc::SpatialState* rootOfAll = new spc::SpatialState("MasterRoot");
+  rootOfAll->Attach(entity0->GetRoot());
+
+  debug(rootOfAll, 0);
+
   float rot = 0.0f;
   
   spc::UInt32 nextSec = SDL_GetTicks() + 1000;

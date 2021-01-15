@@ -3,6 +3,8 @@
 
 #include <spcCore/coreexport.hh>
 #include <spcCore/entity/entitystate.hh>
+#include <spcCore/types.hh>
+#include <spcCore/math/matrix4f.hh>
 #include <vector>
 
 namespace spc
@@ -18,16 +20,40 @@ public:
   virtual ~SpatialState();
   
   bool Attach(SpatialState *child);
+  bool DetachSelf();
   bool Detach(SpatialState *child);
   SpatialState* GetParent();
   const SpatialState* GetParent() const;
+
+  Size GetNumberOfChildren() const;
+  SpatialState* GetChild(Size idx);
+  const SpatialState* GetChild(Size idx) const;
+
+  /**
+   * @name Transformation
+   * @{
+   */
+  void SetMatrix(const Matrix4f & matrix);
+  const Matrix4f& GetMatrix() const;
+  const Matrix4f& GetGlobalMatrix() const;
+  /**
+   * @}
+   */
   
 protected:
   void UpdateEntity(Entity* oldEntity, Entity* newEntity) override;
+
   
 private:
   SpatialState* m_parent;
   std::vector<SpatialState*> m_children;
+
+
+  Matrix4f m_matrix;
+  mutable bool m_globalMatrixDirty;
+  mutable Matrix4f m_globalMatrix;
+  void SetGlobalMatrixDirty();
+
 };
 
 }
