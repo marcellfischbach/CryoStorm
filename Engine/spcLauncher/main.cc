@@ -7,6 +7,7 @@
 #include <spcCore/entity/entity.hh>
 #include <spcCore/entity/entitystate.hh>
 #include <spcCore/entity/spatialstate.hh>
+#include <spcCore/entity/world.hh>
 #include <spcCore/input/input.hh>
 #include <spcCore/math/math.hh>
 #include <spcCore/objectregistry.hh>
@@ -336,29 +337,34 @@ int main(int argc, char **argv)
   pointLight3->SetPosition(spc::Vector3f(5.0f, 5.0f, 5.0f));
   pointLight3->SetRange(10.0f);
   scene->Add(pointLight3);
+
+  spc::World* world = new spc::World();
   
   spc::Entity* entity0 = new spc::Entity("Entity_0");
-  spc::SpatialState *rootState0 = new spc::SpatialState("RootState0_0");
-  spc::SpatialState *childState00 = new spc::SpatialState("Child0_0");
-  spc::SpatialState *childState10 = new spc::SpatialState("Child1_0");
+  spc::SpatialState *rootState0 = new spc::SpatialState("RootState_0");
+  spc::SpatialState *childState00 = new spc::SpatialState("Child_0_0");
+  spc::SpatialState *childState01 = new spc::SpatialState("Child_0_1");
   entity0->Attach(rootState0);
   rootState0->Attach(childState00);
-  rootState0->Attach(childState10);
-  
+  rootState0->Attach(childState01);
   
   spc::Entity* entity1 = new spc::Entity("Entity_1");
-  spc::SpatialState* rootState1 = new spc::SpatialState("RootState0_1");
-  spc::SpatialState* childState01 = new spc::SpatialState("Child0_1");
-  spc::SpatialState* childState11 = new spc::SpatialState("Child1_1");
+  spc::SpatialState* rootState1 = new spc::SpatialState("RootState_1");
+  spc::SpatialState* childState10 = new spc::SpatialState("Child_1_0");
+  spc::SpatialState* childState11 = new spc::SpatialState("Child_1_1");
   entity1->Attach(rootState1);
-  rootState1->Attach(childState01);
+  rootState1->Attach(childState10);
   rootState1->Attach(childState11);
 
 
-  entity0->Attach(entity1, childState11);
+  entity0->Attach(entity1, childState00);
+  world->Attach(entity0);
 
   spc::SpatialState* rootOfAll = new spc::SpatialState("MasterRoot");
   rootOfAll->Attach(entity0->GetRoot());
+
+  entity0->Detach(entity1);
+  rootOfAll->Attach(entity1->GetRoot());
 
   debug(rootOfAll, 0);
 

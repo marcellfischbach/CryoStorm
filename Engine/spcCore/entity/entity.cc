@@ -1,6 +1,7 @@
 #include <spcCore/entity/entity.hh>
 #include <spcCore/entity/entitystate.hh>
 #include <spcCore/entity/spatialstate.hh>
+#include <spcCore/entity/world.hh>
 
 namespace spc
 {
@@ -10,6 +11,7 @@ Entity::Entity(const std::string &name)
   , m_name(name)
   , m_rootState(nullptr)
   , m_parent(nullptr)
+  , m_world(nullptr)
 {
   SPC_CLASS_GEN_CONSTR;
 }
@@ -29,17 +31,37 @@ const std::string &Entity::GetName() const
   return m_name;
 }
 
+void Entity::SetWorld(World* world)
+{
+  if (m_world != world)
+  {
+    SPC_SET(m_world, world);
+    for (auto child : m_children)
+    {
+      child->SetWorld(world);
+    }
+  }
+}
+
+World *Entity::GetWorld() 
+{
+  return m_world;
+}
+
+const World* Entity::GetWorld() const
+{
+  return m_world;
+}
+
+
+
 bool Entity::Attach(Entity* entity, SpatialState* parentState)
 {
   if (!entity)
   {
     return false;
   }
-  if (entity->GetParent())
-  {
-    return false;
-  }
-  if (std::find(m_children.begin(), m_children.end(), entity) != m_children.end())
+  if (entity->GetParent() || std::find(m_children.begin(), m_children.end(), entity) != m_children.end())
   {
     return false;
   }
@@ -50,6 +72,7 @@ bool Entity::Attach(Entity* entity, SpatialState* parentState)
 
   entity->m_parent = this;
   m_children.push_back(entity);
+  entity->SetWorld(m_world);
 
   SpatialState* childRoot = entity->GetRoot();
   if (!parentState)
@@ -84,6 +107,7 @@ bool Entity::Detach(Entity* entity)
 
   entity->m_parent = nullptr;
   m_children.erase(it);
+  entity->SetWorld(nullptr);
 
   SpatialState* childRoot = entity->GetRoot();
   if (childRoot)

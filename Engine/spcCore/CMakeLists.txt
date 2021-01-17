@@ -101,7 +101,10 @@ set(SOURCES
         math/plane.hh
         math/planeclipper.cc
         math/planeclipper.hh
+        math/quaternion.hh
         math/randomrange.hh
+        math/transform.cc
+        math/transform.hh
         math/vector.hh
         math/vector2f.hh
         math/vector3f.hh

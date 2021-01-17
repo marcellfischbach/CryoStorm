@@ -26,6 +26,10 @@ public:
   void SetName(const std::string &name);
   const std::string &GetName() const;
 
+  void SetWorld(World * world);
+  World* GetWorld();
+  const World* GetWorld() const;
+
   bool Attach(Entity * entity, SpatialState *parentState = nullptr);
   bool Detach(Entity * entity);
   Entity* GetParent();

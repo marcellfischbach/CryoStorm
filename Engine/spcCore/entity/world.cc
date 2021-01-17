@@ -1,5 +1,6 @@
 
 #include <spcCore/entity/world.hh>
+#include <spcCore/entity/entity.hh>
 #include <spcCore/graphics/scene/gfxscene.hh>
 
 namespace spc
@@ -28,5 +29,30 @@ const GfxScene* World::GetScene() const
   return m_scene;
 }
 
+
+bool World::Attach(Entity* entity)
+{
+  if (std::find(m_entities.begin(), m_entities.end(), entity) != m_entities.end()
+    || entity->GetWorld())
+  {
+    return false;
+  }
+  m_entities.push_back(entity);
+  entity->SetWorld(this);
+  entity->AddRef();
+}
+
+bool World::Detach(Entity* entity)
+{
+  auto it = std::find(m_entities.begin(), m_entities.end(), entity);
+  if (it == m_entities.end() || entity->GetWorld() != this)
+  {
+    return false;
+  }
+
+  m_entities.erase(it);
+  entity->SetWorld(nullptr);
+  entity->Release();
+}
 
 }

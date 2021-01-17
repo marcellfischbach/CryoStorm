@@ -7,6 +7,7 @@
 namespace spc
 {
 
+class Entity;
 class GfxScene;
 
 SPC_CLASS()
@@ -19,10 +20,15 @@ public:
   void SetScene(GfxScene * scene);
   GfxScene* GetScene();
   const GfxScene* GetScene() const;
+
+  bool Attach(Entity * entit);
+  bool Detach(Entity * entit);
+
   
 private:
   GfxScene* m_scene;
   
+  std::vector<Entity*> m_entities;
   
 };
 
