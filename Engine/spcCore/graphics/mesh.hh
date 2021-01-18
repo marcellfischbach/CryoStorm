@@ -38,8 +38,7 @@ public:
   public:
     ~SubMesh();
     void SetMesh(iRenderMesh* mesh);
-    iRenderMesh* GetMesh();
-    const iRenderMesh* GetMesh() const;
+    iRenderMesh* GetMesh() const;
 
     void SetMaterialSlotIdx(Size materialSlotIdx);
     Size GetMaterialSlotIdx() const;
@@ -77,6 +76,8 @@ public:
 
 
   void AddSubMesh(iRenderMesh* mesh, Size materialSlotIdx);
+  Size GetNumberOfSubMeshes() const;
+  const SubMesh& GetSubMesh(Size idx) const;
 
 
 private:

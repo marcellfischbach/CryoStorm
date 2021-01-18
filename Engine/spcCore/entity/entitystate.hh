@@ -8,6 +8,7 @@ namespace spc
 {
 
 class Entity;
+class World;
 
 SPC_CLASS()
 class SPC_CORE_API EntityState : public SPC_SUPER(iObject)
@@ -24,6 +25,21 @@ public:
   void SetEntity(Entity* entity);
   Entity* GetEntity();
   const Entity* GetEntity() const;
+
+  World* GetWorld();
+  const World* GetWorld() const;
+
+
+  /**
+   * @name Livecycle
+   * @{
+   */
+  virtual void OnAttachedToWorld(World * world);
+  virtual void OnDetachedFromWorld(World * world);
+
+  /**
+   * @}
+   */
   
 protected:
   virtual void UpdateEntity(Entity* oldEntity, Entity* newEntity);

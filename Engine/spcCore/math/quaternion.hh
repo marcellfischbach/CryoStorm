@@ -83,12 +83,12 @@ struct SPC_CORE_API Quaternion
 			return SetAxisAngle(v.x, v.y, v.z, angle);
 		}
 
-		SPC_FORCEINLINE static Quaternion FromAngleAxis(const Vector3f &v, float angle)
+		SPC_FORCEINLINE static Quaternion FromAxisAngle(const Vector3f &v, float angle)
 		{
-			return FromAngleAxis(v.x, v.y, v.z, angle);
+			return FromAxisAngle(v.x, v.y, v.z, angle);
 		}
 
-		SPC_FORCEINLINE static Quaternion FromAngleAxis(float x, float y, float z, float angle)
+		SPC_FORCEINLINE static Quaternion FromAxisAngle(float x, float y, float z, float angle)
 		{
 			float angle2 = angle/2.0f;
 			float c = spcCos(angle2);

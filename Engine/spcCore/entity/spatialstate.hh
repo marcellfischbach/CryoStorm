@@ -36,7 +36,6 @@ public:
    */
   void SetTransform(const Transform & transform);
   const Transform &GetTransform() const;
-
   const Matrix4f& GetGlobalMatrix() const;
   /**
    * @}
@@ -44,6 +43,7 @@ public:
   
 protected:
   void UpdateEntity(Entity* oldEntity, Entity* newEntity) override;
+  virtual void TransformationUpdated();
 
   
 private:

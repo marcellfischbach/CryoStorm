@@ -31,6 +31,28 @@ Size Mesh::AddMaterialSlot(const std::string& name, iMaterial* defaultMaterial)
   return m_materialSlots.size() - 1;
 }
 
+Size Mesh::GetNumberOfSubMeshes() const
+{
+  return m_subMeshes.size();
+}
+
+void Mesh::AddSubMesh(iRenderMesh* mesh, Size materialSlotIdx)
+{
+  SubMesh subMesh;
+  subMesh.SetMesh(mesh);
+  subMesh.SetMaterialSlotIdx(materialSlotIdx);
+  m_subMeshes.push_back(subMesh);
+}
+
+const Mesh::SubMesh &Mesh::GetSubMesh(Size idx) const
+{
+  if (idx >= m_subMeshes.size())
+  {
+    throw OutOfBoundsException();
+  }
+  return m_subMeshes[idx];
+}
+
 Size Mesh::GetNumberOfMaterialSlots() const
 {
   return m_materialSlots.size();
@@ -75,12 +97,7 @@ void Mesh::SubMesh::SetMesh(iRenderMesh* mesh)
   SPC_SET(m_mesh, mesh);
 }
 
-iRenderMesh* Mesh::SubMesh::GetMesh()
-{
-  return m_mesh;
-}
-
-const iRenderMesh* Mesh::SubMesh::GetMesh() const
+iRenderMesh* Mesh::SubMesh::GetMesh() const
 {
   return m_mesh;
 }

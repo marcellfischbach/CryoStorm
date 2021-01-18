@@ -27,6 +27,8 @@ set(SOURCES
         entity/entitystate.hh
         entity/spatialstate.cc
         entity/spatialstate.hh
+        entity/staticmeshstate.cc
+        entity/staticmeshstate.hh
         entity/world.cc
         entity/world.hh
 

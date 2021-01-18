@@ -8,12 +8,12 @@ namespace spc
 {
 
 GfxScene::GfxScene()
-: iObject()
+  : iObject()
 {
   SPC_CLASS_GEN_CONSTR;
 }
 
-void GfxScene::Add(GfxSceneMesh*sceneMesh)
+void GfxScene::Add(GfxSceneMesh* sceneMesh)
 {
   if (sceneMesh)
   {
@@ -30,7 +30,23 @@ void GfxScene::Add(GfxSceneMesh*sceneMesh)
   }
 }
 
-void GfxScene::Add(iLight *light)
+void GfxScene::Remove(GfxSceneMesh* sceneMesh)
+{
+  if (sceneMesh)
+  {
+    auto it = std::find(m_meshes.begin(), m_meshes.end(), sceneMesh);
+    if (it == m_meshes.end())
+    {
+      return;
+    }
+
+    sceneMesh->ClearLights();
+    m_meshes.erase(it);
+    sceneMesh->Release();
+  }
+}
+
+void GfxScene::Add(iLight* light)
 {
   if (light)
   {
@@ -47,7 +63,7 @@ void GfxScene::Add(iLight *light)
   }
 }
 
-void GfxScene::Render(iDevice * device, eRenderPass pass)
+void GfxScene::Render(iDevice* device, eRenderPass pass)
 {
   for (auto mesh : m_meshes)
   {

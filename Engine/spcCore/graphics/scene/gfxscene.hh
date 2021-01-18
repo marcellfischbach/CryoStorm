@@ -23,6 +23,7 @@ public:
   GfxScene();
   
   void Add(GfxSceneMesh * sceneMesh);
+  void Remove(GfxSceneMesh * sceneMesh);
   void Add(iLight* light);
   
   void Render(iDevice * device, eRenderPass pass);

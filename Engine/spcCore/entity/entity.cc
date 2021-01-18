@@ -35,7 +35,22 @@ void Entity::SetWorld(World* world)
 {
   if (m_world != world)
   {
+    if (m_world)
+    {
+      for (auto state : m_states)
+      {
+        state->OnDetachedFromWorld(m_world);
+      }
+    }
     SPC_SET(m_world, world);
+    if (m_world)
+    {
+      for (auto state : m_states)
+      {
+        state->OnAttachedToWorld(m_world);
+      }
+    }
+
     for (auto child : m_children)
     {
       child->SetWorld(world);
@@ -220,6 +235,10 @@ void Entity::RegisterEntityState(EntityState *entityState)
   {
     entityState->AddRef();
     m_states.push_back(entityState);
+    if (m_world)
+    {
+      entityState->OnAttachedToWorld(m_world);
+    }
   }
 }
 
@@ -232,6 +251,11 @@ void Entity::DeregisterEntityState(EntityState *entityState)
   auto it = std::find(m_states.begin(), m_states.end(), entityState);
   if (it != m_states.end())
   {
+    if (m_world)
+    {
+      entityState->OnDetachedFromWorld(m_world);
+    }
+
     entityState->Release();
     m_states.erase(it);
   }

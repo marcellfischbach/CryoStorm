@@ -141,6 +141,13 @@ void SpatialState::SetGlobalMatrixDirty()
   {
     it->SetGlobalMatrixDirty();
   }
+
+  TransformationUpdated();
+}
+
+void SpatialState::TransformationUpdated()
+{
+
 }
 
 }

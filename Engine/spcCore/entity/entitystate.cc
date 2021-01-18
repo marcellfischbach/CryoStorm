@@ -53,6 +53,16 @@ const Entity* EntityState::GetEntity() const
   return m_entity;
 }
 
+World* EntityState::GetWorld()
+{
+  return m_entity ? m_entity->GetWorld() : nullptr;
+}
+
+const World* EntityState::GetWorld() const
+{
+  return m_entity ? m_entity->GetWorld() : nullptr;
+}
+
 
 void EntityState::UpdateEntity(Entity *oldEntity, Entity *newEntity)
 {
@@ -64,6 +74,16 @@ void EntityState::UpdateEntity(Entity *oldEntity, Entity *newEntity)
   {
     newEntity->RegisterEntityState(this);
   }
+}
+
+void EntityState::OnAttachedToWorld(World* world)
+{
+
+}
+
+void EntityState::OnDetachedFromWorld(World* world)
+{
+
 }
 
 }
