@@ -24,6 +24,9 @@
 #include <spcCore/graphics/material/materialinstance.hh>
 #include <spcCore/graphics/scene/gfxscene.hh>
 #include <spcCore/graphics/scene/gfxscenemesh.hh>
+#include <spcCore/math/matrix.hh>
+#include <spcCore/math/quaternion.hh>
+#include <spcCore/math/vector.hh>
 #include <spcCore/resource/assetmanager.hh>
 #include <spcCore/resource/binarydata.hh>
 #include <spcCore/resource/vfs.hh>
@@ -253,7 +256,24 @@ int main(int argc, char **argv)
   {
     return -1;
   }
-  
+
+  spc::Quaternion q = spc::Quaternion::FromAngleAxis(spc::Vector3f(1.0f, 0.0f, 1.0f).Normalize(), spc::spcDeg2Rad(34));
+	spc::Matrix4f m4;
+	m4.SetRotation(spc::Vector3f(1.0f, 0.0f, 1.0f).Normalize(), spc::spcDeg2Rad(34));
+
+	spc::Vector3f v0 (1, 2, 3);
+	spc::Vector3f v1 (1, 2, 3);
+
+	q.Rotate(v0, v0);
+	spc::Vector3f o;
+	q.Inverted().Rotate(v0, o);
+	spc::Matrix4f::Transform(m4, v1, v1);
+
+	printf ("V0: %.2f %.2f %.2f\n", v0.x, v0.y, v0.z);
+	printf ("O : %.2f %.2f %.2f\n", o.x, o.y, o.z);
+	printf ("V1: %.2f %.2f %.2f\n", v1.x, v1.y, v1.z);
+
+
   spc::iDevice *device = spc::ObjectRegistry::Get<spc::iDevice>();
   
   spc::iShader *shader = spc::AssetManager::Get()->Load<spc::iShader>(spc::ResourceLocator("testprogram.xml"));
@@ -342,35 +362,38 @@ int main(int argc, char **argv)
   
   spc::Entity* entity0 = new spc::Entity("Entity_0");
   spc::SpatialState *rootState0 = new spc::SpatialState("RootState_0");
-  spc::SpatialState *childState00 = new spc::SpatialState("Child_0_0");
-  spc::SpatialState *childState01 = new spc::SpatialState("Child_0_1");
   entity0->Attach(rootState0);
-  rootState0->Attach(childState00);
-  rootState0->Attach(childState01);
-  
+
   spc::Entity* entity1 = new spc::Entity("Entity_1");
   spc::SpatialState* rootState1 = new spc::SpatialState("RootState_1");
-  spc::SpatialState* childState10 = new spc::SpatialState("Child_1_0");
-  spc::SpatialState* childState11 = new spc::SpatialState("Child_1_1");
   entity1->Attach(rootState1);
-  rootState1->Attach(childState10);
-  rootState1->Attach(childState11);
 
 
-  entity0->Attach(entity1, childState00);
+  entity0->Attach(entity1);
   world->Attach(entity0);
 
-  spc::SpatialState* rootOfAll = new spc::SpatialState("MasterRoot");
-  rootOfAll->Attach(entity0->GetRoot());
+  spc::Transform tr0 = entity0->GetRoot()->GetTransform();
+  spc::Transform tr1 = entity1->GetRoot()->GetTransform();
 
-  entity0->Detach(entity1);
-  rootOfAll->Attach(entity1->GetRoot());
+  tr0.SetTranslation(spc::Vector3f(0.0f, 10.0f, 0.0f));
+	tr0.SetRotation(spc::Quaternion::FromAngleAxis(0.0f, 1.0f, 0.0f, spc::spcDeg2Rad(45)));
 
-  debug(rootOfAll, 0);
+  tr1.SetTranslation(spc::Vector3f(10.0f, 0.0f, 0.0f));
+  tr1.SetRotation(spc::Quaternion::FromAngleAxis(0.0f, 1.0f, 0.0f, spc::spcDeg2Rad(45)));
+
+  entity0->GetRoot()->SetTransform(tr0);
+  entity1->GetRoot()->SetTransform(tr1);
+
+
+  entity0->GetRoot()->GetGlobalMatrix().Debug("Entity0");
+  entity1->GetRoot()->GetGlobalMatrix().Debug("Entity1");
 
   float rot = 0.0f;
-  
-  spc::UInt32 nextSec = SDL_GetTicks() + 1000;
+
+	fflush(stdout);
+	if (true) {return 0;}
+
+	spc::UInt32 nextSec = SDL_GetTicks() + 1000;
   spc::UInt32 frames = 0;
   while (true)
   {

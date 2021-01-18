@@ -106,5 +106,16 @@ static SPC_FORCEINLINE float spcSqrt(float v)
   return ::sqrtf(v);
 }
 
+static SPC_FORCEINLINE float spcRad2Deg(float rad)
+{
+	return rad * 180.0f / (float)M_PI;
+}
+
+
+static SPC_FORCEINLINE float spcDeg2Rad(float deg)
+{
+	return deg * (float)M_PI / 180.0f;
+}
+
 }
 

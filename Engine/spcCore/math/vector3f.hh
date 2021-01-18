@@ -43,11 +43,12 @@ public:
 
   }
 
-  SPC_FORCEINLINE void Set(float x, float y, float z)
+  SPC_FORCEINLINE Vector3f &Set(float x, float y, float z)
   {
     this->x = x;
     this->y = y;
     this->z = z;
+    return *this;
   }
 
   SPC_FORCEINLINE void Set(const Vector3f& v)

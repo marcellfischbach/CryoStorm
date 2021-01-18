@@ -77,7 +77,7 @@ public:
     m00 = m11 = m22 = m33 = 1.0f;
   }
 
-  SPC_FORCEINLINE void Set(float m00 = 1.0f, float m01 = 0.0f, float m02 = 0.0f, float m03 = 0.0f, float m10 = 0.0f, float m11 = 1.0f, float m12 = 0.0f, float m13 = 0.0f, float m20 = 0.0f, float m21 = 0.0f, float m22 = 1.0f, float m23 = 0.0f, float m30 = 0.0f, float m31 = 0.0f, float m32 = 0.0f, float m33 = 1.0f)
+  SPC_FORCEINLINE Matrix4f &Set(float m00 = 1.0f, float m01 = 0.0f, float m02 = 0.0f, float m03 = 0.0f, float m10 = 0.0f, float m11 = 1.0f, float m12 = 0.0f, float m13 = 0.0f, float m20 = 0.0f, float m21 = 0.0f, float m22 = 1.0f, float m23 = 0.0f, float m30 = 0.0f, float m31 = 0.0f, float m32 = 0.0f, float m33 = 1.0f)
   {
     this->m00 = m00;
     this->m01 = m01;
@@ -95,6 +95,7 @@ public:
     this->m31 = m31;
     this->m32 = m32;
     this->m33 = m33;
+    return *this;
   }
 
   SPC_FORCEINLINE void Set(const Matrix4f& matrix)
@@ -278,6 +279,14 @@ public:
     m10 = -s;
     m11 = c;
 
+    return *this;
+  }
+
+  SPC_FORCEINLINE Matrix4f& Scale(Vector3f s)
+  {
+    m00 *= s.x;
+    m11 *= s.y;
+    m22 *= s.z;
     return *this;
   }
 
@@ -615,12 +624,11 @@ public:
 
   static Vector3f& Transform(const Matrix4f & m, const Vector3f & v, Vector3f & res)
   {
-    res.Set(
+    return res.Set(
       m.m00 * v.x + m.m10 * v.y + m.m20 * v.z + m.m30,
       m.m01 * v.x + m.m11 * v.y + m.m21 * v.z + m.m31,
       m.m02 * v.x + m.m12 * v.y + m.m22 * v.z + m.m32
     );
-    return res;
   }
 
 
@@ -648,10 +656,10 @@ public:
       printf("spc::Matrix4f:\n");
     }
 
-    printf("  %f %f %f %f\n", m00, m01, m02, m03);
-    printf("  %f %f %f %f\n", m10, m11, m12, m13);
-    printf("  %f %f %f %f\n", m20, m21, m22, m23);
-    printf("  %f %f %f %f\n", m30, m31, m32, m33);
+    printf("  %.2f %.2f %.2f %.2f\n", m00, m01, m02, m03);
+    printf("  %.2f %.2f %.2f %.2f\n", m10, m11, m12, m13);
+    printf("  %.2f %.2f %.2f %.2f\n", m20, m21, m22, m23);
+    printf("  %.2f %.2f %.2f %.2f\n", m30, m31, m32, m33);
     fflush(stdout);
   }
 

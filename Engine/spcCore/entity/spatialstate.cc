@@ -106,15 +106,15 @@ void SpatialState::UpdateEntity(Entity *oldEntity, Entity *newEntity)
   }
 }
 
-void SpatialState::SetMatrix(const Matrix4f& matrix)
+void SpatialState::SetTransform(const Transform &transform)
 {
-  m_matrix = matrix;
-  SetGlobalMatrixDirty();
+	m_transform = transform;
+	SetGlobalMatrixDirty();
 }
 
-const Matrix4f& SpatialState::GetMatrix() const
+const Transform &SpatialState::GetTransform() const
 {
-  return m_matrix;
+	return m_transform;
 }
 
 const Matrix4f& SpatialState::GetGlobalMatrix() const
@@ -123,11 +123,11 @@ const Matrix4f& SpatialState::GetGlobalMatrix() const
   {
     if (m_parent)
     {
-      m_globalMatrix = m_parent->GetGlobalMatrix() * m_matrix;
+      m_globalMatrix = m_parent->GetGlobalMatrix() * m_transform.GetMatrix();
     }
     else
     {
-      m_globalMatrix = m_matrix;
+      m_globalMatrix = m_transform.GetMatrix();
     }
     m_globalMatrixDirty = false;
   }

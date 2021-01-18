@@ -6,6 +6,7 @@
 #include <spcCore/types.hh>
 #include <spcCore/math/matrix4f.hh>
 #include <vector>
+#include <spcCore/math/transform.hh>
 
 namespace spc
 {
@@ -33,8 +34,9 @@ public:
    * @name Transformation
    * @{
    */
-  void SetMatrix(const Matrix4f & matrix);
-  const Matrix4f& GetMatrix() const;
+  void SetTransform(const Transform & transform);
+  const Transform &GetTransform() const;
+
   const Matrix4f& GetGlobalMatrix() const;
   /**
    * @}
@@ -48,8 +50,8 @@ private:
   SpatialState* m_parent;
   std::vector<SpatialState*> m_children;
 
+  Transform m_transform;
 
-  Matrix4f m_matrix;
   mutable bool m_globalMatrixDirty;
   mutable Matrix4f m_globalMatrix;
   void SetGlobalMatrixDirty();
