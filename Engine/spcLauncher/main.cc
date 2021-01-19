@@ -159,7 +159,7 @@ bool initialize_modules(int argc, char **argv)
   
   wnd = SDL_CreateWindow("Spice", 25, 25, 1024, 768, SDL_WINDOW_OPENGL);
   context = SDL_GL_CreateContext(wnd);
-  bool vsync = false;
+  bool vsync = true;
   SDL_GL_SetSwapInterval(vsync ? 1 : 0);
   
   SDL_ShowWindow(wnd);
@@ -190,10 +190,10 @@ spc::iRenderMesh* create_plane_mesh()
   // create a render mesh
   spc::iRenderMeshGenerator *generator = spc::ObjectRegistry::Get<spc::iRenderMeshGeneratorFactory>()->Create();
   std::vector<spc::Vector3f> positions;
-  positions.push_back(spc::Vector3f(-1.0f, 0.0f, -1.0f));
-  positions.push_back(spc::Vector3f(-1.0f, 0.0f, 1.0f));
-  positions.push_back(spc::Vector3f(1.0f, 0.0f, -1.0f));
-  positions.push_back(spc::Vector3f(1.0f, 0.0f, 1.0f));
+  positions.push_back(spc::Vector3f(-2.0f, 0.0f, -2.0f));
+  positions.push_back(spc::Vector3f(-2.0f, 0.0f, 2.0f));
+  positions.push_back(spc::Vector3f(2.0f, 0.0f, -2.0f));
+  positions.push_back(spc::Vector3f(2.0f, 0.0f, 2.0f));
   std::vector<spc::Vector3f> normals;
   normals.push_back(spc::Vector3f(0.0f, 1.0f, 0.0f));
   normals.push_back(spc::Vector3f(0.0f, 1.0f, 0.0f));
@@ -336,17 +336,20 @@ int main(int argc, char **argv)
   
   spc::Camera *camera = new spc::Camera();
   spc::Projector projector;
+  projector.UpdateOrtho(-20.0f, 20.0f, -20.0f, 20.0f, 1.0f, 1000.0f);
+
   //camera->SetSpot(spc::Vector3f(0, 0, 0));
   
   spc::iPointLight *pointLight0 = device->CreatePointLight();
   pointLight0->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f));
-  pointLight0->SetPosition(spc::Vector3f(-5.0f, 5.0f, -5.0f));
-  pointLight0->SetRange(10.0f);
+  pointLight0->SetPosition(spc::Vector3f(0.0f, 50.0f, 0.0f));
+  pointLight0->SetRange(100.0f);
   scene->Add(pointLight0);
-  
+
+  /*
   spc::iPointLight *pointLight1 = device->CreatePointLight();
   pointLight1->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f));
-  pointLight1->SetPosition(spc::Vector3f(-5.0f, 5.0f, 5.0f));
+  pointLight1->SetPosition(spc::Vector3f(-10.0f, 10.0f, 10.0f));
   pointLight1->SetRange(10.0f);
   scene->Add(pointLight1);
   
@@ -361,31 +364,39 @@ int main(int argc, char **argv)
   pointLight3->SetPosition(spc::Vector3f(5.0f, 5.0f, 5.0f));
   pointLight3->SetRange(10.0f);
   scene->Add(pointLight3);
-
+  */
   
   spc::Entity* entity0 = new spc::Entity("Entity_0");
   spc::StaticMeshState *meshState = new spc::StaticMeshState("StaticMesh");
   spc::Transform tr = meshState->GetTransform();
-  tr.SetTranslation(spc::Vector3f(2, 0, 0));
+  tr.SetTranslation(spc::Vector3f(0, 0, 0));
   meshState->SetTransform(tr);
   meshState->SetMesh(mesh);
   entity0->Attach(meshState);
   world->Attach(entity0);
 
 
-  entity0 = new spc::Entity("Entity_1");
+  spc::Entity* entityX = new spc::Entity("Entity_1");
   meshState = new spc::StaticMeshState("StaticMesh");
   tr = meshState->GetTransform();
-  tr.SetTranslation(spc::Vector3f(-2, 0, 0));
+  tr.SetTranslation(spc::Vector3f(4, 0, 0));
   meshState->SetTransform(tr);
   meshState->SetMesh(mesh);
-  entity0->Attach(meshState);
-  world->Attach(entity0);
+  entityX->Attach(meshState);
+  world->Attach(entityX);
+
+  spc::Entity* entityZ = new spc::Entity("Entity_2");
+  meshState = new spc::StaticMeshState("StaticMesh");
+  tr = meshState->GetTransform();
+  tr.SetTranslation(spc::Vector3f(0, 0, 4));
+  meshState->SetTransform(tr);
+  meshState->SetMesh(mesh);
+  entityZ->Attach(meshState);
+  world->Attach(entityZ);
 
 
   float rot = 0.0f;
   float entRot = 0.0f;
-
 
 	spc::UInt32 nextSec = SDL_GetTicks() + 1000;
   spc::UInt32 frames = 0;
@@ -404,8 +415,7 @@ int main(int argc, char **argv)
     {
       frames++;
     }
-    
-    
+   
     SDL_GL_MakeCurrent(wnd, context);
     UpdateEvents();
     
@@ -419,10 +429,15 @@ int main(int argc, char **argv)
     glViewport(0, 0, 1024, 768);
     device->Clear(true, spc::Color4f(0.0f, 0.0, 0.0, 0.0f), true, 1.0f, false, 0);
     
-    tr = entity0->GetRoot()->GetTransform();
-    tr.SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(0, 1, 0), entRot));
-    entity0->GetRoot()->SetTransform(tr);
-    entRot += 0.001f;
+    tr = entityX->GetRoot()->GetTransform();
+    tr.SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(0.0f, 1.0f, 0.0f), entRot*2));
+    entityX->GetRoot()->SetTransform(tr);
+
+    tr = entityZ->GetRoot()->GetTransform();
+    tr.SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(0.0f, 1.0f, 0.0f), entRot/2.0f));
+    entityZ->GetRoot()->SetTransform(tr);
+
+    entRot += 0.01f;
 
     spc::Matrix4f rotMatrix;
     rotMatrix.SetRotationY(rot);
@@ -431,13 +446,13 @@ int main(int argc, char **argv)
     
     //camera->SetSpot(spc::Vector3f(0, 20 * -spc::spcCos(rot), 0.0f));
     //camera->SetEye(spc::Vector3f(20, 20 * spc::spcCos(rot), 20.0f));
-    camera->SetEye(spc::Vector3f(5.0f * spc::spcCos(rot), 5.0f, spc::spcSin(rot) * 5.0f));
+    camera->SetEye(spc::Vector3f(0.0f, 10.0f, -10.0f));
     camera->SetSpot(spc::Vector3f(0.0f, 0.0f, 0.0f));
     camera->Bind(device);
     
     projector.Bind(device);
     
-    rot += 0.00005f;
+    rot += 0.005f;
     
     scene->Render(device, spc::eRP_Forward);
     

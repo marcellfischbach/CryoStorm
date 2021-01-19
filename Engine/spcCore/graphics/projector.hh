@@ -15,6 +15,8 @@ class SPC_CORE_API Projector
 public:
   Projector();
   void UpdatePerspective(float angle, float aspect, float near, float far);
+  void UpdatePerspective(float left, float right, float bottom, float top, float near, float far);
+  void UpdateOrtho(float left, float right, float bottom, float top, float near, float far);
 
   void Bind(iDevice* device);
 

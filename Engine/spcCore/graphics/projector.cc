@@ -33,6 +33,28 @@ void Projector::UpdatePerspective(float angleRad, float aspect, float near, floa
   m_far = far;
 }
 
+void Projector::UpdatePerspective(float left, float right, float bottom, float top, float near, float far)
+{
+  m_mode = ePM_Perspective;
+  m_left = left;
+  m_right = right;
+  m_bottom = bottom;
+  m_top = top;
+  m_near = near;
+  m_far = far;
+}
+
+void Projector::UpdateOrtho(float left, float right, float bottom, float top, float near, float far)
+{
+  m_mode = ePM_Orthographic;
+  m_left = left;
+  m_right = right;
+  m_bottom = bottom;
+  m_top = top;
+  m_near = near;
+  m_far = far;
+}
+
 void Projector::Bind(iDevice* device)
 {
 
