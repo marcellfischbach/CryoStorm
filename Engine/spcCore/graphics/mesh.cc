@@ -31,6 +31,15 @@ Size Mesh::AddMaterialSlot(const std::string& name, iMaterial* defaultMaterial)
   return m_materialSlots.size() - 1;
 }
 
+void Mesh::SetDefaultMaterial(Size idx, iMaterial* defaultMaterial)
+{
+  if (idx >= m_materialSlots.size())
+  {
+    throw OutOfBoundsException();
+  }
+  SPC_SET(m_materialSlots[idx].m_defaultMaterial, defaultMaterial);
+}
+
 Size Mesh::GetNumberOfSubMeshes() const
 {
   return m_subMeshes.size();
@@ -67,6 +76,8 @@ const Mesh::MaterialSlot& Mesh::GetMaterialSlot(Size idx) const
 
   return m_materialSlots[idx];
 }
+
+
 
 
 /* *********************************************************************

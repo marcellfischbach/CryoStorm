@@ -1,19 +1,19 @@
 
 #pragma once
 
-#include <spcAssimp/assimpexport.hh>
+#include <spcAssimpLoader/assimpexport.hh>
 
 namespace spc::assimp
 {
 
-class SPC_ASSIMP_API AssimpModule
+class SPC_ASSIMP_API AssimpLoaderModule
 {
 public:
   static bool Register(int argc, char** argv);
   static bool Initialize(int argc, char** argv);
 
 private:
-  AssimpModule() { }
+  AssimpLoaderModule() { }
 };
 
 }

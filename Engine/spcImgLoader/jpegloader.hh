@@ -15,6 +15,7 @@ namespace spc::img
     SPC_CLASS_GEN_OBJECT;
   public:
     JpegLoader();
+    virtual ~JpegLoader() { }
 
     virtual bool CanLoad(const Class * cls, const ResourceLocator & locator) const;
 

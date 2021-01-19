@@ -30,5 +30,6 @@ target_link_libraries(spcLauncher
         spcCore
         spcOpenGL
         spcImgLoader
+        spcAssimpLoader
         ${SDL_LIBRARY}
     )

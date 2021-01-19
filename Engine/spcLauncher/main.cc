@@ -33,7 +33,7 @@
 #include <spcCore/resource/binarydata.hh>
 #include <spcCore/resource/vfs.hh>
 
-
+#include <spcAssimpLoader/assimploadermodule.hh>
 #include <spcOpenGL/openglmodule.hh>
 #include <GL/glew.h>
 
@@ -127,6 +127,11 @@ bool register_modules(int argc, char** argv)
     printf("Unable to register opengl\n");
     return false;
   }
+  if (!spc::assimp::AssimpLoaderModule::Register(argc, argv))
+  {
+    printf("Unable to register assimp loader\n");
+    return false;
+  }
   if (!spc::img::ImgLoaderModule::Register(argc, argv))
   {
     printf("Unable to register png loader\n");
@@ -159,7 +164,7 @@ bool initialize_modules(int argc, char **argv)
   
   wnd = SDL_CreateWindow("Spice", 25, 25, 1024, 768, SDL_WINDOW_OPENGL);
   context = SDL_GL_CreateContext(wnd);
-  bool vsync = false;
+  bool vsync = true;
   SDL_GL_SetSwapInterval(vsync ? 1 : 0);
   
   SDL_ShowWindow(wnd);
@@ -174,6 +179,11 @@ bool initialize_modules(int argc, char **argv)
   if (!spc::opengl::OpenGLModule::Initialize(argc, argv))
   {
     printf("Unable to initialize opengl\n");
+    return false;
+  }
+  if (!spc::assimp::AssimpLoaderModule::Initialize(argc, argv))
+  {
+    printf("Unable to initialize assimp loader\n");
     return false;
   }
   if (!spc::img::ImgLoaderModule::Initialize(argc, argv))
@@ -365,6 +375,11 @@ int main(int argc, char **argv)
   pointLight3->SetRange(10.0f);
   scene->Add(pointLight3);
   */
+
+  spc::Mesh* suzanne = spc::AssetManager::Get()->Load<spc::Mesh>(spc::ResourceLocator("suzanne.fbx"));
+  spc::Mesh* cube = spc::AssetManager::Get()->Load<spc::Mesh>(spc::ResourceLocator("cube.fbx"));
+  suzanne->SetDefaultMaterial(0, material);
+  cube->SetDefaultMaterial(0, material);
   
   spc::Entity* entity0 = new spc::Entity("Entity_0");
   spc::StaticMeshState *meshState = new spc::StaticMeshState("StaticMesh");
@@ -393,6 +408,17 @@ int main(int argc, char **argv)
   meshState->SetMesh(mesh);
   entityZ->Attach(meshState);
   world->Attach(entityZ);
+
+
+  spc::Entity* suzanneEntity = new spc::Entity("Entity_2");
+  meshState = new spc::StaticMeshState("StaticMesh");
+  meshState->GetTransform()
+    .SetTranslation(spc::Vector3f(4, 0, 4))
+    .Finish();
+  meshState->SetMesh(cube);
+  suzanneEntity->Attach(meshState);
+  world->Attach(suzanneEntity);
+
 
 
   float rot = 0.0f;
@@ -444,10 +470,8 @@ int main(int argc, char **argv)
     //sceneMesh->SetModelMatrix(rotMatrix);
     
     
-    //camera->SetSpot(spc::Vector3f(0, 20 * -spc::spcCos(rot), 0.0f));
-    //camera->SetEye(spc::Vector3f(20, 20 * spc::spcCos(rot), 20.0f));
-    camera->SetEye(spc::Vector3f(0.0f, 10.0f, -10.0f));
-    camera->SetSpot(spc::Vector3f(0.0f, 0.0f, 0.0f));
+    camera->SetSpot(spc::Vector3f(0, 0.0f, 0.0f));
+    camera->SetEye(spc::Vector3f(spc::spcCos(rot) * 20.0f, 20.0f, spc::spcSin(rot) * 20.0f));
     camera->Bind(device);
     
     projector.Bind(device);

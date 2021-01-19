@@ -43,7 +43,7 @@ vec4 calc_light(vec4 light_color, vec4 light_vector, float light_range, vec3 fra
 void main()
 {
   vec3 norm = normalize(world_normal);
-  vec4 frag_color = vec4(0.0, 0.0, 0.0, 0.0);
+  vec4 frag_color = vec4(0.1, 0.1, 0.1, 0.0);
   frag_color += calc_light(spc_LightColor[0], spc_LightVector[0], spc_LightRange[0], world_position, norm) * color;
   frag_color += calc_light(spc_LightColor[1], spc_LightVector[1], spc_LightRange[1], world_position, norm) * color;
   frag_color += calc_light(spc_LightColor[2], spc_LightVector[2], spc_LightRange[2], world_position, norm) * color;
