@@ -9,23 +9,28 @@
 namespace spc
 {
 
+class SpatialState;
 class SPC_CORE_API Transform
 {
 public:
-  Transform();
+  Transform(SpatialState *spatialState);
 
-  void SetTranslation(const Vector3f &translation);
+  Transform &SetTranslation(const Vector3f &translation);
   const Vector3f &GetTranslation() const;
 
-  void SetRotation(const Quaternion &rotation);
+  Transform& SetRotation(const Quaternion &rotation);
   const Quaternion &GetRotation () const;
 
-  void SetScale(const Vector3f &scale);
+  Transform& SetScale(const Vector3f &scale);
   const Vector3f &GetScale() const;
+
+  void Finish();
 
   const Matrix4f &GetMatrix() const;
 
 private:
+  SpatialState* m_spatialState;
+
   Vector3f m_translation;
   Quaternion m_rotation;
   Vector3f m_scale;

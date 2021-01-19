@@ -5,6 +5,8 @@ namespace spc
 {
 SpatialState::SpatialState(const std::string& name)
   : EntityState(name)
+  , m_transform(this)
+  , m_transformationState(0)
   , m_parent(nullptr)
 {
 
@@ -106,10 +108,9 @@ void SpatialState::UpdateEntity(Entity *oldEntity, Entity *newEntity)
   }
 }
 
-void SpatialState::SetTransform(const Transform &transform)
+Transform& SpatialState::GetTransform() 
 {
-	m_transform = transform;
-	SetGlobalMatrixDirty();
+  return m_transform;
 }
 
 const Transform &SpatialState::GetTransform() const
@@ -117,9 +118,42 @@ const Transform &SpatialState::GetTransform() const
 	return m_transform;
 }
 
+void SpatialState::FinishTransformation()
+{
+  UpdateFlagRequestHierarchyTransformationUpdate();
+  UpdateFlagUpdateGlobalMatrix();
+}
+
+void SpatialState::UpdateFlagUpdateGlobalMatrix()
+{
+  if ((m_transformationState & eTS_GlobalMatrixDirty) != 0)
+  {
+    return;
+  }
+  m_transformationState |= eTS_GlobalMatrixDirty;
+  m_transformationState |= eTS_RequestHierarchyTransformationUpdate;
+  for (auto child : m_children)
+  {
+    child->UpdateFlagUpdateGlobalMatrix();
+  }
+}
+
+void SpatialState::UpdateFlagRequestHierarchyTransformationUpdate()
+{
+  if ((m_transformationState & eTS_RequestHierarchyTransformationUpdate) != 0)
+  {
+    return;
+  }
+  m_transformationState |= eTS_RequestHierarchyTransformationUpdate;
+  if (m_parent)
+  {
+    m_parent->UpdateFlagRequestHierarchyTransformationUpdate();
+  }
+}
+
 const Matrix4f& SpatialState::GetGlobalMatrix() const
 {
-  if (m_globalMatrixDirty)
+  if ((m_transformationState & eTS_GlobalMatrixDirty) != 0)
   {
     if (m_parent)
     {
@@ -129,20 +163,28 @@ const Matrix4f& SpatialState::GetGlobalMatrix() const
     {
       m_globalMatrix = m_transform.GetMatrix();
     }
-    m_globalMatrixDirty = false;
+
+    m_transformationState &= ~eTS_GlobalMatrixDirty;
   }
   return m_globalMatrix;
 }
 
-void SpatialState::SetGlobalMatrixDirty()
+void SpatialState::UpdateTransformation()
 {
-  m_globalMatrixDirty = true;
-  for (auto it : m_children)
+  if ((m_transformationState & eTS_RequestHierarchyTransformationUpdate) == 0)
   {
-    it->SetGlobalMatrixDirty();
+    return;
   }
 
+  // calling get global matrix will update the global matrix;
+  GetGlobalMatrix();
+  m_transformationState = 0;
+
   TransformationUpdated();
+  for (auto child : m_children)
+  {
+    child->UpdateTransformation();
+  }
 }
 
 void SpatialState::TransformationUpdated()

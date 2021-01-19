@@ -159,7 +159,7 @@ bool initialize_modules(int argc, char **argv)
   
   wnd = SDL_CreateWindow("Spice", 25, 25, 1024, 768, SDL_WINDOW_OPENGL);
   context = SDL_GL_CreateContext(wnd);
-  bool vsync = true;
+  bool vsync = false;
   SDL_GL_SetSwapInterval(vsync ? 1 : 0);
   
   SDL_ShowWindow(wnd);
@@ -368,9 +368,9 @@ int main(int argc, char **argv)
   
   spc::Entity* entity0 = new spc::Entity("Entity_0");
   spc::StaticMeshState *meshState = new spc::StaticMeshState("StaticMesh");
-  spc::Transform tr = meshState->GetTransform();
-  tr.SetTranslation(spc::Vector3f(0, 0, 0));
-  meshState->SetTransform(tr);
+  meshState->GetTransform()
+    .SetTranslation(spc::Vector3f(0, 0, 0))
+    .Finish();
   meshState->SetMesh(mesh);
   entity0->Attach(meshState);
   world->Attach(entity0);
@@ -378,18 +378,18 @@ int main(int argc, char **argv)
 
   spc::Entity* entityX = new spc::Entity("Entity_1");
   meshState = new spc::StaticMeshState("StaticMesh");
-  tr = meshState->GetTransform();
-  tr.SetTranslation(spc::Vector3f(4, 0, 0));
-  meshState->SetTransform(tr);
+  meshState->GetTransform()
+    .SetTranslation(spc::Vector3f(4, 0, 0))
+    .Finish();
   meshState->SetMesh(mesh);
   entityX->Attach(meshState);
   world->Attach(entityX);
 
   spc::Entity* entityZ = new spc::Entity("Entity_2");
   meshState = new spc::StaticMeshState("StaticMesh");
-  tr = meshState->GetTransform();
-  tr.SetTranslation(spc::Vector3f(0, 0, 4));
-  meshState->SetTransform(tr);
+  meshState->GetTransform()
+    .SetTranslation(spc::Vector3f(0, 0, 4))
+    .Finish();
   meshState->SetMesh(mesh);
   entityZ->Attach(meshState);
   world->Attach(entityZ);
@@ -429,13 +429,13 @@ int main(int argc, char **argv)
     glViewport(0, 0, 1024, 768);
     device->Clear(true, spc::Color4f(0.0f, 0.0, 0.0, 0.0f), true, 1.0f, false, 0);
     
-    tr = entityX->GetRoot()->GetTransform();
-    tr.SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(0.0f, 1.0f, 0.0f), entRot*2));
-    entityX->GetRoot()->SetTransform(tr);
+    entityX->GetRoot()->GetTransform()
+      .SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(0.0f, 1.0f, 0.0f), entRot * 2))
+      .Finish();
 
-    tr = entityZ->GetRoot()->GetTransform();
-    tr.SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(0.0f, 1.0f, 0.0f), entRot/2.0f));
-    entityZ->GetRoot()->SetTransform(tr);
+    entityZ->GetRoot()->GetTransform()
+      .SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(0.0f, 1.0f, 0.0f), entRot / 2.0f))
+      .Finish();
 
     entRot += 0.01f;
 
@@ -454,6 +454,7 @@ int main(int argc, char **argv)
     
     rot += 0.005f;
     
+    world->UpdateTransformation();
     scene->Render(device, spc::eRP_Forward);
     
     SDL_GL_SwapWindow(wnd);

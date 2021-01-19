@@ -29,6 +29,8 @@ set(SOURCES
         entity/spatialstate.hh
         entity/staticmeshstate.cc
         entity/staticmeshstate.hh
+        entity/transform.cc
+        entity/transform.hh
         entity/world.cc
         entity/world.hh
 
@@ -105,8 +107,6 @@ set(SOURCES
         math/planeclipper.hh
         math/quaternion.hh
         math/randomrange.hh
-        math/transform.cc
-        math/transform.hh
         math/vector.hh
         math/vector2f.hh
         math/vector3f.hh

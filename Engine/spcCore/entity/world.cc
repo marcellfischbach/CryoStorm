@@ -1,6 +1,7 @@
 
 #include <spcCore/entity/world.hh>
 #include <spcCore/entity/entity.hh>
+#include <spcCore/entity/spatialstate.hh>
 #include <spcCore/graphics/scene/gfxscene.hh>
 
 namespace spc
@@ -53,6 +54,15 @@ bool World::Detach(Entity* entity)
   m_entities.erase(it);
   entity->SetWorld(nullptr);
   entity->Release();
+}
+
+void World::UpdateTransformation()
+{
+  for (auto entity : m_entities)
+  {
+    SpatialState *spatialState = entity->GetRoot();
+    spatialState->UpdateTransformation();
+  }
 }
 
 }

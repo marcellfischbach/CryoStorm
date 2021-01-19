@@ -3,10 +3,10 @@
 
 #include <spcCore/coreexport.hh>
 #include <spcCore/entity/entitystate.hh>
+#include <spcCore/entity/transform.hh>
 #include <spcCore/types.hh>
 #include <spcCore/math/matrix4f.hh>
 #include <vector>
-#include <spcCore/math/transform.hh>
 
 namespace spc
 {
@@ -34,12 +34,16 @@ public:
    * @name Transformation
    * @{
    */
-  void SetTransform(const Transform & transform);
+  Transform &GetTransform();
   const Transform &GetTransform() const;
+  void FinishTransformation();
   const Matrix4f& GetGlobalMatrix() const;
+  void UpdateTransformation();
   /**
    * @}
    */
+
+
   
 protected:
   void UpdateEntity(Entity* oldEntity, Entity* newEntity) override;
@@ -47,14 +51,22 @@ protected:
 
   
 private:
+  void UpdateFlagUpdateGlobalMatrix();
+  void UpdateFlagRequestHierarchyTransformationUpdate();
+
   SpatialState* m_parent;
   std::vector<SpatialState*> m_children;
 
   Transform m_transform;
 
-  mutable bool m_globalMatrixDirty;
+  enum TransformationState
+  {
+    eTS_GlobalMatrixDirty = 1,
+    eTS_RequestHierarchyTransformationUpdate = 2,
+  };
+
+  mutable UInt8 m_transformationState;
   mutable Matrix4f m_globalMatrix;
-  void SetGlobalMatrixDirty();
 
 };
 

@@ -24,6 +24,7 @@ public:
   bool Attach(Entity * entit);
   bool Detach(Entity * entit);
 
+  void UpdateTransformation();
   
 private:
   GfxScene* m_scene;
