@@ -53,6 +53,11 @@ bool GL4Device::Initialize()
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
   glEnable(GL_DEPTH_TEST);
 
+
+  glEnable(GL_CULL_FACE);
+  glFrontFace(GL_CW);
+  glCullFace(GL_BACK);
+
   m_modelMatrix.SetIdentity();
   m_viewMatrix.SetIdentity();
   m_projectionMatrix.SetIdentity();

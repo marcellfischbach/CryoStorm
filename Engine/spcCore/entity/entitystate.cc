@@ -86,4 +86,9 @@ void EntityState::OnDetachedFromWorld(World* world)
 
 }
 
+void EntityState::Update(float tpf)
+{
+  // nothing to be done
+}
+
 }

@@ -24,6 +24,8 @@ public:
   bool Attach(Entity * entit);
   bool Detach(Entity * entit);
 
+  void Update (float tpf);
+
   void UpdateTransformation();
   
 private:

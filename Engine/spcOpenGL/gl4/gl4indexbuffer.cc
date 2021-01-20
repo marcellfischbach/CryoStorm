@@ -31,7 +31,7 @@ void GL4IndexBuffer::CreateForRendering(Size size, eBufferUsage usage)
   case eBU_Stream: mode = GL_STREAM_DRAW; break;
   case eBU_Dynamic: mode = GL_DYNAMIC_DRAW; break;
   }
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, 0, mode);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, nullptr, mode);
 }
 
 void GL4IndexBuffer::Bind()

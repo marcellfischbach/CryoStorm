@@ -61,7 +61,7 @@ GL4RenderMesh::~GL4RenderMesh()
 void GL4RenderMesh::Render(iDevice* graphics, eRenderPass pass)
 {
   glBindVertexArray(m_vao);
-  glDrawElements(m_primType, m_count, m_indexType, reinterpret_cast<const void*>(0));
+  glDrawElements(m_primType, (GLsizei)m_count, m_indexType, nullptr);
 }
 
 
@@ -80,10 +80,7 @@ GL4RenderMeshGenerator::GL4RenderMeshGenerator()
   SPC_CLASS_GEN_CONSTR;
 }
 
-GL4RenderMeshGenerator::~GL4RenderMeshGenerator()
-{
-
-}
+GL4RenderMeshGenerator::~GL4RenderMeshGenerator() = default;
 
 
 void GL4RenderMeshGenerator::SetVertices(const std::vector<Vector3f>& vertices)
@@ -134,84 +131,84 @@ void GL4RenderMeshGenerator::SetIndices(const std::vector<UInt32>& indices)
 
 iRenderMesh* GL4RenderMeshGenerator::Generate()
 {
-  if (m_indices.size() == 0 || m_vertices.size() == 0)
+  if (m_indices.empty() || m_vertices.empty())
   {
     return nullptr;
   }
 
   std::vector<VertexDeclaration::Attribute> attributes;
   UInt16 offset = 0;
-  attributes.push_back(VertexDeclaration::Attribute(0, eVS_Vertices, 3, eDT_Float, 0, 0));
+  attributes.emplace_back(VertexDeclaration::Attribute(0, eVS_Vertices, 3, eDT_Float, 0, 0));
   offset += 3 * sizeof(float);
   UInt16 count = 3;
-  if (m_normals.size() != 0)
+  if (!m_normals.empty())
   {
     if (m_normals.size() != m_vertices.size())
     {
       return nullptr;
     }
-    attributes.push_back(VertexDeclaration::Attribute(0, eVS_Normals, 3, eDT_Float, 0, offset));
+    attributes.emplace_back(VertexDeclaration::Attribute(0, eVS_Normals, 3, eDT_Float, 0, offset));
     count += 3;
     offset += 3 * sizeof(float);
   }
 
-  if (m_tangents.size() != 0)
+  if (!m_tangents.empty())
   {
     if (m_tangents.size() != m_vertices.size())
     {
       return nullptr;
     }
-    attributes.push_back(VertexDeclaration::Attribute(0, eVS_Tangents, 3, eDT_Float, 0, offset));
+    attributes.emplace_back(VertexDeclaration::Attribute(0, eVS_Tangents, 3, eDT_Float, 0, offset));
     count += 3;
     offset += 3 * sizeof(float);
   }
-  if (m_uv0.size() != 0)
+  if (!m_uv0.empty())
   {
     if (m_uv0.size() != m_vertices.size())
     {
       return nullptr;
     }
-    attributes.push_back(VertexDeclaration::Attribute(0, eVS_UV0, 2, eDT_Float, 0, offset));
+    attributes.emplace_back(VertexDeclaration::Attribute(0, eVS_UV0, 2, eDT_Float, 0, offset));
     count += 2;
     offset += 2 * sizeof(float);
   }
-  if (m_uv1.size() != 0)
+  if (!m_uv1.empty())
   {
     if (m_uv1.size() != m_vertices.size())
     {
       return nullptr;
     }
-    attributes.push_back(VertexDeclaration::Attribute(0, eVS_UV1, 2, eDT_Float, 0, offset));
+    attributes.emplace_back(VertexDeclaration::Attribute(0, eVS_UV1, 2, eDT_Float, 0, offset));
     count += 2;
     offset += 2 * sizeof(float);
   }
-  if (m_uv2.size() != 0)
+  if (!m_uv2.empty())
   {
     if (m_uv2.size() != m_vertices.size())
     {
       return nullptr;
     }
-    attributes.push_back(VertexDeclaration::Attribute(0, eVS_UV2, 2, eDT_Float, 0, offset));
+    attributes.emplace_back(VertexDeclaration::Attribute(0, eVS_UV2, 2, eDT_Float, 0, offset));
     count += 2;
     offset += 2 * sizeof(float);
   }
-  if (m_uv3.size() != 0)
+  if (!m_uv3.empty())
   {
     if (m_uv3.size() != m_vertices.size())
     {
       return nullptr;
     }
-    attributes.push_back(VertexDeclaration::Attribute(0, eVS_UV3, 2, eDT_Float, 0, offset));
+    attributes.emplace_back(VertexDeclaration::Attribute(0, eVS_UV3, 2, eDT_Float, 0, offset));
     count += 2;
     offset += 2 * sizeof(float);
   }
-  if (m_colors.size() != 0)
+  if (!m_colors.empty())
   {
     if (m_colors.size() != m_vertices.size())
     {
       return nullptr;
     }
-    attributes.push_back(VertexDeclaration::Attribute(0, eVS_Colors, 4, eDT_Float, 0, offset));
+    attributes.emplace_back(VertexDeclaration::Attribute(0, eVS_Colors, 4, eDT_Float, 0, offset));
     count += 4;
     offset += 4 * sizeof(float);
   }
@@ -221,7 +218,7 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
   }
 
   VertexDeclaration vd (attributes);
-  float* vBuffer = new float[count * m_vertices.size()];
+  auto vBuffer = new float[count * m_vertices.size()];
 
   for (Size i = 0, c = 0, in = m_vertices.size(); i < in; ++i)
   {
@@ -231,45 +228,45 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
       vBuffer[c++] = v.y;
       vBuffer[c++] = v.z;
     }
-    if (m_normals.size() != 0)
+    if (!m_normals.empty())
     {
       Vector3f& v = m_normals[i];
       vBuffer[c++] = v.x;
       vBuffer[c++] = v.y;
       vBuffer[c++] = v.z;
     }
-    if (m_tangents.size() != 0)
+    if (!m_tangents.empty())
     {
       Vector3f& v = m_tangents[i];
       vBuffer[c++] = v.x;
       vBuffer[c++] = v.y;
       vBuffer[c++] = v.z;
     }
-    if (m_uv0.size() != 0)
+    if (!m_uv0.empty())
     {
       Vector2f& v = m_uv0[i];
       vBuffer[c++] = v.x;
       vBuffer[c++] = v.y;
     }
-    if (m_uv1.size() != 0)
+    if (!m_uv1.empty())
     {
       Vector2f& v = m_uv1[i];
       vBuffer[c++] = v.x;
       vBuffer[c++] = v.y;
     }
-    if (m_uv2.size() != 0)
+    if (!m_uv2.empty())
     {
       Vector2f& v = m_uv2[i];
       vBuffer[c++] = v.x;
       vBuffer[c++] = v.y;
     }
-    if (m_uv3.size() != 0)
+    if (!m_uv3.empty())
     {
       Vector2f& v = m_uv3[i];
       vBuffer[c++] = v.x;
       vBuffer[c++] = v.y;
     }
-    if (m_colors.size() != 0)
+    if (!m_colors.empty())
     {
       Color4f& v = m_colors[i];
       vBuffer[c++] = v.r;
@@ -279,15 +276,15 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
     }
   }
 
-  GL4VertexBuffer* vb = new GL4VertexBuffer();
+  auto vb = new GL4VertexBuffer();
   vb->Bind();
   vb->CreateForRendering(m_vertices.size() * offset, eBU_Static);
   vb->Copy(vBuffer, m_vertices.size() * offset);
   delete[] vBuffer;
 
-  GL4IndexBuffer* ib = new GL4IndexBuffer();
+  auto ib = new GL4IndexBuffer();
   eDataType indexType;
-  if (m_vertices.size() > 65536)
+  if (m_vertices.size() >= 65536 || true)
   {
     ib->Bind();
     ib->CreateForRendering(m_indices.size() * sizeof(UInt32), eBU_Static);
@@ -296,7 +293,7 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
   }
   else
   {
-    UInt16* iBuffer = new UInt16[m_indices.size()];
+    auto iBuffer = new UInt16[m_indices.size()];
     for (Size i = 0, in = m_indices.size(); i < in; ++i)
     {
       iBuffer[i] = static_cast<UInt16>(m_indices[i]);
@@ -328,8 +325,9 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
     );
     glEnableVertexAttribArray(attribute.Location);
   }
+  glBindVertexArray(0);
 
-  GL4RenderMesh* mesh = new GL4RenderMesh(
+  auto mesh = new GL4RenderMesh(
     vao,
     vb,
     ib,
@@ -350,10 +348,7 @@ GL4RenderMeshGeneratorFactory::GL4RenderMeshGeneratorFactory()
   SPC_CLASS_GEN_CONSTR;
 }
 
-GL4RenderMeshGeneratorFactory::~GL4RenderMeshGeneratorFactory()
-{
-
-}
+GL4RenderMeshGeneratorFactory::~GL4RenderMeshGeneratorFactory() = default;
 
 iRenderMeshGenerator* GL4RenderMeshGeneratorFactory::Create()
 {

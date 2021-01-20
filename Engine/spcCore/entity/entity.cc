@@ -276,4 +276,19 @@ const SpatialState *Entity::GetRoot() const
   return m_rootState;
 }
 
+
+void Entity::Update(float tpf)
+{
+
+  for (auto state : m_states)
+  {
+    state->Update(tpf);
+  }
+
+  for (auto child : m_children)
+  {
+    child->Update(tpf);
+  }
+}
+
 }

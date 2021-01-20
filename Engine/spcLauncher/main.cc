@@ -200,10 +200,10 @@ spc::iRenderMesh* create_plane_mesh()
   // create a render mesh
   spc::iRenderMeshGenerator *generator = spc::ObjectRegistry::Get<spc::iRenderMeshGeneratorFactory>()->Create();
   std::vector<spc::Vector3f> positions;
-  positions.push_back(spc::Vector3f(-2.0f, 0.0f, -2.0f));
-  positions.push_back(spc::Vector3f(-2.0f, 0.0f, 2.0f));
-  positions.push_back(spc::Vector3f(2.0f, 0.0f, -2.0f));
-  positions.push_back(spc::Vector3f(2.0f, 0.0f, 2.0f));
+  positions.push_back(spc::Vector3f(-1.0f, 0.0f, -1.0f));
+  positions.push_back(spc::Vector3f(-1.0f, 0.0f, 1.0f));
+  positions.push_back(spc::Vector3f(1.0f, 0.0f, -1.0f));
+  positions.push_back(spc::Vector3f(1.0f, 0.0f, 1.0f));
   std::vector<spc::Vector3f> normals;
   normals.push_back(spc::Vector3f(0.0f, 1.0f, 0.0f));
   normals.push_back(spc::Vector3f(0.0f, 1.0f, 0.0f));
@@ -269,23 +269,6 @@ int main(int argc, char **argv)
     return -1;
   }
 
-  spc::Quaternion q = spc::Quaternion::FromAxisAngle(spc::Vector3f(1.0f, 0.0f, 1.0f).Normalize(), spc::spcDeg2Rad(34));
-	spc::Matrix4f m4;
-	m4.SetRotation(spc::Vector3f(1.0f, 0.0f, 1.0f).Normalize(), spc::spcDeg2Rad(34));
-
-	spc::Vector3f v0 (1, 2, 3);
-	spc::Vector3f v1 (1, 2, 3);
-
-	q.Rotate(v0, v0);
-	spc::Vector3f o;
-	q.Inverted().Rotate(v0, o);
-	spc::Matrix4f::Transform(m4, v1, v1);
-
-	printf ("V0: %.2f %.2f %.2f\n", v0.x, v0.y, v0.z);
-	printf ("O : %.2f %.2f %.2f\n", o.x, o.y, o.z);
-	printf ("V1: %.2f %.2f %.2f\n", v1.x, v1.y, v1.z);
-
-
   spc::iDevice *device = spc::ObjectRegistry::Get<spc::iDevice>();
   
   spc::iShader *shader = spc::AssetManager::Get()->Load<spc::iShader>(spc::ResourceLocator("testprogram.xml"));
@@ -346,7 +329,7 @@ int main(int argc, char **argv)
   
   spc::Camera *camera = new spc::Camera();
   spc::Projector projector;
-  projector.UpdateOrtho(-20.0f, 20.0f, -20.0f, 20.0f, 1.0f, 1000.0f);
+//  projector.UpdateOrtho(-20.0f, 20.0f, -20.0f, 20.0f, 1.0f, 1000.0f);
 
   //camera->SetSpot(spc::Vector3f(0, 0, 0));
   
@@ -413,9 +396,9 @@ int main(int argc, char **argv)
   spc::Entity* suzanneEntity = new spc::Entity("Entity_2");
   meshState = new spc::StaticMeshState("StaticMesh");
   meshState->GetTransform()
-    .SetTranslation(spc::Vector3f(4, 0, 4))
+    .SetTranslation(spc::Vector3f(0, 0, 0))
     .Finish();
-  meshState->SetMesh(cube);
+  meshState->SetMesh(suzanne);
   suzanneEntity->Attach(meshState);
   world->Attach(suzanneEntity);
 
@@ -426,6 +409,7 @@ int main(int argc, char **argv)
 
 	spc::UInt32 nextSec = SDL_GetTicks() + 1000;
   spc::UInt32 frames = 0;
+  spc::UInt32 lastTime = SDL_GetTicks();
   while (true)
   {
     Uint32 time = SDL_GetTicks();
@@ -441,6 +425,8 @@ int main(int argc, char **argv)
     {
       frames++;
     }
+    spc::UInt32 deltaTime = time - lastTime;
+    lastTime = time;
    
     SDL_GL_MakeCurrent(wnd, context);
     UpdateEvents();
@@ -454,7 +440,7 @@ int main(int argc, char **argv)
     
     glViewport(0, 0, 1024, 768);
     device->Clear(true, spc::Color4f(0.0f, 0.0, 0.0, 0.0f), true, 1.0f, false, 0);
-    
+    /*
     entityX->GetRoot()->GetTransform()
       .SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(0.0f, 1.0f, 0.0f), entRot * 2))
       .Finish();
@@ -462,23 +448,19 @@ int main(int argc, char **argv)
     entityZ->GetRoot()->GetTransform()
       .SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(0.0f, 1.0f, 0.0f), entRot / 2.0f))
       .Finish();
-
+    */
     entRot += 0.01f;
 
-    spc::Matrix4f rotMatrix;
-    rotMatrix.SetRotationY(rot);
-    //sceneMesh->SetModelMatrix(rotMatrix);
-    
-    
+    float dist = 5.0f;
     camera->SetSpot(spc::Vector3f(0, 0.0f, 0.0f));
-    camera->SetEye(spc::Vector3f(spc::spcCos(rot) * 20.0f, 20.0f, spc::spcSin(rot) * 20.0f));
+    camera->SetEye(spc::Vector3f(spc::spcSin(rot) * dist, dist, -spc::spcCos(rot) * dist));
     camera->Bind(device);
     
     projector.Bind(device);
     
     rot += 0.005f;
-    
-    world->UpdateTransformation();
+
+    world->Update((float)deltaTime / 1000.0f);
     scene->Render(device, spc::eRP_Forward);
     
     SDL_GL_SwapWindow(wnd);

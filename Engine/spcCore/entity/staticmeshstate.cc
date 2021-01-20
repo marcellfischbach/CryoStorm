@@ -107,15 +107,18 @@ void StaticMeshState::RemoveMeshFromScene(World* world)
   }
 }
 
-
-
-void StaticMeshState::TransformationUpdated()
+void StaticMeshState::Update(float tpf)
 {
   Matrix4f mat = GetGlobalMatrix();
   for (auto gfxMesh : m_gfxMeshes)
   {
     gfxMesh->SetModelMatrix(mat);
   }
+
+}
+
+void StaticMeshState::TransformationUpdated()
+{
 }
 
 }

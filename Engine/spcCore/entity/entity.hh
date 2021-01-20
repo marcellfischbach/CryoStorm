@@ -48,6 +48,15 @@ public:
   SpatialState*GetRoot();
   const SpatialState*GetRoot() const;
 
+  /**
+   * @name Lifecycle
+   * @{
+   */
+   void Update (float tpf);
+
+  /**
+   * @}
+   */
 
   
   /**

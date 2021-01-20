@@ -37,6 +37,7 @@ public:
   virtual void OnAttachedToWorld(World * world);
   virtual void OnDetachedFromWorld(World * world);
 
+  virtual void Update(float tpf);
   /**
    * @}
    */

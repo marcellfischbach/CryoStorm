@@ -62,7 +62,7 @@ iObject* AssimpMeshLoader::Load(const Class* cls, const ResourceLocator& locator
     aiProcess_CalcTangentSpace |
     aiProcess_Triangulate |
     aiProcess_GenNormals |
-    //aiProcess_MakeLeftHanded |
+    aiProcess_MakeLeftHanded |
     aiProcess_FlipWindingOrder |
     aiProcess_JoinIdenticalVertices);
 
@@ -78,7 +78,9 @@ iObject* AssimpMeshLoader::Load(const Class* cls, const ResourceLocator& locator
     aiMesh* mesh = scene->mMeshes[i];
     aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
-    std::string materialName(material->GetName().C_Str());
+    aiString aiMatName;
+    material->Get(AI_MATKEY_NAME, aiMatName);
+    std::string materialName(aiMatName.C_Str());
     if (d.materialSlots.find(materialName) == d.materialSlots.end())
     {
       Size idx = d.mesh->AddMaterialSlot(materialName);
@@ -107,7 +109,9 @@ void AssimpMeshLoader::ReadNode(aiNode* node, const Matrix4f &parentMatrix, Load
     iRenderMesh* renderMesh = AssimpMeshLoaderLoadMesh(mesh, globalMatrix);
     aiMaterial* material = d.scene->mMaterials[mesh->mMaterialIndex];
 
-    std::string materialName(material->GetName().C_Str());
+    aiString aiMatName;
+    material->Get(AI_MATKEY_NAME, aiMatName);
+    std::string materialName(aiMatName.C_Str());
     Size materialSlot = d.materialSlots[materialName];
 
 
@@ -136,6 +140,11 @@ void AssimpMeshLoaderConvert(aiMatrix4x4& aiMat, Matrix4f& out)
   );
 }
 
+Color4f ConvertRGBA(aiColor4D& v)
+{
+  return Color4f(v.r, v.g, v.b, v.a);
+}
+
 Vector3f Convert3f(aiVector3D& v)
 {
   return Vector3f(v.x, v.y, v.z);
@@ -153,6 +162,7 @@ iRenderMesh* AssimpMeshLoaderLoadMesh(aiMesh* mesh, const Matrix4f &matrix)
   std::vector<Vector3f> normals;
   std::vector<Vector3f> tangents;
   std::vector<Vector2f> uvs;
+  std::vector<Color4f>  colors;
 
   for (unsigned i = 0, in = mesh->mNumVertices; i < in; ++i)
   {
@@ -179,6 +189,16 @@ iRenderMesh* AssimpMeshLoaderLoadMesh(aiMesh* mesh, const Matrix4f &matrix)
       Vector2f uv = Convert2f(mesh->mTextureCoords[0][i]);
       uvs.push_back(uv);
     }
+    if (mesh->mColors[0])
+    {
+      Color4f color = ConvertRGBA(mesh->mColors[0][i]);
+      colors.push_back(color);
+    }
+    else
+    {
+      colors.push_back(Color4f(1, 1, 1, 1));
+    }
+    printf("\n");
   }
 
   std::vector<UInt32> indices;
@@ -195,7 +215,7 @@ iRenderMesh* AssimpMeshLoaderLoadMesh(aiMesh* mesh, const Matrix4f &matrix)
   }
 
 
-  iRenderMeshGeneratorFactory* renderMeshGenFact = ObjectRegistry::Get<iRenderMeshGeneratorFactory>();
+  auto renderMeshGenFact = ObjectRegistry::Get<iRenderMeshGeneratorFactory>();
   iRenderMeshGenerator* generator = renderMeshGenFact->Create();
   generator->SetVertices(vertices);
   if (mesh->mNormals)
@@ -209,6 +229,10 @@ iRenderMesh* AssimpMeshLoaderLoadMesh(aiMesh* mesh, const Matrix4f &matrix)
   if (mesh->mTextureCoords[0])
   {
     generator->SetUV0(uvs);
+  }
+  if (!colors.empty())
+  {
+    generator->SetColors(colors);
   }
   
   generator->SetIndices(indices);

@@ -65,4 +65,12 @@ void World::UpdateTransformation()
   }
 }
 
+void World::Update(float tpf)
+{
+  for (auto entity : m_entities)
+  {
+    entity->Update(tpf);
+  }
+}
+
 }

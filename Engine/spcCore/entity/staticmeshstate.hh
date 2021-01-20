@@ -16,35 +16,36 @@ class GfxSceneMesh;
 SPC_CLASS()
 class SPC_CORE_API StaticMeshState : public SPC_SUPER(SpatialState)
 {
-  SPC_CLASS_GEN;
+SPC_CLASS_GEN;
 public:
-  StaticMeshState(const std::string & name = std::string(""));
-  virtual ~StaticMeshState();
+    StaticMeshState(const std::string& name = std::string(""));
+    virtual ~StaticMeshState();
 
 
-  void SetMesh(Mesh * mesh);
-  const Mesh* GetMesh() const;
-  Mesh* GetMesh();
+    void SetMesh(Mesh* mesh);
+    const Mesh* GetMesh() const;
+    Mesh* GetMesh();
 
-  /**
- * @name Livecycle
- * @{
- */
-  virtual void OnAttachedToWorld(World * world);
-  virtual void OnDetachedFromWorld(World * world);
+    /**
+     * @name Livecycle
+    * @{
+    */
+    void OnAttachedToWorld(World* world) override;
+    void OnDetachedFromWorld(World* world) override;
 
-  /**
-   * @}
-   */
+    void Update(float tpf) override;
+    /**
+     * @}
+     */
 
 protected:
-  void TransformationUpdated() override;
+    void TransformationUpdated() override;
 
 private:
-  void AddMeshToScene(World * world);
-  void RemoveMeshFromScene(World * world);
-  Mesh* m_mesh;
-  std::vector<GfxSceneMesh*>  m_gfxMeshes;
+    void AddMeshToScene(World* world);
+    void RemoveMeshFromScene(World* world);
+    Mesh* m_mesh;
+    std::vector<GfxSceneMesh*> m_gfxMeshes;
 };
 
 

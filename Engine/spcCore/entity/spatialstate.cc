@@ -4,20 +4,17 @@
 namespace spc
 {
 SpatialState::SpatialState(const std::string& name)
-  : EntityState(name)
-  , m_transform(this)
-  , m_transformationState(0)
-  , m_parent(nullptr)
+        : EntityState(name), m_transform(this), m_transformationState(0), m_parent(nullptr)
 {
 
 }
 
-SpatialState::~SpatialState() 
+SpatialState::~SpatialState()
 {
 
 }
 
-bool SpatialState::Attach(SpatialState *child)
+bool SpatialState::Attach(SpatialState* child)
 {
   if (!child)
   {
@@ -31,7 +28,7 @@ bool SpatialState::Attach(SpatialState *child)
   {
     return false;
   }
-  
+
   child->AddRef();
   m_children.push_back(child);
   child->m_parent = this;
@@ -47,7 +44,7 @@ bool SpatialState::DetachSelf()
   return m_parent && m_parent->Detach(this);
 }
 
-bool SpatialState::Detach(SpatialState *child)
+bool SpatialState::Detach(SpatialState* child)
 {
   if (!child)
   {
@@ -62,7 +59,7 @@ bool SpatialState::Detach(SpatialState *child)
   {
     return false;
   }
-  
+
   m_children.erase(it);
   child->m_parent = nullptr;
   child->Release();
@@ -99,7 +96,7 @@ SpatialState* SpatialState::GetChild(Size idx)
   return const_cast<SpatialState*>(static_cast<const SpatialState*>(this)->GetChild(idx));
 }
 
-void SpatialState::UpdateEntity(Entity *oldEntity, Entity *newEntity)
+void SpatialState::UpdateEntity(Entity* oldEntity, Entity* newEntity)
 {
   EntityState::UpdateEntity(oldEntity, newEntity);
   for (auto child : m_children)
@@ -108,14 +105,14 @@ void SpatialState::UpdateEntity(Entity *oldEntity, Entity *newEntity)
   }
 }
 
-Transform& SpatialState::GetTransform() 
+Transform& SpatialState::GetTransform()
 {
   return m_transform;
 }
 
-const Transform &SpatialState::GetTransform() const
+const Transform& SpatialState::GetTransform() const
 {
-	return m_transform;
+  return m_transform;
 }
 
 void SpatialState::FinishTransformation()
