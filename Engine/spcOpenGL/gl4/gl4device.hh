@@ -41,12 +41,14 @@ public:
 
   void SetShader(iShader * shader) override;
 
+  iSampler *CreateSampler() override;
   iTexture2D* CreateTexture(const iTexture2D::Descriptor & descriptor) override;
   iDirectionalLight* CreateDirectionalLight() override;
   iPointLight* CreatePointLight() override;
 
 
   void ResetTextures() override;
+  void SetSampler(eTextureUnit unit, iSampler * sampler);
   eTextureUnit BindTexture(iTexture * texture) override;
   bool BindMaterial(iMaterial * material, eRenderPass pass) override;
   void Render(iRenderMesh * mesh, eRenderPass pass) override;

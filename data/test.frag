@@ -50,7 +50,7 @@ void main()
   frag_color += calc_light(spc_LightColor[3], spc_LightVector[3], spc_LightRange[3], world_position, norm) * color;
 
 
-  spc_FragColor = frag_color; // * texture(spc_Diffuse, texCoord);
+  spc_FragColor = frag_color * texture(spc_Diffuse, texCoord);
 //  spc_FragColor = vec4(norm * 0.5 + 0.5, 1.0);
   //spc_FragColor = color;
 }
