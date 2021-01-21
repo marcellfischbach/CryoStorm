@@ -1,9 +1,9 @@
 #pragma once
 
 
-#define SPC_FLOAT_IS_ZERO(e) (e < 1e-6 && e > -1e-6)
-#define SPC_FLOAT_IS_ONE(e) (e < (1.0 + 1e-6) && e > (1.0 - 1e-6))
-#define SPC_FLOAT_IS(e, v) (e < (v + 1e-6) && e > (v - 1e-6))
+#define SPC_FLOAT_IS_ZERO(e) (e < 1e-6f && e > -1e-6f)
+#define SPC_FLOAT_IS_ONE(e) (e < (1.0f + 1e-6f) && e > (1.0f - 1e-6f))
+#define SPC_FLOAT_IS(e, v) (e < (v + 1e-6f) && e > (v - 1e-6f))
 
 #define SPC_UNUSED(x) (void)x
 

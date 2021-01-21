@@ -108,13 +108,31 @@ static SPC_FORCEINLINE float spcSqrt(float v)
 
 static SPC_FORCEINLINE float spcRad2Deg(float rad)
 {
-	return rad * 180.0f / (float)M_PI;
+  return rad * 180.0f / (float)M_PI;
 }
 
 
 static SPC_FORCEINLINE float spcDeg2Rad(float deg)
 {
-	return deg * (float)M_PI / 180.0f;
+  return deg * (float)M_PI / 180.0f;
+}
+
+
+static SPC_FORCEINLINE float spcClamp01(float v)
+{
+  return v < 0.0f ? 0.0f : (v > 1.0f ? 1.0f : v);
+}
+
+static SPC_FORCEINLINE double spcClamp01(double v)
+{
+  return v < 0.0 ? 0.0 : (v > 1.0 ? 1.0 : v);
+}
+
+template <typename T>
+static SPC_FORCEINLINE T spcClamp(T v, T min, T max)
+{
+  return v < min ? min : (v > max ? max : v);
+
 }
 
 }

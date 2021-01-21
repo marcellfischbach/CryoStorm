@@ -38,6 +38,17 @@ public:
 
   }
 
+
+  SPC_FORCEINLINE bool operator== (const Color4f &o) const
+  {
+    return SPC_FLOAT_IS(r, o.r) && SPC_FLOAT_IS(g, o.g) && SPC_FLOAT_IS(b, o.b) && SPC_FLOAT_IS(a, o.a);
+  }
+
+  SPC_FORCEINLINE bool operator!= (const Color4f& o) const
+  {
+    return !SPC_FLOAT_IS(r, o.r) || !SPC_FLOAT_IS(g, o.g) || !SPC_FLOAT_IS(b, o.b) || !SPC_FLOAT_IS(a, o.a);
+  }
+
 };
 
 }

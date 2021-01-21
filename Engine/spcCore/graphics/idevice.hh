@@ -5,13 +5,13 @@
 #include <spcCore/types.hh>
 #include <spcCore/math/color4f.hh>
 #include <spcCore/math/matrix.hh>
-#include <spcCore/math/vector.hh>
 #include <spcCore/class.hh>
 #include <spcCore/graphics/erenderpass.hh>
 #include <spcCore/graphics/etextureunit.hh>
 #include <spcCore/graphics/idirectionallight.hh>
 #include <spcCore/graphics/ipointlight.hh>
 #include <spcCore/graphics/irendermesh.hh>
+#include <spcCore/graphics/isampler.hh>
 #include <spcCore/graphics/itexture.hh>
 #include <spcCore/graphics/itexture2d.hh>
 #include <spcCore/graphics/material/imaterial.hh>
@@ -47,6 +47,7 @@ struct SPC_CORE_API iDevice : public SPC_SUPER(iObject)
 
   virtual void SetShader(iShader* shader) = 0;
 
+  virtual iSampler* CreateSampler() = 0;
   virtual iTexture2D* CreateTexture(const iTexture2D::Descriptor& descriptor) = 0;
   virtual iDirectionalLight* CreateDirectionalLight() = 0;
   virtual iPointLight* CreatePointLight() = 0;

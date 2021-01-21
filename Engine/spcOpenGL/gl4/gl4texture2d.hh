@@ -22,6 +22,10 @@ public:
     return eTT_Texture2D;
   }
 
+  void SetSampler(iSampler* sampler) override;
+  iSampler* GetSampler() override;
+  const iSampler* GetSampler() const override;
+
   void Bind();
 
   bool Initialize(UInt16 width, UInt16 height, ePixelFormat format, bool generateMipMaps) override;
@@ -39,6 +43,7 @@ private:
     UInt16 Height;
   };
   std::vector<Level> m_level;
+  iSampler* m_sampler;
 };
 
 }

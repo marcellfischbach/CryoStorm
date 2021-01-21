@@ -14,10 +14,10 @@
 #include <spcCore/objectregistry.hh>
 #include <spcCore/graphics/camera.hh>
 #include <spcCore/graphics/idevice.hh>
-#include <spcCore/graphics/idirectionallight.hh>
 #include <spcCore/graphics/image.hh>
 #include <spcCore/graphics/ipointlight.hh>
 #include <spcCore/graphics/irendermesh.hh>
+#include <spcCore/graphics/isampler.hh>
 #include <spcCore/graphics/mesh.hh>
 #include <spcCore/graphics/projector.hh>
 #include <spcCore/graphics/shading/ishader.hh>
@@ -26,11 +26,7 @@
 #include <spcCore/graphics/material/materialinstance.hh>
 #include <spcCore/graphics/scene/gfxscene.hh>
 #include <spcCore/graphics/scene/gfxscenemesh.hh>
-#include <spcCore/math/matrix.hh>
-#include <spcCore/math/quaternion.hh>
-#include <spcCore/math/vector.hh>
 #include <spcCore/resource/assetmanager.hh>
-#include <spcCore/resource/binarydata.hh>
 #include <spcCore/resource/vfs.hh>
 
 #include <spcAssimpLoader/assimploadermodule.hh>
@@ -143,6 +139,8 @@ bool register_modules(int argc, char** argv)
 SDL_Window *wnd;
 SDL_GLContext context;
 
+
+
 bool initialize_modules(int argc, char **argv)
 {
   spc::VFS::Get()->SetBasePath("D:\\DEV\\SpiceEngine\\data");
@@ -169,8 +167,7 @@ bool initialize_modules(int argc, char **argv)
   
   SDL_ShowWindow(wnd);
   SDL_GL_MakeCurrent(wnd, context);
-  
-  
+
   if (!spc::CoreModule::Initialize(argc, argv))
   {
     printf("Unable to initialize core\n");
@@ -200,10 +197,10 @@ spc::iRenderMesh* create_plane_mesh()
   // create a render mesh
   spc::iRenderMeshGenerator *generator = spc::ObjectRegistry::Get<spc::iRenderMeshGeneratorFactory>()->Create();
   std::vector<spc::Vector3f> positions;
-  positions.push_back(spc::Vector3f(-1.0f, 0.0f, -1.0f));
-  positions.push_back(spc::Vector3f(-1.0f, 0.0f, 1.0f));
-  positions.push_back(spc::Vector3f(1.0f, 0.0f, -1.0f));
-  positions.push_back(spc::Vector3f(1.0f, 0.0f, 1.0f));
+  positions.push_back(spc::Vector3f(-10.0f, 0.0f, -10.0f));
+  positions.push_back(spc::Vector3f(-10.0f, 0.0f, 10.0f));
+  positions.push_back(spc::Vector3f(10.0f, 0.0f, -10.0f));
+  positions.push_back(spc::Vector3f(10.0f, 0.0f, 10.0f));
   std::vector<spc::Vector3f> normals;
   normals.push_back(spc::Vector3f(0.0f, 1.0f, 0.0f));
   normals.push_back(spc::Vector3f(0.0f, 1.0f, 0.0f));
@@ -211,9 +208,9 @@ spc::iRenderMesh* create_plane_mesh()
   normals.push_back(spc::Vector3f(0.0f, 1.0f, 0.0f));
   std::vector<spc::Vector2f> uv;
   uv.push_back(spc::Vector2f(0.0f, 0.0f));
-  uv.push_back(spc::Vector2f(0.0f, 1.0f));
-  uv.push_back(spc::Vector2f(1.0f, 0.0f));
-  uv.push_back(spc::Vector2f(1.0f, 1.0f));
+  uv.push_back(spc::Vector2f(0.0f, 10.0f));
+  uv.push_back(spc::Vector2f(10.0f, 0.0f));
+  uv.push_back(spc::Vector2f(10.0f, 10.0f));
   std::vector<spc::UInt32> indices;
   indices.push_back(0);
   indices.push_back(1);
@@ -289,6 +286,12 @@ int main(int argc, char **argv)
   desc.MipMaps = false;
   spc::iTexture2D *texture = device->CreateTexture(desc);
   texture->Data(0, image);
+
+  spc::iSampler* sampler = device->CreateSampler();
+  sampler->SetAddressU(spc::eTAM_Repeat);
+  sampler->SetAddressV(spc::eTAM_MirrorOnce);
+  texture->SetSampler(sampler);
+
   
   
   spc::Material *material = new spc::Material();
@@ -372,7 +375,7 @@ int main(int argc, char **argv)
   meshState->SetMesh(mesh);
   entity0->Attach(meshState);
   world->Attach(entity0);
-
+    /*
 
   spc::Entity* entityX = new spc::Entity("Entity_1");
   meshState = new spc::StaticMeshState("StaticMesh");
@@ -402,7 +405,7 @@ int main(int argc, char **argv)
   suzanneEntity->Attach(meshState);
   world->Attach(suzanneEntity);
 
-
+    */
 
   float rot = 0.0f;
   float entRot = 0.0f;

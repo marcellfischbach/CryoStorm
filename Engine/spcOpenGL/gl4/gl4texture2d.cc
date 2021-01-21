@@ -2,6 +2,7 @@
 #include <spcOpenGL/gl4/gl4texture2d.hh>
 #include <spcOpenGL/gl4/gl4pixelformatmap.hh>
 #include <spcCore/graphics/image.hh>
+#include <spcCore/graphics/isampler.hh>
 #include <spcCore/math/math.hh>
 #include <GL/glew.h>
 
@@ -11,6 +12,7 @@ GL4Texture2D::GL4Texture2D()
   : iTexture2D()
   , m_width(0)
   , m_height(0)
+  , m_sampler(nullptr)
 {
   SPC_CLASS_GEN_CONSTR;
   glGenTextures(1, &m_name);
@@ -113,5 +115,20 @@ void GL4Texture2D::Data(UInt8 level, UInt16 x, UInt16 y, UInt16 width, UInt16 he
   );
 }
 
+
+void GL4Texture2D::SetSampler(iSampler* sampler)
+{
+  SPC_SET(m_sampler, sampler);
+}
+
+iSampler* GL4Texture2D::GetSampler()
+{
+  return m_sampler;
+}
+
+const iSampler* GL4Texture2D::GetSampler() const
+{
+  return m_sampler;
+}
 
 }

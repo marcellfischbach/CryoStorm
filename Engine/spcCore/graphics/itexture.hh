@@ -9,6 +9,8 @@
 namespace spc
 {
 
+struct iSampler;
+
 SPC_CLASS(NoInstance)
 struct SPC_CORE_API iTexture : public SPC_SUPER(iObject)
 {
@@ -16,6 +18,10 @@ struct SPC_CORE_API iTexture : public SPC_SUPER(iObject)
   virtual ~iTexture() { }
 
   virtual eTextureType GetType() const = 0;
+
+  virtual void SetSampler(iSampler *sampler) = 0;
+  virtual iSampler* GetSampler() = 0;
+  virtual const iSampler* GetSampler() const = 0;
 
 };
 

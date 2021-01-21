@@ -38,14 +38,18 @@ set(SOURCES
         graphics/camera.cc
         graphics/camera.hh
         graphics/ebufferusage.hh
+        graphics/ecomparefunc.hh
         graphics/edatatype.hh
+        graphics/efiltermode.hh
         graphics/epixelformat.hh
         graphics/eprimitivetype.hh
         graphics/eprojectionmode.hh
         graphics/erenderpass.hh
         graphics/eshaderattribute.hh
-        graphics/etextureunit.hh
+        graphics/etextureaddressmode.hh
+        graphics/etexturecomparemode.hh
         graphics/etexturetype.hh
+        graphics/etextureunit.hh
         graphics/evertexstream.hh
         graphics/graphicsexceptions.cc
         graphics/graphicsexceptions.hh
@@ -59,6 +63,7 @@ set(SOURCES
         graphics/irendermesh.hh
         graphics/itexture.hh
         graphics/itexture2d.hh
+        graphics/isampler.hh
         graphics/ivertexbuffer.hh
         graphics/mesh.cc
         graphics/mesh.hh

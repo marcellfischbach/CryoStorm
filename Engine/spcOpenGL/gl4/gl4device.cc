@@ -2,8 +2,9 @@
 #include <spcOpenGL/gl4/gl4device.hh>
 #include <spcOpenGL/gl4/gl4directionallight.hh>
 #include <spcOpenGL/gl4/gl4pointlight.hh>
-#include <spcOpenGL/gl4/shading/gl4program.hh>
+#include <spcOpenGL/gl4/gl4sampler.hh>
 #include <spcOpenGL/gl4/gl4texture2d.hh>
+#include <spcOpenGL/gl4/shading/gl4program.hh>
 #include <spcCore/graphics/shading/ishaderattribute.hh>
 #include <GL/glew.h>
 #include <iostream>
@@ -16,11 +17,11 @@ namespace spc::opengl
 GL4Device::GL4Device()
   : iDevice()
   , m_shader(nullptr)
-  , m_modelViewMatrixDirty (false)
-  , m_viewProjectionMatrixDirty (false)
+  , m_modelViewMatrixDirty(false)
+  , m_viewProjectionMatrixDirty(false)
   , m_modelViewProjectionMatrixDirty(false)
-  , m_modelMatrixInvDirty (false)
-  , m_viewMatrixInvDirty (false)
+  , m_modelMatrixInvDirty(false)
+  , m_viewMatrixInvDirty(false)
   , m_projectionMatrixInvDirty(false)
   , m_modelViewMatrixInvDirty(false)
   , m_viewProjectionMatrixInvDirty(false)
@@ -100,7 +101,7 @@ void GL4Device::Clear(bool clearColor, const Color4f& color, bool clearDepth, fl
   glClear(flags);
 }
 
-void GL4Device::SetModelMatrix(const Matrix4f &modelMatrix)
+void GL4Device::SetModelMatrix(const Matrix4f& modelMatrix)
 {
   m_modelMatrix = modelMatrix;
 
@@ -138,7 +139,7 @@ void GL4Device::SetProjectionMatrix(const Matrix4f& projectionMatrix)
 }
 
 
-void GL4Device::SetModelMatrix(const Matrix4f& modelMatrix, const Matrix4f &modelMatrixInv)
+void GL4Device::SetModelMatrix(const Matrix4f& modelMatrix, const Matrix4f& modelMatrixInv)
 {
   m_modelMatrix = modelMatrix;
   m_modelMatrixInv = modelMatrixInv;
@@ -150,7 +151,7 @@ void GL4Device::SetModelMatrix(const Matrix4f& modelMatrix, const Matrix4f &mode
   m_modelViewProjectionMatrixInvDirty = true;
 }
 
-void GL4Device::SetViewMatrix(const Matrix4f& viewMatrix, const Matrix4f &viewMatrixInv)
+void GL4Device::SetViewMatrix(const Matrix4f& viewMatrix, const Matrix4f& viewMatrixInv)
 {
   m_viewMatrix = viewMatrix;
   m_viewMatrixInv = viewMatrixInv;
@@ -163,7 +164,7 @@ void GL4Device::SetViewMatrix(const Matrix4f& viewMatrix, const Matrix4f &viewMa
   m_viewProjectionMatrixInvDirty = true;
 }
 
-void GL4Device::SetProjectionMatrix(const Matrix4f& projectionMatrix, const Matrix4f &projectionMatrixInv)
+void GL4Device::SetProjectionMatrix(const Matrix4f& projectionMatrix, const Matrix4f& projectionMatrixInv)
 {
   m_projectionMatrix = projectionMatrix;
   m_projectionMatrixInv = projectionMatrixInv;
@@ -206,8 +207,8 @@ Matrix4f& GL4Device::GetPerspectiveProjectionInv(float l, float r, float b, floa
   float nf2 = z2 * f;
 
 
-  m.m00 = dx / z2; m.m10 = 0.0f;    m.m20 = 0.0f;      m.m30 = sx/z2;
-  m.m01 = 0.0f;    m.m11 = dy / z2; m.m21 = 0.0f;      m.m31 = sy/z2;
+  m.m00 = dx / z2; m.m10 = 0.0f;    m.m20 = 0.0f;      m.m30 = sx / z2;
+  m.m01 = 0.0f;    m.m11 = dy / z2; m.m21 = 0.0f;      m.m31 = sy / z2;
   m.m02 = 0.0f;    m.m12 = 0.0f;    m.m22 = 0.0f;      m.m32 = 1.0f;
   m.m03 = 0.0f;    m.m13 = 0.0f;    m.m23 = -dz / nf2;  m.m33 = sz / nf2;
 
@@ -224,9 +225,9 @@ Matrix4f& GL4Device::GetOrthographicProjection(float l, float r, float b, float 
   float sy = t + b;
   float sz = f + n;
 
-  m.m00 = 2.0f / dx; m.m10 = 0.0f;      m.m20 = 0.0f;      m.m30 = -sx/dx;
-  m.m01 = 0.0f;      m.m11 = 2.0f / dy; m.m21 = 0.0f;      m.m31 = -sy/dy;
-  m.m02 = 0.0f;      m.m12 = 0.0f;      m.m22 = 2.0f / dz; m.m32 = -sz/dz;
+  m.m00 = 2.0f / dx; m.m10 = 0.0f;      m.m20 = 0.0f;      m.m30 = -sx / dx;
+  m.m01 = 0.0f;      m.m11 = 2.0f / dy; m.m21 = 0.0f;      m.m31 = -sy / dy;
+  m.m02 = 0.0f;      m.m12 = 0.0f;      m.m22 = 2.0f / dz; m.m32 = -sz / dz;
   m.m03 = 0.0f;      m.m13 = 0.0f;      m.m23 = 0.0f;      m.m33 = 1.0;
   return m;
 }
@@ -268,6 +269,12 @@ void GL4Device::SetShader(iShader* shader)
 
 }
 
+
+iSampler* GL4Device::CreateSampler()
+{
+  return new GL4Sampler();
+}
+
 iTexture2D* GL4Device::CreateTexture(const iTexture2D::Descriptor& descriptor)
 {
   GL4Texture2D* texture = new GL4Texture2D();
@@ -305,16 +312,27 @@ eTextureUnit GL4Device::ShiftTextureUnit()
   return unit;
 }
 
+void GL4Device::SetSampler(eTextureUnit unit, iSampler* sampler)
+{
+  if (sampler)
+  {
+    static_cast<GL4Sampler*>(sampler)->Bind(unit);
+  }
+}
+
+
 eTextureUnit GL4Device::BindTexture(iTexture* texture)
 {
-  if (!texture ||m_nextTextureUnit == eTU_Invalid)
+  if (!texture || m_nextTextureUnit == eTU_Invalid)
   {
     return eTU_Invalid;
   }
 
+
+  // TODO keep track of the texture units... store them in arrays to not bind the same texture to a unity twice
   eTextureUnit unit = ShiftTextureUnit();
   glActiveTexture(GL_TEXTURE0 + unit);
-
+  SetSampler(unit, texture->GetSampler());
   switch (texture->GetType())
   {
   case eTT_Texture2D:
@@ -369,13 +387,13 @@ void GL4Device::BindForwardLight(iLight* light, Size idx)
       if (lightVector) lightVector->Bind(Vector4f(pointLight->GetPosition(), 1.0f));
       if (lightRange) lightRange->Bind(pointLight->GetRange());
     }
-      break;
+    break;
     case eLT_Directional:
     {
       iDirectionalLight* directionalLight = static_cast<iDirectionalLight*>(light);
       if (lightVector) lightVector->Bind(Vector4f(directionalLight->GetDirection(), 0.0f));
     }
-      break;
+    break;
     }
   }
   else

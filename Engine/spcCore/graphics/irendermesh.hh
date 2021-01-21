@@ -16,17 +16,18 @@ namespace spc
 struct iDevice;
 
 SPC_CLASS()
-struct SPC_CORE_API iRenderMesh : public SPC_SUPER(iObject)
+struct SPC_CORE_API iRenderMesh : SPC_SUPER(iObject)
 {
   SPC_CLASS_GEN;
   virtual ~iRenderMesh() { }
 
-  virtual void Render(iDevice* graphics, eRenderPass pass) = 0;
+  virtual void Render(iDevice * graphics, eRenderPass pass) = 0;
+
 };
 
 
 SPC_CLASS()
-struct SPC_CORE_API iRenderMeshGenerator : public SPC_SUPER(iObject)
+struct SPC_CORE_API iRenderMeshGenerator : SPC_SUPER(iObject)
 {
   SPC_CLASS_GEN;
 
@@ -46,7 +47,7 @@ struct SPC_CORE_API iRenderMeshGenerator : public SPC_SUPER(iObject)
 
 
 SPC_CLASS()
-struct SPC_CORE_API iRenderMeshGeneratorFactory : public SPC_SUPER(iObject)
+struct SPC_CORE_API iRenderMeshGeneratorFactory : SPC_SUPER(iObject)
 {
   SPC_CLASS_GEN;
   virtual ~iRenderMeshGeneratorFactory() { }
