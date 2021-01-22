@@ -28,7 +28,7 @@ GL4Sampler::GL4Sampler()
   glGenSamplers(1, &m_name);
   glSamplerParameteri(m_name, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glSamplerParameteri(m_name, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glSamplerParameteri(m_name, GL_TEXTURE_MAX_ANISOTROPY, 1);
+  glSamplerParameteri(m_name, GL_TEXTURE_MAX_ANISOTROPY_EXT, 1);
   glSamplerParameteri(m_name, GL_TEXTURE_MIN_LOD, -1000);
   glSamplerParameteri(m_name, GL_TEXTURE_MAX_LOD, 1000);
   glSamplerParameteri(m_name, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -131,7 +131,7 @@ void GL4Sampler::SetAnisotropy(UInt8 anisotropy)
   if (m_anisotropy != anisotropy)
   {
     m_anisotropy = anisotropy;
-    glSamplerParameteri(m_name, GL_TEXTURE_MAX_ANISOTROPY, m_anisotropy);
+    glSamplerParameteri(m_name, GL_TEXTURE_MAX_ANISOTROPY_EXT, m_anisotropy);
 
   }
 }

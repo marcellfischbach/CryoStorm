@@ -69,6 +69,8 @@ set(SOURCES
         graphics/mesh.hh
         graphics/projector.cc
         graphics/projector.hh
+        graphics/samplers.cc
+        graphics/samplers.hh
         graphics/vertexdeclaration.cc
         graphics/vertexdeclaration.hh
 

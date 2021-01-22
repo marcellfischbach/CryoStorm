@@ -18,6 +18,7 @@
 #include <spcCore/graphics/ipointlight.hh>
 #include <spcCore/graphics/irendermesh.hh>
 #include <spcCore/graphics/isampler.hh>
+#include <spcCore/graphics/samplers.hh>
 #include <spcCore/graphics/mesh.hh>
 #include <spcCore/graphics/projector.hh>
 #include <spcCore/graphics/shading/ishader.hh>
@@ -197,10 +198,10 @@ spc::iRenderMesh* create_plane_mesh()
   // create a render mesh
   spc::iRenderMeshGenerator *generator = spc::ObjectRegistry::Get<spc::iRenderMeshGeneratorFactory>()->Create();
   std::vector<spc::Vector3f> positions;
-  positions.push_back(spc::Vector3f(-10.0f, 0.0f, -10.0f));
-  positions.push_back(spc::Vector3f(-10.0f, 0.0f, 10.0f));
-  positions.push_back(spc::Vector3f(10.0f, 0.0f, -10.0f));
-  positions.push_back(spc::Vector3f(10.0f, 0.0f, 10.0f));
+  positions.push_back(spc::Vector3f(-100.0f, 0.0f, -100.0f));
+  positions.push_back(spc::Vector3f(-100.0f, 0.0f, 100.0f));
+  positions.push_back(spc::Vector3f(100.0f, 0.0f, -100.0f));
+  positions.push_back(spc::Vector3f(100.0f, 0.0f, 100.0f));
   std::vector<spc::Vector3f> normals;
   normals.push_back(spc::Vector3f(0.0f, 1.0f, 0.0f));
   normals.push_back(spc::Vector3f(0.0f, 1.0f, 0.0f));
@@ -208,9 +209,9 @@ spc::iRenderMesh* create_plane_mesh()
   normals.push_back(spc::Vector3f(0.0f, 1.0f, 0.0f));
   std::vector<spc::Vector2f> uv;
   uv.push_back(spc::Vector2f(0.0f, 0.0f));
-  uv.push_back(spc::Vector2f(0.0f, 10.0f));
-  uv.push_back(spc::Vector2f(10.0f, 0.0f));
-  uv.push_back(spc::Vector2f(10.0f, 10.0f));
+  uv.push_back(spc::Vector2f(0.0f, 1.0f));
+  uv.push_back(spc::Vector2f(1.0f, 0.0f));
+  uv.push_back(spc::Vector2f(1.0f, 1.0f));
   std::vector<spc::UInt32> indices;
   indices.push_back(0);
   indices.push_back(1);
@@ -287,11 +288,12 @@ int main(int argc, char **argv)
   spc::iTexture2D *texture = device->CreateTexture(desc);
   texture->Data(0, image);
 
+  /*
   spc::iSampler* sampler = device->CreateSampler();
   sampler->SetAddressU(spc::eTAM_Repeat);
   sampler->SetAddressV(spc::eTAM_MirrorOnce);
   texture->SetSampler(sampler);
-
+  */
   
   
   spc::Material *material = new spc::Material();

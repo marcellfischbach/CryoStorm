@@ -5,6 +5,8 @@
 #include <spcOpenGL/gl4/gl4sampler.hh>
 #include <spcOpenGL/gl4/gl4texture2d.hh>
 #include <spcOpenGL/gl4/shading/gl4program.hh>
+#include <spcCore/objectregistry.hh>
+#include <spcCore/graphics/samplers.hh>
 #include <spcCore/graphics/shading/ishaderattribute.hh>
 #include <GL/glew.h>
 #include <iostream>
@@ -71,6 +73,8 @@ bool GL4Device::Initialize()
   m_modelViewMatrixInv.SetIdentity();
   m_viewProjectionMatrixInv.SetIdentity();
   m_modelViewProjectionMatrixInv.SetIdentity();
+
+
 
   return true;
 }
@@ -283,6 +287,7 @@ iTexture2D* GL4Device::CreateTexture(const iTexture2D::Descriptor& descriptor)
     descriptor.Height,
     descriptor.Format,
     descriptor.MipMaps);
+  texture->SetSampler(ObjectRegistry::Get<Samplers>()->GetDefault());
   return texture;
 }
 

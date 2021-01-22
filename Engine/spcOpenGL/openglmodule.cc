@@ -2,6 +2,7 @@
 #include <spcOpenGL/openglmodule.hh>
 #include <master.refl.cc>
 #include <spcCore/objectregistry.hh>
+#include <spcCore/graphics/samplers.hh>
 #include <spcCore/resource/assetmanager.hh>
 #include <spcOpenGL/gl4/gl4device.hh>
 #include <spcOpenGL/gl4/gl4rendermesh.hh>
@@ -24,7 +25,17 @@ bool OpenGLModule::Register(int argc, char** argv)
 bool OpenGLModule::Initialize(int argc, char** argv)
 {
   GL4Device* gl4Graphics = ObjectRegistry::Get<iDevice>()->Query<GL4Device>();
-  return gl4Graphics->Initialize();
+  bool initialized = gl4Graphics->Initialize();
+  if (initialized) 
+  {
+    Samplers* samplers = new Samplers();
+    samplers->Load();
+
+    ObjectRegistry::Register<Samplers>(samplers);
+
+  }
+
+  return initialized;
 }
 
 

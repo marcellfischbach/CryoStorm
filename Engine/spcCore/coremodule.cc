@@ -19,6 +19,7 @@ bool CoreModule::Register(int argc, char** argv)
 
 bool CoreModule::Initialize(int argc, char** argv)
 {
+
   return true;
 }
 
