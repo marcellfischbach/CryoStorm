@@ -30,7 +30,7 @@ class SPC_CORE_API Material : public SPC_SUPER(iMaterial)
   friend class MaterialInstance;
   SPC_CLASS_GEN_OBJECT;
 public:
-  static const UInt16 UndefinedIndex = ~0x00;
+  static const Size UndefinedIndex = ~0x00;
 
   Material();
   virtual ~Material();
@@ -47,23 +47,23 @@ public:
 
   std::vector<std::string> GetAttributeNames() const;
 
-  UInt16 IndexOf(const std::string & attributeName) override;
+  Size IndexOf(const std::string & attributeName) override;
 
-  void Set(UInt16 idx, float value) override;
-  void Set(UInt16 idx, const Vector2f & v) override;
-  void Set(UInt16 idx, const Vector3f & v) override;
-  void Set(UInt16 idx, const Vector4f & v) override;
-  void Set(UInt16 idx, const Color4f & v) override;
-  void Set(UInt16 idx, int value) override;
-  void Set(UInt16 idx, const Matrix3f & m) override;
-  void Set(UInt16 idx, const Matrix4f & m) override;
-  void Set(UInt16 idx, iTexture * texture) override;
+  void Set(Size idx, float value) override;
+  void Set(Size idx, const Vector2f & v) override;
+  void Set(Size idx, const Vector3f & v) override;
+  void Set(Size idx, const Vector4f & v) override;
+  void Set(Size idx, const Color4f & v) override;
+  void Set(Size idx, int value) override;
+  void Set(Size idx, const Matrix3f & m) override;
+  void Set(Size idx, const Matrix4f & m) override;
+  void Set(Size idx, iTexture * texture) override;
 
 
 private:
   bool BindShader(iDevice * device, eRenderPass pass);
-  void BindAttribute(iDevice * device, eRenderPass pass, UInt16 idx);
-  void BindAttribute(iDevice * device, eRenderPass pass, UInt16 idx, float* floats, int* ints, iTexture * texture);
+  void BindAttribute(iDevice * device, eRenderPass pass, Size idx);
+  void BindAttribute(iDevice * device, eRenderPass pass, Size idx, float* floats, int* ints, iTexture * texture);
   void UpdateShaderAttributes(eRenderPass pass);
 
   struct Attribute

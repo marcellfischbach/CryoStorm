@@ -4,6 +4,7 @@
 #include <spcCore/coreexport.hh>
 #include <spcCore/class.hh>
 #include <spcCore/resource/iassetloader.hh>
+#include <spcCore/resource/iassetloader.hh>
 #include <map>
 #include <vector>
 
@@ -20,6 +21,7 @@ public:
   static AssetManager* Get();
 
   void RegisterLoader(iAssetLoader* loader);
+  void RegisterLoader(iAssetLoaderSpc* loader);
 
 
   template<typename T>
@@ -41,7 +43,11 @@ public:
 protected:
   AssetManager();
 
+  iObject* LoadExt(const Class* cls, const ResourceLocator& locator);
+  iObject* LoadSpc(const Class* cls, const ResourceLocator& locator);
+
   std::vector<iAssetLoader*> m_loaders;
+  std::vector<iAssetLoaderSpc*> m_loadersSpc;
 
 
 private:

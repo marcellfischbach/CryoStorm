@@ -22,9 +22,9 @@ SPC_CLASS_GEN;
 	{
 	}
 
-	virtual UInt32 RegisterAttribute(const std::string& attributeName) = 0;
+	virtual Size RegisterAttribute(const std::string& attributeName) = 0;
 
-	virtual UInt32 GetAttributeId(const std::string& attributeName) = 0;
+	virtual Size GetAttributeId(const std::string& attributeName) = 0;
 
 	virtual iShaderAttribute* GetShaderAttribute(UInt32 id) = 0;
 

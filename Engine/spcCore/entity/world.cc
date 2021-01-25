@@ -41,6 +41,7 @@ bool World::Attach(Entity* entity)
   m_entities.push_back(entity);
   entity->SetWorld(this);
   entity->AddRef();
+  return true;
 }
 
 bool World::Detach(Entity* entity)
@@ -54,6 +55,7 @@ bool World::Detach(Entity* entity)
   m_entities.erase(it);
   entity->SetWorld(nullptr);
   entity->Release();
+  return true;
 }
 
 void World::UpdateTransformation()

@@ -21,7 +21,7 @@ bool GL4ShaderAttributeNull::IsValid() const
   return true;
 }
 
-void GL4ShaderAttributeNull::SetArrayIndex(UInt16 idx) 
+void GL4ShaderAttributeNull::SetArrayIndex(Size idx)
 {
 }
 

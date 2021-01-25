@@ -6,10 +6,10 @@
 namespace spc
 {
 
-class SPC_CORE_API FileNotOpenException : public std::exception
+class FileNotOpenException : public std::exception
 {
 public:
-  FileNotOpenException();
+  inline FileNotOpenException() : std::exception() { }
 };
 
 }

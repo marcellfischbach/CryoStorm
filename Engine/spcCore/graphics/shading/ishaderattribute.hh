@@ -20,7 +20,7 @@ struct iShaderAttribute
 
 	virtual bool IsValid() const = 0;
 
-	virtual void SetArrayIndex(UInt16 idx) = 0;
+	virtual void SetArrayIndex(Size idx) = 0;
 
 	virtual void Bind(float x) = 0;
 

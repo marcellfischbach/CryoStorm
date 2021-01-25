@@ -1,5 +1,6 @@
 
 #include <spcCore/resource/file.hh>
+#include <spcCore/resource/ifile.hh>
 #include <stdio.h>
 
 
@@ -92,6 +93,16 @@ const std::string& Attribute::GetValue() const
   return m_value;
 }
 
+int Attribute::GetIntValue() const
+{
+  return atoi(m_value.c_str());
+}
+
+double Attribute::GetDoubleValue() const
+{
+  return atof(m_value.c_str());
+}
+
 Attribute::AttributeType Attribute::GetType() const
 {
   return m_type;
@@ -158,6 +169,35 @@ const Element* Element::GetChild(size_t idx) const
   return m_children[idx];
 }
 
+Element* Element::GetChild(const std::string& childName)
+{
+  return const_cast<Element*>(static_cast<const Element*>(this)->GetChild(childName));
+}
+
+const Element* Element::GetChild(const std::string& childName) const
+{
+  for (auto child : m_children)
+  {
+    if (childName == child->m_tagName)
+    {
+      return child;
+    }
+  }
+  return nullptr;
+}
+
+
+bool Element::HasChild(const std::string& childName) const
+{
+  for (auto child : m_children)
+  {
+    if (childName == child->m_tagName)
+    {
+      return true;
+    }
+  }
+  return false;
+}
 
 void Element::AddAttribute(const Attribute& attribute)
 {
@@ -167,15 +207,6 @@ void Element::AddAttribute(const Attribute& attribute)
 size_t Element::GetNumberOfAttributes() const
 {
   return m_attributes.size();
-}
-
-const Attribute* Element::GetAttribute(size_t idx) const
-{
-  if (idx >= m_attributes.size())
-  {
-    return nullptr;
-  }
-  return &m_attributes[idx];
 }
 
 bool Element::HasAttribute(const std::string& attributeName) const
@@ -190,7 +221,14 @@ bool Element::HasAttribute(const std::string& attributeName) const
   return false;
 }
 
-
+const Attribute* Element::GetAttribute(size_t idx) const
+{
+  if (idx >= m_attributes.size())
+  {
+    return nullptr;
+  }
+  return &m_attributes[idx];
+}
 
 const Attribute* Element::GetAttribute(const std::string& attributeName) const
 {
@@ -204,6 +242,46 @@ const Attribute* Element::GetAttribute(const std::string& attributeName) const
   return nullptr;
 }
 
+const std::string Element::GetAttribute(size_t idx, const std::string &defaultValue) const
+{
+  const Attribute* attr = GetAttribute(idx);
+  return attr ? attr->GetValue() : defaultValue;
+}
+
+
+const std::string Element::GetAttribute(const std::string& attributeName, const std::string& defaultValue) const
+{
+  const Attribute* attr = GetAttribute(attributeName);
+  return attr ? attr->GetValue() : defaultValue;
+}
+
+
+
+int Element::GetAttribute(size_t idx, int defaultValue) const
+{
+  const Attribute* attr = GetAttribute(idx);
+  return attr ? attr->GetIntValue() : defaultValue;
+}
+
+
+int Element::GetAttribute(const std::string& attributeName, int defaultValue) const
+{
+  const Attribute* attr = GetAttribute(attributeName);
+  return attr ? attr->GetIntValue() : defaultValue;
+}
+
+double Element::GetAttribute(size_t idx, double defaultValue) const
+{
+  const Attribute* attr = GetAttribute(idx);
+  return attr ? attr->GetDoubleValue() : defaultValue;
+}
+
+
+double Element::GetAttribute(const std::string& attributeName, double defaultValue) const
+{
+  const Attribute* attr = GetAttribute(attributeName);
+  return attr ? attr->GetDoubleValue() : defaultValue;
+}
 
 
 
@@ -246,7 +324,15 @@ size_t File::GetDataSize() const
 
 bool File::Parse(const std::string& filename)
 {
+#ifdef SPC_WIN32
+  FILE* file = nullptr;
+  if (fopen_s(&file, filename.c_str(), "rb") != 0)
+  {
+    return false;
+  }
+#else
   FILE* file = fopen(filename.c_str(), "rb");
+#endif
   if (!file)
   {
     return false;
@@ -260,6 +346,26 @@ bool File::Parse(const std::string& filename)
   fread(buffer, 1, size, file);
   fclose(file);
 
+
+  BufferBuffer bbuf(buffer, size);
+  bool success = Parse(&bbuf);
+  delete[] buffer;
+  return success;
+}
+
+bool File::Parse(iFile* file)
+{
+  if (!file)
+  {
+    return false;
+  }
+
+  file->Seek(eSM_End, 0);
+  long size = file->Tell();
+  file->Seek(eSM_Set, 0);
+
+  char* buffer = new char[size];
+  file->Read(1, size, buffer);
 
   BufferBuffer bbuf(buffer, size);
   bool success = Parse(&bbuf);
@@ -445,7 +551,7 @@ Token GetNextToken(iBuffer* buffer)
   // check identifier
   if (ch == '_'
     || ch >= 'a' && ch <= 'z'
-    || ch >= 'A' && ch <= 'A')
+    || ch >= 'A' && ch <= 'Z')
   {
     std::string id;
     id += ch;
@@ -454,7 +560,7 @@ Token GetNextToken(iBuffer* buffer)
       ch = buffer->GetNext();
       if (ch == '_'
         || ch >= 'a' && ch <= 'z'
-        || ch >= 'A' && ch <= 'A'
+        || ch >= 'A' && ch <= 'Z'
         || ch >= '0' && ch <= '9')
       {
         id += ch;

@@ -5,6 +5,11 @@
 #include <string>
 #include <vector>
 
+namespace spc
+{
+struct iFile;
+}
+
 namespace spc::file
 {
 
@@ -22,6 +27,8 @@ public:
 
   const std::string& GetName() const;
   const std::string& GetValue() const;
+  int GetIntValue() const;
+  double GetDoubleValue() const;
   AttributeType GetType() const;
 
 private:
@@ -47,13 +54,25 @@ public:
   size_t GetNumberOfChildren() const;
   Element* GetChild(size_t idx);
   const Element* GetChild(size_t idx) const;
+  bool HasChild(const std::string& childName) const;
+  Element* GetChild(const std::string& childName);
+  const Element* GetChild(const std::string& childName) const;
 
   void AddAttribute(const Attribute &attribute);
 
   size_t GetNumberOfAttributes() const;
-  const Attribute* GetAttribute(size_t idx) const;
   bool HasAttribute(const std::string& attributeName) const;
+  const Attribute* GetAttribute(size_t idx) const;
   const Attribute* GetAttribute(const std::string &attributeName) const;
+
+  const std::string GetAttribute(size_t idx, const std::string &defaultValue) const;
+  const std::string GetAttribute(const std::string& attributeName, const std::string &defaultValue) const;
+
+  int GetAttribute(size_t idx, int defaultValue) const;
+  int GetAttribute(const std::string& attributeName, int defaultValue) const;
+
+  double GetAttribute(size_t idx, double defaultValue) const;
+  double GetAttribute(const std::string& attributeName, double defaultValue) const;
 
 private:
   std::string m_tagName;
@@ -77,6 +96,7 @@ public:
 
 
   bool Parse(const std::string& filename);
+  bool Parse(iFile* file);
   bool Parse(const char* buffer, size_t bufferSize);
 
   std::string Print(bool format, int indent);

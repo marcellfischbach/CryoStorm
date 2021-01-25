@@ -17,7 +17,7 @@ public:
 
 	bool IsValid() const override;
 
-	void SetArrayIndex(UInt16 idx) override;
+	void SetArrayIndex(Size idx) override;
 	void Bind(float x) override;
 	void Bind(float x, float y) override;
 	void Bind(float x, float y, float z) override;

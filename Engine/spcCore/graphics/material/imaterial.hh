@@ -26,17 +26,17 @@ struct SPC_CORE_API iMaterial : public SPC_SUPER(iObject)
 
   virtual bool Bind(iDevice * device, eRenderPass pass) = 0;
 
-  virtual UInt16 IndexOf(const std::string & attributeName) = 0;
+  virtual Size IndexOf(const std::string & attributeName) = 0;
 
-  virtual void Set(UInt16 idx, float value) = 0;
-  virtual void Set(UInt16 idx, const Vector2f & v) = 0;
-  virtual void Set(UInt16 idx, const Vector3f & v) = 0;
-  virtual void Set(UInt16 idx, const Vector4f & v) = 0;
-  virtual void Set(UInt16 idx, const Color4f & v) = 0;
-  virtual void Set(UInt16 idx, int value) = 0;
-  virtual void Set(UInt16 idx, const Matrix3f & m) = 0;
-  virtual void Set(UInt16 idx, const Matrix4f & m) = 0;
-  virtual void Set(UInt16 idx, iTexture * texture) = 0;
+  virtual void Set(Size idx, float value) = 0;
+  virtual void Set(Size idx, const Vector2f & v) = 0;
+  virtual void Set(Size idx, const Vector3f & v) = 0;
+  virtual void Set(Size idx, const Vector4f & v) = 0;
+  virtual void Set(Size idx, const Color4f & v) = 0;
+  virtual void Set(Size idx, int value) = 0;
+  virtual void Set(Size idx, const Matrix3f & m) = 0;
+  virtual void Set(Size idx, const Matrix4f & m) = 0;
+  virtual void Set(Size idx, iTexture * texture) = 0;
 };
 
 }

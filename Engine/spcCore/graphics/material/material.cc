@@ -40,7 +40,7 @@ bool Material::Bind(iDevice* device, eRenderPass pass)
     return false;
   }
   device->ResetTextures();
-  for (UInt16 i = 0, in = m_attributes.size(); i < in; ++i)
+  for (Size i = 0, in = m_attributes.size(); i < in; ++i)
   {
     BindAttribute(device, pass, i);
   }
@@ -60,13 +60,13 @@ bool Material::BindShader(iDevice* device, eRenderPass pass)
 }
 
 
-void Material::BindAttribute(iDevice* device, eRenderPass pass, UInt16 idx)
+void Material::BindAttribute(iDevice* device, eRenderPass pass, Size idx)
 {
   Attribute& attr = m_attributes[idx];
   BindAttribute(device, pass, idx, attr.Floats, attr.Ints, attr.Texture);
 }
 
-void Material::BindAttribute(iDevice *device, eRenderPass pass, UInt16 idx, float *floats, int* ints, iTexture*texture)
+void Material::BindAttribute(iDevice *device, eRenderPass pass, Size idx, float *floats, int* ints, iTexture*texture)
 {
   Attribute& attribute = m_attributes[idx];
   iShaderAttribute* shaderAttribute = attribute.Attributes[pass];
@@ -168,9 +168,9 @@ std::vector<std::string> Material::GetAttributeNames() const
   return names;
 }
 
-UInt16 Material::IndexOf(const std::string& attributeName)
+Size Material::IndexOf(const std::string& attributeName)
 {
-  for (UInt16 i = 0, in = m_attributes.size(); i < in; ++i)
+  for (Size i = 0, in = m_attributes.size(); i < in; ++i)
   {
     if (m_attributes[i].Name == attributeName)
     {
@@ -180,7 +180,7 @@ UInt16 Material::IndexOf(const std::string& attributeName)
   return UndefinedIndex;
 }
 
-void Material::Set(UInt16 idx, float value)
+void Material::Set(Size idx, float value)
 {
   if (idx >= m_attributes.size())
   {
@@ -192,7 +192,7 @@ void Material::Set(UInt16 idx, float value)
 }
 
 
-void Material::Set(UInt16 idx, const Vector2f& v)
+void Material::Set(Size idx, const Vector2f& v)
 {
   if (idx >= m_attributes.size())
   {
@@ -205,7 +205,7 @@ void Material::Set(UInt16 idx, const Vector2f& v)
 }
 
 
-void Material::Set(UInt16 idx, const Vector3f& v)
+void Material::Set(Size idx, const Vector3f& v)
 {
   if (idx >= m_attributes.size())
   {
@@ -218,7 +218,7 @@ void Material::Set(UInt16 idx, const Vector3f& v)
   attr.Floats[2] = v.z;
 }
 
-void Material::Set(UInt16 idx, const Vector4f& v)
+void Material::Set(Size idx, const Vector4f& v)
 {
   if (idx >= m_attributes.size())
   {
@@ -232,7 +232,7 @@ void Material::Set(UInt16 idx, const Vector4f& v)
   attr.Floats[3] = v.w;
 }
 
-void Material::Set(UInt16 idx, const Color4f& v)
+void Material::Set(Size idx, const Color4f& v)
 {
   if (idx >= m_attributes.size())
   {
@@ -247,7 +247,7 @@ void Material::Set(UInt16 idx, const Color4f& v)
 }
 
 
-void Material::Set(UInt16 idx, int value)
+void Material::Set(Size idx, int value)
 {
   if (idx >= m_attributes.size())
   {
@@ -259,7 +259,7 @@ void Material::Set(UInt16 idx, int value)
 }
 
 
-void Material::Set(UInt16 idx, const Matrix3f& m)
+void Material::Set(Size idx, const Matrix3f& m)
 {
   if (idx >= m_attributes.size())
   {
@@ -270,7 +270,7 @@ void Material::Set(UInt16 idx, const Matrix3f& m)
   memcpy(attr.Floats, &m, sizeof(float) * 9);
 }
 
-void Material::Set(UInt16 idx, const Matrix4f& m)
+void Material::Set(Size idx, const Matrix4f& m)
 {
   if (idx >= m_attributes.size())
   {
@@ -281,7 +281,7 @@ void Material::Set(UInt16 idx, const Matrix4f& m)
   memcpy(attr.Floats, &m, sizeof(float) * 16);
 }
 
-void Material::Set(UInt16 idx, iTexture* texture)
+void Material::Set(Size idx, iTexture* texture)
 {
   if (idx >= m_attributes.size())
   {

@@ -24,9 +24,9 @@ bool GL4ShaderAttribute::IsValid() const
   return true;
 }
 
-void GL4ShaderAttribute::SetArrayIndex(UInt16 idx) 
+void GL4ShaderAttribute::SetArrayIndex(Size idx)
 {
-  m_arrayIndex = idx;
+  m_arrayIndex = (GLint)idx;
   m_absLocation = m_location + m_arrayIndex;
 }
 

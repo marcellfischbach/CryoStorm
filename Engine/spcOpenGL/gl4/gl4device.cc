@@ -193,7 +193,7 @@ Matrix4f& GL4Device::GetPerspectiveProjection(float l, float r, float b, float t
 
   m.m00 = z2 / dx; m.m10 = 0.0f;    m.m20 = -sx / dx;   m.m30 = 0.0f;
   m.m01 = 0.0f;    m.m11 = z2 / dy; m.m21 = -sy / dy;   m.m31 = 0.0f;
-  m.m02 = 0.0f;    m.m12 = 0.0f;    m.m22 = sz / dz;    m.m32 = -2.0 * n * f / dz;
+  m.m02 = 0.0f;    m.m12 = 0.0f;    m.m22 = sz / dz;    m.m32 = -2.0f * n * f / dz;
   m.m03 = 0.0f;    m.m13 = 0.0f;    m.m23 = 1.0f;       m.m33 = 0.0f;
 
   return m;

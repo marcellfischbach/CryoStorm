@@ -1,7 +1,6 @@
 
 #include <spcCore/graphics/samplers.hh>
-#include <spcCore/objectregistry.hh>
-#include <spcCore/graphics/idevice.hh>
+#include <spcCore/resource/assetmanager.hh>
 
 namespace spc
 {
@@ -58,23 +57,11 @@ void Samplers::Load()
 {
 
   // mock the default stuff
-  iDevice *device = ObjectRegistry::Get<iDevice>();
-  m_default = device->CreateSampler();
-  m_default->SetFilterMode(eFM_MinMagLinear);
-  m_default->SetAnisotropy(1);
 
-  m_normalMap = device->CreateSampler();
-  m_normalMap->SetFilterMode(eFM_MinMagLinear);
-  m_normalMap->SetAnisotropy(1);
+  m_default = AssetManager::Get()->Load<iSampler>(ResourceLocator("samplers/default.spc"));
+  m_normalMap = AssetManager::Get()->Load<iSampler>(ResourceLocator("samplers/normal_map.spc"));
+  m_uiSprite = AssetManager::Get()->Load<iSampler>(ResourceLocator("samplers/ui_sprite.spc"));
 
-  m_uiSprite = device->CreateSampler();
-  m_uiSprite->SetFilterMode(eFM_MinMagNearest);
-  m_uiSprite->SetAnisotropy(1);
-  /*
-  m_uiSprite->SetAddressU(eTAM_Clamp);
-  m_uiSprite->SetAddressV(eTAM_Clamp);
-  m_uiSprite->SetAddressW(eTAM_Clamp);
-  */
 }
 
 

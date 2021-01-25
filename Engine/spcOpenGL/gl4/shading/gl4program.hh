@@ -25,15 +25,15 @@ public:
 
 	UInt32 GetName() const;
 
-	virtual UInt32 RegisterAttribute(const std::string& attributeName);
+	Size RegisterAttribute(const std::string & attributeName) override;
 
-	virtual UInt32 GetAttributeId(const std::string& attributeName);
+	Size GetAttributeId(const std::string & attributeName) override;
 
-	virtual iShaderAttribute* GetShaderAttribute(UInt32 id);
+	iShaderAttribute* GetShaderAttribute(UInt32 id) override;
 
-	virtual iShaderAttribute* GetShaderAttribute(const std::string& attributeName);
+	iShaderAttribute* GetShaderAttribute(const std::string& attributeName) override;
 
-	virtual iShaderAttribute* GetShaderAttribute(eShaderAttribute shaderAttribute);
+	iShaderAttribute* GetShaderAttribute(eShaderAttribute shaderAttribute) override;
 
 
 private:

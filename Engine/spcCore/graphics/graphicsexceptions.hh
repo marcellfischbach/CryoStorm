@@ -12,9 +12,13 @@ namespace spc
 class NoSuchStreamException : public std::exception
 {
 public:
-  NoSuchStreamException(UInt8 streamId);
+  inline NoSuchStreamException(UInt8 streamId) : std::exception()
+    , m_streamId(streamId)
+  {
 
-    UInt8 GetStreamId() const;
+  }
+
+  inline UInt8 GetStreamId() const { return m_streamId;  }
 
 private:
   UInt8 m_streamId;

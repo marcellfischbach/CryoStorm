@@ -36,20 +36,20 @@ public:
   Material* GetMaterial();
   const Material* GetMaterial() const;
 
-  UInt16 IndexOf(const std::string & attributeName) override;
+  Size IndexOf(const std::string & attributeName) override;
 
-  void Set(UInt16 idx, float value) override;
-  void Set(UInt16 idx, const Vector2f & v) override;
-  void Set(UInt16 idx, const Vector3f & v) override;
-  void Set(UInt16 idx, const Vector4f & v) override;
-  void Set(UInt16 idx, const Color4f& v) override;
-  void Set(UInt16 idx, int value) override;
-  void Set(UInt16 idx, const Matrix3f & m) override;
-  void Set(UInt16 idx, const Matrix4f & m) override;
-  void Set(UInt16 idx, iTexture * texture) override;
+  void Set(Size idx, float value) override;
+  void Set(Size idx, const Vector2f & v) override;
+  void Set(Size idx, const Vector3f & v) override;
+  void Set(Size idx, const Vector4f & v) override;
+  void Set(Size idx, const Color4f& v) override;
+  void Set(Size idx, int value) override;
+  void Set(Size idx, const Matrix3f & m) override;
+  void Set(Size idx, const Matrix4f & m) override;
+  void Set(Size idx, iTexture * texture) override;
 
-  bool IsOverridden(UInt16 idx) const;
-  void SetOverride(UInt16 idx, bool _override);
+  bool IsOverridden(Size idx) const;
+  void SetOverride(Size idx, bool _override);
 private:
 
   void RebuildAttributes();

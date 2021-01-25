@@ -11,16 +11,16 @@ namespace spc
 {
 
 
-class SPC_CORE_API BufferExhaustedException : public std::exception
+class  BufferExhaustedException : public std::exception
 {
 public:
-  BufferExhaustedException();
+  inline BufferExhaustedException() : std::exception () { }
 };
 
-class SPC_CORE_API BinaryEntryAlreadyExistsException : public std::exception
+class BinaryEntryAlreadyExistsException : public std::exception
 {
 public:
-  BinaryEntryAlreadyExistsException();
+  inline BinaryEntryAlreadyExistsException() : std::exception() { }
 };
 
 class SPC_CORE_API BinaryOutputStream

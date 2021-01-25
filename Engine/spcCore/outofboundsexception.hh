@@ -7,10 +7,10 @@
 namespace spc
 {
 
-class SPC_CORE_API OutOfBoundsException : public std::exception
+class OutOfBoundsException : public std::exception
 {
 public:
-	OutOfBoundsException();
+	inline OutOfBoundsException() : std::exception() { }
 };
 
 }

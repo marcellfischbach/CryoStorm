@@ -33,18 +33,19 @@ bool MaterialInstance::Bind(iDevice* device, eRenderPass pass)
   }
 
   device->ResetTextures();
-  for (UInt16 i = 0, in = m_attributes.size(); i < in; i++)
+  for (Size i = 0, in = m_attributes.size(); i < in; i++)
   {
     Attribute& attribute = m_attributes[i];
     if (attribute.Override)
     {
-      m_material->BindAttribute(device, pass, i, attribute.Floats, attribute.Ints, attribute.Texture);
+      m_material->BindAttribute(device, pass, (UInt16)i, attribute.Floats, attribute.Ints, attribute.Texture);
     }
     else
     {
-      m_material->BindAttribute(device, pass, i);
+      m_material->BindAttribute(device, pass, (UInt16)i);
     }
   }
+  return true;
 }
 
 void MaterialInstance::SetMaterial(Material* material)
@@ -64,14 +65,14 @@ const Material* MaterialInstance::GetMaterial() const
 }
 
 
-UInt16 MaterialInstance::IndexOf(const std::string& attributeName)
+Size MaterialInstance::IndexOf(const std::string& attributeName)
 {
   return m_material ? m_material->IndexOf(attributeName) : Material::UndefinedIndex;
 }
 
 
 
-void MaterialInstance::Set(UInt16 idx, float value)
+void MaterialInstance::Set(Size idx, float value)
 {
   if (idx >= m_attributes.size())
   {
@@ -83,7 +84,7 @@ void MaterialInstance::Set(UInt16 idx, float value)
 }
 
 
-void MaterialInstance::Set(UInt16 idx, const Vector2f& v)
+void MaterialInstance::Set(Size idx, const Vector2f& v)
 {
   if (idx >= m_attributes.size())
   {
@@ -96,7 +97,7 @@ void MaterialInstance::Set(UInt16 idx, const Vector2f& v)
 }
 
 
-void MaterialInstance::Set(UInt16 idx, const Vector3f& v)
+void MaterialInstance::Set(Size idx, const Vector3f& v)
 {
   if (idx >= m_attributes.size())
   {
@@ -109,7 +110,7 @@ void MaterialInstance::Set(UInt16 idx, const Vector3f& v)
   attr.Floats[2] = v.z;
 }
 
-void MaterialInstance::Set(UInt16 idx, const Vector4f& v)
+void MaterialInstance::Set(Size idx, const Vector4f& v)
 {
   if (idx >= m_attributes.size())
   {
@@ -124,7 +125,7 @@ void MaterialInstance::Set(UInt16 idx, const Vector4f& v)
 }
 
 
-void MaterialInstance::Set(UInt16 idx, const Color4f& v)
+void MaterialInstance::Set(Size idx, const Color4f& v)
 {
   if (idx >= m_attributes.size())
   {
@@ -138,7 +139,7 @@ void MaterialInstance::Set(UInt16 idx, const Color4f& v)
   attr.Floats[3] = v.a;
 }
 
-void MaterialInstance::Set(UInt16 idx, int value)
+void MaterialInstance::Set(Size idx, int value)
 {
   if (idx >= m_attributes.size())
   {
@@ -150,7 +151,7 @@ void MaterialInstance::Set(UInt16 idx, int value)
 }
 
 
-void MaterialInstance::Set(UInt16 idx, const Matrix3f& m)
+void MaterialInstance::Set(Size idx, const Matrix3f& m)
 {
   if (idx >= m_attributes.size())
   {
@@ -161,7 +162,7 @@ void MaterialInstance::Set(UInt16 idx, const Matrix3f& m)
   memcpy(attr.Floats, &m, sizeof(float) * 9);
 }
 
-void MaterialInstance::Set(UInt16 idx, const Matrix4f& m)
+void MaterialInstance::Set(Size idx, const Matrix4f& m)
 {
   if (idx >= m_attributes.size())
   {
@@ -172,7 +173,7 @@ void MaterialInstance::Set(UInt16 idx, const Matrix4f& m)
   memcpy(attr.Floats, &m, sizeof(float) * 16);
 }
 
-void MaterialInstance::Set(UInt16 idx, iTexture* texture)
+void MaterialInstance::Set(Size idx, iTexture* texture)
 {
   if (idx >= m_attributes.size())
   {
@@ -184,7 +185,7 @@ void MaterialInstance::Set(UInt16 idx, iTexture* texture)
 
 }
 
-bool MaterialInstance::IsOverridden(UInt16 idx) const
+bool MaterialInstance::IsOverridden(Size idx) const
 {
   if (idx >= m_attributes.size())
   {
@@ -194,7 +195,7 @@ bool MaterialInstance::IsOverridden(UInt16 idx) const
   return attr.Override;
 }
 
-void MaterialInstance::SetOverride(UInt16 idx, bool _override)
+void MaterialInstance::SetOverride(Size idx, bool _override)
 {
   if (idx >= m_attributes.size())
   {

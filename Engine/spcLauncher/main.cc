@@ -273,8 +273,10 @@ int main(int argc, char **argv)
   shader->RegisterAttribute("Diffuse");
   shader->RegisterAttribute("Color");
   
+
+  spc::iSampler* sampler = spc::AssetManager::Get()->Load<spc::iSampler>(spc::ResourceLocator("sampler_default.spc"));
   
-  spc::Image *image = spc::AssetManager::Get()->Load<spc::Image>(spc::ResourceLocator("2k_earth_daymap.jpg"));
+  spc::Image *image = spc::AssetManager::Get()->Load<spc::Image>(spc::ResourceLocator("GrassGreenTexture0003.jpg"));
   if (!image)
   {
     image = spc::AssetManager::Get()->Load<spc::Image>(spc::ResourceLocator("snowflake_64.png"));

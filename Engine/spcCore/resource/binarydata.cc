@@ -5,19 +5,7 @@
 namespace spc
 {
     
-    BufferExhaustedException::BufferExhaustedException()
-      : std::exception()
-    {
-    
-    }
-    
-    
-    BinaryEntryAlreadyExistsException::BinaryEntryAlreadyExistsException()
-      : std::exception()
-    {
-    
-    }
-
+ 
 /* ************************************************************************
  * ************************************************************************
  * 	Binary Output Stream
@@ -457,6 +445,7 @@ namespace spc
       
       delete[] it->second.m_data;
       m_entries.erase(it);
+      return true;
     }
     
     

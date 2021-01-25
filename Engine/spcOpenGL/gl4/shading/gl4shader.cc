@@ -50,7 +50,7 @@ void GL4Shader::SetSource(const std::string& source)
   const GLchar* sources[1];
   sources[0] = m_source.c_str();
   GLint length[1];
-  length[0] = m_source.length();
+  length[0] = (GLint)m_source.length();
   glShaderSource(m_name, 1, sources, length);
 }
 

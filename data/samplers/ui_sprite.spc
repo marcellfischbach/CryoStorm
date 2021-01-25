@@ -1,0 +1,11 @@
+sampler name:"UISprite"
+		filter: "MinMagLinear"
+		anisotropy: 1
+		minLOD: -1000
+		maxLOD: 1000
+		addressU: "Repeat"
+		addressV: "Repeat"
+		addressW: "Repeat"
+		borderColor: "#000000"
+		textureCompareMode: "None"
+		textureCompareFunc: "Always"

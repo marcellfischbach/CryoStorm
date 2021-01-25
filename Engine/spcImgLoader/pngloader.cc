@@ -92,7 +92,7 @@ iObject* PngLoader::Load(const Class* cls, const ResourceLocator& locator) const
   }
 
 
-  UInt32 stride = png_get_rowbytes(png_ptr, info_ptr);
+  //Size stride = png_get_rowbytes(png_ptr, info_ptr);
   png_bytep* row_pointers = new png_bytep[height];
   for (UInt32 y = 0; y < height; y++)
   {

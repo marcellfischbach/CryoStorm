@@ -39,7 +39,7 @@
     } \
     private: \
       int64_t m_refCount
-    
+
 #define SPC_CLASS_GEN_CONSTR m_refCount = 1
 
 #define SPC_WEAK_OBJECT(Super) \
@@ -66,7 +66,7 @@ namespace spc
 class BadMethodInvokation : public std::exception
 {
 public:
-  BadMethodInvokation(const std::string &msg)
+  BadMethodInvokation(const std::string& msg)
     : m_msg(msg)
   {
   }
@@ -75,7 +75,7 @@ public:
 
   }
 
-  const char *getMessage () const
+  const char* getMessage() const
   {
     return m_msg.c_str();
   }
@@ -87,7 +87,7 @@ private:
 class NoSuchMethodException : public std::exception
 {
 public:
-  NoSuchMethodException(const std::string &methodName)
+  NoSuchMethodException(const std::string& methodName)
     : m_methodName(methodName)
   {
   }
@@ -96,7 +96,7 @@ public:
 
   }
 
-  const char *getMethodName () const
+  const char* getMethodName() const
   {
     return m_methodName.c_str();
   }
@@ -153,6 +153,17 @@ struct SPC_CORE_API iObject
     return reinterpret_cast<T*>(QueryClass(T::GetStaticClass()));
   }
   virtual const void* QueryClass(const Class* clazz) const;
+};
+
+
+class AutoRelease
+{
+private:
+  iObject* obj;
+public:
+  AutoRelease(iObject* obj) : obj(obj) { }
+  ~AutoRelease() { SPC_RELEASE(obj); }
+
 };
 
 

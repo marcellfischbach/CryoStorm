@@ -15,7 +15,6 @@ set(SOURCES
         coremodule.hh
         objectregistry.cc
         objectregistry.hh
-        outofboundsexception.cc
         outofboundsexception.hh
         string.cc
         string.hh
@@ -51,7 +50,6 @@ set(SOURCES
         graphics/etexturetype.hh
         graphics/etextureunit.hh
         graphics/evertexstream.hh
-        graphics/graphicsexceptions.cc
         graphics/graphicsexceptions.hh
         graphics/idevice.hh
         graphics/idirectionallight.hh
@@ -99,6 +97,9 @@ set(SOURCES
         input/input.hh
         input/key.hh
 
+        loaders/samplerloader.cc
+        loaders/samplerloader.hh
+
         math/boundingbox.cc
         math/boundingbox.hh
         math/clipper.cc
@@ -132,7 +133,6 @@ set(SOURCES
         resource/filesystemfile.hh
         resource/iassetloader.hh
         resource/ifile.hh
-        resource/resourceexceptions.cc
         resource/resourceexceptions.hh
         resource/resourcelocator.cc
         resource/resourcelocator.hh

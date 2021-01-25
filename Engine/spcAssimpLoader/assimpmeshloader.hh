@@ -6,8 +6,8 @@
 #include <spcCore/math/matrix4f.hh>
 #include <png.h>
 
-class aiMesh;
-class aiNode;
+struct aiMesh;
+struct aiNode;
 
 namespace spc::assimp
 {

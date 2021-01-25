@@ -22,10 +22,7 @@ MeshLoader::~MeshLoader()
 
 bool MeshLoader::CanLoad(const Class* cls, const ResourceLocator& locator) const
 {
-  if (Mesh::GetStaticClass() == cls)
-  {
-    return true;
-  }
+  return Mesh::GetStaticClass() == cls;
 }
 
 iObject* MeshLoader::Load(const Class* cls, const ResourceLocator& locator) const

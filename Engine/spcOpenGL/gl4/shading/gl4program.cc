@@ -109,7 +109,7 @@ void GL4Program::RegisterRenderAttributes()
   RegisterAttribute("LightRange");
 }
 
-UInt32 GL4Program::RegisterAttribute(const std::string& attributeName)
+Size GL4Program::RegisterAttribute(const std::string& attributeName)
 {
   for (UInt32 i = 0; i < m_attributes.size(); i++)
   {
@@ -131,7 +131,7 @@ UInt32 GL4Program::RegisterAttribute(const std::string& attributeName)
   return m_attributes.size() - 1;
 }
 
-UInt32 GL4Program::GetAttributeId(const std::string& attributeName)
+Size GL4Program::GetAttributeId(const std::string& attributeName)
 {
   for (UInt32 i = 0; i < m_attributes.size(); i++)
   {
