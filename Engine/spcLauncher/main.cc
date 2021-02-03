@@ -281,23 +281,20 @@ int main(int argc, char **argv)
   {
     image = spc::AssetManager::Get()->Load<spc::Image>(spc::ResourceLocator("snowflake_64.png"));
   }
+
+  if (image)
+  {
+    image->GenerateMipMaps(spc::Image::eMipMapProcedure::eMMP_Linear4x4);
+  }
   
   spc::iTexture2D::Descriptor desc;
   desc.Format = image->GetPixelFormat();
   desc.Width = image->GetWidth();
   desc.Height = image->GetHeight();
-  desc.MipMaps = false;
+  desc.MipMaps = true;
   spc::iTexture2D *texture = device->CreateTexture(desc);
-  texture->Data(0, image);
+  texture->Data(image);
 
-  /*
-  spc::iSampler* sampler = device->CreateSampler();
-  sampler->SetAddressU(spc::eTAM_Repeat);
-  sampler->SetAddressV(spc::eTAM_MirrorOnce);
-  texture->SetSampler(sampler);
-  */
-  
-  
   spc::Material *material = new spc::Material();
   material->SetShader(spc::eRP_Forward, shader);
   material->RegisterAttribute("Diffuse");
@@ -318,13 +315,11 @@ int main(int argc, char **argv)
 
   spc::World* world = new spc::World();
 
-  spc::GfxScene* scene = world->GetScene();
-  
-  
   int width, height;
   SDL_GetWindowSize(wnd, &width, &height);
   
   float aspect = (float) height / (float) width;
+  /*
   spc::Matrix4f projection = device->GetPerspectiveProjection(-1.0f, 1.0f, -aspect, aspect, 1.0f, 100.0f, projection);
   //spc::Matrix4f projection = graphics->GetOrthographicProjection(-20.0f, 20.0f, -20.0f, 20.0f, -100.0f, 100.0f, projection);
   device->SetProjectionMatrix(projection);
@@ -332,7 +327,7 @@ int main(int argc, char **argv)
   spc::Matrix4f view;
   view.SetLookAt(spc::Vector3f(20, 20, 20), spc::Vector3f(0, 0, 0), spc::Vector3f(0, 1, 0));
   device->SetViewMatrix(view);
-  
+  */
   
   spc::Camera *camera = new spc::Camera();
   spc::Projector projector;
@@ -344,7 +339,8 @@ int main(int argc, char **argv)
   pointLight0->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f));
   pointLight0->SetPosition(spc::Vector3f(0.0f, 50.0f, 0.0f));
   pointLight0->SetRange(100.0f);
-  scene->Add(pointLight0);
+
+  world->GetScene()->Add(pointLight0);
 
   /*
   spc::iPointLight *pointLight1 = device->CreatePointLight();
@@ -458,7 +454,7 @@ int main(int argc, char **argv)
     */
     entRot += 0.01f;
 
-    float dist = 5.0f;
+    float dist = 100.0f;
     camera->SetSpot(spc::Vector3f(0, 0.0f, 0.0f));
     camera->SetEye(spc::Vector3f(spc::spcSin(rot) * dist, dist, -spc::spcCos(rot) * dist));
     camera->Bind(device);
@@ -468,7 +464,7 @@ int main(int argc, char **argv)
     rot += 0.005f;
 
     world->Update((float)deltaTime / 1000.0f);
-    scene->Render(device, spc::eRP_Forward);
+    world->GetScene()->Render(device, spc::eRP_Forward);
     
     SDL_GL_SwapWindow(wnd);
     

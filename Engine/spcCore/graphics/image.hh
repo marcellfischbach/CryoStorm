@@ -19,6 +19,13 @@ class SPC_CORE_API Image : public SPC_SUPER(iObject)
 public:
   Image(UInt16 width, UInt16 height, ePixelFormat pixelFormat);
 
+  enum class eMipMapProcedure
+  {
+    eMMP_Linear4x4,
+    eMMP_Normal
+  };
+  void GenerateMipMaps(eMipMapProcedure procedure);
+
   void Copy(UInt16 layer, const UInt8* buffer);
   
   UInt16 GetNumberOfLayers() const;
@@ -33,6 +40,8 @@ private:
   void GenerateLayers(UInt16 width, UInt16 height);
   void GenerateMipMapLayers();
   void GenerateLayer(UInt16 layer);
+  void GenerateMipMapsLinear4x4();
+  void GenerateMipMapsNormal();
 
   struct Layer
   {

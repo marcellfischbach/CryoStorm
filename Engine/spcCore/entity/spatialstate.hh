@@ -51,6 +51,7 @@ protected:
 
   
 private:
+  void UpdateGlobalMatrix() const;
   void UpdateFlagUpdateGlobalMatrix();
   void UpdateFlagRequestHierarchyTransformationUpdate();
 

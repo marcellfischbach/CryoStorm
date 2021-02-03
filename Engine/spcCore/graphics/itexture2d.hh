@@ -28,6 +28,7 @@ struct SPC_CORE_API iTexture2D : public SPC_SUPER(iTexture)
   virtual ~iTexture2D() { }
 
   virtual bool Initialize(UInt16 width, UInt16 height, ePixelFormat format, bool generateMipMaps) = 0;
+  virtual void Data(const Image* image) = 0;
   virtual void Data(UInt8 level, const Image* image) = 0;
   virtual void Data(UInt8 level, ePixelFormat format, const void* data) = 0;
   virtual void Data(UInt8 level, UInt16 x, UInt16 y, UInt16 width, UInt16 height, ePixelFormat format, const void* data) = 0;

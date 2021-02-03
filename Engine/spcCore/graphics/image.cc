@@ -1,7 +1,7 @@
 
 #include <spcCore/graphics/image.hh>
 #include <spcCore/math/math.hh>
-
+#include <spcCore/math/math.hh>
 namespace spc
 {
 
@@ -68,6 +68,20 @@ void Image::GenerateLayer(UInt16 layer)
   l.buffer = new UInt8[l.size];
 }
 
+void Image::GenerateMipMaps(eMipMapProcedure procedure)
+{
+  GenerateMipMapLayers();
+  switch (procedure)
+  {
+    case eMipMapProcedure::eMMP_Linear4x4:
+      GenerateMipMapsLinear4x4();
+      break;
+    case eMipMapProcedure::eMMP_Normal:
+      GenerateMipMapsNormal();
+      break;
+  }
+}
+
 void Image::GenerateMipMapLayers()
 {
   for (UInt16 layer = 1; layer < m_numberOfLayers; layer++)
@@ -129,5 +143,71 @@ ePixelFormat Image::GetPixelFormat() const
   return m_pixelFormat;
 }
 
+
+void Image::GenerateMipMapsLinear4x4()
+{
+  for (UInt16 l = 1; l<m_numberOfLayers; ++l)
+  {
+    Layer& src = m_layers[l-1];
+    Layer& dst = m_layers[l];
+
+    UInt32 bpp = byte_per_pixel(m_pixelFormat);
+    UInt8* dptr = dst.buffer;
+    for (int y=0; y<dst.height; y++)
+    {
+      UInt32 srcRow0Idx = spcMin(y * 2, src.height-1) * src.width * bpp;
+      UInt32 srcRow1Idx = spcMin(y * 2 + 1, src.height-1) * src.width * bpp;
+      for (int x=0; x<dst.width; x++)
+      {
+        UInt32 src00Idx = srcRow0Idx + spcMin(x * 2, src.width-1) * bpp;
+        UInt32 src01Idx = srcRow0Idx + spcMin(x * 2 + 1, src.width-1) * bpp;
+        UInt32 src10Idx = srcRow1Idx + spcMin(x * 2, src.width-1) * bpp;
+        UInt32 src11Idx = srcRow1Idx + spcMin(x * 2 + 1, src.width-1) * bpp;
+        for (UInt32 c = 0; c<bpp; c++)
+        {
+          UInt32 s = src.buffer[src00Idx+c]
+                  + src.buffer[src01Idx+c]
+                  + src.buffer[src10Idx+c]
+                  + src.buffer[src11Idx+c];
+          s >>= 2;
+          *dptr++ = (UInt8)(s & 0x000000ff);
+        }
+      }
+    }
+  }
+}
+
+void Image::GenerateMipMapsNormal()
+{
+  for (UInt16 l = 1; l<m_numberOfLayers; ++l)
+  {
+    Layer& src = m_layers[l-1];
+    Layer& dst = m_layers[l];
+
+    UInt32 bpp = byte_per_pixel(m_pixelFormat);
+    UInt8* dptr = dst.buffer;
+    for (int y=0; y<dst.width; y++)
+    {
+      UInt32 srcRow0Idx = spcMin(y * 2, src.height-1) * src.width * bpp;
+      UInt32 srcRow1Idx = spcMin(y * 2 + 1, src.height-1) * src.width * bpp;
+      for (int x=0; x<dst.width; x++)
+      {
+        UInt32 src00Idx = srcRow0Idx + spcMin(x * 2, src.width-1) * bpp;
+        UInt32 src01Idx = srcRow0Idx + spcMin(x * 2 + 1, src.width-1) * bpp;
+        UInt32 src10Idx = srcRow1Idx + spcMin(x * 2, src.width-1) * bpp;
+        UInt32 src11Idx = srcRow1Idx + spcMin(x * 2 + 1, src.width-1) * bpp;
+        for (UInt32 c = 0; c<bpp; c++)
+        {
+          UInt32 s = src.buffer[src00Idx+c]
+                     + src.buffer[src01Idx+c]
+                     + src.buffer[src10Idx+c]
+                     + src.buffer[src11Idx+c];
+          s >> 2;
+          *dptr++ = (UInt8)(s & 0x000000ff);
+        }
+      }
+    }
+  }
+}
 
 }

@@ -168,14 +168,14 @@ iRenderMesh* AssimpMeshLoaderLoadMesh(aiMesh* mesh, const Matrix4f &matrix)
   {
     Vector3f vertex = Convert3f(mesh->mVertices[i]);
     vertices.push_back(Matrix4f::Transform(matrix, vertex, vertex));
-    printf("[%d] %.2f %.2f %.2f", i, vertex.x, vertex.y, vertex.z);
+//    printf("[%d] %.2f %.2f %.2f", i, vertex.x, vertex.y, vertex.z);
 
     if (mesh->mNormals)
     {
       Vector3f normal = Convert3f(mesh->mNormals[i]);
       normal.Normalize();
       normals.push_back(Matrix4f::Mult(matrix, normal, normal));
-      printf("   %.2f %.2f %.2f", normal.x, normal.y, normal.z);
+//      printf("   %.2f %.2f %.2f", normal.x, normal.y, normal.z);
     }
     if (mesh->mTangents)
     {
@@ -198,7 +198,7 @@ iRenderMesh* AssimpMeshLoaderLoadMesh(aiMesh* mesh, const Matrix4f &matrix)
     {
       colors.push_back(Color4f(1, 1, 1, 1));
     }
-    printf("\n");
+//    printf("\n");
   }
 
   std::vector<UInt32> indices;

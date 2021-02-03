@@ -72,6 +72,14 @@ bool GL4Texture2D::Initialize(UInt16 width, UInt16 height, ePixelFormat format, 
   return true;
 }
 
+void GL4Texture2D::Data(const Image* image)
+{
+  for (UInt16 l=0; l<image->GetNumberOfLayers(); l++)
+  {
+    Data(l, image->GetPixelFormat(), image->GetData(l));
+  }
+}
+
 void GL4Texture2D::Data(UInt8 level, const Image* image)
 {
   Data(level, image->GetPixelFormat(), image->GetData(level));

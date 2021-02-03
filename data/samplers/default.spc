@@ -1,6 +1,6 @@
 sampler name:"Default"
-		filter: "MinMagLinear"
-		anisotropy: 1
+		filter: "Anisotropic"
+		anisotropy: 16
 		minLOD: -1000
 		maxLOD: 1000
 		addressU: "Repeat"
