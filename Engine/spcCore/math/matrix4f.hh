@@ -175,7 +175,6 @@ public:
     return res;
   }
 
-
   SPC_FORCEINLINE Vector3f& GetYAxis(Vector3f& res) const
   {
     res.x = m10;
@@ -192,6 +191,25 @@ public:
     res.z = m22;
     return res;
   }
+
+
+  SPC_FORCEINLINE const Vector3f GetXAxis() const
+  {
+    return Vector3f(m00, m01, m02);
+  }
+
+
+  SPC_FORCEINLINE const Vector3f GetYAxis() const
+  {
+    return Vector3f(m10, m11, m12);
+  }
+
+  SPC_FORCEINLINE const Vector3f GetZAxis() const
+  {
+    return Vector3f(m30, m31, m32);
+  }
+
+
 
   SPC_FORCEINLINE Vector3f& GetAxis(UInt8 axis, Vector3f& res) const
   {
@@ -214,6 +232,17 @@ public:
       break;
     }
     return res;
+  }
+
+  SPC_FORCEINLINE const Vector3f GetAxis(UInt8 axis) const
+  {
+    switch (axis)
+    {
+      case 0: return Vector3f(m00, m01, m02);
+      case 1: return Vector3f(m10, m11, m12);
+      case 2: return Vector3f(m20, m21, m22);
+    }
+    return Vector3f(0.0f, 0.0f, 0.0f);
   }
 
   SPC_FORCEINLINE void ClearRotation()
@@ -244,6 +273,11 @@ public:
     res.y = m31;
     res.z = m32;
     return res;
+  }
+
+  SPC_FORCEINLINE Vector3f GetTranslation() const
+  {
+    return Vector3f(m30, m31, m32);
   }
 
   SPC_FORCEINLINE Matrix4f& SetRotationX(float angle)

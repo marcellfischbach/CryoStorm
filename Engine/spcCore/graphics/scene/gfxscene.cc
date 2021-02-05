@@ -63,6 +63,25 @@ void GfxScene::Add(iLight* light)
   }
 }
 
+void GfxScene::Remove(iLight* light)
+{
+  if (light)
+  {
+    auto it = std::find(m_lights.begin(), m_lights.end(), light);
+    if (it == m_lights.end())
+    {
+      return;
+    }
+
+    m_lights.erase(it);
+    for (auto mesh : m_meshes)
+    {
+      mesh->RemoveLight(light);
+    }
+    light->Release();
+  }
+}
+
 void GfxScene::Render(iDevice* device, eRenderPass pass)
 {
   for (auto mesh : m_meshes)

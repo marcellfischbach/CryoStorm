@@ -98,8 +98,27 @@ void GfxSceneMesh::AddLight(iLight* light)
 {
   if (light)
   {
+    if (std::find(m_lights.begin(), m_lights.end(), light) != m_lights.end())
+    {
+      return;
+    }
     light->AddRef();
     m_lights.push_back(light);
+  }
+}
+
+void GfxSceneMesh::RemoveLight(iLight* light)
+{
+  if (light)
+  {
+    auto it = std::find(m_lights.begin(), m_lights.end(), light);
+    if (it == m_lights.end())
+    {
+      return;
+    }
+
+    m_lights.erase(it);
+    light->Release();
   }
 }
 

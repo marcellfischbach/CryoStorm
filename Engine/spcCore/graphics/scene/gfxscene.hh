@@ -25,6 +25,7 @@ public:
   void Add(GfxSceneMesh * sceneMesh);
   void Remove(GfxSceneMesh * sceneMesh);
   void Add(iLight* light);
+  void Remove(iLight* light);
   
   void Render(iDevice * device, eRenderPass pass);
 
@@ -35,3 +36,4 @@ private:
 };
 
 }
+

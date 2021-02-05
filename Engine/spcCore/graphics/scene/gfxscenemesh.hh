@@ -36,6 +36,7 @@ public:
 
   void ClearLights();
   void AddLight(iLight * light);
+  void RemoveLight(iLight * light);
   const std::vector<const iLight*>& GetLights() const;
 
   void Render(iDevice * device, eRenderPass pass);

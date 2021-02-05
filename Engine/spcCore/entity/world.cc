@@ -63,7 +63,10 @@ void World::UpdateTransformation()
   for (auto entity : m_entities)
   {
     SpatialState *spatialState = entity->GetRoot();
-    spatialState->UpdateTransformation();
+    if (spatialState)
+    {
+      spatialState->UpdateTransformation();
+    }
   }
 }
 

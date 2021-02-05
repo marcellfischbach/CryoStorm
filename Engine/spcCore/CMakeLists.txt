@@ -20,10 +20,13 @@ set(SOURCES
         string.hh
         types.hh
 
+
         entity/entity.cc
         entity/entity.hh
         entity/entitystate.cc
         entity/entitystate.hh
+        entity/lightstate.cc
+        entity/lightstate.hh
         entity/spatialstate.cc
         entity/spatialstate.hh
         entity/staticmeshstate.cc
