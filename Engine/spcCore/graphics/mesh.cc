@@ -16,6 +16,11 @@ Mesh::~Mesh()
 
 }
 
+const BoundingBox & Mesh::GetBoundingBox() const
+{
+  return m_boundingBox;
+}
+
 
 Size Mesh::AddMaterialSlot(const std::string& name, iMaterial* defaultMaterial)
 {
@@ -51,6 +56,7 @@ void Mesh::AddSubMesh(iRenderMesh* mesh, Size materialSlotIdx)
   subMesh.SetMesh(mesh);
   subMesh.SetMaterialSlotIdx(materialSlotIdx);
   m_subMeshes.push_back(subMesh);
+  m_boundingBox.Add(mesh->GetBoundingBox());
 }
 
 const Mesh::SubMesh &Mesh::GetSubMesh(Size idx) const

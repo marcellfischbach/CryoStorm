@@ -4,6 +4,7 @@
 
 #include <spcCore/class.hh>
 #include <spcCore/types.hh>
+#include <spcCore/math/boundingbox.hh>
 #include <spcCore/graphics/irendermesh.hh>
 #include <spcCore/graphics/edatatype.hh>
 #include <spcCore/graphics/eprimitivetype.hh>
@@ -20,18 +21,19 @@ class SPC_OGL_API GL4RenderMesh : public SPC_SUPER(iRenderMesh)
 {
   SPC_CLASS_GEN_OBJECT;
 public:
-  GL4RenderMesh(UInt32 vao, GL4VertexBuffer *vb, GL4IndexBuffer *ib, ePrimitiveType type, eDataType indexType, Size count);
+  GL4RenderMesh(UInt32 vao, GL4VertexBuffer *vb, GL4IndexBuffer *ib, ePrimitiveType type, eDataType indexType, Size count, const BoundingBox &boundingBox);
   virtual ~GL4RenderMesh();
 
+  const BoundingBox &GetBoundingBox() const override;
 
-
-  virtual void Render(iDevice * graphics, eRenderPass pass);
+  void Render(iDevice * graphics, eRenderPass pass) override;
 
 private:
 
   UInt32 m_vao;
   GL4VertexBuffer* m_vertexBuffer;
   GL4IndexBuffer* m_indexBuffer;
+  BoundingBox m_boundingBox;
 
   UInt32 m_indexType;
   UInt32 m_primType;

@@ -150,7 +150,7 @@ struct SPC_CORE_API iObject
 
   template<typename T> const T* Query() const
   {
-    return reinterpret_cast<T*>(QueryClass(T::GetStaticClass()));
+    return reinterpret_cast<const T*>(QueryClass(T::GetStaticClass()));
   }
   virtual const void* QueryClass(const Class* clazz) const;
 };

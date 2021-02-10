@@ -1,5 +1,4 @@
 
-
 add_definitions(-DSPC_CORE_EXPORT)
 add_definitions(-D_USE_MATH_DEFINES)
 
@@ -85,6 +84,8 @@ set(SOURCES
         graphics/material/materialinstance.cc
         graphics/material/materialinstance.hh
 
+        graphics/scene/gfxlight.cc
+        graphics/scene/gfxlight.hh
         graphics/scene/gfxscene.cc
         graphics/scene/gfxscene.hh
         graphics/scene/gfxscenemesh.cc

@@ -4,6 +4,7 @@
 #include <spcCore/coreexport.hh>
 #include <spcCore/class.hh>
 #include <spcCore/types.hh>
+#include <spcCore/math/boundingbox.hh>
 #include <spcCore/math/vector2f.hh>
 #include <spcCore/math/vector3f.hh>
 #include <spcCore/math/color4f.hh>
@@ -20,6 +21,8 @@ struct SPC_CORE_API iRenderMesh : SPC_SUPER(iObject)
 {
   SPC_CLASS_GEN;
   virtual ~iRenderMesh() { }
+
+  virtual const BoundingBox &GetBoundingBox() const = 0;
 
   virtual void Render(iDevice * graphics, eRenderPass pass) = 0;
 

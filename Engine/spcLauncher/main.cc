@@ -368,6 +368,7 @@ int main(int argc, char** argv)
            .SetTranslation(spc::Vector3f(0, 0, 0))
            .Finish();
   meshState->SetMesh(mesh);
+  meshState->SetStatic(true);
   entity0->Attach(meshState);
   world->Attach(entity0);
 
@@ -377,6 +378,7 @@ int main(int argc, char** argv)
   lightState->SetType(spc::eLT_Point);
   lightState->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f));
   lightState->SetRange(100.0f);
+  lightState->SetStatic(true);
   lightEntity->GetRoot()->GetTransform()
              .SetTranslation(spc::Vector3f(0.0f, 50.0f, 0.0f))
              .Finish();

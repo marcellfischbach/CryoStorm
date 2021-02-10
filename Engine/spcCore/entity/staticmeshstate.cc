@@ -82,6 +82,7 @@ void StaticMeshState::AddMeshToScene(World *world)
       const Mesh::MaterialSlot& matSlot = m_mesh->GetMaterialSlot(subMesh.GetMaterialSlotIdx());
 
       GfxSceneMesh* sceneMesh = new GfxSceneMesh();
+      sceneMesh->SetStatic(IsStatic());
       sceneMesh->SetMesh(subMesh.GetMesh());
       sceneMesh->SetMaterial(matSlot.GetDefaultMaterial());
       sceneMesh->SetModelMatrix(GetGlobalMatrix());

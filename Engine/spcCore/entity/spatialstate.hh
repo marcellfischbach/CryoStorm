@@ -19,6 +19,9 @@ class SPC_CORE_API SpatialState : public SPC_SUPER(EntityState)
 public:
   SpatialState(const std::string &name = std::string(""));
   virtual ~SpatialState();
+
+  void SetStatic(bool _static);
+  bool IsStatic() const;
   
   bool Attach(SpatialState *child);
   bool DetachSelf();
@@ -55,6 +58,8 @@ private:
   void UpdateFlagUpdateGlobalMatrix();
   void UpdateFlagRequestHierarchyTransformationUpdate();
 
+
+  bool m_static;
   SpatialState* m_parent;
   std::vector<SpatialState*> m_children;
 

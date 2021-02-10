@@ -5,7 +5,7 @@
 #include <spcCore/class.hh>
 #include <spcCore/math/matrix4f.hh>
 #include <spcCore/graphics/erenderpass.hh>
-#include <spcCore/graphics/ilight.hh>
+#include <spcCore/graphics/scene/gfxlight.hh>
 #include <vector>
 
 namespace spc
@@ -23,6 +23,9 @@ public:
   GfxSceneMesh();
   virtual ~GfxSceneMesh();
 
+  void SetStatic(bool _static);
+  bool IsStatic() const;
+
   void SetMaterial(iMaterial * material);
   iMaterial* GetMaterial();
   const iMaterial* GetMaterial() const;
@@ -35,21 +38,22 @@ public:
   const Matrix4f& GetModelMatrix() const;
 
   void ClearLights();
-  void AddLight(iLight * light);
-  void RemoveLight(iLight * light);
-  const std::vector<const iLight*>& GetLights() const;
+  void AddLight(GfxLight * light);
+  void RemoveLight(GfxLight * light);
+  Size GetNumberOfLights() const;
+  const std::vector< GfxLight*>& GetLights() const;
 
   void Render(iDevice * device, eRenderPass pass);
 
 
 private:
-
+  bool m_static;
   iMaterial* m_material;
   iRenderMesh* m_mesh;
 
   Matrix4f m_modelMatrix;
 
-  std::vector<iLight*> m_lights;
+  std::vector<GfxLight*> m_lights;
 
 };
 

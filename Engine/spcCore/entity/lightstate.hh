@@ -13,12 +13,13 @@ namespace spc
 struct iLight;
 struct iPointLight;
 struct iDirectionalLight;
+class GfxLight;
 class World;
 
 SPC_CLASS()
 class SPC_CORE_API LightState : public SPC_SUPER(SpatialState)
 {
-  SPC_CLASS_GEN;
+  SPC_CLASS_GEN_OBJECT;
 
 public:
   LightState(const std::string &name);
@@ -53,6 +54,8 @@ private:
   iLight* m_light;
   iPointLight* m_pointLight;
   iDirectionalLight* m_directionalLight;
+
+  GfxLight *m_gfxLight;
 
   eLightType m_lightType;
 

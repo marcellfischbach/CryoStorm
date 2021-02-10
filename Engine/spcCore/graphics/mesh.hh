@@ -69,6 +69,7 @@ public:
     std::string m_name;
   };
 
+  const BoundingBox& GetBoundingBox() const;
 
   Size AddMaterialSlot(const std::string& name, iMaterial* defaultMaterial = nullptr);
   void SetDefaultMaterial(Size idx, iMaterial* defaultMaterial);
@@ -83,7 +84,7 @@ public:
 
 
 private:
-
+  BoundingBox m_boundingBox;
   std::vector<MaterialSlot> m_materialSlots;
   std::vector<SubMesh> m_subMeshes;
 

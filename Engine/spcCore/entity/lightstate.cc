@@ -5,6 +5,7 @@
 #include <spcCore/graphics/ipointlight.hh>
 #include <spcCore/graphics/idirectionallight.hh>
 #include <spcCore/graphics/idevice.hh>
+#include <spcCore/graphics/scene/gfxlight.hh>
 #include <spcCore/graphics/scene/gfxscene.hh>
 #include <spcCore/objectregistry.hh>
 
@@ -12,15 +13,17 @@ namespace spc
 {
 
 
-LightState::LightState(const std::string &name)
-        : SpatialState(name), m_light(nullptr), m_lightType(eLT_Point)
+LightState::LightState(const std::string& name)
+        : SpatialState(name), m_light(nullptr), m_lightType(eLT_Point), m_gfxLight(nullptr)
 {
 
 }
 
 LightState::~LightState() noexcept
 {
-
+  RemoveFromScene(GetWorld());
+  SPC_RELEASE(m_light);
+  SPC_RELEASE(m_gfxLight);
 }
 
 void LightState::SetType(eLightType type)
@@ -28,54 +31,34 @@ void LightState::SetType(eLightType type)
   if (m_lightType != type)
   {
     World* world = GetWorld();
-    if (m_light && world)
-    {
-      OnDetachedFromWorld(world);
-      OnAttachedToWorld(world);
-    }
+    RemoveFromScene(world);
+    AddToScene(world);
   }
 }
 
 void LightState::OnAttachedToWorld(World* world)
 {
-  GfxScene* scene = world->GetScene();
-  if (scene)
-  {
-    if (!m_light)
-    {
-      m_light = CreateLight();
-      m_pointLight = m_light->Query<iPointLight>();
-      m_directionalLight = m_light->Query<iDirectionalLight>();
-      UpdateValues();
-    }
-    scene->Add(m_light);
-  }
+  AddToScene(world);
 }
+
 
 void LightState::OnDetachedFromWorld(World* world)
 {
-  GfxScene* scene = world->GetScene();
-  if (m_light && scene)
-  {
-    scene->Remove(m_light);
-    m_light->Release();
-    m_light = nullptr;
-    m_pointLight = nullptr;
-    m_directionalLight = nullptr;
-  }
+  RemoveFromScene(world);
 }
+
 
 void LightState::TransformationUpdated()
 {
   if (m_pointLight)
   {
-    const Matrix4f &mat = GetGlobalMatrix();
+    const Matrix4f& mat = GetGlobalMatrix();
 
     m_pointLight->SetPosition(mat.GetTranslation());
   }
   if (m_directionalLight)
   {
-    const Matrix4f &mat = GetGlobalMatrix();
+    const Matrix4f& mat = GetGlobalMatrix();
     m_directionalLight->SetDirection(mat.GetZAxis());
   }
 }
@@ -115,21 +98,41 @@ void LightState::UpdateValues()
 
 void LightState::AddToScene(World* world)
 {
-  if (m_light && world)
+  if (!m_light)
+  {
+    m_light = CreateLight();
+    m_pointLight = m_light->Query<iPointLight>();
+    m_directionalLight = m_light->Query<iDirectionalLight>();
+    UpdateValues();
+  }
+  if (world)
   {
     GfxScene* scene = world->GetScene();
-    scene->Add(m_light);
+    if (m_gfxLight)
+    {
+      m_gfxLight->Release();
+    }
+    m_gfxLight = new GfxLight();
+    m_gfxLight->SetStatic(IsStatic());
+    m_gfxLight->SetLight(m_light);
+
+    scene->Add(m_gfxLight);
   }
 }
 
 
 void LightState::RemoveFromScene(World* world)
 {
-  if (m_light && world)
+  if (m_gfxLight && world)
   {
-    GfxScene* scene = world->GetScene();
-    scene->Remove(m_light);
+    world->GetScene()->Remove(m_gfxLight);
   }
+
+  SPC_RELEASE(m_light);
+  SPC_RELEASE(m_directionalLight);
+  m_light = nullptr;
+  m_pointLight = nullptr;
+  m_directionalLight = nullptr;
 }
 
 void LightState::SetColor(const Color4f& color)
@@ -138,7 +141,7 @@ void LightState::SetColor(const Color4f& color)
   UpdateValues();
 }
 
-const Color4f&LightState::GetColor() const
+const Color4f& LightState::GetColor() const
 {
   return m_color;
 }

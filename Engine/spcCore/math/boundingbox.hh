@@ -46,6 +46,11 @@ public:
     return m_points;
   }
 
+  SPC_FORCEINLINE const float GetDiagonal() const
+  {
+    return m_diagonal;
+  }
+
   void Debug(const char* message = 0) const;
 
 private:
@@ -56,7 +61,7 @@ private:
   Vector3f m_center;
 
   Vector3f m_points[8];
-
+  float m_diagonal;
 };
 
 

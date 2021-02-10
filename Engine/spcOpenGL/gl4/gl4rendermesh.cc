@@ -11,31 +11,38 @@ namespace spc::opengl
 
 
 static GLenum PrimitiveTypeMap[] = {
-  GL_POINTS,
-  GL_LINES,
-  GL_TRIANGLES
+        GL_POINTS,
+        GL_LINES,
+        GL_TRIANGLES
 };
 
 static GLenum DataTypeMap[] = {
-  GL_BYTE,
-  GL_UNSIGNED_BYTE,
-  GL_SHORT,
-  GL_UNSIGNED_SHORT,
-  GL_INT,
-  GL_UNSIGNED_INT,
-  GL_FLOAT,
-  GL_DOUBLE
+        GL_BYTE,
+        GL_UNSIGNED_BYTE,
+        GL_SHORT,
+        GL_UNSIGNED_SHORT,
+        GL_INT,
+        GL_UNSIGNED_INT,
+        GL_FLOAT,
+        GL_DOUBLE
 };
 
 
-GL4RenderMesh::GL4RenderMesh(UInt32 vao, GL4VertexBuffer* vb, GL4IndexBuffer* ib, ePrimitiveType primitiveType, eDataType indexType, Size count)
-  : iRenderMesh()
-  , m_vao(vao)
-  , m_vertexBuffer(nullptr)
-  , m_indexBuffer(nullptr)
-  , m_primType(PrimitiveTypeMap[primitiveType])
-  , m_indexType(DataTypeMap[indexType])
-  , m_count(count)
+GL4RenderMesh::GL4RenderMesh(UInt32 vao,
+                             GL4VertexBuffer* vb,
+                             GL4IndexBuffer* ib,
+                             ePrimitiveType primitiveType,
+                             eDataType indexType,
+                             Size count,
+                             const BoundingBox& boundingBox)
+        : iRenderMesh()
+        , m_vao(vao)
+        , m_vertexBuffer(nullptr)
+        , m_indexBuffer(nullptr)
+        , m_primType(PrimitiveTypeMap[primitiveType])
+        , m_indexType(DataTypeMap[indexType])
+        , m_count(count)
+        , m_boundingBox(boundingBox)
 {
   SPC_CLASS_GEN_CONSTR;
   SPC_SET(m_vertexBuffer, vb);
@@ -57,25 +64,21 @@ GL4RenderMesh::~GL4RenderMesh()
   m_indexBuffer = nullptr;
 }
 
+const BoundingBox& GL4RenderMesh::GetBoundingBox() const
+{
+  return m_boundingBox;
+}
 
 void GL4RenderMesh::Render(iDevice* graphics, eRenderPass pass)
 {
   glBindVertexArray(m_vao);
-  glDrawElements(m_primType, (GLsizei)m_count, m_indexType, nullptr);
+  glDrawElements(m_primType, (GLsizei) m_count, m_indexType, nullptr);
 }
 
 
-
-
-
-
-
-
-
-
-
 GL4RenderMeshGenerator::GL4RenderMeshGenerator()
-  : iRenderMeshGenerator()
+        :
+        iRenderMeshGenerator()
 {
   SPC_CLASS_GEN_CONSTR;
 }
@@ -217,7 +220,9 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
     attribute.Stride = offset;
   }
 
-  VertexDeclaration vd (attributes);
+  BoundingBox bbox;
+  bbox.Clear();
+  VertexDeclaration vd(attributes);
   auto vBuffer = new float[count * m_vertices.size()];
 
   for (Size i = 0, c = 0, in = m_vertices.size(); i < in; ++i)
@@ -227,6 +232,7 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
       vBuffer[c++] = v.x;
       vBuffer[c++] = v.y;
       vBuffer[c++] = v.z;
+      bbox.Add(v);
     }
     if (!m_normals.empty())
     {
@@ -275,6 +281,7 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
       vBuffer[c++] = v.a;
     }
   }
+  bbox.Finish();
 
   auto vb = new GL4VertexBuffer();
   vb->Bind();
@@ -312,28 +319,29 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
 
   ib->Bind();
   vb->Bind();
-  const std::vector<VertexDeclaration::Attribute> & vdAttributes = vd.GetAttributes(0);
+  const std::vector<VertexDeclaration::Attribute>& vdAttributes = vd.GetAttributes(0);
   for (const VertexDeclaration::Attribute& attribute : vdAttributes)
   {
     glVertexAttribPointer(
-      attribute.Location,
-      attribute.Size,
-      DataTypeMap[attribute.Type],
-      false,
-      attribute.Stride,
-      reinterpret_cast<const void*>(attribute.Offset)
+            attribute.Location,
+            attribute.Size,
+            DataTypeMap[attribute.Type],
+            false,
+            attribute.Stride,
+            reinterpret_cast<const void*>(attribute.Offset)
     );
     glEnableVertexAttribArray(attribute.Location);
   }
   glBindVertexArray(0);
 
   auto mesh = new GL4RenderMesh(
-    vao,
-    vb,
-    ib,
-    ePT_Triangles,
-    indexType,
-    m_indices.size()
+          vao,
+          vb,
+          ib,
+          ePT_Triangles,
+          indexType,
+          m_indices.size(),
+          bbox
   );
 
   ib->Release();
@@ -343,7 +351,8 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
 
 
 GL4RenderMeshGeneratorFactory::GL4RenderMeshGeneratorFactory()
-  : iRenderMeshGeneratorFactory()
+        :
+        iRenderMeshGeneratorFactory()
 {
   SPC_CLASS_GEN_CONSTR;
 }

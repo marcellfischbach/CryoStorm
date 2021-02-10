@@ -31,9 +31,9 @@ void GfxSceneMesh::Render(iDevice* device, eRenderPass pass)
     if (pass == eRP_Forward)
     {
       Size i = 0; 
-      for (iLight* light : m_lights)
+      for (GfxLight* light : m_lights)
       {
-        device->BindForwardLight(light, i++);
+        device->BindForwardLight(light->GetLight(), i++);
       }
       device->FinishForwardLights(i);
     }
@@ -41,6 +41,17 @@ void GfxSceneMesh::Render(iDevice* device, eRenderPass pass)
     device->SetModelMatrix(m_modelMatrix);
     device->Render(m_mesh, pass);
   }
+}
+
+void GfxSceneMesh::SetStatic(bool _static)
+{
+  m_static = _static;
+
+}
+
+bool GfxSceneMesh::IsStatic() const
+{
+  return m_static;
 }
 
 void GfxSceneMesh::SetMaterial(iMaterial* material)
@@ -87,14 +98,14 @@ const Matrix4f& GfxSceneMesh::GetModelMatrix()  const
 
 void GfxSceneMesh::ClearLights()
 {
-  for (iLight* light : m_lights)
+  for (GfxLight* light : m_lights)
   {
     light->Release();
   }
   m_lights.clear();
 }
 
-void GfxSceneMesh::AddLight(iLight* light)
+void GfxSceneMesh::AddLight(GfxLight* light)
 {
   if (light)
   {
@@ -107,7 +118,7 @@ void GfxSceneMesh::AddLight(iLight* light)
   }
 }
 
-void GfxSceneMesh::RemoveLight(iLight* light)
+void GfxSceneMesh::RemoveLight(GfxLight* light)
 {
   if (light)
   {
@@ -120,6 +131,16 @@ void GfxSceneMesh::RemoveLight(iLight* light)
     m_lights.erase(it);
     light->Release();
   }
+}
+
+Size GfxSceneMesh::GetNumberOfLights() const
+{
+  return m_lights.size();
+}
+
+const std::vector<GfxLight*>& GfxSceneMesh::GetLights() const
+{
+  return m_lights;
 }
 
 }

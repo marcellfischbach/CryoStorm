@@ -8,7 +8,7 @@
 namespace spc
 {
 SpatialState::SpatialState(const std::string& name)
-        : EntityState(name), m_transform(this), m_transformationState(0), m_parent(nullptr)
+        : EntityState(name), m_transform(this), m_transformationState(0), m_parent(nullptr), m_static(false)
 {
 
 }
@@ -16,6 +16,16 @@ SpatialState::SpatialState(const std::string& name)
 SpatialState::~SpatialState()
 {
 
+}
+
+void SpatialState::SetStatic(bool _static)
+{
+  m_static = _static;
+}
+
+bool SpatialState::IsStatic() const
+{
+  return m_static;
 }
 
 bool SpatialState::Attach(SpatialState* child)

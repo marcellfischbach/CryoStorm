@@ -85,6 +85,8 @@ void BoundingBox::Finish()
   m_points[7] = Vector3f(m_max.x, m_max.y, m_max.z);
 
   m_valid = true;
+
+  m_diagonal = (m_max - m_min).Length();
 }
 
 
