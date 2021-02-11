@@ -11,7 +11,7 @@ namespace spc
 {
 
 class Mesh;
-class GfxSceneMesh;
+class GfxMesh;
 
 SPC_CLASS()
 class SPC_CORE_API StaticMeshState : public SPC_SUPER(SpatialState)
@@ -45,7 +45,7 @@ private:
   void AddMeshToScene(World* world);
   void RemoveMeshFromScene(World* world);
   Mesh* m_mesh;
-  std::vector<GfxSceneMesh*> m_gfxMeshes;
+  std::vector<GfxMesh*> m_gfxMeshes;
 };
 
 

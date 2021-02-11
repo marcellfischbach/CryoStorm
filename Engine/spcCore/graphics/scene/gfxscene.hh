@@ -11,7 +11,7 @@ namespace spc
 {
 
 struct iDevice;
-class GfxSceneMesh;
+class GfxMesh;
 class GfxLight;
 
 
@@ -22,8 +22,8 @@ class SPC_CORE_API GfxScene : public SPC_SUPER(iObject)
 public:
   GfxScene();
   
-  void Add(GfxSceneMesh * sceneMesh);
-  void Remove(GfxSceneMesh * sceneMesh);
+  void Add(GfxMesh * sceneMesh);
+  void Remove(GfxMesh * sceneMesh);
   void Add(GfxLight* light);
   void Remove(GfxLight* light);
   
@@ -34,12 +34,12 @@ private:
   void Remove(GfxLight *light, std::vector<GfxLight*> &lights);
 
 
-  void AddStaticLightsToMesh(GfxSceneMesh *mesh);
+  void AddStaticLightsToMesh(GfxMesh *mesh);
   void AddStaticLightToMeshes(GfxLight *light);
-  float CalcInfluenceOfLightToMesh(const GfxLight* light, const GfxSceneMesh* mesh);
+  float CalcInfluenceOfLightToMesh(const GfxLight* light, const GfxMesh* mesh);
 
-  std::vector<GfxSceneMesh*> m_meshes;
-  std::vector<GfxSceneMesh*> m_staticMeshes;
+  std::vector<GfxMesh*> m_meshes;
+  std::vector<GfxMesh*> m_staticMeshes;
 
   std::vector<GfxLight*> m_globalLights;
   std::vector<GfxLight*> m_staticLights;

@@ -4,7 +4,7 @@
 #include <spcCore/entity/world.hh>
 #include <spcCore/graphics/mesh.hh>
 #include <spcCore/graphics/scene/gfxscene.hh>
-#include <spcCore/graphics/scene/gfxscenemesh.hh>
+#include <spcCore/graphics/scene/gfxmesh.hh>
 
 
 namespace spc
@@ -81,7 +81,7 @@ void StaticMeshState::AddMeshToScene(World *world)
       const Mesh::SubMesh& subMesh = m_mesh->GetSubMesh(i);
       const Mesh::MaterialSlot& matSlot = m_mesh->GetMaterialSlot(subMesh.GetMaterialSlotIdx());
 
-      GfxSceneMesh* sceneMesh = new GfxSceneMesh();
+      GfxMesh* sceneMesh = new GfxMesh();
       sceneMesh->SetStatic(IsStatic());
       sceneMesh->SetMesh(subMesh.GetMesh());
       sceneMesh->SetMaterial(matSlot.GetDefaultMaterial());

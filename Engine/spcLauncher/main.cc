@@ -27,7 +27,7 @@
 #include <spcCore/graphics/material/material.hh>
 #include <spcCore/graphics/material/materialinstance.hh>
 #include <spcCore/graphics/scene/gfxscene.hh>
-#include <spcCore/graphics/scene/gfxscenemesh.hh>
+#include <spcCore/graphics/scene/gfxmesh.hh>
 #include <spcCore/resource/assetmanager.hh>
 #include <spcCore/resource/vfs.hh>
 
@@ -362,25 +362,35 @@ int main(int argc, char** argv)
   suzanne->SetDefaultMaterial(0, material);
   cube->SetDefaultMaterial(0, material);
 
-  spc::Entity* entity0 = new spc::Entity("Entity_0");
-  spc::StaticMeshState* meshState = new spc::StaticMeshState("StaticMesh");
-  meshState->GetTransform()
-           .SetTranslation(spc::Vector3f(0, 0, 0))
-           .Finish();
-  meshState->SetMesh(mesh);
-  meshState->SetStatic(true);
-  entity0->Attach(meshState);
+  spc::Entity* entity0 = new spc::Entity("Entity0");
+  spc::StaticMeshState* meshState0 = new spc::StaticMeshState("StaticMesh0");
+  meshState0->GetTransform()
+            .SetTranslation(spc::Vector3f(-100, 0, 0))
+            .Finish();
+  meshState0->SetMesh(mesh);
+  meshState0->SetStatic(true);
+  entity0->Attach(meshState0);
   world->Attach(entity0);
+
+  spc::Entity* entity1 = new spc::Entity("Entity1");
+  spc::StaticMeshState* meshState1 = new spc::StaticMeshState("StaticMesh1");
+  meshState1->GetTransform()
+            .SetTranslation(spc::Vector3f(100, 0, 0))
+            .Finish();
+  meshState1->SetMesh(mesh);
+  meshState1->SetStatic(true);
+  entity1->Attach(meshState1);
+  world->Attach(entity1);
 
   spc::Entity* lightEntity = new spc::Entity("Light_0");
   spc::LightState* lightState = new spc::LightState("LightState");
   lightEntity->Attach(lightState);
   lightState->SetType(spc::eLT_Point);
   lightState->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f));
-  lightState->SetRange(100.0f);
+  lightState->SetRange(50.0f);
   lightState->SetStatic(true);
   lightEntity->GetRoot()->GetTransform()
-             .SetTranslation(spc::Vector3f(0.0f, 50.0f, 0.0f))
+             .SetTranslation(spc::Vector3f(-100.0f, 25.0f, 0.0f))
              .Finish();
   world->Attach(lightEntity);
 
@@ -431,7 +441,7 @@ int main(int argc, char** argv)
     entRot += 0.01f;
 
     lightEntity->GetRoot()->GetTransform()
-               .SetTranslation(spc::Vector3f(0.0f, 50.0f + spc::spcSin(entRot) * 25.0f, 0.0f))
+               .SetTranslation(spc::Vector3f(0.0f + spc::spcSin(entRot) * 100.0f, 25.0f, 0.0f))
                .Finish();
 
     float dist = 100.0f;

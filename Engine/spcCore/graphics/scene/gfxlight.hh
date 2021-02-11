@@ -31,7 +31,6 @@ public:
 private:
   bool m_static;
   iLight* m_light;
-  Vector3f m_position;
 };
 
 

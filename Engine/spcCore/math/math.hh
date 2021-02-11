@@ -88,7 +88,7 @@ static SPC_FORCEINLINE double spcMax(double x, double y)
 
 static SPC_FORCEINLINE float spcMax(float x, float y)
 {
-  return ::fminf(x, y);
+  return ::fmaxf(x, y);
 }
 
 static SPC_FORCEINLINE int spcMax(int x, int y)

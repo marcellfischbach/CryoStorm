@@ -3,7 +3,7 @@
 #include <spcCore/graphics/ilight.hh>
 #include <spcCore/graphics/ipointlight.hh>
 #include <spcCore/graphics/mesh.hh>
-#include <spcCore/graphics/scene/gfxscenemesh.hh>
+#include <spcCore/graphics/scene/gfxmesh.hh>
 #include <algorithm>
 
 
@@ -19,7 +19,7 @@ GfxScene::GfxScene()
   SPC_CLASS_GEN_CONSTR;
 }
 
-void GfxScene::Add(GfxSceneMesh* sceneMesh)
+void GfxScene::Add(GfxMesh* sceneMesh)
 {
   if (sceneMesh)
   {
@@ -46,7 +46,7 @@ void GfxScene::Add(GfxSceneMesh* sceneMesh)
   }
 }
 
-void GfxScene::Remove(GfxSceneMesh* sceneMesh)
+void GfxScene::Remove(GfxMesh* sceneMesh)
 {
   if (sceneMesh)
   {
@@ -151,7 +151,7 @@ struct LightInfluenceOnMesh
   {}
 };
 
-void GfxScene::AddStaticLightsToMesh(GfxSceneMesh* mesh)
+void GfxScene::AddStaticLightsToMesh(GfxMesh* mesh)
 {
   if (mesh->GetNumberOfLights() >= MaxLights)
   {
@@ -227,11 +227,11 @@ void GfxScene::AddStaticLightToMeshes(GfxLight* light)
   }
 }
 
-float GfxScene::CalcInfluenceOfLightToMesh(const GfxLight* light, const GfxSceneMesh* mesh)
+float GfxScene::CalcInfluenceOfLightToMesh(const GfxLight* light, const GfxMesh* mesh)
 {
   if (!light || !mesh)
   {
-    return FLT_MAX;
+    return 0.0f;
   }
 
   float halfSize = mesh->GetMesh()->GetBoundingBox().GetDiagonal() / 2.0f;
@@ -244,10 +244,16 @@ float GfxScene::CalcInfluenceOfLightToMesh(const GfxLight* light, const GfxScene
       lightDistanceFactor = 1.0f;
       break;
     case eLT_Point:
-      const iPointLight* pointLight = light->GetLight()->Query<iPointLight>();
-      Vector3f delta = pointLight->GetPosition() - mesh->GetModelMatrix().GetTranslation();
-      float distance = delta.Dot() - (halfSize*halfSize);
-      lightDistanceFactor = 1.0f - distance / (pointLight->GetRange() * pointLight->GetRange());
+      auto pointLight = light->GetLight()->Query<iPointLight>();
+      Vector3f lightPos = pointLight->GetPosition();
+      Vector3f meshPos = mesh->GetModelMatrix().GetTranslation();
+      Vector3f delta = lightPos - meshPos;
+      float distance = delta.Length();
+      float overlap =  pointLight->GetRange() + halfSize - distance;
+      if (overlap > 0.0f)
+      {
+        lightDistanceFactor = overlap / pointLight->GetRange();
+      }
       break;
   }
   return lightPower * lightDistanceFactor;

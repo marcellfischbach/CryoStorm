@@ -16,12 +16,12 @@ struct iMaterial;
 struct iRenderMesh;
 
 SPC_CLASS()
-class SPC_CORE_API GfxSceneMesh : public SPC_SUPER(iObject)
+class SPC_CORE_API GfxMesh : public SPC_SUPER(iObject)
 {
   SPC_CLASS_GEN_OBJECT;
 public:
-  GfxSceneMesh();
-  virtual ~GfxSceneMesh();
+  GfxMesh();
+  virtual ~GfxMesh();
 
   void SetStatic(bool _static);
   bool IsStatic() const;

@@ -88,8 +88,8 @@ set(SOURCES
         graphics/scene/gfxlight.hh
         graphics/scene/gfxscene.cc
         graphics/scene/gfxscene.hh
-        graphics/scene/gfxscenemesh.cc
-        graphics/scene/gfxscenemesh.hh
+        graphics/scene/gfxmesh.cc
+        graphics/scene/gfxmesh.hh
 
         graphics/shading/ishader.hh
         graphics/shading/ishaderattribute.hh

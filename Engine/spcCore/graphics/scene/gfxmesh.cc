@@ -1,5 +1,5 @@
 
-#include <spcCore/graphics/scene/gfxscenemesh.hh>
+#include <spcCore/graphics/scene/gfxmesh.hh>
 #include <spcCore/graphics/material/imaterial.hh>
 #include <spcCore/graphics/irendermesh.hh>
 #include <spcCore/graphics/idevice.hh>
@@ -8,7 +8,7 @@
 namespace spc
 {
 
-GfxSceneMesh::GfxSceneMesh()
+GfxMesh::GfxMesh()
   : iObject()
   , m_material(nullptr)
   , m_mesh(nullptr)
@@ -17,14 +17,14 @@ GfxSceneMesh::GfxSceneMesh()
 }
 
 
-GfxSceneMesh::~GfxSceneMesh()
+GfxMesh::~GfxMesh()
 {
   SPC_RELEASE(m_material);
   SPC_RELEASE(m_mesh);
   ClearLights();
 }
 
-void GfxSceneMesh::Render(iDevice* device, eRenderPass pass)
+void GfxMesh::Render(iDevice* device, eRenderPass pass)
 {
   if (device->BindMaterial(m_material, pass))
   {
@@ -43,60 +43,60 @@ void GfxSceneMesh::Render(iDevice* device, eRenderPass pass)
   }
 }
 
-void GfxSceneMesh::SetStatic(bool _static)
+void GfxMesh::SetStatic(bool _static)
 {
   m_static = _static;
 
 }
 
-bool GfxSceneMesh::IsStatic() const
+bool GfxMesh::IsStatic() const
 {
   return m_static;
 }
 
-void GfxSceneMesh::SetMaterial(iMaterial* material)
+void GfxMesh::SetMaterial(iMaterial* material)
 {
   SPC_SET(m_material, material);
 }
 
-iMaterial* GfxSceneMesh::GetMaterial()
+iMaterial* GfxMesh::GetMaterial()
 {
   return m_material;
 }
 
-const iMaterial* GfxSceneMesh::GetMaterial() const
+const iMaterial* GfxMesh::GetMaterial() const
 {
   return m_material;
 }
 
 
-void GfxSceneMesh::SetMesh(iRenderMesh* mesh)
+void GfxMesh::SetMesh(iRenderMesh* mesh)
 {
   SPC_SET(m_mesh, mesh);
 }
 
-iRenderMesh* GfxSceneMesh::GetMesh()
+iRenderMesh* GfxMesh::GetMesh()
 {
   return m_mesh;
 }
 
-const iRenderMesh* GfxSceneMesh::GetMesh() const
+const iRenderMesh* GfxMesh::GetMesh() const
 {
   return m_mesh;
 }
 
 
-void GfxSceneMesh::SetModelMatrix(const Matrix4f& modelMatrix)
+void GfxMesh::SetModelMatrix(const Matrix4f& modelMatrix)
 {
   m_modelMatrix = modelMatrix;
 }
 
-const Matrix4f& GfxSceneMesh::GetModelMatrix()  const
+const Matrix4f& GfxMesh::GetModelMatrix()  const
 {
   return m_modelMatrix;
 }
 
-void GfxSceneMesh::ClearLights()
+void GfxMesh::ClearLights()
 {
   for (GfxLight* light : m_lights)
   {
@@ -105,7 +105,7 @@ void GfxSceneMesh::ClearLights()
   m_lights.clear();
 }
 
-void GfxSceneMesh::AddLight(GfxLight* light)
+void GfxMesh::AddLight(GfxLight* light)
 {
   if (light)
   {
@@ -118,7 +118,7 @@ void GfxSceneMesh::AddLight(GfxLight* light)
   }
 }
 
-void GfxSceneMesh::RemoveLight(GfxLight* light)
+void GfxMesh::RemoveLight(GfxLight* light)
 {
   if (light)
   {
@@ -133,12 +133,12 @@ void GfxSceneMesh::RemoveLight(GfxLight* light)
   }
 }
 
-Size GfxSceneMesh::GetNumberOfLights() const
+Size GfxMesh::GetNumberOfLights() const
 {
   return m_lights.size();
 }
 
-const std::vector<GfxLight*>& GfxSceneMesh::GetLights() const
+const std::vector<GfxLight*>& GfxMesh::GetLights() const
 {
   return m_lights;
 }
