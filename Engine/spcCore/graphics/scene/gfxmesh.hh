@@ -20,6 +20,14 @@ class SPC_CORE_API GfxMesh : public SPC_SUPER(iObject)
 {
   SPC_CLASS_GEN_OBJECT;
 public:
+  struct Light
+  {
+    GfxLight* Light;
+    float Influence;
+    bool operator== (const GfxLight* l) const { return Light == l; }
+  };
+
+
   GfxMesh();
   virtual ~GfxMesh();
 
@@ -38,12 +46,13 @@ public:
   const Matrix4f& GetModelMatrix() const;
 
   void ClearLights();
-  void AddLight(GfxLight * light);
-  void RemoveLight(GfxLight * light);
+  void AddLight(GfxLight* light, float incluence);
+  void RemoveLight(GfxLight* light);
   Size GetNumberOfLights() const;
-  const std::vector< GfxLight*>& GetLights() const;
+  const std::vector< Light>& GetLights() const;
 
-  void Render(iDevice * device, eRenderPass pass);
+  void Render(iDevice * device, eRenderPass pass );
+  void RenderForward(iDevice * device, eRenderPass pass, const GfxLight** lights, Size numberOfLights);
 
 
 private:
@@ -53,7 +62,7 @@ private:
 
   Matrix4f m_modelMatrix;
 
-  std::vector<GfxLight*> m_lights;
+  std::vector<Light> m_lights;
 
 };
 

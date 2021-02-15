@@ -32,6 +32,7 @@ void LightState::SetType(eLightType type)
   {
     World* world = GetWorld();
     RemoveFromScene(world);
+    m_lightType = type;
     AddToScene(world);
   }
 }
@@ -59,7 +60,7 @@ void LightState::TransformationUpdated()
   if (m_directionalLight)
   {
     const Matrix4f& mat = GetGlobalMatrix();
-    m_directionalLight->SetDirection(mat.GetZAxis());
+    m_directionalLight->SetDirection(-mat.GetZAxis());
   }
 }
 
@@ -129,7 +130,7 @@ void LightState::RemoveFromScene(World* world)
   }
 
   SPC_RELEASE(m_light);
-  SPC_RELEASE(m_directionalLight);
+  SPC_RELEASE(m_gfxLight);
   m_light = nullptr;
   m_pointLight = nullptr;
   m_directionalLight = nullptr;

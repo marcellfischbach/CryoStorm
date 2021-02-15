@@ -282,7 +282,7 @@ int main(int argc, char** argv)
     image->GenerateMipMaps(spc::Image::eMipMapProcedure::eMMP_Linear4x4);
   }
 
-  spc::iTexture2D::Descriptor desc;
+  spc::iTexture2D::Descriptor desc = {};
   desc.Format = image->GetPixelFormat();
   desc.Width = image->GetWidth();
   desc.Height = image->GetHeight();
@@ -314,48 +314,11 @@ int main(int argc, char** argv)
   SDL_GetWindowSize(wnd, &width, &height);
 
   float aspect = (float) height / (float) width;
-  /*
-  spc::Matrix4f projection = device->GetPerspectiveProjection(-1.0f, 1.0f, -aspect, aspect, 1.0f, 100.0f, projection);
-  //spc::Matrix4f projection = graphics->GetOrthographicProjection(-20.0f, 20.0f, -20.0f, 20.0f, -100.0f, 100.0f, projection);
-  device->SetProjectionMatrix(projection);
-  
-  spc::Matrix4f view;
-  view.SetLookAt(spc::Vector3f(20, 20, 20), spc::Vector3f(0, 0, 0), spc::Vector3f(0, 1, 0));
-  device->SetViewMatrix(view);
-  */
+
 
   spc::Camera* camera = new spc::Camera();
   spc::Projector projector;
-//  projector.UpdateOrtho(-20.0f, 20.0f, -20.0f, 20.0f, 1.0f, 1000.0f);
 
-  //camera->SetSpot(spc::Vector3f(0, 0, 0));
-/*
-  spc::iPointLight *pointLight0 = device->CreatePointLight();
-  pointLight0->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f));
-  pointLight0->SetPosition(spc::Vector3f(0.0f, 50.0f, 0.0f));
-  pointLight0->SetRange(100.0f);
-
-  world->GetScene()->Add(pointLight0);
-*/
-  /*
-  spc::iPointLight *pointLight1 = device->CreatePointLight();
-  pointLight1->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f));
-  pointLight1->SetPosition(spc::Vector3f(-10.0f, 10.0f, 10.0f));
-  pointLight1->SetRange(10.0f);
-  scene->Add(pointLight1);
-  
-  spc::iPointLight *pointLight2 = device->CreatePointLight();
-  pointLight2->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f));
-  pointLight2->SetPosition(spc::Vector3f(5.0f, 5.0f, -5.0f));
-  pointLight2->SetRange(10.0f);
-  scene->Add(pointLight2);
-  
-  spc::iPointLight *pointLight3 = device->CreatePointLight();
-  pointLight3->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f));
-  pointLight3->SetPosition(spc::Vector3f(5.0f, 5.0f, 5.0f));
-  pointLight3->SetRange(10.0f);
-  scene->Add(pointLight3);
-  */
 
   spc::Mesh* suzanne = spc::AssetManager::Get()->Load<spc::Mesh>(spc::ResourceLocator("suzanne.fbx"));
   spc::Mesh* cube = spc::AssetManager::Get()->Load<spc::Mesh>(spc::ResourceLocator("cube.fbx"));
@@ -386,13 +349,23 @@ int main(int argc, char** argv)
   spc::LightState* lightState = new spc::LightState("LightState");
   lightEntity->Attach(lightState);
   lightState->SetType(spc::eLT_Point);
-  lightState->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f));
+  lightState->SetColor(spc::Color4f(1.0f, 0.0f, 0.0f, 1.0f));
   lightState->SetRange(50.0f);
-  lightState->SetStatic(true);
+  lightState->SetStatic(false);
   lightEntity->GetRoot()->GetTransform()
              .SetTranslation(spc::Vector3f(-100.0f, 25.0f, 0.0f))
              .Finish();
   world->Attach(lightEntity);
+
+  spc::Entity* sunEntity = new spc::Entity("Sun");
+  spc::LightState* sunLightState = new spc::LightState("SunLight");
+  sunEntity->Attach(sunLightState);
+  sunLightState->SetType(spc::eLT_Directional);
+  sunLightState->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f));
+  sunLightState->GetTransform()
+    .SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(1.0f, 0.0f, 0.0f), spc::spcDeg2Rad(45.0f)))
+    .Finish();
+  world->Attach(sunEntity);
 
   float rot = 0.0f;
   float entRot = 0.0f;

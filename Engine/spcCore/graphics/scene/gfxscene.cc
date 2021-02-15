@@ -31,7 +31,7 @@ void GfxScene::Add(GfxMesh* sceneMesh)
     sceneMesh->ClearLights();
     for (auto light : m_globalLights)
     {
-      sceneMesh->AddLight(light);
+      sceneMesh->AddLight(light, FLT_MAX);
     }
 
     if (sceneMesh->IsStatic())
@@ -129,27 +129,86 @@ void GfxScene::Remove(GfxLight* light, std::vector<GfxLight*>& lights)
   light->Release();
 }
 
-void GfxScene::Render(iDevice* device, eRenderPass pass)
+Size assign_lights(
+  GfxMesh* mesh,
+  const std::vector<GfxMesh::Light>& static_lights,
+  const std::vector<GfxMesh::Light>& dynamic_lights,
+  const GfxLight** lights,
+  Size offset,
+  Size numberOfLights)
 {
-  for (auto mesh : m_staticMeshes)
+  for (Size s = 0, d = 0, sn = static_lights.size(), dn = dynamic_lights.size();
+    offset < numberOfLights && (s < sn || d < dn); offset++)
   {
-    mesh->Render(device, pass);
-  }
-  for (auto mesh : m_meshes)
-  {
-    mesh->Render(device, pass);
+    if (s < sn && d < dn)
+    {
+      if (static_lights[s].Influence >= dynamic_lights[d].Influence)
+      {
+        lights[offset] = static_lights[s++].Light;
+      }
+      else
+      {
+        lights[offset] = dynamic_lights[d++].Light;
+      }
+    }
+    else if (s < sn)
+    {
+      lights[offset] = static_lights[s++].Light;
+    }
+    else if (d < dn)
+    {
+      lights[offset] = dynamic_lights[d++].Light;
+    }
+    else
+    {
+      break;
+    }
   }
 
+  return offset;
+}
+
+void GfxScene::Render(iDevice* device, eRenderPass pass)
+{
+  if (pass == eRP_Forward)
+  {
+    static const GfxLight* lights[MaxLights];
+    Size offset = 0;
+    for (auto globalLight : m_globalLights)
+    {
+      if (offset >= MaxLights)
+      {
+        break;
+      }
+      lights[offset++] = globalLight;
+    }
+
+    for (auto mesh : m_staticMeshes)
+    {
+      Size numberOfLights = offset;
+      if (offset < MaxLights)
+      {
+        const std::vector< GfxMesh::Light>& static_lights = mesh->GetLights();
+        std::vector< GfxMesh::Light> dynamic_lights = CalcMeshLightInfluences(mesh, m_dynamicLights);
+        numberOfLights = assign_lights(mesh, static_lights, dynamic_lights, lights, offset, MaxLights);
+      }
+      mesh->RenderForward(device, pass, lights, numberOfLights);
+    }
+    for (auto mesh : m_meshes)
+    {
+      Size numberOfLights = offset;
+      if (offset < MaxLights)
+      {
+        std::vector< GfxMesh::Light> static_lights = CalcMeshLightInfluences(mesh, m_staticLights);
+        std::vector< GfxMesh::Light> dynamic_lights = CalcMeshLightInfluences(mesh, m_dynamicLights);
+        Size numberOfLights = assign_lights(mesh, static_lights, dynamic_lights, lights, offset, MaxLights);
+      }
+      mesh->RenderForward(device, pass, lights, numberOfLights);
+    }
+  }
 }
 
 
-struct LightInfluenceOnMesh
-{
-  GfxLight* light;
-  float influence;
-  LightInfluenceOnMesh(GfxLight* light = nullptr, float influence = FLT_MAX) : light(light), influence(influence)
-  {}
-};
 
 void GfxScene::AddStaticLightsToMesh(GfxMesh* mesh)
 {
@@ -161,23 +220,26 @@ void GfxScene::AddStaticLightsToMesh(GfxMesh* mesh)
 
   //
   // collect all static lights with the influence on the mesh and sort it by their influence
-  std::vector<LightInfluenceOnMesh> influences(m_staticLights.size());
+  std::vector<GfxMesh::Light> influences;
   for (auto light : m_staticLights)
   {
-    influences.emplace_back(LightInfluenceOnMesh(light, CalcInfluenceOfLightToMesh(light, mesh)));
+    GfxMesh::Light l{};
+    l.Light = light;
+    l.Influence = CalcMeshLightInfluence(light, mesh);
+    influences.push_back(l);
   }
   std::sort(influences.begin(), influences.end(),
-            [](const LightInfluenceOnMesh& i0, const LightInfluenceOnMesh& i1) { return i0.influence > i1.influence; });
+            [](const GfxMesh::Light& i0, const GfxMesh::Light& i1) { return i0.Influence > i1.Influence; });
 
   //
   // assign the most significant lights to the mesh
-  for (auto inf : influences)
+  for (auto &inf : influences)
   {
-    if (inf.influence <= MinLightInfluence)
+    if (inf.Influence <= MinLightInfluence)
     {
       return;
     }
-    mesh->AddLight(inf.light);
+    mesh->AddLight(inf.Light, inf.Influence);
     if (mesh->GetNumberOfLights() >= MaxLights)
     {
       return;
@@ -189,14 +251,14 @@ void GfxScene::AddStaticLightToMeshes(GfxLight* light)
 {
   for (auto mesh : m_staticMeshes)
   {
-    float influence = CalcInfluenceOfLightToMesh(light, mesh);
+    float influence = CalcMeshLightInfluence(light, mesh);
     if (influence <= MinLightInfluence)
     {
       continue;
     }
     if (mesh->GetNumberOfLights() < MaxLights)
     {
-      mesh->AddLight(light);
+      mesh->AddLight(light, influence);
     }
     else
     {
@@ -205,13 +267,13 @@ void GfxScene::AddStaticLightToMeshes(GfxLight* light)
       // find the light with the least influence
       float leastInfluence = FLT_MAX;
       GfxLight* leastLight = nullptr;
-      for (auto assignedLight : mesh->GetLights())
+      for (auto &assignedLight : mesh->GetLights())
       {
-        float assignedInfluence = CalcInfluenceOfLightToMesh(assignedLight, mesh);
+        float assignedInfluence = assignedLight.Influence;
         if (assignedInfluence < leastInfluence)
         {
           leastInfluence = assignedInfluence;
-          leastLight = assignedLight;
+          leastLight = assignedLight.Light;
         }
       }
 
@@ -221,13 +283,13 @@ void GfxScene::AddStaticLightToMeshes(GfxLight* light)
       if (influence > leastInfluence)
       {
         mesh->RemoveLight(leastLight);
-        mesh->AddLight(light);
+        mesh->AddLight(light, influence);
       }
     }
   }
 }
 
-float GfxScene::CalcInfluenceOfLightToMesh(const GfxLight* light, const GfxMesh* mesh)
+float GfxScene::CalcMeshLightInfluence(GfxLight* light, const GfxMesh* mesh)
 {
   if (!light || !mesh)
   {
@@ -259,5 +321,26 @@ float GfxScene::CalcInfluenceOfLightToMesh(const GfxLight* light, const GfxMesh*
   return lightPower * lightDistanceFactor;
 }
 
+
+std::vector<GfxMesh::Light> GfxScene::CalcMeshLightInfluences(const GfxMesh* mesh, const std::vector<GfxLight*>& lights)
+{
+  std::vector<GfxMesh::Light> influences;
+  for (GfxLight* light : lights)
+  {
+    float influence = CalcMeshLightInfluence(light, mesh);
+    if (influence <= MinLightInfluence)
+    {
+      continue;
+    }
+    GfxMesh::Light l{};
+    l.Light = light;
+    l.Influence = influence;
+    influences.push_back(l);
+  }
+
+  std::sort(influences.begin(), influences.end(),
+    [](const GfxMesh::Light& i0, const GfxMesh::Light& i1) { return i0.Influence > i1.Influence; });
+  return influences;
+}
 
 }

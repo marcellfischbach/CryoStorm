@@ -5,14 +5,15 @@
 #include <spcCore/coreexport.hh>
 #include <spcCore/class.hh>
 #include <spcCore/graphics/erenderpass.hh>
+#include <spcCore/graphics/scene/gfxmesh.hh>
 #include <vector>
 
 namespace spc
 {
 
 struct iDevice;
-class GfxMesh;
 class GfxLight;
+struct LightInfluenceOnMesh;
 
 
 SPC_CLASS()
@@ -36,7 +37,9 @@ private:
 
   void AddStaticLightsToMesh(GfxMesh *mesh);
   void AddStaticLightToMeshes(GfxLight *light);
-  float CalcInfluenceOfLightToMesh(const GfxLight* light, const GfxMesh* mesh);
+  float CalcMeshLightInfluence( GfxLight* light, const GfxMesh* mesh);
+  std::vector<GfxMesh::Light> CalcMeshLightInfluences(const GfxMesh * mesh, const std::vector<GfxLight*> &lights);
+
 
   std::vector<GfxMesh*> m_meshes;
   std::vector<GfxMesh*> m_staticMeshes;

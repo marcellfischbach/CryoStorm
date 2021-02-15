@@ -365,7 +365,7 @@ void GL4Device::Render(iRenderMesh* mesh, eRenderPass pass)
 
 
 
-void GL4Device::BindForwardLight(iLight* light, Size idx)
+void GL4Device::BindForwardLight(const iLight* light, Size idx)
 {
   if (!m_shader || idx >= SPC_MAX_LIGHTS)
   {
@@ -379,23 +379,24 @@ void GL4Device::BindForwardLight(iLight* light, Size idx)
   if (lightVector) lightVector->SetArrayIndex(idx);
   if (lightRange) lightRange->SetArrayIndex(idx);
 
+
+
   if (light)
   {
-
     if (lightColor) lightColor->Bind(light->GetColor());
 
     switch (light->GetType())
     {
     case eLT_Point:
     {
-      iPointLight* pointLight = static_cast<iPointLight*>(light);
+      auto pointLight = static_cast<const iPointLight*>(light);
       if (lightVector) lightVector->Bind(Vector4f(pointLight->GetPosition(), 1.0f));
       if (lightRange) lightRange->Bind(pointLight->GetRange());
     }
     break;
     case eLT_Directional:
     {
-      iDirectionalLight* directionalLight = static_cast<iDirectionalLight*>(light);
+      auto directionalLight = static_cast<const iDirectionalLight*>(light);
       if (lightVector) lightVector->Bind(Vector4f(directionalLight->GetDirection(), 0.0f));
     }
     break;

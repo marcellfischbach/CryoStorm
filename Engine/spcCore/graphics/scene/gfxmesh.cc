@@ -30,10 +30,10 @@ void GfxMesh::Render(iDevice* device, eRenderPass pass)
   {
     if (pass == eRP_Forward)
     {
-      Size i = 0; 
-      for (GfxLight* light : m_lights)
+      Size i = 0;
+      for (Light &light : m_lights)
       {
-        device->BindForwardLight(light->GetLight(), i++);
+        device->BindForwardLight(light.Light->GetLight(), i++);
       }
       device->FinishForwardLights(i);
     }
@@ -42,6 +42,25 @@ void GfxMesh::Render(iDevice* device, eRenderPass pass)
     device->Render(m_mesh, pass);
   }
 }
+
+void GfxMesh::RenderForward(iDevice* device, eRenderPass pass, const GfxLight** lights, Size numberOfLights)
+{
+  if (device->BindMaterial(m_material, pass))
+  {
+    Size i;
+    for (i = 0; i < numberOfLights; ++i)
+    {
+      const GfxLight* gfxLight = lights[i];
+      const iLight* light = gfxLight ? gfxLight->GetLight() : nullptr;
+      device->BindForwardLight(light, i);
+    }
+    device->FinishForwardLights(i);
+
+    device->SetModelMatrix(m_modelMatrix);
+    device->Render(m_mesh, pass);
+  }
+}
+
 
 void GfxMesh::SetStatic(bool _static)
 {
@@ -98,14 +117,14 @@ const Matrix4f& GfxMesh::GetModelMatrix()  const
 
 void GfxMesh::ClearLights()
 {
-  for (GfxLight* light : m_lights)
+  for (Light& light : m_lights)
   {
-    light->Release();
+    light.Light->Release();
   }
   m_lights.clear();
 }
 
-void GfxMesh::AddLight(GfxLight* light)
+void GfxMesh::AddLight(GfxLight* light, float influence)
 {
   if (light)
   {
@@ -113,8 +132,12 @@ void GfxMesh::AddLight(GfxLight* light)
     {
       return;
     }
+    Light lght = {};
+    lght.Light = light;
+    lght.Influence = influence;
+
     light->AddRef();
-    m_lights.push_back(light);
+    m_lights.push_back(lght);
   }
 }
 
@@ -138,7 +161,7 @@ Size GfxMesh::GetNumberOfLights() const
   return m_lights.size();
 }
 
-const std::vector<GfxLight*>& GfxMesh::GetLights() const
+const std::vector<GfxMesh::Light>& GfxMesh::GetLights() const
 {
   return m_lights;
 }

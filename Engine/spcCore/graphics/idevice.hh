@@ -59,7 +59,7 @@ struct SPC_CORE_API iDevice : public SPC_SUPER(iObject)
   virtual bool BindMaterial(iMaterial* material, eRenderPass pass) = 0;
   virtual void Render(iRenderMesh* mesh, eRenderPass pass) = 0;
 
-  virtual void BindForwardLight(iLight* light, Size idx) = 0;
+  virtual void BindForwardLight(const iLight* light, Size idx) = 0;
   virtual void FinishForwardLights(Size numLights) = 0;
 };
 

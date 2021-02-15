@@ -22,12 +22,12 @@ vec4 calc_point_light(vec4 light_color, vec3 light_position, float light_range, 
   v_to_l /= distance;
   return light_color
             * clamp(dot(v_to_l, frag_normal), 0.0, 1.0)
-            * (1.0 - distance / light_range);
+            * max(1.0 - distance / light_range, 0.0);
 }
 
 vec4 calc_directional_light(vec4 light_color, vec3 light_vector, vec3 frag_normal)
 {
-    return light_color * dot(light_vector, frag_normal);
+  return light_color * clamp(dot(light_vector, frag_normal), 0.0, 1.0);
 }
 
 vec4 calc_light(vec4 light_color, vec4 light_vector, float light_range, vec3 frag_position, vec3  frag_normal)
