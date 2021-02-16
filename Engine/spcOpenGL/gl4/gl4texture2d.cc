@@ -80,12 +80,12 @@ void GL4Texture2D::Data(const Image* image)
   }
 }
 
-void GL4Texture2D::Data(UInt8 level, const Image* image)
+void GL4Texture2D::Data(UInt16 level, const Image* image)
 {
   Data(level, image->GetPixelFormat(), image->GetData(level));
 }
 
-void GL4Texture2D::Data(UInt8 level, ePixelFormat format, const void* data)
+void GL4Texture2D::Data(UInt16 level, ePixelFormat format, const void* data)
 {
   if (level >= m_level.size())
   {
@@ -105,7 +105,7 @@ void GL4Texture2D::Data(UInt8 level, ePixelFormat format, const void* data)
   );
 }
 
-void GL4Texture2D::Data(UInt8 level, UInt16 x, UInt16 y, UInt16 width, UInt16 height, ePixelFormat format, const void* data)
+void GL4Texture2D::Data(UInt16 level, UInt16 x, UInt16 y, UInt16 width, UInt16 height, ePixelFormat format, const void* data)
 {
   if (level >= m_level.size())
   {

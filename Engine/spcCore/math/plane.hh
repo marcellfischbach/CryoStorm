@@ -4,8 +4,8 @@
 #include <spcCore/math/vector3f.hh>
 
 
-
-namespace spc {
+namespace spc
+{
 
 
 struct SPC_CORE_API Plane
@@ -18,10 +18,10 @@ public:
 
 public:
   SPC_FORCEINLINE Plane(float x = 0.0f, float y = 0.0f, float z = 0.0f, float d = 0.0f)
-    : x(x)
-    , y(y)
-    , z(z)
-    , d(d)
+          : x(x)
+          , y(y)
+          , z(z)
+          , d(d)
   {
 
   }
@@ -63,7 +63,6 @@ public:
 
 
 };
-
 
 
 }

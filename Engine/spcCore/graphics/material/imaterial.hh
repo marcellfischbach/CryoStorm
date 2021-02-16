@@ -7,6 +7,7 @@
 #include <spcCore/math/color4f.hh>
 #include <spcCore/math/vector.hh>
 #include <spcCore/math/matrix.hh>
+#include <spcCore/graphics/erenderqueue.hh>
 #include <spcCore/graphics/itexture.hh>
 #include <string>
 
@@ -19,10 +20,9 @@ struct SPC_CORE_API iMaterial : public SPC_SUPER(iObject)
 {
   SPC_CLASS_GEN;
 
-  virtual ~iMaterial()
-  {
+  ~iMaterial() override = default;
 
-  }
+  SPC_NODISCARD virtual eRenderQueue GetRenderQueue() const = 0;
 
   virtual bool Bind(iDevice * device, eRenderPass pass) = 0;
 

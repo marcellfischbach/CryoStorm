@@ -9,6 +9,7 @@ namespace spc
 
 Material::Material()
   : iMaterial()
+  , m_queue(eRenderQueue::Default)
 {
   SPC_CLASS_GEN_CONSTR;
 
@@ -31,6 +32,16 @@ Material::~Material()
   {
     SPC_RELEASE(attribute.Texture);
   }
+}
+
+void Material::SetRenderQueue(eRenderQueue queue)
+{
+  m_queue = queue;
+}
+
+eRenderQueue Material::GetRenderQueue() const
+{
+  return m_queue;
 }
 
 bool Material::Bind(iDevice* device, eRenderPass pass)

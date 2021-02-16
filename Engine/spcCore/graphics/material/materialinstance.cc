@@ -219,5 +219,9 @@ void MaterialInstance::RebuildAttributes()
     }
   }
 }
+eRenderQueue MaterialInstance::GetRenderQueue() const
+{
+  return m_material ? m_material->GetRenderQueue() : eRenderQueue::Default;
+}
 
 }

@@ -29,6 +29,8 @@ public:
   MaterialInstance();
   virtual ~MaterialInstance();
 
+  eRenderQueue GetRenderQueue() const override;
+
   bool Bind(iDevice * device, eRenderPass pass) override;
 
 
@@ -65,7 +67,6 @@ private:
 
   Material* m_material;
   std::vector<Attribute> m_attributes;
-
 };
 
 

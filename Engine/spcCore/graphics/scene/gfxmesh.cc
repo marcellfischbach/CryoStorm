@@ -92,6 +92,7 @@ const iMaterial* GfxMesh::GetMaterial() const
 void GfxMesh::SetMesh(iRenderMesh* mesh)
 {
   SPC_SET(m_mesh, mesh);
+  UpdateBoundingBox();
 }
 
 iRenderMesh* GfxMesh::GetMesh()
@@ -108,6 +109,7 @@ const iRenderMesh* GfxMesh::GetMesh() const
 void GfxMesh::SetModelMatrix(const Matrix4f& modelMatrix)
 {
   m_modelMatrix = modelMatrix;
+  UpdateBoundingBox();
 }
 
 const Matrix4f& GfxMesh::GetModelMatrix()  const
@@ -164,6 +166,21 @@ Size GfxMesh::GetNumberOfLights() const
 const std::vector<GfxMesh::Light>& GfxMesh::GetLights() const
 {
   return m_lights;
+}
+
+const BoundingBox &GfxMesh::GetBoundingBox() const
+{
+  return m_boundingBox;
+}
+
+void GfxMesh::UpdateBoundingBox()
+{
+  m_boundingBox.Clear();
+  if (m_mesh)
+  {
+    m_boundingBox.Add(m_modelMatrix, m_mesh->GetBoundingBox());
+  }
+  m_boundingBox.Finish();
 }
 
 }

@@ -2,7 +2,7 @@
 #pragma once
 
 #include <cstdint>
-
+#include <spcCore/defs.hh>
 
 //
 // Meta information for SPC_CLASS definitions
@@ -14,18 +14,18 @@
 #define SPC_PROPERTY(...)
 #define SPC_FUNCTION(...)
 #define SPC_CLASS_GEN public: \
-    virtual const spc::Class *GetClass () const;\
+    const spc::Class *GetClass () const override;\
     static const spc::Class *GetStaticClass (); \
-    virtual void *QueryClass(const spc::Class *clazz); \
-    virtual const void *QueryClass(const spc::Class *clazz) const
+    void *QueryClass(const spc::Class *clazz) override; \
+    const void *QueryClass(const spc::Class *clazz) const override
 
 #define SPC_CLASS_GEN_OBJECT \
     SPC_CLASS_GEN; \
-    virtual void AddRef() \
+    void AddRef() override \
     { \
       m_refCount++; \
     } \
-    virtual void Release() \
+    void Release() override  \
     { \
       --m_refCount; \
       if (m_refCount <= 0) \
@@ -33,7 +33,7 @@
           delete this;\
       } \
     } \
-    virtual int64_t RefCount () const\
+    SPC_NODISCARD int64_t RefCount () const override \
     { \
       return m_refCount; \
     } \
@@ -139,20 +139,22 @@ struct SPC_CORE_API iObject
 
   virtual void Release() = 0;
 
-  virtual int64_t RefCount() const = 0;
+  SPC_NODISCARD virtual int64_t RefCount() const = 0;
 
-  template<typename T> T* Query()
+  template<typename T>
+  SPC_NODISCARD T* Query()
   {
     return reinterpret_cast<T*>(QueryClass(T::GetStaticClass()));
   }
 
-  virtual void* QueryClass(const Class* clazz);
+  SPC_NODISCARD virtual void* QueryClass(const Class* clazz);
 
-  template<typename T> const T* Query() const
+  template<typename T>
+  SPC_NODISCARD const T* Query() const
   {
     return reinterpret_cast<const T*>(QueryClass(T::GetStaticClass()));
   }
-  virtual const void* QueryClass(const Class* clazz) const;
+  SPC_NODISCARD virtual const void* QueryClass(const Class* clazz) const;
 };
 
 

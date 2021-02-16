@@ -33,10 +33,12 @@ public:
   static const Size UndefinedIndex = ~0x00;
 
   Material();
-  virtual ~Material();
+  ~Material() override;
 
   bool Bind(iDevice * device, eRenderPass pass) override;
 
+  void SetRenderQueue(eRenderQueue queue);
+  SPC_NODISCARD eRenderQueue GetRenderQueue() const;
 
   void SetShader(eRenderPass pass, iShader * shader);
   iShader* GetShader(eRenderPass pass);
@@ -80,6 +82,7 @@ private:
   iShader* m_shader[eRP_COUNT];
   std::vector<Attribute> m_attributes;
 
+  eRenderQueue m_queue;
 };
 
 

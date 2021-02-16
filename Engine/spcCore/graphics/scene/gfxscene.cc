@@ -23,7 +23,7 @@ void GfxScene::Add(GfxMesh* sceneMesh)
 {
   if (sceneMesh)
   {
-    if (std::find(m_meshes.begin(), m_meshes.end(), sceneMesh) != m_meshes.end())
+    if (std::find(m_dynamicMeshes.begin(), m_dynamicMeshes.end(), sceneMesh) != m_dynamicMeshes.end())
     {
       return;
     }
@@ -41,7 +41,7 @@ void GfxScene::Add(GfxMesh* sceneMesh)
     }
     else
     {
-      m_meshes.push_back(sceneMesh);
+      m_dynamicMeshes.push_back(sceneMesh);
     }
   }
 }
@@ -50,14 +50,14 @@ void GfxScene::Remove(GfxMesh* sceneMesh)
 {
   if (sceneMesh)
   {
-    auto it = std::find(m_meshes.begin(), m_meshes.end(), sceneMesh);
-    if (it == m_meshes.end())
+    auto it = std::find(m_dynamicMeshes.begin(), m_dynamicMeshes.end(), sceneMesh);
+    if (it == m_dynamicMeshes.end())
     {
       return;
     }
 
     sceneMesh->ClearLights();
-    m_meshes.erase(it);
+    m_dynamicMeshes.erase(it);
     sceneMesh->Release();
   }
 }
@@ -194,7 +194,7 @@ void GfxScene::Render(iDevice* device, eRenderPass pass)
       }
       mesh->RenderForward(device, pass, lights, numberOfLights);
     }
-    for (auto mesh : m_meshes)
+    for (auto mesh : m_dynamicMeshes)
     {
       Size numberOfLights = offset;
       if (offset < MaxLights)
@@ -342,5 +342,97 @@ std::vector<GfxMesh::Light> GfxScene::CalcMeshLightInfluences(const GfxMesh* mes
     [](const GfxMesh::Light& i0, const GfxMesh::Light& i1) { return i0.Influence > i1.Influence; });
   return influences;
 }
+
+void GfxScene::ScanMeshes(const iClipper* clipper, UInt32 scanMask, std::function<void(GfxMesh*)> callback) const
+{
+  if (scanMask & eSM_Static)
+  {
+    for (auto mesh : m_staticMeshes)
+    {
+      if (clipper->Test(mesh->GetBoundingBox()) != eClippingResult::eCR_Outside)
+      {
+        callback(mesh);
+      }
+    }
+  }
+
+  if (scanMask & eSM_Dynamic)
+  {
+    for (auto mesh : m_dynamicMeshes)
+    {
+      if (clipper->Test(mesh->GetBoundingBox()) != eClippingResult::eCR_Outside)
+      {
+        callback(mesh);
+      }
+    }
+  }
+}
+
+void GfxScene::ScanLights(const iClipper* clipper, UInt32 scanMask, std::function<bool(GfxLight*)> callback) const
+{
+  if (scanMask & eSM_Global)
+  {
+    for (auto light : m_globalLights)
+    {
+      if (!callback(light))
+      {
+        break;
+      }
+    }
+  }
+
+  if (scanMask & eSM_Static)
+  {
+    for (auto light : m_staticLights)
+    {
+      const iLight* lght = light->GetLight();
+      if (lght->GetType() == eLT_Point)
+      {
+        auto* plight = lght->Query<const iPointLight>();
+        if (clipper->Test(Sphere(plight->GetPosition(), plight->GetRange())) != eClippingResult::eCR_Outside)
+        {
+          if (!callback(light))
+          {
+            break;
+          }
+        }
+      }
+      else
+      {
+        if (!callback(light))
+        {
+          break;
+        }
+      }
+    }
+  }
+
+  if (scanMask & eSM_Dynamic)
+  {
+    for (auto light : m_dynamicLights)
+    {
+      const iLight* lght = light->GetLight();
+      if (lght->GetType() == eLT_Point)
+      {
+        auto* plight = lght->Query<const iPointLight>();
+        if (clipper->Test(Sphere(plight->GetPosition(), plight->GetRange())) != eClippingResult::eCR_Outside)
+        {
+          if (!callback(light))
+          {
+            break;
+          }
+        }
+      }
+      else
+      {
+        if (!callback(light))
+        {
+          break;
+        }
+      }
+    }
+  }
+}
+
 
 }

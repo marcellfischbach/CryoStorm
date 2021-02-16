@@ -30,9 +30,9 @@ public:
 
   bool Initialize(UInt16 width, UInt16 height, ePixelFormat format, bool generateMipMaps) override;
   void Data(const Image * image) override;
-  void Data(UInt8 level, const Image * image) override;
-  void Data(UInt8 level, ePixelFormat format, const void* data) override;
-  void Data(UInt8 level, UInt16 x, UInt16 y, UInt16 width, UInt16 height, ePixelFormat format, const void* data) override;
+  void Data(UInt16 level, const Image * image) override;
+  void Data(UInt16 level, ePixelFormat format, const void* data) override;
+  void Data(UInt16 level, UInt16 x, UInt16 y, UInt16 width, UInt16 height, ePixelFormat format, const void* data) override;
 private:
   UInt32 m_name;
   UInt16 m_width;

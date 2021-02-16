@@ -186,7 +186,7 @@ void Image::GenerateMipMapsNormal()
 
     UInt32 bpp = byte_per_pixel(m_pixelFormat);
     UInt8* dptr = dst.buffer;
-    for (int y=0; y<dst.width; y++)
+    for (int y=0; y<dst.height; y++)
     {
       UInt32 srcRow0Idx = spcMin(y * 2, src.height-1) * src.width * bpp;
       UInt32 srcRow1Idx = spcMin(y * 2 + 1, src.height-1) * src.width * bpp;
@@ -202,7 +202,7 @@ void Image::GenerateMipMapsNormal()
                      + src.buffer[src01Idx+c]
                      + src.buffer[src10Idx+c]
                      + src.buffer[src11Idx+c];
-          s >> 2;
+          s >>= 2;
           *dptr++ = (UInt8)(s & 0x000000ff);
         }
       }

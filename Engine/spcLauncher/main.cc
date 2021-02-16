@@ -18,6 +18,7 @@
 #include <spcCore/graphics/image.hh>
 #include <spcCore/graphics/ipointlight.hh>
 #include <spcCore/graphics/irendermesh.hh>
+#include <spcCore/graphics/irenderpipeline.hh>
 #include <spcCore/graphics/isampler.hh>
 #include <spcCore/graphics/samplers.hh>
 #include <spcCore/graphics/mesh.hh>
@@ -156,9 +157,12 @@ bool initialize_modules(int argc, char** argv)
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 4);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
-  wnd = SDL_CreateWindow("Spice", 25, 25, 1024, 768, SDL_WINDOW_OPENGL);
+  Uint32 flags = SDL_WINDOW_OPENGL;
+  flags |= SDL_WINDOW_BORDERLESS;
+  wnd = SDL_CreateWindow("Spice", 0, 0, 1280, 720, flags);
+//  wnd = SDL_CreateWindow("Spice", 0, 0, 1920, 1080, flags);
   context = SDL_GL_CreateContext(wnd);
-  bool vsync = true;
+  bool vsync = false;
   SDL_GL_SetSwapInterval(vsync ? 1 : 0);
 
   SDL_ShowWindow(wnd);
@@ -367,6 +371,8 @@ int main(int argc, char** argv)
     .Finish();
   world->Attach(sunEntity);
 
+  spc::iRenderPipeline *renderPipeline = spc::ObjectRegistry::Get<spc::iRenderPipeline>();
+
   float rot = 0.0f;
   float entRot = 0.0f;
 
@@ -382,6 +388,7 @@ int main(int argc, char** argv)
       char buffer[1024];
       sprintf_s<1024>(buffer, "Spice Engine %d FPS", frames);
       SDL_SetWindowTitle(wnd, buffer);
+      printf ("%s\n", buffer);
       frames = 0;
     }
     else
@@ -400,7 +407,7 @@ int main(int argc, char** argv)
     }
 
 
-    glViewport(0, 0, 1024, 768);
+    glViewport(0, 0, width, height);
     device->Clear(true, spc::Color4f(0.0f, 0.0, 0.0, 0.0f), true, 1.0f, false, 0);
     /*
     entityX->GetRoot()->GetTransform()
@@ -420,15 +427,12 @@ int main(int argc, char** argv)
     float dist = 100.0f;
     camera->SetSpot(spc::Vector3f(0, 0.0f, 0.0f));
     camera->SetEye(spc::Vector3f(spc::spcSin(rot) * dist, dist, -spc::spcCos(rot) * dist));
-    camera->Bind(device);
-
-    projector.Bind(device);
 
     rot += 0.005f;
 
     world->Update((float) deltaTime / 1000.0f);
     world->UpdateTransformation();
-    world->GetScene()->Render(device, spc::eRP_Forward);
+    renderPipeline->Render(*camera, projector, device, world->GetScene());
 
     SDL_GL_SwapWindow(wnd);
 

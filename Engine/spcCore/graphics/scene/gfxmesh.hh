@@ -3,6 +3,7 @@
 
 #include <spcCore/coreexport.hh>
 #include <spcCore/class.hh>
+#include <spcCore/math/boundingbox.hh>
 #include <spcCore/math/matrix4f.hh>
 #include <spcCore/graphics/erenderpass.hh>
 #include <spcCore/graphics/scene/gfxlight.hh>
@@ -29,38 +30,43 @@ public:
 
 
   GfxMesh();
-  virtual ~GfxMesh();
+  ~GfxMesh() override;
 
   void SetStatic(bool _static);
-  bool IsStatic() const;
+  SPC_NODISCARD bool IsStatic() const;
 
   void SetMaterial(iMaterial * material);
-  iMaterial* GetMaterial();
-  const iMaterial* GetMaterial() const;
+  SPC_NODISCARD iMaterial* GetMaterial();
+  SPC_NODISCARD const iMaterial* GetMaterial() const;
 
   void SetMesh(iRenderMesh * mesh);
   iRenderMesh* GetMesh();
-  const iRenderMesh* GetMesh() const;
+  SPC_NODISCARD const iRenderMesh* GetMesh() const;
 
   void SetModelMatrix(const Matrix4f & modelMatrix);
-  const Matrix4f& GetModelMatrix() const;
+  SPC_NODISCARD const Matrix4f& GetModelMatrix() const;
 
   void ClearLights();
   void AddLight(GfxLight* light, float incluence);
   void RemoveLight(GfxLight* light);
-  Size GetNumberOfLights() const;
-  const std::vector< Light>& GetLights() const;
+  SPC_NODISCARD Size GetNumberOfLights() const;
+  SPC_NODISCARD const std::vector< Light>& GetLights() const;
+
+  SPC_NODISCARD const BoundingBox &GetBoundingBox() const;
 
   void Render(iDevice * device, eRenderPass pass );
   void RenderForward(iDevice * device, eRenderPass pass, const GfxLight** lights, Size numberOfLights);
 
 
+
 private:
+  void UpdateBoundingBox();
+
   bool m_static;
   iMaterial* m_material;
   iRenderMesh* m_mesh;
-
   Matrix4f m_modelMatrix;
+  BoundingBox m_boundingBox;
 
   std::vector<Light> m_lights;
 

@@ -39,6 +39,7 @@ set(SOURCES
         graphics/camera.cc
         graphics/camera.hh
         graphics/ebufferusage.hh
+        math/eclippingresult.hh
         graphics/ecomparefunc.hh
         graphics/edatatype.hh
         graphics/efiltermode.hh
@@ -61,6 +62,7 @@ set(SOURCES
         graphics/image.hh
         graphics/ipointlight.hh
         graphics/irendermesh.hh
+        graphics/irenderpipeline.hh
         graphics/itexture.hh
         graphics/itexture2d.hh
         graphics/isampler.hh
@@ -73,6 +75,8 @@ set(SOURCES
         graphics/samplers.hh
         graphics/vertexdeclaration.cc
         graphics/vertexdeclaration.hh
+
+
 
         graphics/loader/meshloader.cc
         graphics/loader/meshloader.hh
@@ -106,23 +110,30 @@ set(SOURCES
 
         math/boundingbox.cc
         math/boundingbox.hh
-        math/clipper.cc
-        math/clipper.hh
         math/color4f.hh
         math/hysteresis.hh
+        math/iclipper.hh
         math/math.hh
         math/matrix.hh
         math/matrix3f.hh
         math/matrix4f.hh
         math/plane.hh
-        math/planeclipper.cc
-        math/planeclipper.hh
         math/quaternion.hh
         math/randomrange.hh
+        math/sphere.hh
         math/vector.hh
         math/vector2f.hh
         math/vector3f.hh
         math/vector4f.hh
+
+        math/clipper/boxclipper.cc
+        math/clipper/boxclipper.hh
+        math/clipper/multiplaneclipper.cc
+        math/clipper/multiplaneclipper.hh
+        math/clipper/planeclipper.cc
+        math/clipper/planeclipper.hh
+        math/clipper/sphereclipper.cc
+        math/clipper/sphereclipper.hh
 
         resource/assetmanager.cc
         resource/assetmanager.hh
@@ -147,6 +158,8 @@ set(SOURCES
         window/iwindow.hh
 
         )
+
+
 add_library(spcCore SHARED
         ${SOURCES}
         )

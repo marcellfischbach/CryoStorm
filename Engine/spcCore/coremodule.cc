@@ -8,6 +8,7 @@ namespace spc
 {
 
 
+
 bool CoreModule::Register(int argc, char** argv)
 {
   register_classes();
