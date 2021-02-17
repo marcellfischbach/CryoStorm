@@ -156,8 +156,8 @@ bool initialize_modules(int argc, char** argv)
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
   Uint32 flags = SDL_WINDOW_OPENGL;
-  flags |= SDL_WINDOW_BORDERLESS;
-  wnd = SDL_CreateWindow("Spice", 0, 0, 1280, 720, flags);
+  // flags |= SDL_WINDOW_BORDERLESS;
+  wnd = SDL_CreateWindow("Spice", 25, 25, 1280, 720, flags);
 //  wnd = SDL_CreateWindow("Spice", 0, 0, 1920, 1080, flags);
   context = SDL_GL_CreateContext(wnd);
   bool vsync = false;
@@ -353,7 +353,7 @@ int main(int argc, char** argv)
   lightState->SetType(spc::eLT_Point);
   lightState->SetColor(spc::Color4f(1.0f, 0.0f, 0.0f, 1.0f));
   lightState->SetRange(50.0f);
-  lightState->SetStatic(false);
+  lightState->SetStatic(true);
   lightEntity->GetRoot()->GetTransform()
              .SetTranslation(spc::Vector3f(-100.0f, 25.0f, 0.0f))
              .Finish();
@@ -419,7 +419,7 @@ int main(int argc, char** argv)
     entRot += 0.01f;
 
     lightEntity->GetRoot()->GetTransform()
-               .SetTranslation(spc::Vector3f(0.0f + spc::spcSin(entRot) * 100.0f, 25.0f, 0.0f))
+               .SetTranslation(spc::Vector3f(0.0f - spc::spcCos(entRot) * 100.0f, 25.0f, 0.0f))
                .Finish();
 
     float dist = 100.0f;

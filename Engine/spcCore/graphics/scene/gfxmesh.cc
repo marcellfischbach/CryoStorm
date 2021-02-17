@@ -3,6 +3,7 @@
 #include <spcCore/graphics/material/imaterial.hh>
 #include <spcCore/graphics/irendermesh.hh>
 #include <spcCore/graphics/idevice.hh>
+#include <algorithm>
 
 
 namespace spc
@@ -13,6 +14,7 @@ GfxMesh::GfxMesh()
   , m_material(nullptr)
   , m_mesh(nullptr)
   , m_frame(0)
+  , m_lightingDirty(true)
 {
   SPC_CLASS_GEN_CONSTR;
 }
@@ -156,6 +158,16 @@ void GfxMesh::RemoveLight(GfxLight* light)
 
     m_lights.erase(it);
     light->Release();
+    m_lightingDirty = true;
+  }
+}
+
+void GfxMesh::SortAndLimitLights(Size size)
+{
+  std::sort(m_lights.begin(), m_lights.end(), [](Light& l0, Light& l1) { return l0.Influence > l1.Influence; });
+  if (m_lights.size() > 4)
+  {
+    m_lights.resize(size);
   }
 }
 
@@ -182,6 +194,16 @@ void GfxMesh::SetFrame(UInt64 frame)
 UInt64 GfxMesh::GetFrame() const
 {
   return m_frame;
+}
+
+void GfxMesh::SetLightingDirty(bool lightingDirty)
+{
+  m_lightingDirty = lightingDirty;
+}
+
+bool GfxMesh::IsLightingDirty() const
+{
+  return m_lightingDirty;
 }
 
 

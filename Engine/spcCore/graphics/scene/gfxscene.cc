@@ -14,52 +14,69 @@ const int MaxLights = 4;
 const float MinLightInfluence = 0.0f;
 
 GfxScene::GfxScene()
-        : iObject()
+  : iObject()
 {
   SPC_CLASS_GEN_CONSTR;
 }
 
-void GfxScene::Add(GfxMesh* sceneMesh)
+void GfxScene::Add(GfxMesh* mesh)
 {
-  if (sceneMesh)
+  if (!mesh)
   {
-    if (std::find(m_dynamicMeshes.begin(), m_dynamicMeshes.end(), sceneMesh) != m_dynamicMeshes.end())
+    return;
+  }
+
+  if (mesh->IsStatic())
+  {
+    if (std::find(m_staticMeshes.begin(), m_staticMeshes.end(), mesh) != m_staticMeshes.end())
     {
       return;
     }
-    sceneMesh->AddRef();
-    sceneMesh->ClearLights();
-    for (auto light : m_globalLights)
-    {
-      sceneMesh->AddLight(light, FLT_MAX);
-    }
-
-    if (sceneMesh->IsStatic())
-    {
-      m_staticMeshes.push_back(sceneMesh);
-      AddStaticLightsToMesh(sceneMesh);
-    }
-    else
-    {
-      m_dynamicMeshes.push_back(sceneMesh);
-    }
+    m_staticMeshes.push_back(mesh);
   }
+  else
+  {
+    if (std::find(m_dynamicMeshes.begin(), m_dynamicMeshes.end(), mesh) != m_dynamicMeshes.end())
+    {
+      return;
+    }
+    m_dynamicMeshes.push_back(mesh);
+  }
+
+  mesh->AddRef();
+  mesh->ClearLights();
+  mesh->SetLightingDirty(true);
+
 }
 
-void GfxScene::Remove(GfxMesh* sceneMesh)
+void GfxScene::Remove(GfxMesh* mesh)
 {
-  if (sceneMesh)
+  if (!mesh)
   {
-    auto it = std::find(m_dynamicMeshes.begin(), m_dynamicMeshes.end(), sceneMesh);
-    if (it == m_dynamicMeshes.end())
+    return;
+  }
+
+  mesh->ClearLights();
+
+  if (mesh->IsStatic())
+  {
+    auto it = std::find(m_staticMeshes.begin(), m_staticMeshes.end(), mesh);
+    if (it != m_staticMeshes.end())
     {
+      m_staticMeshes.erase(it);
       return;
     }
-
-    sceneMesh->ClearLights();
-    m_dynamicMeshes.erase(it);
-    sceneMesh->Release();
   }
+  else
+  {
+    auto it = std::find(m_dynamicMeshes.begin(), m_dynamicMeshes.end(), mesh);
+    if (it != m_dynamicMeshes.end())
+    {
+      m_dynamicMeshes.erase(it);
+      return;
+    }
+  }
+  mesh->Release();
 }
 
 void GfxScene::Add(GfxLight* light)
@@ -229,11 +246,11 @@ void GfxScene::AddStaticLightsToMesh(GfxMesh* mesh)
     influences.push_back(l);
   }
   std::sort(influences.begin(), influences.end(),
-            [](const GfxMesh::Light& i0, const GfxMesh::Light& i1) { return i0.Influence > i1.Influence; });
+    [](const GfxMesh::Light& i0, const GfxMesh::Light& i1) { return i0.Influence > i1.Influence; });
 
   //
   // assign the most significant lights to the mesh
-  for (auto &inf : influences)
+  for (auto& inf : influences)
   {
     if (inf.Influence <= MinLightInfluence)
     {
@@ -267,7 +284,7 @@ void GfxScene::AddStaticLightToMeshes(GfxLight* light)
       // find the light with the least influence
       float leastInfluence = FLT_MAX;
       GfxLight* leastLight = nullptr;
-      for (auto &assignedLight : mesh->GetLights())
+      for (auto& assignedLight : mesh->GetLights())
       {
         float assignedInfluence = assignedLight.Influence;
         if (assignedInfluence < leastInfluence)
@@ -302,21 +319,21 @@ float GfxScene::CalcMeshLightInfluence(GfxLight* light, const GfxMesh* mesh)
   float lightDistanceFactor = 0.0f;
   switch (light->GetLight()->GetType())
   {
-    case eLT_Directional:
-      lightDistanceFactor = 1.0f;
-      break;
-    case eLT_Point:
-      auto pointLight = light->GetLight()->Query<iPointLight>();
-      Vector3f lightPos = pointLight->GetPosition();
-      Vector3f meshPos = mesh->GetModelMatrix().GetTranslation();
-      Vector3f delta = lightPos - meshPos;
-      float distance = delta.Length();
-      float overlap =  pointLight->GetRange() + halfSize - distance;
-      if (overlap > 0.0f)
-      {
-        lightDistanceFactor = overlap / pointLight->GetRange();
-      }
-      break;
+  case eLT_Directional:
+    lightDistanceFactor = 1.0f;
+    break;
+  case eLT_Point:
+    auto pointLight = light->GetLight()->Query<iPointLight>();
+    Vector3f lightPos = pointLight->GetPosition();
+    Vector3f meshPos = mesh->GetModelMatrix().GetTranslation();
+    Vector3f delta = lightPos - meshPos;
+    float distance = delta.Length();
+    float overlap = pointLight->GetRange() + halfSize - distance;
+    if (overlap > 0.0f)
+    {
+      lightDistanceFactor = overlap / pointLight->GetRange();
+    }
+    break;
   }
   return lightPower * lightDistanceFactor;
 }

@@ -29,7 +29,7 @@ public:
   {
     eSM_Global = 1,
     eSM_Static = 2,
-    eSM_Dynamic = 3
+    eSM_Dynamic = 4
   };
 
   GfxScene();

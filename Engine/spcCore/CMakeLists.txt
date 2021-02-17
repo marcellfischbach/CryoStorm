@@ -19,7 +19,6 @@ set(SOURCES
         string.hh
         types.hh
 
-
         entity/entity.cc
         entity/entity.hh
         entity/entitystate.cc

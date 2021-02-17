@@ -50,6 +50,7 @@ public:
   void ClearLights();
   void AddLight(GfxLight* light, float incluence);
   void RemoveLight(GfxLight* light);
+  void SortAndLimitLights(Size size);
   SPC_NODISCARD Size GetNumberOfLights() const;
   SPC_NODISCARD const std::vector<Light>& GetLights() const;
 
@@ -61,6 +62,9 @@ public:
   void SetFrame(UInt64 frame);
   SPC_NODISCARD UInt64 GetFrame() const;
 
+  void SetLightingDirty(bool lightingDirty);
+  SPC_NODISCARD bool IsLightingDirty() const;
+
 
 private:
   void UpdateBoundingBox();
@@ -71,6 +75,7 @@ private:
   Matrix4f m_modelMatrix;
   BoundingBox m_boundingBox;
   UInt64  m_frame;
+  bool m_lightingDirty;
 
   std::vector<Light> m_lights;
 

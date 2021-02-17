@@ -15,7 +15,7 @@ public:
   float radius;
 
 public:
-  SPC_FORCEINLINE Sphere(const Vector3f& m_center, float radius)
+  SPC_FORCEINLINE Sphere(const Vector3f& center, float radius)
           : center(center)
           , radius(radius)
   {
