@@ -3,9 +3,16 @@
 
 #include <spcOpenGL/openglexport.hh>
 #include <spcCore/graphics/irenderpipeline.hh>
+#include <spcCore/types.hh>
+#include <vector>
+
+namespace spc
+{
+
+class GfxLight;
 
 
-namespace spc::opengl
+namespace opengl
 {
 
 SPC_CLASS()
@@ -18,6 +25,16 @@ public:
 
 
   void Render(Camera& camera, Projector& projector, iDevice* device, GfxScene* scene) override;
+
+private:
+  UInt64 m_frame;
+
+  std::vector<GfxLight*> m_dynamicLights;
+  std::vector<GfxLight*> m_staticLights;
+  std::vector<GfxLight*> m_staticLightsNew;
+
 };
+
+}
 
 }

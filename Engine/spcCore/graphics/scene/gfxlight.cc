@@ -11,6 +11,7 @@ GfxLight::GfxLight()
   : iObject()
   , m_static(false)
   , m_light(nullptr)
+  , m_frame(0)
 {
   SPC_CLASS_GEN_CONSTR;
 }
@@ -44,6 +45,17 @@ iLight * GfxLight::GetLight()
 const iLight * GfxLight::GetLight() const
 {
   return m_light;
+}
+
+
+void GfxLight::SetFrame(UInt64 frame)
+{
+  m_frame = frame;
+}
+
+UInt64 GfxLight::GetFrame() const
+{
+  return m_frame;
 }
 
 }

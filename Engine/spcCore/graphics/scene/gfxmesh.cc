@@ -12,6 +12,7 @@ GfxMesh::GfxMesh()
   : iObject()
   , m_material(nullptr)
   , m_mesh(nullptr)
+  , m_frame(0)
 {
   SPC_CLASS_GEN_CONSTR;
 }
@@ -172,6 +173,17 @@ const BoundingBox &GfxMesh::GetBoundingBox() const
 {
   return m_boundingBox;
 }
+
+void GfxMesh::SetFrame(UInt64 frame)
+{
+  m_frame = frame;
+}
+
+UInt64 GfxMesh::GetFrame() const
+{
+  return m_frame;
+}
+
 
 void GfxMesh::UpdateBoundingBox()
 {
