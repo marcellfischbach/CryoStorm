@@ -8,6 +8,7 @@ uniform vec4 spc_Color;
 uniform vec4 spc_LightColor[4];
 uniform vec4 spc_LightVector[4];
 uniform float spc_LightRange[4];
+uniform int spc_LightCount;
 
 in vec4 color;
 in vec2 texCoord;
@@ -46,10 +47,10 @@ void main()
 {
     vec3 norm = normalize(world_normal);
     vec4 frag_color = vec4(0.0, 0.0, 0.0, 0.0);
-    frag_color += calc_light(spc_LightColor[0], spc_LightVector[0], spc_LightRange[0], world_position, norm);
-    frag_color += calc_light(spc_LightColor[1], spc_LightVector[1], spc_LightRange[1], world_position, norm);
-    frag_color += calc_light(spc_LightColor[2], spc_LightVector[2], spc_LightRange[2], world_position, norm);
-    frag_color += calc_light(spc_LightColor[3], spc_LightVector[3], spc_LightRange[3], world_position, norm);
+    for (int i = 0; i < spc_LightCount; i++)
+    {
+      frag_color += calc_light(spc_LightColor[i], spc_LightVector[i], spc_LightRange[i], world_position, norm);
+    }
     frag_color *= color;
     frag_color *= texture(spc_Diffuse, texCoord);
     spc_FragColor = frag_color;

@@ -411,9 +411,13 @@ void GL4Device::BindForwardLight(const iLight* light, Size idx)
 
 void GL4Device::FinishForwardLights(Size numLights)
 {
-  for (Size i = numLights; i < SPC_MAX_LIGHTS; i++)
+  if (m_shader)
   {
-    BindForwardLight(nullptr, i);
+    iShaderAttribute* count = m_shader->GetShaderAttribute(eSA_LightCount);
+    if (count)
+    {
+      count->Bind((int)numLights);
+    }
   }
 }
 

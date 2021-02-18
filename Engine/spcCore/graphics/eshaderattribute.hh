@@ -25,6 +25,7 @@ enum eShaderAttribute
   eSA_LightColor,
   eSA_LightVector,
   eSA_LightRange,
+  eSA_LightCount
 
 };
 
