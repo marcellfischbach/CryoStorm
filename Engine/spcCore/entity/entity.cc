@@ -92,7 +92,7 @@ bool Entity::Attach(Entity* entity, SpatialState* parentState)
   SpatialState* childRoot = entity->GetRoot();
   if (!parentState)
   {
-    parentState = m_rootState;
+    parentState = GetAbsolutRoot();
   }
   if (childRoot && parentState)
   {
@@ -191,6 +191,7 @@ bool Entity::Attach(EntityState *entityState)
   {
     SetRoot(spatialState);
   }
+
   
   return true;
 }
@@ -261,9 +262,34 @@ void Entity::DeregisterEntityState(EntityState *entityState)
   }
 }
 
+
 void Entity::SetRoot(SpatialState *rootState)
 {
+  bool replace = m_rootState != nullptr;
+  
+  if (m_rootState)
+  {
+    m_rootState->DetachSelf();
+  }
   SPC_SET(m_rootState, rootState);
+  SpatialState* parentRoot = GetAbsolutParentRoot();
+  if (parentRoot)
+  {
+    parentRoot->Attach(m_rootState);
+  }
+  
+  if (replace && m_rootState)
+  {
+    for (Entity *child : m_children)
+    {
+      SpatialState *childRoot = child->GetRoot();
+      if (childRoot)
+      {
+        childRoot->DetachSelf();
+        m_rootState->Attach(childRoot);
+      }
+    }
+  }
 }
 
 SpatialState *Entity::GetRoot()
@@ -274,6 +300,25 @@ SpatialState *Entity::GetRoot()
 const SpatialState *Entity::GetRoot() const
 {
   return m_rootState;
+}
+
+SpatialState* Entity::GetAbsolutRoot()
+{
+  Entity* entity = this;
+  while (entity)
+  {
+    if (entity->m_rootState)
+    {
+      return entity->m_rootState;
+    }
+    entity = entity->GetParent();
+  }
+  return nullptr;
+}
+
+SpatialState* Entity::GetAbsolutParentRoot()
+{
+  return m_parent ? m_parent->GetAbsolutRoot() : nullptr;
 }
 
 

@@ -50,7 +50,8 @@ public:
   
 protected:
   void UpdateEntity(Entity* oldEntity, Entity* newEntity) override;
-  virtual void TransformationUpdated();
+  virtual void TransformationUpdatedPreChildren();
+  virtual void TransformationUpdatedPostChildren();
 
   
 private:

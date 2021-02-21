@@ -39,7 +39,7 @@ public:
    */
 
 protected:
-  void TransformationUpdated() override;
+  void TransformationUpdatedPreChildren() override;
 
 private:
   void AddMeshToScene(World* world);

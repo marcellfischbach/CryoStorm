@@ -67,6 +67,8 @@ public:
   void DeregisterEntityState(EntityState* entityState);
   
 private:
+  SpatialState *GetAbsolutRoot();
+  SpatialState *GetAbsolutParentRoot();
   std::string m_name;
   
   SpatialState* m_rootState;

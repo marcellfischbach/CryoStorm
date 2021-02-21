@@ -9,6 +9,7 @@ namespace spc
 
 class Entity;
 class GfxScene;
+class SpatialState;
 
 SPC_CLASS()
 class SPC_CORE_API World : public SPC_SUPER(iObject)
@@ -30,6 +31,7 @@ public:
   
 private:
   GfxScene* m_scene;
+  SpatialState *m_rootState;
   
   std::vector<Entity*> m_entities;
   

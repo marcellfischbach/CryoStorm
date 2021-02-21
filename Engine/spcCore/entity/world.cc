@@ -10,6 +10,7 @@ namespace spc
 World::World()
   : iObject()
   , m_scene(nullptr)
+  , m_rootState(new SpatialState())
 {
   SPC_CLASS_GEN_CONSTR;
   SetScene(new GfxScene());

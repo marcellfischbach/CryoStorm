@@ -41,7 +41,7 @@ public:
   void OnDetachedFromWorld(World * world) override;
 
 protected:
-  void TransformationUpdated() override;
+  void TransformationUpdatedPreChildren() override;
 
 private:
   iLight *CreateLight();

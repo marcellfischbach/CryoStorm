@@ -118,7 +118,7 @@ void StaticMeshState::Update(float tpf)
 
 }
 
-void StaticMeshState::TransformationUpdated()
+void StaticMeshState::TransformationUpdatedPreChildren()
 {
 }
 

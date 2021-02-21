@@ -194,18 +194,24 @@ void SpatialState::UpdateTransformation()
       UpdateGlobalMatrix();
     }
     m_transformationState = 0;
-
-    TransformationUpdated();
+  
+    TransformationUpdatedPreChildren();
     for (auto child : m_children)
     {
       child->UpdateTransformation();
     }
+    TransformationUpdatedPostChildren();
   }
 }
 
-void SpatialState::TransformationUpdated()
+void SpatialState::TransformationUpdatedPreChildren()
 {
 
 }
 
+
+void SpatialState::TransformationUpdatedPostChildren()
+{
+
+}
 }

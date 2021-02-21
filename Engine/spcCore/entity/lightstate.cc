@@ -49,7 +49,7 @@ void LightState::OnDetachedFromWorld(World* world)
 }
 
 
-void LightState::TransformationUpdated()
+void LightState::TransformationUpdatedPreChildren()
 {
   if (m_pointLight)
   {
@@ -92,8 +92,8 @@ void LightState::UpdateValues()
     {
       m_pointLight->SetRange(m_range);
     }
-
-    TransformationUpdated();
+  
+    TransformationUpdatedPreChildren();
   }
 }
 
