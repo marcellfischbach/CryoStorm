@@ -24,9 +24,17 @@ struct Token
 {
   TokenType type;
   std::string value;
-  Token(TokenType type) : type(type), value("") { }
-  Token(TokenType type, std::string value) : type(type), value(value) { }
-  Token(TokenType type, char ch) : type(type), value("")
+  Token(TokenType type)
+          : type(type)
+          , value("")
+  {}
+  Token(TokenType type, std::string value)
+          : type(type)
+          , value(value)
+  {}
+  Token(TokenType type, char ch)
+          : type(type)
+          , value("")
   {
     value += ch;
   }
@@ -35,7 +43,8 @@ struct Token
 
 struct iBuffer
 {
-  virtual ~iBuffer() { }
+  virtual ~iBuffer()
+  {}
 
   virtual bool IsEOF() = 0;
 
@@ -70,16 +79,16 @@ private:
 Token GetNextToken(iBuffer* buffer);
 
 Attribute::Attribute(const std::string& value, AttributeType type)
-  : m_name("")
-  , m_value(value)
-  , m_type (type)
+        : m_name("")
+        , m_value(value)
+        , m_type(type)
 {
 }
 
 Attribute::Attribute(const std::string& name, const std::string& value, AttributeType type)
-  : m_name(name)
-  , m_value(value)
-  , m_type(type)
+        : m_name(name)
+        , m_value(value)
+        , m_type(type)
 {
 }
 
@@ -109,7 +118,7 @@ Attribute::AttributeType Attribute::GetType() const
 }
 
 Element::Element()
-  : m_parent(nullptr)
+        : m_parent(nullptr)
 {
 
 }
@@ -176,12 +185,35 @@ Element* Element::GetChild(const std::string& childName)
 
 const Element* Element::GetChild(const std::string& childName) const
 {
-  for (auto child : m_children)
+  std::string path = childName;
+  while (true)
   {
-    if (childName == child->m_tagName)
+    for (auto child : m_children)
     {
-      return child;
+      if (path == child->m_tagName)
+      {
+        if (path.length() >= childName.length())
+        {
+          return child;
+        }
+        else
+        {
+          std::string tail = childName.substr(path.length() + 1);
+          const Element* element = child->GetChild(tail);
+          if (element)
+          {
+            return element;
+          }
+        }
+      }
     }
+
+    Size idx = path.find_last_of('.');
+    if (idx == std::string::npos)
+    {
+      break;
+    }
+    path = path.substr(0, idx);
   }
   return nullptr;
 }
@@ -189,14 +221,7 @@ const Element* Element::GetChild(const std::string& childName) const
 
 bool Element::HasChild(const std::string& childName) const
 {
-  for (auto child : m_children)
-  {
-    if (childName == child->m_tagName)
-    {
-      return true;
-    }
-  }
-  return false;
+  return GetChild(childName) != nullptr;
 }
 
 void Element::AddAttribute(const Attribute& attribute)
@@ -242,7 +267,7 @@ const Attribute* Element::GetAttribute(const std::string& attributeName) const
   return nullptr;
 }
 
-const std::string Element::GetAttribute(size_t idx, const std::string &defaultValue) const
+const std::string Element::GetAttribute(size_t idx, const std::string& defaultValue) const
 {
   const Attribute* attr = GetAttribute(idx);
   return attr ? attr->GetValue() : defaultValue;
@@ -254,7 +279,6 @@ const std::string Element::GetAttribute(const std::string& attributeName, const 
   const Attribute* attr = GetAttribute(attributeName);
   return attr ? attr->GetValue() : defaultValue;
 }
-
 
 
 int Element::GetAttribute(size_t idx, int defaultValue) const
@@ -284,10 +308,9 @@ double Element::GetAttribute(const std::string& attributeName, double defaultVal
 }
 
 
-
 File::File()
-  : m_data(nullptr)
-  , m_dataSize(0)
+        : m_data(nullptr)
+        , m_dataSize(0)
 {
 
 }
@@ -325,7 +348,7 @@ size_t File::GetDataSize() const
 bool File::Parse(const std::string& filename)
 {
 #ifdef SPC_WIN32
-  FILE* file = nullptr;
+  FILE * file = nullptr;
   if (fopen_s(&file, filename.c_str(), "rb") != 0)
   {
     return false;
@@ -400,78 +423,78 @@ bool File::Parse(iBuffer* buffer)
 
     switch (token.type)
     {
-    case TokenType::CurlyBraceOpen:
-      parent = currentElement;
-      currentElement = nullptr;
-      break;
-    case TokenType::CurlyBraceClose:
-      parent = parent->GetParent();
-      currentElement = nullptr;
-      break;
-    case TokenType::Comma:
-      currentElement = nullptr;
-      break;
-    case TokenType::Colon:
-      printf("Invalid token colon\n");
-      return false;
-    case TokenType::EOD:
-      if (parent != &m_root || currentElement != nullptr)
-      {
-        printf("Unexpected End of Document found\n");
+      case TokenType::CurlyBraceOpen:
+        parent = currentElement;
+        currentElement = nullptr;
+        break;
+      case TokenType::CurlyBraceClose:
+        parent = parent->GetParent();
+        currentElement = nullptr;
+        break;
+      case TokenType::Comma:
+        currentElement = nullptr;
+        break;
+      case TokenType::Colon:
+        printf("Invalid token colon\n");
         return false;
-      }
-      buffer->ReadRest(&m_data, m_dataSize);
-      return true;
-
-    case TokenType::Identifier:
-      if (!currentElement)
-      {
-        currentElement = new Element();
-        currentElement->SetTagName(token.value);
-        parent->AddChild(currentElement);
-      }
-      else
-      {
-        std::string attributeName = token.value;
-        token = GetNextToken(buffer);
-        if (token.type != TokenType::Colon)
+      case TokenType::EOD:
+        if (parent != &m_root || currentElement != nullptr)
         {
-          printf("Expecting colon\n");
+          printf("Unexpected End of Document found\n");
           return false;
         }
-        token = GetNextToken(buffer);
-        if (token.type == TokenType::String)
+        buffer->ReadRest(&m_data, m_dataSize);
+        return true;
+
+      case TokenType::Identifier:
+        if (!currentElement)
         {
-          currentElement->AddAttribute(Attribute(attributeName, token.value, Attribute::AttributeType::String));
-        }
-        else if (token.type == TokenType::Number)
-        {
-          currentElement->AddAttribute(Attribute(attributeName, token.value, Attribute::AttributeType::Number));
+          currentElement = new Element();
+          currentElement->SetTagName(token.value);
+          parent->AddChild(currentElement);
         }
         else
         {
-          printf("Expecting string or number\n");
+          std::string attributeName = token.value;
+          token = GetNextToken(buffer);
+          if (token.type != TokenType::Colon)
+          {
+            printf("Expecting colon\n");
+            return false;
+          }
+          token = GetNextToken(buffer);
+          if (token.type == TokenType::String)
+          {
+            currentElement->AddAttribute(Attribute(attributeName, token.value, Attribute::AttributeType::String));
+          }
+          else if (token.type == TokenType::Number)
+          {
+            currentElement->AddAttribute(Attribute(attributeName, token.value, Attribute::AttributeType::Number));
+          }
+          else
+          {
+            printf("Expecting string or number\n");
+            return false;
+          }
+        }
+        break;
+
+      case TokenType::String:
+        if (!currentElement)
+        {
+          printf("No current elemnt\n");
           return false;
         }
-      }
-      break;
-
-    case TokenType::String:
-      if (!currentElement)
-      {
-        printf("No current elemnt\n");
-        return false;
-      }
-      currentElement->AddAttribute(Attribute(token.value, Attribute::AttributeType::String));
-      break;
-    case TokenType::Number:
-      if (!currentElement)
-      {
-        printf("No current elemnt\n");
-        return false;
-      }
-      currentElement->AddAttribute(Attribute(token.value, Attribute::AttributeType::Number));
-      break;
+        currentElement->AddAttribute(Attribute(token.value, Attribute::AttributeType::String));
+        break;
+      case TokenType::Number:
+        if (!currentElement)
+        {
+          printf("No current elemnt\n");
+          return false;
+        }
+        currentElement->AddAttribute(Attribute(token.value, Attribute::AttributeType::Number));
+        break;
     }
 
 
@@ -481,11 +504,10 @@ bool File::Parse(iBuffer* buffer)
 }
 
 
-
 BufferBuffer::BufferBuffer(const char* buffer, size_t bufferSize)
-  : m_buffer(buffer)
-  , m_bufferSize(bufferSize)
-  , m_idx(0)
+        : m_buffer(buffer)
+        , m_bufferSize(bufferSize)
+        , m_idx(0)
 {
 
 }
@@ -540,18 +562,23 @@ Token GetNextToken(iBuffer* buffer)
 
   switch (ch)
   {
-  case '{': return Token(TokenType::CurlyBraceOpen, ch);
-  case '}': return Token(TokenType::CurlyBraceClose, ch);
-  case ',': return Token(TokenType::Comma, ch);
-  case ':': return Token(TokenType::Colon, ch);
-  case '@': return Token(TokenType::EOD, ch);
+    case '{':
+      return Token(TokenType::CurlyBraceOpen, ch);
+    case '}':
+      return Token(TokenType::CurlyBraceClose, ch);
+    case ',':
+      return Token(TokenType::Comma, ch);
+    case ':':
+      return Token(TokenType::Colon, ch);
+    case '@':
+      return Token(TokenType::EOD, ch);
   }
 
 
   // check identifier
   if (ch == '_'
-    || ch >= 'a' && ch <= 'z'
-    || ch >= 'A' && ch <= 'Z')
+      || ch >= 'a' && ch <= 'z'
+      || ch >= 'A' && ch <= 'Z')
   {
     std::string id;
     id += ch;
@@ -559,9 +586,10 @@ Token GetNextToken(iBuffer* buffer)
     {
       ch = buffer->GetNext();
       if (ch == '_'
-        || ch >= 'a' && ch <= 'z'
-        || ch >= 'A' && ch <= 'Z'
-        || ch >= '0' && ch <= '9')
+          || ch == '.'
+          || ch >= 'a' && ch <= 'z'
+          || ch >= 'A' && ch <= 'Z'
+          || ch >= '0' && ch <= '9')
       {
         id += ch;
       }
@@ -608,12 +636,13 @@ Token GetNextToken(iBuffer* buffer)
     {
       ch = buffer->GetNext();
       if (ch >= '0' && ch <= '9'
-        || ch == '-'
-        || ch == '+'
-        || ch == 'e'
-        || ch == 'E'
-        || ch == '.'
-        ) {
+          || ch == '-'
+          || ch == '+'
+          || ch == 'e'
+          || ch == 'E'
+          || ch == '.'
+              )
+      {
         num += ch;
       }
       else
@@ -676,7 +705,7 @@ void File::Debug() const
   spc::file::Debug(&m_root, 0);
 }
 
-std::string Print(const Element* element, bool format, int ind, const std::string& indent, bool &endWithCurly)
+std::string Print(const Element* element, bool format, int ind, const std::string& indent, bool& endWithCurly)
 {
   endWithCurly = false;
   std::string line;
@@ -718,11 +747,11 @@ std::string Print(const Element* element, bool format, int ind, const std::strin
       line += "{";
     }
 
-    for (size_t i = 0, in = element->GetNumberOfChildren(); i<in; i++)
+    for (size_t i = 0, in = element->GetNumberOfChildren(); i < in; i++)
     {
       bool ewc = false;
       line += Print(element->GetChild(i), format, ind + 1, indent, ewc);
-      if (!ewc && i+1<in)
+      if (!ewc && i + 1 < in)
       {
         line += ",";
       }
@@ -752,7 +781,7 @@ std::string File::Print(bool format, int indent)
     indentStr += " ";
   }
   std::string prnt;
-  
+
   for (size_t i = 0, in = m_root.GetNumberOfChildren(); i < in; i++)
   {
     bool ewc = false;

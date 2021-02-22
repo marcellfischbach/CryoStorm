@@ -1,11 +1,13 @@
 
 #include <spcOpenGL/openglmodule.hh>
 #include <master.refl.cc>
+
 #include <spcCore/objectregistry.hh>
 #include <spcCore/graphics/samplers.hh>
 #include <spcCore/resource/assetmanager.hh>
 #include <spcOpenGL/gl4/gl4device.hh>
 #include <spcOpenGL/gl4/gl4rendermesh.hh>
+#include <spcOpenGL/gl4/loading/gl4programloader.hh>
 #include <spcOpenGL/gl4/loading/gl4shaderloader.hh>
 #include <spcOpenGL/gl4/pipeline/forward/gl4forwardpipeline.hh>
 
@@ -15,6 +17,7 @@ bool OpenGLModule::Register(int argc, char** argv)
 {
   register_classes();
 
+  AssetManager::Get()->RegisterLoader(new GL4ProgramLoader());
   AssetManager::Get()->RegisterLoader(new GL4ShaderLoader());
   ObjectRegistry::Register<iDevice>(new GL4Device());
   ObjectRegistry::Register<iRenderPipeline>(new GL4ForwardPipeline());

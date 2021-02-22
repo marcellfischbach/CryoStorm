@@ -4,6 +4,7 @@
 #include <spcLauncher/window/sdlmouse.hh>
 #include <spcLauncher/launchermodule.hh>
 #include <spcCore/coremodule.hh>
+#include <spcCore/settings.hh>
 #include <spcCore/entity/entity.hh>
 #include <spcCore/entity/entitystate.hh>
 #include <spcCore/entity/lightstate.hh>
@@ -31,6 +32,7 @@
 #include <spcCore/graphics/scene/gfxmesh.hh>
 #include <spcCore/resource/assetmanager.hh>
 #include <spcCore/resource/vfs.hh>
+#include <spcCore/resource/resourcelocator.hh>
 
 #include <spcAssimpLoader/assimploadermodule.hh>
 #include <spcOpenGL/openglmodule.hh>
@@ -139,6 +141,7 @@ SDL_GLContext context;
 bool initialize_modules(int argc, char** argv)
 {
   spc::VFS::Get()->SetBasePath("D:\\DEV\\SpiceEngine\\data");
+  spc::Settings settings("display.spc");
 
   SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE);
 
@@ -157,10 +160,15 @@ bool initialize_modules(int argc, char** argv)
 
   Uint32 flags = SDL_WINDOW_OPENGL;
   // flags |= SDL_WINDOW_BORDERLESS;
-  wnd = SDL_CreateWindow("Spice", 25, 25, 1280, 720, flags);
+  std::string title = settings.GetText("title");
+  spc::Vector2i res = settings.GetVector2i("resolution");
+  spc::Vector2i pos = settings.GetVector2i("pos");
+  bool vsync = settings.GetBool("vsync");
+  wnd = SDL_CreateWindow(title.c_str(),
+          pos.x, pos.y,
+          res.x, res.y, flags);
 //  wnd = SDL_CreateWindow("Spice", 0, 0, 1920, 1080, flags);
   context = SDL_GL_CreateContext(wnd);
-  bool vsync = false;
   SDL_GL_SetSwapInterval(vsync ? 1 : 0);
 
   SDL_ShowWindow(wnd);
@@ -195,10 +203,10 @@ spc::iRenderMesh* create_plane_mesh()
   // create a render mesh
   spc::iRenderMeshGenerator* generator = spc::ObjectRegistry::Get<spc::iRenderMeshGeneratorFactory>()->Create();
   std::vector<spc::Vector3f> positions;
-  positions.push_back(spc::Vector3f(-100.0f, 0.0f, -100.0f));
-  positions.push_back(spc::Vector3f(-100.0f, 0.0f, 100.0f));
-  positions.push_back(spc::Vector3f(100.0f, 0.0f, -100.0f));
-  positions.push_back(spc::Vector3f(100.0f, 0.0f, 100.0f));
+  positions.push_back(spc::Vector3f(-10.0f, 0.0f, -10.0f));
+  positions.push_back(spc::Vector3f(-10.0f, 0.0f, 10.0f));
+  positions.push_back(spc::Vector3f(10.0f, 0.0f, -10.0f));
+  positions.push_back(spc::Vector3f(10.0f, 0.0f, 10.0f));
   std::vector<spc::Vector3f> normals;
   normals.push_back(spc::Vector3f(0.0f, 1.0f, 0.0f));
   normals.push_back(spc::Vector3f(0.0f, 1.0f, 0.0f));
@@ -266,7 +274,7 @@ int main(int argc, char** argv)
 
   spc::iDevice* device = spc::ObjectRegistry::Get<spc::iDevice>();
 
-  spc::iShader* shader = spc::AssetManager::Get()->Load<spc::iShader>(spc::ResourceLocator("testprogram.xml"));
+  spc::iShader* shader = spc::AssetManager::Get()->Load<spc::iShader>(spc::ResourceLocator("test_color_program.spc"));
   shader->RegisterAttribute("Diffuse");
   shader->RegisterAttribute("Color");
 
@@ -320,6 +328,7 @@ int main(int argc, char** argv)
 
   spc::Camera* camera = new spc::Camera();
   spc::Projector projector;
+  projector.UpdatePerspective(spc::spcDeg2Rad(90.0f), aspect, 1.0f, 1024.0f);
 
 
   spc::Mesh* suzanne = spc::AssetManager::Get()->Load<spc::Mesh>(spc::ResourceLocator("suzanne.fbx"));
@@ -330,7 +339,7 @@ int main(int argc, char** argv)
   spc::Entity* entity0 = new spc::Entity("Entity0");
   spc::StaticMeshState* meshState0 = new spc::StaticMeshState("StaticMesh0");
   meshState0->GetTransform()
-            .SetTranslation(spc::Vector3f(-100, 0, 0))
+            .SetTranslation(spc::Vector3f(0, 0, 0))
             .Finish();
   meshState0->SetMesh(mesh);
   meshState0->SetStatic(true);
@@ -340,9 +349,9 @@ int main(int argc, char** argv)
   spc::Entity* entity1 = new spc::Entity("Entity1");
   spc::StaticMeshState* meshState1 = new spc::StaticMeshState("StaticMesh1");
   meshState1->GetTransform()
-            .SetTranslation(spc::Vector3f(100, 0, 0))
+            .SetTranslation(spc::Vector3f(0, 0, 0))
             .Finish();
-  meshState1->SetMesh(mesh);
+  meshState1->SetMesh(suzanne);
   meshState1->SetStatic(true);
   entity1->Attach(meshState1);
   world->Attach(entity1);
@@ -351,9 +360,9 @@ int main(int argc, char** argv)
   spc::LightState* lightState = new spc::LightState("LightState");
   lightEntity->Attach(lightState);
   lightState->SetType(spc::eLT_Point);
-  lightState->SetColor(spc::Color4f(1.0f, 0.0f, 0.0f, 1.0f));
-  lightState->SetRange(50.0f);
-  lightState->SetStatic(true);
+  lightState->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f));
+  lightState->SetRange(500.0f);
+  lightState->SetStatic(false);
   lightEntity->GetRoot()->GetTransform()
              .SetTranslation(spc::Vector3f(-100.0f, 25.0f, 0.0f))
              .Finish();
@@ -363,7 +372,7 @@ int main(int argc, char** argv)
   spc::LightState* sunLightState = new spc::LightState("SunLight");
   sunEntity->Attach(sunLightState);
   sunLightState->SetType(spc::eLT_Directional);
-  sunLightState->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f));
+  sunLightState->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 0.1f);
   sunLightState->GetTransform()
     .SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(1.0f, 0.0f, 0.0f), spc::spcDeg2Rad(45.0f)))
     .Finish();
@@ -371,6 +380,7 @@ int main(int argc, char** argv)
 
   spc::iRenderPipeline *renderPipeline = spc::ObjectRegistry::Get<spc::iRenderPipeline>();
 
+  std::string title = spc::Settings("display.spc").GetText("title");
   float rot = 0.0f;
   float entRot = 0.0f;
 
@@ -384,7 +394,7 @@ int main(int argc, char** argv)
     {
       nextSec += 1000;
       char buffer[1024];
-      sprintf_s<1024>(buffer, "Spice Engine %d FPS", frames);
+      sprintf_s<1024>(buffer, "%s  %d FPS", title.c_str(), frames);
       SDL_SetWindowTitle(wnd, buffer);
       printf ("%s\n", buffer);
       frames = 0;
@@ -419,12 +429,12 @@ int main(int argc, char** argv)
     entRot += 0.01f;
 
     lightEntity->GetRoot()->GetTransform()
-               .SetTranslation(spc::Vector3f(0.0f - spc::spcCos(entRot) * 100.0f, 25.0f, 0.0f))
+               .SetTranslation(spc::Vector3f(spc::spcCos(entRot) * 5.0f, 5.0f, spc::spcSin(entRot) * 5.0f))
                .Finish();
 
-    float dist = 100.0f;
+    float dist = 10.0f;
     camera->SetSpot(spc::Vector3f(0, 0.0f, 0.0f));
-    camera->SetEye(spc::Vector3f(spc::spcSin(rot) * dist, dist, -spc::spcCos(rot) * dist));
+    camera->SetEye(spc::Vector3f(spc::spcSin(rot) * dist, dist, spc::spcCos(rot) * dist));
 
     rot += 0.005f;
 

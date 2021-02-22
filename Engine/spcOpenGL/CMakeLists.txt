@@ -29,6 +29,8 @@ set(SOURCES
         gl4/gl4vertexbuffer.hh
 
 
+		gl4/loading/gl4programloader.cc
+		gl4/loading/gl4programloader.hh
 		gl4/loading/gl4shaderloader.cc
 		gl4/loading/gl4shaderloader.hh
 

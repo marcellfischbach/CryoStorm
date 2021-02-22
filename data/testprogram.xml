@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <programm>
-  <shader type="vertex">test.vert</shader>
-  <shader type="fragment">test.frag</shader>
+  <shader type="vertex">test_color.vert</shader>
+  <shader type="fragment">test_color.frag</shader>
 
   <attributes>
     <attribute>Diffuse</attribute>

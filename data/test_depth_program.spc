@@ -1,6 +1,6 @@
 program {
-  shader "vertex" "test.vert",
-  shader "fragment" "test.frag",
+  shader "test_depth.vert",
+  shader "test_depth.frag",
   attributes {
     attribute "Diffuse",
     attribute "Color"

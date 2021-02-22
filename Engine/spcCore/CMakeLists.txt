@@ -15,6 +15,8 @@ set(SOURCES
         objectregistry.cc
         objectregistry.hh
         outofboundsexception.hh
+        settings.cc
+        settings.hh
         string.cc
         string.hh
         types.hh
