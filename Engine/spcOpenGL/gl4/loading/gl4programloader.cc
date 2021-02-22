@@ -69,9 +69,9 @@ iObject* GL4ProgramLoader::Load(const Class* cls, const file::File* file, const 
     for (Size i=0, in=attributesElement->GetNumberOfChildren(); i<in; i++)
     {
       const file::Element* attributeElement = attributesElement->GetChild(i);
-      if (attributesElement)
+      if (attributeElement && attributeElement->GetTagName() == std::string ("attribute") && attributeElement->GetNumberOfAttributes () >= 1)
       {
-        program->RegisterAttribute(attributesElement->GetAttribute(0)->GetValue());
+        program->RegisterAttribute(attributeElement->GetAttribute(0)->GetValue());
       }
     }
   }

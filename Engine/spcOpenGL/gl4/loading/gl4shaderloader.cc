@@ -5,6 +5,7 @@
 #include <spcOpenGL/gl4/gl4exceptions.hh>
 #include <spcCore/resource/vfs.hh>
 #include <spcCore/graphics/evertexstream.hh>
+#include <spcCore/math/math.hh>
 #include <tinyxml2/tinyxml2.h>
 #include <regex>
 #include <iostream>
@@ -25,12 +26,43 @@ std::vector<std::string> split(const std::string& string)
 {
   std::vector<std::string> res;
   size_t offset = 0;
-  size_t idx = 0;
-  while ((idx = string.find('\n', offset)) != std::string::npos)
+  size_t idxn = 0;
+  size_t idxr = 0;
+  while (true)
   {
-    std::string part = string.substr(offset, idx - offset);
-    res.push_back(part);
-    offset = idx + 1;
+    idxn = string.find('\n', offset);
+    idxr = string.find('\r', offset);
+
+    if (idxn != std::string::npos && idxr != std::string::npos)
+    {
+      if (idxn + 1 == idxr || idxr + 1 == idxn)
+      {
+        Size min = spcMin(idxn, idxr);
+
+        std::string part = string.substr(offset, min - offset);
+        res.push_back(part);
+        offset = min + 2;
+      }
+      else
+      {
+        Size min = spcMin(idxn, idxr);
+        std::string part = string.substr(offset, min - offset);
+        res.push_back(part);
+        offset = min + 1;
+      }
+    }
+    else if (idxn != std::string::npos || idxr != std::string::npos)
+    {
+      Size pos = idxn != std::string::npos ? idxn : idxr;
+      std::string part = string.substr(offset, pos - offset);
+      res.push_back(part);
+      offset = pos + 1;
+    }
+    else
+    {
+      break;
+    }
+
   }
   std::string part = string.substr(offset, string.length() - offset);
   res.push_back(part);
@@ -51,7 +83,7 @@ std::string merge(const std::vector<std::string>& lines)
 
 void replace(std::vector<std::string>& lines, const std::string& vertexStreamName, eVertexStream stream)
 {
-  std::regex reg("(.*layout\\s*\\(location\\s*=\\s*)(" + vertexStreamName + ")(\\s*\\).*)");
+  std::regex reg("(.*layout\\s*\\(\\s*location\\s*=\\s*)(" + vertexStreamName + ")(\\s*\\).*)");
   for (std::string& line : lines)
   {
     std::smatch sm;
@@ -66,24 +98,38 @@ void replace(std::vector<std::string>& lines, const std::string& vertexStreamNam
 }
 
 GL4Shader* LoadShader(const std::string& typeText,
-                      const std::string& origSource,
-                      const ResourceLocator* locator)
+  const std::string& origSource,
+  const ResourceLocator* locator)
 {
   eGL4ShaderType shaderType;
   if (typeText == "vertex")
-  { shaderType = eST_Vertex; }
+  {
+    shaderType = eST_Vertex;
+  }
   else if (typeText == "tessEval")
-  { shaderType = eST_TessEval; }
+  {
+    shaderType = eST_TessEval;
+  }
   else if (typeText == "tessControl")
-  { shaderType = eST_TessControl; }
+  {
+    shaderType = eST_TessControl;
+  }
   else if (typeText == "geometry")
-  { shaderType = eST_Geometry; }
+  {
+    shaderType = eST_Geometry;
+  }
   else if (typeText == "fragment")
-  { shaderType = eST_Fragment; }
+  {
+    shaderType = eST_Fragment;
+  }
   else if (typeText == "compute")
-  { shaderType = eST_Compute; }
+  {
+    shaderType = eST_Compute;
+  }
   else
-  { return nullptr; }
+  {
+    return nullptr;
+  }
 
   std::cout << "Orig source:" << std::endl << origSource << std::endl;
 
@@ -111,7 +157,7 @@ GL4Shader* LoadShader(const std::string& typeText,
   }
   catch (GL4ShaderCompileException& sce)
   {
-    printf("Unable to compile shader: %s\n%s\n", locator ? locator-> GetLocator().c_str() : "unknown file", sce.what());
+    printf("Unable to compile shader: %s\n%s\n", locator ? locator->GetLocator().c_str() : "unknown file", sce.what());
   }
 
   return nullptr;
@@ -134,8 +180,8 @@ iObject* GL4ShaderLoader::Load(const Class* cls, const file::File* file, const R
 
 
   return LoadShader(shaderElement->GetAttribute(0)->GetValue(),
-                    shaderElement->GetAttribute(1)->GetValue(),
-                    locator);
+    shaderElement->GetAttribute(1)->GetValue(),
+    locator);
 
 }
 

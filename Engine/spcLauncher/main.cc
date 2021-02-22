@@ -260,8 +260,12 @@ void debug(spc::SpatialState* state, int indent)
   }
 }
 
+#include <regex>
+#include <sstream>
+
 int main(int argc, char** argv)
 {
+
   if (!register_modules(argc, argv))
   {
     return -1;

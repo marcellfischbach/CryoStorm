@@ -3,6 +3,7 @@
 
 #include <math.h>
 #include <spcCore/defs.hh>
+#include <spcCore/types.hh>
 
 
 
@@ -80,6 +81,11 @@ static SPC_FORCEINLINE int spcMin(int x, int y)
   return x < y ? x : y;
 }
 
+static SPC_FORCEINLINE Size spcMin(Size x, Size y)
+{
+  return x < y ? x : y;
+}
+
 
 static SPC_FORCEINLINE double spcMax(double x, double y)
 {
@@ -95,6 +101,12 @@ static SPC_FORCEINLINE int spcMax(int x, int y)
 {
   return x > y ? x : y;
 }
+
+static SPC_FORCEINLINE Size spcMax(Size x, Size y)
+{
+  return x > y ? x : y;
+}
+
 
 static SPC_FORCEINLINE double spcSqrt(double v)
 {

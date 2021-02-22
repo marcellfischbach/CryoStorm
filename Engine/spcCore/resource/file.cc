@@ -25,16 +25,16 @@ struct Token
   TokenType type;
   std::string value;
   Token(TokenType type)
-          : type(type)
-          , value("")
+    : type(type)
+    , value("")
   {}
   Token(TokenType type, std::string value)
-          : type(type)
-          , value(value)
+    : type(type)
+    , value(value)
   {}
   Token(TokenType type, char ch)
-          : type(type)
-          , value("")
+    : type(type)
+    , value("")
   {
     value += ch;
   }
@@ -79,16 +79,16 @@ private:
 Token GetNextToken(iBuffer* buffer);
 
 Attribute::Attribute(const std::string& value, AttributeType type)
-        : m_name("")
-        , m_value(value)
-        , m_type(type)
+  : m_name("")
+  , m_value(value)
+  , m_type(type)
 {
 }
 
 Attribute::Attribute(const std::string& name, const std::string& value, AttributeType type)
-        : m_name(name)
-        , m_value(value)
-        , m_type(type)
+  : m_name(name)
+  , m_value(value)
+  , m_type(type)
 {
 }
 
@@ -118,7 +118,7 @@ Attribute::AttributeType Attribute::GetType() const
 }
 
 Element::Element()
-        : m_parent(nullptr)
+  : m_parent(nullptr)
 {
 
 }
@@ -309,8 +309,8 @@ double Element::GetAttribute(const std::string& attributeName, double defaultVal
 
 
 File::File()
-        : m_data(nullptr)
-        , m_dataSize(0)
+  : m_data(nullptr)
+  , m_dataSize(0)
 {
 
 }
@@ -348,7 +348,7 @@ size_t File::GetDataSize() const
 bool File::Parse(const std::string& filename)
 {
 #ifdef SPC_WIN32
-  FILE * file = nullptr;
+  FILE* file = nullptr;
   if (fopen_s(&file, filename.c_str(), "rb") != 0)
   {
     return false;
@@ -423,78 +423,78 @@ bool File::Parse(iBuffer* buffer)
 
     switch (token.type)
     {
-      case TokenType::CurlyBraceOpen:
-        parent = currentElement;
-        currentElement = nullptr;
-        break;
-      case TokenType::CurlyBraceClose:
-        parent = parent->GetParent();
-        currentElement = nullptr;
-        break;
-      case TokenType::Comma:
-        currentElement = nullptr;
-        break;
-      case TokenType::Colon:
-        printf("Invalid token colon\n");
+    case TokenType::CurlyBraceOpen:
+      parent = currentElement;
+      currentElement = nullptr;
+      break;
+    case TokenType::CurlyBraceClose:
+      parent = parent->GetParent();
+      currentElement = nullptr;
+      break;
+    case TokenType::Comma:
+      currentElement = nullptr;
+      break;
+    case TokenType::Colon:
+      printf("Invalid token colon\n");
+      return false;
+    case TokenType::EOD:
+      if (parent != &m_root || currentElement != nullptr)
+      {
+        printf("Unexpected End of Document found\n");
         return false;
-      case TokenType::EOD:
-        if (parent != &m_root || currentElement != nullptr)
+      }
+      buffer->ReadRest(&m_data, m_dataSize);
+      return true;
+
+    case TokenType::Identifier:
+      if (!currentElement)
+      {
+        currentElement = new Element();
+        currentElement->SetTagName(token.value);
+        parent->AddChild(currentElement);
+      }
+      else
+      {
+        std::string attributeName = token.value;
+        token = GetNextToken(buffer);
+        if (token.type != TokenType::Colon)
         {
-          printf("Unexpected End of Document found\n");
+          printf("Expecting colon\n");
           return false;
         }
-        buffer->ReadRest(&m_data, m_dataSize);
-        return true;
-
-      case TokenType::Identifier:
-        if (!currentElement)
+        token = GetNextToken(buffer);
+        if (token.type == TokenType::String)
         {
-          currentElement = new Element();
-          currentElement->SetTagName(token.value);
-          parent->AddChild(currentElement);
+          currentElement->AddAttribute(Attribute(attributeName, token.value, Attribute::AttributeType::String));
+        }
+        else if (token.type == TokenType::Number)
+        {
+          currentElement->AddAttribute(Attribute(attributeName, token.value, Attribute::AttributeType::Number));
         }
         else
         {
-          std::string attributeName = token.value;
-          token = GetNextToken(buffer);
-          if (token.type != TokenType::Colon)
-          {
-            printf("Expecting colon\n");
-            return false;
-          }
-          token = GetNextToken(buffer);
-          if (token.type == TokenType::String)
-          {
-            currentElement->AddAttribute(Attribute(attributeName, token.value, Attribute::AttributeType::String));
-          }
-          else if (token.type == TokenType::Number)
-          {
-            currentElement->AddAttribute(Attribute(attributeName, token.value, Attribute::AttributeType::Number));
-          }
-          else
-          {
-            printf("Expecting string or number\n");
-            return false;
-          }
+          printf("Expecting string or number\n");
+          return false;
         }
-        break;
+      }
+      break;
 
-      case TokenType::String:
-        if (!currentElement)
-        {
-          printf("No current elemnt\n");
-          return false;
-        }
-        currentElement->AddAttribute(Attribute(token.value, Attribute::AttributeType::String));
-        break;
-      case TokenType::Number:
-        if (!currentElement)
-        {
-          printf("No current elemnt\n");
-          return false;
-        }
-        currentElement->AddAttribute(Attribute(token.value, Attribute::AttributeType::Number));
-        break;
+    case TokenType::String:
+      if (!currentElement)
+      {
+        printf("No current elemnt\n");
+        return false;
+      }
+      currentElement->AddAttribute(Attribute(token.value, Attribute::AttributeType::String));
+      break;
+    case TokenType::Number:
+      if (!currentElement)
+      {
+        printf("No current elemnt\n");
+        return false;
+      }
+      currentElement->AddAttribute(Attribute(token.value, Attribute::AttributeType::Number));
+      break;
     }
 
 
@@ -505,9 +505,9 @@ bool File::Parse(iBuffer* buffer)
 
 
 BufferBuffer::BufferBuffer(const char* buffer, size_t bufferSize)
-        : m_buffer(buffer)
-        , m_bufferSize(bufferSize)
-        , m_idx(0)
+  : m_buffer(buffer)
+  , m_bufferSize(bufferSize)
+  , m_idx(0)
 {
 
 }
@@ -562,23 +562,23 @@ Token GetNextToken(iBuffer* buffer)
 
   switch (ch)
   {
-    case '{':
-      return Token(TokenType::CurlyBraceOpen, ch);
-    case '}':
-      return Token(TokenType::CurlyBraceClose, ch);
-    case ',':
-      return Token(TokenType::Comma, ch);
-    case ':':
-      return Token(TokenType::Colon, ch);
-    case '@':
-      return Token(TokenType::EOD, ch);
+  case '{':
+    return Token(TokenType::CurlyBraceOpen, ch);
+  case '}':
+    return Token(TokenType::CurlyBraceClose, ch);
+  case ',':
+    return Token(TokenType::Comma, ch);
+  case ':':
+    return Token(TokenType::Colon, ch);
+  case '@':
+    return Token(TokenType::EOD, ch);
   }
 
 
   // check identifier
   if (ch == '_'
-      || ch >= 'a' && ch <= 'z'
-      || ch >= 'A' && ch <= 'Z')
+    || ch >= 'a' && ch <= 'z'
+    || ch >= 'A' && ch <= 'Z')
   {
     std::string id;
     id += ch;
@@ -586,10 +586,10 @@ Token GetNextToken(iBuffer* buffer)
     {
       ch = buffer->GetNext();
       if (ch == '_'
-          || ch == '.'
-          || ch >= 'a' && ch <= 'z'
-          || ch >= 'A' && ch <= 'Z'
-          || ch >= '0' && ch <= '9')
+        || ch == '.'
+        || ch >= 'a' && ch <= 'z'
+        || ch >= 'A' && ch <= 'Z'
+        || ch >= '0' && ch <= '9')
       {
         id += ch;
       }
@@ -636,12 +636,12 @@ Token GetNextToken(iBuffer* buffer)
     {
       ch = buffer->GetNext();
       if (ch >= '0' && ch <= '9'
-          || ch == '-'
-          || ch == '+'
-          || ch == 'e'
-          || ch == 'E'
-          || ch == '.'
-              )
+        || ch == '-'
+        || ch == '+'
+        || ch == 'e'
+        || ch == 'E'
+        || ch == '.'
+        )
       {
         num += ch;
       }
