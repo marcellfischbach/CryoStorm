@@ -48,7 +48,9 @@ iObject* GL4ProgramLoader::Load(const Class* cls, const file::File* file, const 
     const file::Element* shaderElement = shadersElement->GetChild(i);
     if (shaderElement && shaderElement->GetTagName() == "shader")
     {
-      GL4Shader *shader = AssetManager::Get()->Load<GL4Shader>(ResourceLocator(shaderElement->GetAttribute(0)->GetValue()));
+      GL4Shader *shader = locator 
+        ? AssetManager::Get()->Load<GL4Shader>(ResourceLocator(*locator, shaderElement->GetAttribute(0)->GetValue()))
+        : AssetManager::Get()->Load<GL4Shader>(ResourceLocator(shaderElement->GetAttribute(0)->GetValue()));
       program->AttachShader(shader);
     }
   }

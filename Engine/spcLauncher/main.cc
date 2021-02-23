@@ -278,7 +278,7 @@ int main(int argc, char** argv)
 
   spc::iDevice* device = spc::ObjectRegistry::Get<spc::iDevice>();
 
-  spc::iShader* shader = spc::AssetManager::Get()->Load<spc::iShader>(spc::ResourceLocator("test_color_program.spc"));
+  spc::iShader* shader = spc::AssetManager::Get()->Load<spc::iShader>(spc::ResourceLocator("/shaders/test_color_program.spc"));
   shader->RegisterAttribute("Diffuse");
   shader->RegisterAttribute("Color");
 

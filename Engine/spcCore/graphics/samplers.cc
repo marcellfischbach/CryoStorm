@@ -58,9 +58,9 @@ void Samplers::Load()
 
   // mock the default stuff
 
-  m_default = AssetManager::Get()->Load<iSampler>(ResourceLocator("samplers/default.spc"));
-  m_normalMap = AssetManager::Get()->Load<iSampler>(ResourceLocator("samplers/normal_map.spc"));
-  m_uiSprite = AssetManager::Get()->Load<iSampler>(ResourceLocator("samplers/ui_sprite.spc"));
+  m_default = AssetManager::Get()->Load<iSampler>(ResourceLocator("/samplers/default.spc"));
+  m_normalMap = AssetManager::Get()->Load<iSampler>(ResourceLocator("/samplers/normal_map.spc"));
+  m_uiSprite = AssetManager::Get()->Load<iSampler>(ResourceLocator("/samplers/ui_sprite.spc"));
 
 }
 

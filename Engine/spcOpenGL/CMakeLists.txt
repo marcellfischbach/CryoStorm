@@ -45,6 +45,8 @@ set(SOURCES
 		gl4/shading/gl4shaderattribute.hh
 		gl4/shading/gl4shaderattributenull.cc
 		gl4/shading/gl4shaderattributenull.hh
+		gl4/shading/gl4shadersourcefragment.cc
+		gl4/shading/gl4shadersourcefragment.hh
 		gl4/shading/gl4shadertype.hh
         )
 

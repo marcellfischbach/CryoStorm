@@ -48,7 +48,7 @@ iFile* VFS::Open(const ResourceLocator& resourceLocator, eAccessMode accessMode,
 
 iFile* VFS::File(const ResourceLocator& resourceLocator)
 {
-  return new FileSystemFile(m_basePath + "/" + resourceLocator.GetLocator());
+  return new FileSystemFile(m_basePath + "/" + resourceLocator.Encoded());
 }
 
 }

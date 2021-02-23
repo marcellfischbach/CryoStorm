@@ -23,7 +23,7 @@ class SPC_OGL_API GL4ForwardPipeline : public SPC_SUPER(iRenderPipeline)
 SPC_CLASS_GEN_OBJECT;
 public:
   GL4ForwardPipeline();
-  ~GL4ForwardPipeline() override;
+  ~GL4ForwardPipeline() noexcept override;
 
 
   void Render(Camera& camera, Projector& projector, iDevice* device, GfxScene* scene) override;

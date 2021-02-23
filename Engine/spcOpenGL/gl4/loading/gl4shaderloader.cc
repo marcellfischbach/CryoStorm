@@ -6,15 +6,18 @@
 #include <spcCore/resource/vfs.hh>
 #include <spcCore/graphics/evertexstream.hh>
 #include <spcCore/math/math.hh>
+#include <spcCore/resource/file.hh>
 #include <tinyxml2/tinyxml2.h>
 #include <regex>
 #include <iostream>
-
+#include <set>
 
 using namespace tinyxml2;
 
 namespace spc::opengl
 {
+
+std::vector<std::string> replace_includes(const ResourceLocator* parent, std::vector<std::string>& lines,std::set<ResourceLocator>& included);
 
 GL4ShaderLoader::GL4ShaderLoader()
 {
@@ -97,6 +100,61 @@ void replace(std::vector<std::string>& lines, const std::string& vertexStreamNam
 
 }
 
+std::vector<std::string> loadExternalLines(const ResourceLocator& locator, std::set<ResourceLocator> &included)
+{
+  iFile *file = VFS::Get()->Open(locator, eAM_Read, eOM_Text);
+  if (!file)
+  {
+    return std::vector<std::string>();
+  }
+
+  spc::file::File fFile;
+  bool res = fFile.Parse(file);
+  file->Release();
+  if (!res)
+  {
+    return std::vector<std::string>();
+  }
+
+  file::Element* fragment = fFile.Root()->GetChild("fragment");
+  if (!fragment || fragment->GetNumberOfAttributes() == 0)
+  {
+    return std::vector<std::string>();
+  }
+
+  std::string source = fragment->GetAttribute(0)->GetValue();
+  std::vector<std::string> lines = split(source);
+  return replace_includes(&locator, lines, included);
+  
+}
+
+std::vector<std::string>  replace_includes(const ResourceLocator *parent, std::vector<std::string>& lines, std::set<ResourceLocator> &included)
+{
+  std::vector<std::string> result;
+  std::regex reg("(#include\\s*\\<\\s*)([^\\>\\s]+)(\\s*\\>)");
+  for (std::string& line : lines)
+  {
+    std::smatch sm;
+    if (std::regex_match(line, sm, reg))
+    {
+
+      std::string part1 = sm[2];
+      ResourceLocator locator(parent, part1);
+      std::vector<std::string> loadedLines = loadExternalLines(locator, included);
+      included.insert(locator);
+      for (std::string& l : loadedLines)
+      {
+        result.push_back(l);
+      }
+    }
+    else
+    {
+      result.push_back(line);
+    }
+  }
+  return result;
+}
+
 GL4Shader* LoadShader(const std::string& typeText,
   const std::string& origSource,
   const ResourceLocator* locator)
@@ -134,6 +192,9 @@ GL4Shader* LoadShader(const std::string& typeText,
   std::cout << "Orig source:" << std::endl << origSource << std::endl;
 
   std::vector<std::string> lines = split(origSource);
+  std::set<ResourceLocator> included;
+
+  lines = replace_includes(locator, lines, included);
   replace(lines, "eVS_Vertices", eVS_Vertices);
   replace(lines, "eVS_Normals", eVS_Normals);
   replace(lines, "eVS_Tangents", eVS_Tangents);

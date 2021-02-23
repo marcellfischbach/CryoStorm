@@ -78,10 +78,6 @@ set(SOURCES
         graphics/vertexdeclaration.hh
 
 
-
-        graphics/loader/meshloader.cc
-        graphics/loader/meshloader.hh
-
         graphics/material/ematerialattributetype.hh
         graphics/material/imaterial.hh
         graphics/material/material.cc
