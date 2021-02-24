@@ -4,6 +4,7 @@
 #include <spcCore/resource/assetmanager.hh>
 #include <spcCore/loaders/samplerloader.hh>
 
+
 namespace spc
 {
 

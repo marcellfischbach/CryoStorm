@@ -17,7 +17,9 @@ using namespace tinyxml2;
 namespace spc::opengl
 {
 
-std::vector<std::string> replace_includes(const ResourceLocator* parent, std::vector<std::string>& lines,std::set<ResourceLocator>& included);
+std::vector<std::string> replace_includes(const ResourceLocator* parent,
+                                          std::vector<std::string>& lines,
+                                          std::set<ResourceLocator>& included);
 
 GL4ShaderLoader::GL4ShaderLoader()
 {
@@ -100,9 +102,9 @@ void replace(std::vector<std::string>& lines, const std::string& vertexStreamNam
 
 }
 
-std::vector<std::string> loadExternalLines(const ResourceLocator& locator, std::set<ResourceLocator> &included)
+std::vector<std::string> loadExternalLines(const ResourceLocator& locator, std::set<ResourceLocator>& included)
 {
-  iFile *file = VFS::Get()->Open(locator, eAM_Read, eOM_Text);
+  iFile* file = VFS::Get()->Open(locator, eAM_Read, eOM_Text);
   if (!file)
   {
     return std::vector<std::string>();
@@ -125,10 +127,11 @@ std::vector<std::string> loadExternalLines(const ResourceLocator& locator, std::
   std::string source = fragment->GetAttribute(0)->GetValue();
   std::vector<std::string> lines = split(source);
   return replace_includes(&locator, lines, included);
-  
+
 }
 
-std::vector<std::string>  replace_includes(const ResourceLocator *parent, std::vector<std::string>& lines, std::set<ResourceLocator> &included)
+std::vector<std::string>
+replace_includes(const ResourceLocator* parent, std::vector<std::string>& lines, std::set<ResourceLocator>& included)
 {
   std::vector<std::string> result;
   std::regex reg("(#include\\s*\\<\\s*)([^\\>\\s]+)(\\s*\\>)");
@@ -156,8 +159,8 @@ std::vector<std::string>  replace_includes(const ResourceLocator *parent, std::v
 }
 
 GL4Shader* LoadShader(const std::string& typeText,
-  const std::string& origSource,
-  const ResourceLocator* locator)
+                      const std::string& origSource,
+                      const ResourceLocator* locator)
 {
   eGL4ShaderType shaderType;
   if (typeText == "vertex")
@@ -241,8 +244,8 @@ iObject* GL4ShaderLoader::Load(const Class* cls, const file::File* file, const R
 
 
   return LoadShader(shaderElement->GetAttribute(0)->GetValue(),
-    shaderElement->GetAttribute(1)->GetValue(),
-    locator);
+                    shaderElement->GetAttribute(1)->GetValue(),
+                    locator);
 
 }
 

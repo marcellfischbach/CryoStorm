@@ -21,12 +21,16 @@ set(SOURCES
         gl4/gl4pointlight.hh
         gl4/gl4rendermesh.cc
         gl4/gl4rendermesh.hh
+		gl4/gl4rendertarget2d.cc
+		gl4/gl4rendertarget2d.hh
         gl4/gl4sampler.cc
         gl4/gl4sampler.hh
         gl4/gl4texture2d.cc
         gl4/gl4texture2d.hh
         gl4/gl4vertexbuffer.cc
         gl4/gl4vertexbuffer.hh
+		gl4/gl4texturecube.cc
+		gl4/gl4texturecube.hh
 
 
 		gl4/loading/gl4programloader.cc

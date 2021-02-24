@@ -16,11 +16,17 @@ class SPC_OGL_API GL4Texture2D : public SPC_SUPER(iTexture2D)
 public:
   GL4Texture2D();
   ~GL4Texture2D();
+  UInt32 GetName()
+  {
+    return m_name;
+  }
 
   eTextureType GetType() const
   {
     return eTT_Texture2D;
   }
+
+  ePixelFormat GetFormat() const override;
 
   void SetSampler(iSampler* sampler) override;
   iSampler* GetSampler() override;
@@ -28,7 +34,8 @@ public:
 
   void Bind();
 
-  bool Initialize(UInt16 width, UInt16 height, ePixelFormat format, bool generateMipMaps) override;
+  bool Initialize(UInt16 width, UInt16 height, ePixelFormat format, bool generateMipMaps);
+
   void Data(const Image * image) override;
   void Data(UInt16 level, const Image * image) override;
   void Data(UInt16 level, ePixelFormat format, const void* data) override;
@@ -37,6 +44,7 @@ private:
   UInt32 m_name;
   UInt16 m_width;
   UInt16 m_height;
+  ePixelFormat m_format;
 
   struct Level
   {

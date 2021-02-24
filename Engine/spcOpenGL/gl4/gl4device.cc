@@ -2,8 +2,10 @@
 #include <spcOpenGL/gl4/gl4device.hh>
 #include <spcOpenGL/gl4/gl4directionallight.hh>
 #include <spcOpenGL/gl4/gl4pointlight.hh>
+#include <spcOpenGL/gl4/gl4rendertarget2d.hh>
 #include <spcOpenGL/gl4/gl4sampler.hh>
 #include <spcOpenGL/gl4/gl4texture2d.hh>
+#include <spcOpenGL/gl4/gl4texturecube.hh>
 #include <spcOpenGL/gl4/shading/gl4program.hh>
 #include <spcCore/objectregistry.hh>
 #include <spcCore/graphics/samplers.hh>
@@ -17,17 +19,17 @@ namespace spc::opengl
 {
 
 GL4Device::GL4Device()
-  : iDevice()
-  , m_shader(nullptr)
-  , m_modelViewMatrixDirty(false)
-  , m_viewProjectionMatrixDirty(false)
-  , m_modelViewProjectionMatrixDirty(false)
-  , m_modelMatrixInvDirty(false)
-  , m_viewMatrixInvDirty(false)
-  , m_projectionMatrixInvDirty(false)
-  , m_modelViewMatrixInvDirty(false)
-  , m_viewProjectionMatrixInvDirty(false)
-  , m_modelViewProjectionMatrixInvDirty(false)
+        : iDevice()
+        , m_shader(nullptr)
+        , m_modelViewMatrixDirty(false)
+        , m_viewProjectionMatrixDirty(false)
+        , m_modelViewProjectionMatrixDirty(false)
+        , m_modelMatrixInvDirty(false)
+        , m_viewMatrixInvDirty(false)
+        , m_projectionMatrixInvDirty(false)
+        , m_modelViewMatrixInvDirty(false)
+        , m_viewProjectionMatrixInvDirty(false)
+        , m_modelViewProjectionMatrixInvDirty(false)
 {
   SPC_CLASS_GEN_CONSTR;
 }
@@ -47,10 +49,10 @@ bool GL4Device::Initialize()
   }
 
   printf("OpenGL capabilities:\n");
-  printf("  Vendor  : %s\n", (const char*)glGetString(GL_VENDOR));
-  printf("  Renderer: %s\n", (const char*)glGetString(GL_RENDERER));
-  printf("  Version : %s\n", (const char*)glGetString(GL_VERSION));
-  printf("  GLSL    : %s\n", (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION));
+  printf("  Vendor  : %s\n", (const char*) glGetString(GL_VENDOR));
+  printf("  Renderer: %s\n", (const char*) glGetString(GL_RENDERER));
+  printf("  Version : %s\n", (const char*) glGetString(GL_VERSION));
+  printf("  GLSL    : %s\n", (const char*) glGetString(GL_SHADING_LANGUAGE_VERSION));
 
   glPixelStorei(GL_PACK_ALIGNMENT, 1);
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -75,7 +77,6 @@ bool GL4Device::Initialize()
   m_modelViewProjectionMatrixInv.SetIdentity();
 
 
-
   return true;
 }
 
@@ -84,7 +85,12 @@ void GL4Device::SetViewport(Int16 x, Int16 y, UInt16 width, UInt16 height)
   glViewport(x, y, width, height);
 }
 
-void GL4Device::Clear(bool clearColor, const Color4f& color, bool clearDepth, float depth, bool clearStencil, UInt8 stencil)
+void GL4Device::Clear(bool clearColor,
+                      const Color4f& color,
+                      bool clearDepth,
+                      float depth,
+                      bool clearStencil,
+                      UInt8 stencil)
 {
   GLenum flags = 0;
   if (clearColor)
@@ -191,10 +197,22 @@ Matrix4f& GL4Device::GetPerspectiveProjection(float l, float r, float b, float t
   float sz = n + f;
 
 
-  m.m00 = z2 / dx; m.m10 = 0.0f;    m.m20 = -sx / dx;   m.m30 = 0.0f;
-  m.m01 = 0.0f;    m.m11 = z2 / dy; m.m21 = -sy / dy;   m.m31 = 0.0f;
-  m.m02 = 0.0f;    m.m12 = 0.0f;    m.m22 = sz / dz;    m.m32 = -2.0f * n * f / dz;
-  m.m03 = 0.0f;    m.m13 = 0.0f;    m.m23 = 1.0f;       m.m33 = 0.0f;
+  m.m00 = z2 / dx;
+  m.m10 = 0.0f;
+  m.m20 = -sx / dx;
+  m.m30 = 0.0f;
+  m.m01 = 0.0f;
+  m.m11 = z2 / dy;
+  m.m21 = -sy / dy;
+  m.m31 = 0.0f;
+  m.m02 = 0.0f;
+  m.m12 = 0.0f;
+  m.m22 = sz / dz;
+  m.m32 = -2.0f * n * f / dz;
+  m.m03 = 0.0f;
+  m.m13 = 0.0f;
+  m.m23 = 1.0f;
+  m.m33 = 0.0f;
 
   return m;
 }
@@ -211,10 +229,22 @@ Matrix4f& GL4Device::GetPerspectiveProjectionInv(float l, float r, float b, floa
   float nf2 = z2 * f;
 
 
-  m.m00 = dx / z2; m.m10 = 0.0f;    m.m20 = 0.0f;      m.m30 = sx / z2;
-  m.m01 = 0.0f;    m.m11 = dy / z2; m.m21 = 0.0f;      m.m31 = sy / z2;
-  m.m02 = 0.0f;    m.m12 = 0.0f;    m.m22 = 0.0f;      m.m32 = 1.0f;
-  m.m03 = 0.0f;    m.m13 = 0.0f;    m.m23 = -dz / nf2;  m.m33 = sz / nf2;
+  m.m00 = dx / z2;
+  m.m10 = 0.0f;
+  m.m20 = 0.0f;
+  m.m30 = sx / z2;
+  m.m01 = 0.0f;
+  m.m11 = dy / z2;
+  m.m21 = 0.0f;
+  m.m31 = sy / z2;
+  m.m02 = 0.0f;
+  m.m12 = 0.0f;
+  m.m22 = 0.0f;
+  m.m32 = 1.0f;
+  m.m03 = 0.0f;
+  m.m13 = 0.0f;
+  m.m23 = -dz / nf2;
+  m.m33 = sz / nf2;
 
 
   return m;
@@ -229,10 +259,22 @@ Matrix4f& GL4Device::GetOrthographicProjection(float l, float r, float b, float 
   float sy = t + b;
   float sz = f + n;
 
-  m.m00 = 2.0f / dx; m.m10 = 0.0f;      m.m20 = 0.0f;      m.m30 = -sx / dx;
-  m.m01 = 0.0f;      m.m11 = 2.0f / dy; m.m21 = 0.0f;      m.m31 = -sy / dy;
-  m.m02 = 0.0f;      m.m12 = 0.0f;      m.m22 = 2.0f / dz; m.m32 = -sz / dz;
-  m.m03 = 0.0f;      m.m13 = 0.0f;      m.m23 = 0.0f;      m.m33 = 1.0;
+  m.m00 = 2.0f / dx;
+  m.m10 = 0.0f;
+  m.m20 = 0.0f;
+  m.m30 = -sx / dx;
+  m.m01 = 0.0f;
+  m.m11 = 2.0f / dy;
+  m.m21 = 0.0f;
+  m.m31 = -sy / dy;
+  m.m02 = 0.0f;
+  m.m12 = 0.0f;
+  m.m22 = 2.0f / dz;
+  m.m32 = -sz / dz;
+  m.m03 = 0.0f;
+  m.m13 = 0.0f;
+  m.m23 = 0.0f;
+  m.m33 = 1.0;
   return m;
 }
 
@@ -245,10 +287,22 @@ Matrix4f& GL4Device::GetOrthographicProjectionInv(float l, float r, float b, flo
   float sy = t + b;
   float sz = n + f;
 
-  m.m00 = dx / 2.0f; m.m10 = 0.0f;      m.m20 = 0.0f;       m.m30 = sx / 2.0f;
-  m.m01 = 0.0f;      m.m11 = dy / 2.0f; m.m21 = 0.0f;       m.m31 = sy / 2.0f;
-  m.m02 = 0.0f;      m.m12 = 0.0f;      m.m22 = dz / 2.0f;  m.m32 = sz / 2.0f;
-  m.m03 = 0.0f;      m.m13 = 0.0f;      m.m23 = 0.0f;       m.m33 = 1.0;
+  m.m00 = dx / 2.0f;
+  m.m10 = 0.0f;
+  m.m20 = 0.0f;
+  m.m30 = sx / 2.0f;
+  m.m01 = 0.0f;
+  m.m11 = dy / 2.0f;
+  m.m21 = 0.0f;
+  m.m31 = sy / 2.0f;
+  m.m02 = 0.0f;
+  m.m12 = 0.0f;
+  m.m22 = dz / 2.0f;
+  m.m32 = sz / 2.0f;
+  m.m03 = 0.0f;
+  m.m13 = 0.0f;
+  m.m23 = 0.0f;
+  m.m33 = 1.0;
 
   return m;
 }
@@ -283,12 +337,31 @@ iTexture2D* GL4Device::CreateTexture(const iTexture2D::Descriptor& descriptor)
 {
   GL4Texture2D* texture = new GL4Texture2D();
   texture->Initialize(
-    descriptor.Width,
-    descriptor.Height,
-    descriptor.Format,
-    descriptor.MipMaps);
+          descriptor.Width,
+          descriptor.Height,
+          descriptor.Format,
+          descriptor.MipMaps);
   texture->SetSampler(ObjectRegistry::Get<Samplers>()->GetDefault());
   return texture;
+}
+
+
+iTextureCube* GL4Device::CreateTexture(const iTextureCube::Descriptor& descriptor)
+{
+  GL4TextureCube* texture = new GL4TextureCube();
+  texture->Initialize(
+          descriptor.Size,
+          descriptor.Format,
+          descriptor.MipMaps);
+  texture->SetSampler(ObjectRegistry::Get<Samplers>()->GetDefault());
+  return texture;
+}
+
+iRenderTarget2D* GL4Device::CreateRenderTarget(const iRenderTarget2D::Descriptor& descriptor)
+{
+  GL4RenderTarget2D* target = new GL4RenderTarget2D();
+  target->Initialize(descriptor.Width, descriptor.Height);
+  return target;
 }
 
 iPointLight* GL4Device::CreatePointLight()
@@ -340,9 +413,9 @@ eTextureUnit GL4Device::BindTexture(iTexture* texture)
   SetSampler(unit, texture->GetSampler());
   switch (texture->GetType())
   {
-  case eTT_Texture2D:
-    static_cast<GL4Texture2D*>(texture)->Bind();
-    break;
+    case eTT_Texture2D:
+      static_cast<GL4Texture2D*>(texture)->Bind();
+      break;
   }
 
 
@@ -364,7 +437,6 @@ void GL4Device::Render(iRenderMesh* mesh, eRenderPass pass)
 }
 
 
-
 void GL4Device::BindForwardLight(const iLight* light, Size idx)
 {
   if (!m_shader || idx >= SPC_MAX_LIGHTS)
@@ -375,37 +447,45 @@ void GL4Device::BindForwardLight(const iLight* light, Size idx)
   iShaderAttribute* lightColor = m_shader->GetShaderAttribute(eSA_LightColor);
   iShaderAttribute* lightVector = m_shader->GetShaderAttribute(eSA_LightVector);
   iShaderAttribute* lightRange = m_shader->GetShaderAttribute(eSA_LightRange);
-  if (lightColor) lightColor->SetArrayIndex(idx);
-  if (lightVector) lightVector->SetArrayIndex(idx);
-  if (lightRange) lightRange->SetArrayIndex(idx);
-
+  if (lightColor)
+  { lightColor->SetArrayIndex(idx); }
+  if (lightVector)
+  { lightVector->SetArrayIndex(idx); }
+  if (lightRange)
+  { lightRange->SetArrayIndex(idx); }
 
 
   if (light)
   {
-    if (lightColor) lightColor->Bind(light->GetColor());
+    if (lightColor)
+    { lightColor->Bind(light->GetColor()); }
 
     switch (light->GetType())
     {
-    case eLT_Point:
-    {
-      auto pointLight = static_cast<const iPointLight*>(light);
-      if (lightVector) lightVector->Bind(Vector4f(pointLight->GetPosition(), 1.0f));
-      if (lightRange) lightRange->Bind(pointLight->GetRange());
-    }
-    break;
-    case eLT_Directional:
-    {
-      auto directionalLight = static_cast<const iDirectionalLight*>(light);
-      if (lightVector) lightVector->Bind(Vector4f(directionalLight->GetDirection(), 0.0f));
-    }
-    break;
+      case eLT_Point:
+      {
+        auto pointLight = static_cast<const iPointLight*>(light);
+        if (lightVector)
+        { lightVector->Bind(Vector4f(pointLight->GetPosition(), 1.0f)); }
+        if (lightRange)
+        { lightRange->Bind(pointLight->GetRange()); }
+      }
+        break;
+      case eLT_Directional:
+      {
+        auto directionalLight = static_cast<const iDirectionalLight*>(light);
+        if (lightVector)
+        { lightVector->Bind(Vector4f(directionalLight->GetDirection(), 0.0f)); }
+      }
+        break;
     }
   }
   else
   {
-    if (lightColor) lightColor->Bind(Color4f(0.0f, 0.0f, 0.0f));
-    if (lightVector) lightVector->Bind(Vector4f(0.0f, 0.0f, 0.0f, 0.0f));
+    if (lightColor)
+    { lightColor->Bind(Color4f(0.0f, 0.0f, 0.0f)); }
+    if (lightVector)
+    { lightVector->Bind(Vector4f(0.0f, 0.0f, 0.0f, 0.0f)); }
   }
 }
 
@@ -416,7 +496,7 @@ void GL4Device::FinishForwardLights(Size numLights)
     iShaderAttribute* count = m_shader->GetShaderAttribute(eSA_LightCount);
     if (count)
     {
-      count->Bind((int)numLights);
+      count->Bind((int) numLights);
     }
   }
 }

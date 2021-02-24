@@ -33,11 +33,12 @@ bool GL4Texture2D::Initialize(UInt16 width, UInt16 height, ePixelFormat format, 
 {
   m_width = width;
   m_height = height;
+  m_format = format;
   Bind();
 
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
   UInt8 level = 0;
@@ -137,6 +138,10 @@ iSampler* GL4Texture2D::GetSampler()
 const iSampler* GL4Texture2D::GetSampler() const
 {
   return m_sampler;
+}
+ePixelFormat GL4Texture2D::GetFormat() const
+{
+  return m_format;
 }
 
 }

@@ -43,6 +43,8 @@ public:
 
   iSampler *CreateSampler() override;
   iTexture2D* CreateTexture(const iTexture2D::Descriptor & descriptor) override;
+  iTextureCube* CreateTexture(const iTextureCube::Descriptor & descriptor) override;
+  iRenderTarget2D* CreateRenderTarget(const iRenderTarget2D::Descriptor & descriptor) override;
   iDirectionalLight* CreateDirectionalLight() override;
   iPointLight* CreatePointLight() override;
 

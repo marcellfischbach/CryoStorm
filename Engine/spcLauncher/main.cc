@@ -20,6 +20,7 @@
 #include <spcCore/graphics/ipointlight.hh>
 #include <spcCore/graphics/irendermesh.hh>
 #include <spcCore/graphics/irenderpipeline.hh>
+#include <spcCore/graphics/irendertarget2d.hh>
 #include <spcCore/graphics/isampler.hh>
 #include <spcCore/graphics/samplers.hh>
 #include <spcCore/graphics/mesh.hh>
@@ -381,6 +382,43 @@ int main(int argc, char** argv)
     .SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(1.0f, 0.0f, 0.0f), spc::spcDeg2Rad(45.0f)))
     .Finish();
   world->Attach(sunEntity);
+
+
+
+  spc::iTexture2D::Descriptor rt_col_desc = {};
+  rt_col_desc.Width = width;
+  rt_col_desc.Height = height;
+  rt_col_desc.Format = spc::ePF_RGBA;
+  rt_col_desc.MipMaps = false;
+  spc::iTexture2D* color_texture = device->CreateTexture(rt_col_desc);
+
+  spc::iTexture2D::Descriptor rt_dpth_desc = {};
+  rt_dpth_desc.Width = 1024;
+  rt_dpth_desc.Height = 1024;
+  rt_dpth_desc.Format = spc::ePF_DepthStencil;
+  rt_dpth_desc.MipMaps = false;
+  spc::iTexture2D* depth_texture = device->CreateTexture(rt_dpth_desc);
+
+
+  spc::iRenderTarget2D::Descriptor rt_desc = {};
+  rt_desc.Width = width;
+  rt_desc.Height = height;
+
+  spc::iRenderTarget2D* renderTarget = device->CreateRenderTarget(rt_desc);
+  renderTarget->AddColorTexture(color_texture);
+  renderTarget->SetDepthTexture(depth_texture);
+  if (!renderTarget->Compile())
+  {
+    printf("Unable to compile render target: %s\n", renderTarget->GetCompileLog().c_str());
+  }
+  else
+  {
+    printf("Render target complete\n");
+  }
+
+
+
+
 
   spc::iRenderPipeline *renderPipeline = spc::ObjectRegistry::Get<spc::iRenderPipeline>();
 

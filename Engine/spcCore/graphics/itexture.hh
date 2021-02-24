@@ -5,6 +5,7 @@
 #include <spcCore/coreexport.hh>
 #include <spcCore/class.hh>
 #include <spcCore/graphics/etexturetype.hh>
+#include <spcCore/graphics/epixelformat.hh>
 
 namespace spc
 {
@@ -18,6 +19,8 @@ struct SPC_CORE_API iTexture : public SPC_SUPER(iObject)
   virtual ~iTexture() { }
 
   virtual eTextureType GetType() const = 0;
+
+  virtual ePixelFormat GetFormat() const = 0;
 
   virtual void SetSampler(iSampler *sampler) = 0;
   virtual iSampler* GetSampler() = 0;

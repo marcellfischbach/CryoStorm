@@ -64,8 +64,11 @@ set(SOURCES
         graphics/ipointlight.hh
         graphics/irendermesh.hh
         graphics/irenderpipeline.hh
+        graphics/irendertarget.hh
+        graphics/irendertarget2d.hh
         graphics/itexture.hh
         graphics/itexture2d.hh
+        graphics/itexturecube.hh
         graphics/isampler.hh
         graphics/ivertexbuffer.hh
         graphics/mesh.cc

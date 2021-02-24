@@ -13,6 +13,7 @@
 
 namespace spc::opengl
 {
+
 bool OpenGLModule::Register(int argc, char** argv)
 {
   register_classes();
