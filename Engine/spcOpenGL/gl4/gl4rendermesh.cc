@@ -144,6 +144,7 @@ void GL4RenderMeshGenerator::SetIndices(const std::vector<UInt32>& indices)
 
 iRenderMesh* GL4RenderMeshGenerator::Generate()
 {
+  glBindVertexArray(0);
   int numVertexDefs = 0;
   numVertexDefs += m_vertices2.empty() ? 0 : 1;
   numVertexDefs += m_vertices3.empty() ? 0 : 1;

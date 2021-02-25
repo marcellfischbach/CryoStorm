@@ -59,18 +59,18 @@ void UpdateEvents()
   {
     switch (evt.type)
     {
-      case SDL_KEYDOWN:keyboard.Update(evt.key.keysym.scancode, true);
-        break;
-      case SDL_KEYUP:keyboard.Update(evt.key.keysym.scancode, false);
-        break;
-      case SDL_MOUSEBUTTONDOWN:mouse.Update(evt.button.button, true);
-        break;
-      case SDL_MOUSEBUTTONUP:mouse.Update(evt.button.button, false);
-        break;
-      case SDL_MOUSEWHEEL:mouse.Update(evt.wheel.y, evt.wheel.x);
-        break;
-      case SDL_MOUSEMOTION:mouse.Update(evt.motion.x, evt.motion.y, evt.motion.xrel, evt.motion.yrel);
-        break;
+    case SDL_KEYDOWN:keyboard.Update(evt.key.keysym.scancode, true);
+      break;
+    case SDL_KEYUP:keyboard.Update(evt.key.keysym.scancode, false);
+      break;
+    case SDL_MOUSEBUTTONDOWN:mouse.Update(evt.button.button, true);
+      break;
+    case SDL_MOUSEBUTTONUP:mouse.Update(evt.button.button, false);
+      break;
+    case SDL_MOUSEWHEEL:mouse.Update(evt.wheel.y, evt.wheel.x);
+      break;
+    case SDL_MOUSEMOTION:mouse.Update(evt.motion.x, evt.motion.y, evt.motion.xrel, evt.motion.yrel);
+      break;
 
     }
   }
@@ -166,9 +166,9 @@ bool initialize_modules(int argc, char** argv)
   spc::Vector2i pos = settings.GetVector2i("pos");
   bool vsync = settings.GetBool("vsync");
   wnd = SDL_CreateWindow(title.c_str(),
-          pos.x, pos.y,
-          res.x, res.y, flags);
-//  wnd = SDL_CreateWindow("Spice", 0, 0, 1920, 1080, flags);
+    pos.x, pos.y,
+    res.x, res.y, flags);
+  //  wnd = SDL_CreateWindow("Spice", 0, 0, 1920, 1080, flags);
   context = SDL_GL_CreateContext(wnd);
   SDL_GL_SetSwapInterval(vsync ? 1 : 0);
 
@@ -252,8 +252,8 @@ void debug(spc::SpatialState* state, int indent)
     printf("  ");
   }
   printf("%s [%s]\n",
-         state->GetName().c_str(),
-         state->GetEntity() ? state->GetEntity()->GetName().c_str() : "n/a"
+    state->GetName().c_str(),
+    state->GetEntity() ? state->GetEntity()->GetName().c_str() : "n/a"
   );
   for (spc::Size i = 0, in = state->GetNumberOfChildren(); i < in; i++)
   {
@@ -326,7 +326,7 @@ int main(int argc, char** argv)
   int width, height;
   SDL_GetWindowSize(wnd, &width, &height);
 
-  float aspect = (float) height / (float) width;
+  float aspect = (float)height / (float)width;
 
 
   spc::Camera* camera = new spc::Camera();
@@ -342,8 +342,8 @@ int main(int argc, char** argv)
   spc::Entity* entity0 = new spc::Entity("Entity0");
   spc::StaticMeshState* meshState0 = new spc::StaticMeshState("StaticMesh0");
   meshState0->GetTransform()
-            .SetTranslation(spc::Vector3f(0, 0, 0))
-            .Finish();
+    .SetTranslation(spc::Vector3f(0, 0, 0))
+    .Finish();
   meshState0->SetMesh(mesh);
   meshState0->SetStatic(true);
   entity0->Attach(meshState0);
@@ -352,8 +352,8 @@ int main(int argc, char** argv)
   spc::Entity* entity1 = new spc::Entity("Entity1");
   spc::StaticMeshState* meshState1 = new spc::StaticMeshState("StaticMesh1");
   meshState1->GetTransform()
-            .SetTranslation(spc::Vector3f(0, 0, 0))
-            .Finish();
+    .SetTranslation(spc::Vector3f(0, 0, 0))
+    .Finish();
   meshState1->SetMesh(suzanne);
   meshState1->SetStatic(true);
   entity1->Attach(meshState1);
@@ -367,8 +367,8 @@ int main(int argc, char** argv)
   lightState->SetRange(500.0f);
   lightState->SetStatic(false);
   lightEntity->GetRoot()->GetTransform()
-             .SetTranslation(spc::Vector3f(-100.0f, 25.0f, 0.0f))
-             .Finish();
+    .SetTranslation(spc::Vector3f(-100.0f, 25.0f, 0.0f))
+    .Finish();
   world->Attach(lightEntity);
 
   spc::Entity* sunEntity = new spc::Entity("Sun");
@@ -383,10 +383,10 @@ int main(int argc, char** argv)
 
 
   spc::iSampler* colorSampler = device->CreateSampler();
-  colorSampler->SetFilterMode(spc::eFM_MinMagNearest);
+  colorSampler->SetFilterMode(spc::eFM_MinMagLinear);
 
   spc::iSampler* depthSampler = device->CreateSampler();
-  depthSampler->SetFilterMode(spc::eFM_MinMagNearest);
+  depthSampler->SetFilterMode(spc::eFM_MinMagLinear);
 
   spc::iTexture2D::Descriptor rt_col_desc = {};
   rt_col_desc.Width = width;
@@ -399,7 +399,7 @@ int main(int argc, char** argv)
   spc::iTexture2D::Descriptor rt_dpth_desc = {};
   rt_dpth_desc.Width = width;
   rt_dpth_desc.Height = height;
-  rt_dpth_desc.Format = spc::ePF_DepthStencil;
+  rt_dpth_desc.Format = spc::ePF_Depth;
   rt_dpth_desc.MipMaps = false;
   spc::iTexture2D* depth_texture = device->CreateTexture(rt_dpth_desc);
   depth_texture->SetSampler(depthSampler);
@@ -411,11 +411,11 @@ int main(int argc, char** argv)
 
   spc::iRenderTarget2D* renderTarget = device->CreateRenderTarget(rt_desc);
   renderTarget->AddColorTexture(color_texture);
-  //renderTarget->SetDepthTexture(depth_texture);
-  renderTarget->SetDepthBuffer(spc::ePF_DepthStencil);
+  renderTarget->SetDepthBuffer(spc::ePF_Depth);
   if (!renderTarget->Compile())
   {
     printf("Unable to compile render target: %s\n", renderTarget->GetCompileLog().c_str());
+    return 0;
   }
   else
   {
@@ -426,7 +426,7 @@ int main(int argc, char** argv)
 
 
 
-  spc::iRenderPipeline *renderPipeline = spc::ObjectRegistry::Get<spc::iRenderPipeline>();
+  spc::iRenderPipeline* renderPipeline = spc::ObjectRegistry::Get<spc::iRenderPipeline>();
 
   std::string title = spc::Settings("display.spc").GetText("title");
   float rot = 0.0f;
@@ -435,6 +435,8 @@ int main(int argc, char** argv)
   spc::UInt32 nextSec = SDL_GetTicks() + 1000;
   spc::UInt32 frames = 0;
   spc::UInt32 lastTime = SDL_GetTicks();
+
+  bool offscreen = true;
   while (true)
   {
     Uint32 time = SDL_GetTicks();
@@ -444,7 +446,7 @@ int main(int argc, char** argv)
       char buffer[1024];
       sprintf_s<1024>(buffer, "%s  %d FPS", title.c_str(), frames);
       SDL_SetWindowTitle(wnd, buffer);
-      printf ("%s\n", buffer);
+      printf("%s\n", buffer);
       frames = 0;
     }
     else
@@ -474,8 +476,8 @@ int main(int argc, char** argv)
     entRot += 0.01f;
 
     lightEntity->GetRoot()->GetTransform()
-               .SetTranslation(spc::Vector3f(spc::spcCos(entRot) * 5.0f, 5.0f, spc::spcSin(entRot) * 5.0f))
-               .Finish();
+      .SetTranslation(spc::Vector3f(spc::spcCos(entRot) * 5.0f, 5.0f, spc::spcSin(entRot) * 5.0f))
+      .Finish();
 
     float dist = 4.0f;
     camera->SetSpot(spc::Vector3f(0, 0.0f, 0.0f));
@@ -483,25 +485,19 @@ int main(int argc, char** argv)
 
     rot += 0.005f;
 
-    world->Update((float) deltaTime / 1000.0f);
+    world->Update((float)deltaTime / 1000.0f);
     world->UpdateTransformation();
-#define OFFSCREEN
 
-#ifdef OFFSCREEN
+
     device->SetRenderTarget(renderTarget);
-#else
-    device->SetRenderTarget(nullptr);
-#endif
-    device->SetViewport(0, 0, width, height);
-    device->Clear(true, spc::Color4f(0.0f, 0.0, 0.0, 1.0f), true, 1.0f, false, 0);
+    device->Clear(true, spc::Color4f(0.0f, 0.0, 0.0, 1.0f), true, 1.0f, true, 0);
     renderPipeline->Render(*camera, projector, device, world->GetScene());
 
-#ifdef OFFSCREEN
+
     device->SetRenderTarget(nullptr);
     device->SetViewport(0, 0, width, height);
-    device->Clear(true, spc::Color4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, false, 0);
+    device->Clear(true, spc::Color4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, true, 0);
     device->RenderFullscreen(color_texture);
-#endif
 
     SDL_GL_SwapWindow(wnd);
 

@@ -21,6 +21,9 @@ public:
 
   bool Initialize (UInt16 width, UInt16 height);
 
+  UInt16 GetWidth() const override;
+  UInt16 GetHeight() const override;
+
   void SetDepthTexture(iTexture2D* depthTexture) override;
   void SetDepthBuffer(ePixelFormat format) override;
   void AddColorTexture(iTexture2D* colorTexture) override;

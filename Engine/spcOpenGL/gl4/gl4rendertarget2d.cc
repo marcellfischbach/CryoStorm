@@ -41,6 +41,16 @@ void GL4RenderTarget2D::Bind()
   glBindFramebuffer(GL_FRAMEBUFFER, m_name);
 }
 
+UInt16 GL4RenderTarget2D::GetWidth() const
+{
+  return m_width;
+}
+
+
+UInt16 GL4RenderTarget2D::GetHeight() const
+{
+  return m_height;
+}
 
 bool GL4RenderTarget2D::Initialize(UInt16 width, UInt16 height)
 {
@@ -60,17 +70,27 @@ void GL4RenderTarget2D::SetDepthTexture(iTexture2D* depthTexture)
 
 
   GL4Texture2D* txt = depthTexture->Query<GL4Texture2D>();
-  SPC_SET(m_depthTexture, txt);
 
 
-  if (depthTexture->GetFormat() != ePF_DepthStencil)
+  GLenum attachment = 0;
+  switch (depthTexture->GetFormat())
   {
+  case ePF_Depth:
+    attachment = GL_DEPTH_ATTACHMENT;
+    break;
+  case ePF_DepthStencil:
+    attachment = GL_DEPTH_STENCIL_ATTACHMENT;
+    break;
+  default:
     return;
   }
 
+  SPC_SET(m_depthTexture, txt);
+
+
 
   glFramebufferTexture(GL_FRAMEBUFFER,
-    GL_DEPTH_STENCIL_ATTACHMENT,
+    attachment,
     txt->GetName(),
     0);
 
@@ -78,14 +98,26 @@ void GL4RenderTarget2D::SetDepthTexture(iTexture2D* depthTexture)
 
 void GL4RenderTarget2D::SetDepthBuffer(ePixelFormat format)
 {
-  if (format != ePF_DepthStencil)
+
+  GLenum attachment = 0;
+  GLenum internalFormat = 0;
+  switch (format)
   {
+  case ePF_Depth:
+    internalFormat = GL_DEPTH_COMPONENT;
+    attachment = GL_DEPTH_ATTACHMENT;
+    break;
+  case ePF_DepthStencil:
+    internalFormat = GL_DEPTH_STENCIL;
+    attachment = GL_DEPTH_STENCIL_ATTACHMENT;
+    break;
+  default:
     return;
   }
   glGenRenderbuffers(1, &m_depthBuffer);
   glBindRenderbuffer(GL_RENDERBUFFER, m_depthBuffer);
-  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_STENCIL, m_width, m_height);
-  glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_depthBuffer);
+  glRenderbufferStorage(GL_RENDERBUFFER, internalFormat, m_width, m_height);
+  glFramebufferRenderbuffer(GL_FRAMEBUFFER, attachment, GL_RENDERBUFFER, m_depthBuffer);
 }
 
 void GL4RenderTarget2D::AddColorTexture(iTexture2D* colorTexture)

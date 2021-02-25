@@ -348,6 +348,7 @@ void GL4Device::SetRenderTarget(iRenderTarget* renderTarget)
     {
       GL4RenderTarget2D* rt2d = static_cast<GL4RenderTarget2D*>(renderTarget);
       rt2d->Bind();
+      SetViewport(0, 0, rt2d->GetWidth(), rt2d->GetHeight());
       break;
     }
     default:
@@ -359,13 +360,16 @@ void GL4Device::SetRenderTarget(iRenderTarget* renderTarget)
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
   }
 
+  glEnable(GL_DEPTH_TEST);
+  glDepthFunc(GL_LEQUAL);
+
 
   glEnable(GL_CULL_FACE);
   glFrontFace(GL_CW);
   glCullFace(GL_BACK);
-  glEnable(GL_DEPTH_TEST);
-  glDepthFunc(GL_LEQUAL);
 
+  glColorMask(true, true, true, true);
+  glDepthMask(true);
 }
 
 
@@ -481,7 +485,6 @@ void GL4Device::RenderFullscreen(iTexture2D* texture)
 {
   iRenderMesh* mesh = FullscreenBlitRenderMesh();
   GL4Program* prog = FullscreenBlitProgram();
-
   SetShader(prog);
   ResetTextures();
   eTextureUnit unit = BindTexture(texture);

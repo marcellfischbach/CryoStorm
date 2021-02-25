@@ -1,5 +1,5 @@
 sampler name:"OffscreenDepth"
-		filter: "MinMagNearest"
+		filter: "Anisotropic"
 		anisotropy: 16
 		minLOD: -1000
 		maxLOD: 1000

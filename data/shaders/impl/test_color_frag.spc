@@ -31,7 +31,7 @@ void main()
     frag_color *= texture(spc_Diffuse, texCoord);
     spc_FragColor = frag_color;
     //  spc_FragColor = vec4(norm * 0.5 + 0.5, 1.0);
-    spc_FragColor = spc_Color;
+    // spc_FragColor = spc_Color;
 }
 
 "

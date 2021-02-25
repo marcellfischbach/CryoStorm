@@ -21,6 +21,9 @@ struct SPC_CORE_API iRenderTarget2D : public SPC_SUPER(iRenderTarget)
   SPC_CLASS_GEN;
   ~iRenderTarget2D() override = default;
 
+  virtual UInt16 GetWidth() const = 0;
+  virtual UInt16 GetHeight() const = 0;
+
   virtual void SetDepthTexture(iTexture2D* depthTexture) = 0;
   virtual void SetDepthBuffer(ePixelFormat format) = 0;
 
