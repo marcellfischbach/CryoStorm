@@ -49,6 +49,7 @@ struct SPC_CORE_API iDevice : public SPC_SUPER(iObject)
   virtual Matrix4f& GetOrthographicProjectionInv(float l, float r, float b, float t, float n, float f, Matrix4f& m) = 0;
 
   virtual void SetShader(iShader* shader) = 0;
+  virtual void SetRenderTarget(iRenderTarget* target) = 0;
 
   virtual iSampler* CreateSampler() = 0;
   virtual iTexture2D* CreateTexture(const iTexture2D::Descriptor& descriptor) = 0;
@@ -63,6 +64,7 @@ struct SPC_CORE_API iDevice : public SPC_SUPER(iObject)
   virtual eTextureUnit BindTexture(iTexture* texture) = 0;
   virtual bool BindMaterial(iMaterial* material, eRenderPass pass) = 0;
   virtual void Render(iRenderMesh* mesh, eRenderPass pass) = 0;
+  virtual void RenderFullscreen(iTexture2D* texture) = 0;
 
   virtual void BindForwardLight(const iLight* light, Size idx) = 0;
   virtual void FinishForwardLights(Size numLights) = 0;

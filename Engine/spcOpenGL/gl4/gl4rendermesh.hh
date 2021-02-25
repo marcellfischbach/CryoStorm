@@ -50,7 +50,9 @@ public:
   GL4RenderMeshGenerator();
   virtual ~GL4RenderMeshGenerator();
 
+  virtual void SetVertices(const std::vector<Vector2f> & vertices);
   virtual void SetVertices(const std::vector<Vector3f> & vertices);
+  virtual void SetVertices(const std::vector<Vector4f> & vertices);
   virtual void SetNormals(const std::vector<Vector3f> & normals);
   virtual void SetColors(const std::vector<Color4f> & colors);
   virtual void SetTangents(const std::vector<Vector3f> & tangents);
@@ -61,7 +63,9 @@ public:
   virtual void SetIndices(const std::vector<UInt32> & indices);
   virtual iRenderMesh* Generate();
 private:
-  std::vector<Vector3f> m_vertices;
+  std::vector<Vector2f> m_vertices2;
+  std::vector<Vector3f> m_vertices3;
+  std::vector<Vector4f> m_vertices4;
   std::vector<Vector3f> m_normals;
   std::vector<Color4f> m_colors;
   std::vector<Vector3f> m_tangents;

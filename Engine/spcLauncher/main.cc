@@ -280,8 +280,6 @@ int main(int argc, char** argv)
   spc::iDevice* device = spc::ObjectRegistry::Get<spc::iDevice>();
 
   spc::iShader* shader = spc::AssetManager::Get()->Load<spc::iShader>(spc::ResourceLocator("/shaders/test_color_program.spc"));
-  shader->RegisterAttribute("Diffuse");
-  shader->RegisterAttribute("Color");
 
 
   spc::iSampler* sampler = spc::AssetManager::Get()->Load<spc::iSampler>(spc::ResourceLocator("sampler_default.spc"));
@@ -310,11 +308,11 @@ int main(int argc, char** argv)
   material->RegisterAttribute("Diffuse");
   material->RegisterAttribute("Color");
   material->Set(material->IndexOf("Diffuse"), texture);
-  material->Set(material->IndexOf("Color"), spc::Color4f(1, 1, 1, 1));
+  material->Set(material->IndexOf("Color"), spc::Color4f(1, 0, 0, 1));
 
   spc::MaterialInstance* instance = new spc::MaterialInstance();
   instance->SetMaterial(material);
-  instance->Set(instance->IndexOf("Color"), spc::Color4f(0, 1, 1, 1));
+  instance->Set(instance->IndexOf("Color"), spc::Color4f(0, 0, 1, 1));
 
 
   spc::iRenderMesh* renderMesh = create_plane_mesh();
@@ -336,7 +334,7 @@ int main(int argc, char** argv)
   projector.UpdatePerspective(spc::spcDeg2Rad(90.0f), aspect, 1.0f, 1024.0f);
 
 
-  spc::Mesh* suzanne = spc::AssetManager::Get()->Load<spc::Mesh>(spc::ResourceLocator("suzanne.fbx"));
+  spc::Mesh* suzanne = spc::AssetManager::Get()->Load<spc::Mesh>(spc::ResourceLocator("file:///suzanne.fbx"));
   spc::Mesh* cube = spc::AssetManager::Get()->Load<spc::Mesh>(spc::ResourceLocator("cube.fbx"));
   suzanne->SetDefaultMaterial(0, material);
   cube->SetDefaultMaterial(0, material);
@@ -384,6 +382,11 @@ int main(int argc, char** argv)
   world->Attach(sunEntity);
 
 
+  spc::iSampler* colorSampler = device->CreateSampler();
+  colorSampler->SetFilterMode(spc::eFM_MinMagNearest);
+
+  spc::iSampler* depthSampler = device->CreateSampler();
+  depthSampler->SetFilterMode(spc::eFM_MinMagNearest);
 
   spc::iTexture2D::Descriptor rt_col_desc = {};
   rt_col_desc.Width = width;
@@ -391,13 +394,15 @@ int main(int argc, char** argv)
   rt_col_desc.Format = spc::ePF_RGBA;
   rt_col_desc.MipMaps = false;
   spc::iTexture2D* color_texture = device->CreateTexture(rt_col_desc);
+  color_texture->SetSampler(colorSampler);
 
   spc::iTexture2D::Descriptor rt_dpth_desc = {};
-  rt_dpth_desc.Width = 1024;
-  rt_dpth_desc.Height = 1024;
+  rt_dpth_desc.Width = width;
+  rt_dpth_desc.Height = height;
   rt_dpth_desc.Format = spc::ePF_DepthStencil;
   rt_dpth_desc.MipMaps = false;
   spc::iTexture2D* depth_texture = device->CreateTexture(rt_dpth_desc);
+  depth_texture->SetSampler(depthSampler);
 
 
   spc::iRenderTarget2D::Descriptor rt_desc = {};
@@ -406,7 +411,8 @@ int main(int argc, char** argv)
 
   spc::iRenderTarget2D* renderTarget = device->CreateRenderTarget(rt_desc);
   renderTarget->AddColorTexture(color_texture);
-  renderTarget->SetDepthTexture(depth_texture);
+  //renderTarget->SetDepthTexture(depth_texture);
+  renderTarget->SetDepthBuffer(spc::ePF_DepthStencil);
   if (!renderTarget->Compile())
   {
     printf("Unable to compile render target: %s\n", renderTarget->GetCompileLog().c_str());
@@ -456,9 +462,6 @@ int main(int argc, char** argv)
       break;
     }
 
-
-    glViewport(0, 0, width, height);
-    device->Clear(true, spc::Color4f(0.0f, 0.0, 0.0, 0.0f), true, 1.0f, false, 0);
     /*
     entityX->GetRoot()->GetTransform()
       .SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(0.0f, 1.0f, 0.0f), entRot * 2))
@@ -474,7 +477,7 @@ int main(int argc, char** argv)
                .SetTranslation(spc::Vector3f(spc::spcCos(entRot) * 5.0f, 5.0f, spc::spcSin(entRot) * 5.0f))
                .Finish();
 
-    float dist = 10.0f;
+    float dist = 4.0f;
     camera->SetSpot(spc::Vector3f(0, 0.0f, 0.0f));
     camera->SetEye(spc::Vector3f(spc::spcSin(rot) * dist, dist, spc::spcCos(rot) * dist));
 
@@ -482,7 +485,23 @@ int main(int argc, char** argv)
 
     world->Update((float) deltaTime / 1000.0f);
     world->UpdateTransformation();
+#define OFFSCREEN
+
+#ifdef OFFSCREEN
+    device->SetRenderTarget(renderTarget);
+#else
+    device->SetRenderTarget(nullptr);
+#endif
+    device->SetViewport(0, 0, width, height);
+    device->Clear(true, spc::Color4f(0.0f, 0.0, 0.0, 1.0f), true, 1.0f, false, 0);
     renderPipeline->Render(*camera, projector, device, world->GetScene());
+
+#ifdef OFFSCREEN
+    device->SetRenderTarget(nullptr);
+    device->SetViewport(0, 0, width, height);
+    device->Clear(true, spc::Color4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, false, 0);
+    device->RenderFullscreen(color_texture);
+#endif
 
     SDL_GL_SwapWindow(wnd);
 

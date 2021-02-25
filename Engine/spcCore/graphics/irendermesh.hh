@@ -7,6 +7,7 @@
 #include <spcCore/math/boundingbox.hh>
 #include <spcCore/math/vector2f.hh>
 #include <spcCore/math/vector3f.hh>
+#include <spcCore/math/vector4f.hh>
 #include <spcCore/math/color4f.hh>
 #include <spcCore/graphics/erenderpass.hh>
 #include <vector>
@@ -36,7 +37,9 @@ struct SPC_CORE_API iRenderMeshGenerator : SPC_SUPER(iObject)
 
   virtual ~iRenderMeshGenerator() { }
 
+  virtual void SetVertices(const std::vector<Vector2f> & vertices) = 0;
   virtual void SetVertices(const std::vector<Vector3f> & vertices) = 0;
+  virtual void SetVertices(const std::vector<Vector4f> & vertices) = 0;
   virtual void SetNormals(const std::vector<Vector3f> & normals) = 0;
   virtual void SetColors(const std::vector<Color4f> & colors) = 0;
   virtual void SetTangents(const std::vector<Vector3f> & tangents) = 0;

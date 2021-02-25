@@ -86,9 +86,19 @@ GL4RenderMeshGenerator::GL4RenderMeshGenerator()
 GL4RenderMeshGenerator::~GL4RenderMeshGenerator() = default;
 
 
+void GL4RenderMeshGenerator::SetVertices(const std::vector<Vector2f>& vertices)
+{
+  m_vertices2= vertices;
+}
+
 void GL4RenderMeshGenerator::SetVertices(const std::vector<Vector3f>& vertices)
 {
-  m_vertices = vertices;
+  m_vertices3 = vertices;
+}
+
+void GL4RenderMeshGenerator::SetVertices(const std::vector<Vector4f>& vertices)
+{
+  m_vertices4 = vertices;
 }
 
 
@@ -134,19 +144,43 @@ void GL4RenderMeshGenerator::SetIndices(const std::vector<UInt32>& indices)
 
 iRenderMesh* GL4RenderMeshGenerator::Generate()
 {
-  if (m_indices.empty() || m_vertices.empty())
+  int numVertexDefs = 0;
+  numVertexDefs += m_vertices2.empty() ? 0 : 1;
+  numVertexDefs += m_vertices3.empty() ? 0 : 1;
+  numVertexDefs += m_vertices4.empty() ? 0 : 1;
+  if (m_indices.empty() || numVertexDefs != 1)
   {
     return nullptr;
   }
 
   std::vector<VertexDeclaration::Attribute> attributes;
   UInt16 offset = 0;
-  attributes.emplace_back(VertexDeclaration::Attribute(0, eVS_Vertices, 3, eDT_Float, 0, 0));
-  offset += 3 * sizeof(float);
-  UInt16 count = 3;
+  UInt16 count = 0;
+  Size vertexCount = 0;
+  if (!m_vertices2.empty())
+  {
+    attributes.emplace_back(VertexDeclaration::Attribute(0, eVS_Vertices, 2, eDT_Float, 0, 0));
+    offset += 2 * sizeof(float);
+    count += 2;
+    vertexCount = m_vertices2.size();
+  }
+  else if (!m_vertices3.empty())
+  {
+    attributes.emplace_back(VertexDeclaration::Attribute(0, eVS_Vertices, 3, eDT_Float, 0, 0));
+    offset += 3 * sizeof(float);
+    count += 3;
+    vertexCount = m_vertices3.size();
+  }
+  else if (!m_vertices4.empty())
+  {
+    attributes.emplace_back(VertexDeclaration::Attribute(0, eVS_Vertices, 4, eDT_Float, 0, 0));
+    offset += 4 * sizeof(float);
+    count += 4;
+    vertexCount = m_vertices4.size();
+  }
   if (!m_normals.empty())
   {
-    if (m_normals.size() != m_vertices.size())
+    if (m_normals.size() != vertexCount)
     {
       return nullptr;
     }
@@ -157,7 +191,7 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
 
   if (!m_tangents.empty())
   {
-    if (m_tangents.size() != m_vertices.size())
+    if (m_tangents.size() != vertexCount)
     {
       return nullptr;
     }
@@ -167,7 +201,7 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
   }
   if (!m_uv0.empty())
   {
-    if (m_uv0.size() != m_vertices.size())
+    if (m_uv0.size() != vertexCount)
     {
       return nullptr;
     }
@@ -177,7 +211,7 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
   }
   if (!m_uv1.empty())
   {
-    if (m_uv1.size() != m_vertices.size())
+    if (m_uv1.size() != vertexCount)
     {
       return nullptr;
     }
@@ -187,7 +221,7 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
   }
   if (!m_uv2.empty())
   {
-    if (m_uv2.size() != m_vertices.size())
+    if (m_uv2.size() != vertexCount)
     {
       return nullptr;
     }
@@ -197,7 +231,7 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
   }
   if (!m_uv3.empty())
   {
-    if (m_uv3.size() != m_vertices.size())
+    if (m_uv3.size() != vertexCount)
     {
       return nullptr;
     }
@@ -207,7 +241,7 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
   }
   if (!m_colors.empty())
   {
-    if (m_colors.size() != m_vertices.size())
+    if (m_colors.size() != vertexCount)
     {
       return nullptr;
     }
@@ -223,17 +257,35 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
   BoundingBox bbox;
   bbox.Clear();
   VertexDeclaration vd(attributes);
-  auto vBuffer = new float[count * m_vertices.size()];
+  auto vBuffer = new float[count * vertexCount];
 
-  for (Size i = 0, c = 0, in = m_vertices.size(); i < in; ++i)
+  for (Size i = 0, c = 0; i < vertexCount; ++i)
   {
+    if (!m_vertices2.empty())
     {
-      Vector3f& v = m_vertices[i];
+      Vector2f& v = m_vertices2[i];
+      vBuffer[c++] = v.x;
+      vBuffer[c++] = v.y;
+      bbox.Add(Vector3f(v.x, v.y, 0.0f));
+    }
+    else if (!m_vertices3.empty())
+    {
+      Vector3f& v = m_vertices3[i];
       vBuffer[c++] = v.x;
       vBuffer[c++] = v.y;
       vBuffer[c++] = v.z;
       bbox.Add(v);
     }
+    else if (!m_vertices4.empty())
+    {
+      Vector4f& v = m_vertices4[i];
+      vBuffer[c++] = v.x;
+      vBuffer[c++] = v.y;
+      vBuffer[c++] = v.z;
+      vBuffer[c++] = v.w;
+      bbox.Add(v.AsVector3f());
+    }
+
     if (!m_normals.empty())
     {
       Vector3f& v = m_normals[i];
@@ -285,13 +337,13 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
 
   auto vb = new GL4VertexBuffer();
   vb->Bind();
-  vb->CreateForRendering(m_vertices.size() * offset, eBU_Static);
-  vb->Copy(vBuffer, m_vertices.size() * offset);
+  vb->CreateForRendering(vertexCount* offset, eBU_Static);
+  vb->Copy(vBuffer, vertexCount* offset);
   delete[] vBuffer;
 
   auto ib = new GL4IndexBuffer();
   eDataType indexType;
-  if (m_vertices.size() >= 65536 || true)
+  if (vertexCount >= 65536 || true)
   {
     ib->Bind();
     ib->CreateForRendering(m_indices.size() * sizeof(UInt32), eBU_Static);

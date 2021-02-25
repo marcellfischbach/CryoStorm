@@ -11,6 +11,7 @@
 namespace spc::opengl
 {
 
+class GL4Program;
 
 SPC_CLASS()
 class SPC_OGL_API GL4Device : public SPC_SUPER(iDevice)
@@ -40,6 +41,7 @@ public:
 
 
   void SetShader(iShader * shader) override;
+  void SetRenderTarget(iRenderTarget * target) override;
 
   iSampler *CreateSampler() override;
   iTexture2D* CreateTexture(const iTexture2D::Descriptor & descriptor) override;
@@ -54,6 +56,7 @@ public:
   eTextureUnit BindTexture(iTexture * texture) override;
   bool BindMaterial(iMaterial * material, eRenderPass pass) override;
   void Render(iRenderMesh * mesh, eRenderPass pass) override;
+  void RenderFullscreen(iTexture2D * texture) override;
 
   void BindForwardLight(const iLight * light, Size idx);
   void FinishForwardLights(Size numLights);
@@ -61,6 +64,7 @@ public:
   void BindMatrices();
 
 private:
+  iRenderTarget* m_renderTarget;
   iShader* m_shader;
   eTextureUnit ShiftTextureUnit();
 
@@ -110,6 +114,19 @@ private:
   bool m_modelViewMatrixInvDirty;
   bool m_viewProjectionMatrixInvDirty;
   bool m_modelViewProjectionMatrixInvDirty;
+
+
+  /** 
+   * \name Fullscreen Rendering
+   * @{
+   */
+  GL4Program* FullscreenBlitProgram();
+  GL4Program* m_fullscreenBlitProgram;
+  iRenderMesh* FullscreenBlitRenderMesh();
+  iRenderMesh* m_fullscreenBlitRenderMesh;
+  /**
+   * @}
+   */
 };
 
 

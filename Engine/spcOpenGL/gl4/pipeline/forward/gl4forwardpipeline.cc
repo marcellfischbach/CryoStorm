@@ -69,7 +69,7 @@ void GL4ForwardPipeline::Render(Camera& camera, Projector& projector, iDevice* d
     }
   );
 
-  scene->Render(device, spc::eRP_Forward);
+  //scene->Render(device, spc::eRP_Forward);
 
 }
 

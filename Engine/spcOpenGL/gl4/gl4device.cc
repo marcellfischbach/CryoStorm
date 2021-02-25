@@ -3,6 +3,7 @@
 #include <spcOpenGL/gl4/gl4directionallight.hh>
 #include <spcOpenGL/gl4/gl4pointlight.hh>
 #include <spcOpenGL/gl4/gl4rendertarget2d.hh>
+#include <spcOpenGL/gl4/gl4rendermesh.hh>
 #include <spcOpenGL/gl4/gl4sampler.hh>
 #include <spcOpenGL/gl4/gl4texture2d.hh>
 #include <spcOpenGL/gl4/gl4texturecube.hh>
@@ -10,6 +11,7 @@
 #include <spcCore/objectregistry.hh>
 #include <spcCore/graphics/samplers.hh>
 #include <spcCore/graphics/shading/ishaderattribute.hh>
+#include <spcCore/resource/assetmanager.hh>
 #include <GL/glew.h>
 #include <iostream>
 
@@ -19,17 +21,20 @@ namespace spc::opengl
 {
 
 GL4Device::GL4Device()
-        : iDevice()
-        , m_shader(nullptr)
-        , m_modelViewMatrixDirty(false)
-        , m_viewProjectionMatrixDirty(false)
-        , m_modelViewProjectionMatrixDirty(false)
-        , m_modelMatrixInvDirty(false)
-        , m_viewMatrixInvDirty(false)
-        , m_projectionMatrixInvDirty(false)
-        , m_modelViewMatrixInvDirty(false)
-        , m_viewProjectionMatrixInvDirty(false)
-        , m_modelViewProjectionMatrixInvDirty(false)
+  : iDevice()
+  , m_renderTarget(nullptr)
+  , m_shader(nullptr)
+  , m_modelViewMatrixDirty(false)
+  , m_viewProjectionMatrixDirty(false)
+  , m_modelViewProjectionMatrixDirty(false)
+  , m_modelMatrixInvDirty(false)
+  , m_viewMatrixInvDirty(false)
+  , m_projectionMatrixInvDirty(false)
+  , m_modelViewMatrixInvDirty(false)
+  , m_viewProjectionMatrixInvDirty(false)
+  , m_modelViewProjectionMatrixInvDirty(false)
+  , m_fullscreenBlitProgram(nullptr)
+  , m_fullscreenBlitRenderMesh(nullptr)
 {
   SPC_CLASS_GEN_CONSTR;
 }
@@ -49,10 +54,10 @@ bool GL4Device::Initialize()
   }
 
   printf("OpenGL capabilities:\n");
-  printf("  Vendor  : %s\n", (const char*) glGetString(GL_VENDOR));
-  printf("  Renderer: %s\n", (const char*) glGetString(GL_RENDERER));
-  printf("  Version : %s\n", (const char*) glGetString(GL_VERSION));
-  printf("  GLSL    : %s\n", (const char*) glGetString(GL_SHADING_LANGUAGE_VERSION));
+  printf("  Vendor  : %s\n", (const char*)glGetString(GL_VENDOR));
+  printf("  Renderer: %s\n", (const char*)glGetString(GL_RENDERER));
+  printf("  Version : %s\n", (const char*)glGetString(GL_VERSION));
+  printf("  GLSL    : %s\n", (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION));
 
   glPixelStorei(GL_PACK_ALIGNMENT, 1);
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -86,11 +91,11 @@ void GL4Device::SetViewport(Int16 x, Int16 y, UInt16 width, UInt16 height)
 }
 
 void GL4Device::Clear(bool clearColor,
-                      const Color4f& color,
-                      bool clearDepth,
-                      float depth,
-                      bool clearStencil,
-                      UInt8 stencil)
+  const Color4f& color,
+  bool clearDepth,
+  float depth,
+  bool clearStencil,
+  UInt8 stencil)
 {
   GLenum flags = 0;
   if (clearColor)
@@ -327,6 +332,42 @@ void GL4Device::SetShader(iShader* shader)
 
 }
 
+void GL4Device::SetRenderTarget(iRenderTarget* renderTarget)
+{
+  if (m_renderTarget == renderTarget && false)
+  {
+    return;
+  }
+
+  m_renderTarget = renderTarget;
+  if (m_renderTarget)
+  {
+    switch (renderTarget->GetType())
+    {
+    case eTT_Texture2D:
+    {
+      GL4RenderTarget2D* rt2d = static_cast<GL4RenderTarget2D*>(renderTarget);
+      rt2d->Bind();
+      break;
+    }
+    default:
+      break;
+    }
+  }
+  else
+  {
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  }
+
+
+  glEnable(GL_CULL_FACE);
+  glFrontFace(GL_CW);
+  glCullFace(GL_BACK);
+  glEnable(GL_DEPTH_TEST);
+  glDepthFunc(GL_LEQUAL);
+
+}
+
 
 iSampler* GL4Device::CreateSampler()
 {
@@ -337,10 +378,10 @@ iTexture2D* GL4Device::CreateTexture(const iTexture2D::Descriptor& descriptor)
 {
   GL4Texture2D* texture = new GL4Texture2D();
   texture->Initialize(
-          descriptor.Width,
-          descriptor.Height,
-          descriptor.Format,
-          descriptor.MipMaps);
+    descriptor.Width,
+    descriptor.Height,
+    descriptor.Format,
+    descriptor.MipMaps);
   texture->SetSampler(ObjectRegistry::Get<Samplers>()->GetDefault());
   return texture;
 }
@@ -350,9 +391,9 @@ iTextureCube* GL4Device::CreateTexture(const iTextureCube::Descriptor& descripto
 {
   GL4TextureCube* texture = new GL4TextureCube();
   texture->Initialize(
-          descriptor.Size,
-          descriptor.Format,
-          descriptor.MipMaps);
+    descriptor.Size,
+    descriptor.Format,
+    descriptor.MipMaps);
   texture->SetSampler(ObjectRegistry::Get<Samplers>()->GetDefault());
   return texture;
 }
@@ -413,9 +454,9 @@ eTextureUnit GL4Device::BindTexture(iTexture* texture)
   SetSampler(unit, texture->GetSampler());
   switch (texture->GetType())
   {
-    case eTT_Texture2D:
-      static_cast<GL4Texture2D*>(texture)->Bind();
-      break;
+  case eTT_Texture2D:
+    static_cast<GL4Texture2D*>(texture)->Bind();
+    break;
   }
 
 
@@ -436,6 +477,23 @@ void GL4Device::Render(iRenderMesh* mesh, eRenderPass pass)
   }
 }
 
+void GL4Device::RenderFullscreen(iTexture2D* texture)
+{
+  iRenderMesh* mesh = FullscreenBlitRenderMesh();
+  GL4Program* prog = FullscreenBlitProgram();
+
+  SetShader(prog);
+  ResetTextures();
+  eTextureUnit unit = BindTexture(texture);
+  iShaderAttribute* attrib = prog->GetShaderAttribute("Diffuse");
+  if (attrib)
+  {
+    attrib->Bind(unit);
+  }
+  mesh->Render(this, eRP_Forward);
+}
+
+
 
 void GL4Device::BindForwardLight(const iLight* light, Size idx)
 {
@@ -448,44 +506,62 @@ void GL4Device::BindForwardLight(const iLight* light, Size idx)
   iShaderAttribute* lightVector = m_shader->GetShaderAttribute(eSA_LightVector);
   iShaderAttribute* lightRange = m_shader->GetShaderAttribute(eSA_LightRange);
   if (lightColor)
-  { lightColor->SetArrayIndex(idx); }
+  {
+    lightColor->SetArrayIndex(idx);
+  }
   if (lightVector)
-  { lightVector->SetArrayIndex(idx); }
+  {
+    lightVector->SetArrayIndex(idx);
+  }
   if (lightRange)
-  { lightRange->SetArrayIndex(idx); }
+  {
+    lightRange->SetArrayIndex(idx);
+  }
 
 
   if (light)
   {
     if (lightColor)
-    { lightColor->Bind(light->GetColor()); }
+    {
+      lightColor->Bind(light->GetColor());
+    }
 
     switch (light->GetType())
     {
-      case eLT_Point:
+    case eLT_Point:
+    {
+      auto pointLight = static_cast<const iPointLight*>(light);
+      if (lightVector)
       {
-        auto pointLight = static_cast<const iPointLight*>(light);
-        if (lightVector)
-        { lightVector->Bind(Vector4f(pointLight->GetPosition(), 1.0f)); }
-        if (lightRange)
-        { lightRange->Bind(pointLight->GetRange()); }
+        lightVector->Bind(Vector4f(pointLight->GetPosition(), 1.0f));
       }
-        break;
-      case eLT_Directional:
+      if (lightRange)
       {
-        auto directionalLight = static_cast<const iDirectionalLight*>(light);
-        if (lightVector)
-        { lightVector->Bind(Vector4f(directionalLight->GetDirection(), 0.0f)); }
+        lightRange->Bind(pointLight->GetRange());
       }
-        break;
+    }
+    break;
+    case eLT_Directional:
+    {
+      auto directionalLight = static_cast<const iDirectionalLight*>(light);
+      if (lightVector)
+      {
+        lightVector->Bind(Vector4f(directionalLight->GetDirection(), 0.0f));
+      }
+    }
+    break;
     }
   }
   else
   {
     if (lightColor)
-    { lightColor->Bind(Color4f(0.0f, 0.0f, 0.0f)); }
+    {
+      lightColor->Bind(Color4f(0.0f, 0.0f, 0.0f));
+    }
     if (lightVector)
-    { lightVector->Bind(Vector4f(0.0f, 0.0f, 0.0f, 0.0f)); }
+    {
+      lightVector->Bind(Vector4f(0.0f, 0.0f, 0.0f, 0.0f));
+    }
   }
 }
 
@@ -496,7 +572,7 @@ void GL4Device::FinishForwardLights(Size numLights)
     iShaderAttribute* count = m_shader->GetShaderAttribute(eSA_LightCount);
     if (count)
     {
-      count->Bind((int) numLights);
+      count->Bind((int)numLights);
     }
   }
 }
@@ -680,6 +756,48 @@ void GL4Device::UpdateModelViewProjectionMatrixInv()
   }
   m_modelViewProjectionMatrix.Inverted(m_modelViewProjectionMatrixInv);
   m_modelViewProjectionMatrixInvDirty = false;
+}
+
+GL4Program* GL4Device::FullscreenBlitProgram()
+{
+  if (!m_fullscreenBlitProgram)
+  {
+    m_fullscreenBlitProgram = AssetManager::Get()->Load<GL4Program>("file:///engine/opengl/gl4/fullscreen_blit.spc");
+  }
+  return m_fullscreenBlitProgram;
+}
+
+iRenderMesh* GL4Device::FullscreenBlitRenderMesh()
+{
+  if (!m_fullscreenBlitRenderMesh)
+  {
+    GL4RenderMeshGenerator gen;
+
+    std::vector<Vector4f> vertices4;
+    vertices4.push_back(Vector4f(-1.0f, -1.0f, 0.0f, 1.0f));
+    vertices4.push_back(Vector4f(-1.0f, 1.0f, 0.0f, 1.0f));
+    vertices4.push_back(Vector4f(1.0f, -1.0f, 0.0f, 1.0f));
+    vertices4.push_back(Vector4f(1.0f, 1.0f, 0.0f, 1.0f));
+    std::vector<Vector2f> uv;
+    uv.push_back(Vector2f(0.0f, 0.0f));
+    uv.push_back(Vector2f(0.0f, 1.0f));
+    uv.push_back(Vector2f(1.0f, 0.0f));
+    uv.push_back(Vector2f(1.0f, 1.0f));
+    std::vector<UInt32> indices;
+    indices.push_back(0);
+    indices.push_back(1);
+    indices.push_back(3);
+    indices.push_back(0);
+    indices.push_back(3);
+    indices.push_back(2);
+
+
+    gen.SetVertices(vertices4);
+    gen.SetUV0(uv);
+    gen.SetIndices(indices);
+    m_fullscreenBlitRenderMesh = gen.Generate();
+  }
+  return m_fullscreenBlitRenderMesh;
 }
 
 }

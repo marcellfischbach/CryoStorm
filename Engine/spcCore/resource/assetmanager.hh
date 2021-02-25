@@ -7,7 +7,7 @@
 #include <spcCore/resource/iassetloader.hh>
 #include <map>
 #include <vector>
-
+#include <string>
 
 namespace spc
 {
@@ -39,6 +39,17 @@ public:
     return obj ? obj->Query<T>() : nullptr;
   }
   iObject* Load(const Class* cls, const ResourceLocator& locator);
+
+  template<typename T>
+  T* Load(const std::string& locator)
+  {
+    iObject* obj = Load(T::GetStaticClass(), ResourceLocator(locator));
+    return obj ? obj->Query<T>() : nullptr;
+  }
+  iObject* Load(const Class* cls, const std::string& locator)
+  {
+    return Load(cls, ResourceLocator(locator));
+  }
 
 protected:
   AssetManager();
