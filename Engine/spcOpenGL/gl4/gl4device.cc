@@ -939,44 +939,44 @@ iRenderMesh* GL4Device::FullscreenBlitCubeRenderMesh(int layer)
   {
   case 0: // Positive X
     uv.push_back(Vector3f(1.0f, 1.0f, 1.0f));
-    uv.push_back(Vector3f(1.0f, 0.0f, 1.0f));
-    uv.push_back(Vector3f(1.0f, 1.0f, 0.0f));
-    uv.push_back(Vector3f(1.0f, 0.0f, 0.0f));
+    uv.push_back(Vector3f(1.0f, -1.0f, 1.0f));
+    uv.push_back(Vector3f(1.0f, 1.0f, -1.0f));
+    uv.push_back(Vector3f(1.0f, -1.0f, -1.0f));
     gen.SetUV0(uv);
     return (m_fullscreenBlitCubePosXRenderMesh = gen.Generate());
   case 1: // Negative X
-    uv.push_back(Vector3f(-1.0f, 1.0f, 0.0f));
-    uv.push_back(Vector3f(-1.0f, 0.0f, 0.0f));
+    uv.push_back(Vector3f(-1.0f, 1.0f, -1.0f));
+    uv.push_back(Vector3f(-1.0f, -1.0f, -1.0f));
     uv.push_back(Vector3f(-1.0f, 1.0f, 1.0f));
-    uv.push_back(Vector3f(-1.0f, 0.0f, 1.0f));
+    uv.push_back(Vector3f(-1.0f, -1.0f, 1.0f));
     gen.SetUV0(uv);
     return (m_fullscreenBlitCubeNegXRenderMesh = gen.Generate());
   case 2: // Positive Y
-    uv.push_back(Vector3f(0.0f, 1.0f, 0.0f));
-    uv.push_back(Vector3f(0.0f, 1.0f, 1.0f));
-    uv.push_back(Vector3f(1.0f, 1.0f, 0.0f));
+    uv.push_back(Vector3f(-1.0f, 1.0f, -1.0f));
+    uv.push_back(Vector3f(-1.0f, 1.0f, 1.0f));
+    uv.push_back(Vector3f(1.0f, 1.0f, -1.0f));
     uv.push_back(Vector3f(1.0f, 1.0f, 1.0f));
     gen.SetUV0(uv);
     return (m_fullscreenBlitCubePosYRenderMesh = gen.Generate());
   case 3: // Negative Y
-    uv.push_back(Vector3f(0.0f, -1.0f, 0.0f));
-    uv.push_back(Vector3f(0.0f, -1.0f, 1.0f));
-    uv.push_back(Vector3f(1.0f, -1.0f, 0.0f));
+    uv.push_back(Vector3f(-1.0f, -1.0f, -1.0f));
+    uv.push_back(Vector3f(-1.0f, -1.0f, 1.0f));
+    uv.push_back(Vector3f(1.0f, -1.0f, -1.0f));
     uv.push_back(Vector3f(1.0f, -1.0f, 1.0f));
     gen.SetUV0(uv);
     return (m_fullscreenBlitCubeNegYRenderMesh = gen.Generate());
   case 4: // Positive Z
-    uv.push_back(Vector3f(0.0f, 1.0f, 1.0f));
-    uv.push_back(Vector3f(0.0f, 0.0f, 1.0f));
+    uv.push_back(Vector3f(-1.0f, 1.0f, 1.0f));
+    uv.push_back(Vector3f(-1.0f, -1.0f, 1.0f));
     uv.push_back(Vector3f(1.0f, 1.0f, 1.0f));
-    uv.push_back(Vector3f(1.0f, 0.0f, 1.0f));
+    uv.push_back(Vector3f(1.0f, -1.0f, 1.0f));
     gen.SetUV0(uv);
     return (m_fullscreenBlitCubePosZRenderMesh = gen.Generate());
   case 5: // Negative Z
     uv.push_back(Vector3f(1.0f, 1.0f, -1.0f));
-    uv.push_back(Vector3f(1.0f, 0.0f, -1.0f));
-    uv.push_back(Vector3f(0.0f, 1.0f, -1.0f));
-    uv.push_back(Vector3f(0.0f, 0.0f, -1.0f));
+    uv.push_back(Vector3f(1.0f, -1.0f, -1.0f));
+    uv.push_back(Vector3f(-1.0f, 1.0f, -1.0f));
+    uv.push_back(Vector3f(-1.0f, -1.0f, -1.0f));
     gen.SetUV0(uv);
     return (m_fullscreenBlitCubeNegZRenderMesh = gen.Generate());
 

@@ -10,7 +10,7 @@ in vec3 texCoord;
 void main ()
 {
 	vec3 tex = normalize(texCoord);
-	spc_FragColor = texture(spc_Diffuse, tex);
+	spc_FragColor = texture(spc_Diffuse, texCoord);
 }
 
 "

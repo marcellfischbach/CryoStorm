@@ -337,7 +337,7 @@ void GL4ForwardPipeline::RenderPointShadowMaps(GL4PointLight* pointLight, GL4Ren
 {
   m_device->SetRenderTarget(shadowMap);
   m_device->SetViewport(0, 0, shadowMap->GetSize(), shadowMap->GetSize());
-  m_device->Clear(true, Color4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, false, 0);
+  m_device->Clear(true, Color4f(0.0f, 0.0f, 0.5f, 1.0f), true, 1.0f, false, 0);
 
 
   float near = 1.0f;
