@@ -32,6 +32,8 @@ public:
   void SetColor(const Color4f & color) override;
   const Color4f& GetColor() const override;
 
+  float GetIntensity() const;
+
   void SetPosition(const Vector3f & position) override;
   const Vector3f& GetPosition() const override;
 
@@ -43,6 +45,7 @@ private:
   eLightChangeMode m_changeMode;
   bool m_castShadow;
   Color4f m_color;
+  float m_intensity;
 
   Vector3f m_position;
   float m_range;

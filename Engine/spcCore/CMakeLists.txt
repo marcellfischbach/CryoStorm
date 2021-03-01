@@ -66,6 +66,7 @@ set(SOURCES
         graphics/irenderpipeline.hh
         graphics/irendertarget.hh
         graphics/irendertarget2d.hh
+        graphics/irendertargetcube.hh
         graphics/itexture.hh
         graphics/itexture2d.hh
         graphics/itexturecube.hh
@@ -128,6 +129,8 @@ set(SOURCES
 
         math/clipper/boxclipper.cc
         math/clipper/boxclipper.hh
+        math/clipper/compoundclipper.cc
+        math/clipper/compoundclipper.hh
         math/clipper/multiplaneclipper.cc
         math/clipper/multiplaneclipper.hh
         math/clipper/planeclipper.cc

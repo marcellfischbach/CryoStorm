@@ -16,7 +16,10 @@ SPC_CLASS_GEN_OBJECT;
 public:
   GL4TextureCube();
   ~GL4TextureCube() override;
-
+  SPC_NODISCARD UInt32 GetName()
+  {
+    return m_name;
+  }
   SPC_NODISCARD eTextureType GetType() const override
   {
     return eTT_TextureCube;

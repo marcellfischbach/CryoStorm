@@ -18,7 +18,7 @@ struct SPC_CORE_API iDirectionalLight : public SPC_SUPER(iLight)
   virtual ~iDirectionalLight() { }
 
   virtual void SetDirection(const Vector3f & direction) = 0;
-  virtual const Vector3f& GetDirection() const = 0;
+  virtual SPC_NODISCARD const Vector3f& GetDirection() const = 0;
 
 
 };

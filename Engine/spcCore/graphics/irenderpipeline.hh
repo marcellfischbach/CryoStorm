@@ -8,6 +8,7 @@ namespace spc
 {
 
 struct iDevice;
+struct iRenderTarget2D;
 class GfxScene;
 class Camera;
 class Projector;
@@ -19,7 +20,7 @@ SPC_CLASS_GEN;
 
   ~iRenderPipeline() override = default;
 
-  virtual void Render(Camera& camera, Projector& projector, iDevice* device, GfxScene* scene) = 0;
+  virtual void Render(iRenderTarget2D* target, Camera& camera, Projector& projector, iDevice* device, GfxScene* scene) = 0;
 };
 
 

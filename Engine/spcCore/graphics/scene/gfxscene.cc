@@ -366,7 +366,7 @@ void GfxScene::ScanMeshes(const iClipper* clipper, UInt32 scanMask, std::functio
   {
     for (auto mesh : m_staticMeshes)
     {
-      if (clipper->Test(mesh->GetBoundingBox()) != eClippingResult::eCR_Outside)
+      if (!clipper || clipper->Test(mesh->GetBoundingBox()) != eClippingResult::eCR_Outside)
       {
         callback(mesh);
       }
@@ -377,7 +377,7 @@ void GfxScene::ScanMeshes(const iClipper* clipper, UInt32 scanMask, std::functio
   {
     for (auto mesh : m_dynamicMeshes)
     {
-      if (clipper->Test(mesh->GetBoundingBox()) != eClippingResult::eCR_Outside)
+      if (!clipper || clipper->Test(mesh->GetBoundingBox()) != eClippingResult::eCR_Outside)
       {
         callback(mesh);
       }

@@ -46,6 +46,16 @@ void GfxMesh::Render(iDevice* device, eRenderPass pass)
   }
 }
 
+
+void GfxMesh::RenderUnlit(iDevice* device, eRenderPass pass)
+{
+  if (device->BindMaterial(m_material, pass))
+  {
+    device->SetModelMatrix(m_modelMatrix);
+    device->Render(m_mesh, pass);
+  }
+}
+
 void GfxMesh::RenderForward(iDevice* device, eRenderPass pass, const GfxLight** lights, Size numberOfLights)
 {
   if (device->BindMaterial(m_material, pass))

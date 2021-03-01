@@ -20,10 +20,10 @@ struct SPC_CORE_API iPointLight : public SPC_SUPER(iLight)
   virtual ~iPointLight() { }
 
   virtual void SetPosition(const Vector3f & direction) = 0;
-  virtual const Vector3f& GetPosition() const = 0;
+  virtual SPC_NODISCARD const Vector3f& GetPosition() const = 0;
 
   virtual void SetRange(float range) = 0;
-  virtual float GetRange() const = 0;
+  virtual SPC_NODISCARD float GetRange() const = 0;
 
 
 };

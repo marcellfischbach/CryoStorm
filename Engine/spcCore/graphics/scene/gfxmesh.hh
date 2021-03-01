@@ -57,6 +57,7 @@ public:
   SPC_NODISCARD const BoundingBox& GetBoundingBox() const;
 
   void Render(iDevice* device, eRenderPass pass);
+  void RenderUnlit(iDevice* device, eRenderPass pass);
   void RenderForward(iDevice* device, eRenderPass pass, const GfxLight** lights, Size numberOfLights);
 
   void SetFrame(UInt64 frame);

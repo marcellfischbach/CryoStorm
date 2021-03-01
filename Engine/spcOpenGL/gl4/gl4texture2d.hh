@@ -16,12 +16,12 @@ class SPC_OGL_API GL4Texture2D : public SPC_SUPER(iTexture2D)
 public:
   GL4Texture2D();
   ~GL4Texture2D();
-  UInt32 GetName()
+  SPC_NODISCARD UInt32 GetName()
   {
     return m_name;
   }
 
-  eTextureType GetType() const
+  SPC_NODISCARD eTextureType GetType() const
   {
     return eTT_Texture2D;
   }

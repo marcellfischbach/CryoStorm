@@ -33,6 +33,8 @@ public:
   bool Compile() override;
   std::string GetCompileLog() const override;
 
+  iTexture2D* GetDepthTexture() override;
+  const iTexture2D* GetDepthTexture() const override;
   Size GetNumberOfColorTextures() const override;
   iTexture2D* GetColorTexture(Size idx) override;
   const iTexture2D* GetColorTexture(Size idx) const override;

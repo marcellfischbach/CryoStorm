@@ -3,6 +3,7 @@
 #include <spcOpenGL/gl4/gl4directionallight.hh>
 #include <spcOpenGL/gl4/gl4pointlight.hh>
 #include <spcOpenGL/gl4/gl4rendertarget2d.hh>
+#include <spcOpenGL/gl4/gl4rendertargetcube.hh>
 #include <spcOpenGL/gl4/gl4rendermesh.hh>
 #include <spcOpenGL/gl4/gl4sampler.hh>
 #include <spcOpenGL/gl4/gl4texture2d.hh>
@@ -35,6 +36,13 @@ GL4Device::GL4Device()
   , m_modelViewProjectionMatrixInvDirty(false)
   , m_fullscreenBlitProgram(nullptr)
   , m_fullscreenBlitRenderMesh(nullptr)
+  , m_fullscreenBlitCubeProgram(nullptr)
+  , m_fullscreenBlitCubePosXRenderMesh(nullptr)
+  , m_fullscreenBlitCubePosYRenderMesh(nullptr)
+  , m_fullscreenBlitCubePosZRenderMesh(nullptr)
+  , m_fullscreenBlitCubeNegXRenderMesh(nullptr)
+  , m_fullscreenBlitCubeNegYRenderMesh(nullptr)
+  , m_fullscreenBlitCubeNegZRenderMesh(nullptr)
 {
   SPC_CLASS_GEN_CONSTR;
 }
@@ -191,6 +199,21 @@ void GL4Device::SetProjectionMatrix(const Matrix4f& projectionMatrix, const Matr
   m_modelViewProjectionMatrixInvDirty = true;
 }
 
+void GL4Device::SetShadowMapViewMatrices(const Matrix4f* matrices, Size numberOfMatrices)
+{
+  m_shadowMapMatrixCount = numberOfMatrices;
+  memcpy(m_shadowMapViewMatrices, matrices, sizeof(Matrix4f) * numberOfMatrices);
+  m_shadowMapViewProjectionMatrixDirty = true;
+}
+
+void GL4Device::SetShadowMapProjectionMatrices(const Matrix4f* matrices, Size numberOfMatrices)
+{
+  m_shadowMapMatrixCount = numberOfMatrices;
+  memcpy(m_shadowMapProjectionMatrices, matrices, sizeof(Matrix4f) * numberOfMatrices);
+  m_shadowMapViewProjectionMatrixDirty = true;
+}
+
+
 Matrix4f& GL4Device::GetPerspectiveProjection(float l, float r, float b, float t, float n, float f, Matrix4f& m)
 {
   float z2 = 2.0f * n;
@@ -202,23 +225,10 @@ Matrix4f& GL4Device::GetPerspectiveProjection(float l, float r, float b, float t
   float sz = n + f;
 
 
-  m.m00 = z2 / dx;
-  m.m10 = 0.0f;
-  m.m20 = -sx / dx;
-  m.m30 = 0.0f;
-  m.m01 = 0.0f;
-  m.m11 = z2 / dy;
-  m.m21 = -sy / dy;
-  m.m31 = 0.0f;
-  m.m02 = 0.0f;
-  m.m12 = 0.0f;
-  m.m22 = sz / dz;
-  m.m32 = -2.0f * n * f / dz;
-  m.m03 = 0.0f;
-  m.m13 = 0.0f;
-  m.m23 = 1.0f;
-  m.m33 = 0.0f;
-
+  m.m00 = z2 / dx; m.m10 = 0.0f;    m.m20 = -sx / dx; m.m30 = 0.0f;
+  m.m01 = 0.0f;    m.m11 = z2 / dy; m.m21 = -sy / dy; m.m31 = 0.0f;
+  m.m02 = 0.0f;    m.m12 = 0.0f;    m.m22 = sz / dz;  m.m32 = -2.0f * n * f / dz;
+  m.m03 = 0.0f;    m.m13 = 0.0f;    m.m23 = 1.0f;     m.m33 = 0.0f;
   return m;
 }
 
@@ -351,6 +361,13 @@ void GL4Device::SetRenderTarget(iRenderTarget* renderTarget)
       SetViewport(0, 0, rt2d->GetWidth(), rt2d->GetHeight());
       break;
     }
+    case eTT_TextureCube:
+    {
+      GL4RenderTargetCube* rtcube = static_cast<GL4RenderTargetCube*>(renderTarget);
+      rtcube->Bind();
+      SetViewport(0, 0, rtcube->GetSize(), rtcube->GetSize());
+      break;
+    }
     default:
       break;
     }
@@ -409,6 +426,15 @@ iRenderTarget2D* GL4Device::CreateRenderTarget(const iRenderTarget2D::Descriptor
   return target;
 }
 
+
+iRenderTargetCube* GL4Device::CreateRenderTarget(const iRenderTargetCube::Descriptor& descriptor)
+{
+  GL4RenderTargetCube* target = new GL4RenderTargetCube();
+  target->Initialize(descriptor.Size);
+  return target;
+}
+
+
 iPointLight* GL4Device::CreatePointLight()
 {
   return new GL4PointLight();
@@ -461,6 +487,10 @@ eTextureUnit GL4Device::BindTexture(iTexture* texture)
   case eTT_Texture2D:
     static_cast<GL4Texture2D*>(texture)->Bind();
     break;
+  case eTT_TextureCube:
+    static_cast<GL4TextureCube*>(texture)->Bind();
+    break;
+
   }
 
 
@@ -495,6 +525,23 @@ void GL4Device::RenderFullscreen(iTexture2D* texture)
   }
   mesh->Render(this, eRP_Forward);
 }
+
+
+void GL4Device::RenderFullscreen(iTextureCube* texture, int layer)
+{
+  iRenderMesh* mesh = FullscreenBlitCubeRenderMesh(layer);
+  GL4Program* prog = FullscreenBlitCubeProgram();
+  SetShader(prog);
+  ResetTextures();
+  eTextureUnit unit = BindTexture(texture);
+  iShaderAttribute* attrib = prog->GetShaderAttribute("Diffuse");
+  if (attrib)
+  {
+    attrib->Bind(unit);
+  }
+  mesh->Render(this, eRP_Forward);
+}
+
 
 
 
@@ -684,6 +731,40 @@ void GL4Device::BindMatrices()
     }
     attr->Bind(m_modelViewProjectionMatrixInv);
   }
+
+  attr = m_shader->GetShaderAttribute(eSA_ShadowMapViewMatrix);
+  if (attr)
+  {
+    for (Size i = 0; i < m_shadowMapMatrixCount; i++)
+    {
+      attr->SetArrayIndex(i);
+      attr->Bind(m_shadowMapViewMatrices[i]);
+    }
+  }
+
+  attr = m_shader->GetShaderAttribute(eSA_ShadowMapProjectionMatrix);
+  if (attr)
+  {
+    for (Size i = 0; i < m_shadowMapMatrixCount; i++)
+    {
+      attr->SetArrayIndex(i);
+      attr->Bind(m_shadowMapProjectionMatrices[i]);
+    }
+  }
+
+  attr = m_shader->GetShaderAttribute(eSA_ShadowMapViewProjectionMatrix);
+  if (attr)
+  {
+    if (m_shadowMapViewProjectionMatrixDirty)
+    {
+      UpdateShadowMapViewProjectionMatrix();
+    }
+    for (Size i = 0; i < m_shadowMapMatrixCount; i++)
+    {
+      attr->SetArrayIndex(i);
+      attr->Bind(m_shadowMapViewProjectionMatrices[i]);
+    }
+  }
 }
 
 
@@ -761,6 +842,17 @@ void GL4Device::UpdateModelViewProjectionMatrixInv()
   m_modelViewProjectionMatrixInvDirty = false;
 }
 
+void GL4Device::UpdateShadowMapViewProjectionMatrix()
+{
+  for (Size i = 0; i < m_shadowMapMatrixCount; i++)
+  {
+    Matrix4f::Mult(m_shadowMapProjectionMatrices[i], m_shadowMapViewMatrices[i], m_shadowMapViewProjectionMatrices[i]);
+
+  }
+  m_shadowMapViewProjectionMatrixDirty = false;
+}
+
+
 GL4Program* GL4Device::FullscreenBlitProgram()
 {
   if (!m_fullscreenBlitProgram)
@@ -802,5 +894,95 @@ iRenderMesh* GL4Device::FullscreenBlitRenderMesh()
   }
   return m_fullscreenBlitRenderMesh;
 }
+
+
+GL4Program* GL4Device::FullscreenBlitCubeProgram()
+{
+  if (!m_fullscreenBlitCubeProgram)
+  {
+    m_fullscreenBlitCubeProgram = AssetManager::Get()->Load<GL4Program>("file:///engine/opengl/gl4/fullscreen_blit_cube.spc");
+  }
+  return m_fullscreenBlitCubeProgram;
+}
+
+iRenderMesh* GL4Device::FullscreenBlitCubeRenderMesh(int layer)
+{
+  switch (layer) {
+  case 0: if (m_fullscreenBlitCubePosXRenderMesh) return m_fullscreenBlitCubePosXRenderMesh; else break;
+  case 1: if (m_fullscreenBlitCubeNegXRenderMesh) return m_fullscreenBlitCubeNegXRenderMesh; else break;
+  case 2: if (m_fullscreenBlitCubePosYRenderMesh) return m_fullscreenBlitCubePosYRenderMesh; else break;
+  case 3: if (m_fullscreenBlitCubeNegYRenderMesh) return m_fullscreenBlitCubeNegYRenderMesh; else break;
+  case 4: if (m_fullscreenBlitCubePosZRenderMesh) return m_fullscreenBlitCubePosZRenderMesh; else break;
+  case 5: if (m_fullscreenBlitCubeNegZRenderMesh) return m_fullscreenBlitCubeNegZRenderMesh; else break;
+  default: break;
+  }
+
+
+  GL4RenderMeshGenerator gen;
+  std::vector<Vector4f> vertices4;
+  vertices4.push_back(Vector4f(-1.0f, -1.0f, 0.0f, 1.0f));
+  vertices4.push_back(Vector4f(-1.0f, 1.0f, 0.0f, 1.0f));
+  vertices4.push_back(Vector4f(1.0f, -1.0f, 0.0f, 1.0f));
+  vertices4.push_back(Vector4f(1.0f, 1.0f, 0.0f, 1.0f));
+  std::vector<UInt32> indices;
+  indices.push_back(0);
+  indices.push_back(1);
+  indices.push_back(3);
+  indices.push_back(0);
+  indices.push_back(3);
+  indices.push_back(2);
+  gen.SetVertices(vertices4);
+  gen.SetIndices(indices);
+
+  std::vector<Vector3f> uv;
+  switch (layer)
+  {
+  case 0: // Positive X
+    uv.push_back(Vector3f(1.0f, 1.0f, 1.0f));
+    uv.push_back(Vector3f(1.0f, 0.0f, 1.0f));
+    uv.push_back(Vector3f(1.0f, 1.0f, 0.0f));
+    uv.push_back(Vector3f(1.0f, 0.0f, 0.0f));
+    gen.SetUV0(uv);
+    return (m_fullscreenBlitCubePosXRenderMesh = gen.Generate());
+  case 1: // Negative X
+    uv.push_back(Vector3f(-1.0f, 1.0f, 0.0f));
+    uv.push_back(Vector3f(-1.0f, 0.0f, 0.0f));
+    uv.push_back(Vector3f(-1.0f, 1.0f, 1.0f));
+    uv.push_back(Vector3f(-1.0f, 0.0f, 1.0f));
+    gen.SetUV0(uv);
+    return (m_fullscreenBlitCubeNegXRenderMesh = gen.Generate());
+  case 2: // Positive Y
+    uv.push_back(Vector3f(0.0f, 1.0f, 0.0f));
+    uv.push_back(Vector3f(0.0f, 1.0f, 1.0f));
+    uv.push_back(Vector3f(1.0f, 1.0f, 0.0f));
+    uv.push_back(Vector3f(1.0f, 1.0f, 1.0f));
+    gen.SetUV0(uv);
+    return (m_fullscreenBlitCubePosYRenderMesh = gen.Generate());
+  case 3: // Negative Y
+    uv.push_back(Vector3f(0.0f, -1.0f, 0.0f));
+    uv.push_back(Vector3f(0.0f, -1.0f, 1.0f));
+    uv.push_back(Vector3f(1.0f, -1.0f, 0.0f));
+    uv.push_back(Vector3f(1.0f, -1.0f, 1.0f));
+    gen.SetUV0(uv);
+    return (m_fullscreenBlitCubeNegYRenderMesh = gen.Generate());
+  case 4: // Positive Z
+    uv.push_back(Vector3f(0.0f, 1.0f, 1.0f));
+    uv.push_back(Vector3f(0.0f, 0.0f, 1.0f));
+    uv.push_back(Vector3f(1.0f, 1.0f, 1.0f));
+    uv.push_back(Vector3f(1.0f, 0.0f, 1.0f));
+    gen.SetUV0(uv);
+    return (m_fullscreenBlitCubePosZRenderMesh = gen.Generate());
+  case 5: // Negative Z
+    uv.push_back(Vector3f(1.0f, 1.0f, -1.0f));
+    uv.push_back(Vector3f(1.0f, 0.0f, -1.0f));
+    uv.push_back(Vector3f(0.0f, 1.0f, -1.0f));
+    uv.push_back(Vector3f(0.0f, 0.0f, -1.0f));
+    gen.SetUV0(uv);
+    return (m_fullscreenBlitCubeNegZRenderMesh = gen.Generate());
+
+  }
+  return nullptr;
+}
+
 
 }

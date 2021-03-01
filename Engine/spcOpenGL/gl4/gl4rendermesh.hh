@@ -57,6 +57,7 @@ public:
   virtual void SetColors(const std::vector<Color4f> & colors);
   virtual void SetTangents(const std::vector<Vector3f> & tangents);
   virtual void SetUV0(const std::vector<Vector2f> & uv);
+  virtual void SetUV0(const std::vector<Vector3f> & uv);
   virtual void SetUV1(const std::vector<Vector2f> & uv);
   virtual void SetUV2(const std::vector<Vector2f> & uv);
   virtual void SetUV3(const std::vector<Vector2f> & uv);
@@ -69,7 +70,8 @@ private:
   std::vector<Vector3f> m_normals;
   std::vector<Color4f> m_colors;
   std::vector<Vector3f> m_tangents;
-  std::vector<Vector2f> m_uv0;
+  std::vector<Vector2f> m_uv02;
+  std::vector<Vector3f> m_uv03;
   std::vector<Vector2f> m_uv1;
   std::vector<Vector2f> m_uv2;
   std::vector<Vector2f> m_uv3;

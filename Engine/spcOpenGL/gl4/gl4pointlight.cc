@@ -52,6 +52,11 @@ const Color4f& GL4PointLight::GetColor() const
   return m_color;
 }
 
+float GL4PointLight::GetIntensity() const
+{
+  return m_intensity;
+}
+
 void GL4PointLight::SetPosition(const Vector3f& position)
 {
   m_position = position;

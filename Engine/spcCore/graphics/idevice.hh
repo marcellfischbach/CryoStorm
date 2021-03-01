@@ -13,6 +13,7 @@
 #include <spcCore/graphics/irendermesh.hh>
 #include <spcCore/graphics/irendertarget.hh>
 #include <spcCore/graphics/irendertarget2d.hh>
+#include <spcCore/graphics/irendertargetcube.hh>
 #include <spcCore/graphics/isampler.hh>
 #include <spcCore/graphics/itexture.hh>
 #include <spcCore/graphics/itexture2d.hh>
@@ -43,6 +44,9 @@ struct SPC_CORE_API iDevice : public SPC_SUPER(iObject)
   virtual void SetViewMatrix(const Matrix4f& viewMatrix, const Matrix4f& viewMatrixInv) = 0;
   virtual void SetProjectionMatrix(const Matrix4f& projectionwMatrix, const Matrix4f &projectionMatrixInv) = 0;
 
+  virtual void SetShadowMapViewMatrices(const Matrix4f* viewMatrices, Size numMatrices) = 0;
+  virtual void SetShadowMapProjectionMatrices(const Matrix4f* projectionMatrices, Size numMatrices) = 0;
+
   virtual Matrix4f& GetPerspectiveProjection(float l, float r, float b, float t, float n, float f, Matrix4f& m) = 0;
   virtual Matrix4f& GetPerspectiveProjectionInv(float l, float r, float b, float t, float n, float f, Matrix4f& m) = 0;
   virtual Matrix4f& GetOrthographicProjection(float l, float r, float b, float t, float n, float f, Matrix4f& m) = 0;
@@ -55,6 +59,7 @@ struct SPC_CORE_API iDevice : public SPC_SUPER(iObject)
   virtual iTexture2D* CreateTexture(const iTexture2D::Descriptor& descriptor) = 0;
   virtual iTextureCube* CreateTexture(const iTextureCube::Descriptor& descriptor) = 0;
   virtual iRenderTarget2D* CreateRenderTarget(const iRenderTarget2D::Descriptor &descriptor) = 0;
+  virtual iRenderTargetCube* CreateRenderTarget(const iRenderTargetCube::Descriptor &descriptor) = 0;
   virtual iDirectionalLight* CreateDirectionalLight() = 0;
   virtual iPointLight* CreatePointLight() = 0;
 
@@ -65,6 +70,7 @@ struct SPC_CORE_API iDevice : public SPC_SUPER(iObject)
   virtual bool BindMaterial(iMaterial* material, eRenderPass pass) = 0;
   virtual void Render(iRenderMesh* mesh, eRenderPass pass) = 0;
   virtual void RenderFullscreen(iTexture2D* texture) = 0;
+  virtual void RenderFullscreen(iTextureCube* texture, int layer) = 0;
 
   virtual void BindForwardLight(const iLight* light, Size idx) = 0;
   virtual void FinishForwardLights(Size numLights) = 0;

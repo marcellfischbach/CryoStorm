@@ -279,7 +279,8 @@ int main(int argc, char** argv)
 
   spc::iDevice* device = spc::ObjectRegistry::Get<spc::iDevice>();
 
-  spc::iShader* shader = spc::AssetManager::Get()->Load<spc::iShader>(spc::ResourceLocator("/shaders/test_color_program.spc"));
+  spc::iShader* forwardShader = spc::AssetManager::Get()->Load<spc::iShader>(spc::ResourceLocator("/shaders/test_color_program.spc"));
+  spc::iShader* shadowCubeShader = spc::AssetManager::Get()->Load<spc::iShader>(spc::ResourceLocator("/shaders/test_shadow_point_program.spc"));
 
 
   spc::iSampler* sampler = spc::AssetManager::Get()->Load<spc::iSampler>(spc::ResourceLocator("sampler_default.spc"));
@@ -304,7 +305,8 @@ int main(int argc, char** argv)
   texture->Data(image);
 
   spc::Material* material = new spc::Material();
-  material->SetShader(spc::eRP_Forward, shader);
+  material->SetShader(spc::eRP_Forward, forwardShader);
+  material->SetShader(spc::eRP_ShadowCube, shadowCubeShader);
   material->RegisterAttribute("Diffuse");
   material->RegisterAttribute("Color");
   material->Set(material->IndexOf("Diffuse"), texture);
@@ -363,9 +365,10 @@ int main(int argc, char** argv)
   spc::LightState* lightState = new spc::LightState("LightState");
   lightEntity->Attach(lightState);
   lightState->SetType(spc::eLT_Point);
-  lightState->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f));
-  lightState->SetRange(500.0f);
+  lightState->SetColor(spc::Color4f(1.0f, 0.5f, 0.2f, 1.0f) * 1.0f);
+  lightState->SetRange(100.0f);
   lightState->SetStatic(false);
+  lightState->SetCastShadow(true);
   lightEntity->GetRoot()->GetTransform()
     .SetTranslation(spc::Vector3f(-100.0f, 25.0f, 0.0f))
     .Finish();
@@ -375,7 +378,7 @@ int main(int argc, char** argv)
   spc::LightState* sunLightState = new spc::LightState("SunLight");
   sunEntity->Attach(sunLightState);
   sunLightState->SetType(spc::eLT_Directional);
-  sunLightState->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 0.1f);
+  sunLightState->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 0.5f);
   sunLightState->GetTransform()
     .SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(1.0f, 0.0f, 0.0f), spc::spcDeg2Rad(45.0f)))
     .Finish();
@@ -426,6 +429,7 @@ int main(int argc, char** argv)
 
 
 
+
   spc::iRenderPipeline* renderPipeline = spc::ObjectRegistry::Get<spc::iRenderPipeline>();
 
   std::string title = spc::Settings("display.spc").GetText("title");
@@ -437,6 +441,7 @@ int main(int argc, char** argv)
   spc::UInt32 lastTime = SDL_GetTicks();
 
   bool offscreen = true;
+  bool anim = true;
   while (true)
   {
     Uint32 time = SDL_GetTicks();
@@ -463,6 +468,11 @@ int main(int argc, char** argv)
     {
       break;
     }
+    
+    if (spc::Input::IsKeyPressed(spc::Key::eK_A))
+    {
+      anim = !anim;
+    }
 
     /*
     entityX->GetRoot()->GetTransform()
@@ -473,31 +483,34 @@ int main(int argc, char** argv)
       .SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(0.0f, 1.0f, 0.0f), entRot / 2.0f))
       .Finish();
     */
-    entRot += 0.01f;
+    if (anim)
+    {
+      entRot += 0.01f;
+    }
 
     lightEntity->GetRoot()->GetTransform()
-      .SetTranslation(spc::Vector3f(spc::spcCos(entRot) * 5.0f, 5.0f, spc::spcSin(entRot) * 5.0f))
+      .SetTranslation(spc::Vector3f(spc::spcCos(entRot) * 25.0f, 5.0f, spc::spcSin(entRot) * 25.0f))
       .Finish();
 
-    float dist = 4.0f;
+    float dist = 20.0f;
     camera->SetSpot(spc::Vector3f(0, 0.0f, 0.0f));
-    camera->SetEye(spc::Vector3f(spc::spcSin(rot) * dist, dist, spc::spcCos(rot) * dist));
+    camera->SetEye(spc::Vector3f(dist, dist, dist));
 
-    rot += 0.005f;
+    //rot += 0.005f;
 
     world->Update((float)deltaTime / 1000.0f);
     world->UpdateTransformation();
 
 
-    device->SetRenderTarget(renderTarget);
-    device->Clear(true, spc::Color4f(0.0f, 0.0, 0.0, 1.0f), true, 1.0f, true, 0);
-    renderPipeline->Render(*camera, projector, device, world->GetScene());
+    renderPipeline->Render(renderTarget, *camera, projector, device, world->GetScene());
 
 
     device->SetRenderTarget(nullptr);
     device->SetViewport(0, 0, width, height);
     device->Clear(true, spc::Color4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, true, 0);
     device->RenderFullscreen(color_texture);
+
+
 
     SDL_GL_SwapWindow(wnd);
 

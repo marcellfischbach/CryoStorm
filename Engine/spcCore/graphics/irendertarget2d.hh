@@ -29,6 +29,8 @@ struct SPC_CORE_API iRenderTarget2D : public SPC_SUPER(iRenderTarget)
 
   virtual void AddColorTexture(iTexture2D *colorTexture) = 0;
 
+  virtual iTexture2D* GetDepthTexture() = 0;
+  virtual const iTexture2D* GetDepthTexture() const = 0;
   virtual Size GetNumberOfColorTextures() const = 0;
   virtual iTexture2D* GetColorTexture(Size idx) = 0;
   virtual const iTexture2D* GetColorTexture(Size idx) const = 0;

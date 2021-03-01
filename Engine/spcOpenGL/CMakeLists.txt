@@ -23,6 +23,8 @@ set(SOURCES
         gl4/gl4rendermesh.hh
 		gl4/gl4rendertarget2d.cc
 		gl4/gl4rendertarget2d.hh
+		gl4/gl4rendertargetcube.cc
+		gl4/gl4rendertargetcube.hh
         gl4/gl4sampler.cc
         gl4/gl4sampler.hh
         gl4/gl4texture2d.cc

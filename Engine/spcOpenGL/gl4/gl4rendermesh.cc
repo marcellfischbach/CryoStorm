@@ -119,7 +119,12 @@ void GL4RenderMeshGenerator::SetTangents(const std::vector<Vector3f>& tangents)
 
 void GL4RenderMeshGenerator::SetUV0(const std::vector<Vector2f>& uv)
 {
-  m_uv0 = uv;
+  m_uv02 = uv;
+}
+
+void GL4RenderMeshGenerator::SetUV0(const std::vector<Vector3f>& uv)
+{
+  m_uv03 = uv;
 }
 
 void GL4RenderMeshGenerator::SetUV1(const std::vector<Vector2f>& uv)
@@ -146,10 +151,13 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
 {
   glBindVertexArray(0);
   int numVertexDefs = 0;
+  int numUV0Defs = 0;
   numVertexDefs += m_vertices2.empty() ? 0 : 1;
   numVertexDefs += m_vertices3.empty() ? 0 : 1;
   numVertexDefs += m_vertices4.empty() ? 0 : 1;
-  if (m_indices.empty() || numVertexDefs != 1)
+  numUV0Defs += m_uv02.empty() ? 0 : 1;
+  numUV0Defs += m_uv03.empty() ? 0 : 1;
+  if (m_indices.empty() || numVertexDefs != 1 || numUV0Defs > 1)
   {
     return nullptr;
   }
@@ -200,15 +208,25 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
     count += 3;
     offset += 3 * sizeof(float);
   }
-  if (!m_uv0.empty())
+  if (!m_uv02.empty())
   {
-    if (m_uv0.size() != vertexCount)
+    if (m_uv02.size() != vertexCount)
     {
       return nullptr;
     }
     attributes.emplace_back(VertexDeclaration::Attribute(0, eVS_UV0, 2, eDT_Float, 0, offset));
     count += 2;
     offset += 2 * sizeof(float);
+  }
+  else if (!m_uv03.empty())
+  {
+    if (m_uv03.size() != vertexCount)
+    {
+      return nullptr;
+    }
+    attributes.emplace_back(VertexDeclaration::Attribute(0, eVS_UV0, 3, eDT_Float, 0, offset));
+    count += 3;
+    offset += 3 * sizeof(float);
   }
   if (!m_uv1.empty())
   {
@@ -301,11 +319,18 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
       vBuffer[c++] = v.y;
       vBuffer[c++] = v.z;
     }
-    if (!m_uv0.empty())
+    if (!m_uv02.empty())
     {
-      Vector2f& v = m_uv0[i];
+      Vector2f& v = m_uv02[i];
       vBuffer[c++] = v.x;
       vBuffer[c++] = v.y;
+    }
+    else if (!m_uv03.empty())
+    {
+      Vector3f& v = m_uv03[i];
+      vBuffer[c++] = v.x;
+      vBuffer[c++] = v.y;
+      vBuffer[c++] = v.z;
     }
     if (!m_uv1.empty())
     {

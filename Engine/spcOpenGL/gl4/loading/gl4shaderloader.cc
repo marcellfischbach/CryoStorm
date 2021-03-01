@@ -192,7 +192,6 @@ GL4Shader* LoadShader(const std::string& typeText,
     return nullptr;
   }
 
-  std::cout << "Orig source:" << std::endl << origSource << std::endl;
 
   std::vector<std::string> lines = split(origSource);
   std::set<ResourceLocator> included;
@@ -210,8 +209,6 @@ GL4Shader* LoadShader(const std::string& typeText,
   replace(lines, "eVS_Colors", eVS_Colors);
   std::string source = merge(lines);
 
-  std::cout << "Replaced source:" << std::endl << source << std::endl;
-
   try
   {
     GL4Shader* shader = new GL4Shader(shaderType);
@@ -221,6 +218,7 @@ GL4Shader* LoadShader(const std::string& typeText,
   }
   catch (GL4ShaderCompileException& sce)
   {
+    printf("Shader:\n%s\n", source.c_str());
     printf("Unable to compile shader: %s\n%s\n", locator ? locator->GetLocator().c_str() : "unknown file", sce.what());
   }
 

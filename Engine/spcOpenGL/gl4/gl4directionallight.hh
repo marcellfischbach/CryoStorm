@@ -34,12 +34,14 @@ public:
   void SetDirection(const Vector3f & direction) override;
   const Vector3f& GetDirection() const override;
 
+  float GetIntensity() const override;
 
 private:
 
   eLightChangeMode m_changeMode;
   bool m_castShadow;
   Color4f m_color;
+  float m_intensity;
 
   Vector3f m_direction;
 

@@ -44,11 +44,17 @@ bool GL4DirectionalLight::IsCastShadow() const
 void GL4DirectionalLight::SetColor(const Color4f& color)
 {
   m_color = color;
+  m_intensity = color.r + color.g + color.b;
 }
 
 const Color4f& GL4DirectionalLight::GetColor() const
 {
   return m_color;
+}
+
+float GL4DirectionalLight::GetIntensity() const
+{
+  return m_intensity;
 }
 
 void GL4DirectionalLight::SetDirection(const Vector3f& direction)

@@ -1,34 +1,27 @@
 
-#include <spcOpenGL/gl4/gl4rendertarget2d.hh>
-#include <spcOpenGL/gl4/gl4texture2d.hh>
+#include <spcOpenGL/gl4/gl4rendertargetcube.hh>
+#include <spcOpenGL/gl4/gl4texturecube.hh>
 #include <GL/glew.h>
 
 namespace spc::opengl
 {
 
-GL4RenderTarget2D::GL4RenderTarget2D()
-  : iRenderTarget2D()
+GL4RenderTargetCube::GL4RenderTargetCube()
+  : iRenderTargetCube()
   , m_name(0)
-  , m_width(0)
-  , m_height(0)
-  , m_depthBuffer(0)
+  , m_size(0)
   , m_depthTexture(nullptr)
 {
   SPC_CLASS_GEN_CONSTR;
   glGenFramebuffers(1, &m_name);
 }
 
-GL4RenderTarget2D::~GL4RenderTarget2D()
+GL4RenderTargetCube::~GL4RenderTargetCube()
 {
   glDeleteFramebuffers(1, &m_name);
   m_name = 0;
 
   SPC_RELEASE(m_depthTexture);
-  if (m_depthBuffer)
-  {
-    glDeleteRenderbuffers(1, &m_depthBuffer);
-    m_depthBuffer = 0;
-  }
   for (auto color : m_colorTextures)
   {
     color->Release();
@@ -36,32 +29,27 @@ GL4RenderTarget2D::~GL4RenderTarget2D()
   m_colorTextures.clear();
 }
 
-void GL4RenderTarget2D::Bind()
+void GL4RenderTargetCube::Bind()
 {
   glBindFramebuffer(GL_FRAMEBUFFER, m_name);
 }
 
-UInt16 GL4RenderTarget2D::GetWidth() const
+UInt16 GL4RenderTargetCube::GetSize() const
 {
-  return m_width;
+  return m_size;
 }
 
 
-UInt16 GL4RenderTarget2D::GetHeight() const
-{
-  return m_height;
-}
 
-bool GL4RenderTarget2D::Initialize(UInt16 width, UInt16 height)
+bool GL4RenderTargetCube::Initialize(UInt16 size)
 {
-  m_width = width;
-  m_height = height;
+  m_size = size;
   Bind();
 
   return true;
 }
 
-void GL4RenderTarget2D::SetDepthTexture(iTexture2D* depthTexture)
+void GL4RenderTargetCube::SetDepthTexture(iTextureCube* depthTexture)
 {
   if (!depthTexture)
   {
@@ -69,7 +57,7 @@ void GL4RenderTarget2D::SetDepthTexture(iTexture2D* depthTexture)
   }
 
 
-  GL4Texture2D* txt = depthTexture->Query<GL4Texture2D>();
+  GL4TextureCube* txt = depthTexture->Query<GL4TextureCube>();
 
 
   GLenum attachment = 0;
@@ -96,31 +84,8 @@ void GL4RenderTarget2D::SetDepthTexture(iTexture2D* depthTexture)
 
 }
 
-void GL4RenderTarget2D::SetDepthBuffer(ePixelFormat format)
-{
 
-  GLenum attachment = 0;
-  GLenum internalFormat = 0;
-  switch (format)
-  {
-  case ePF_Depth:
-    internalFormat = GL_DEPTH_COMPONENT;
-    attachment = GL_DEPTH_ATTACHMENT;
-    break;
-  case ePF_DepthStencil:
-    internalFormat = GL_DEPTH_STENCIL;
-    attachment = GL_DEPTH_STENCIL_ATTACHMENT;
-    break;
-  default:
-    return;
-  }
-  glGenRenderbuffers(1, &m_depthBuffer);
-  glBindRenderbuffer(GL_RENDERBUFFER, m_depthBuffer);
-  glRenderbufferStorage(GL_RENDERBUFFER, internalFormat, m_width, m_height);
-  glFramebufferRenderbuffer(GL_FRAMEBUFFER, attachment, GL_RENDERBUFFER, m_depthBuffer);
-}
-
-void GL4RenderTarget2D::AddColorTexture(iTexture2D* colorTexture)
+void GL4RenderTargetCube::AddColorTexture(iTextureCube* colorTexture)
 {
   if (!colorTexture)
   {
@@ -128,7 +93,7 @@ void GL4RenderTarget2D::AddColorTexture(iTexture2D* colorTexture)
   }
 
 
-  GL4Texture2D* txt = colorTexture->Query<GL4Texture2D>();
+  GL4TextureCube* txt = colorTexture->Query<GL4TextureCube>();
   txt->AddRef();
 
 
@@ -147,12 +112,12 @@ void GL4RenderTarget2D::AddColorTexture(iTexture2D* colorTexture)
 }
 
 
-eTextureType GL4RenderTarget2D::GetType() const
+eTextureType GL4RenderTargetCube::GetType() const
 {
-  return eTT_Texture2D;
+  return eTT_TextureCube;
 }
 
-bool GL4RenderTarget2D::Compile()
+bool GL4RenderTargetCube::Compile()
 {
   GLenum res = glCheckFramebufferStatus(GL_FRAMEBUFFER);
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -189,28 +154,27 @@ bool GL4RenderTarget2D::Compile()
   return false;
 }
 
-std::string GL4RenderTarget2D::GetCompileLog() const
+std::string GL4RenderTargetCube::GetCompileLog() const
 {
   return m_log;
 }
 
-iTexture2D* GL4RenderTarget2D::GetDepthTexture()
+iTextureCube* GL4RenderTargetCube::GetDepthTexture()
 {
   return m_depthTexture;
 }
 
-const iTexture2D* GL4RenderTarget2D::GetDepthTexture() const
+const iTextureCube* GL4RenderTargetCube::GetDepthTexture() const
 {
   return m_depthTexture;
 }
 
-
-Size GL4RenderTarget2D::GetNumberOfColorTextures() const
+Size GL4RenderTargetCube::GetNumberOfColorTextures() const
 {
   return m_colorTextures.size();
 }
 
-iTexture2D* GL4RenderTarget2D::GetColorTexture(Size idx)
+iTextureCube* GL4RenderTargetCube::GetColorTexture(Size idx)
 {
   if (idx >= m_colorTextures.size())
   {
@@ -220,7 +184,7 @@ iTexture2D* GL4RenderTarget2D::GetColorTexture(Size idx)
 }
 
 
-const iTexture2D* GL4RenderTarget2D::GetColorTexture(Size idx) const
+const iTextureCube* GL4RenderTargetCube::GetColorTexture(Size idx) const
 {
   if (idx >= m_colorTextures.size())
   {

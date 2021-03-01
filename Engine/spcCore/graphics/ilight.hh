@@ -19,17 +19,18 @@ struct SPC_CORE_API iLight : public SPC_SUPER(iObject)
 
   virtual ~iLight () { }
 
-  virtual eLightType GetType() const = 0;
+  virtual SPC_NODISCARD eLightType GetType() const = 0;
 
   virtual void SetChangeMode(eLightChangeMode changeMode) = 0;
-  virtual eLightChangeMode GetChangeMode() const = 0;
+  virtual SPC_NODISCARD eLightChangeMode GetChangeMode() const = 0;
 
   virtual void SetCastShadow(bool castShadow) = 0;
-  virtual bool IsCastShadow() const = 0;
+  virtual SPC_NODISCARD bool IsCastShadow() const = 0;
 
   virtual void SetColor(const Color4f& color) = 0;
-  virtual const Color4f& GetColor() const = 0;
+  virtual SPC_NODISCARD const Color4f& GetColor() const = 0;
 
+  virtual SPC_NODISCARD float GetIntensity() const = 0;
 
 };
 

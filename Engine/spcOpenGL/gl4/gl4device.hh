@@ -34,6 +34,10 @@ public:
   void SetViewMatrix(const Matrix4f& viewMatrix, const Matrix4f& viewMatrixInv) override;
   void SetProjectionMatrix(const Matrix4f& projectionwMatrix, const Matrix4f &projectionMatrixInv) override;
 
+  void SetShadowMapViewMatrices(const Matrix4f * viewMatrices, Size numMatrices) override;
+  void SetShadowMapProjectionMatrices(const Matrix4f * projectionMatrices, Size numMatrices) override;
+
+
   Matrix4f& GetPerspectiveProjection(float l, float r, float b, float t, float n, float f, Matrix4f & m) override;
   Matrix4f& GetPerspectiveProjectionInv(float l, float r, float b, float t, float n, float f, Matrix4f & m) override;
   Matrix4f& GetOrthographicProjection(float l, float r, float b, float t, float n, float f, Matrix4f & m) override;
@@ -47,6 +51,7 @@ public:
   iTexture2D* CreateTexture(const iTexture2D::Descriptor & descriptor) override;
   iTextureCube* CreateTexture(const iTextureCube::Descriptor & descriptor) override;
   iRenderTarget2D* CreateRenderTarget(const iRenderTarget2D::Descriptor & descriptor) override;
+  iRenderTargetCube* CreateRenderTarget(const iRenderTargetCube::Descriptor & descriptor) override;
   iDirectionalLight* CreateDirectionalLight() override;
   iPointLight* CreatePointLight() override;
 
@@ -57,6 +62,7 @@ public:
   bool BindMaterial(iMaterial * material, eRenderPass pass) override;
   void Render(iRenderMesh * mesh, eRenderPass pass) override;
   void RenderFullscreen(iTexture2D * texture) override;
+  void RenderFullscreen(iTextureCube * texture, int layer) override;
 
   void BindForwardLight(const iLight * light, Size idx);
   void FinishForwardLights(Size numLights);
@@ -84,6 +90,7 @@ private:
   void UpdateModelViewMatrixInv();
   void UpdateViewProjectionMatrixInv();
   void UpdateModelViewProjectionMatrixInv();
+  void UpdateShadowMapViewProjectionMatrix();
 
 
   Matrix4f m_modelMatrix;
@@ -115,6 +122,12 @@ private:
   bool m_viewProjectionMatrixInvDirty;
   bool m_modelViewProjectionMatrixInvDirty;
 
+  Size m_shadowMapMatrixCount;
+  Matrix4f m_shadowMapViewMatrices[6];
+  Matrix4f m_shadowMapProjectionMatrices[6];
+  Matrix4f m_shadowMapViewProjectionMatrices[6];
+  bool m_shadowMapViewProjectionMatrixDirty;
+
 
   /** 
    * \name Fullscreen Rendering
@@ -124,6 +137,17 @@ private:
   GL4Program* m_fullscreenBlitProgram;
   iRenderMesh* FullscreenBlitRenderMesh();
   iRenderMesh* m_fullscreenBlitRenderMesh;
+
+  GL4Program* FullscreenBlitCubeProgram();
+  GL4Program* m_fullscreenBlitCubeProgram;
+  iRenderMesh* FullscreenBlitCubeRenderMesh(int layer);
+  iRenderMesh* m_fullscreenBlitCubePosXRenderMesh;
+  iRenderMesh* m_fullscreenBlitCubePosYRenderMesh;
+  iRenderMesh* m_fullscreenBlitCubePosZRenderMesh;
+  iRenderMesh* m_fullscreenBlitCubeNegXRenderMesh;
+  iRenderMesh* m_fullscreenBlitCubeNegYRenderMesh;
+  iRenderMesh* m_fullscreenBlitCubeNegZRenderMesh;
+
   /**
    * @}
    */

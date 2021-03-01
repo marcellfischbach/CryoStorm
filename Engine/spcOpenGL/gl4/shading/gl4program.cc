@@ -104,6 +104,11 @@ void GL4Program::RegisterRenderAttributes()
   RegisterAttribute("ModelViewMatrixInv");
   RegisterAttribute("ViewProjectionMatrixInv");
   RegisterAttribute("ModelViewProjectionMatrixInv");
+
+  RegisterAttribute("ShadowMapViewMatrix");
+  RegisterAttribute("ShadowMapProjectionMatrix");
+  RegisterAttribute("ShadowMapViewProjectionMatrix");
+
   RegisterAttribute("LightColor");
   RegisterAttribute("LightVector");
   RegisterAttribute("LightRange");
