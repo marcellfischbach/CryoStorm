@@ -20,7 +20,7 @@ void main()
     vec4 frag_color = calc_lights(world_position, norm);
         
     frag_color *= color;
-    frag_color *= texture(spc_Diffuse, texCoord);
+    frag_color *= texture(spc_Diffuse, texCoord * 3);
     spc_FragColor = frag_color;
     
 }

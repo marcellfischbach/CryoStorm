@@ -198,7 +198,7 @@ bool initialize_modules(int argc, char** argv)
   return true;
 }
 
-spc::iRenderMesh* create_plane_mesh()
+spc::iRenderMesh* create_plane_mesh(float nx, float ny)
 {
   //
   // create a render mesh
@@ -215,9 +215,9 @@ spc::iRenderMesh* create_plane_mesh()
   normals.push_back(spc::Vector3f(0.0f, 1.0f, 0.0f));
   std::vector<spc::Vector2f> uv;
   uv.push_back(spc::Vector2f(0.0f, 0.0f));
-  uv.push_back(spc::Vector2f(0.0f, 1.0f));
-  uv.push_back(spc::Vector2f(1.0f, 0.0f));
-  uv.push_back(spc::Vector2f(1.0f, 1.0f));
+  uv.push_back(spc::Vector2f(0.0f, ny));
+  uv.push_back(spc::Vector2f(nx, 0.0f));
+  uv.push_back(spc::Vector2f(nx, ny));
   std::vector<spc::UInt32> indices;
   indices.push_back(0);
   indices.push_back(1);
@@ -317,7 +317,7 @@ int main(int argc, char** argv)
   instance->Set(instance->IndexOf("Color"), spc::Color4f(0, 0, 1, 1));
 
 
-  spc::iRenderMesh* renderMesh = create_plane_mesh();
+  spc::iRenderMesh* renderMesh = create_plane_mesh(2, 2);
   spc::Mesh* mesh = new spc::Mesh();
   mesh->AddMaterialSlot("Default", instance);
   mesh->AddSubMesh(renderMesh, 0);
@@ -492,7 +492,7 @@ int main(int argc, char** argv)
       .SetTranslation(spc::Vector3f(spc::spcCos(entRot) * 5.0f, 5.0f, spc::spcSin(entRot) * 5.0f))
       .Finish();
 
-    float dist = 5.0f;
+    float dist = 3.0f;
     camera->SetSpot(spc::Vector3f(0, 0.0f, 0.0f));
     camera->SetEye(spc::Vector3f(spc::spcCos(entRot + (float)M_PI / 2.0f) * dist, dist, spc::spcSin(entRot+ (float)M_PI / 2.0f) * dist));
 
