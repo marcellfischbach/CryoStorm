@@ -3,10 +3,12 @@
 #include <spcOpenGL/gl4/gl4directionallight.hh>
 #include <spcOpenGL/gl4/gl4pointlight.hh>
 #include <spcOpenGL/gl4/gl4rendertarget2d.hh>
+#include <spcOpenGL/gl4/gl4rendertarget2darray.hh>
 #include <spcOpenGL/gl4/gl4rendertargetcube.hh>
 #include <spcOpenGL/gl4/gl4rendermesh.hh>
 #include <spcOpenGL/gl4/gl4sampler.hh>
 #include <spcOpenGL/gl4/gl4texture2d.hh>
+#include <spcOpenGL/gl4/gl4texture2darray.hh>
 #include <spcOpenGL/gl4/gl4texturecube.hh>
 #include <spcOpenGL/gl4/shading/gl4program.hh>
 #include <spcCore/objectregistry.hh>
@@ -412,6 +414,21 @@ iTexture2D* GL4Device::CreateTexture(const iTexture2D::Descriptor& descriptor)
 }
 
 
+iTexture2DArray* GL4Device::CreateTexture(const iTexture2DArray::Descriptor& descriptor)
+{
+  GL4Texture2DArray* texture = new GL4Texture2DArray();
+  texture->Initialize(
+    descriptor.Width,
+    descriptor.Height,
+    descriptor.Layers,
+    descriptor.Format,
+    descriptor.MipMaps);
+  texture->SetSampler(ObjectRegistry::Get<Samplers>()->GetDefault());
+  return texture;
+}
+
+
+
 iTextureCube* GL4Device::CreateTexture(const iTextureCube::Descriptor& descriptor)
 {
   GL4TextureCube* texture = new GL4TextureCube();
@@ -430,6 +447,13 @@ iRenderTarget2D* GL4Device::CreateRenderTarget(const iRenderTarget2D::Descriptor
   return target;
 }
 
+
+iRenderTarget2DArray* GL4Device::CreateRenderTarget(const iRenderTarget2DArray::Descriptor& descriptor)
+{
+  GL4RenderTarget2DArray* target = new GL4RenderTarget2DArray();
+  target->Initialize(descriptor.Width, descriptor.Height, descriptor.Layer);
+  return target;
+}
 
 iRenderTargetCube* GL4Device::CreateRenderTarget(const iRenderTargetCube::Descriptor& descriptor)
 {

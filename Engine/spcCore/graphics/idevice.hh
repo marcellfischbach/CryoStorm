@@ -13,10 +13,12 @@
 #include <spcCore/graphics/irendermesh.hh>
 #include <spcCore/graphics/irendertarget.hh>
 #include <spcCore/graphics/irendertarget2d.hh>
+#include <spcCore/graphics/irendertarget2darray.hh>
 #include <spcCore/graphics/irendertargetcube.hh>
 #include <spcCore/graphics/isampler.hh>
 #include <spcCore/graphics/itexture.hh>
 #include <spcCore/graphics/itexture2d.hh>
+#include <spcCore/graphics/itexture2darray.hh>
 #include <spcCore/graphics/itexturecube.hh>
 #include <spcCore/graphics/material/imaterial.hh>
 
@@ -62,8 +64,10 @@ struct SPC_CORE_API iDevice : public SPC_SUPER(iObject)
 
   virtual iSampler* CreateSampler() = 0;
   virtual iTexture2D* CreateTexture(const iTexture2D::Descriptor& descriptor) = 0;
+  virtual iTexture2DArray* CreateTexture(const iTexture2DArray::Descriptor& descriptor) = 0;
   virtual iTextureCube* CreateTexture(const iTextureCube::Descriptor& descriptor) = 0;
   virtual iRenderTarget2D* CreateRenderTarget(const iRenderTarget2D::Descriptor &descriptor) = 0;
+  virtual iRenderTarget2DArray* CreateRenderTarget(const iRenderTarget2DArray::Descriptor &descriptor) = 0;
   virtual iRenderTargetCube* CreateRenderTarget(const iRenderTargetCube::Descriptor &descriptor) = 0;
   virtual iDirectionalLight* CreateDirectionalLight() = 0;
   virtual iPointLight* CreatePointLight() = 0;

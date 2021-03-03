@@ -4,8 +4,6 @@
 #include <spcOpenGL/openglexport.hh>
 #include <spcCore/class.hh>
 #include <spcCore/graphics/idevice.hh>
-#include <spcCore/graphics/itexture.hh>
-#include <spcCore/graphics/itexture2d.hh>
 #include <spcCore/graphics/etextureunit.hh>
 #include <map>
 
@@ -54,8 +52,10 @@ public:
 
   iSampler *CreateSampler() override;
   iTexture2D* CreateTexture(const iTexture2D::Descriptor & descriptor) override;
+  iTexture2DArray* CreateTexture(const iTexture2DArray::Descriptor & descriptor) override;
   iTextureCube* CreateTexture(const iTextureCube::Descriptor & descriptor) override;
   iRenderTarget2D* CreateRenderTarget(const iRenderTarget2D::Descriptor & descriptor) override;
+  iRenderTarget2DArray* CreateRenderTarget(const iRenderTarget2DArray::Descriptor & descriptor) override;
   iRenderTargetCube* CreateRenderTarget(const iRenderTargetCube::Descriptor & descriptor) override;
   iDirectionalLight* CreateDirectionalLight() override;
   iPointLight* CreatePointLight() override;
