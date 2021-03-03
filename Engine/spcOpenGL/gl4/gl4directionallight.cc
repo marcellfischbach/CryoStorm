@@ -41,6 +41,16 @@ bool GL4DirectionalLight::IsCastShadow() const
   return m_castShadow;
 }
 
+void GL4DirectionalLight::SetShadowMapBias(float shadowBias)
+{
+  m_shadowBias = shadowBias;
+}
+
+float GL4DirectionalLight::GetShadowMapBias() const
+{
+  return m_shadowBias;
+}
+
 void GL4DirectionalLight::SetColor(const Color4f& color)
 {
   m_color = color;

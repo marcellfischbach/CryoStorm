@@ -1,8 +1,8 @@
 program {
   shaders {
-    shader "impl/test_shadow_point_vert.spc",
-    shader "impl/test_shadow_point_geom.spc",
-    shader "impl/test_shadow_point_frag.spc",
+    shader "impl/test_shadow_point.vert",
+    shader "impl/test_shadow_point.geom",
+    shader "impl/test_shadow_point.frag",
   },
   attributes {
     attribute "Diffuse",

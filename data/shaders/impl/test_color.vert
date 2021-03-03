@@ -1,4 +1,3 @@
-shader "vertex" "
 #version 330
 
 layout(location = eVS_Vertices) in vec4 spc_Position;
@@ -26,4 +25,3 @@ void main()
   texCoord = spc_UV;
 }
 
-"

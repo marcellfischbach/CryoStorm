@@ -12,6 +12,7 @@
 #include <spcCore/graphics/isampler.hh>
 #include <spcCore/math/clipper/boxclipper.hh>
 #include <spcCore/math/clipper/sphereclipper.hh>
+#include <spcCore/settings.hh>
 #include <algorithm>
 #include <GL/glew.h>
 
@@ -30,6 +31,26 @@ GL4ForwardPipeline::GL4ForwardPipeline()
   , m_shadowMapDepthSampler(nullptr)
 {
   SPC_CLASS_GEN_CONSTR;
+
+}
+
+void GL4ForwardPipeline::Initialize()
+{
+  Settings settings(ResourceLocator("file:///config/graphics.spc"));
+  m_pointLightShadowMapSize = settings.GetInt("point_light.shadow_map.size", 1024);
+  std::string filter = settings.GetText("point_light.shadow_map.filter", "PCF");
+  if (filter == std::string("Plain"))
+  {
+    m_shadowMapFilter = ShadowMapFilter::Plain;
+  }
+  else if (filter == std::string("PCF"))
+  {
+    m_shadowMapFilter = ShadowMapFilter::PCF;
+  }
+  else if (filter == std::string("VSM"))
+  {
+    m_shadowMapFilter = ShadowMapFilter::VSM;
+  }
 }
 
 GL4ForwardPipeline::~GL4ForwardPipeline() noexcept
@@ -111,7 +132,7 @@ void GL4ForwardPipeline::Render(iRenderTarget2D* target, Camera& camera, Project
     GL4RenderTargetCube* cube = m_pointLightShadowMap[0];
     Size size = target->GetWidth() / 4;
 
-    iTextureCube* texture = cube->GetDepthTexture();;
+    iTextureCube* texture = cube->GetColorTexture(0);
 
 
     m_device->SetViewport(0, 0, size, size);
@@ -252,7 +273,14 @@ void GL4ForwardPipeline::RenderShadowMaps()
     }
     RenderPointShadowMaps(pointLight, shadowMap);
     m_pointLightShadowMapAssignment[pointLight] = shadowMap;
-    m_device->SetPointLightShadowMap(pointLight, shadowMap->GetColorTexture(0), shadowMap->GetDepthTexture());
+    m_device->SetPointLightShadowMap(
+      pointLight,
+      shadowMap->GetColorTexture(0),
+      shadowMap->GetDepthTexture(),
+      0.1f,
+      pointLight->GetRange(),
+      pointLight->GetShadowMapBias()
+    );
 
   }
 }
@@ -283,15 +311,21 @@ GL4RenderTargetCube* GL4ForwardPipeline::GetPointLightShadowMap(Size idx)
   if (m_pointLightShadowMap.size() <= idx)
   {
     iRenderTargetCube::Descriptor desc{};
-    desc.Size = 1024;
+    desc.Size = m_pointLightShadowMapSize;
     GL4RenderTargetCube* cubeMap = static_cast<GL4RenderTargetCube*>(m_device->CreateRenderTarget(desc));
 
-    iTextureCube::Descriptor colorDesc{};
-    colorDesc.Size = desc.Size;
-    colorDesc.Format = ePF_RGBA;
-    colorDesc.MipMaps = false;
-    iTextureCube* colorTexture = m_device->CreateTexture(colorDesc);
-    colorTexture->SetSampler(GetShadowMapColorSampler());
+
+    if (m_shadowMapFilter == ShadowMapFilter::VSM)
+    {
+      iTextureCube::Descriptor colorDesc{};
+      colorDesc.Size = desc.Size;
+      colorDesc.Format = ePF_RGBA;
+      colorDesc.MipMaps = false;
+      iTextureCube* colorTexture = m_device->CreateTexture(colorDesc);
+      colorTexture->SetSampler(GetShadowMapColorSampler());
+      cubeMap->AddColorTexture(colorTexture);
+      colorTexture->Release();
+    }
 
     iTextureCube::Descriptor depthDesc{};
     depthDesc.Size = desc.Size;
@@ -299,14 +333,12 @@ GL4RenderTargetCube* GL4ForwardPipeline::GetPointLightShadowMap(Size idx)
     depthDesc.MipMaps = false;
     iTextureCube* depthTexture = m_device->CreateTexture(depthDesc);
     depthTexture->SetSampler(GetShadowMapDepthSampler());
-
-    cubeMap->AddColorTexture(colorTexture);
     cubeMap->SetDepthTexture(depthTexture);
+    depthTexture->Release();
+
     if (!cubeMap->Compile())
     {
       cubeMap->Release();
-      colorTexture->Release();
-      depthTexture->Release();
       cubeMap = nullptr;
       return nullptr;
     }
@@ -338,7 +370,14 @@ iSampler* GL4ForwardPipeline::GetShadowMapDepthSampler()
   if (!m_shadowMapDepthSampler)
   {
     m_shadowMapDepthSampler = m_device->CreateSampler();
-    m_shadowMapDepthSampler->SetFilterMode(eFM_MinMagNearest);
+    if (m_shadowMapFilter == ShadowMapFilter::PCF)
+    {
+      m_shadowMapDepthSampler->SetFilterMode(eFM_MinMagLinear);
+    }
+    else
+    {
+      m_shadowMapDepthSampler->SetFilterMode(eFM_MinMagNearest);
+    }
     m_shadowMapDepthSampler->SetAnisotropy(1);
     m_shadowMapDepthSampler->SetAddressU(eTAM_Clamp);
     m_shadowMapDepthSampler->SetAddressV(eTAM_Clamp);
@@ -358,7 +397,7 @@ void GL4ForwardPipeline::RenderPointShadowMaps(GL4PointLight* pointLight, GL4Ren
   m_device->Clear(true, Color4f(0.0f, 0.0f, 0.5f, 1.0f), true, 1.0f, false, 0);
 
 
-  float near = 1.0f;
+  float near = 0.1f;
   float far = pointLight->GetRange();
   Matrix4f projection;
   m_device->GetPerspectiveProjection(-near, near, -near, near, near, far, projection);
@@ -372,12 +411,12 @@ void GL4ForwardPipeline::RenderPointShadowMaps(GL4PointLight* pointLight, GL4Ren
   };
   Vector3f pos = pointLight->GetPosition();
   Matrix4f views[6];
-  views[0].SetLookAt(pos, pos + Vector3f(1, 0, 0), Vector3f(0, 1, 0));
-  views[1].SetLookAt(pos, pos + Vector3f(-1, 0, 0), Vector3f(0, 1, 0));
+  views[0].SetLookAt(pos, pos + Vector3f(1, 0, 0), Vector3f(0, -1, 0));
+  views[1].SetLookAt(pos, pos + Vector3f(-1, 0, 0), Vector3f(0, -1, 0));
   views[2].SetLookAt(pos, pos + Vector3f(0, 1, 0), Vector3f(0, 0, -1));
   views[3].SetLookAt(pos, pos + Vector3f(0, -1, 0), Vector3f(0, 0, 1));
-  views[4].SetLookAt(pos, pos + Vector3f(0, 0, 1), Vector3f(0, 1, 0));
-  views[5].SetLookAt(pos, pos + Vector3f(0, 0, -1), Vector3f(0, 1, 0));
+  views[4].SetLookAt(pos, pos + Vector3f(0, 0, -1), Vector3f(0, -1, 0));
+  views[5].SetLookAt(pos, pos + Vector3f(0, 0, 1), Vector3f(0, -1, 0));
 
 
   m_device->SetShadowMapProjectionMatrices(projections, 6);

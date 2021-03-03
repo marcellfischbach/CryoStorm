@@ -142,7 +142,7 @@ SDL_GLContext context;
 bool initialize_modules(int argc, char** argv)
 {
   spc::VFS::Get()->SetBasePath("D:\\DEV\\SpiceEngine\\data");
-  spc::Settings settings("display.spc");
+  spc::Settings settings("file:///config/display.spc");
 
   SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE);
 
@@ -365,7 +365,7 @@ int main(int argc, char** argv)
   spc::LightState* lightState = new spc::LightState("LightState");
   lightEntity->Attach(lightState);
   lightState->SetType(spc::eLT_Point);
-  lightState->SetColor(spc::Color4f(1.0f, 0.5f, 0.2f, 1.0f) * 1.0f);
+  lightState->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 1.0f);
   lightState->SetRange(25.0f);
   lightState->SetStatic(false);
   lightState->SetCastShadow(true);
@@ -378,7 +378,7 @@ int main(int argc, char** argv)
   spc::LightState* sunLightState = new spc::LightState("SunLight");
   sunEntity->Attach(sunLightState);
   sunLightState->SetType(spc::eLT_Directional);
-  sunLightState->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 0.1f);
+  sunLightState->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 0.5f);
   sunLightState->GetTransform()
     .SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(1.0f, 0.0f, 0.0f), spc::spcDeg2Rad(45.0f)))
     .Finish();
@@ -492,7 +492,7 @@ int main(int argc, char** argv)
       .SetTranslation(spc::Vector3f(spc::spcCos(entRot) * 5.0f, 5.0f, spc::spcSin(entRot) * 5.0f))
       .Finish();
 
-    float dist = 20.0f;
+    float dist = 5.0f;
     camera->SetSpot(spc::Vector3f(0, 0.0f, 0.0f));
     camera->SetEye(spc::Vector3f(spc::spcCos(entRot + (float)M_PI / 2.0f) * dist, dist, spc::spcSin(entRot+ (float)M_PI / 2.0f) * dist));
 

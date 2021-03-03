@@ -14,9 +14,18 @@ namespace spc
 
 
 LightState::LightState(const std::string& name)
-        : SpatialState(name), m_light(nullptr), m_lightType(eLT_Point), m_gfxLight(nullptr)
+  : SpatialState(name)
+  , m_light(nullptr)
+  , m_directionalLight(nullptr)
+  , m_pointLight(nullptr)
+  , m_gfxLight(nullptr)
+  , m_lightType(eLT_Point)
+  , m_castShadow(false)
+  , m_shadowBias(0.001f)
+  , m_color(1.0f, 1.0f, 1.0f, 1.0f)
+  , m_range (100.0f)
 {
-
+  SPC_CLASS_GEN_CONSTR;
 }
 
 LightState::~LightState() noexcept
@@ -75,8 +84,8 @@ iLight* LightState::CreateLight()
   iDevice* device = ObjectRegistry::Get<iDevice>();
   switch (m_lightType)
   {
-    case eLT_Point: return device->CreatePointLight();
-    case eLT_Directional: return device->CreateDirectionalLight();
+  case eLT_Point: return device->CreatePointLight();
+  case eLT_Directional: return device->CreateDirectionalLight();
   }
   return nullptr;
 }
@@ -86,13 +95,15 @@ void LightState::UpdateValues()
   if (m_light)
   {
     m_light->SetCastShadow(m_castShadow);
+    m_light->SetShadowMapBias(m_shadowBias);
     m_light->SetColor(m_color);
     m_light->SetChangeMode(eLCM_Dynamic);
+
     if (m_pointLight)
     {
       m_pointLight->SetRange(m_range);
     }
-  
+
     TransformationUpdatedPreChildren();
   }
 }
@@ -156,6 +167,17 @@ void LightState::SetCastShadow(bool castShadow)
 bool LightState::IsCastShadow() const
 {
   return m_castShadow;
+}
+
+void LightState::SetShadowMapBias(float bias)
+{
+  m_shadowBias = bias;
+  UpdateValues();
+}
+
+float LightState::GetShadowMapBias() const
+{
+  return m_shadowBias;
 }
 
 void LightState::SetRange(float range)

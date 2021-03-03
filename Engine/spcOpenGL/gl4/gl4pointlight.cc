@@ -42,6 +42,17 @@ bool GL4PointLight::IsCastShadow() const
   return m_castShadow;
 }
 
+void GL4PointLight::SetShadowMapBias(float shadowBias)
+{
+  m_shadowBias = shadowBias;
+}
+
+float GL4PointLight::GetShadowMapBias() const
+{
+  return m_shadowBias;
+}
+
+
 void GL4PointLight::SetColor(const Color4f& color)
 {
   m_color = color;

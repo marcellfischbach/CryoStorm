@@ -26,16 +26,19 @@ public:
   ~LightState() override;
 
   void SetType(eLightType type);
-  eLightType GetType() const;
+  SPC_NODISCARD eLightType GetType() const;
 
   void SetCastShadow(bool castShadow);
-  bool IsCastShadow() const;
+  SPC_NODISCARD bool IsCastShadow() const;
+
+  void SetShadowMapBias(float bias);
+  SPC_NODISCARD float GetShadowMapBias() const;
 
   void SetColor(const Color4f &color);
-  const Color4f &GetColor() const;
+  SPC_NODISCARD const Color4f &GetColor() const;
 
   void SetRange(float range);
-  float GetRange() const;
+  SPC_NODISCARD float GetRange() const;
 
   void OnAttachedToWorld(World * world) override;
   void OnDetachedFromWorld(World * world) override;
@@ -60,6 +63,7 @@ private:
   eLightType m_lightType;
 
   bool m_castShadow;
+  float m_shadowBias;
   Color4f m_color;
   float m_range;
 };

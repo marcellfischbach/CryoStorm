@@ -27,6 +27,9 @@ struct SPC_CORE_API iLight : public SPC_SUPER(iObject)
   virtual void SetCastShadow(bool castShadow) = 0;
   virtual SPC_NODISCARD bool IsCastShadow() const = 0;
 
+  virtual void SetShadowMapBias(float bias) = 0;
+  virtual SPC_NODISCARD float GetShadowMapBias() const = 0;
+
   virtual void SetColor(const Color4f& color) = 0;
   virtual SPC_NODISCARD const Color4f& GetColor() const = 0;
 

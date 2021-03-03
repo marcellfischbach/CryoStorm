@@ -21,11 +21,6 @@ std::vector<std::string> replace_includes(const ResourceLocator* parent,
                                           std::vector<std::string>& lines,
                                           std::set<ResourceLocator>& included);
 
-GL4ShaderLoader::GL4ShaderLoader()
-{
-  SPC_CLASS_GEN_CONSTR;
-}
-
 
 std::vector<std::string> split(const std::string& string)
 {
@@ -102,17 +97,27 @@ void replace(std::vector<std::string>& lines, const std::string& vertexStreamNam
 
 }
 
-std::vector<std::string> loadExternalLines(const ResourceLocator& locator, std::set<ResourceLocator>& included)
+std::vector<std::string> loadExternalLinesRaw(const ResourceLocator& locator, iFile* file, std::set<ResourceLocator>& included)
 {
-  iFile* file = VFS::Get()->Open(locator, eAM_Read, eOM_Text);
-  if (!file)
-  {
-    return std::vector<std::string>();
-  }
+  file->Seek(eSM_End, 0);
+  long size = file->Tell();
+  file->Seek(eSM_Set, 0);
 
+  char* buffer = new char[size + 1];
+  file->Read(sizeof(char), size, buffer);
+  buffer[size] = '\0';
+  std::string source(buffer);
+
+  std::vector<std::string> lines = split(source);
+  delete[] buffer;
+
+  return replace_includes(&locator, lines, included);
+}
+
+std::vector<std::string> loadExternalLinesSpc(const ResourceLocator& locator, iFile* file, std::set<ResourceLocator>& included)
+{
   spc::file::File fFile;
   bool res = fFile.Parse(file);
-  file->Release();
   if (!res)
   {
     return std::vector<std::string>();
@@ -128,6 +133,38 @@ std::vector<std::string> loadExternalLines(const ResourceLocator& locator, std::
   std::vector<std::string> lines = split(source);
   return replace_includes(&locator, lines, included);
 
+}
+
+
+std::vector<std::string> loadExternalLines(const ResourceLocator& locator, std::set<ResourceLocator>& included)
+{
+  iFile* file = VFS::Get()->Open(locator, eAM_Read, eOM_Binary);
+  if (!file)
+  {
+    return std::vector<std::string>();
+  }
+
+  std::vector<std::string> lines;
+  std::string ext = locator.GetExtension();
+  if (ext == "VERT"
+    || ext == "EVAL"
+    || ext == "CTRL"
+    || ext == "GEOM"
+    || ext == "FRAG"
+    || ext == "COMP"
+    || ext == "GLSL"
+    )
+  {
+     lines = loadExternalLinesRaw(locator, file,  included);
+  }
+  else if (ext == "SPC")
+  {
+    lines = loadExternalLinesSpc(locator, file, included);
+  }
+  file->Close();
+  file->Release();
+
+  return lines;
 }
 
 std::vector<std::string>
@@ -230,14 +267,19 @@ GL4Shader* LoadShader(const std::string& typeText,
   return nullptr;
 }
 
+GL4ShaderLoaderSpc::GL4ShaderLoaderSpc()
+{
+  SPC_CLASS_GEN_CONSTR;
+}
 
-bool GL4ShaderLoader::CanLoad(const Class* cls, const file::File* file, const ResourceLocator* locator) const
+
+bool GL4ShaderLoaderSpc::CanLoad(const Class* cls, const file::File* file, const ResourceLocator* locator) const
 {
   return cls->IsAssignableFrom<GL4Shader>() && file->Root()->HasChild("shader");
 }
 
 
-iObject* GL4ShaderLoader::Load(const Class* cls, const file::File* file, const ResourceLocator* locator) const
+iObject* GL4ShaderLoaderSpc::Load(const Class* cls, const file::File* file, const ResourceLocator* locator) const
 {
   const file::Element* shaderElement = file->Root()->GetChild("shader");
   if (!shaderElement)
@@ -251,6 +293,81 @@ iObject* GL4ShaderLoader::Load(const Class* cls, const file::File* file, const R
                     locator);
 
 }
+
+
+
+GL4ShaderLoader::GL4ShaderLoader()
+{
+  SPC_CLASS_GEN_CONSTR;
+}
+
+
+bool GL4ShaderLoader::CanLoad(const Class* cls,  const ResourceLocator& locator) const
+{
+  std::string ext = locator.GetExtension();
+
+  return cls->IsAssignableFrom<GL4Shader>() &&
+    (ext == std::string("VERT")
+      || ext == std::string("EVAL")
+      || ext == std::string("CTRL")
+      || ext == std::string("GEOM")
+      || ext == std::string("FRAG")
+      || ext == std::string("COMP")
+      );
+}
+
+
+iObject* GL4ShaderLoader::Load(const Class* cls, const ResourceLocator& locator) const
+{
+  iFile* file = VFS::Get()->Open(locator, eAM_Read, eOM_Binary);
+  if (!file)
+  {
+    return nullptr;
+  }
+
+  file->Seek(eSM_End, 0);
+  long size = file->Tell();
+  file->Seek(eSM_Set, 0);
+
+  char* buffer = new char[size+1];
+  file->Read(sizeof(char), size, buffer);
+  buffer[size] = '\0';
+  file->Close();
+  file->Release();
+
+  std::string source(buffer);
+  std::string ext = locator.GetExtension();
+  if (ext == std::string("VERT"))
+  {
+    ext = std::string("vertex");
+  } 
+  else if (ext == std::string("EVAL"))
+  {
+    ext = std::string("tessEval");
+  }
+  else if (ext == std::string("CTRL"))
+  {
+    ext = std::string("tessControl");
+  }
+  else if (ext == std::string("GEOM"))
+  {
+    ext = std::string("geometry");
+  }
+  else if (ext == std::string("FRAG"))
+  {
+    ext = std::string("fragment");
+  }
+  else if (ext == std::string("COMP"))
+  {
+    ext = std::string("compute");
+  }
+  GL4Shader* shader = LoadShader(ext, source, &locator);
+  delete[] buffer;
+  buffer = nullptr;
+
+  return shader;
+}
+
 
 
 }

@@ -20,6 +20,7 @@ bool OpenGLModule::Register(int argc, char** argv)
 
   AssetManager::Get()->RegisterLoader(new GL4ProgramLoader());
   AssetManager::Get()->RegisterLoader(new GL4ShaderLoader());
+  AssetManager::Get()->RegisterLoader(new GL4ShaderLoaderSpc());
   ObjectRegistry::Register<iDevice>(new GL4Device());
   ObjectRegistry::Register<iRenderPipeline>(new GL4ForwardPipeline());
   ObjectRegistry::Register<iRenderMeshGeneratorFactory>(new GL4RenderMeshGeneratorFactory());
@@ -37,6 +38,12 @@ bool OpenGLModule::Initialize(int argc, char** argv)
 
     ObjectRegistry::Register<Samplers>(samplers);
 
+  }
+
+  iRenderPipeline* pipeline = ObjectRegistry::Get<iRenderPipeline>();
+  if (pipeline)
+  {
+    pipeline->Initialize();
   }
 
   return initialized;

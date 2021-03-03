@@ -33,6 +33,7 @@ public:
   GL4ForwardPipeline();
   ~GL4ForwardPipeline() noexcept override;
 
+  void Initialize() override;
 
   void Render(iRenderTarget2D * taget, Camera & camera, Projector & projector, iDevice * device, GfxScene * scene) override;
 
@@ -44,7 +45,7 @@ private:
   void CollectShadowLights(GfxLight * light);
   void SortShadowLights();
   void RenderShadowMaps();
-  void RenderPointShadowMaps(GL4PointLight *pointLight, GL4RenderTargetCube *renderTarget);
+  void RenderPointShadowMaps(GL4PointLight * pointLight, GL4RenderTargetCube * renderTarget);
   GL4RenderTargetCube* GetPointLightShadowMap(Size i);
   iSampler* GetShadowMapColorSampler();
   iSampler* GetShadowMapDepthSampler();
@@ -69,6 +70,15 @@ private:
   Projector m_projector;
   GfxScene* m_scene;
   iRenderTarget2D* m_target;
+
+  enum class ShadowMapFilter 
+  {
+    Plain,
+    PCF,
+    VSM
+  };
+  Size m_pointLightShadowMapSize;
+  ShadowMapFilter m_shadowMapFilter;
 
   std::vector<GfxLight*> m_dynamicLights;
   std::vector<GfxLight*> m_staticLights;

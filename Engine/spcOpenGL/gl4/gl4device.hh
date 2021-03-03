@@ -49,7 +49,7 @@ public:
   void SetRenderTarget(iRenderTarget * target) override;
 
   void ClearShadowMaps() override;
-  void SetPointLightShadowMap(iLight * light, iTextureCube * colorMap, iTextureCube * depthMap) override;
+  void SetPointLightShadowMap(iLight * light, iTextureCube * colorMap, iTextureCube * depthMap, float near, float far, float bias) override;
 
 
   iSampler *CreateSampler() override;
@@ -139,6 +139,7 @@ private:
     iLight* Light;
     iTextureCube* Color;
     iTextureCube* Depth;
+    Vector3f Mapping;
   };
   std::map<const iLight*, PointLightShadowData> m_pointLightShadowData;
 

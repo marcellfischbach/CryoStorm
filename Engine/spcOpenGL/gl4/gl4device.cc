@@ -244,22 +244,10 @@ Matrix4f& GL4Device::GetPerspectiveProjectionInv(float l, float r, float b, floa
   float nf2 = z2 * f;
 
 
-  m.m00 = dx / z2;
-  m.m10 = 0.0f;
-  m.m20 = 0.0f;
-  m.m30 = sx / z2;
-  m.m01 = 0.0f;
-  m.m11 = dy / z2;
-  m.m21 = 0.0f;
-  m.m31 = sy / z2;
-  m.m02 = 0.0f;
-  m.m12 = 0.0f;
-  m.m22 = 0.0f;
-  m.m32 = 1.0f;
-  m.m03 = 0.0f;
-  m.m13 = 0.0f;
-  m.m23 = -dz / nf2;
-  m.m33 = sz / nf2;
+  m.m00 = dx / z2;  m.m10 = 0.0f;     m.m20 = 0.0f;       m.m30 = sx / z2;
+  m.m01 = 0.0f;     m.m11 = dy / z2;  m.m21 = 0.0f;       m.m31 = sy / z2;
+  m.m02 = 0.0f;     m.m12 = 0.0f;     m.m22 = 0.0f;       m.m32 = 1.0f;
+  m.m03 = 0.0f;     m.m13 = 0.0f;     m.m23 = -dz / nf2;  m.m33 = sz / nf2;
 
 
   return m;
@@ -395,12 +383,13 @@ void GL4Device::ClearShadowMaps()
   m_pointLightShadowData.clear();
 }
 
-void GL4Device::SetPointLightShadowMap(iLight* light, iTextureCube* colorMap, iTextureCube* depthMap)
+void GL4Device::SetPointLightShadowMap(iLight* light, iTextureCube* colorMap, iTextureCube* depthMap, float near, float far, float bias)
 {
   PointLightShadowData data{};
   data.Light = light;
   data.Color = colorMap;
   data.Depth = depthMap;
+  data.Mapping.Set(near, far, bias);
   m_pointLightShadowData[light] = data;
 }
 
@@ -571,6 +560,7 @@ void GL4Device::BindForwardLight(const iLight* light, Size idx)
   iShaderAttribute* lightVector = m_shader->GetShaderAttribute(eSA_LightVector);
   iShaderAttribute* lightRange = m_shader->GetShaderAttribute(eSA_LightRange);
   iShaderAttribute* lightCastShadow = m_shader->GetShaderAttribute(eSA_LightCastShadow);
+  iShaderAttribute* pointLightShadowMapMapping = m_shader->GetShaderAttribute(eSA_PointLightShadowMapMapping);
   iShaderAttribute* pointLightShadowMapColor = m_shader->GetShaderAttribute(eSA_PointLightShadowMapColor);
   iShaderAttribute* pointLightShadowMapDepth = m_shader->GetShaderAttribute(eSA_PointLightShadowMapDepth);
   if (lightColor)
@@ -588,6 +578,10 @@ void GL4Device::BindForwardLight(const iLight* light, Size idx)
   if (lightCastShadow)
   {
     lightCastShadow->SetArrayIndex(idx);
+  }
+  if (pointLightShadowMapMapping)
+  {
+    pointLightShadowMapMapping->SetArrayIndex(idx);
   }
   if (pointLightShadowMapColor)
   {
@@ -630,6 +624,10 @@ void GL4Device::BindForwardLight(const iLight* light, Size idx)
           {
             lightCastShadow->Bind(1);
           }
+          if (pointLightShadowMapMapping)
+          {
+            pointLightShadowMapMapping->Bind(data.Mapping);
+          }
           if (pointLightShadowMapColor && data.Color)
           {
             eTextureUnit unit = BindTexture(data.Color);
@@ -647,7 +645,7 @@ void GL4Device::BindForwardLight(const iLight* light, Size idx)
             }
           }
         }
-       }
+      }
       break;
     case eLT_Directional:
       {
@@ -1008,17 +1006,17 @@ iRenderMesh* GL4Device::FullscreenBlitCubeRenderMesh(int layer)
   switch (layer)
   {
   case 0: // Positive X
-    uv.push_back(Vector3f(1.0f, 1.0f, 1.0f));
     uv.push_back(Vector3f(1.0f, -1.0f, 1.0f));
-    uv.push_back(Vector3f(1.0f, 1.0f, -1.0f));
+    uv.push_back(Vector3f(1.0f, 1.0f, 1.0f));
     uv.push_back(Vector3f(1.0f, -1.0f, -1.0f));
+    uv.push_back(Vector3f(1.0f, 1.0f, -1.0f));
     gen.SetUV0(uv);
     return (m_fullscreenBlitCubePosXRenderMesh = gen.Generate());
   case 1: // Negative X
-    uv.push_back(Vector3f(-1.0f, 1.0f, -1.0f));
     uv.push_back(Vector3f(-1.0f, -1.0f, -1.0f));
-    uv.push_back(Vector3f(-1.0f, 1.0f, 1.0f));
+    uv.push_back(Vector3f(-1.0f, 1.0f, -1.0f));
     uv.push_back(Vector3f(-1.0f, -1.0f, 1.0f));
+    uv.push_back(Vector3f(-1.0f, 1.0f, 1.0f));
     gen.SetUV0(uv);
     return (m_fullscreenBlitCubeNegXRenderMesh = gen.Generate());
   case 2: // Positive Y
@@ -1036,17 +1034,17 @@ iRenderMesh* GL4Device::FullscreenBlitCubeRenderMesh(int layer)
     gen.SetUV0(uv);
     return (m_fullscreenBlitCubeNegYRenderMesh = gen.Generate());
   case 4: // Positive Z
-    uv.push_back(Vector3f(-1.0f, 1.0f, 1.0f));
     uv.push_back(Vector3f(-1.0f, -1.0f, 1.0f));
-    uv.push_back(Vector3f(1.0f, 1.0f, 1.0f));
+    uv.push_back(Vector3f(-1.0f, 1.0f, 1.0f));
     uv.push_back(Vector3f(1.0f, -1.0f, 1.0f));
+    uv.push_back(Vector3f(1.0f, 1.0f, 1.0f));
     gen.SetUV0(uv);
     return (m_fullscreenBlitCubePosZRenderMesh = gen.Generate());
   case 5: // Negative Z
-    uv.push_back(Vector3f(1.0f, 1.0f, -1.0f));
     uv.push_back(Vector3f(1.0f, -1.0f, -1.0f));
-    uv.push_back(Vector3f(-1.0f, 1.0f, -1.0f));
+    uv.push_back(Vector3f(1.0f, 1.0f, -1.0f));
     uv.push_back(Vector3f(-1.0f, -1.0f, -1.0f));
+    uv.push_back(Vector3f(-1.0f, 1.0f, -1.0f));
     gen.SetUV0(uv);
     return (m_fullscreenBlitCubeNegZRenderMesh = gen.Generate());
 

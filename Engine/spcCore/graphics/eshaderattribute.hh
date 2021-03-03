@@ -33,6 +33,7 @@ enum eShaderAttribute
   eSA_LightCastShadow,
 
   /* ShadowMapping */
+  eSA_PointLightShadowMapMapping,
   eSA_PointLightShadowMapColor,
   eSA_PointLightShadowMapDepth,
 

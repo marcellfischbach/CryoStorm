@@ -1,5 +1,3 @@
-
-shader "fragment" "
 #version 330
 
 layout(location = 0) out vec4 spc_FragColor;
@@ -13,7 +11,7 @@ in vec2 texCoord;
 in vec3 world_position;
 in vec3 world_normal;
 
-#include <../common/lighting.spc>
+#include <../common/lighting.glsl>
 
 
 void main()
@@ -22,9 +20,8 @@ void main()
     vec4 frag_color = calc_lights(world_position, norm);
         
     frag_color *= color;
-    //frag_color *= texture(spc_Diffuse, texCoord);
+    frag_color *= texture(spc_Diffuse, texCoord);
     spc_FragColor = frag_color;
     
 }
 
-"

@@ -115,6 +115,7 @@ void GL4Program::RegisterRenderAttributes()
   RegisterAttribute("LightCount");
   RegisterAttribute("LightCastShadow");
 
+  RegisterAttribute("PointLightShadowMapMapping");
   RegisterAttribute("PointLightShadowMapColor");
   RegisterAttribute("PointLightShadowMapDepth");
 
