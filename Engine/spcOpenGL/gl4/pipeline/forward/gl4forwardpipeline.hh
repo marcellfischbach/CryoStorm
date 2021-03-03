@@ -39,7 +39,7 @@ public:
 private:
 
   void LightScanned(GfxLight * light);
-  void MeshScanned(GfxMesh * mesh, const GfxLight * *lights, Size offset);
+  void RenderMesh(GfxMesh * mesh, const GfxLight * *lights, Size offset);
 
   void CollectShadowLights(GfxLight * light);
   void SortShadowLights();

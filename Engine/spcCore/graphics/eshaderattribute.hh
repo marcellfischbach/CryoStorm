@@ -29,7 +29,12 @@ enum eShaderAttribute
   eSA_LightColor,
   eSA_LightVector,
   eSA_LightRange,
-  eSA_LightCount
+  eSA_LightCount,
+  eSA_LightCastShadow,
+
+  /* ShadowMapping */
+  eSA_PointLightShadowMapColor,
+  eSA_PointLightShadowMapDepth,
 
 };
 

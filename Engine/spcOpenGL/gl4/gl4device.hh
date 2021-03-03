@@ -7,6 +7,7 @@
 #include <spcCore/graphics/itexture.hh>
 #include <spcCore/graphics/itexture2d.hh>
 #include <spcCore/graphics/etextureunit.hh>
+#include <map>
 
 namespace spc::opengl
 {
@@ -46,6 +47,10 @@ public:
 
   void SetShader(iShader * shader) override;
   void SetRenderTarget(iRenderTarget * target) override;
+
+  void ClearShadowMaps() override;
+  void SetPointLightShadowMap(iLight * light, iTextureCube * colorMap, iTextureCube * depthMap) override;
+
 
   iSampler *CreateSampler() override;
   iTexture2D* CreateTexture(const iTexture2D::Descriptor & descriptor) override;
@@ -127,6 +132,15 @@ private:
   Matrix4f m_shadowMapProjectionMatrices[6];
   Matrix4f m_shadowMapViewProjectionMatrices[6];
   bool m_shadowMapViewProjectionMatrixDirty;
+
+
+  struct PointLightShadowData
+  {
+    iLight* Light;
+    iTextureCube* Color;
+    iTextureCube* Depth;
+  };
+  std::map<const iLight*, PointLightShadowData> m_pointLightShadowData;
 
 
   /** 

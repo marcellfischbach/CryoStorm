@@ -47,6 +47,7 @@ struct SPC_CORE_API iDevice : public SPC_SUPER(iObject)
   virtual void SetShadowMapViewMatrices(const Matrix4f* viewMatrices, Size numMatrices) = 0;
   virtual void SetShadowMapProjectionMatrices(const Matrix4f* projectionMatrices, Size numMatrices) = 0;
 
+
   virtual Matrix4f& GetPerspectiveProjection(float l, float r, float b, float t, float n, float f, Matrix4f& m) = 0;
   virtual Matrix4f& GetPerspectiveProjectionInv(float l, float r, float b, float t, float n, float f, Matrix4f& m) = 0;
   virtual Matrix4f& GetOrthographicProjection(float l, float r, float b, float t, float n, float f, Matrix4f& m) = 0;
@@ -54,6 +55,10 @@ struct SPC_CORE_API iDevice : public SPC_SUPER(iObject)
 
   virtual void SetShader(iShader* shader) = 0;
   virtual void SetRenderTarget(iRenderTarget* target) = 0;
+
+  virtual void ClearShadowMaps() = 0;
+  virtual void SetPointLightShadowMap(iLight* light, iTextureCube* colorMap, iTextureCube* depthMap) = 0;
+
 
   virtual iSampler* CreateSampler() = 0;
   virtual iTexture2D* CreateTexture(const iTexture2D::Descriptor& descriptor) = 0;

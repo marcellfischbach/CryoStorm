@@ -56,7 +56,8 @@ void GL4ForwardPipeline::Render(iRenderTarget2D* target, Camera& camera, Project
 
 
 
-  // get all global finalRenderLights from the scene
+  // get all global lights from the scene....
+  // global lights are always along the final renderlights 
   const GfxLight* finalRenderLights[MaxLights];
   Size finalRenderLightOffset = 0;
   scene->ScanLights(&clipper, GfxScene::eSM_Global,
@@ -72,6 +73,8 @@ void GL4ForwardPipeline::Render(iRenderTarget2D* target, Camera& camera, Project
     });
 
 
+  //
+  // collect the "normal" static and dynamic lights
   m_dynamicLights.clear();
   m_staticLights.clear();
   m_staticLightsNew.clear();
@@ -84,35 +87,45 @@ void GL4ForwardPipeline::Render(iRenderTarget2D* target, Camera& camera, Project
     });
 
 
+  //
+  // Render up to MasLights shadow maps
   RenderShadowMaps();
 
+
+  // 
+  // and finaly render all visible objects
   device->SetRenderTarget(m_target);
   device->Clear(true, spc::Color4f(0.0f, 0.0, 0.0, 1.0f), true, 1.0f, true, 0);
-
   scene->ScanMeshes(&clipper, GfxScene::eSM_Dynamic | GfxScene::eSM_Static,
     [this, &finalRenderLights, &finalRenderLightOffset](GfxMesh* mesh)
     {
-      MeshScanned(mesh, finalRenderLights, finalRenderLightOffset);
+      RenderMesh(mesh, finalRenderLights, finalRenderLightOffset);
     }
   );
 
-  if (!m_pointLightShadowMap.empty())
+
+
+  // for debuging purpose
+  if (!m_pointLightShadowMap.empty() && false)
   {
     GL4RenderTargetCube* cube = m_pointLightShadowMap[0];
     Size size = target->GetWidth() / 4;
 
+    iTextureCube* texture = cube->GetDepthTexture();;
+
+
     m_device->SetViewport(0, 0, size, size);
-    m_device->RenderFullscreen(cube->GetColorTexture(0), 1);
-    
+    m_device->RenderFullscreen(texture, 1);
+
     m_device->SetViewport(size, 0, size, size);
-    m_device->RenderFullscreen(cube->GetColorTexture(0), 4);
+    m_device->RenderFullscreen(texture, 4);
 
     m_device->SetViewport(size * 2, 0, size, size);
-    m_device->RenderFullscreen(cube->GetColorTexture(0), 0);
+    m_device->RenderFullscreen(texture, 0);
 
     m_device->SetViewport(size * 3, 0, size, size);
-    m_device->RenderFullscreen(cube->GetColorTexture(0), 5);
-    
+    m_device->RenderFullscreen(texture, 5);
+
 
   }
 
@@ -146,7 +159,7 @@ void GL4ForwardPipeline::LightScanned(GfxLight* light)
 
 
 
-void GL4ForwardPipeline::MeshScanned(GfxMesh* mesh, const GfxLight** lights, Size offset)
+void GL4ForwardPipeline::RenderMesh(GfxMesh* mesh, const GfxLight** lights, Size offset)
 {
 
   if (mesh->IsStatic())
@@ -198,45 +211,31 @@ void GL4ForwardPipeline::CollectShadowLights(GfxLight* light)
   switch (lght->GetType())
   {
   case eLT_Point:
-  {
-    GL4PointLight* pointLight = static_cast<GL4PointLight*>(light->GetLight());
-    if (pointLight)
     {
-      m_shadowPointLights.push_back(pointLight);
+      GL4PointLight* pointLight = static_cast<GL4PointLight*>(light->GetLight());
+      if (pointLight)
+      {
+        m_shadowPointLights.push_back(pointLight);
+      }
     }
     break;
-  }
   case eLT_Directional:
-  {
-    GL4DirectionalLight* directionalLight = static_cast<GL4DirectionalLight*>(light->GetLight());
-    if (directionalLight)
     {
-      m_shadowDirectionalLights.push_back(directionalLight);
+      GL4DirectionalLight* directionalLight = static_cast<GL4DirectionalLight*>(light->GetLight());
+      if (directionalLight)
+      {
+        m_shadowDirectionalLights.push_back(directionalLight);
+      }
     }
     break;
   }
-  }
 }
 
-void GL4ForwardPipeline::SortShadowLights()
-{
-  std::sort(m_shadowDirectionalLights.begin(), m_shadowDirectionalLights.end(),
-    [](GL4DirectionalLight* light0, GL4DirectionalLight* light1) {
-      return light0->GetIntensity() > light1->GetIntensity();
-    });
-
-
-  std::sort(m_shadowPointLights.begin(), m_shadowPointLights.end(),
-    [](GL4PointLight* light0, GL4PointLight* light1) {
-      return light0->GetIntensity() > light1->GetIntensity();
-    });
-
-}
 
 void GL4ForwardPipeline::RenderShadowMaps()
 {
   SortShadowLights();
-
+  m_device->ClearShadowMaps();
   m_pointLightShadowMapAssignment.clear();
   Size i = 0;
   for (auto pointLight : m_shadowPointLights)
@@ -253,8 +252,25 @@ void GL4ForwardPipeline::RenderShadowMaps()
     }
     RenderPointShadowMaps(pointLight, shadowMap);
     m_pointLightShadowMapAssignment[pointLight] = shadowMap;
+    m_device->SetPointLightShadowMap(pointLight, shadowMap->GetColorTexture(0), shadowMap->GetDepthTexture());
 
   }
+}
+
+
+void GL4ForwardPipeline::SortShadowLights()
+{
+  std::sort(m_shadowDirectionalLights.begin(), m_shadowDirectionalLights.end(),
+    [](GL4DirectionalLight* light0, GL4DirectionalLight* light1) {
+      return light0->GetIntensity() > light1->GetIntensity();
+    });
+
+
+  std::sort(m_shadowPointLights.begin(), m_shadowPointLights.end(),
+    [](GL4PointLight* light0, GL4PointLight* light1) {
+      return light0->GetIntensity() > light1->GetIntensity();
+    });
+
 }
 
 GL4RenderTargetCube* GL4ForwardPipeline::GetPointLightShadowMap(Size idx)
@@ -327,6 +343,8 @@ iSampler* GL4ForwardPipeline::GetShadowMapDepthSampler()
     m_shadowMapDepthSampler->SetAddressU(eTAM_Clamp);
     m_shadowMapDepthSampler->SetAddressV(eTAM_Clamp);
     m_shadowMapDepthSampler->SetAddressW(eTAM_Clamp);
+    m_shadowMapDepthSampler->SetTextureCompareMode(eTCM_CompareToR);
+    m_shadowMapDepthSampler->SetTextureCompareFunc(eCF_LessOrEqual);
   }
   return m_shadowMapDepthSampler;
 }
@@ -350,7 +368,7 @@ void GL4ForwardPipeline::RenderPointShadowMaps(GL4PointLight* pointLight, GL4Ren
     projection,
     projection,
     projection,
-    projection 
+    projection
   };
   Vector3f pos = pointLight->GetPosition();
   Matrix4f views[6];

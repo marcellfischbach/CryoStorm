@@ -366,7 +366,7 @@ int main(int argc, char** argv)
   lightEntity->Attach(lightState);
   lightState->SetType(spc::eLT_Point);
   lightState->SetColor(spc::Color4f(1.0f, 0.5f, 0.2f, 1.0f) * 1.0f);
-  lightState->SetRange(100.0f);
+  lightState->SetRange(25.0f);
   lightState->SetStatic(false);
   lightState->SetCastShadow(true);
   lightEntity->GetRoot()->GetTransform()
@@ -378,7 +378,7 @@ int main(int argc, char** argv)
   spc::LightState* sunLightState = new spc::LightState("SunLight");
   sunEntity->Attach(sunLightState);
   sunLightState->SetType(spc::eLT_Directional);
-  sunLightState->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 0.5f);
+  sunLightState->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 0.1f);
   sunLightState->GetTransform()
     .SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(1.0f, 0.0f, 0.0f), spc::spcDeg2Rad(45.0f)))
     .Finish();
@@ -489,12 +489,12 @@ int main(int argc, char** argv)
     }
 
     lightEntity->GetRoot()->GetTransform()
-      .SetTranslation(spc::Vector3f(spc::spcCos(entRot) * 25.0f, 5.0f, spc::spcSin(entRot) * 25.0f))
+      .SetTranslation(spc::Vector3f(spc::spcCos(entRot) * 5.0f, 5.0f, spc::spcSin(entRot) * 5.0f))
       .Finish();
 
     float dist = 20.0f;
     camera->SetSpot(spc::Vector3f(0, 0.0f, 0.0f));
-    camera->SetEye(spc::Vector3f(dist, dist, dist));
+    camera->SetEye(spc::Vector3f(spc::spcCos(entRot + (float)M_PI / 2.0f) * dist, dist, spc::spcSin(entRot+ (float)M_PI / 2.0f) * dist));
 
     //rot += 0.005f;
 

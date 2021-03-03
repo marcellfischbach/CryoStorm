@@ -355,19 +355,19 @@ void GL4Device::SetRenderTarget(iRenderTarget* renderTarget)
     switch (renderTarget->GetType())
     {
     case eTT_Texture2D:
-    {
-      GL4RenderTarget2D* rt2d = static_cast<GL4RenderTarget2D*>(renderTarget);
-      rt2d->Bind();
-      SetViewport(0, 0, rt2d->GetWidth(), rt2d->GetHeight());
-      break;
-    }
+      {
+        GL4RenderTarget2D* rt2d = static_cast<GL4RenderTarget2D*>(renderTarget);
+        rt2d->Bind();
+        SetViewport(0, 0, rt2d->GetWidth(), rt2d->GetHeight());
+        break;
+      }
     case eTT_TextureCube:
-    {
-      GL4RenderTargetCube* rtcube = static_cast<GL4RenderTargetCube*>(renderTarget);
-      rtcube->Bind();
-      SetViewport(0, 0, rtcube->GetSize(), rtcube->GetSize());
-      break;
-    }
+      {
+        GL4RenderTargetCube* rtcube = static_cast<GL4RenderTargetCube*>(renderTarget);
+        rtcube->Bind();
+        SetViewport(0, 0, rtcube->GetSize(), rtcube->GetSize());
+        break;
+      }
     default:
       break;
     }
@@ -387,6 +387,21 @@ void GL4Device::SetRenderTarget(iRenderTarget* renderTarget)
 
   glColorMask(true, true, true, true);
   glDepthMask(true);
+}
+
+
+void GL4Device::ClearShadowMaps()
+{
+  m_pointLightShadowData.clear();
+}
+
+void GL4Device::SetPointLightShadowMap(iLight* light, iTextureCube* colorMap, iTextureCube* depthMap)
+{
+  PointLightShadowData data{};
+  data.Light = light;
+  data.Color = colorMap;
+  data.Depth = depthMap;
+  m_pointLightShadowData[light] = data;
 }
 
 
@@ -555,6 +570,9 @@ void GL4Device::BindForwardLight(const iLight* light, Size idx)
   iShaderAttribute* lightColor = m_shader->GetShaderAttribute(eSA_LightColor);
   iShaderAttribute* lightVector = m_shader->GetShaderAttribute(eSA_LightVector);
   iShaderAttribute* lightRange = m_shader->GetShaderAttribute(eSA_LightRange);
+  iShaderAttribute* lightCastShadow = m_shader->GetShaderAttribute(eSA_LightCastShadow);
+  iShaderAttribute* pointLightShadowMapColor = m_shader->GetShaderAttribute(eSA_PointLightShadowMapColor);
+  iShaderAttribute* pointLightShadowMapDepth = m_shader->GetShaderAttribute(eSA_PointLightShadowMapDepth);
   if (lightColor)
   {
     lightColor->SetArrayIndex(idx);
@@ -566,6 +584,18 @@ void GL4Device::BindForwardLight(const iLight* light, Size idx)
   if (lightRange)
   {
     lightRange->SetArrayIndex(idx);
+  }
+  if (lightCastShadow)
+  {
+    lightCastShadow->SetArrayIndex(idx);
+  }
+  if (pointLightShadowMapColor)
+  {
+    pointLightShadowMapColor->SetArrayIndex(idx);
+  }
+  if (pointLightShadowMapDepth)
+  {
+    pointLightShadowMapDepth->SetArrayIndex(idx);
   }
 
 
@@ -579,27 +609,55 @@ void GL4Device::BindForwardLight(const iLight* light, Size idx)
     switch (light->GetType())
     {
     case eLT_Point:
-    {
-      auto pointLight = static_cast<const iPointLight*>(light);
-      if (lightVector)
       {
-        lightVector->Bind(Vector4f(pointLight->GetPosition(), 1.0f));
-      }
-      if (lightRange)
-      {
-        lightRange->Bind(pointLight->GetRange());
-      }
-    }
-    break;
+        auto pointLight = static_cast<const iPointLight*>(light);
+        if (lightVector)
+        {
+          lightVector->Bind(Vector4f(pointLight->GetPosition(), 1.0f));
+        }
+        if (lightRange)
+        {
+          lightRange->Bind(pointLight->GetRange());
+        }
+
+        //
+        // Bind the shadow mapping.
+        auto it = m_pointLightShadowData.find(pointLight);
+        if (it != m_pointLightShadowData.end())
+        {
+          PointLightShadowData& data = it->second;
+          if (lightCastShadow)
+          {
+            lightCastShadow->Bind(1);
+          }
+          if (pointLightShadowMapColor && data.Color)
+          {
+            eTextureUnit unit = BindTexture(data.Color);
+            if (unit != eTU_Invalid)
+            {
+              pointLightShadowMapColor->Bind(unit);
+            }
+          }
+          if (pointLightShadowMapDepth && data.Depth)
+          {
+            eTextureUnit unit = BindTexture(data.Depth);
+            if (unit != eTU_Invalid)
+            {
+              pointLightShadowMapDepth->Bind(unit);
+            }
+          }
+        }
+       }
+      break;
     case eLT_Directional:
-    {
-      auto directionalLight = static_cast<const iDirectionalLight*>(light);
-      if (lightVector)
       {
-        lightVector->Bind(Vector4f(directionalLight->GetDirection(), 0.0f));
+        auto directionalLight = static_cast<const iDirectionalLight*>(light);
+        if (lightVector)
+        {
+          lightVector->Bind(Vector4f(directionalLight->GetDirection(), 0.0f));
+        }
       }
-    }
-    break;
+      break;
     }
   }
   else
@@ -611,6 +669,18 @@ void GL4Device::BindForwardLight(const iLight* light, Size idx)
     if (lightVector)
     {
       lightVector->Bind(Vector4f(0.0f, 0.0f, 0.0f, 0.0f));
+    }
+    if (lightCastShadow)
+    {
+      lightCastShadow->Bind(0);
+    }
+    if (pointLightShadowMapColor)
+    {
+      pointLightShadowMapColor->Bind(0);
+    }
+    if (pointLightShadowMapDepth)
+    {
+      pointLightShadowMapDepth->Bind(0);
     }
   }
 }

@@ -113,6 +113,12 @@ void GL4Program::RegisterRenderAttributes()
   RegisterAttribute("LightVector");
   RegisterAttribute("LightRange");
   RegisterAttribute("LightCount");
+  RegisterAttribute("LightCastShadow");
+
+  RegisterAttribute("PointLightShadowMapColor");
+  RegisterAttribute("PointLightShadowMapDepth");
+
+
 }
 
 Size GL4Program::RegisterAttribute(const std::string& attributeName)
