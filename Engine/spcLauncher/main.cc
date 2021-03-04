@@ -492,7 +492,7 @@ int main(int argc, char** argv)
       .SetTranslation(spc::Vector3f(spc::spcCos(entRot) * 5.0f, 5.0f, spc::spcSin(entRot) * 5.0f))
       .Finish();
 
-    float dist = 3.0f;
+    float dist = 5.0f;
     camera->SetSpot(spc::Vector3f(0, 0.0f, 0.0f));
     camera->SetEye(spc::Vector3f(spc::spcCos(entRot + (float)M_PI / 2.0f) * dist, dist, spc::spcSin(entRot+ (float)M_PI / 2.0f) * dist));
 

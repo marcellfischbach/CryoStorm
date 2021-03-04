@@ -115,10 +115,15 @@ void GL4Program::RegisterRenderAttributes()
   RegisterAttribute("LightCount");
   RegisterAttribute("LightCastShadow");
 
-  RegisterAttribute("PointLightShadowMapMapping");
+  RegisterAttribute("PointLightShadowMapMappingBias");
   RegisterAttribute("PointLightShadowMapColor");
   RegisterAttribute("PointLightShadowMapDepth");
 
+
+  RegisterAttribute("DirectionalLightShadowMapLayersBias");
+  RegisterAttribute("DirectionalLightShadowMapMatrices");
+  RegisterAttribute("DirectionalLightShadowMapColor");
+  RegisterAttribute("DirectionalLightShadowMapDepth");
 
 }
 

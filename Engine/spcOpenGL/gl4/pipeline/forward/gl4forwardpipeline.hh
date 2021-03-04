@@ -2,6 +2,7 @@
 #pragma once
 
 #include <spcOpenGL/openglexport.hh>
+#include <spcOpenGL/gl4/pipeline/forward/gl4forwardpointlightrenderer.hh>
 #include <spcCore/graphics/camera.hh>
 #include <spcCore/graphics/irenderpipeline.hh>
 #include <spcCore/graphics/projector.hh>
@@ -84,14 +85,10 @@ private:
   std::vector<GfxLight*> m_staticLights;
   std::vector<GfxLight*> m_staticLightsNew;
 
+  GL4ForwardPointLightRenderer m_pointLightRenderer;
+
   std::vector<GL4DirectionalLight*> m_shadowDirectionalLights;
-  std::vector<GL4PointLight*> m_shadowPointLights;
 
-  std::vector< GL4RenderTargetCube*> m_pointLightShadowMap;
-  std::map<GL4PointLight*, GL4RenderTargetCube*> m_pointLightShadowMapAssignment;
-
-  iSampler* m_shadowMapColorSampler;
-  iSampler* m_shadowMapDepthSampler;
 };
 
 }

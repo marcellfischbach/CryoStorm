@@ -27,8 +27,6 @@ GL4ForwardPipeline::GL4ForwardPipeline()
   , m_device(nullptr)
   , m_scene(nullptr)
   , m_target(nullptr)
-  , m_shadowMapColorSampler(nullptr)
-  , m_shadowMapDepthSampler(nullptr)
 {
   SPC_CLASS_GEN_CONSTR;
 
@@ -37,6 +35,9 @@ GL4ForwardPipeline::GL4ForwardPipeline()
 void GL4ForwardPipeline::Initialize()
 {
   Settings settings(ResourceLocator("file:///config/graphics.spc"));
+  m_pointLightRenderer.Initialize(settings);
+
+
   m_pointLightShadowMapSize = settings.GetInt("point_light.shadow_map.size", 1024);
   std::string filter = settings.GetText("point_light.shadow_map.filter", "PCF");
   if (filter == std::string("Plain"))
@@ -66,6 +67,9 @@ void GL4ForwardPipeline::Render(iRenderTarget2D* target, Camera& camera, Project
   m_scene = scene;
   m_target = target;
 
+  m_pointLightRenderer.SetDevice(device);
+  m_pointLightRenderer.SetScene(scene);
+
 
   camera.Bind(device);
   projector.Bind(device);
@@ -73,13 +77,12 @@ void GL4ForwardPipeline::Render(iRenderTarget2D* target, Camera& camera, Project
 
 
   m_shadowDirectionalLights.clear();
-  m_shadowPointLights.clear();
-
+  m_pointLightRenderer.Clear();
 
 
   // get all global lights from the scene....
   // global lights are always along the final renderlights 
-  const GfxLight* finalRenderLights[MaxLights];
+  const GfxLight* finalRenderLights[MaxLights] = {};
   Size finalRenderLightOffset = 0;
   scene->ScanLights(&clipper, GfxScene::eSM_Global,
     [this, &finalRenderLights, &finalRenderLightOffset](GfxLight* light) {
@@ -127,6 +130,7 @@ void GL4ForwardPipeline::Render(iRenderTarget2D* target, Camera& camera, Project
 
 
   // for debuging purpose
+  /*
   if (!m_pointLightShadowMap.empty() && false)
   {
     GL4RenderTargetCube* cube = m_pointLightShadowMap[0];
@@ -149,6 +153,7 @@ void GL4ForwardPipeline::Render(iRenderTarget2D* target, Camera& camera, Project
 
 
   }
+  */
 
   //scene->Render(device, spc::eRP_Forward);
   m_device = nullptr;
@@ -234,10 +239,7 @@ void GL4ForwardPipeline::CollectShadowLights(GfxLight* light)
   case eLT_Point:
     {
       GL4PointLight* pointLight = static_cast<GL4PointLight*>(light->GetLight());
-      if (pointLight)
-      {
-        m_shadowPointLights.push_back(pointLight);
-      }
+      m_pointLightRenderer.Add(pointLight);
     }
     break;
   case eLT_Directional:
@@ -257,32 +259,9 @@ void GL4ForwardPipeline::RenderShadowMaps()
 {
   SortShadowLights();
   m_device->ClearShadowMaps();
-  m_pointLightShadowMapAssignment.clear();
+
   Size i = 0;
-  for (auto pointLight : m_shadowPointLights)
-  {
-    if (i >= MaxLights)
-    {
-      break;
-    }
-
-    GL4RenderTargetCube* shadowMap = GetPointLightShadowMap(i);
-    if (!shadowMap)
-    {
-      return;
-    }
-    RenderPointShadowMaps(pointLight, shadowMap);
-    m_pointLightShadowMapAssignment[pointLight] = shadowMap;
-    m_device->SetPointLightShadowMap(
-      pointLight,
-      shadowMap->GetColorTexture(0),
-      shadowMap->GetDepthTexture(),
-      0.1f,
-      pointLight->GetRange(),
-      pointLight->GetShadowMapBias()
-    );
-
-  }
+  i += m_pointLightRenderer.RenderShadowMaps(MaxLights - i);
 }
 
 
@@ -294,145 +273,8 @@ void GL4ForwardPipeline::SortShadowLights()
     });
 
 
-  std::sort(m_shadowPointLights.begin(), m_shadowPointLights.end(),
-    [](GL4PointLight* light0, GL4PointLight* light1) {
-      return light0->GetIntensity() > light1->GetIntensity();
-    });
 
 }
-
-GL4RenderTargetCube* GL4ForwardPipeline::GetPointLightShadowMap(Size idx)
-{
-  if (idx >= MaxLights)
-  {
-    return nullptr;
-  }
-
-  if (m_pointLightShadowMap.size() <= idx)
-  {
-    iRenderTargetCube::Descriptor desc{};
-    desc.Size = m_pointLightShadowMapSize;
-    GL4RenderTargetCube* cubeMap = static_cast<GL4RenderTargetCube*>(m_device->CreateRenderTarget(desc));
-
-
-    if (m_shadowMapFilter == ShadowMapFilter::VSM)
-    {
-      iTextureCube::Descriptor colorDesc{};
-      colorDesc.Size = desc.Size;
-      colorDesc.Format = ePF_RGBA;
-      colorDesc.MipMaps = false;
-      iTextureCube* colorTexture = m_device->CreateTexture(colorDesc);
-      colorTexture->SetSampler(GetShadowMapColorSampler());
-      cubeMap->AddColorTexture(colorTexture);
-      colorTexture->Release();
-    }
-
-    iTextureCube::Descriptor depthDesc{};
-    depthDesc.Size = desc.Size;
-    depthDesc.Format = ePF_Depth;
-    depthDesc.MipMaps = false;
-    iTextureCube* depthTexture = m_device->CreateTexture(depthDesc);
-    depthTexture->SetSampler(GetShadowMapDepthSampler());
-    cubeMap->SetDepthTexture(depthTexture);
-    depthTexture->Release();
-
-    if (!cubeMap->Compile())
-    {
-      cubeMap->Release();
-      cubeMap = nullptr;
-      return nullptr;
-    }
-    else
-    {
-      m_pointLightShadowMap.push_back(cubeMap);
-    }
-  }
-  return m_pointLightShadowMap[idx];
-}
-
-iSampler* GL4ForwardPipeline::GetShadowMapColorSampler()
-{
-  if (!m_shadowMapColorSampler)
-  {
-    m_shadowMapColorSampler = m_device->CreateSampler();
-    m_shadowMapColorSampler->SetFilterMode(eFM_MinMagNearest);
-    m_shadowMapColorSampler->SetAnisotropy(1);
-    m_shadowMapColorSampler->SetAddressU(eTAM_Clamp);
-    m_shadowMapColorSampler->SetAddressV(eTAM_Clamp);
-    m_shadowMapColorSampler->SetAddressW(eTAM_Clamp);
-  }
-  return m_shadowMapColorSampler;
-}
-
-
-iSampler* GL4ForwardPipeline::GetShadowMapDepthSampler()
-{
-  if (!m_shadowMapDepthSampler)
-  {
-    m_shadowMapDepthSampler = m_device->CreateSampler();
-    if (m_shadowMapFilter == ShadowMapFilter::PCF)
-    {
-      m_shadowMapDepthSampler->SetFilterMode(eFM_MinMagLinear);
-    }
-    else
-    {
-      m_shadowMapDepthSampler->SetFilterMode(eFM_MinMagNearest);
-    }
-    m_shadowMapDepthSampler->SetAnisotropy(1);
-    m_shadowMapDepthSampler->SetAddressU(eTAM_Clamp);
-    m_shadowMapDepthSampler->SetAddressV(eTAM_Clamp);
-    m_shadowMapDepthSampler->SetAddressW(eTAM_Clamp);
-    m_shadowMapDepthSampler->SetTextureCompareMode(eTCM_CompareToR);
-    m_shadowMapDepthSampler->SetTextureCompareFunc(eCF_LessOrEqual);
-  }
-  return m_shadowMapDepthSampler;
-}
-
-
-
-void GL4ForwardPipeline::RenderPointShadowMaps(GL4PointLight* pointLight, GL4RenderTargetCube* shadowMap)
-{
-  m_device->SetRenderTarget(shadowMap);
-  m_device->SetViewport(0, 0, shadowMap->GetSize(), shadowMap->GetSize());
-  m_device->Clear(true, Color4f(0.0f, 0.0f, 0.5f, 1.0f), true, 1.0f, false, 0);
-
-
-  float near = 0.1f;
-  float far = pointLight->GetRange();
-  Matrix4f projection;
-  m_device->GetPerspectiveProjection(-near, near, -near, near, near, far, projection);
-  Matrix4f projections[] = {
-    projection,
-    projection,
-    projection,
-    projection,
-    projection,
-    projection
-  };
-  Vector3f pos = pointLight->GetPosition();
-  Matrix4f views[6];
-  views[0].SetLookAt(pos, pos + Vector3f(1, 0, 0), Vector3f(0, -1, 0));
-  views[1].SetLookAt(pos, pos + Vector3f(-1, 0, 0), Vector3f(0, -1, 0));
-  views[2].SetLookAt(pos, pos + Vector3f(0, 1, 0), Vector3f(0, 0, -1));
-  views[3].SetLookAt(pos, pos + Vector3f(0, -1, 0), Vector3f(0, 0, 1));
-  views[4].SetLookAt(pos, pos + Vector3f(0, 0, -1), Vector3f(0, -1, 0));
-  views[5].SetLookAt(pos, pos + Vector3f(0, 0, 1), Vector3f(0, -1, 0));
-
-
-  m_device->SetShadowMapProjectionMatrices(projections, 6);
-  m_device->SetShadowMapViewMatrices(views, 6);
-
-  SphereClipper clipper(pos, pointLight->GetRange());
-
-
-  m_scene->ScanMeshes(nullptr, GfxScene::eSM_Dynamic | GfxScene::eSM_Static,
-    [this](GfxMesh* mesh)
-    {
-      mesh->RenderUnlit(m_device, eRP_ShadowCube);
-    }
-  );
-}
-
 
 Size GL4ForwardPipeline::AssignLights(
   const std::vector<GfxMesh::Light>& static_lights,
@@ -539,7 +381,7 @@ void GL4ForwardPipeline::AppendLights(GfxMesh* mesh, const std::vector<GfxLight*
   }
 
   auto meshLights = CalcMeshLightInfluences(mesh, lights, false);
-  for (auto meshLight : meshLights)
+  for (auto &meshLight : meshLights)
   {
     mesh->AddLight(meshLight.Light, meshLight.Influence);
   }

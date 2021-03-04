@@ -60,6 +60,7 @@ struct SPC_CORE_API iDevice : public SPC_SUPER(iObject)
 
   virtual void ClearShadowMaps() = 0;
   virtual void SetPointLightShadowMap(iLight* light, iTextureCube* colorMap, iTextureCube* depthMap, float near, float far, float bias) = 0;
+  virtual void SetDirectionalLightShadowMap(iLight* light, const Vector3f& layers, iTexture2DArray* colorMap, iTexture2DArray* depthMap, Matrix4f matrices[3], float bias) = 0;
 
 
   virtual iSampler* CreateSampler() = 0;

@@ -44,8 +44,12 @@ set(SOURCES
 		gl4/loading/gl4shaderloader.cc
 		gl4/loading/gl4shaderloader.hh
 
+		gl4/pipeline/forward/gl4forwarddirectionallightrenderer.cc
+		gl4/pipeline/forward/gl4forwarddirectionallightrenderer.hh
 		gl4/pipeline/forward/gl4forwardpipeline.cc
 		gl4/pipeline/forward/gl4forwardpipeline.hh
+		gl4/pipeline/forward/gl4forwardpointlightrenderer.cc
+		gl4/pipeline/forward/gl4forwardpointlightrenderer.hh
 
 		gl4/shading/gl4program.cc
 		gl4/shading/gl4program.hh

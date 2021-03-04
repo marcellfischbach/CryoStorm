@@ -31,7 +31,9 @@ public:
 	void Bind(const Vector4f& v) override;
 	void Bind(const Color4f& v) override;
 	void Bind(const Matrix3f& v) override;
+	void Bind(const Matrix3f* v, Size count) override;
 	void Bind(const Matrix4f& v) override;
+	void Bind(const Matrix4f* v, Size count) override;
 
 private:
 	GLint m_location;

@@ -48,6 +48,7 @@ public:
 
   void ClearShadowMaps() override;
   void SetPointLightShadowMap(iLight * light, iTextureCube * colorMap, iTextureCube * depthMap, float near, float far, float bias) override;
+  void SetDirectionalLightShadowMap(iLight * light, const Vector3f &layers, iTexture2DArray * colorMap, iTexture2DArray * depthMap, Matrix4f matrices[3], float bias) override;
 
 
   iSampler *CreateSampler() override;
@@ -142,6 +143,16 @@ private:
     Vector3f Mapping;
   };
   std::map<const iLight*, PointLightShadowData> m_pointLightShadowData;
+
+  struct DirectionalLightShadowData
+  {
+    iLight* Light;
+    iTexture2DArray* Color;
+    iTexture2DArray* Depth;
+    Vector4f LayersBias;
+    Matrix4f Matrices[3];
+  };
+  std::map<const iLight*, DirectionalLightShadowData> m_directionalLightShadowData;
 
 
   /** 

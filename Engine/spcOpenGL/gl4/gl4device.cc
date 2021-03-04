@@ -383,6 +383,7 @@ void GL4Device::SetRenderTarget(iRenderTarget* renderTarget)
 void GL4Device::ClearShadowMaps()
 {
   m_pointLightShadowData.clear();
+  m_directionalLightShadowData.clear();
 }
 
 void GL4Device::SetPointLightShadowMap(iLight* light, iTextureCube* colorMap, iTextureCube* depthMap, float near, float far, float bias)
@@ -394,6 +395,18 @@ void GL4Device::SetPointLightShadowMap(iLight* light, iTextureCube* colorMap, iT
   data.Mapping.Set(near, far, bias);
   m_pointLightShadowData[light] = data;
 }
+
+void GL4Device::SetDirectionalLightShadowMap(iLight* light, const Vector3f& layers, iTexture2DArray* colorMap, iTexture2DArray* depthMap, Matrix4f matrices[3], float bias)
+{
+  DirectionalLightShadowData data{};
+  data.Light = light;
+  data.Color = colorMap;
+  data.Depth = depthMap;
+  data.LayersBias.Set(layers.x, layers.y, layers.z, bias);;
+  memcpy(data.Matrices, matrices, sizeof(Matrix4f) * 3);
+  m_directionalLightShadowData[light] = data;
+}
+
 
 
 iSampler* GL4Device::CreateSampler()
@@ -584,9 +597,17 @@ void GL4Device::BindForwardLight(const iLight* light, Size idx)
   iShaderAttribute* lightVector = m_shader->GetShaderAttribute(eSA_LightVector);
   iShaderAttribute* lightRange = m_shader->GetShaderAttribute(eSA_LightRange);
   iShaderAttribute* lightCastShadow = m_shader->GetShaderAttribute(eSA_LightCastShadow);
-  iShaderAttribute* pointLightShadowMapMapping = m_shader->GetShaderAttribute(eSA_PointLightShadowMapMapping);
+
+  iShaderAttribute* pointLightShadowMapMappingBias = m_shader->GetShaderAttribute(eSA_PointLightShadowMapMappingBias);
   iShaderAttribute* pointLightShadowMapColor = m_shader->GetShaderAttribute(eSA_PointLightShadowMapColor);
   iShaderAttribute* pointLightShadowMapDepth = m_shader->GetShaderAttribute(eSA_PointLightShadowMapDepth);
+
+
+  iShaderAttribute* directionalLightShadowMapLayersBias = m_shader->GetShaderAttribute(eSA_DirectionalLightShadowMapLayersBias);
+  iShaderAttribute* directionalLightShadowMapMatrices = m_shader->GetShaderAttribute(eSA_DirectionalLightShadowMapMatrices);
+  iShaderAttribute* directionalLightShadowMapColor = m_shader->GetShaderAttribute(eSA_DirectionalLightShadowMapColor);
+  iShaderAttribute* directionalLightShadowMapDepth = m_shader->GetShaderAttribute(eSA_DirectionalLightShadowMapDepth);
+
   if (lightColor)
   {
     lightColor->SetArrayIndex(idx);
@@ -603,9 +624,9 @@ void GL4Device::BindForwardLight(const iLight* light, Size idx)
   {
     lightCastShadow->SetArrayIndex(idx);
   }
-  if (pointLightShadowMapMapping)
+  if (pointLightShadowMapMappingBias)
   {
-    pointLightShadowMapMapping->SetArrayIndex(idx);
+    pointLightShadowMapMappingBias->SetArrayIndex(idx);
   }
   if (pointLightShadowMapColor)
   {
@@ -614,6 +635,23 @@ void GL4Device::BindForwardLight(const iLight* light, Size idx)
   if (pointLightShadowMapDepth)
   {
     pointLightShadowMapDepth->SetArrayIndex(idx);
+  }
+
+  if (directionalLightShadowMapLayersBias)
+  {
+    directionalLightShadowMapLayersBias->SetArrayIndex(idx);
+  }
+  if (directionalLightShadowMapMatrices)
+  {
+    directionalLightShadowMapMatrices->SetArrayIndex(idx * 3);
+  }
+  if (directionalLightShadowMapColor)
+  {
+    directionalLightShadowMapColor->SetArrayIndex(idx);
+  }
+  if (directionalLightShadowMapDepth)
+  {
+    directionalLightShadowMapDepth->SetArrayIndex(idx);
   }
 
 
@@ -648,9 +686,9 @@ void GL4Device::BindForwardLight(const iLight* light, Size idx)
           {
             lightCastShadow->Bind(1);
           }
-          if (pointLightShadowMapMapping)
+          if (pointLightShadowMapMappingBias)
           {
-            pointLightShadowMapMapping->Bind(data.Mapping);
+            pointLightShadowMapMappingBias->Bind(data.Mapping);
           }
           if (pointLightShadowMapColor && data.Color)
           {
@@ -677,6 +715,40 @@ void GL4Device::BindForwardLight(const iLight* light, Size idx)
         if (lightVector)
         {
           lightVector->Bind(Vector4f(directionalLight->GetDirection(), 0.0f));
+        }
+        auto it = m_directionalLightShadowData.find(directionalLight);
+        if (it != m_directionalLightShadowData.end())
+        {
+          DirectionalLightShadowData& data = it->second;
+          if (lightCastShadow)
+          {
+            lightCastShadow->Bind(1);
+          }
+
+          if (directionalLightShadowMapLayersBias)
+          {
+            directionalLightShadowMapLayersBias->Bind(data.LayersBias);
+          }
+          if (directionalLightShadowMapMatrices)
+          {
+            directionalLightShadowMapMatrices->Bind(data.Matrices, 3);
+          }
+          if (directionalLightShadowMapColor && data.Color)
+          {
+            eTextureUnit unit = BindTexture(data.Color);
+            if (unit != eTU_Invalid)
+            {
+              directionalLightShadowMapColor->Bind(unit);
+            }
+          }
+          if (directionalLightShadowMapDepth && data.Depth)
+          {
+            eTextureUnit unit = BindTexture(data.Depth);
+            if (unit != eTU_Invalid)
+            {
+              directionalLightShadowMapDepth->Bind(unit);
+            }
+          }
         }
       }
       break;

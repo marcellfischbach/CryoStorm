@@ -33,9 +33,14 @@ enum eShaderAttribute
   eSA_LightCastShadow,
 
   /* ShadowMapping */
-  eSA_PointLightShadowMapMapping,
+  eSA_PointLightShadowMapMappingBias,
   eSA_PointLightShadowMapColor,
   eSA_PointLightShadowMapDepth,
+
+  eSA_DirectionalLightShadowMapLayersBias,
+  eSA_DirectionalLightShadowMapMatrices,
+  eSA_DirectionalLightShadowMapColor,
+  eSA_DirectionalLightShadowMapDepth,
 
 };
 

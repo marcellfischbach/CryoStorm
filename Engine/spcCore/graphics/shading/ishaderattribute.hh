@@ -48,8 +48,11 @@ struct iShaderAttribute
 
 	virtual void Bind(const Matrix3f& v) = 0;
 
+	virtual void Bind(const Matrix3f* v, Size count) = 0;
+
 	virtual void Bind(const Matrix4f& v) = 0;
 
+	virtual void Bind(const Matrix4f* v, Size count) = 0;
 };
 
 

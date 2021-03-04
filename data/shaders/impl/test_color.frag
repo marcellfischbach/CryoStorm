@@ -10,6 +10,7 @@ in vec4 color;
 in vec2 texCoord;
 in vec3 world_position;
 in vec3 world_normal;
+in vec3 camera_space_position;
 
 #include <../common/lighting.glsl>
 
@@ -17,7 +18,7 @@ in vec3 world_normal;
 void main()
 {
     vec3 norm = normalize(world_normal);
-    vec4 frag_color = calc_lights(world_position, norm);
+    vec4 frag_color = calc_lights(world_position, norm, camera_space_position);
         
     frag_color *= color;
     frag_color *= texture(spc_Diffuse, texCoord * 3);
