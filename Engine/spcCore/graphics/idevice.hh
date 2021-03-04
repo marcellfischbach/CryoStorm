@@ -80,6 +80,7 @@ struct SPC_CORE_API iDevice : public SPC_SUPER(iObject)
   virtual bool BindMaterial(iMaterial* material, eRenderPass pass) = 0;
   virtual void Render(iRenderMesh* mesh, eRenderPass pass) = 0;
   virtual void RenderFullscreen(iTexture2D* texture) = 0;
+  virtual void RenderFullscreen(iTexture2DArray* texture, int layer) = 0;
   virtual void RenderFullscreen(iTextureCube* texture, int layer) = 0;
 
   virtual void BindForwardLight(const iLight* light, Size idx) = 0;

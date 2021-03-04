@@ -13,6 +13,7 @@ namespace spc
 
 struct iDevice;
 struct iSampler;
+struct iTexture2DArray;
 class GfxScene;
 class Settings;
 
@@ -40,6 +41,9 @@ public:
   void Add(GL4DirectionalLight* directionalLight);
 
   Size RenderShadowMaps(Size maxShadowLights);
+
+  iTexture2DArray* GetColorTexture();
+  iTexture2DArray* GetDepthTexture();
 
 private:
   void SortLights();

@@ -281,6 +281,7 @@ int main(int argc, char** argv)
 
   spc::iShader* forwardShader = spc::AssetManager::Get()->Load<spc::iShader>(spc::ResourceLocator("/shaders/test_color_program.spc"));
   spc::iShader* shadowCubeShader = spc::AssetManager::Get()->Load<spc::iShader>(spc::ResourceLocator("/shaders/test_shadow_point_program.spc"));
+  spc::iShader* shadowPSSMShader = spc::AssetManager::Get()->Load<spc::iShader>(spc::ResourceLocator("/shaders/test_shadow_pssm_program.spc"));
 
 
   spc::iSampler* sampler = spc::AssetManager::Get()->Load<spc::iSampler>(spc::ResourceLocator("sampler_default.spc"));
@@ -307,10 +308,12 @@ int main(int argc, char** argv)
   spc::Material* material = new spc::Material();
   material->SetShader(spc::eRP_Forward, forwardShader);
   material->SetShader(spc::eRP_ShadowCube, shadowCubeShader);
+  material->SetShader(spc::eRP_ShadowPSSM, shadowPSSMShader);
+
   material->RegisterAttribute("Diffuse");
   material->RegisterAttribute("Color");
   material->Set(material->IndexOf("Diffuse"), texture);
-  material->Set(material->IndexOf("Color"), spc::Color4f(1, 0, 0, 1));
+  material->Set(material->IndexOf("Color"), spc::Color4f(1, 1, 1, 1));
 
   spc::MaterialInstance* instance = new spc::MaterialInstance();
   instance->SetMaterial(material);
@@ -365,7 +368,7 @@ int main(int argc, char** argv)
   spc::LightState* lightState = new spc::LightState("LightState");
   lightEntity->Attach(lightState);
   lightState->SetType(spc::eLT_Point);
-  lightState->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 1.0f);
+  lightState->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 0.5f);
   lightState->SetRange(25.0f);
   lightState->SetStatic(false);
   lightState->SetCastShadow(true);
@@ -378,7 +381,8 @@ int main(int argc, char** argv)
   spc::LightState* sunLightState = new spc::LightState("SunLight");
   sunEntity->Attach(sunLightState);
   sunLightState->SetType(spc::eLT_Directional);
-  sunLightState->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 0.5f);
+  sunLightState->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 1.0f);
+  sunLightState->SetCastShadow(true);
   sunLightState->GetTransform()
     .SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(1.0f, 0.0f, 0.0f), spc::spcDeg2Rad(45.0f)))
     .Finish();

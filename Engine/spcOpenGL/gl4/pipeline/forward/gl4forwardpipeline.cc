@@ -36,22 +36,8 @@ void GL4ForwardPipeline::Initialize()
 {
   Settings settings(ResourceLocator("file:///config/graphics.spc"));
   m_pointLightRenderer.Initialize(settings);
+  m_directionalLightRenderer.Initialize(settings);
 
-
-  m_pointLightShadowMapSize = settings.GetInt("point_light.shadow_map.size", 1024);
-  std::string filter = settings.GetText("point_light.shadow_map.filter", "PCF");
-  if (filter == std::string("Plain"))
-  {
-    m_shadowMapFilter = ShadowMapFilter::Plain;
-  }
-  else if (filter == std::string("PCF"))
-  {
-    m_shadowMapFilter = ShadowMapFilter::PCF;
-  }
-  else if (filter == std::string("VSM"))
-  {
-    m_shadowMapFilter = ShadowMapFilter::VSM;
-  }
 }
 
 GL4ForwardPipeline::~GL4ForwardPipeline() noexcept
@@ -69,6 +55,8 @@ void GL4ForwardPipeline::Render(iRenderTarget2D* target, Camera& camera, Project
 
   m_pointLightRenderer.SetDevice(device);
   m_pointLightRenderer.SetScene(scene);
+  m_directionalLightRenderer.SetDevice(device);
+  m_directionalLightRenderer.SetScene(scene);
 
 
   camera.Bind(device);
@@ -76,8 +64,8 @@ void GL4ForwardPipeline::Render(iRenderTarget2D* target, Camera& camera, Project
   BoxClipper clipper(Vector3f(-1000.0f, -1000.0f, -1000.0f), Vector3f(1000.0f, 1000.0f, 1000.0f));
 
 
-  m_shadowDirectionalLights.clear();
   m_pointLightRenderer.Clear();
+  m_directionalLightRenderer.Clear();
 
 
   // get all global lights from the scene....
@@ -130,30 +118,26 @@ void GL4ForwardPipeline::Render(iRenderTarget2D* target, Camera& camera, Project
 
 
   // for debuging purpose
-  /*
-  if (!m_pointLightShadowMap.empty() && false)
+  iTexture2DArray* debugColor = m_directionalLightRenderer.GetColorTexture();
+  if (debugColor && true)
   {
-    GL4RenderTargetCube* cube = m_pointLightShadowMap[0];
-    Size size = target->GetWidth() / 4;
-
-    iTextureCube* texture = cube->GetColorTexture(0);
+    Size size = target->GetWidth() / 3;
 
 
     m_device->SetViewport(0, 0, size, size);
-    m_device->RenderFullscreen(texture, 1);
+    m_device->RenderFullscreen(debugColor, 0);
 
+    /*
     m_device->SetViewport(size, 0, size, size);
-    m_device->RenderFullscreen(texture, 4);
+    m_device->RenderFullscreen(debugColor, 1);
 
     m_device->SetViewport(size * 2, 0, size, size);
-    m_device->RenderFullscreen(texture, 0);
-
-    m_device->SetViewport(size * 3, 0, size, size);
-    m_device->RenderFullscreen(texture, 5);
+    m_device->RenderFullscreen(debugColor, 2);
+    */
 
 
   }
-  */
+  
 
   //scene->Render(device, spc::eRP_Forward);
   m_device = nullptr;
@@ -245,10 +229,7 @@ void GL4ForwardPipeline::CollectShadowLights(GfxLight* light)
   case eLT_Directional:
     {
       GL4DirectionalLight* directionalLight = static_cast<GL4DirectionalLight*>(light->GetLight());
-      if (directionalLight)
-      {
-        m_shadowDirectionalLights.push_back(directionalLight);
-      }
+      m_directionalLightRenderer.Add(directionalLight);
     }
     break;
   }
@@ -257,24 +238,14 @@ void GL4ForwardPipeline::CollectShadowLights(GfxLight* light)
 
 void GL4ForwardPipeline::RenderShadowMaps()
 {
-  SortShadowLights();
   m_device->ClearShadowMaps();
 
   Size i = 0;
+  i += m_directionalLightRenderer.RenderShadowMaps(MaxLights - i);
   i += m_pointLightRenderer.RenderShadowMaps(MaxLights - i);
 }
 
 
-void GL4ForwardPipeline::SortShadowLights()
-{
-  std::sort(m_shadowDirectionalLights.begin(), m_shadowDirectionalLights.end(),
-    [](GL4DirectionalLight* light0, GL4DirectionalLight* light1) {
-      return light0->GetIntensity() > light1->GetIntensity();
-    });
-
-
-
-}
 
 Size GL4ForwardPipeline::AssignLights(
   const std::vector<GfxMesh::Light>& static_lights,

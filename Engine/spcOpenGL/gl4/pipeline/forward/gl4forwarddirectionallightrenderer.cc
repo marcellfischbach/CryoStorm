@@ -58,6 +58,19 @@ void GL4ForwardDirectionalLightRenderer::SetScene(GfxScene* scene)
   m_scene = scene;
 }
 
+iTexture2DArray* GL4ForwardDirectionalLightRenderer::GetColorTexture()
+{
+  return !m_directionalLightShadowMap.empty() && m_directionalLightShadowMap[0] 
+    ? m_directionalLightShadowMap[0]->GetColorTexture(0) 
+    : nullptr;
+}
+
+iTexture2DArray* GL4ForwardDirectionalLightRenderer::GetDepthTexture()
+{
+  return !m_directionalLightShadowMap.empty() && m_directionalLightShadowMap[0]
+    ? m_directionalLightShadowMap[0]->GetDepthTexture()
+    : nullptr;
+}
 
 void GL4ForwardDirectionalLightRenderer::Clear()
 {
@@ -125,7 +138,7 @@ GL4RenderTarget2DArray* GL4ForwardDirectionalLightRenderer::GetDirectionalLightS
     GL4RenderTarget2DArray* shadowRenderTarget = static_cast<GL4RenderTarget2DArray*>(m_device->CreateRenderTarget(desc));
 
 
-    if (m_shadowMapFilter == ShadowMapFilter::VSM)
+    if (m_shadowMapFilter == ShadowMapFilter::VSM || true)
     {
       iTexture2DArray::Descriptor colorDesc{};
       colorDesc.Width = desc.Width;
@@ -196,8 +209,10 @@ iSampler* GL4ForwardDirectionalLightRenderer::GetShadowMapDepthSampler()
     m_shadowMapDepthSampler->SetAddressU(eTAM_Clamp);
     m_shadowMapDepthSampler->SetAddressV(eTAM_Clamp);
     m_shadowMapDepthSampler->SetAddressW(eTAM_Clamp);
+    /*
     m_shadowMapDepthSampler->SetTextureCompareMode(eTCM_CompareToR);
     m_shadowMapDepthSampler->SetTextureCompareFunc(eCF_LessOrEqual);
+    */
   }
   return m_shadowMapDepthSampler;
 }
@@ -206,47 +221,35 @@ iSampler* GL4ForwardDirectionalLightRenderer::GetShadowMapDepthSampler()
 
 void GL4ForwardDirectionalLightRenderer::RenderDirectionalShadowMaps(GL4DirectionalLight* directionalLight, GL4RenderTarget2DArray* shadowMap)
 {
-  /*
   m_device->SetRenderTarget(shadowMap);
-  m_device->SetViewport(0, 0, shadowMap->GetSize(), shadowMap->GetSize());
-  m_device->Clear(true, Color4f(0.0f, 0.0f, 0.5f, 1.0f), true, 1.0f, false, 0);
+  m_device->Clear(true, Color4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, false, 0);
 
 
-  float near = 0.1f;
-  float far = directionalLight->GetRange();
+  float near = -20.0;
+  float far = 20.0;
   Matrix4f projection;
-  m_device->GetPerspectiveProjection(-near, near, -near, near, near, far, projection);
+  m_device->GetOrthographicProjection(-10.0f, 10.0f, -10.0f, 10.0, -20.0f, 20.0f, projection);
   Matrix4f projections[] = {
-    projection,
-    projection,
-    projection,
     projection,
     projection,
     projection
   };
-  Vector3f pos = directionalLight->GetPosition();
-  Matrix4f views[6];
-  views[0].SetLookAt(pos, pos + Vector3f(1, 0, 0), Vector3f(0, -1, 0));
-  views[1].SetLookAt(pos, pos + Vector3f(-1, 0, 0), Vector3f(0, -1, 0));
-  views[2].SetLookAt(pos, pos + Vector3f(0, 1, 0), Vector3f(0, 0, -1));
-  views[3].SetLookAt(pos, pos + Vector3f(0, -1, 0), Vector3f(0, 0, 1));
-  views[4].SetLookAt(pos, pos + Vector3f(0, 0, -1), Vector3f(0, -1, 0));
-  views[5].SetLookAt(pos, pos + Vector3f(0, 0, 1), Vector3f(0, -1, 0));
+  Vector3f pos(0.0f, 0.0f, 0.0f);
+  Matrix4f views[3];
+  views[0].SetLookAt(pos, pos - directionalLight->GetDirection(), Vector3f(0, 1, 0));
+  views[1].SetLookAt(pos, pos - directionalLight->GetDirection(), Vector3f(0, 1, 0));
+  views[2].SetLookAt(pos, pos - directionalLight->GetDirection(), Vector3f(0, 1, 0));
 
 
-  m_device->SetShadowMapProjectionMatrices(projections, 6);
-  m_device->SetShadowMapViewMatrices(views, 6);
-
-  SphereClipper clipper(pos, directionalLight->GetRange());
-
+  m_device->SetShadowMapProjectionMatrices(projections, 3);
+  m_device->SetShadowMapViewMatrices(views, 3);
 
   m_scene->ScanMeshes(nullptr, GfxScene::eSM_Dynamic | GfxScene::eSM_Static,
     [this](GfxMesh* mesh)
     {
-      mesh->RenderUnlit(m_device, eRP_ShadowCube);
+      mesh->RenderUnlit(m_device, eRP_ShadowPSSM);
     }
   );
-  */
 }
 
 

@@ -3,6 +3,7 @@
 
 #include <spcOpenGL/openglexport.hh>
 #include <spcOpenGL/gl4/pipeline/forward/gl4forwardpointlightrenderer.hh>
+#include <spcOpenGL/gl4/pipeline/forward/gl4forwarddirectionallightrenderer.hh>
 #include <spcCore/graphics/camera.hh>
 #include <spcCore/graphics/irenderpipeline.hh>
 #include <spcCore/graphics/projector.hh>
@@ -44,13 +45,7 @@ private:
   void RenderMesh(GfxMesh * mesh, const GfxLight * *lights, Size offset);
 
   void CollectShadowLights(GfxLight * light);
-  void SortShadowLights();
   void RenderShadowMaps();
-  void RenderPointShadowMaps(GL4PointLight * pointLight, GL4RenderTargetCube * renderTarget);
-  GL4RenderTargetCube* GetPointLightShadowMap(Size i);
-  iSampler* GetShadowMapColorSampler();
-  iSampler* GetShadowMapDepthSampler();
-
 
 
   Size AssignLights(const std::vector<GfxMesh::Light> &staticLights,
@@ -72,22 +67,14 @@ private:
   GfxScene* m_scene;
   iRenderTarget2D* m_target;
 
-  enum class ShadowMapFilter 
-  {
-    Plain,
-    PCF,
-    VSM
-  };
-  Size m_pointLightShadowMapSize;
-  ShadowMapFilter m_shadowMapFilter;
-
+  
   std::vector<GfxLight*> m_dynamicLights;
   std::vector<GfxLight*> m_staticLights;
   std::vector<GfxLight*> m_staticLightsNew;
 
   GL4ForwardPointLightRenderer m_pointLightRenderer;
+  GL4ForwardDirectionalLightRenderer m_directionalLightRenderer;
 
-  std::vector<GL4DirectionalLight*> m_shadowDirectionalLights;
 
 };
 

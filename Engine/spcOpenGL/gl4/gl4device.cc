@@ -38,6 +38,7 @@ GL4Device::GL4Device()
   , m_modelViewProjectionMatrixInvDirty(false)
   , m_fullscreenBlitProgram(nullptr)
   , m_fullscreenBlitRenderMesh(nullptr)
+  , m_fullscreenBlitArrayProgram(nullptr)
   , m_fullscreenBlitCubeProgram(nullptr)
   , m_fullscreenBlitCubePosXRenderMesh(nullptr)
   , m_fullscreenBlitCubePosYRenderMesh(nullptr)
@@ -334,7 +335,7 @@ void GL4Device::SetShader(iShader* shader)
 
 void GL4Device::SetRenderTarget(iRenderTarget* renderTarget)
 {
-  if (m_renderTarget == renderTarget && false)
+  if (m_renderTarget == renderTarget)
   {
     return;
   }
@@ -349,6 +350,13 @@ void GL4Device::SetRenderTarget(iRenderTarget* renderTarget)
         GL4RenderTarget2D* rt2d = static_cast<GL4RenderTarget2D*>(renderTarget);
         rt2d->Bind();
         SetViewport(0, 0, rt2d->GetWidth(), rt2d->GetHeight());
+        break;
+      }
+    case eTT_Texture2DArray:
+      {
+        GL4RenderTarget2DArray* rt2dArray = static_cast<GL4RenderTarget2DArray*>(renderTarget);
+        rt2dArray->Bind();
+        SetViewport(0, 0, rt2dArray->GetWidth(), rt2dArray->GetHeight());
         break;
       }
     case eTT_TextureCube:
@@ -567,6 +575,27 @@ void GL4Device::RenderFullscreen(iTexture2D* texture)
   mesh->Render(this, eRP_Forward);
 }
 
+
+
+void GL4Device::RenderFullscreen(iTexture2DArray* texture, int layer)
+{
+  iRenderMesh* mesh = FullscreenBlitRenderMesh();
+  GL4Program* prog = FullscreenBlitArrayProgram();
+  SetShader(prog);
+  ResetTextures();
+  eTextureUnit unit = BindTexture(texture);
+  iShaderAttribute* attrib = prog->GetShaderAttribute("Diffuse");
+  if (attrib)
+  {
+    attrib->Bind(unit);
+  }
+  attrib = prog->GetShaderAttribute("ArrayIndex");
+  if (attrib)
+  {
+    attrib->Bind((float)layer);
+  }
+  mesh->Render(this, eRP_Forward);
+}
 
 void GL4Device::RenderFullscreen(iTextureCube* texture, int layer)
 {
@@ -1025,6 +1054,17 @@ GL4Program* GL4Device::FullscreenBlitProgram()
   }
   return m_fullscreenBlitProgram;
 }
+
+
+GL4Program* GL4Device::FullscreenBlitArrayProgram()
+{
+  if (!m_fullscreenBlitArrayProgram)
+  {
+    m_fullscreenBlitArrayProgram = AssetManager::Get()->Load<GL4Program>("file:///engine/opengl/gl4/fullscreen_blit_array.spc");
+  }
+  return m_fullscreenBlitArrayProgram;
+}
+
 
 iRenderMesh* GL4Device::FullscreenBlitRenderMesh()
 {

@@ -68,6 +68,7 @@ public:
   bool BindMaterial(iMaterial * material, eRenderPass pass) override;
   void Render(iRenderMesh * mesh, eRenderPass pass) override;
   void RenderFullscreen(iTexture2D * texture) override;
+  void RenderFullscreen(iTexture2DArray * texture, int layer) override;
   void RenderFullscreen(iTextureCube * texture, int layer) override;
 
   void BindForwardLight(const iLight * light, Size idx);
@@ -163,6 +164,10 @@ private:
   GL4Program* m_fullscreenBlitProgram;
   iRenderMesh* FullscreenBlitRenderMesh();
   iRenderMesh* m_fullscreenBlitRenderMesh;
+
+  GL4Program* FullscreenBlitArrayProgram();
+  GL4Program* m_fullscreenBlitArrayProgram;
+
 
   GL4Program* FullscreenBlitCubeProgram();
   GL4Program* m_fullscreenBlitCubeProgram;
