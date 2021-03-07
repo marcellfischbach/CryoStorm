@@ -1,6 +1,5 @@
 
 uniform vec3 spc_PointLightShadowMapMappingBias[4];
-uniform samplerCube spc_PointLightShadowMapColor[4];
 uniform samplerCubeShadow spc_PointLightShadowMapDepth[4];
 
 
@@ -42,6 +41,7 @@ float calc_point_shadow(int idx, vec3 light_position, float light_range, vec3 fr
         fz -= mapping.z;
 
 
-        return texture(spc_PointLightShadowMapDepth[idx], vec4(delta, fz));
+        float v = texture(spc_PointLightShadowMapDepth[idx], vec4(delta, fz));
+        return v;
     }
 }

@@ -4,6 +4,7 @@ add_definitions(-DSPC_OGL_EXPORT)
 add_definitions(-D_USE_MATH_DEFINES)
 
 set(SOURCES
+        glerror.hh
         openglexport.hh
         openglmodule.cc
         openglmodule.hh

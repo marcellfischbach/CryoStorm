@@ -4,6 +4,7 @@
 #include <spcOpenGL/gl4/gl4directionallight.hh>
 #include <spcOpenGL/gl4/gl4pointlight.hh>
 #include <spcOpenGL/gl4/gl4rendertargetcube.hh>
+#include <spcOpenGL/glerror.hh>
 #include <spcCore/graphics/camera.hh>
 #include <spcCore/graphics/projector.hh>
 #include <spcCore/graphics/scene/gfxscene.hh>
@@ -46,6 +47,7 @@ GL4ForwardPipeline::~GL4ForwardPipeline() noexcept
 }
 void GL4ForwardPipeline::Render(iRenderTarget2D* target, Camera& camera, Projector& projector, iDevice* device, GfxScene* scene)
 {
+  SPC_GL_ERROR();
   ++m_frame;
   m_device = device;
   m_camera = camera;
@@ -66,6 +68,7 @@ void GL4ForwardPipeline::Render(iRenderTarget2D* target, Camera& camera, Project
 
   m_pointLightRenderer.Clear();
   m_directionalLightRenderer.Clear();
+  SPC_GL_ERROR();
 
 
   // get all global lights from the scene....
@@ -84,6 +87,7 @@ void GL4ForwardPipeline::Render(iRenderTarget2D* target, Camera& camera, Project
       return true;
     });
 
+  SPC_GL_ERROR();
 
   //
   // collect the "normal" static and dynamic lights
@@ -98,28 +102,33 @@ void GL4ForwardPipeline::Render(iRenderTarget2D* target, Camera& camera, Project
       return true;
     });
 
+  SPC_GL_ERROR();
 
   //
   // Render up to MasLights shadow maps
   RenderShadowMaps();
 
+  SPC_GL_ERROR();
 
   // 
   // and finaly render all visible objects
   device->SetRenderTarget(m_target);
   device->Clear(true, spc::Color4f(0.0f, 0.0, 0.0, 1.0f), true, 1.0f, true, 0);
+  //printf("Render - start\n");
   scene->ScanMeshes(&clipper, GfxScene::eSM_Dynamic | GfxScene::eSM_Static,
     [this, &finalRenderLights, &finalRenderLightOffset](GfxMesh* mesh)
     {
       RenderMesh(mesh, finalRenderLights, finalRenderLightOffset);
     }
   );
+  //printf("Render - done\n");
 
+  SPC_GL_ERROR();
 
 
   // for debuging purpose
   iTexture2DArray* debugColor = m_directionalLightRenderer.GetColorTexture();
-  if (debugColor && true)
+  if (debugColor && false)
   {
     Size size = target->GetWidth() / 3;
 
@@ -146,6 +155,8 @@ void GL4ForwardPipeline::Render(iRenderTarget2D* target, Camera& camera, Project
   m_scene = nullptr;
   m_target = nullptr;
 
+  SPC_GL_ERROR();
+
 }
 
 
@@ -171,7 +182,7 @@ void GL4ForwardPipeline::LightScanned(GfxLight* light)
 
 void GL4ForwardPipeline::RenderMesh(GfxMesh* mesh, const GfxLight** lights, Size offset)
 {
-
+ // printf("  RenderMesh - start\n");
   if (mesh->IsStatic())
   {
     if (mesh->IsLightingDirty())
@@ -191,7 +202,9 @@ void GL4ForwardPipeline::RenderMesh(GfxMesh* mesh, const GfxLight** lights, Size
       dynamicLights,
       lights,
       offset);
+    SPC_GL_ERROR();
     mesh->RenderForward(m_device, eRP_Forward, lights, numLights);
+    SPC_GL_ERROR();
   }
   else
   {
@@ -202,9 +215,12 @@ void GL4ForwardPipeline::RenderMesh(GfxMesh* mesh, const GfxLight** lights, Size
       dynamicLights,
       lights,
       offset);
+    SPC_GL_ERROR();
     mesh->RenderForward(m_device, eRP_Forward, lights, numLights);
+    SPC_GL_ERROR();
   }
 
+  //printf("  RenderMesh - done\n");
 }
 
 void GL4ForwardPipeline::CollectShadowLights(GfxLight* light)
@@ -243,6 +259,7 @@ void GL4ForwardPipeline::RenderShadowMaps()
   Size i = 0;
   i += m_directionalLightRenderer.RenderShadowMaps(MaxLights - i);
   i += m_pointLightRenderer.RenderShadowMaps(MaxLights - i);
+
 }
 
 

@@ -7,6 +7,7 @@ namespace spc
 
 enum eTextureUnit
 {
+  eTU_Unbound,
   eTU_Unit0,
   eTU_Unit1,
   eTU_Unit2,

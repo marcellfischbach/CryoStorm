@@ -3,6 +3,7 @@
 #include <spcCore/graphics/material/imaterial.hh>
 #include <spcCore/graphics/irendermesh.hh>
 #include <spcCore/graphics/idevice.hh>
+
 #include <algorithm>
 
 
@@ -71,6 +72,7 @@ void GfxMesh::RenderForward(iDevice* device, eRenderPass pass, const GfxLight** 
 
     device->SetModelMatrix(m_modelMatrix);
     device->Render(m_mesh, pass);
+    device->SetShader(nullptr);
   }
 }
 

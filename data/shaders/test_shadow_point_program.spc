@@ -5,6 +5,5 @@ program {
     shader "impl/test_shadow_point.frag",
   },
   attributes {
-    attribute "Diffuse",
   }
 }

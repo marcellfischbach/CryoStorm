@@ -3,6 +3,7 @@
 #include <spcOpenGL/gl4/gl4rendermesh.hh>
 #include <spcOpenGL/gl4/gl4vertexbuffer.hh>
 #include <spcOpenGL/gl4/gl4indexbuffer.hh>
+#include <spcOpenGL/glerror.hh>
 #include <spcCore/graphics/vertexdeclaration.hh>
 #include <gl/glew.h>
 
@@ -71,8 +72,13 @@ const BoundingBox& GL4RenderMesh::GetBoundingBox() const
 
 void GL4RenderMesh::Render(iDevice* graphics, eRenderPass pass)
 {
+  SPC_GL_ERROR();
   glBindVertexArray(m_vao);
+  SPC_GL_ERROR();
   glDrawElements(m_primType, (GLsizei) m_count, m_indexType, nullptr);
+  SPC_GL_ERROR();
+  glBindVertexArray(0);
+  SPC_GL_ERROR();
 }
 
 

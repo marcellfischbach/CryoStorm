@@ -97,7 +97,7 @@ Size GL4ForwardPointLightRenderer::RenderShadowMaps(Size maxShadowLights)
       pointLight->GetRange(),
       pointLight->GetShadowMapBias()
     );
-
+    i++;
   }
   return i;
 }

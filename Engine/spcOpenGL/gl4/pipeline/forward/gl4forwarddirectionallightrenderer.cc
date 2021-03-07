@@ -104,13 +104,13 @@ Size GL4ForwardDirectionalLightRenderer::RenderShadowMaps(Size maxShadowLights)
     RenderDirectionalShadowMaps(directionalLight, shadowMap);
     m_device->SetDirectionalLightShadowMap(
       directionalLight,
-      3,
+      Vector3f(5.0f, 7.0f, 9.0f) ,
       shadowMap->GetColorTexture(0),
       shadowMap->GetDepthTexture(),
       m_shadowMatrices,
       directionalLight->GetShadowMapBias()
     );
-
+    ++i;
   }
   return i;
 }
@@ -138,7 +138,7 @@ GL4RenderTarget2DArray* GL4ForwardDirectionalLightRenderer::GetDirectionalLightS
     GL4RenderTarget2DArray* shadowRenderTarget = static_cast<GL4RenderTarget2DArray*>(m_device->CreateRenderTarget(desc));
 
 
-    if (m_shadowMapFilter == ShadowMapFilter::VSM || true)
+    if (m_shadowMapFilter == ShadowMapFilter::VSM)
     {
       iTexture2DArray::Descriptor colorDesc{};
       colorDesc.Width = desc.Width;
@@ -209,10 +209,8 @@ iSampler* GL4ForwardDirectionalLightRenderer::GetShadowMapDepthSampler()
     m_shadowMapDepthSampler->SetAddressU(eTAM_Clamp);
     m_shadowMapDepthSampler->SetAddressV(eTAM_Clamp);
     m_shadowMapDepthSampler->SetAddressW(eTAM_Clamp);
-    /*
     m_shadowMapDepthSampler->SetTextureCompareMode(eTCM_CompareToR);
-    m_shadowMapDepthSampler->SetTextureCompareFunc(eCF_LessOrEqual);
-    */
+      m_shadowMapDepthSampler->SetTextureCompareFunc(eCF_LessOrEqual);
   }
   return m_shadowMapDepthSampler;
 }
@@ -239,6 +237,10 @@ void GL4ForwardDirectionalLightRenderer::RenderDirectionalShadowMaps(GL4Directio
   views[0].SetLookAt(pos, pos - directionalLight->GetDirection(), Vector3f(0, 1, 0));
   views[1].SetLookAt(pos, pos - directionalLight->GetDirection(), Vector3f(0, 1, 0));
   views[2].SetLookAt(pos, pos - directionalLight->GetDirection(), Vector3f(0, 1, 0));
+
+  Matrix4f::Mult(projections[0], views[0], m_shadowMatrices[0]);
+  Matrix4f::Mult(projections[1], views[1], m_shadowMatrices[1]);
+  Matrix4f::Mult(projections[2], views[2], m_shadowMatrices[2]);
 
 
   m_device->SetShadowMapProjectionMatrices(projections, 3);

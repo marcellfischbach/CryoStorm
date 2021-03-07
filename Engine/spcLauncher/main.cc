@@ -373,9 +373,24 @@ int main(int argc, char** argv)
   lightState->SetStatic(false);
   lightState->SetCastShadow(true);
   lightEntity->GetRoot()->GetTransform()
-    .SetTranslation(spc::Vector3f(-100.0f, 25.0f, 0.0f))
+    .SetTranslation(spc::Vector3f(5.0f, 5.0f, 5.0f))
     .Finish();
   world->Attach(lightEntity);
+
+  /*
+  lightEntity = new spc::Entity("Light_0");
+  lightState = new spc::LightState("LightState");
+  lightEntity->Attach(lightState);
+  lightState->SetType(spc::eLT_Point);
+  lightState->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 0.5f);
+  lightState->SetRange(25.0f);
+  lightState->SetStatic(true);
+  lightState->SetCastShadow(true);
+  lightEntity->GetRoot()->GetTransform()
+    .SetTranslation(spc::Vector3f(5.0f, 5.0f, 5.0f))
+    .Finish();
+  world->Attach(lightEntity);
+  */
 
   spc::Entity* sunEntity = new spc::Entity("Sun");
   spc::LightState* sunLightState = new spc::LightState("SunLight");

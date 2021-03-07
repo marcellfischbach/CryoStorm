@@ -11,6 +11,7 @@
 #include <spcOpenGL/gl4/gl4texture2darray.hh>
 #include <spcOpenGL/gl4/gl4texturecube.hh>
 #include <spcOpenGL/gl4/shading/gl4program.hh>
+#include <spcOpenGL/glerror.hh>
 #include <spcCore/objectregistry.hh>
 #include <spcCore/graphics/samplers.hh>
 #include <spcCore/graphics/shading/ishaderattribute.hh>
@@ -64,11 +65,16 @@ bool GL4Device::Initialize()
     return false;
   }
 
+  GLint units, combinedUnits;
+  glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &units);
+  glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &combinedUnits);
   printf("OpenGL capabilities:\n");
   printf("  Vendor  : %s\n", (const char*)glGetString(GL_VENDOR));
   printf("  Renderer: %s\n", (const char*)glGetString(GL_RENDERER));
   printf("  Version : %s\n", (const char*)glGetString(GL_VERSION));
   printf("  GLSL    : %s\n", (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION));
+  printf("  Max textures: %d\n", units);
+  printf("  Max combined textures: %d\n", combinedUnits);
 
   glPixelStorei(GL_PACK_ALIGNMENT, 1);
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -92,6 +98,8 @@ bool GL4Device::Initialize()
   m_viewProjectionMatrixInv.SetIdentity();
   m_modelViewProjectionMatrixInv.SetIdentity();
 
+
+  SPC_GL_ERROR();
 
   return true;
 }
@@ -316,7 +324,7 @@ Matrix4f& GL4Device::GetOrthographicProjectionInv(float l, float r, float b, flo
 
 void GL4Device::SetShader(iShader* shader)
 {
-  if (shader == m_shader)
+  if (shader == m_shader && false)
   {
     return;
   }
@@ -375,6 +383,7 @@ void GL4Device::SetRenderTarget(iRenderTarget* renderTarget)
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
   }
 
+  /*
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LEQUAL);
 
@@ -385,6 +394,7 @@ void GL4Device::SetRenderTarget(iRenderTarget* renderTarget)
 
   glColorMask(true, true, true, true);
   glDepthMask(true);
+  */
 }
 
 
@@ -536,6 +546,10 @@ eTextureUnit GL4Device::BindTexture(iTexture* texture)
   case eTT_Texture2D:
     static_cast<GL4Texture2D*>(texture)->Bind();
     break;
+  case eTT_Texture2DArray:
+    static_cast<GL4Texture2DArray*>(texture)->Bind();
+    break;
+
   case eTT_TextureCube:
     static_cast<GL4TextureCube*>(texture)->Bind();
     break;
@@ -555,8 +569,11 @@ void GL4Device::Render(iRenderMesh* mesh, eRenderPass pass)
 {
   if (mesh)
   {
+    SPC_GL_ERROR();
     BindMatrices();
+    SPC_GL_ERROR();
     mesh->Render(this, pass);
+    SPC_GL_ERROR();
   }
 }
 
@@ -622,20 +639,25 @@ void GL4Device::BindForwardLight(const iLight* light, Size idx)
     return;
   }
 
+  SPC_GL_ERROR();
+
   iShaderAttribute* lightColor = m_shader->GetShaderAttribute(eSA_LightColor);
   iShaderAttribute* lightVector = m_shader->GetShaderAttribute(eSA_LightVector);
   iShaderAttribute* lightRange = m_shader->GetShaderAttribute(eSA_LightRange);
   iShaderAttribute* lightCastShadow = m_shader->GetShaderAttribute(eSA_LightCastShadow);
+  SPC_GL_ERROR();
 
   iShaderAttribute* pointLightShadowMapMappingBias = m_shader->GetShaderAttribute(eSA_PointLightShadowMapMappingBias);
   iShaderAttribute* pointLightShadowMapColor = m_shader->GetShaderAttribute(eSA_PointLightShadowMapColor);
   iShaderAttribute* pointLightShadowMapDepth = m_shader->GetShaderAttribute(eSA_PointLightShadowMapDepth);
+  SPC_GL_ERROR();
 
 
   iShaderAttribute* directionalLightShadowMapLayersBias = m_shader->GetShaderAttribute(eSA_DirectionalLightShadowMapLayersBias);
   iShaderAttribute* directionalLightShadowMapMatrices = m_shader->GetShaderAttribute(eSA_DirectionalLightShadowMapMatrices);
   iShaderAttribute* directionalLightShadowMapColor = m_shader->GetShaderAttribute(eSA_DirectionalLightShadowMapColor);
   iShaderAttribute* directionalLightShadowMapDepth = m_shader->GetShaderAttribute(eSA_DirectionalLightShadowMapDepth);
+  SPC_GL_ERROR();
 
   if (lightColor)
   {
@@ -682,6 +704,7 @@ void GL4Device::BindForwardLight(const iLight* light, Size idx)
   {
     directionalLightShadowMapDepth->SetArrayIndex(idx);
   }
+  SPC_GL_ERROR();
 
 
   if (light)
@@ -695,14 +718,20 @@ void GL4Device::BindForwardLight(const iLight* light, Size idx)
     {
     case eLT_Point:
       {
+        SPC_GL_ERROR();
         auto pointLight = static_cast<const iPointLight*>(light);
         if (lightVector)
         {
           lightVector->Bind(Vector4f(pointLight->GetPosition(), 1.0f));
         }
+        SPC_GL_ERROR();
         if (lightRange)
         {
           lightRange->Bind(pointLight->GetRange());
+        }
+        if (directionalLightShadowMapDepth)
+        {
+          directionalLightShadowMapDepth->Bind(0);
         }
 
         //
@@ -710,15 +739,18 @@ void GL4Device::BindForwardLight(const iLight* light, Size idx)
         auto it = m_pointLightShadowData.find(pointLight);
         if (it != m_pointLightShadowData.end())
         {
+          SPC_GL_ERROR();
           PointLightShadowData& data = it->second;
           if (lightCastShadow)
           {
             lightCastShadow->Bind(1);
           }
+          SPC_GL_ERROR();
           if (pointLightShadowMapMappingBias)
           {
             pointLightShadowMapMappingBias->Bind(data.Mapping);
           }
+          SPC_GL_ERROR();
           if (pointLightShadowMapColor && data.Color)
           {
             eTextureUnit unit = BindTexture(data.Color);
@@ -727,13 +759,33 @@ void GL4Device::BindForwardLight(const iLight* light, Size idx)
               pointLightShadowMapColor->Bind(unit);
             }
           }
-          if (pointLightShadowMapDepth && data.Depth)
+          SPC_GL_ERROR();
+          if (pointLightShadowMapDepth)
           {
-            eTextureUnit unit = BindTexture(data.Depth);
-            if (unit != eTU_Invalid)
+            if (data.Depth)
             {
-              pointLightShadowMapDepth->Bind(unit);
+              eTextureUnit unit = BindTexture(data.Depth);
+              if (unit != eTU_Invalid)
+              {
+                pointLightShadowMapDepth->Bind(unit);
+              }
             }
+            else
+            {
+              pointLightShadowMapDepth->Bind(0);
+            }
+          }
+          SPC_GL_ERROR();
+        }
+        else
+        {
+          if (lightCastShadow)
+          {
+            lightCastShadow->Bind(0);
+          }
+          if (pointLightShadowMapDepth)
+          {
+            pointLightShadowMapDepth->Bind(0);
           }
         }
       }
@@ -745,6 +797,12 @@ void GL4Device::BindForwardLight(const iLight* light, Size idx)
         {
           lightVector->Bind(Vector4f(directionalLight->GetDirection(), 0.0f));
         }
+        if (pointLightShadowMapDepth)
+        {
+          pointLightShadowMapDepth->Bind(0);
+        }
+
+
         auto it = m_directionalLightShadowData.find(directionalLight);
         if (it != m_directionalLightShadowData.end())
         {
@@ -770,13 +828,32 @@ void GL4Device::BindForwardLight(const iLight* light, Size idx)
               directionalLightShadowMapColor->Bind(unit);
             }
           }
-          if (directionalLightShadowMapDepth && data.Depth)
+          if (directionalLightShadowMapDepth)
           {
-            eTextureUnit unit = BindTexture(data.Depth);
-            if (unit != eTU_Invalid)
+            if (data.Depth)
             {
-              directionalLightShadowMapDepth->Bind(unit);
+              eTextureUnit unit = BindTexture(data.Depth);
+              //printf("    Bind directional light shadow map: %p -> %d\n", data.Depth, unit);
+              if (unit != eTU_Invalid)
+              {
+                directionalLightShadowMapDepth->Bind(unit);
+              }
             }
+            else
+            {
+              directionalLightShadowMapDepth->Bind(0);
+            }
+          }
+        }
+        else
+        {
+          if (lightCastShadow)
+          {
+            lightCastShadow->Bind(0);
+          }
+          if (directionalLightShadowMapDepth)
+          {
+            directionalLightShadowMapDepth->Bind(0);
           }
         }
       }
@@ -797,19 +874,21 @@ void GL4Device::BindForwardLight(const iLight* light, Size idx)
     {
       lightCastShadow->Bind(0);
     }
-    if (pointLightShadowMapColor)
-    {
-      pointLightShadowMapColor->Bind(0);
-    }
     if (pointLightShadowMapDepth)
     {
       pointLightShadowMapDepth->Bind(0);
     }
+    if (directionalLightShadowMapDepth)
+    {
+      directionalLightShadowMapDepth->Bind(0);
+    }
   }
+  SPC_GL_ERROR();
 }
 
 void GL4Device::FinishForwardLights(Size numLights)
 {
+  SPC_GL_ERROR();
   if (m_shader)
   {
     iShaderAttribute* count = m_shader->GetShaderAttribute(eSA_LightCount);
@@ -818,6 +897,7 @@ void GL4Device::FinishForwardLights(Size numLights)
       count->Bind((int)numLights);
     }
   }
+  SPC_GL_ERROR();
 }
 
 void GL4Device::BindMatrices()
