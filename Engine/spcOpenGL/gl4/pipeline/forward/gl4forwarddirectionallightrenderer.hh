@@ -14,7 +14,9 @@ namespace spc
 struct iDevice;
 struct iSampler;
 struct iTexture2DArray;
+class Camera;
 class GfxScene;
+class Projector;
 class Settings;
 
 }
@@ -40,7 +42,7 @@ public:
   void Clear();
   void Add(GL4DirectionalLight* directionalLight);
 
-  Size RenderShadowMaps(Size maxShadowLights);
+  Size RenderShadowMaps(Size maxShadowLights, const Camera &camera, const Projector &projector);
 
   iTexture2DArray* GetColorTexture();
   iTexture2DArray* GetDepthTexture();
@@ -50,7 +52,10 @@ private:
   GL4RenderTarget2DArray* GetDirectionalLightShadowMap(Size idx);
   iSampler* GetShadowMapColorSampler();
   iSampler* GetShadowMapDepthSampler();
-  void RenderDirectionalShadowMaps(GL4DirectionalLight* directionalLight, GL4RenderTarget2DArray* shadowMap);
+  float GetSplitSize(const Vector3f* near, const Vector3f* far);
+
+  void RenderDirectionalShadowMaps(GL4DirectionalLight* directionalLight, GL4RenderTarget2DArray* shadowMap, const Camera& camera, const Projector& projector);
+
 
 private:
   iDevice* m_device;

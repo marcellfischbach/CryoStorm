@@ -1,0 +1,407 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{B741E70D-993C-3952-9A62-9B269143A6D8}</ProjectGuid>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
+    <Keyword>Win32Proj</Keyword>
+    <Platform>x64</Platform>
+    <ProjectName>spcOpenGL</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\DEV\SpiceEngine\build\bin\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">spcOpenGL.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">spcOpenGL</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.dll</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\DEV\SpiceEngine\build\bin\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">spcOpenGL.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">spcOpenGL</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.dll</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\DEV\SpiceEngine\build\bin\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">spcOpenGL.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">spcOpenGL</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.dll</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\DEV\SpiceEngine\build\bin\RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">spcOpenGL.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">spcOpenGL</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.dll</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</GenerateManifest>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\DEV\SpiceEngine\build\Engine\spcOpenGL\__cmake__build__moc__;D:\DEV\SpiceEngine\3rdparty;D:\DEV\VC\include;D:\DEV\VC\include\bullet;D:\DEV\SpiceEngine\Engine;D:\DEV\SpiceEngine\Editor;D:\DEV\SpiceEngine\build\Engine\spcCore\__cmake__build__moc__;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;SPC_WIN32;NDEBUG;SPC_OGL_EXPORT;_USE_MATH_DEFINES;CMAKE_INTDIR="Debug";spcOpenGL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;SPC_WIN32;NDEBUG;SPC_OGL_EXPORT;_USE_MATH_DEFINES;CMAKE_INTDIR=\"Debug\";spcOpenGL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\DEV\SpiceEngine\build\Engine\spcOpenGL\__cmake__build__moc__;D:\DEV\SpiceEngine\3rdparty;D:\DEV\VC\include;D:\DEV\VC\include\bullet;D:\DEV\SpiceEngine\Engine;D:\DEV\SpiceEngine\Editor;D:\DEV\SpiceEngine\build\Engine\spcCore\__cmake__build__moc__;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\DEV\SpiceEngine\build\Engine\spcOpenGL\__cmake__build__moc__;D:\DEV\SpiceEngine\3rdparty;D:\DEV\VC\include;D:\DEV\VC\include\bullet;D:\DEV\SpiceEngine\Engine;D:\DEV\SpiceEngine\Editor;D:\DEV\SpiceEngine\build\Engine\spcCore\__cmake__build__moc__;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>..\..\bin\spcCore.lib;..\..\bin\tinyxml2d.lib;opengl32.lib;glu32.lib;D:\DEV\VC\lib\glew32.lib;D:\DEV\VC\lib\libpng16d.lib;D:\DEV\VC\lib\zlibd.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/DEV/SpiceEngine/build/bin/spcOpenGL.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/DEV/SpiceEngine/build/bin/spcOpenGL.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\DEV\SpiceEngine\build\Engine\spcOpenGL\__cmake__build__moc__;D:\DEV\SpiceEngine\3rdparty;D:\DEV\VC\include;D:\DEV\VC\include\bullet;D:\DEV\SpiceEngine\Engine;D:\DEV\SpiceEngine\Editor;D:\DEV\SpiceEngine\build\Engine\spcCore\__cmake__build__moc__;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;SPC_WIN32;SPC_OGL_EXPORT;_USE_MATH_DEFINES;CMAKE_INTDIR="Release";spcOpenGL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;SPC_WIN32;SPC_OGL_EXPORT;_USE_MATH_DEFINES;CMAKE_INTDIR=\"Release\";spcOpenGL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\DEV\SpiceEngine\build\Engine\spcOpenGL\__cmake__build__moc__;D:\DEV\SpiceEngine\3rdparty;D:\DEV\VC\include;D:\DEV\VC\include\bullet;D:\DEV\SpiceEngine\Engine;D:\DEV\SpiceEngine\Editor;D:\DEV\SpiceEngine\build\Engine\spcCore\__cmake__build__moc__;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\DEV\SpiceEngine\build\Engine\spcOpenGL\__cmake__build__moc__;D:\DEV\SpiceEngine\3rdparty;D:\DEV\VC\include;D:\DEV\VC\include\bullet;D:\DEV\SpiceEngine\Engine;D:\DEV\SpiceEngine\Editor;D:\DEV\SpiceEngine\build\Engine\spcCore\__cmake__build__moc__;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>..\..\bin\spcCore.lib;..\..\bin\tinyxml2.lib;opengl32.lib;glu32.lib;D:\DEV\VC\lib\glew32.lib;D:\DEV\VC\lib\libpng16.lib;D:\DEV\VC\lib\zlib.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/DEV/SpiceEngine/build/bin/spcOpenGL.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/DEV/SpiceEngine/build/bin/spcOpenGL.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\DEV\SpiceEngine\build\Engine\spcOpenGL\__cmake__build__moc__;D:\DEV\SpiceEngine\3rdparty;D:\DEV\VC\include;D:\DEV\VC\include\bullet;D:\DEV\SpiceEngine\Engine;D:\DEV\SpiceEngine\Editor;D:\DEV\SpiceEngine\build\Engine\spcCore\__cmake__build__moc__;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;SPC_WIN32;SPC_OGL_EXPORT;_USE_MATH_DEFINES;CMAKE_INTDIR="MinSizeRel";spcOpenGL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;SPC_WIN32;SPC_OGL_EXPORT;_USE_MATH_DEFINES;CMAKE_INTDIR=\"MinSizeRel\";spcOpenGL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\DEV\SpiceEngine\build\Engine\spcOpenGL\__cmake__build__moc__;D:\DEV\SpiceEngine\3rdparty;D:\DEV\VC\include;D:\DEV\VC\include\bullet;D:\DEV\SpiceEngine\Engine;D:\DEV\SpiceEngine\Editor;D:\DEV\SpiceEngine\build\Engine\spcCore\__cmake__build__moc__;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\DEV\SpiceEngine\build\Engine\spcOpenGL\__cmake__build__moc__;D:\DEV\SpiceEngine\3rdparty;D:\DEV\VC\include;D:\DEV\VC\include\bullet;D:\DEV\SpiceEngine\Engine;D:\DEV\SpiceEngine\Editor;D:\DEV\SpiceEngine\build\Engine\spcCore\__cmake__build__moc__;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>..\..\bin\MinSizeRel\spcCore.lib;..\..\bin\MinSizeRel\tinyxml2.lib;opengl32.lib;glu32.lib;D:\DEV\VC\lib\glew32.lib;D:\DEV\VC\lib\libpng16.lib;D:\DEV\VC\lib\zlib.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/DEV/SpiceEngine/build/bin/MinSizeRel/spcOpenGL.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/DEV/SpiceEngine/build/bin/MinSizeRel/spcOpenGL.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\DEV\SpiceEngine\build\Engine\spcOpenGL\__cmake__build__moc__;D:\DEV\SpiceEngine\3rdparty;D:\DEV\VC\include;D:\DEV\VC\include\bullet;D:\DEV\SpiceEngine\Engine;D:\DEV\SpiceEngine\Editor;D:\DEV\SpiceEngine\build\Engine\spcCore\__cmake__build__moc__;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;SPC_WIN32;SPC_OGL_EXPORT;_USE_MATH_DEFINES;CMAKE_INTDIR="RelWithDebInfo";spcOpenGL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;SPC_WIN32;SPC_OGL_EXPORT;_USE_MATH_DEFINES;CMAKE_INTDIR=\"RelWithDebInfo\";spcOpenGL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\DEV\SpiceEngine\build\Engine\spcOpenGL\__cmake__build__moc__;D:\DEV\SpiceEngine\3rdparty;D:\DEV\VC\include;D:\DEV\VC\include\bullet;D:\DEV\SpiceEngine\Engine;D:\DEV\SpiceEngine\Editor;D:\DEV\SpiceEngine\build\Engine\spcCore\__cmake__build__moc__;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\DEV\SpiceEngine\build\Engine\spcOpenGL\__cmake__build__moc__;D:\DEV\SpiceEngine\3rdparty;D:\DEV\VC\include;D:\DEV\VC\include\bullet;D:\DEV\SpiceEngine\Engine;D:\DEV\SpiceEngine\Editor;D:\DEV\SpiceEngine\build\Engine\spcCore\__cmake__build__moc__;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>..\..\bin\RelWithDebInfo\spcCore.lib;..\..\bin\RelWithDebInfo\tinyxml2.lib;opengl32.lib;glu32.lib;D:\DEV\VC\lib\glew32.lib;D:\DEV\VC\lib\libpng16.lib;D:\DEV\VC\lib\zlib.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/DEV/SpiceEngine/build/bin/RelWithDebInfo/spcOpenGL.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/DEV/SpiceEngine/build/bin/RelWithDebInfo/spcOpenGL.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\CMakeLists.txt">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule D:/DEV/SpiceEngine/Engine/spcOpenGL/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SD:/DEV/SpiceEngine -BD:/DEV/SpiceEngine/build --check-stamp-file D:/DEV/SpiceEngine/build/Engine/spcOpenGL/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\DEV\SpiceEngine\build\Engine\spcOpenGL\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule D:/DEV/SpiceEngine/Engine/spcOpenGL/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SD:/DEV/SpiceEngine -BD:/DEV/SpiceEngine/build --check-stamp-file D:/DEV/SpiceEngine/build/Engine/spcOpenGL/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\DEV\SpiceEngine\build\Engine\spcOpenGL\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule D:/DEV/SpiceEngine/Engine/spcOpenGL/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SD:/DEV/SpiceEngine -BD:/DEV/SpiceEngine/build --check-stamp-file D:/DEV/SpiceEngine/build/Engine/spcOpenGL/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\DEV\SpiceEngine\build\Engine\spcOpenGL\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule D:/DEV/SpiceEngine/Engine/spcOpenGL/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SD:/DEV/SpiceEngine -BD:/DEV/SpiceEngine/build --check-stamp-file D:/DEV/SpiceEngine/build/Engine/spcOpenGL/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\DEV\SpiceEngine\build\Engine\spcOpenGL\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\glerror.hh" />
+    <ClInclude Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\openglexport.hh" />
+    <ClCompile Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\openglmodule.cc" />
+    <ClInclude Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\openglmodule.hh" />
+    <ClCompile Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\gl4device.cc" />
+    <ClInclude Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\gl4device.hh" />
+    <ClCompile Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\gl4directionallight.cc" />
+    <ClInclude Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\gl4directionallight.hh" />
+    <ClCompile Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\gl4exceptions.cc" />
+    <ClInclude Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\gl4exceptions.hh" />
+    <ClCompile Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\gl4indexbuffer.cc" />
+    <ClInclude Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\gl4indexbuffer.hh" />
+    <ClInclude Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\gl4pixelformatmap.hh" />
+    <ClCompile Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\gl4pointlight.cc" />
+    <ClInclude Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\gl4pointlight.hh" />
+    <ClCompile Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\gl4rendermesh.cc" />
+    <ClInclude Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\gl4rendermesh.hh" />
+    <ClCompile Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\gl4rendertarget2d.cc" />
+    <ClInclude Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\gl4rendertarget2d.hh" />
+    <ClCompile Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\gl4rendertarget2darray.cc" />
+    <ClInclude Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\gl4rendertarget2darray.hh" />
+    <ClCompile Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\gl4rendertargetcube.cc" />
+    <ClInclude Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\gl4rendertargetcube.hh" />
+    <ClCompile Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\gl4sampler.cc" />
+    <ClInclude Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\gl4sampler.hh" />
+    <ClCompile Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\gl4texture2d.cc" />
+    <ClInclude Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\gl4texture2d.hh" />
+    <ClCompile Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\gl4texture2darray.cc" />
+    <ClInclude Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\gl4texture2darray.hh" />
+    <ClCompile Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\gl4texturecube.cc" />
+    <ClInclude Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\gl4texturecube.hh" />
+    <ClCompile Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\gl4vertexbuffer.cc" />
+    <ClInclude Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\gl4vertexbuffer.hh" />
+    <ClCompile Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\loading\gl4programloader.cc" />
+    <ClInclude Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\loading\gl4programloader.hh" />
+    <ClCompile Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\loading\gl4shaderloader.cc" />
+    <ClInclude Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\loading\gl4shaderloader.hh" />
+    <ClCompile Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\pipeline\forward\gl4forwarddirectionallightrenderer.cc" />
+    <ClInclude Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\pipeline\forward\gl4forwarddirectionallightrenderer.hh" />
+    <ClCompile Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\pipeline\forward\gl4forwardpipeline.cc" />
+    <ClInclude Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\pipeline\forward\gl4forwardpipeline.hh" />
+    <ClCompile Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\pipeline\forward\gl4forwardpointlightrenderer.cc" />
+    <ClInclude Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\pipeline\forward\gl4forwardpointlightrenderer.hh" />
+    <ClCompile Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\shading\gl4program.cc" />
+    <ClInclude Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\shading\gl4program.hh" />
+    <ClCompile Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\shading\gl4shader.cc" />
+    <ClInclude Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\shading\gl4shader.hh" />
+    <ClCompile Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\shading\gl4shaderattribute.cc" />
+    <ClInclude Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\shading\gl4shaderattribute.hh" />
+    <ClCompile Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\shading\gl4shaderattributenull.cc" />
+    <ClInclude Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\shading\gl4shaderattributenull.hh" />
+    <ClCompile Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\shading\gl4shadersourcefragment.cc" />
+    <ClInclude Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\shading\gl4shadersourcefragment.hh" />
+    <ClInclude Include="D:\DEV\SpiceEngine\Engine\spcOpenGL\gl4\shading\gl4shadertype.hh" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="D:\DEV\SpiceEngine\build\ZERO_CHECK.vcxproj">
+      <Project>{3DBF72C5-489C-385D-906E-40D16BA84AB8}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="D:\DEV\SpiceEngine\build\Engine\spcCore\spcCore.vcxproj">
+      <Project>{077E78B2-BA6E-353F-84FE-23223A5ACE06}</Project>
+      <Name>spcCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\DEV\SpiceEngine\build\moc\spcMOC.vcxproj">
+      <Project>{F4062079-4AC9-36D8-96E1-C30BA21C099F}</Project>
+      <Name>spcMOC</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\DEV\SpiceEngine\build\Engine\spcOpenGL\spcOpenGL-MOC.vcxproj">
+      <Project>{80070E3F-C0AA-3895-A95E-BE02AAAE06C9}</Project>
+      <Name>spcOpenGL-MOC</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="D:\DEV\SpiceEngine\build\3rdparty\tinyxml2\tinyxml2.vcxproj">
+      <Project>{CB57F0FE-1D1B-3D5A-8C72-4EF9071EBBE8}</Project>
+      <Name>tinyxml2</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

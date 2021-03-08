@@ -5,10 +5,13 @@
 #include <spcOpenGL/gl4/gl4rendertarget2darray.hh>
 
 #include <spcCore/settings.hh>
+#include <spcCore/graphics/camera.hh>
 #include <spcCore/graphics/idevice.hh>
 #include <spcCore/graphics/isampler.hh>
+#include <spcCore/graphics/projector.hh>
 #include <spcCore/graphics/scene/gfxmesh.hh>
 #include <spcCore/graphics/scene/gfxscene.hh>
+#include <spcCore/math/math.hh>
 #include <spcCore/math/clipper/sphereclipper.hh>
 
 #include <algorithm>
@@ -85,7 +88,7 @@ void GL4ForwardDirectionalLightRenderer::Add(GL4DirectionalLight* directionalLig
   }
 }
 
-Size GL4ForwardDirectionalLightRenderer::RenderShadowMaps(Size maxShadowLights)
+Size GL4ForwardDirectionalLightRenderer::RenderShadowMaps(Size maxShadowLights, const Camera& camera, const Projector& projector)
 {
   SortLights();
   Size i = 0;
@@ -101,10 +104,10 @@ Size GL4ForwardDirectionalLightRenderer::RenderShadowMaps(Size maxShadowLights)
     {
       break;
     }
-    RenderDirectionalShadowMaps(directionalLight, shadowMap);
+    RenderDirectionalShadowMaps(directionalLight, shadowMap, camera, projector);
     m_device->SetDirectionalLightShadowMap(
       directionalLight,
-      Vector3f(5.0f, 7.0f, 9.0f) ,
+      Vector3f(directionalLight->GetSplit0(), directionalLight->GetSplit1(), directionalLight->GetSplit2()) ,
       shadowMap->GetColorTexture(0),
       shadowMap->GetDepthTexture(),
       m_shadowMatrices,
@@ -217,26 +220,50 @@ iSampler* GL4ForwardDirectionalLightRenderer::GetShadowMapDepthSampler()
 
 
 
-void GL4ForwardDirectionalLightRenderer::RenderDirectionalShadowMaps(GL4DirectionalLight* directionalLight, GL4RenderTarget2DArray* shadowMap)
+void GL4ForwardDirectionalLightRenderer::RenderDirectionalShadowMaps(GL4DirectionalLight* directionalLight, GL4RenderTarget2DArray* shadowMap, const Camera& camera, const Projector& projector)
 {
   m_device->SetRenderTarget(shadowMap);
   m_device->Clear(true, Color4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, false, 0);
 
 
+  Vector3f nearPoints[4];
+  Vector3f split0Points[4];
+  Vector3f split1Points[4];
+  Vector3f split2Points[4];
+
+  projector.GetPoints(projector.GetNear(), nearPoints);
+  projector.GetPoints(directionalLight->GetSplit0(), split0Points);
+  projector.GetPoints(directionalLight->GetSplit1(), split1Points);
+  projector.GetPoints(directionalLight->GetSplit2(), split2Points);
+
+  float sizeSplit0 = GetSplitSize(nearPoints, split0Points) / 2.0f;
+  float sizeSplit1 = GetSplitSize(split0Points, split1Points) / 2.0f;
+  float sizeSplit2 = GetSplitSize(split1Points, split2Points) / 2.0f;
+
+
   float near = -20.0;
   float far = 20.0;
-  Matrix4f projection;
-  m_device->GetOrthographicProjection(-10.0f, 10.0f, -10.0f, 10.0, -20.0f, 20.0f, projection);
+  Matrix4f projection0, projection1, projection2;
+  m_device->GetOrthographicProjection(-sizeSplit0, sizeSplit0, -sizeSplit0, sizeSplit0, near, far, projection0);
+  m_device->GetOrthographicProjection(-sizeSplit1, sizeSplit1, -sizeSplit1, sizeSplit1, near, far, projection1);
+  m_device->GetOrthographicProjection(-sizeSplit2, sizeSplit2, -sizeSplit2, sizeSplit2, near, far, projection2);
   Matrix4f projections[] = {
-    projection,
-    projection,
-    projection
+    projection0,
+    projection1,
+    projection2
   };
-  Vector3f pos(0.0f, 0.0f, 0.0f);
+
+
+  Vector3f direction = (camera.GetSpot() - camera.GetEye()).Normalize();
+  Vector3f pos0 = camera.GetEye() + direction * (projector.GetNear() + directionalLight->GetSplit0()) / 2.0f;
+  Vector3f pos1 = camera.GetEye() + direction * (directionalLight->GetSplit0() + directionalLight->GetSplit1()) / 2.0f;
+  Vector3f pos2 = camera.GetEye() + direction * (directionalLight->GetSplit2() + directionalLight->GetSplit2()) / 2.0f;
+
+
   Matrix4f views[3];
-  views[0].SetLookAt(pos, pos - directionalLight->GetDirection(), Vector3f(0, 1, 0));
-  views[1].SetLookAt(pos, pos - directionalLight->GetDirection(), Vector3f(0, 1, 0));
-  views[2].SetLookAt(pos, pos - directionalLight->GetDirection(), Vector3f(0, 1, 0));
+  views[0].SetLookAt(pos0, pos0 + directionalLight->GetDirection(), Vector3f(0, 1, 0));
+  views[1].SetLookAt(pos1, pos1 + directionalLight->GetDirection(), Vector3f(0, 1, 0));
+  views[2].SetLookAt(pos2, pos2 + directionalLight->GetDirection(), Vector3f(0, 1, 0));
 
   Matrix4f::Mult(projections[0], views[0], m_shadowMatrices[0]);
   Matrix4f::Mult(projections[1], views[1], m_shadowMatrices[1]);
@@ -252,6 +279,28 @@ void GL4ForwardDirectionalLightRenderer::RenderDirectionalShadowMaps(GL4Directio
       mesh->RenderUnlit(m_device, eRP_ShadowPSSM);
     }
   );
+}
+
+float GL4ForwardDirectionalLightRenderer::GetSplitSize(const Vector3f* near, const Vector3f* far)
+{
+  /*
+  *     1         3
+  *      +-------+
+  *      |       |
+  *      |       |
+  *      |       |
+  *      +-------+
+  *     0         2
+  */
+  Vector3f tmp;
+  float dotFar03 = Vector3f::Sub(far[0], far[3], tmp).Dot();
+  float dotFar21 = Vector3f::Sub(far[2], far[1], tmp).Dot();
+  float dotNearFar03 = Vector3f::Sub(near[0], far[3], tmp).Dot();
+  float dotNearFar21 = Vector3f::Sub(near[2], far[1], tmp).Dot();
+  float maxDist = spcMax(spcMax(dotFar03, dotFar21), spcMax(dotNearFar03, dotNearFar21));
+
+  // add a 10% extra
+  return spcSqrt(maxDist) * 1.1f;
 }
 
 

@@ -1,0 +1,24 @@
+^D:\DEV\SPICEENGINE\BUILD\CMAKEFILES\1D3DE81960203ADC2A25F4B8A426E8F8\SPCCORE-MOC.RULE
+setlocal
+cd D:\DEV\SpiceEngine\Engine\spcCore
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+D:\DEV\SpiceEngine\build\bin\spcMOC --path D:/DEV/SpiceEngine/build/Engine/spcCore/__cmake__build__moc__
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\DEV\SPICEENGINE\ENGINE\SPCCORE\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SD:/DEV/SpiceEngine -BD:/DEV/SpiceEngine/build --check-stamp-file D:/DEV/SpiceEngine/build/Engine/spcCore/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

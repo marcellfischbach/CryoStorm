@@ -33,6 +33,7 @@ struct SPC_CORE_API iLight : public SPC_SUPER(iObject)
   virtual void SetColor(const Color4f& color) = 0;
   virtual SPC_NODISCARD const Color4f& GetColor() const = 0;
 
+  virtual void SetIntensity(float intensity) = 0;
   virtual SPC_NODISCARD float GetIntensity() const = 0;
 
 };

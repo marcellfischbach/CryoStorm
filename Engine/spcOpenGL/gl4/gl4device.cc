@@ -65,15 +65,18 @@ bool GL4Device::Initialize()
     return false;
   }
 
-  GLint units, combinedUnits;
-  glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &units);
+  GLint units, imageUnits, combinedUnits;
+  
+  glGetIntegerv(GL_MAX_TEXTURE_UNITS, &units);
+  glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &imageUnits);
   glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &combinedUnits);
   printf("OpenGL capabilities:\n");
   printf("  Vendor  : %s\n", (const char*)glGetString(GL_VENDOR));
   printf("  Renderer: %s\n", (const char*)glGetString(GL_RENDERER));
   printf("  Version : %s\n", (const char*)glGetString(GL_VERSION));
   printf("  GLSL    : %s\n", (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION));
-  printf("  Max textures: %d\n", units);
+  printf("  Max texture units: %d\n", units);
+  printf("  Max images units: %d\n", imageUnits);
   printf("  Max combined textures: %d\n", combinedUnits);
 
   glPixelStorei(GL_PACK_ALIGNMENT, 1);
@@ -795,7 +798,7 @@ void GL4Device::BindForwardLight(const iLight* light, Size idx)
         auto directionalLight = static_cast<const iDirectionalLight*>(light);
         if (lightVector)
         {
-          lightVector->Bind(Vector4f(directionalLight->GetDirection(), 0.0f));
+          lightVector->Bind(Vector4f(-directionalLight->GetDirection(), 0.0f));
         }
         if (pointLightShadowMapDepth)
         {

@@ -368,8 +368,8 @@ int main(int argc, char** argv)
   spc::LightState* lightState = new spc::LightState("LightState");
   lightEntity->Attach(lightState);
   lightState->SetType(spc::eLT_Point);
-  lightState->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 0.5f);
-  lightState->SetRange(25.0f);
+  lightState->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 1.0f);
+  lightState->SetRange(25);
   lightState->SetStatic(false);
   lightState->SetCastShadow(true);
   lightEntity->GetRoot()->GetTransform()
@@ -397,18 +397,21 @@ int main(int argc, char** argv)
   sunEntity->Attach(sunLightState);
   sunLightState->SetType(spc::eLT_Directional);
   sunLightState->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 1.0f);
+  sunLightState->SetSplits(7.0f, 70.0f, 110.0f);
+  sunLightState->SetShadowMapBias(0.01f);
   sunLightState->SetCastShadow(true);
   sunLightState->GetTransform()
-    .SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(1.0f, 0.0f, 0.0f), spc::spcDeg2Rad(45.0f)))
+    .SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(1.0f, 0.0f, 0.0f), spc::spcDeg2Rad(-45.0f)))
     .Finish();
+
   world->Attach(sunEntity);
 
 
   spc::iSampler* colorSampler = device->CreateSampler();
-  colorSampler->SetFilterMode(spc::eFM_MinMagLinear);
+  colorSampler->SetFilterMode(spc::eFM_MinMagNearest);
 
   spc::iSampler* depthSampler = device->CreateSampler();
-  depthSampler->SetFilterMode(spc::eFM_MinMagLinear);
+  depthSampler->SetFilterMode(spc::eFM_MinMagNearest);
 
   spc::iTexture2D::Descriptor rt_col_desc = {};
   rt_col_desc.Width = width;
@@ -471,6 +474,7 @@ int main(int argc, char** argv)
       sprintf_s<1024>(buffer, "%s  %d FPS", title.c_str(), frames);
       SDL_SetWindowTitle(wnd, buffer);
       printf("%s\n", buffer);
+      fflush(stdout);
       frames = 0;
     }
     else

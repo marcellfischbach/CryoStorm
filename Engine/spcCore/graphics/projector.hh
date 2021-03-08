@@ -4,6 +4,7 @@
 
 #include <spcCore/coreexport.hh>
 #include <spcCore/graphics/eprojectionmode.hh>
+#include <spcCore/math/vector3f.hh>
 
 namespace spc
 {
@@ -17,6 +18,10 @@ public:
   void UpdatePerspective(float angle, float aspect, float near, float far);
   void UpdatePerspective(float left, float right, float bottom, float top, float near, float far);
   void UpdateOrtho(float left, float right, float bottom, float top, float near, float far);
+
+  void GetPoints(float depth, Vector3f* out) const;
+  SPC_NODISCARD float GetNear() const;
+  SPC_NODISCARD float GetFar() const;
 
   void Bind(iDevice* device);
 

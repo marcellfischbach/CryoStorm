@@ -257,7 +257,7 @@ void GL4ForwardPipeline::RenderShadowMaps()
   m_device->ClearShadowMaps();
 
   Size i = 0;
-  i += m_directionalLightRenderer.RenderShadowMaps(MaxLights - i);
+  i += m_directionalLightRenderer.RenderShadowMaps(MaxLights - i, m_camera, m_projector);
   i += m_pointLightRenderer.RenderShadowMaps(MaxLights - i);
 
 }

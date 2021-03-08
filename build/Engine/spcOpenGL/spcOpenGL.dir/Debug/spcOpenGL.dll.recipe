@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <ProjectOutputs>
+    <ProjectOutput>
+      <FullPath>D:\DEV\SpiceEngine\build\x64\Debug\ZERO_CHECK</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>D:\DEV\SpiceEngine\build\bin\spcMOC.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>D:\DEV\SpiceEngine\build\Engine\spcCore\x64\Debug\spcCore-MOC</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>D:\DEV\SpiceEngine\build\bin\spcCore.dll</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>D:\DEV\SpiceEngine\build\Engine\spcOpenGL\x64\Debug\spcOpenGL-MOC</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>D:\DEV\SpiceEngine\build\bin\spcOpenGL.dll</FullPath>
+    </ProjectOutput>
+  </ProjectOutputs>
+  <ContentFiles />
+  <SatelliteDlls />
+  <NonRecipeFileRefs />
+</Project>

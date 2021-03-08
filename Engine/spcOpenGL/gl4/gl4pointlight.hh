@@ -35,6 +35,7 @@ public:
   void SetColor(const Color4f & color) override;
   const Color4f& GetColor() const override;
 
+  void SetIntensity(float intensity);
   float GetIntensity() const;
 
   void SetPosition(const Vector3f & position) override;

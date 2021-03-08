@@ -10,6 +10,7 @@ GL4PointLight::GL4PointLight()
   , m_changeMode(eLCM_Dynamic)
   , m_castShadow(true)
   , m_color(1.0f, 1.0f, 1.0f)
+  , m_intensity(1.0)
   , m_position(0.0f, 0.0f, 0.0f)
   , m_range(10.0)
 {
@@ -61,6 +62,11 @@ void GL4PointLight::SetColor(const Color4f& color)
 const Color4f& GL4PointLight::GetColor() const
 {
   return m_color;
+}
+
+void GL4PointLight::SetIntensity(float intensity)
+{
+  m_intensity = intensity;
 }
 
 float GL4PointLight::GetIntensity() const

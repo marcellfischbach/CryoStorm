@@ -1,0 +1,10 @@
+^D:\DEV\SPICEENGINE\BUILD\CMAKEFILES\6CB5E23416C22436CD88549E68D7DEE5\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SD:/DEV/SpiceEngine -BD:/DEV/SpiceEngine/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file D:/DEV/SpiceEngine/build/SpiceEngine.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

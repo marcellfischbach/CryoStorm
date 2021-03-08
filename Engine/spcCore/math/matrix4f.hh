@@ -206,6 +206,7 @@ public:
 
   SPC_FORCEINLINE const Vector3f GetZAxis() const
   {
+//    return Vector3f(m02, m12, m22);
     return Vector3f(m20, m21, m22);
   }
 
