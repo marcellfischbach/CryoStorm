@@ -226,6 +226,7 @@ void GL4ForwardDirectionalLightRenderer::RenderDirectionalShadowMaps(GL4Directio
   m_device->Clear(true, Color4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, false, 0);
 
 
+
   Vector3f nearPoints[4];
   Vector3f split0Points[4];
   Vector3f split1Points[4];
@@ -240,30 +241,78 @@ void GL4ForwardDirectionalLightRenderer::RenderDirectionalShadowMaps(GL4Directio
   float sizeSplit1 = GetSplitSize(split0Points, split1Points) / 2.0f;
   float sizeSplit2 = GetSplitSize(split1Points, split2Points) / 2.0f;
 
-
-  float near = -20.0;
-  float far = 20.0;
-  Matrix4f projection0, projection1, projection2;
-  m_device->GetOrthographicProjection(-sizeSplit0, sizeSplit0, -sizeSplit0, sizeSplit0, near, far, projection0);
-  m_device->GetOrthographicProjection(-sizeSplit1, sizeSplit1, -sizeSplit1, sizeSplit1, near, far, projection1);
-  m_device->GetOrthographicProjection(-sizeSplit2, sizeSplit2, -sizeSplit2, sizeSplit2, near, far, projection2);
-  Matrix4f projections[] = {
-    projection0,
-    projection1,
-    projection2
-  };
-
-
   Vector3f direction = (camera.GetSpot() - camera.GetEye()).Normalize();
   Vector3f pos0 = camera.GetEye() + direction * (projector.GetNear() + directionalLight->GetSplit0()) / 2.0f;
   Vector3f pos1 = camera.GetEye() + direction * (directionalLight->GetSplit0() + directionalLight->GetSplit1()) / 2.0f;
   Vector3f pos2 = camera.GetEye() + direction * (directionalLight->GetSplit2() + directionalLight->GetSplit2()) / 2.0f;
+
+  Matrix4f mat;
+  mat.SetLookAt(Vector3f(0, 0, 0), directionalLight->GetDirection(), Vector3f(0, 1, 0));
+  Vector3f xAxis = mat.GetXAxis();
+  Vector3f yAxis = mat.GetYAxis();
+
+  float xPart1 = xAxis.Dot(pos1);
+  float yPart1 = yAxis.Dot(pos1);
+  printf("xPart1: %.2f % (%.2f / %d = %.2f)", xPart1, sizeSplit1, (int)m_directionalLightShadowMapSize, (sizeSplit1 / m_directionalLightShadowMapSize));
+  xPart1 = fmodf(xPart1, (sizeSplit1 / m_directionalLightShadowMapSize));
+  yPart1 = fmodf(yPart1, (sizeSplit1 / m_directionalLightShadowMapSize));
+  printf(" = %.2f\n", xPart1);
+
+  printf("Pos1: %.2f %.2f %.2f ->", pos1.x, pos1.y, pos1.z);
+  pos1 -= xAxis * xPart1;
+  pos1 -= yAxis * yPart1;
+  printf(" %.2f %.2f %.2f -> ", pos1.x, pos1.y, pos1.z);
+  xPart1 = xAxis.Dot(pos1);
+  yPart1 = yAxis.Dot(pos1);
+  printf("%.2f %.2f -> ", xPart1, yPart1);
+  xPart1 = fmodf(xPart1, (sizeSplit1 / m_directionalLightShadowMapSize));
+  yPart1 = fmodf(yPart1, (sizeSplit1 / m_directionalLightShadowMapSize));
+  printf(" %.2f %.2f\n", xPart1, yPart1);
+
+
 
 
   Matrix4f views[3];
   views[0].SetLookAt(pos0, pos0 + directionalLight->GetDirection(), Vector3f(0, 1, 0));
   views[1].SetLookAt(pos1, pos1 + directionalLight->GetDirection(), Vector3f(0, 1, 0));
   views[2].SetLookAt(pos2, pos2 + directionalLight->GetDirection(), Vector3f(0, 1, 0));
+
+
+
+  float near[] = {FLT_MAX, FLT_MAX, FLT_MAX };
+  float far[] = {-FLT_MAX, -FLT_MAX, -FLT_MAX };
+  std::vector<GfxMesh*> meshes;
+  m_scene->ScanMeshes(nullptr, GfxScene::eSM_Dynamic | GfxScene::eSM_Static,
+    [this, &views, &meshes, &near, &far](GfxMesh* mesh)
+    {
+      const Vector3f* bboxPoints = mesh->GetBoundingBox().GetPoints();
+      for (unsigned i = 0; i < 8; i++)
+      {
+        Vector3f v0 = Matrix4f::Transform(views[0], bboxPoints[i], v0);
+        Vector3f v1 = Matrix4f::Transform(views[1], bboxPoints[i], v1);
+        Vector3f v2 = Matrix4f::Transform(views[2], bboxPoints[i], v2);
+
+        near[0] = spcMin(near[0], v0.z);
+        near[1] = spcMin(near[1], v1.z);
+        near[2] = spcMin(near[2], v2.z);
+        far[0] = spcMax(far[0], v0.z);
+        far[1] = spcMax(far[1], v1.z);
+        far[2] = spcMax(far[2], v2.z);
+      }
+      meshes.push_back(mesh);
+    }
+  );
+
+  Matrix4f projection0, projection1, projection2;
+  m_device->GetOrthographicProjection(-sizeSplit0, sizeSplit0, -sizeSplit0, sizeSplit0, near[0], far[0], projection0);
+  m_device->GetOrthographicProjection(-sizeSplit1, sizeSplit1, -sizeSplit1, sizeSplit1, near[1], far[1], projection1);
+  m_device->GetOrthographicProjection(-sizeSplit2, sizeSplit2, -sizeSplit2, sizeSplit2, near[2], far[2], projection2);
+  Matrix4f projections[] = {
+    projection0,
+    projection1,
+    projection2
+  };
+
 
   Matrix4f::Mult(projections[0], views[0], m_shadowMatrices[0]);
   Matrix4f::Mult(projections[1], views[1], m_shadowMatrices[1]);
@@ -273,12 +322,10 @@ void GL4ForwardDirectionalLightRenderer::RenderDirectionalShadowMaps(GL4Directio
   m_device->SetShadowMapProjectionMatrices(projections, 3);
   m_device->SetShadowMapViewMatrices(views, 3);
 
-  m_scene->ScanMeshes(nullptr, GfxScene::eSM_Dynamic | GfxScene::eSM_Static,
-    [this](GfxMesh* mesh)
-    {
-      mesh->RenderUnlit(m_device, eRP_ShadowPSSM);
-    }
-  );
+  for (auto mesh : meshes)
+  {
+    mesh->RenderUnlit(m_device, eRP_ShadowPSSM);
+  }
 }
 
 float GL4ForwardDirectionalLightRenderer::GetSplitSize(const Vector3f* near, const Vector3f* far)
