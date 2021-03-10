@@ -11,6 +11,7 @@
 #include <spcCore/graphics/projector.hh>
 #include <spcCore/graphics/scene/gfxmesh.hh>
 #include <spcCore/graphics/scene/gfxscene.hh>
+#include <spcCore/input/input.hh>
 #include <spcCore/math/math.hh>
 #include <spcCore/math/clipper/sphereclipper.hh>
 
@@ -219,11 +220,10 @@ iSampler* GL4ForwardDirectionalLightRenderer::GetShadowMapDepthSampler()
 }
 
 
-
 void GL4ForwardDirectionalLightRenderer::RenderDirectionalShadowMaps(GL4DirectionalLight* directionalLight, GL4RenderTarget2DArray* shadowMap, const Camera& camera, const Projector& projector)
 {
   m_device->SetRenderTarget(shadowMap);
-  m_device->Clear(true, Color4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, false, 0);
+  m_device->Clear(false, Color4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, false, 0);
 
 
 
@@ -247,28 +247,34 @@ void GL4ForwardDirectionalLightRenderer::RenderDirectionalShadowMaps(GL4Directio
   Vector3f pos2 = camera.GetEye() + direction * (directionalLight->GetSplit2() + directionalLight->GetSplit2()) / 2.0f;
 
   Matrix4f mat;
-  mat.SetLookAt(Vector3f(0, 0, 0), directionalLight->GetDirection(), Vector3f(0, 1, 0));
-  Vector3f xAxis = mat.GetXAxis();
-  Vector3f yAxis = mat.GetYAxis();
+  mat.SetLookAtInv(Vector3f(0, 0, 0), directionalLight->GetDirection(), Vector3f(0, 1, 0));
+  Vector3f xAxis = mat.GetXAxis().Normalize();
+  Vector3f yAxis = mat.GetYAxis().Normalize();
 
-  float xPart1 = xAxis.Dot(pos1);
-  float yPart1 = yAxis.Dot(pos1);
-  printf("xPart1: %.2f % (%.2f / %d = %.2f)", xPart1, sizeSplit1, (int)m_directionalLightShadowMapSize, (sizeSplit1 / m_directionalLightShadowMapSize));
-  xPart1 = fmodf(xPart1, (sizeSplit1 / m_directionalLightShadowMapSize));
-  yPart1 = fmodf(yPart1, (sizeSplit1 / m_directionalLightShadowMapSize));
-  printf(" = %.2f\n", xPart1);
 
-  printf("Pos1: %.2f %.2f %.2f ->", pos1.x, pos1.y, pos1.z);
-  pos1 -= xAxis * xPart1;
-  pos1 -= yAxis * yPart1;
-  printf(" %.2f %.2f %.2f -> ", pos1.x, pos1.y, pos1.z);
-  xPart1 = xAxis.Dot(pos1);
-  yPart1 = yAxis.Dot(pos1);
-  printf("%.2f %.2f -> ", xPart1, yPart1);
-  xPart1 = fmodf(xPart1, (sizeSplit1 / m_directionalLightShadowMapSize));
-  yPart1 = fmodf(yPart1, (sizeSplit1 / m_directionalLightShadowMapSize));
-  printf(" %.2f %.2f\n", xPart1, yPart1);
 
+  float modV0 = sizeSplit0 * 2.0f / m_directionalLightShadowMapSize;
+  float modV1 = sizeSplit1 * 2.0f / m_directionalLightShadowMapSize;
+  float modV2 = sizeSplit2 * 2.0f / m_directionalLightShadowMapSize;
+  float onAxisX0 = xAxis.Dot(pos0);
+  float onAxisY0 = yAxis.Dot(pos0);
+  float onAxisX1 = spcAbs(xAxis.Dot(pos1));
+  float onAxisY1 = spcAbs(yAxis.Dot(pos1));
+  float onAxisX2 = spcAbs(xAxis.Dot(pos2));
+  float onAxisY2 = spcAbs(yAxis.Dot(pos2));
+
+
+
+  float mod0X = fmodf(onAxisX0, modV0);
+  float mod0Y = fmodf(onAxisY0, modV0);
+  float mod1X = fmodf(onAxisX1, modV1);
+  float mod1Y = fmodf(onAxisY1, modV1);
+  float mod2X = fmodf(onAxisX2, modV2);
+  float mod2Y = fmodf(onAxisY2, modV2);
+
+  pos0 = pos0 - xAxis * mod0X - yAxis * mod0Y;
+  mod0X = 0.0f;
+  mod0Y = 0.0f;
 
 
 
@@ -304,9 +310,9 @@ void GL4ForwardDirectionalLightRenderer::RenderDirectionalShadowMaps(GL4Directio
   );
 
   Matrix4f projection0, projection1, projection2;
-  m_device->GetOrthographicProjection(-sizeSplit0, sizeSplit0, -sizeSplit0, sizeSplit0, near[0], far[0], projection0);
-  m_device->GetOrthographicProjection(-sizeSplit1, sizeSplit1, -sizeSplit1, sizeSplit1, near[1], far[1], projection1);
-  m_device->GetOrthographicProjection(-sizeSplit2, sizeSplit2, -sizeSplit2, sizeSplit2, near[2], far[2], projection2);
+  m_device->GetOrthographicProjection(-sizeSplit0 - mod0X, sizeSplit0 - mod0X, -sizeSplit0 - mod0Y, sizeSplit0 - mod0Y, near[0], far[0], projection0);
+  m_device->GetOrthographicProjection(-sizeSplit1 - mod1X, sizeSplit1 - mod1X, -sizeSplit1 - mod1Y, sizeSplit1 - mod1Y, near[1], far[1], projection1);
+  m_device->GetOrthographicProjection(-sizeSplit2 - mod2X, sizeSplit2 - mod2X, -sizeSplit2 - mod2Y, sizeSplit2 - mod2Y, near[2], far[2], projection2);
   Matrix4f projections[] = {
     projection0,
     projection1,

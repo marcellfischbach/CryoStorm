@@ -397,11 +397,12 @@ int main(int argc, char** argv)
   sunEntity->Attach(sunLightState);
   sunLightState->SetType(spc::eLT_Directional);
   sunLightState->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 1.0f);
-  sunLightState->SetSplits(7.0f, 70.0f, 110.0f);
+  sunLightState->SetSplits(25.0f, 50.0f, 100.0f);
   sunLightState->SetShadowMapBias(0.01f);
   sunLightState->SetCastShadow(true);
   sunLightState->GetTransform()
-    .SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(1.0f, 0.0f, 0.0f), spc::spcDeg2Rad(-45.0f)))
+    //.SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(1.0f, 0.0f, 0.0f), spc::spcDeg2Rad(-45.0f)))
+    .SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(1.0f, 1.0f, 1.0f).Normalize(), spc::spcDeg2Rad(-45.0f)))
     .Finish();
 
   world->Attach(sunEntity);
@@ -462,7 +463,6 @@ int main(int argc, char** argv)
   spc::UInt32 frames = 0;
   spc::UInt32 lastTime = SDL_GetTicks();
 
-  bool offscreen = true;
   bool anim = true;
   while (true)
   {
@@ -508,7 +508,7 @@ int main(int argc, char** argv)
     */
     if (anim)
     {
-      entRot += 0.01f;
+      entRot += 0.003f;
     }
 
     lightEntity->GetRoot()->GetTransform()
@@ -517,7 +517,8 @@ int main(int argc, char** argv)
 
     float dist = 5.0f;
     camera->SetSpot(spc::Vector3f(0, 0.0f, 0.0f));
-    camera->SetEye(spc::Vector3f(spc::spcCos(entRot + (float)M_PI / 2.0f) * dist, dist, spc::spcSin(entRot+ (float)M_PI / 2.0f) * dist));
+    camera->SetEye(spc::Vector3f(spc::spcCos(entRot + (float)M_PI / 2.0f + 0.2f) * dist, dist, spc::spcSin(entRot+ (float)M_PI / 2.0f + 0.2f) * dist));
+    camera->SetUp(spc::Vector3f(spc::spcSin(entRot), spc::spcCos(entRot), 0.0f));
 
     //rot += 0.005f;
 

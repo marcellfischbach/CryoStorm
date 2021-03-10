@@ -193,20 +193,18 @@ public:
   }
 
 
-  SPC_FORCEINLINE const Vector3f GetXAxis() const
+  SPC_FORCEINLINE Vector3f GetXAxis() const
   {
     return Vector3f(m00, m01, m02);
   }
 
-
-  SPC_FORCEINLINE const Vector3f GetYAxis() const
+  SPC_FORCEINLINE Vector3f GetYAxis() const
   {
     return Vector3f(m10, m11, m12);
   }
 
-  SPC_FORCEINLINE const Vector3f GetZAxis() const
+  SPC_FORCEINLINE Vector3f GetZAxis() const
   {
-//    return Vector3f(m02, m12, m22);
     return Vector3f(m20, m21, m22);
   }
 
@@ -525,7 +523,6 @@ public:
     Vector3f::Sub(spot, eye, zAxis).Normalize();
     Vector3f::Cross(up, zAxis, xAxis).Normalize();
     Vector3f::Cross(zAxis, xAxis, yAxis);
-
     SetXAxis(xAxis.x, yAxis.x, zAxis.x);
     SetYAxis(xAxis.y, yAxis.y, zAxis.y);
     SetZAxis(xAxis.z, yAxis.z, zAxis.z);
@@ -541,9 +538,9 @@ public:
     Vector3f::Cross(up, zAxis, xAxis).Normalize();
     Vector3f::Cross(zAxis, xAxis, yAxis);
 
-    Vector3f::Sub(spot, eye, yAxis).Normalize();
-    Vector3f::Cross(yAxis, up, xAxis).Normalize();
-    Vector3f::Cross(xAxis, yAxis, zAxis);
+    Vector3f::Sub(spot, eye, zAxis).Normalize();
+    Vector3f::Cross(up, zAxis, xAxis).Normalize();
+    Vector3f::Cross(zAxis, xAxis, yAxis);
 
     SetXAxis(xAxis);
     SetYAxis(yAxis);
