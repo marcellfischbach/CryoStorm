@@ -258,10 +258,10 @@ void GL4ForwardDirectionalLightRenderer::RenderDirectionalShadowMaps(GL4Directio
   float modV2 = sizeSplit2 * 2.0f / m_directionalLightShadowMapSize;
   float onAxisX0 = xAxis.Dot(pos0);
   float onAxisY0 = yAxis.Dot(pos0);
-  float onAxisX1 = spcAbs(xAxis.Dot(pos1));
-  float onAxisY1 = spcAbs(yAxis.Dot(pos1));
-  float onAxisX2 = spcAbs(xAxis.Dot(pos2));
-  float onAxisY2 = spcAbs(yAxis.Dot(pos2));
+  float onAxisX1 = xAxis.Dot(pos1);
+  float onAxisY1 = yAxis.Dot(pos1);
+  float onAxisX2 = xAxis.Dot(pos2);
+  float onAxisY2 = yAxis.Dot(pos2);
 
 
 
@@ -271,11 +271,6 @@ void GL4ForwardDirectionalLightRenderer::RenderDirectionalShadowMaps(GL4Directio
   float mod1Y = fmodf(onAxisY1, modV1);
   float mod2X = fmodf(onAxisX2, modV2);
   float mod2Y = fmodf(onAxisY2, modV2);
-
-  pos0 = pos0 - xAxis * mod0X - yAxis * mod0Y;
-  mod0X = 0.0f;
-  mod0Y = 0.0f;
-
 
 
   Matrix4f views[3];
