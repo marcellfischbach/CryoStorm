@@ -133,7 +133,7 @@ void GL4ForwardPipeline::Render(iRenderTarget2D* target, Camera& camera, Project
     Size size = target->GetWidth() / 3;
 
 
-    m_device->SetViewport(0, 0, size, size);
+    m_device->SetViewport(0, 0, static_cast<UInt16>(size), static_cast<UInt16>(size));
     m_device->RenderFullscreen(debugColor, 0);
 
     /*

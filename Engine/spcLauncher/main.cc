@@ -164,6 +164,20 @@ bool initialize_modules(int argc, char** argv)
   std::string title = settings.GetText("title");
   spc::Vector2i res = settings.GetVector2i("resolution");
   spc::Vector2i pos = settings.GetVector2i("pos");
+  std::string viewMode = settings.GetText("viewmode", "windowed");
+  if (viewMode == "viewMode")
+  {
+    flags |= SDL_WINDOW_FULLSCREEN;
+  }
+  else if (viewMode == "desktop")
+  {
+    flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+  }
+  else if (viewMode != "windowed")
+  {
+    printf ("Illegal viewmode: '%s'. Defaulting to 'windowed'\n", viewMode.c_str());
+  }
+
   bool vsync = settings.GetBool("vsync");
   wnd = SDL_CreateWindow(title.c_str(),
     pos.x, pos.y,
@@ -328,10 +342,15 @@ int main(int argc, char** argv)
 
   spc::World* world = new spc::World();
 
-  int width, height;
-  SDL_GetWindowSize(wnd, &width, &height);
+  int wnd_width, wnd_height;
+  SDL_GetWindowSize(wnd, &wnd_width, &wnd_height);
 
-  float aspect = (float)height / (float)width;
+  spc::Settings settings("file:///config/display.spc");
+  spc::Vector2i resolution = settings.GetVector2i("resolution", spc::Vector2i(wnd_width, wnd_height));
+  int width = resolution.x;
+  int height = resolution.y;
+
+  float aspect = (float)wnd_height / (float)wnd_width;
 
 
   spc::Camera* camera = new spc::Camera();
@@ -530,7 +549,7 @@ int main(int argc, char** argv)
 
 
     device->SetRenderTarget(nullptr);
-    device->SetViewport(0, 0, width, height);
+    device->SetViewport(0, 0, wnd_width, wnd_height);
     device->Clear(true, spc::Color4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, true, 0);
     device->RenderFullscreen(color_texture);
 

@@ -259,7 +259,7 @@ GL4Shader* LoadShader(const std::string& typeText,
     std::vector<std::string> lines = split(source);
     for (Size i = 0, in = lines.size(); i < in; ++i)
     {
-      printf("(%04d) %s\n", i+1, lines[i].c_str());
+      printf("(%04zu) %s\n", i+1, lines[i].c_str());
     }
     printf("Unable to compile shader: %s\n%s\n", locator ? locator->GetLocator().c_str() : "unknown file", sce.what());
   }

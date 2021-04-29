@@ -7,12 +7,12 @@ namespace spc::opengl
 {
 
 GL4RenderTarget2DArray::GL4RenderTarget2DArray()
-  : iRenderTarget2DArray()
-  , m_name(0)
-  , m_width(0)
-  , m_height(0)
-  , m_layer(0)
-  , m_depthTexture(nullptr)
+    : iRenderTarget2DArray()
+      , m_name(0)
+      , m_width(0)
+      , m_height(0)
+      , m_layer(0)
+      , m_depthTexture(nullptr)
 {
   SPC_CLASS_GEN_CONSTR;
   glGenFramebuffers(1, &m_name);
@@ -24,8 +24,7 @@ GL4RenderTarget2DArray::~GL4RenderTarget2DArray()
   m_name = 0;
 
   SPC_RELEASE(m_depthTexture);
-  for (auto color : m_colorTextures)
-  {
+  for (auto color : m_colorTextures) {
     color->Release();
   }
   m_colorTextures.clear();
@@ -62,64 +61,59 @@ bool GL4RenderTarget2DArray::Initialize(UInt16 width, UInt16 height, UInt16 laye
   return true;
 }
 
-void GL4RenderTarget2DArray::SetDepthTexture(iTexture2DArray* depthTexture)
+void GL4RenderTarget2DArray::SetDepthTexture(iTexture2DArray *depthTexture)
 {
-  if (!depthTexture)
-  {
+  if (!depthTexture) {
     return;
   }
 
 
-  GL4Texture2DArray* txt = depthTexture->Query<GL4Texture2DArray>();
+  GL4Texture2DArray *txt = depthTexture->Query<GL4Texture2DArray>();
 
 
   GLenum attachment = 0;
-  switch (depthTexture->GetFormat())
-  {
-  case ePF_Depth:
-    attachment = GL_DEPTH_ATTACHMENT;
-    break;
-  case ePF_DepthStencil:
-    attachment = GL_DEPTH_STENCIL_ATTACHMENT;
-    break;
-  default:
-    return;
+  switch (depthTexture->GetFormat()) {
+    case ePF_Depth:
+      attachment = GL_DEPTH_ATTACHMENT;
+      break;
+    case ePF_DepthStencil:
+      attachment = GL_DEPTH_STENCIL_ATTACHMENT;
+      break;
+    default:
+      return;
   }
 
   SPC_SET(m_depthTexture, txt);
 
 
-
   glFramebufferTexture(GL_FRAMEBUFFER,
-    attachment,
-    txt->GetName(),
-    0);
+                       attachment,
+                       txt->GetName(),
+                       0);
 
 }
 
-void GL4RenderTarget2DArray::AddColorTexture(iTexture2DArray* colorTexture)
+void GL4RenderTarget2DArray::AddColorTexture(iTexture2DArray *colorTexture)
 {
-  if (!colorTexture)
-  {
+  if (!colorTexture) {
     return;
   }
 
 
-  GL4Texture2DArray* txt = colorTexture->Query<GL4Texture2DArray>();
+  GL4Texture2DArray *txt = colorTexture->Query<GL4Texture2DArray>();
   txt->AddRef();
 
 
   GLenum attachment = GL_DEPTH_ATTACHMENT;
-  if (colorTexture->GetFormat() == ePF_DepthStencil)
-  {
+  if (colorTexture->GetFormat() == ePF_DepthStencil) {
     return;
   }
 
 
   glFramebufferTexture(GL_FRAMEBUFFER,
-    GL_COLOR_ATTACHMENT0 + m_colorTextures.size(),
-    txt->GetName(),
-    0);
+                       (GLenum) (GL_COLOR_ATTACHMENT0 + m_colorTextures.size()),
+                       txt->GetName(),
+                       0);
   m_colorTextures.push_back(txt);
 }
 
@@ -133,35 +127,34 @@ bool GL4RenderTarget2DArray::Compile()
 {
   GLenum res = glCheckFramebufferStatus(GL_FRAMEBUFFER);
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
-  switch (res)
-  {
-  case GL_FRAMEBUFFER_COMPLETE:
-    m_log = "Complete";
-    return true;
-  case GL_FRAMEBUFFER_UNDEFINED:
-    m_log = "Framebuffer undefined";
-    break;
-  case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
-    m_log = "Framebuffer incomplete attachment";
-    break;
-  case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
-    m_log = "Framebuffer incomplete missing attachment";
-    break;
-  case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
-    m_log = "Framebuffer incomplete draw buffer";
-    break;
-  case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
-    m_log = "Framebuffer incomplete read buffer";
-    break;
-  case GL_FRAMEBUFFER_UNSUPPORTED:
-    m_log = "Framebuffer unsupported";
-    break;
-  case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE:
-    m_log = "Framebuffer incomplete multisample";
-    break;
-  case GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS:
-    m_log = "Framebuffer incomplete layer targets";
-    break;
+  switch (res) {
+    case GL_FRAMEBUFFER_COMPLETE:
+      m_log = "Complete";
+      return true;
+    case GL_FRAMEBUFFER_UNDEFINED:
+      m_log = "Framebuffer undefined";
+      break;
+    case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+      m_log = "Framebuffer incomplete attachment";
+      break;
+    case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+      m_log = "Framebuffer incomplete missing attachment";
+      break;
+    case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
+      m_log = "Framebuffer incomplete draw buffer";
+      break;
+    case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
+      m_log = "Framebuffer incomplete read buffer";
+      break;
+    case GL_FRAMEBUFFER_UNSUPPORTED:
+      m_log = "Framebuffer unsupported";
+      break;
+    case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE:
+      m_log = "Framebuffer incomplete multisample";
+      break;
+    case GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS:
+      m_log = "Framebuffer incomplete layer targets";
+      break;
   }
   return false;
 }
@@ -171,12 +164,12 @@ std::string GL4RenderTarget2DArray::GetCompileLog() const
   return m_log;
 }
 
-iTexture2DArray* GL4RenderTarget2DArray::GetDepthTexture()
+iTexture2DArray *GL4RenderTarget2DArray::GetDepthTexture()
 {
   return m_depthTexture;
 }
 
-const iTexture2DArray* GL4RenderTarget2DArray::GetDepthTexture() const
+const iTexture2DArray *GL4RenderTarget2DArray::GetDepthTexture() const
 {
   return m_depthTexture;
 }
@@ -187,20 +180,18 @@ Size GL4RenderTarget2DArray::GetNumberOfColorTextures() const
   return m_colorTextures.size();
 }
 
-iTexture2DArray* GL4RenderTarget2DArray::GetColorTexture(Size idx)
+iTexture2DArray *GL4RenderTarget2DArray::GetColorTexture(Size idx)
 {
-  if (idx >= m_colorTextures.size())
-  {
+  if (idx >= m_colorTextures.size()) {
     return nullptr;
   }
   return m_colorTextures[idx];
 }
 
 
-const iTexture2DArray* GL4RenderTarget2DArray::GetColorTexture(Size idx) const
+const iTexture2DArray *GL4RenderTarget2DArray::GetColorTexture(Size idx) const
 {
-  if (idx >= m_colorTextures.size())
-  {
+  if (idx >= m_colorTextures.size()) {
     return nullptr;
   }
   return m_colorTextures[idx];

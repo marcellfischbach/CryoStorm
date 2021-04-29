@@ -123,7 +123,7 @@ void GL4ShaderAttribute::Bind(const Matrix3f& v)
 
 void GL4ShaderAttribute::Bind(const Matrix3f* v, Size count)
 {
-  glUniformMatrix3fv(m_absLocation, count, false, &v->m00);
+  glUniformMatrix3fv(m_absLocation, (GLsizei)count, false, &v->m00);
 }
 
 
@@ -135,7 +135,7 @@ void GL4ShaderAttribute::Bind(const Matrix4f& v)
 
 void GL4ShaderAttribute::Bind(const Matrix4f* v, Size count)
 {
-  glUniformMatrix4fv(m_absLocation, count, false, &v->m00);
+  glUniformMatrix4fv(m_absLocation, (GLsizei)count, false, &v->m00);
 }
 
 }
