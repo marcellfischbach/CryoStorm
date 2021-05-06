@@ -12,6 +12,7 @@ namespace spc
 
 GfxMesh::GfxMesh()
   : iObject()
+  , m_static(false)
   , m_material(nullptr)
   , m_mesh(nullptr)
   , m_frame(0)

@@ -132,10 +132,10 @@ const Transform& SpatialState::GetTransform() const
 void SpatialState::FinishTransformation()
 {
   UpdateFlagRequestHierarchyTransformationUpdate();
-  UpdateFlagUpdateGlobalMatrix();
+  UpdateFlagGlobalMatrixDirty();
 }
 
-void SpatialState::UpdateFlagUpdateGlobalMatrix()
+void SpatialState::UpdateFlagGlobalMatrixDirty()
 {
   if (SPC_IS_TRANSFORM_FLAG(eTS_GlobalMatrixDirty))
   {
@@ -145,7 +145,7 @@ void SpatialState::UpdateFlagUpdateGlobalMatrix()
   SPC_SET_TRANSFORM_FLAG(eTS_RequestHierarchyTransformationUpdate);
   for (auto child : m_children)
   {
-    child->UpdateFlagUpdateGlobalMatrix();
+    child->UpdateFlagGlobalMatrixDirty();
   }
 }
 

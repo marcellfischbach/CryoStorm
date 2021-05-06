@@ -59,25 +59,31 @@ void UpdateEvents()
   {
     switch (evt.type)
     {
-    case SDL_KEYDOWN:keyboard.Update(evt.key.keysym.scancode, true);
-      break;
-    case SDL_KEYUP:keyboard.Update(evt.key.keysym.scancode, false);
-      break;
-    case SDL_MOUSEBUTTONDOWN:mouse.Update(evt.button.button, true);
-      break;
-    case SDL_MOUSEBUTTONUP:mouse.Update(evt.button.button, false);
-      break;
-    case SDL_MOUSEWHEEL:mouse.Update(evt.wheel.y, evt.wheel.x);
-      break;
-    case SDL_MOUSEMOTION:mouse.Update(evt.motion.x, evt.motion.y, evt.motion.xrel, evt.motion.yrel);
-      break;
+      case SDL_KEYDOWN:
+        keyboard.Update(evt.key.keysym.scancode, true);
+        break;
+      case SDL_KEYUP:
+        keyboard.Update(evt.key.keysym.scancode, false);
+        break;
+      case SDL_MOUSEBUTTONDOWN:
+        mouse.Update(evt.button.button, true);
+        break;
+      case SDL_MOUSEBUTTONUP:
+        mouse.Update(evt.button.button, false);
+        break;
+      case SDL_MOUSEWHEEL:
+        mouse.Update(evt.wheel.y, evt.wheel.x);
+        break;
+      case SDL_MOUSEMOTION:
+        mouse.Update(evt.motion.x, evt.motion.y, evt.motion.xrel, evt.motion.yrel);
+        break;
 
     }
   }
 
 }
 
-std::vector<std::string> split(const std::string& string)
+std::vector<std::string> split(const std::string &string)
 {
   std::vector<std::string> res;
   size_t offset = 0;
@@ -94,17 +100,17 @@ std::vector<std::string> split(const std::string& string)
   return res;
 }
 
-std::string merge(const std::vector<std::string>& lines)
+std::string merge(const std::vector<std::string> &lines)
 {
   std::string res;
-  for (const std::string& str : lines)
+  for (const std::string &str : lines)
   {
     res += str + "\n";
   }
   return res;
 }
 
-bool register_modules(int argc, char** argv)
+bool register_modules(int argc, char **argv)
 {
 
   if (!spc::LauncherModule::Register(argc, argv))
@@ -135,11 +141,12 @@ bool register_modules(int argc, char** argv)
 
   return true;
 }
-SDL_Window* wnd;
+
+SDL_Window *wnd;
 SDL_GLContext context;
 
 
-bool initialize_modules(int argc, char** argv)
+bool initialize_modules(int argc, char **argv)
 {
   spc::VFS::Get()->SetBasePath("D:\\DEV\\SpiceEngine\\data");
   spc::Settings settings("file:///config/display.spc");
@@ -175,13 +182,13 @@ bool initialize_modules(int argc, char** argv)
   }
   else if (viewMode != "windowed")
   {
-    printf ("Illegal viewmode: '%s'. Defaulting to 'windowed'\n", viewMode.c_str());
+    printf("Illegal viewmode: '%s'. Defaulting to 'windowed'\n", viewMode.c_str());
   }
 
   bool vsync = settings.GetBool("vsync");
   wnd = SDL_CreateWindow(title.c_str(),
-    pos.x, pos.y,
-    res.x, res.y, flags);
+                         pos.x, pos.y,
+                         res.x, res.y, flags);
   //  wnd = SDL_CreateWindow("Spice", 0, 0, 1920, 1080, flags);
   context = SDL_GL_CreateContext(wnd);
   SDL_GL_SetSwapInterval(vsync ? 1 : 0);
@@ -212,11 +219,11 @@ bool initialize_modules(int argc, char** argv)
   return true;
 }
 
-spc::iRenderMesh* create_plane_mesh(float nx, float ny)
+spc::iRenderMesh *create_plane_mesh(float nx, float ny)
 {
   //
   // create a render mesh
-  spc::iRenderMeshGenerator* generator = spc::ObjectRegistry::Get<spc::iRenderMeshGeneratorFactory>()->Create();
+  spc::iRenderMeshGenerator *generator = spc::ObjectRegistry::Get<spc::iRenderMeshGeneratorFactory>()->Create();
   std::vector<spc::Vector3f> positions;
   positions.push_back(spc::Vector3f(-10.0f, 0.0f, -10.0f));
   positions.push_back(spc::Vector3f(-10.0f, 0.0f, 10.0f));
@@ -250,12 +257,12 @@ spc::iRenderMesh* create_plane_mesh(float nx, float ny)
   generator->SetIndices(indices);
   generator->SetColors(colors);
   generator->SetUV0(uv);
-  spc::iRenderMesh* renderMesh = generator->Generate();
+  spc::iRenderMesh *renderMesh = generator->Generate();
   generator->Release();
   return renderMesh;
 }
 
-void debug(spc::SpatialState* state, int indent)
+void debug(spc::SpatialState *state, int indent)
 {
   if (!state)
   {
@@ -266,8 +273,8 @@ void debug(spc::SpatialState* state, int indent)
     printf("  ");
   }
   printf("%s [%s]\n",
-    state->GetName().c_str(),
-    state->GetEntity() ? state->GetEntity()->GetName().c_str() : "n/a"
+         state->GetName().c_str(),
+         state->GetEntity() ? state->GetEntity()->GetName().c_str() : "n/a"
   );
   for (spc::Size i = 0, in = state->GetNumberOfChildren(); i < in; i++)
   {
@@ -278,7 +285,7 @@ void debug(spc::SpatialState* state, int indent)
 #include <regex>
 #include <sstream>
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
 
   if (!register_modules(argc, argv))
@@ -291,16 +298,16 @@ int main(int argc, char** argv)
     return -1;
   }
 
-  spc::iDevice* device = spc::ObjectRegistry::Get<spc::iDevice>();
+  spc::iDevice *device = spc::ObjectRegistry::Get<spc::iDevice>();
 
-  spc::iShader* forwardShader = spc::AssetManager::Get()->Load<spc::iShader>(spc::ResourceLocator("/shaders/test_color_program.spc"));
-  spc::iShader* shadowCubeShader = spc::AssetManager::Get()->Load<spc::iShader>(spc::ResourceLocator("/shaders/test_shadow_point_program.spc"));
-  spc::iShader* shadowPSSMShader = spc::AssetManager::Get()->Load<spc::iShader>(spc::ResourceLocator("/shaders/test_shadow_pssm_program.spc"));
+  spc::iShader *forwardShader = spc::AssetManager::Get()->Load<spc::iShader>(spc::ResourceLocator("/shaders/test_color_program.spc"));
+  spc::iShader *shadowCubeShader = spc::AssetManager::Get()->Load<spc::iShader>(spc::ResourceLocator("/shaders/test_shadow_point_program.spc"));
+  spc::iShader *shadowPSSMShader = spc::AssetManager::Get()->Load<spc::iShader>(spc::ResourceLocator("/shaders/test_shadow_pssm_program.spc"));
 
 
-  spc::iSampler* sampler = spc::AssetManager::Get()->Load<spc::iSampler>(spc::ResourceLocator("sampler_default.spc"));
+  spc::iSampler *sampler = spc::AssetManager::Get()->Load<spc::iSampler>(spc::ResourceLocator("sampler_default.spc"));
 
-  spc::Image* image = spc::AssetManager::Get()->Load<spc::Image>(spc::ResourceLocator("GrassGreenTexture0003.jpg"));
+  spc::Image *image = spc::AssetManager::Get()->Load<spc::Image>(spc::ResourceLocator("GrassGreenTexture0003.jpg"));
   if (!image)
   {
     image = spc::AssetManager::Get()->Load<spc::Image>(spc::ResourceLocator("snowflake_64.png"));
@@ -316,10 +323,10 @@ int main(int argc, char** argv)
   desc.Width = image->GetWidth();
   desc.Height = image->GetHeight();
   desc.MipMaps = true;
-  spc::iTexture2D* texture = device->CreateTexture(desc);
+  spc::iTexture2D *texture = device->CreateTexture(desc);
   texture->Data(image);
 
-  spc::Material* material = new spc::Material();
+  spc::Material *material = new spc::Material();
   material->SetShader(spc::eRP_Forward, forwardShader);
   material->SetShader(spc::eRP_ShadowCube, shadowCubeShader);
   material->SetShader(spc::eRP_ShadowPSSM, shadowPSSMShader);
@@ -329,18 +336,18 @@ int main(int argc, char** argv)
   material->Set(material->IndexOf("Diffuse"), texture);
   material->Set(material->IndexOf("Color"), spc::Color4f(1, 1, 1, 1));
 
-  spc::MaterialInstance* instance = new spc::MaterialInstance();
+  spc::MaterialInstance *instance = new spc::MaterialInstance();
   instance->SetMaterial(material);
   instance->Set(instance->IndexOf("Color"), spc::Color4f(0, 0, 1, 1));
 
 
-  spc::iRenderMesh* renderMesh = create_plane_mesh(2, 2);
-  spc::Mesh* mesh = new spc::Mesh();
+  spc::iRenderMesh *renderMesh = create_plane_mesh(2, 2);
+  spc::Mesh *mesh = new spc::Mesh();
   mesh->AddMaterialSlot("Default", instance);
   mesh->AddSubMesh(renderMesh, 0);
 
 
-  spc::World* world = new spc::World();
+  spc::World *world = new spc::World();
 
   int wnd_width, wnd_height;
   SDL_GetWindowSize(wnd, &wnd_width, &wnd_height);
@@ -350,41 +357,41 @@ int main(int argc, char** argv)
   int width = resolution.x;
   int height = resolution.y;
 
-  float aspect = (float)wnd_height / (float)wnd_width;
+  float aspect = (float) wnd_height / (float) wnd_width;
 
 
-  spc::Camera* camera = new spc::Camera();
+  spc::Camera *camera = new spc::Camera();
   spc::Projector projector;
   projector.UpdatePerspective(spc::spcDeg2Rad(90.0f), aspect, 1.0f, 1024.0f);
 
 
-  spc::Mesh* suzanne = spc::AssetManager::Get()->Load<spc::Mesh>(spc::ResourceLocator("file:///suzanne.fbx"));
-  spc::Mesh* cube = spc::AssetManager::Get()->Load<spc::Mesh>(spc::ResourceLocator("cube.fbx"));
-  suzanne->SetDefaultMaterial(0, material);
+  spc::Mesh *suzanneMesh = spc::AssetManager::Get()->Load<spc::Mesh>(spc::ResourceLocator("file:///suzanneMesh.fbx"));
+  spc::Mesh *cube = spc::AssetManager::Get()->Load<spc::Mesh>(spc::ResourceLocator("cube.fbx"));
+  suzanneMesh->SetDefaultMaterial(0, material);
   cube->SetDefaultMaterial(0, material);
 
-  spc::Entity* entity0 = new spc::Entity("Entity0");
-  spc::StaticMeshState* meshState0 = new spc::StaticMeshState("StaticMesh0");
+  spc::Entity *entity0 = new spc::Entity("Entity0");
+  spc::StaticMeshState *meshState0 = new spc::StaticMeshState("StaticMesh0");
   meshState0->GetTransform()
-    .SetTranslation(spc::Vector3f(0, 0, 0))
-    .Finish();
+      .SetTranslation(spc::Vector3f(0, 0, 0))
+      .Finish();
   meshState0->SetMesh(mesh);
   meshState0->SetStatic(true);
   entity0->Attach(meshState0);
   world->Attach(entity0);
 
-  spc::Entity* entity1 = new spc::Entity("Entity1");
-  spc::StaticMeshState* meshState1 = new spc::StaticMeshState("StaticMesh1");
+  spc::Entity *suzanneEntity = new spc::Entity("Entity1");
+  spc::StaticMeshState *meshState1 = new spc::StaticMeshState("StaticMesh1");
   meshState1->GetTransform()
-    .SetTranslation(spc::Vector3f(0, 0, 0))
-    .Finish();
-  meshState1->SetMesh(suzanne);
-  meshState1->SetStatic(true);
-  entity1->Attach(meshState1);
-  world->Attach(entity1);
+      .SetTranslation(spc::Vector3f(0, 0, 0))
+      .Finish();
+  meshState1->SetMesh(suzanneMesh);
+  meshState1->SetStatic(false);
+  suzanneEntity->Attach(meshState1);
+  world->Attach(suzanneEntity);
 
-  spc::Entity* lightEntity = new spc::Entity("Light_0");
-  spc::LightState* lightState = new spc::LightState("LightState");
+  spc::Entity *lightEntity = new spc::Entity("Light_0");
+  spc::LightState *lightState = new spc::LightState("LightState");
   lightEntity->Attach(lightState);
   lightState->SetType(spc::eLT_Point);
   lightState->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 1.0f);
@@ -392,8 +399,8 @@ int main(int argc, char** argv)
   lightState->SetStatic(false);
   lightState->SetCastShadow(true);
   lightEntity->GetRoot()->GetTransform()
-    .SetTranslation(spc::Vector3f(5.0f, 5.0f, 5.0f))
-    .Finish();
+      .SetTranslation(spc::Vector3f(5.0f, 5.0f, 5.0f))
+      .Finish();
   world->Attach(lightEntity);
 
   /*
@@ -411,8 +418,8 @@ int main(int argc, char** argv)
   world->Attach(lightEntity);
   */
 
-  spc::Entity* sunEntity = new spc::Entity("Sun");
-  spc::LightState* sunLightState = new spc::LightState("SunLight");
+  spc::Entity *sunEntity = new spc::Entity("Sun");
+  spc::LightState *sunLightState = new spc::LightState("SunLight");
   sunEntity->Attach(sunLightState);
   sunLightState->SetType(spc::eLT_Directional);
   sunLightState->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 1.0f);
@@ -420,17 +427,17 @@ int main(int argc, char** argv)
   sunLightState->SetShadowMapBias(0.01f);
   sunLightState->SetCastShadow(true);
   sunLightState->GetTransform()
-    //.SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(1.0f, 0.0f, 0.0f), spc::spcDeg2Rad(-45.0f)))
-    .SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(1.0f, 1.0f, 1.0f).Normalize(), spc::spcDeg2Rad(-45.0f)))
-    .Finish();
+          //.SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(1.0f, 0.0f, 0.0f), spc::spcDeg2Rad(-45.0f)))
+      .SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(1.0f, 1.0f, 1.0f).Normalize(), spc::spcDeg2Rad(-45.0f)))
+      .Finish();
 
   world->Attach(sunEntity);
 
 
-  spc::iSampler* colorSampler = device->CreateSampler();
+  spc::iSampler *colorSampler = device->CreateSampler();
   colorSampler->SetFilterMode(spc::eFM_MinMagNearest);
 
-  spc::iSampler* depthSampler = device->CreateSampler();
+  spc::iSampler *depthSampler = device->CreateSampler();
   depthSampler->SetFilterMode(spc::eFM_MinMagNearest);
 
   spc::iTexture2D::Descriptor rt_col_desc = {};
@@ -438,7 +445,7 @@ int main(int argc, char** argv)
   rt_col_desc.Height = height;
   rt_col_desc.Format = spc::ePF_RGBA;
   rt_col_desc.MipMaps = false;
-  spc::iTexture2D* color_texture = device->CreateTexture(rt_col_desc);
+  spc::iTexture2D *color_texture = device->CreateTexture(rt_col_desc);
   color_texture->SetSampler(colorSampler);
 
   spc::iTexture2D::Descriptor rt_dpth_desc = {};
@@ -446,7 +453,7 @@ int main(int argc, char** argv)
   rt_dpth_desc.Height = height;
   rt_dpth_desc.Format = spc::ePF_Depth;
   rt_dpth_desc.MipMaps = false;
-  spc::iTexture2D* depth_texture = device->CreateTexture(rt_dpth_desc);
+  spc::iTexture2D *depth_texture = device->CreateTexture(rt_dpth_desc);
   depth_texture->SetSampler(depthSampler);
 
 
@@ -454,7 +461,7 @@ int main(int argc, char** argv)
   rt_desc.Width = width;
   rt_desc.Height = height;
 
-  spc::iRenderTarget2D* renderTarget = device->CreateRenderTarget(rt_desc);
+  spc::iRenderTarget2D *renderTarget = device->CreateRenderTarget(rt_desc);
   renderTarget->AddColorTexture(color_texture);
   renderTarget->SetDepthBuffer(spc::ePF_Depth);
   if (!renderTarget->Compile())
@@ -468,11 +475,7 @@ int main(int argc, char** argv)
   }
 
 
-
-
-
-
-  spc::iRenderPipeline* renderPipeline = spc::ObjectRegistry::Get<spc::iRenderPipeline>();
+  spc::iRenderPipeline *renderPipeline = spc::ObjectRegistry::Get<spc::iRenderPipeline>();
 
   std::string title = spc::Settings("display.spc").GetText("title");
   float rot = 0.0f;
@@ -510,7 +513,7 @@ int main(int argc, char** argv)
     {
       break;
     }
-    
+
     if (spc::Input::IsKeyPressed(spc::Key::eK_A))
     {
       anim = !anim;
@@ -531,17 +534,21 @@ int main(int argc, char** argv)
     }
 
     lightEntity->GetRoot()->GetTransform()
-      .SetTranslation(spc::Vector3f(spc::spcCos(entRot) * 5.0f, 5.0f, spc::spcSin(entRot) * 5.0f))
-      .Finish();
+        .SetTranslation(spc::Vector3f(spc::spcSin(entRot) * 5.0f, 5.0f, spc::spcCos(entRot) * 5.0f))
+        .Finish();
+
+    suzanneEntity->GetRoot()->GetTransform()
+        .SetTranslation(spc::Vector3f(spc::spcCos(entRot * 1.5f) * 5.0f, 5.0f, spc::spcSin(entRot * 1.5f) * 5.0f))
+        .Finish();
 
     float dist = 5.0f;
     camera->SetSpot(spc::Vector3f(0, 0.0f, 0.0f));
-    camera->SetEye(spc::Vector3f(spc::spcCos(entRot + (float)M_PI / 2.0f + 0.2f) * dist, dist, spc::spcSin(entRot+ (float)M_PI / 2.0f + 0.2f) * dist));
-    camera->SetUp(spc::Vector3f(spc::spcSin(entRot), spc::spcCos(entRot), 0.0f));
+    camera->SetEye(spc::Vector3f(spc::spcCos(entRot + (float) M_PI / 2.0f + 0.2f) * dist, dist, spc::spcSin(entRot + (float) M_PI / 2.0f + 0.2f) * dist));
+    camera->SetUp(spc::Vector3f(0.0f, 1.0f, 0.0f));
 
     //rot += 0.005f;
 
-    world->Update((float)deltaTime / 1000.0f);
+    world->Update((float) deltaTime / 1000.0f);
     world->UpdateTransformation();
 
 
@@ -552,7 +559,6 @@ int main(int argc, char** argv)
     device->SetViewport(0, 0, wnd_width, wnd_height);
     device->Clear(true, spc::Color4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, true, 0);
     device->RenderFullscreen(color_texture);
-
 
 
     SDL_GL_SwapWindow(wnd);
