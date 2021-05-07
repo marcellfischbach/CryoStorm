@@ -59,23 +59,48 @@ bool World::Detach(Entity* entity)
   return true;
 }
 
-void World::UpdateTransformation()
+bool World::AttachUpdateState(EntityState *updateState)
 {
-  for (auto entity : m_entities)
+  if (!updateState)
   {
-    SpatialState *spatialState = entity->GetRoot();
-    if (spatialState)
-    {
-      spatialState->UpdateTransformation();
-    }
+    return false;
   }
+
+  auto it = std::find(m_updateStates.begin(), m_updateStates.end(), updateState);
+  if (it != m_updateStates.end())
+  {
+    return false;
+  }
+
+  m_updateStates.push_back(updateState);
+  updateState->AddRef();
+  return true;
 }
+
+
+bool World::DetachUpdateState(EntityState *updateState)
+{
+  if (!updateState)
+  {
+    return false;
+  }
+  auto it = std::find(m_updateStates.begin(), m_updateStates.end(), updateState);
+  if (it == m_updateStates.end())
+  {
+    return false;
+  }
+
+  m_updateStates.erase(it);
+  updateState->Release();
+  return true;
+}
+
 
 void World::Update(float tpf)
 {
-  for (auto entity : m_entities)
+  for (auto updateState : m_updateStates)
   {
-    entity->Update(tpf);
+    updateState->Update(tpf);
   }
 }
 

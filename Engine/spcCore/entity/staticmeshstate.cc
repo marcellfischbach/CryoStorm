@@ -15,7 +15,7 @@ StaticMeshState::StaticMeshState(const std::string& name)
   : SpatialState(name)
   , m_mesh(nullptr)
 {
-
+  SetNeedUpdate(true);
 }
 
 StaticMeshState::~StaticMeshState()
@@ -108,7 +108,7 @@ void StaticMeshState::RemoveMeshFromScene(World* world)
   }
 }
 
-void StaticMeshState::Update(float tpf)
+void StaticMeshState::TransformationUpdatedPreChildren()
 {
   Matrix4f mat = GetGlobalMatrix();
   for (auto gfxMesh : m_gfxMeshes)
@@ -116,10 +116,6 @@ void StaticMeshState::Update(float tpf)
     gfxMesh->SetModelMatrix(mat);
   }
 
-}
-
-void StaticMeshState::TransformationUpdatedPreChildren()
-{
 }
 
 }

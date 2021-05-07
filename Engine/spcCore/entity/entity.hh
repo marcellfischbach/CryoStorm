@@ -52,7 +52,6 @@ public:
    * @name Lifecycle
    * @{
    */
-   void Update (float tpf);
 
   /**
    * @}
@@ -73,6 +72,7 @@ private:
   
   SpatialState* m_rootState;
   std::vector<EntityState*> m_states;
+  std::vector<EntityState*> m_updateStates;
 
   Entity* m_parent;
   std::vector<Entity*> m_children;

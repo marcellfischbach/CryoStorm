@@ -365,16 +365,15 @@ int main(int argc, char **argv)
   projector.UpdatePerspective(spc::spcDeg2Rad(90.0f), aspect, 1.0f, 1024.0f);
 
 
-  spc::Mesh *suzanneMesh = spc::AssetManager::Get()->Load<spc::Mesh>(spc::ResourceLocator("file:///suzanneMesh.fbx"));
+  spc::Mesh *suzanneMesh = spc::AssetManager::Get()->Load<spc::Mesh>(spc::ResourceLocator("file:///suzanne.fbx"));
   spc::Mesh *cube = spc::AssetManager::Get()->Load<spc::Mesh>(spc::ResourceLocator("cube.fbx"));
   suzanneMesh->SetDefaultMaterial(0, material);
   cube->SetDefaultMaterial(0, material);
 
   spc::Entity *entity0 = new spc::Entity("Entity0");
   spc::StaticMeshState *meshState0 = new spc::StaticMeshState("StaticMesh0");
-  meshState0->GetTransform()
-      .SetTranslation(spc::Vector3f(0, 0, 0))
-      .Finish();
+
+  meshState0->SetTransform(spc::Transform(spc::Vector3f(0, 0, 0)));
   meshState0->SetMesh(mesh);
   meshState0->SetStatic(true);
   entity0->Attach(meshState0);
@@ -382,9 +381,7 @@ int main(int argc, char **argv)
 
   spc::Entity *suzanneEntity = new spc::Entity("Entity1");
   spc::StaticMeshState *meshState1 = new spc::StaticMeshState("StaticMesh1");
-  meshState1->GetTransform()
-      .SetTranslation(spc::Vector3f(0, 0, 0))
-      .Finish();
+  meshState1->SetTransform(spc::Transform(spc::Vector3f(0, 0, 0)));
   meshState1->SetMesh(suzanneMesh);
   meshState1->SetStatic(false);
   suzanneEntity->Attach(meshState1);
@@ -398,9 +395,7 @@ int main(int argc, char **argv)
   lightState->SetRange(25);
   lightState->SetStatic(false);
   lightState->SetCastShadow(true);
-  lightEntity->GetRoot()->GetTransform()
-      .SetTranslation(spc::Vector3f(5.0f, 5.0f, 5.0f))
-      .Finish();
+  lightState->SetTransform(spc::Transform(spc::Vector3f(5.0f, 5.0f, 5.0f)));
   world->Attach(lightEntity);
 
   /*
@@ -426,10 +421,10 @@ int main(int argc, char **argv)
   sunLightState->SetSplits(25.0f, 50.0f, 100.0f);
   sunLightState->SetShadowMapBias(0.01f);
   sunLightState->SetCastShadow(true);
-  sunLightState->GetTransform()
+  sunLightState->SetTransform(sunLightState->GetTransform()
           //.SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(1.0f, 0.0f, 0.0f), spc::spcDeg2Rad(-45.0f)))
       .SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(1.0f, 1.0f, 1.0f).Normalize(), spc::spcDeg2Rad(-45.0f)))
-      .Finish();
+  );
 
   world->Attach(sunEntity);
 
@@ -473,6 +468,12 @@ int main(int argc, char **argv)
   {
     printf("Render target complete\n");
   }
+
+  spc::Quaternion myRot  = spc::Quaternion::FromAxisAngle(spc::Vector3f(1, 2, 3).Normalize(), 1.234f);
+  printf ("Quaternion: %.2f %.2f %.2f %.2f\n", myRot.x, myRot.y, myRot.z, myRot.w);
+  spc::Matrix3f myMat = myRot.ToMatrix3();
+  myRot = spc::Quaternion::FromMatrix(myMat);
+  printf ("Quaternion: %.2f %.2f %.2f %.2f\n", myRot.x, myRot.y, myRot.z, myRot.w);
 
 
   spc::iRenderPipeline *renderPipeline = spc::ObjectRegistry::Get<spc::iRenderPipeline>();
@@ -533,15 +534,14 @@ int main(int argc, char **argv)
       entRot += 0.003f;
     }
 
-    lightEntity->GetRoot()->GetTransform()
-        .SetTranslation(spc::Vector3f(spc::spcSin(entRot) * 5.0f, 5.0f, spc::spcCos(entRot) * 5.0f))
-        .Finish();
+    lightEntity->GetRoot()->SetTransform(spc::Transform(spc::Vector3f(spc::spcSin(entRot) * 5.0f, 5.0f, spc::spcCos(entRot) * 5.0f)));
 
-    suzanneEntity->GetRoot()->GetTransform()
-        .SetTranslation(spc::Vector3f(spc::spcCos(entRot * 1.5f) * 5.0f, 5.0f, spc::spcSin(entRot * 1.5f) * 5.0f))
-        .Finish();
+    suzanneEntity->GetRoot()->SetTransform(spc::Transform(
+        spc::Vector3f(spc::spcCos(entRot * 3.5f) * 5.0f, 0.0f, spc::spcSin(entRot * 3.5f) * 5.0f),
+        spc::Quaternion::FromAxisAngle(spc::Vector3f(0, 1, 0), entRot * 3.5f - (float) M_PI / 2.0f)
+    ));
 
-    float dist = 5.0f;
+    float dist = 10.0f;
     camera->SetSpot(spc::Vector3f(0, 0.0f, 0.0f));
     camera->SetEye(spc::Vector3f(spc::spcCos(entRot + (float) M_PI / 2.0f + 0.2f) * dist, dist, spc::spcSin(entRot + (float) M_PI / 2.0f + 0.2f) * dist));
     camera->SetUp(spc::Vector3f(0.0f, 1.0f, 0.0f));
@@ -549,7 +549,7 @@ int main(int argc, char **argv)
     //rot += 0.005f;
 
     world->Update((float) deltaTime / 1000.0f);
-    world->UpdateTransformation();
+    //world->UpdateTransformation();
 
 
     renderPipeline->Render(renderTarget, *camera, projector, device, world->GetScene());

@@ -37,10 +37,11 @@ public:
    * @name Transformation
    * @{
    */
-  Transform &GetTransform();
-  const Transform &GetTransform() const;
-  void FinishTransformation();
+  Transform GetTransform();
+  void SetTransform (const Transform &transform);
   const Matrix4f& GetGlobalMatrix() const;
+  const Matrix4f& GetLocalMatrix() const;
+  void SetLocalMatrix(const Matrix4f &matrix);
   void UpdateTransformation();
   /**
    * @}
@@ -55,25 +56,16 @@ protected:
 
   
 private:
-  void UpdateGlobalMatrix() const;
-  void UpdateFlagGlobalMatrixDirty();
-  void UpdateFlagRequestHierarchyTransformationUpdate();
+  void UpdateGlobalMatrix();
 
 
   bool m_static;
   SpatialState* m_parent;
   std::vector<SpatialState*> m_children;
 
-  Transform m_transform;
+  Matrix4f m_localMatrix;
 
-  enum TransformationState
-  {
-    eTS_GlobalMatrixDirty = 1,
-    eTS_RequestHierarchyTransformationUpdate = 2,
-  };
-
-  mutable UInt8 m_transformationState;
-  mutable Matrix4f m_globalMatrix;
+  Matrix4f m_globalMatrix;
 
 };
 

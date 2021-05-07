@@ -9,6 +9,7 @@ namespace spc
 
 class Entity;
 class GfxScene;
+class EntityState;
 class SpatialState;
 
 SPC_CLASS()
@@ -22,19 +23,21 @@ public:
   GfxScene* GetScene();
   const GfxScene* GetScene() const;
 
-  bool Attach(Entity * entit);
-  bool Detach(Entity * entit);
+  bool Attach(Entity * entity);
+  bool Detach(Entity * entity);
+
+  bool AttachUpdateState(EntityState *updateState);
+  bool DetachUpdateState(EntityState *updateState);
 
   void Update (float tpf);
 
-  void UpdateTransformation();
-  
 private:
   GfxScene* m_scene;
   SpatialState *m_rootState;
   
   std::vector<Entity*> m_entities;
-  
+
+  std::vector<EntityState*> m_updateStates;
 };
 
 }

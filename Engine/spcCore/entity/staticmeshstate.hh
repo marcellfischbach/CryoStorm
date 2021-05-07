@@ -33,7 +33,6 @@ public:
   void OnAttachedToWorld(World* world) override;
   void OnDetachedFromWorld(World* world) override;
 
-  void Update(float tpf) override;
   /**
    * @}
    */

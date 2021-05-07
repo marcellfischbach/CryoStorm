@@ -83,12 +83,12 @@ struct SPC_CORE_API Quaternion
     return SetAxisAngle(v.x, v.y, v.z, angle);
   }
 
-  SPC_FORCEINLINE static Quaternion FromAxisAngle(const Vector3f& v, float angle)
+  SPC_NODISCARD SPC_FORCEINLINE static Quaternion FromAxisAngle(const Vector3f& v, float angle)
   {
     return FromAxisAngle(v.x, v.y, v.z, angle);
   }
 
-  SPC_FORCEINLINE static Quaternion FromAxisAngle(float x, float y, float z, float angle)
+  SPC_NODISCARD SPC_FORCEINLINE static Quaternion FromAxisAngle(float x, float y, float z, float angle)
   {
     float angle2 = angle / 2.0f;
     float c = spcCos(angle2);
@@ -96,6 +96,18 @@ struct SPC_CORE_API Quaternion
     return Quaternion(x * s, y * s, z * s, c);
   }
 
+
+  SPC_NODISCARD SPC_FORCEINLINE static Quaternion FromMatrix(const Matrix3f& m)
+  {
+    float qw  = spcSqrt(1.0f + m.m00 + m.m11 + m.m22) / 2.0f;
+    float qw4 = qw * 4.0f;
+    return Quaternion(
+        (m.m21 - m.m12) / qw4,
+        (m.m02 - m.m20) / qw4,
+        (m.m10 - m.m01) / qw4,
+        qw
+        );
+  }
 
 
   SPC_FORCEINLINE Matrix3f& ToMatrix3(Matrix3f& out) const

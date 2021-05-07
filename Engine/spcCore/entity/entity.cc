@@ -7,11 +7,11 @@ namespace spc
 {
 
 Entity::Entity(const std::string &name)
-  : iObject()
-  , m_name(name)
-  , m_rootState(nullptr)
-  , m_parent(nullptr)
-  , m_world(nullptr)
+    : iObject()
+      , m_name(name)
+      , m_rootState(nullptr)
+      , m_parent(nullptr)
+      , m_world(nullptr)
 {
   SPC_CLASS_GEN_CONSTR;
 }
@@ -31,7 +31,7 @@ const std::string &Entity::GetName() const
   return m_name;
 }
 
-void Entity::SetWorld(World* world)
+void Entity::SetWorld(World *world)
 {
   if (m_world != world)
   {
@@ -39,7 +39,7 @@ void Entity::SetWorld(World* world)
     {
       for (auto state : m_states)
       {
-        state->OnDetachedFromWorld(m_world);
+        state->DetachFromWorld(m_world);
       }
     }
     SPC_SET(m_world, world);
@@ -47,7 +47,7 @@ void Entity::SetWorld(World* world)
     {
       for (auto state : m_states)
       {
-        state->OnAttachedToWorld(m_world);
+        state->AttachToWorld(m_world);
       }
     }
 
@@ -58,19 +58,18 @@ void Entity::SetWorld(World* world)
   }
 }
 
-World *Entity::GetWorld() 
+World *Entity::GetWorld()
 {
   return m_world;
 }
 
-const World* Entity::GetWorld() const
+const World *Entity::GetWorld() const
 {
   return m_world;
 }
 
 
-
-bool Entity::Attach(Entity* entity, SpatialState* parentState)
+bool Entity::Attach(Entity *entity, SpatialState *parentState)
 {
   if (!entity)
   {
@@ -89,7 +88,7 @@ bool Entity::Attach(Entity* entity, SpatialState* parentState)
   m_children.push_back(entity);
   entity->SetWorld(m_world);
 
-  SpatialState* childRoot = entity->GetRoot();
+  SpatialState *childRoot = entity->GetRoot();
   if (!parentState)
   {
     parentState = GetAbsolutRoot();
@@ -104,7 +103,7 @@ bool Entity::Attach(Entity* entity, SpatialState* parentState)
   return true;
 }
 
-bool Entity::Detach(Entity* entity)
+bool Entity::Detach(Entity *entity)
 {
   if (!entity)
   {
@@ -124,7 +123,7 @@ bool Entity::Detach(Entity* entity)
   m_children.erase(it);
   entity->SetWorld(nullptr);
 
-  SpatialState* childRoot = entity->GetRoot();
+  SpatialState *childRoot = entity->GetRoot();
   if (childRoot)
   {
     childRoot->DetachSelf();
@@ -136,12 +135,12 @@ bool Entity::Detach(Entity* entity)
   return true;
 }
 
-Entity* Entity::GetParent()
+Entity *Entity::GetParent()
 {
   return m_parent;
 }
 
-const Entity* Entity::GetParent() const
+const Entity *Entity::GetParent() const
 {
   return m_parent;
 }
@@ -151,7 +150,7 @@ Size Entity::GetNumberOfChildren() const
   return m_children.size();
 }
 
-const Entity* Entity::GetChild(Size idx) const
+const Entity *Entity::GetChild(Size idx) const
 {
   if (idx >= m_children.size())
   {
@@ -160,11 +159,10 @@ const Entity* Entity::GetChild(Size idx) const
   return m_children[idx];
 }
 
-Entity* Entity::GetChild(Size idx)
+Entity *Entity::GetChild(Size idx)
 {
-  return const_cast<Entity*>(static_cast<const Entity*>(this)->GetChild(idx));
+  return const_cast<Entity *>(static_cast<const Entity *>(this)->GetChild(idx));
 }
-
 
 
 bool Entity::Attach(EntityState *entityState)
@@ -177,22 +175,22 @@ bool Entity::Attach(EntityState *entityState)
   {
     return false;
   }
-  
+
   if (std::find(m_states.begin(), m_states.end(), entityState) != m_states.end())
   {
     return false;
   }
-  
+
   entityState->SetEntity(this);
-  
-  
+
+
   auto spatialState = entityState->Query<SpatialState>();
   if (spatialState && !m_rootState)
   {
     SetRoot(spatialState);
   }
 
-  
+
   return true;
 }
 
@@ -211,17 +209,17 @@ bool Entity::Detach(EntityState *entityState)
   {
     return false;
   }
-  
+
   entityState->SetEntity(nullptr);
-  
-  
+
+
   auto spatialState = entityState->Query<SpatialState>();
   if (spatialState == m_rootState)
   {
     SetRoot(nullptr);
   }
-  
-  
+
+
   return true;
 }
 
@@ -238,7 +236,7 @@ void Entity::RegisterEntityState(EntityState *entityState)
     m_states.push_back(entityState);
     if (m_world)
     {
-      entityState->OnAttachedToWorld(m_world);
+      entityState->AttachToWorld(m_world);
     }
   }
 }
@@ -254,7 +252,7 @@ void Entity::DeregisterEntityState(EntityState *entityState)
   {
     if (m_world)
     {
-      entityState->OnDetachedFromWorld(m_world);
+      entityState->DetachFromWorld(m_world);
     }
 
     entityState->Release();
@@ -266,18 +264,18 @@ void Entity::DeregisterEntityState(EntityState *entityState)
 void Entity::SetRoot(SpatialState *rootState)
 {
   bool replace = m_rootState != nullptr;
-  
+
   if (m_rootState)
   {
     m_rootState->DetachSelf();
   }
   SPC_SET(m_rootState, rootState);
-  SpatialState* parentRoot = GetAbsolutParentRoot();
+  SpatialState *parentRoot = GetAbsolutParentRoot();
   if (parentRoot)
   {
     parentRoot->Attach(m_rootState);
   }
-  
+
   if (replace && m_rootState)
   {
     for (Entity *child : m_children)
@@ -292,6 +290,7 @@ void Entity::SetRoot(SpatialState *rootState)
   }
 }
 
+
 SpatialState *Entity::GetRoot()
 {
   return m_rootState;
@@ -302,9 +301,9 @@ const SpatialState *Entity::GetRoot() const
   return m_rootState;
 }
 
-SpatialState* Entity::GetAbsolutRoot()
+SpatialState *Entity::GetAbsolutRoot()
 {
-  Entity* entity = this;
+  Entity *entity = this;
   while (entity)
   {
     if (entity->m_rootState)
@@ -316,24 +315,9 @@ SpatialState* Entity::GetAbsolutRoot()
   return nullptr;
 }
 
-SpatialState* Entity::GetAbsolutParentRoot()
+SpatialState *Entity::GetAbsolutParentRoot()
 {
   return m_parent ? m_parent->GetAbsolutRoot() : nullptr;
-}
-
-
-void Entity::Update(float tpf)
-{
-
-  for (auto state : m_states)
-  {
-    state->Update(tpf);
-  }
-
-  for (auto child : m_children)
-  {
-    child->Update(tpf);
-  }
 }
 
 }

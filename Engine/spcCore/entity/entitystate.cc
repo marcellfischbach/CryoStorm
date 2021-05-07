@@ -1,5 +1,6 @@
 #include <spcCore/entity/entitystate.hh>
 #include <spcCore/entity/entity.hh>
+#include <spcCore/entity/world.hh>
 #include <entity/entitystate.refl.hh>
 
 namespace spc
@@ -8,6 +9,7 @@ namespace spc
 EntityState::EntityState(const std::string &name)
   : iObject()
   , m_name(name)
+  , m_needUpdate(false)
   , m_entity(nullptr)
 {
   SPC_CLASS_GEN_CONSTR;
@@ -63,6 +65,27 @@ const World* EntityState::GetWorld() const
   return m_entity ? m_entity->GetWorld() : nullptr;
 }
 
+void EntityState::SetNeedUpdate(bool needUpdate)
+{
+  if (m_needUpdate != needUpdate)
+  {
+    World* world = GetWorld();
+    if (world && m_needUpdate)
+    {
+      world->DetachUpdateState(this);
+    }
+    m_needUpdate = needUpdate;
+    if (world && m_needUpdate)
+    {
+      world->AttachUpdateState(this);
+    }
+  }
+}
+
+bool EntityState::IsNeedUpdate() const
+{
+  return m_needUpdate;
+}
 
 void EntityState::UpdateEntity(Entity *oldEntity, Entity *newEntity)
 {
@@ -75,6 +98,25 @@ void EntityState::UpdateEntity(Entity *oldEntity, Entity *newEntity)
     newEntity->RegisterEntityState(this);
   }
 }
+
+void EntityState::AttachToWorld(World *world)
+{
+  if (m_needUpdate)
+  {
+    world->AttachUpdateState(this);
+  }
+  OnAttachedToWorld(world);
+}
+
+void EntityState::DetachFromWorld(World *world)
+{
+  if (m_needUpdate)
+  {
+    world->DetachUpdateState(this);
+  }
+  OnAttachedToWorld(world);
+}
+
 
 void EntityState::OnAttachedToWorld(World* world)
 {

@@ -29,11 +29,18 @@ public:
   World* GetWorld();
   const World* GetWorld() const;
 
+  void AttachToWorld(World *world);
+  void DetachFromWorld(World *world);
+
+
+  void SetNeedUpdate(bool needUpdate);
+  bool IsNeedUpdate() const;
 
   /**
    * @name Livecycle
    * @{
    */
+
   virtual void OnAttachedToWorld(World * world);
   virtual void OnDetachedFromWorld(World * world);
 
@@ -48,6 +55,8 @@ protected:
 private:
   std::string m_name;
   Entity* m_entity;
+
+  bool m_needUpdate;
   
 };
 

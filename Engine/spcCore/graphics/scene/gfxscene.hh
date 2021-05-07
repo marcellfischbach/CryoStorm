@@ -53,7 +53,7 @@ private:
   void AddStaticLightsToMesh(GfxMesh *mesh);
   void AddStaticLightToMeshes(GfxLight *light);
   float CalcMeshLightInfluence( GfxLight* light, const GfxMesh* mesh);
-  std::vector<GfxMesh::Light> CalcMeshLightInfluences(const GfxMesh * mesh, const std::vector<GfxLight*> &lights);
+  Size CalcMeshLightInfluences(const GfxMesh * mesh, const std::vector<GfxLight*> &lights, GfxMesh::Light *influencesOut);
 
 
   std::vector<GfxMesh*> m_dynamicMeshes;

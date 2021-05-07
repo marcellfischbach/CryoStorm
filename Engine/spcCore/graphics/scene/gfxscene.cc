@@ -14,12 +14,12 @@ const int MaxLights = 4;
 const float MinLightInfluence = 0.0f;
 
 GfxScene::GfxScene()
-  : iObject()
+    : iObject()
 {
   SPC_CLASS_GEN_CONSTR;
 }
 
-void GfxScene::Add(GfxMesh* mesh)
+void GfxScene::Add(GfxMesh *mesh)
 {
   if (!mesh)
   {
@@ -49,7 +49,7 @@ void GfxScene::Add(GfxMesh* mesh)
 
 }
 
-void GfxScene::Remove(GfxMesh* mesh)
+void GfxScene::Remove(GfxMesh *mesh)
 {
   if (!mesh)
   {
@@ -79,7 +79,7 @@ void GfxScene::Remove(GfxMesh* mesh)
   mesh->Release();
 }
 
-void GfxScene::Add(GfxLight* light)
+void GfxScene::Add(GfxLight *light)
 {
   if (light)
   {
@@ -99,7 +99,7 @@ void GfxScene::Add(GfxLight* light)
   }
 }
 
-void GfxScene::Add(GfxLight* light, std::vector<GfxLight*>& lights)
+void GfxScene::Add(GfxLight *light, std::vector<GfxLight *> &lights)
 {
   if (std::find(lights.begin(), lights.end(), light) != lights.end())
   {
@@ -111,7 +111,7 @@ void GfxScene::Add(GfxLight* light, std::vector<GfxLight*>& lights)
 
 }
 
-void GfxScene::Remove(GfxLight* light)
+void GfxScene::Remove(GfxLight *light)
 {
   if (light)
   {
@@ -130,7 +130,7 @@ void GfxScene::Remove(GfxLight* light)
   }
 }
 
-void GfxScene::Remove(GfxLight* light, std::vector<GfxLight*>& lights)
+void GfxScene::Remove(GfxLight *light, std::vector<GfxLight *> &lights)
 {
   auto it = std::find(lights.begin(), lights.end(), light);
   if (it == lights.end())
@@ -147,15 +147,17 @@ void GfxScene::Remove(GfxLight* light, std::vector<GfxLight*>& lights)
 }
 
 Size assign_lights(
-  GfxMesh* mesh,
-  const std::vector<GfxMesh::Light>& static_lights,
-  const std::vector<GfxMesh::Light>& dynamic_lights,
-  const GfxLight** lights,
-  Size offset,
-  Size numberOfLights)
+    GfxMesh *mesh,
+    const GfxMesh::Light *static_lights,
+    Size num_static,
+    const GfxMesh::Light *dynamic_lights,
+    Size num_dynamic,
+    const GfxLight **lights,
+    Size offset,
+    Size numberOfLights)
 {
-  for (Size s = 0, d = 0, sn = static_lights.size(), dn = dynamic_lights.size();
-    offset < numberOfLights && (s < sn || d < dn); offset++)
+  for (Size s = 0, d = 0, sn = num_static, dn = num_dynamic;
+       offset < numberOfLights && (s < sn || d < dn); offset++)
   {
     if (s < sn && d < dn)
     {
@@ -185,11 +187,11 @@ Size assign_lights(
   return offset;
 }
 
-void GfxScene::Render(iDevice* device, eRenderPass pass)
+void GfxScene::Render(iDevice *device, eRenderPass pass)
 {
   if (pass == eRP_Forward)
   {
-    static const GfxLight* lights[MaxLights];
+    static const GfxLight *lights[MaxLights];
     Size offset = 0;
     for (auto globalLight : m_globalLights)
     {
@@ -200,14 +202,16 @@ void GfxScene::Render(iDevice* device, eRenderPass pass)
       lights[offset++] = globalLight;
     }
 
+    GfxMesh::Light* dynamic_lights = new GfxMesh::Light[m_dynamicLights.size()];
+    GfxMesh::Light* static_lights = new GfxMesh::Light[m_staticLights.size()];
     for (auto mesh : m_staticMeshes)
     {
       Size numberOfLights = offset;
       if (offset < MaxLights)
       {
-        const std::vector< GfxMesh::Light>& static_lights = mesh->GetLights();
-        std::vector< GfxMesh::Light> dynamic_lights = CalcMeshLightInfluences(mesh, m_dynamicLights);
-        numberOfLights = assign_lights(mesh, static_lights, dynamic_lights, lights, offset, MaxLights);
+        const std::vector<GfxMesh::Light> &static_lights = mesh->GetLights();
+        Size numDynamic = CalcMeshLightInfluences(mesh, m_dynamicLights, dynamic_lights);
+        numberOfLights = assign_lights(mesh, &static_lights[0], static_lights.size(), dynamic_lights, numDynamic, lights, offset, MaxLights);
       }
       mesh->RenderForward(device, pass, lights, numberOfLights);
     }
@@ -216,9 +220,9 @@ void GfxScene::Render(iDevice* device, eRenderPass pass)
       Size numberOfLights = offset;
       if (offset < MaxLights)
       {
-        std::vector< GfxMesh::Light> static_lights = CalcMeshLightInfluences(mesh, m_staticLights);
-        std::vector< GfxMesh::Light> dynamic_lights = CalcMeshLightInfluences(mesh, m_dynamicLights);
-        Size numberOfLights = assign_lights(mesh, static_lights, dynamic_lights, lights, offset, MaxLights);
+        Size numStatic = CalcMeshLightInfluences(mesh, m_staticLights, static_lights);
+        Size numDynamic = CalcMeshLightInfluences(mesh, m_dynamicLights, dynamic_lights);
+        numberOfLights = assign_lights(mesh, static_lights, numStatic, dynamic_lights, numDynamic, lights, offset, MaxLights);
       }
       mesh->RenderForward(device, pass, lights, numberOfLights);
     }
@@ -226,8 +230,7 @@ void GfxScene::Render(iDevice* device, eRenderPass pass)
 }
 
 
-
-void GfxScene::AddStaticLightsToMesh(GfxMesh* mesh)
+void GfxScene::AddStaticLightsToMesh(GfxMesh *mesh)
 {
   if (mesh->GetNumberOfLights() >= MaxLights)
   {
@@ -246,11 +249,11 @@ void GfxScene::AddStaticLightsToMesh(GfxMesh* mesh)
     influences.push_back(l);
   }
   std::sort(influences.begin(), influences.end(),
-    [](const GfxMesh::Light& i0, const GfxMesh::Light& i1) { return i0.Influence > i1.Influence; });
+            [](const GfxMesh::Light &i0, const GfxMesh::Light &i1) { return i0.Influence > i1.Influence; });
 
   //
   // assign the most significant lights to the mesh
-  for (auto& inf : influences)
+  for (auto &inf : influences)
   {
     if (inf.Influence <= MinLightInfluence)
     {
@@ -264,7 +267,7 @@ void GfxScene::AddStaticLightsToMesh(GfxMesh* mesh)
   }
 }
 
-void GfxScene::AddStaticLightToMeshes(GfxLight* light)
+void GfxScene::AddStaticLightToMeshes(GfxLight *light)
 {
   for (auto mesh : m_staticMeshes)
   {
@@ -283,8 +286,8 @@ void GfxScene::AddStaticLightToMeshes(GfxLight* light)
       //
       // find the light with the least influence
       float leastInfluence = FLT_MAX;
-      GfxLight* leastLight = nullptr;
-      for (auto& assignedLight : mesh->GetLights())
+      GfxLight *leastLight = nullptr;
+      for (auto &assignedLight : mesh->GetLights())
       {
         float assignedInfluence = assignedLight.Influence;
         if (assignedInfluence < leastInfluence)
@@ -306,7 +309,7 @@ void GfxScene::AddStaticLightToMeshes(GfxLight* light)
   }
 }
 
-float GfxScene::CalcMeshLightInfluence(GfxLight* light, const GfxMesh* mesh)
+float GfxScene::CalcMeshLightInfluence(GfxLight *light, const GfxMesh *mesh)
 {
   if (!light || !mesh)
   {
@@ -319,48 +322,48 @@ float GfxScene::CalcMeshLightInfluence(GfxLight* light, const GfxMesh* mesh)
   float lightDistanceFactor = 0.0f;
   switch (light->GetLight()->GetType())
   {
-  case eLT_Directional:
-    lightDistanceFactor = 1.0f;
-    break;
-  case eLT_Point:
-    auto pointLight = light->GetLight()->Query<iPointLight>();
-    Vector3f lightPos = pointLight->GetPosition();
-    Vector3f meshPos = mesh->GetModelMatrix().GetTranslation();
-    Vector3f delta = lightPos - meshPos;
-    float distance = delta.Length();
-    float overlap = pointLight->GetRange() + halfSize - distance;
-    if (overlap > 0.0f)
-    {
-      lightDistanceFactor = overlap / pointLight->GetRange();
-    }
-    break;
+    case eLT_Directional:
+      lightDistanceFactor = 1.0f;
+      break;
+    case eLT_Point:
+      auto pointLight = light->GetLight()->Query<iPointLight>();
+      Vector3f lightPos = pointLight->GetPosition();
+      Vector3f meshPos = mesh->GetModelMatrix().GetTranslation();
+      Vector3f delta = lightPos - meshPos;
+      float distance = delta.Length();
+      float overlap = pointLight->GetRange() + halfSize - distance;
+      if (overlap > 0.0f)
+      {
+        lightDistanceFactor = overlap / pointLight->GetRange();
+      }
+      break;
   }
   return lightPower * lightDistanceFactor;
 }
 
 
-std::vector<GfxMesh::Light> GfxScene::CalcMeshLightInfluences(const GfxMesh* mesh, const std::vector<GfxLight*>& lights)
+Size GfxScene::CalcMeshLightInfluences(const GfxMesh *mesh, const std::vector<GfxLight *> &lights, GfxMesh::Light *influences)
 {
-  std::vector<GfxMesh::Light> influences;
-  for (GfxLight* light : lights)
+  Size num = 0;
+  for (GfxLight *light : lights)
   {
     float influence = CalcMeshLightInfluence(light, mesh);
     if (influence <= MinLightInfluence)
     {
       continue;
     }
-    GfxMesh::Light l{};
-    l.Light = light;
-    l.Influence = influence;
-    influences.push_back(l);
+    influences[num++] = GfxMesh::Light {
+        light,
+        influence
+    };
+
   }
 
-  std::sort(influences.begin(), influences.end(),
-    [](const GfxMesh::Light& i0, const GfxMesh::Light& i1) { return i0.Influence > i1.Influence; });
-  return influences;
+  std::sort(influences, influences + num, [](const GfxMesh::Light &i0, const GfxMesh::Light &i1) { return i0.Influence > i1.Influence; });
+  return num;
 }
 
-void GfxScene::ScanMeshes(const iClipper* clipper, UInt32 scanMask, std::function<void(GfxMesh*)> callback) const
+void GfxScene::ScanMeshes(const iClipper *clipper, UInt32 scanMask, std::function<void(GfxMesh *)> callback) const
 {
   if (scanMask & eSM_Static)
   {
@@ -385,7 +388,7 @@ void GfxScene::ScanMeshes(const iClipper* clipper, UInt32 scanMask, std::functio
   }
 }
 
-void GfxScene::ScanLights(const iClipper* clipper, UInt32 scanMask, std::function<bool(GfxLight*)> callback) const
+void GfxScene::ScanLights(const iClipper *clipper, UInt32 scanMask, std::function<bool(GfxLight *)> callback) const
 {
   if (scanMask & eSM_Global)
   {
@@ -402,10 +405,10 @@ void GfxScene::ScanLights(const iClipper* clipper, UInt32 scanMask, std::functio
   {
     for (auto light : m_staticLights)
     {
-      const iLight* lght = light->GetLight();
+      const iLight *lght = light->GetLight();
       if (lght->GetType() == eLT_Point)
       {
-        auto* plight = lght->Query<const iPointLight>();
+        auto *plight = lght->Query<const iPointLight>();
         if (clipper->Test(Sphere(plight->GetPosition(), plight->GetRange())) != eClippingResult::eCR_Outside)
         {
           if (!callback(light))
@@ -428,10 +431,10 @@ void GfxScene::ScanLights(const iClipper* clipper, UInt32 scanMask, std::functio
   {
     for (auto light : m_dynamicLights)
     {
-      const iLight* lght = light->GetLight();
+      const iLight *lght = light->GetLight();
       if (lght->GetType() == eLT_Point)
       {
-        auto* plight = lght->Query<const iPointLight>();
+        auto *plight = lght->Query<const iPointLight>();
         if (clipper->Test(Sphere(plight->GetPosition(), plight->GetRange())) != eClippingResult::eCR_Outside)
         {
           if (!callback(light))
