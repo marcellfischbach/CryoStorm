@@ -282,9 +282,9 @@ void GL4ForwardDirectionalLightRenderer::RenderDirectionalShadowMaps(GL4Directio
 
   float near[] = {FLT_MAX, FLT_MAX, FLT_MAX };
   float far[] = {-FLT_MAX, -FLT_MAX, -FLT_MAX };
-  std::vector<GfxMesh*> meshes;
+  m_meshesCache.clear();
   m_scene->ScanMeshes(nullptr, GfxScene::eSM_Dynamic | GfxScene::eSM_Static,
-    [this, &views, &meshes, &near, &far](GfxMesh* mesh)
+    [this, &views, &near, &far](GfxMesh* mesh)
     {
       const Vector3f* bboxPoints = mesh->GetBoundingBox().GetPoints();
       for (unsigned i = 0; i < 8; i++)
@@ -300,7 +300,7 @@ void GL4ForwardDirectionalLightRenderer::RenderDirectionalShadowMaps(GL4Directio
         far[1] = spcMax(far[1], v1.z);
         far[2] = spcMax(far[2], v2.z);
       }
-      meshes.push_back(mesh);
+      m_meshesCache.push_back(mesh);
     }
   );
 
@@ -323,7 +323,7 @@ void GL4ForwardDirectionalLightRenderer::RenderDirectionalShadowMaps(GL4Directio
   m_device->SetShadowMapProjectionMatrices(projections, 3);
   m_device->SetShadowMapViewMatrices(views, 3);
 
-  for (auto mesh : meshes)
+  for (auto mesh : m_meshesCache)
   {
     mesh->RenderUnlit(m_device, eRP_ShadowPSSM);
   }

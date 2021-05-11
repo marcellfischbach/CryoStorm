@@ -16,6 +16,7 @@ struct iSampler;
 struct iTexture2DArray;
 class Camera;
 class GfxScene;
+class GfxMesh;
 class Projector;
 class Settings;
 
@@ -78,6 +79,8 @@ private:
   iSampler* m_shadowMapColorSampler;
   iSampler* m_shadowMapDepthSampler;
 
+
+  std::vector<GfxMesh*> m_meshesCache;
 };
 
 
