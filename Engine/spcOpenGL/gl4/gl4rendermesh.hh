@@ -27,6 +27,9 @@ public:
   const BoundingBox &GetBoundingBox() const override;
 
   void Render(iDevice * graphics, eRenderPass pass) override;
+#if _DEBUG
+  SPC_NODISCARD virtual Size GetNumberOfTriangles() const override;
+#endif
 
 private:
 

@@ -49,12 +49,12 @@ public:
     }
     return false;
   }
-  SPC_FORCEINLINE bool IsLow() const
+  SPC_NODISCARD SPC_FORCEINLINE bool IsLow() const
   {
     return m_state == Low;
   }
 
-  SPC_FORCEINLINE bool IsHigh() const
+  SPC_NODISCARD SPC_FORCEINLINE bool IsHigh() const
   {
     return m_state == Hight;
   }

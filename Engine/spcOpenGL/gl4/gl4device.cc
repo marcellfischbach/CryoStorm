@@ -1272,4 +1272,33 @@ iRenderMesh* GL4Device::FullscreenBlitCubeRenderMesh(int layer)
 }
 
 
+#if _DEBUG
+void GL4Device::IncDrawCalls()
+{
+  ++m_numDrawCalls;
+}
+
+void GL4Device::IncTriangles(Size num)
+{
+  m_numTriangles += num;
+}
+
+void GL4Device::ResetDebug()
+{
+  m_numDrawCalls = 0;
+  m_numTriangles = 0;
+}
+
+Size GL4Device::GetNumberOfDrawCalls() const
+{
+  return m_numDrawCalls;
+}
+
+Size GL4Device::GetNumberOfTriangles() const
+{
+  return m_numTriangles;
+}
+
+#endif
+
 }

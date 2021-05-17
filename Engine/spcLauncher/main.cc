@@ -225,10 +225,10 @@ spc::iRenderMesh *create_plane_mesh(float nx, float ny)
   // create a render mesh
   spc::iRenderMeshGenerator *generator = spc::ObjectRegistry::Get<spc::iRenderMeshGeneratorFactory>()->Create();
   std::vector<spc::Vector3f> positions;
-  positions.push_back(spc::Vector3f(-10.0f, 0.0f, -10.0f));
-  positions.push_back(spc::Vector3f(-10.0f, 0.0f, 10.0f));
-  positions.push_back(spc::Vector3f(10.0f, 0.0f, -10.0f));
-  positions.push_back(spc::Vector3f(10.0f, 0.0f, 10.0f));
+  positions.push_back(spc::Vector3f(-40.0f, 0.0f, -40.0f));
+  positions.push_back(spc::Vector3f(-40.0f, 0.0f, 40.0f));
+  positions.push_back(spc::Vector3f(40.0f, 0.0f, -40.0f));
+  positions.push_back(spc::Vector3f(40.0f, 0.0f, 40.0f));
   std::vector<spc::Vector3f> normals;
   normals.push_back(spc::Vector3f(0.0f, 1.0f, 0.0f));
   normals.push_back(spc::Vector3f(0.0f, 1.0f, 0.0f));
@@ -341,7 +341,7 @@ int main(int argc, char **argv)
   instance->Set(instance->IndexOf("Color"), spc::Color4f(0, 0, 1, 1));
 
 
-  spc::iRenderMesh *renderMesh = create_plane_mesh(2, 2);
+  spc::iRenderMesh *renderMesh = create_plane_mesh(8, 8);
   spc::Mesh *mesh = new spc::Mesh();
   mesh->AddMaterialSlot("Default", instance);
   mesh->AddSubMesh(renderMesh, 0);
@@ -379,22 +379,35 @@ int main(int argc, char **argv)
   entity0->Attach(meshState0);
   world->Attach(entity0);
 
-  spc::Entity *suzanneEntity = new spc::Entity("Entity1");
-  spc::StaticMeshState *meshState1 = new spc::StaticMeshState("StaticMesh1");
-  meshState1->SetTransform(spc::Transform(spc::Vector3f(0, 0, 0)));
-  meshState1->SetMesh(suzanneMesh);
-  meshState1->SetStatic(false);
-  suzanneEntity->Attach(meshState1);
-  world->Attach(suzanneEntity);
+
+  spc::Entity *suzanneEntity = nullptr;
+
+  size_t num = 20;
+  for (size_t i=0; i<num; i++)
+  {
+    float x = -40.0f + (float)i / (float)num * 80.0f;
+    for (size_t j=0; j<num; j++)
+    {
+      float y = -40.0f + (float)j / (float)num * 80.0f;
+
+      suzanneEntity = new spc::Entity("Entity1");
+      spc::StaticMeshState *meshState1 = new spc::StaticMeshState("StaticMesh1");
+      meshState1->SetTransform(spc::Transform(spc::Vector3f(x, 0, y)));
+      meshState1->SetMesh(suzanneMesh);
+      meshState1->SetStatic(true);
+      suzanneEntity->Attach(meshState1);
+      world->Attach(suzanneEntity);
+    }
+  }
 
   spc::Entity *lightEntity = new spc::Entity("Light_0");
   spc::LightState *lightState = new spc::LightState("LightState");
   lightEntity->Attach(lightState);
   lightState->SetType(spc::eLT_Point);
   lightState->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 1.0f);
-  lightState->SetRange(25);
-  lightState->SetStatic(false);
-  lightState->SetCastShadow(true);
+  lightState->SetRange(50);
+  lightState->SetStatic(true);
+  lightState->SetCastShadow(false);
   lightState->SetTransform(spc::Transform(spc::Vector3f(5.0f, 5.0f, 5.0f)));
   world->Attach(lightEntity);
 
@@ -419,7 +432,7 @@ int main(int argc, char **argv)
   sunLightState->SetType(spc::eLT_Directional);
   sunLightState->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 1.0f);
   sunLightState->SetSplits(25.0f, 50.0f, 100.0f);
-  sunLightState->SetShadowMapBias(0.01f);
+  sunLightState->SetShadowMapBias(0.003f);
   sunLightState->SetCastShadow(true);
   sunLightState->SetTransform(sunLightState->GetTransform()
           //.SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(1.0f, 0.0f, 0.0f), spc::spcDeg2Rad(-45.0f)))
@@ -487,18 +500,32 @@ int main(int argc, char **argv)
   spc::UInt32 lastTime = SDL_GetTicks();
 
   bool anim = true;
+#if _DEBUG
+  spc::Size numDrawCallsPerSec = 0;
+  spc::Size numTrianglesPerSec = 0;
+#endif
   while (true)
   {
+#if _DEBUG
+    device->ResetDebug();
+#endif
     Uint32 time = SDL_GetTicks();
     if (time > nextSec)
     {
       nextSec += 1000;
       char buffer[1024];
+#if _DEBUG
+      sprintf_s<1024>(buffer, "%s  %d FPS  #%llu calls (%llu triangles)", title.c_str(), frames, numDrawCallsPerSec, numTrianglesPerSec);
+      numDrawCallsPerSec = 0;
+      numTrianglesPerSec = 0;
+#else
       sprintf_s<1024>(buffer, "%s  %d FPS", title.c_str(), frames);
+#endif
       SDL_SetWindowTitle(wnd, buffer);
       printf("%s\n", buffer);
       fflush(stdout);
       frames = 0;
+
     }
     else
     {
@@ -534,12 +561,13 @@ int main(int argc, char **argv)
       entRot += 0.003f;
     }
 
-    lightEntity->GetRoot()->SetTransform(spc::Transform(spc::Vector3f(spc::spcSin(entRot) * 5.0f, 5.0f, spc::spcCos(entRot) * 5.0f)));
-
+//    lightEntity->GetRoot()->SetTransform(spc::Transform(spc::Vector3f(spc::spcSin(entRot) * 5.0f, 5.0f, spc::spcCos(entRot) * 5.0f)));
+  /*
     suzanneEntity->GetRoot()->SetTransform(spc::Transform(
         spc::Vector3f(spc::spcCos(entRot * 3.5f) * 5.0f, 0.0f, spc::spcSin(entRot * 3.5f) * 5.0f),
         spc::Quaternion::FromAxisAngle(spc::Vector3f(0, 1, 0), entRot * 3.5f - (float) M_PI / 2.0f)
     ));
+    */
 
     float dist = 10.0f;
     camera->SetSpot(spc::Vector3f(0, 0.0f, 0.0f));
@@ -560,6 +588,10 @@ int main(int argc, char **argv)
     device->Clear(true, spc::Color4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, true, 0);
     device->RenderFullscreen(color_texture);
 
+#if _DEBUG
+    numDrawCallsPerSec += device->GetNumberOfDrawCalls();
+    numTrianglesPerSec += device->GetNumberOfTriangles();
+#endif
 
     SDL_GL_SwapWindow(wnd);
 

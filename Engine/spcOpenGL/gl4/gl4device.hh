@@ -76,6 +76,18 @@ public:
 
   void BindMatrices();
 
+#if _DEBUG
+
+
+  void IncDrawCalls();
+  void IncTriangles(Size num);
+
+  void ResetDebug() override;
+  SPC_NODISCARD Size GetNumberOfDrawCalls() const override;
+  SPC_NODISCARD Size GetNumberOfTriangles () const override;
+#endif
+
+
 private:
   iRenderTarget* m_renderTarget;
   iShader* m_shader;
@@ -178,6 +190,11 @@ private:
   iRenderMesh* m_fullscreenBlitCubeNegXRenderMesh;
   iRenderMesh* m_fullscreenBlitCubeNegYRenderMesh;
   iRenderMesh* m_fullscreenBlitCubeNegZRenderMesh;
+
+#if _DEBUG
+  Size m_numDrawCalls;
+  Size m_numTriangles;
+#endif
 
   /**
    * @}

@@ -1,11 +1,13 @@
 
 
 #include <spcOpenGL/gl4/gl4rendermesh.hh>
+#include <spcOpenGL/gl4/gl4device.hh>
 #include <spcOpenGL/gl4/gl4vertexbuffer.hh>
 #include <spcOpenGL/gl4/gl4indexbuffer.hh>
 #include <spcOpenGL/glerror.hh>
 #include <spcCore/graphics/vertexdeclaration.hh>
 #include <gl/glew.h>
+
 
 namespace spc::opengl
 {
@@ -79,8 +81,20 @@ void GL4RenderMesh::Render(iDevice* graphics, eRenderPass pass)
   SPC_GL_ERROR();
   glBindVertexArray(0);
   SPC_GL_ERROR();
+
+#if _DEBUG
+  auto gl4Device = graphics->Query<GL4Device>();
+  gl4Device->IncDrawCalls();
+  gl4Device->IncTriangles(GetNumberOfTriangles());
+#endif
 }
 
+#if _DEBUG
+Size GL4RenderMesh::GetNumberOfTriangles() const
+{
+  return m_count / 3;
+}
+#endif
 
 GL4RenderMeshGenerator::GL4RenderMeshGenerator()
         :

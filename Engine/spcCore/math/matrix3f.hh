@@ -102,47 +102,47 @@ public:
 			return *this;
 		}
 
-		SPC_FORCEINLINE static Matrix3f &Mult(const Matrix3f &m0, const Matrix3f &m1, Matrix3f &r)
+		SPC_FORCEINLINE friend Matrix3f operator*(const Matrix3f &m0, const Matrix3f &m1)
 		{
-			float m00 = m0.m00 * m1.m00 + m0.m10 * m1.m01 + m0.m20 * m1.m02;
-			float m01 = m0.m01 * m1.m00 + m0.m11 * m1.m01 + m0.m21 * m1.m02;
-			float m02 = m0.m02 * m1.m00 + m0.m12 * m1.m01 + m0.m22 * m1.m02;
+			float mm00 = m0.m00 * m1.m00 + m0.m10 * m1.m01 + m0.m20 * m1.m02;
+			float mm01 = m0.m01 * m1.m00 + m0.m11 * m1.m01 + m0.m21 * m1.m02;
+			float mm02 = m0.m02 * m1.m00 + m0.m12 * m1.m01 + m0.m22 * m1.m02;
 
-			float m10 = m0.m00 * m1.m10 + m0.m10 * m1.m11 + m0.m20 * m1.m12;
-			float m11 = m0.m01 * m1.m10 + m0.m11 * m1.m11 + m0.m21 * m1.m12;
-			float m12 = m0.m02 * m1.m10 + m0.m12 * m1.m11 + m0.m22 * m1.m12;
+			float mm10 = m0.m00 * m1.m10 + m0.m10 * m1.m11 + m0.m20 * m1.m12;
+			float mm11 = m0.m01 * m1.m10 + m0.m11 * m1.m11 + m0.m21 * m1.m12;
+			float mm12 = m0.m02 * m1.m10 + m0.m12 * m1.m11 + m0.m22 * m1.m12;
 
-			float m20 = m0.m00 * m1.m20 + m0.m10 * m1.m21 + m0.m20 * m1.m22;
-			float m21 = m0.m01 * m1.m20 + m0.m11 * m1.m21 + m0.m21 * m1.m22;
-			float m22 = m0.m02 * m1.m20 + m0.m12 * m1.m21 + m0.m22 * m1.m22;
+			float mm20 = m0.m00 * m1.m20 + m0.m10 * m1.m21 + m0.m20 * m1.m22;
+			float mm21 = m0.m01 * m1.m20 + m0.m11 * m1.m21 + m0.m21 * m1.m22;
+			float mm22 = m0.m02 * m1.m20 + m0.m12 * m1.m21 + m0.m22 * m1.m22;
 
+      return Matrix3f(mm00, mm01, mm02,
+                      mm10, mm11, mm12,
+                      mm20, mm21, mm22);
 
-			r.m00 = m00;
-			r.m01 = m01;
-			r.m02 = m02;
-			r.m10 = m10;
-			r.m11 = m11;
-			r.m12 = m12;
-			r.m20 = m20;
-			r.m21 = m21;
-			r.m22 = m22;
-			return r;
 		}
 
 
-		static Vector3f &Mult(const Matrix3f &m, const Vector3f &v, Vector3f &res)
+		SPC_FORCEINLINE friend Vector3f operator*(const Matrix3f &m, const Vector3f &v)
 		{
 			float x = m.m00 * v.x + m.m10 * v.y + m.m20 * v.z;
 			float y = m.m01 * v.x + m.m11 * v.y + m.m21 * v.z;
 			float z = m.m02 * v.x + m.m12 * v.y + m.m22 * v.z;
-			res.x = x;
-			res.y = y;
-			res.z = z;
-			return res;
+			return Vector3f(x, y, z);
 		}
 
 
-		void Debug(const std::string &msg = "") const
+  SPC_FORCEINLINE friend Vector3f operator*(const Vector3f &v, const Matrix3f &m)
+  {
+    float x = m.m00 * v.x + m.m01 * v.y + m.m02 * v.z;
+    float y = m.m10 * v.x + m.m11 * v.y + m.m12 * v.z;
+    float z = m.m20 * v.x + m.m21 * v.y + m.m22 * v.z;
+    return Vector3f(x, y, z);
+  }
+
+
+
+  void Debug(const std::string &msg = "") const
 		{
 			printf ("spc::Matrix3f: %s\n", msg.c_str());
 			printf ("  %.2f %.2f %.2f\n", m00, m01, m02);

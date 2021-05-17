@@ -27,6 +27,10 @@ struct SPC_CORE_API iRenderMesh : SPC_SUPER(iObject)
 
   virtual void Render(iDevice * graphics, eRenderPass pass) = 0;
 
+#if _DEBUG
+  SPC_NODISCARD virtual Size GetNumberOfTriangles() const = 0;
+#endif
+
 };
 
 
