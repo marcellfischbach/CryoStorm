@@ -1046,14 +1046,14 @@ void GL4Device::BindMatrices()
 
 void GL4Device::UpdateModelViewMatrix()
 {
-  Matrix4f::Mult(m_viewMatrix, m_modelMatrix, m_modelViewMatrix);
+  m_modelViewMatrix = m_viewMatrix * m_modelMatrix;
   m_modelViewMatrixDirty = false;
 }
 
 
 void GL4Device::UpdateViewProjectionMatrix()
 {
-  Matrix4f::Mult(m_projectionMatrix, m_viewMatrix, m_viewProjectionMatrix);
+  m_viewProjectionMatrix = m_projectionMatrix * m_viewMatrix;
   m_viewProjectionMatrixDirty = false;
 }
 
@@ -1063,26 +1063,26 @@ void GL4Device::UpdateModelViewProjectionMatrix()
   {
     UpdateModelViewMatrix();
   }
-  Matrix4f::Mult(m_projectionMatrix, m_modelViewMatrix, m_modelViewProjectionMatrix);
+  m_modelViewProjectionMatrix = m_projectionMatrix * m_modelViewMatrix;
   m_modelViewProjectionMatrixDirty = false;
 }
 
 void GL4Device::UpdateModelMatrixInv()
 {
-  m_modelMatrix.Inverted(m_modelMatrixInv);
+  m_modelMatrixInv = m_modelMatrix.Inverted();
   m_modelMatrixInvDirty = false;
 }
 
 
 void GL4Device::UpdateViewMatrixInv()
 {
-  m_viewMatrix.Inverted(m_viewMatrixInv);
+  m_viewMatrixInv = m_viewMatrix.Inverted();
   m_viewMatrixInvDirty = false;
 }
 
 void GL4Device::UpdateProjectionMatrixInv()
 {
-  m_projectionMatrix.Inverted(m_projectionMatrixInv);
+  m_projectionMatrixInv = m_projectionMatrix.Inverted();
   m_projectionMatrixInvDirty = false;
 }
 
@@ -1093,7 +1093,7 @@ void GL4Device::UpdateModelViewMatrixInv()
   {
     UpdateModelViewMatrix();
   }
-  m_modelViewMatrix.Inverted(m_modelViewMatrixInv);
+  m_modelViewMatrixInv = m_modelViewMatrix.Inverted();
   m_modelViewMatrixInvDirty = false;
 }
 
@@ -1104,7 +1104,7 @@ void GL4Device::UpdateViewProjectionMatrixInv()
   {
     UpdateViewProjectionMatrix();
   }
-  m_viewProjectionMatrix.Inverted(m_viewProjectionMatrixInv);
+  m_viewProjectionMatrixInv = m_viewProjectionMatrix.Inverted();
   m_viewProjectionMatrixInvDirty = false;
 }
 
@@ -1114,7 +1114,7 @@ void GL4Device::UpdateModelViewProjectionMatrixInv()
   {
     UpdateModelViewProjectionMatrix();
   }
-  m_modelViewProjectionMatrix.Inverted(m_modelViewProjectionMatrixInv);
+  m_modelViewProjectionMatrixInv = m_modelViewProjectionMatrix.Inverted();
   m_modelViewProjectionMatrixInvDirty = false;
 }
 
@@ -1122,7 +1122,7 @@ void GL4Device::UpdateShadowMapViewProjectionMatrix()
 {
   for (Size i = 0; i < m_shadowMapMatrixCount; i++)
   {
-    Matrix4f::Mult(m_shadowMapProjectionMatrices[i], m_shadowMapViewMatrices[i], m_shadowMapViewProjectionMatrices[i]);
+    m_shadowMapViewProjectionMatrices[i] = m_shadowMapProjectionMatrices[i] * m_shadowMapViewMatrices[i];
 
   }
   m_shadowMapViewProjectionMatrixDirty = false;

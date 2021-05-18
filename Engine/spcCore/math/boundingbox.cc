@@ -43,8 +43,7 @@ void BoundingBox::Add(const BoundingBox &bbox)
 
 void BoundingBox::Add(const Matrix4f &M, const Vector3f &p)
 {
-  Vector3f mp;
-  Matrix4f::Transform(M, p, mp);
+  Vector3f mp = Matrix4f::Transform(M, p);
   if (mp.x > m_max.x) m_max.x = mp.x;
   if (mp.y > m_max.y) m_max.y = mp.y;
   if (mp.z > m_max.z) m_max.z = mp.z;

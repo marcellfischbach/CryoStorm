@@ -88,7 +88,7 @@ const Matrix4f &Transform::GetMatrix() const
 {
   if (m_dirty)
   {
-    m_rotation.ToMatrix4(m_matrix);
+    m_matrix = m_rotation.ToMatrix4();
     m_matrix.SetTranslation(m_translation);
     m_matrix.Scale(m_scale);
     m_dirty = false;

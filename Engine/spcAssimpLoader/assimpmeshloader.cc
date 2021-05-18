@@ -18,14 +18,14 @@
 namespace spc::assimp
 {
 
-void AssimpMeshLoaderConvert(aiMatrix4x4& aiMat, Matrix4f& out);
+Matrix4f ConvertMatrix4x4(aiMatrix4x4& aiMat);
 iRenderMesh* AssimpMeshLoaderLoadMesh(aiMesh* mesh, const Matrix4f& matrix);
 
 struct LoaderData
 {
-  const aiScene* scene;
+  const aiScene* scene = nullptr;
   std::map<std::string, Size> materialSlots;
-  Mesh* mesh;
+  Mesh* mesh = nullptr;
 
 };
 
@@ -98,8 +98,7 @@ iObject* AssimpMeshLoader::Load(const Class* cls, const ResourceLocator& locator
 
 void AssimpMeshLoader::ReadNode(aiNode* node, const Matrix4f &parentMatrix, LoaderData& d) const
 {
-  Matrix4f localMatrix;
-  AssimpMeshLoaderConvert(node->mTransformation, localMatrix);
+  Matrix4f localMatrix = ConvertMatrix4x4(node->mTransformation);
   Matrix4f globalMatrix = parentMatrix * localMatrix;
 
 
@@ -130,9 +129,9 @@ void AssimpMeshLoader::ReadNode(aiNode* node, const Matrix4f &parentMatrix, Load
 
 
 
-void AssimpMeshLoaderConvert(aiMatrix4x4& aiMat, Matrix4f& out) 
+Matrix4f ConvertMatrix4x4(aiMatrix4x4& aiMat)
 {
-  out.Set(
+  return Matrix4f(
     aiMat.a1, aiMat.a2, aiMat.a3, aiMat.a4,
     aiMat.b1, aiMat.b2, aiMat.b3, aiMat.b4,
     aiMat.c1, aiMat.c2, aiMat.c3, aiMat.c4,
@@ -167,21 +166,21 @@ iRenderMesh* AssimpMeshLoaderLoadMesh(aiMesh* mesh, const Matrix4f &matrix)
   for (unsigned i = 0, in = mesh->mNumVertices; i < in; ++i)
   {
     Vector3f vertex = Convert3f(mesh->mVertices[i]);
-    vertices.push_back(Matrix4f::Transform(matrix, vertex, vertex));
+    vertices.push_back(Matrix4f::Transform(matrix, vertex));
 //    printf("[%d] %.2f %.2f %.2f", i, vertex.x, vertex.y, vertex.z);
 
     if (mesh->mNormals)
     {
       Vector3f normal = Convert3f(mesh->mNormals[i]);
       normal.Normalize();
-      normals.push_back(Matrix4f::Mult(matrix, normal, normal));
+      normals.push_back(Matrix4f::Mult(matrix, normal));
 //      printf("   %.2f %.2f %.2f", normal.x, normal.y, normal.z);
     }
     if (mesh->mTangents)
     {
       Vector3f tangent = Convert3f(mesh->mTangents[i]);
       tangent.Normalize();
-      tangents.push_back(Matrix4f::Mult(matrix, tangent, tangent));
+      tangents.push_back(Matrix4f::Mult(matrix, tangent));
     }
 
     if (mesh->mTextureCoords[0])

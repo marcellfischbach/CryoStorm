@@ -1,13 +1,15 @@
 #pragma once
 
+#include <cmath>
 #include <spcCore/coreexport.hh>
 #include <spcCore/defs.hh>
 #include <spcCore/types.hh>
+#include <spcCore/math/eaxis.hh>
 #include <spcCore/math/vector4f.hh>
 
 
-namespace spc {
-
+namespace spc
+{
 
 
 struct SPC_CORE_API Matrix4f
@@ -31,43 +33,44 @@ public:
   float m33;
 
 public:
-  SPC_FORCEINLINE Matrix4f(const float* f)
-    : m00(f[0])
-    , m01(f[1])
-    , m02(f[2])
-    , m03(f[3])
-    , m10(f[4])
-    , m11(f[5])
-    , m12(f[6])
-    , m13(f[7])
-    , m20(f[8])
-    , m21(f[9])
-    , m22(f[10])
-    , m23(f[11])
-    , m30(f[12])
-    , m31(f[13])
-    , m32(f[14])
-    , m33(f[15])
+
+  SPC_FORCEINLINE explicit Matrix4f(float m00 = 1.0f, float m01 = 0.0f, float m02 = 0.0f, float m03 = 0.0f, float m10 = 0.0f, float m11 = 1.0f, float m12 = 0.0f, float m13 = 0.0f, float m20 = 0.0f, float m21 = 0.0f, float m22 = 1.0f, float m23 = 0.0f, float m30 = 0.0f, float m31 = 0.0f, float m32 = 0.0f, float m33 = 1.0f)
+      : m00(m00)
+        , m01(m01)
+        , m02(m02)
+        , m03(m03)
+        , m10(m10)
+        , m11(m11)
+        , m12(m12)
+        , m13(m13)
+        , m20(m20)
+        , m21(m21)
+        , m22(m22)
+        , m23(m23)
+        , m30(m30)
+        , m31(m31)
+        , m32(m32)
+        , m33(m33)
   {
   }
 
-  SPC_FORCEINLINE Matrix4f(float m00 = 1.0f, float m01 = 0.0f, float m02 = 0.0f, float m03 = 0.0f, float m10 = 0.0f, float m11 = 1.0f, float m12 = 0.0f, float m13 = 0.0f, float m20 = 0.0f, float m21 = 0.0f, float m22 = 1.0f, float m23 = 0.0f, float m30 = 0.0f, float m31 = 0.0f, float m32 = 0.0f, float m33 = 1.0f)
-    : m00(m00)
-    , m01(m01)
-    , m02(m02)
-    , m03(m03)
-    , m10(m10)
-    , m11(m11)
-    , m12(m12)
-    , m13(m13)
-    , m20(m20)
-    , m21(m21)
-    , m22(m22)
-    , m23(m23)
-    , m30(m30)
-    , m31(m31)
-    , m32(m32)
-    , m33(m33)
+  SPC_FORCEINLINE explicit Matrix4f(const float *f)
+      : m00(f[0])
+        , m01(f[1])
+        , m02(f[2])
+        , m03(f[3])
+        , m10(f[4])
+        , m11(f[5])
+        , m12(f[6])
+        , m13(f[7])
+        , m20(f[8])
+        , m21(f[9])
+        , m22(f[10])
+        , m23(f[11])
+        , m30(f[12])
+        , m31(f[13])
+        , m32(f[14])
+        , m33(f[15])
   {
   }
 
@@ -77,178 +80,80 @@ public:
     m00 = m11 = m22 = m33 = 1.0f;
   }
 
-  SPC_FORCEINLINE Matrix4f &Set(float m00 = 1.0f, float m01 = 0.0f, float m02 = 0.0f, float m03 = 0.0f, float m10 = 0.0f, float m11 = 1.0f, float m12 = 0.0f, float m13 = 0.0f, float m20 = 0.0f, float m21 = 0.0f, float m22 = 1.0f, float m23 = 0.0f, float m30 = 0.0f, float m31 = 0.0f, float m32 = 0.0f, float m33 = 1.0f)
-  {
-    this->m00 = m00;
-    this->m01 = m01;
-    this->m02 = m02;
-    this->m03 = m03;
-    this->m10 = m10;
-    this->m11 = m11;
-    this->m12 = m12;
-    this->m13 = m13;
-    this->m20 = m20;
-    this->m21 = m21;
-    this->m22 = m22;
-    this->m23 = m23;
-    this->m30 = m30;
-    this->m31 = m31;
-    this->m32 = m32;
-    this->m33 = m33;
-    return *this;
-  }
-
-  SPC_FORCEINLINE void Set(const Matrix4f& matrix)
-  {
-    m00 = matrix.m00;
-    m01 = matrix.m01;
-    m02 = matrix.m02;
-    m03 = matrix.m03;
-    m10 = matrix.m10;
-    m11 = matrix.m11;
-    m12 = matrix.m12;
-    m13 = matrix.m13;
-    m20 = matrix.m20;
-    m21 = matrix.m21;
-    m22 = matrix.m22;
-    m23 = matrix.m23;
-    m30 = matrix.m30;
-    m31 = matrix.m31;
-    m32 = matrix.m32;
-    m33 = matrix.m33;
-  }
-
-  SPC_FORCEINLINE void SetXAxis(float x, float y, float z)
+  SPC_FORCEINLINE void SetXAxis(float x, float y, float z, float w = 0.0f)
   {
     m00 = x;
     m01 = y;
     m02 = z;
-    m03 = 0.0f;
+    m03 = w;
   }
 
-  SPC_FORCEINLINE void SetXAxis(const Vector3f& v)
+  SPC_FORCEINLINE void SetXAxis(const Vector3f &v, float w = 0.0f)
   {
     m00 = v.x;
     m01 = v.y;
     m02 = v.z;
-    m03 = 0.0f;
+    m03 = w;
   }
 
-  SPC_FORCEINLINE void SetYAxis(float x, float y, float z)
+  SPC_FORCEINLINE void SetXAxis(const Vector4f &v)
+  {
+    m00 = v.x;
+    m01 = v.y;
+    m02 = v.z;
+    m03 = v.w;
+  }
+
+  SPC_FORCEINLINE void SetYAxis(float x, float y, float z, float w = 0.0f)
   {
     m10 = x;
     m11 = y;
     m12 = z;
-    m13 = 0.0f;
+    m13 = w;
   }
 
-  SPC_FORCEINLINE void SetYAxis(const Vector3f& v)
+  SPC_FORCEINLINE void SetYAxis(const Vector3f &v, float w = 0.0f)
   {
     m10 = v.x;
     m11 = v.y;
     m12 = v.z;
-    m13 = 0.0f;
+    m13 = w;
   }
 
 
-  SPC_FORCEINLINE void SetZAxis(float x, float y, float z)
+  SPC_FORCEINLINE void SetYAxis(const Vector4f &v)
+  {
+    m10 = v.x;
+    m11 = v.y;
+    m12 = v.z;
+    m13 = v.w;
+  }
+
+
+  SPC_FORCEINLINE void SetZAxis(float x, float y, float z, float w = 0.0f)
   {
     m20 = x;
     m21 = y;
     m22 = z;
-    m23 = 0.0f;
+    m23 = w;
   }
 
-  SPC_FORCEINLINE void SetZAxis(const Vector3f& v)
+  SPC_FORCEINLINE void SetZAxis(const Vector3f &v, float w = 0.0f)
   {
     m20 = v.x;
     m21 = v.y;
     m22 = v.z;
-    m23 = 0.0f;
+    m23 = w;
   }
 
-  SPC_FORCEINLINE Vector3f& GetXAxis(Vector3f& res) const
+  SPC_FORCEINLINE void SetZAxis(const Vector4f &v)
   {
-    res.x = m00;
-    res.y = m01;
-    res.z = m02;
-    return res;
+    m20 = v.x;
+    m21 = v.y;
+    m22 = v.z;
+    m23 = v.w;
   }
 
-  SPC_FORCEINLINE Vector3f& GetYAxis(Vector3f& res) const
-  {
-    res.x = m10;
-    res.y = m11;
-    res.z = m12;
-    return res;
-  }
-
-
-  SPC_FORCEINLINE Vector3f& GetZAxis(Vector3f& res) const
-  {
-    res.x = m20;
-    res.y = m21;
-    res.z = m22;
-    return res;
-  }
-
-
-  SPC_FORCEINLINE Vector3f GetXAxis() const
-  {
-    return Vector3f(m00, m01, m02);
-  }
-
-  SPC_FORCEINLINE Vector3f GetYAxis() const
-  {
-    return Vector3f(m10, m11, m12);
-  }
-
-  SPC_FORCEINLINE Vector3f GetZAxis() const
-  {
-    return Vector3f(m20, m21, m22);
-  }
-
-
-
-  SPC_FORCEINLINE Vector3f& GetAxis(UInt8 axis, Vector3f& res) const
-  {
-    switch (axis)
-    {
-    case 0:
-      res.x = m00;
-      res.y = m01;
-      res.z = m02;
-      break;
-    case 1:
-      res.x = m10;
-      res.y = m11;
-      res.z = m12;
-      break;
-    case 2:
-      res.x = m20;
-      res.y = m21;
-      res.z = m22;
-      break;
-    }
-    return res;
-  }
-
-  SPC_FORCEINLINE const Vector3f GetAxis(UInt8 axis) const
-  {
-    switch (axis)
-    {
-      case 0: return Vector3f(m00, m01, m02);
-      case 1: return Vector3f(m10, m11, m12);
-      case 2: return Vector3f(m20, m21, m22);
-    }
-    return Vector3f(0.0f, 0.0f, 0.0f);
-  }
-
-  SPC_FORCEINLINE void ClearRotation()
-  {
-    m00 = m11 = m22 = 1.0f;
-    m01 = m02 = m10 = m12 = m20 = m21 = 0.0f;
-  }
 
   SPC_FORCEINLINE void SetTranslation(float x, float y, float z, float w = 1.0f)
   {
@@ -258,7 +163,7 @@ public:
     m33 = w;
   }
 
-  SPC_FORCEINLINE void SetTranslation(const Vector3f& tr, float w = 1.0f)
+  SPC_FORCEINLINE void SetTranslation(const Vector3f &tr, float w = 1.0f)
   {
     m30 = tr.x;
     m31 = tr.y;
@@ -266,67 +171,107 @@ public:
     m33 = w;
   }
 
-  SPC_FORCEINLINE Vector3f& GetTranslation(Vector3f& res) const
+  SPC_FORCEINLINE void SetTranslation(const Vector4f &tr)
   {
-    res.x = m30;
-    res.y = m31;
-    res.z = m32;
-    return res;
+    m30 = tr.x;
+    m31 = tr.y;
+    m32 = tr.z;
+    m33 = tr.w;
   }
 
-  SPC_FORCEINLINE Vector3f GetTranslation() const
+
+  SPC_NODISCARD SPC_FORCEINLINE Vector3f GetXAxis() const
+  {
+    return Vector3f(m00, m01, m02);
+  }
+
+  SPC_NODISCARD SPC_FORCEINLINE Vector3f GetYAxis() const
+  {
+    return Vector3f(m10, m11, m12);
+  }
+
+
+  SPC_NODISCARD SPC_FORCEINLINE Vector3f GetZAxis() const
+  {
+    return Vector3f(m20, m21, m22);
+  }
+
+  SPC_NODISCARD SPC_FORCEINLINE Vector3f GetAxis(eAxis axis) const
+  {
+    switch (axis)
+    {
+      case eAxis::X:
+        return Vector3f(m00, m01, m02);
+      case eAxis::Y:
+        return Vector3f(m10, m11, m12);
+      case eAxis::Z:
+        return Vector3f(m20, m21, m22);
+    }
+    return Vector3f(0.0f, 0.0f, 0.0f);
+  }
+
+
+  SPC_NODISCARD SPC_FORCEINLINE Vector3f GetTranslation() const
   {
     return Vector3f(m30, m31, m32);
   }
 
-  SPC_FORCEINLINE Matrix4f& SetRotationX(float angle)
+
+  SPC_FORCEINLINE void ClearRotation()
   {
-    float c = (float)cos(angle);
-    float s = (float)sin(angle);
+    m00 = m11 = m22 = 1.0f;
+    m01 = m02 = m10 = m12 = m20 = m21 = 0.0f;
+  }
+
+
+  SPC_FORCEINLINE void SetRotationX(float angle)
+  {
+    float c = std::cos(angle);
+    float s = std::sin(angle);
     m11 = c;
     m12 = s;
     m21 = -s;
     m22 = c;
-
-    return *this;
   }
 
-  SPC_FORCEINLINE Matrix4f& SetRotationY(float angle)
+  SPC_FORCEINLINE void SetRotationY(float angle)
   {
-    float c = (float)cos(angle);
-    float s = (float)sin(angle);
+    float c = std::cos(angle);
+    float s = std::sin(angle);
     m00 = c;
     m02 = -s;
     m20 = s;
     m22 = c;
-
-    return *this;
   }
 
-  SPC_FORCEINLINE Matrix4f& SetRotationZ(float angle)
+  SPC_FORCEINLINE void SetRotationZ(float angle)
   {
-    float c = (float)cos(angle);
-    float s = (float)sin(angle);
+    float c = std::cos(angle);
+    float s = std::sin(angle);
     m00 = c;
     m01 = s;
     m10 = -s;
     m11 = c;
-
-    return *this;
   }
 
-  SPC_FORCEINLINE Matrix4f& Scale(Vector3f s)
+  SPC_FORCEINLINE void SetScale(Vector3f s)
+  {
+    m00 = s.x;
+    m11 = s.y;
+    m22 = s.z;
+  }
+
+  SPC_FORCEINLINE void Scale(Vector3f s)
   {
     m00 *= s.x;
     m11 *= s.y;
     m22 *= s.z;
-    return *this;
   }
 
-  SPC_FORCEINLINE Matrix4f& SetRotation(const Vector3f& axis, float angle)
+  SPC_FORCEINLINE Matrix4f &SetRotation(const Vector3f &axis, float angle)
   {
-    float c = cosf(angle);
-    float s = sinf(angle);
+    float c = std::cos(angle);
+    float s = std::sin(angle);
 
     float x = axis.x;
     float y = axis.y;
@@ -346,7 +291,7 @@ public:
     return *this;
   }
 
-  SPC_FORCEINLINE Matrix4f& Inverted(Matrix4f& res) const
+  SPC_NODISCARD SPC_FORCEINLINE Matrix4f Inverted() const
   {
     float v0 = m20 * m31 - m21 * m30;
     float v1 = m20 * m32 - m22 * m30;
@@ -396,31 +341,13 @@ public:
     float lm23 = -(v4 * m00 - v2 * m01 + v0 * m03) * invDet;
     float lm33 = +(v3 * m00 - v1 * m01 + v0 * m02) * invDet;
 
-    res.m00 = lm00;
-    res.m01 = lm01;
-    res.m02 = lm02;
-    res.m03 = lm03;
-
-    res.m10 = lm10;
-    res.m11 = lm11;
-    res.m12 = lm12;
-    res.m13 = lm13;
-
-    res.m20 = lm20;
-    res.m21 = lm21;
-    res.m22 = lm22;
-    res.m23 = lm23;
-
-    res.m30 = lm30;
-    res.m31 = lm31;
-    res.m32 = lm32;
-    res.m33 = lm33;
-
-
-    return res;
+    return Matrix4f(lm00, lm01, lm02, lm03,
+                    lm10, lm11, lm12, lm13,
+                    lm20, lm21, lm22, lm23,
+                    lm30, lm31, lm32, lm33);
   }
 
-  SPC_FORCEINLINE Matrix4f & Invert()
+  SPC_FORCEINLINE void Invert()
   {
     float v0 = m20 * m31 - m21 * m30;
     float v1 = m20 * m32 - m22 * m30;
@@ -489,21 +416,37 @@ public:
     m31 = lm31;
     m32 = lm32;
     m33 = lm33;
-
-
-    return *this;
   }
 
-  SPC_FORCEINLINE Matrix4f Transposed() const
+  SPC_NODISCARD SPC_FORCEINLINE Matrix4f Transposed() const
   {
+    float mm00 = m00;
+    float mm01 = m10;
+    float mm02 = m20;
+    float mm03 = m30;
+    float mm10 = m01;
+    float mm11 = m11;
+    float mm12 = m21;
+    float mm13 = m31;
+    float mm20 = m02;
+    float mm21 = m12;
+    float mm22 = m22;
+    float mm23 = m32;
+    float mm30 = m03;
+    float mm31 = m13;
+    float mm32 = m23;
+    float mm33 = m33;
     return Matrix4f(
-      m00, m10, m20, m30,
-      m01, m11, m21, m31,
-      m02, m12, m22, m32,
-      m03, m13, m23, m33);
+        mm00, mm01, mm02, mm03,
+        mm10, mm11, mm12, mm13,
+        mm20, mm21, mm22, mm23,
+        mm30, mm31, mm32, mm33
+    );
   }
+
 #define SWAP(a, b, s) (s) = (a); (a)=(b); (b)=(s)
-  SPC_FORCEINLINE Matrix4f & Transpose()
+
+  SPC_FORCEINLINE void Transpose()
   {
     float s;
     SWAP(m01, m10, s);
@@ -512,11 +455,11 @@ public:
     SWAP(m12, m21, s);
     SWAP(m13, m31, s);
     SWAP(m23, m32, s);
-    return *this;
   }
+
 #undef SWAP
 
-  SPC_FORCEINLINE Matrix4f& SetLookAt(const Vector3f & eye, const Vector3f & spot, const Vector3f & up)
+  SPC_FORCEINLINE void SetLookAt(const Vector3f &eye, const Vector3f &spot, const Vector3f &up)
   {
     Vector3f xAxis, yAxis, zAxis;
 
@@ -527,11 +470,9 @@ public:
     SetYAxis(xAxis.y, yAxis.y, zAxis.y);
     SetZAxis(xAxis.z, yAxis.z, zAxis.z);
     SetTranslation(-xAxis.Dot(eye), -yAxis.Dot(eye), -zAxis.Dot(eye));
-
-    return *this;
   }
 
-  SPC_FORCEINLINE Matrix4f& SetLookAtInv(const Vector3f & eye, const Vector3f & spot, const Vector3f & up)
+  SPC_FORCEINLINE void SetLookAtInv(const Vector3f &eye, const Vector3f &spot, const Vector3f &up)
   {
     Vector3f xAxis, yAxis, zAxis;
     Vector3f::Sub(eye, spot, zAxis).Normalize();
@@ -546,43 +487,42 @@ public:
     SetYAxis(yAxis);
     SetZAxis(zAxis);
     SetTranslation(eye);
-
-
-    return *this;
   }
 
-  SPC_FORCEINLINE friend Matrix4f operator*(const Matrix4f& m0, const Matrix4f& m1)
+  SPC_FORCEINLINE Matrix4f &operator=(const Matrix4f &other) = default;
+
+  SPC_FORCEINLINE friend Matrix4f operator*(const Matrix4f &m0, const Matrix4f &m1)
   {
-    float m00 = m0.m00 * m1.m00 + m0.m10 * m1.m01 + m0.m20 * m1.m02 + m0.m30 * m1.m03;
-    float m01 = m0.m01 * m1.m00 + m0.m11 * m1.m01 + m0.m21 * m1.m02 + m0.m31 * m1.m03;
-    float m02 = m0.m02 * m1.m00 + m0.m12 * m1.m01 + m0.m22 * m1.m02 + m0.m32 * m1.m03;
-    float m03 = m0.m03 * m1.m00 + m0.m13 * m1.m01 + m0.m23 * m1.m02 + m0.m33 * m1.m03;
+    float mm00 = m0.m00 * m1.m00 + m0.m10 * m1.m01 + m0.m20 * m1.m02 + m0.m30 * m1.m03;
+    float mm01 = m0.m01 * m1.m00 + m0.m11 * m1.m01 + m0.m21 * m1.m02 + m0.m31 * m1.m03;
+    float mm02 = m0.m02 * m1.m00 + m0.m12 * m1.m01 + m0.m22 * m1.m02 + m0.m32 * m1.m03;
+    float mm03 = m0.m03 * m1.m00 + m0.m13 * m1.m01 + m0.m23 * m1.m02 + m0.m33 * m1.m03;
 
-    float m10 = m0.m00 * m1.m10 + m0.m10 * m1.m11 + m0.m20 * m1.m12 + m0.m30 * m1.m13;
-    float m11 = m0.m01 * m1.m10 + m0.m11 * m1.m11 + m0.m21 * m1.m12 + m0.m31 * m1.m13;
-    float m12 = m0.m02 * m1.m10 + m0.m12 * m1.m11 + m0.m22 * m1.m12 + m0.m32 * m1.m13;
-    float m13 = m0.m03 * m1.m10 + m0.m13 * m1.m11 + m0.m23 * m1.m12 + m0.m33 * m1.m13;
+    float mm10 = m0.m00 * m1.m10 + m0.m10 * m1.m11 + m0.m20 * m1.m12 + m0.m30 * m1.m13;
+    float mm11 = m0.m01 * m1.m10 + m0.m11 * m1.m11 + m0.m21 * m1.m12 + m0.m31 * m1.m13;
+    float mm12 = m0.m02 * m1.m10 + m0.m12 * m1.m11 + m0.m22 * m1.m12 + m0.m32 * m1.m13;
+    float mm13 = m0.m03 * m1.m10 + m0.m13 * m1.m11 + m0.m23 * m1.m12 + m0.m33 * m1.m13;
 
-    float m20 = m0.m00 * m1.m20 + m0.m10 * m1.m21 + m0.m20 * m1.m22 + m0.m30 * m1.m23;
-    float m21 = m0.m01 * m1.m20 + m0.m11 * m1.m21 + m0.m21 * m1.m22 + m0.m31 * m1.m23;
-    float m22 = m0.m02 * m1.m20 + m0.m12 * m1.m21 + m0.m22 * m1.m22 + m0.m32 * m1.m23;
-    float m23 = m0.m03 * m1.m20 + m0.m13 * m1.m21 + m0.m23 * m1.m22 + m0.m33 * m1.m23;
+    float mm20 = m0.m00 * m1.m20 + m0.m10 * m1.m21 + m0.m20 * m1.m22 + m0.m30 * m1.m23;
+    float mm21 = m0.m01 * m1.m20 + m0.m11 * m1.m21 + m0.m21 * m1.m22 + m0.m31 * m1.m23;
+    float mm22 = m0.m02 * m1.m20 + m0.m12 * m1.m21 + m0.m22 * m1.m22 + m0.m32 * m1.m23;
+    float mm23 = m0.m03 * m1.m20 + m0.m13 * m1.m21 + m0.m23 * m1.m22 + m0.m33 * m1.m23;
 
-    float m30 = m0.m00 * m1.m30 + m0.m10 * m1.m31 + m0.m20 * m1.m32 + m0.m30 * m1.m33;
-    float m31 = m0.m01 * m1.m30 + m0.m11 * m1.m31 + m0.m21 * m1.m32 + m0.m31 * m1.m33;
-    float m32 = m0.m02 * m1.m30 + m0.m12 * m1.m31 + m0.m22 * m1.m32 + m0.m32 * m1.m33;
-    float m33 = m0.m03 * m1.m30 + m0.m13 * m1.m31 + m0.m23 * m1.m32 + m0.m33 * m1.m33;
+    float mm30 = m0.m00 * m1.m30 + m0.m10 * m1.m31 + m0.m20 * m1.m32 + m0.m30 * m1.m33;
+    float mm31 = m0.m01 * m1.m30 + m0.m11 * m1.m31 + m0.m21 * m1.m32 + m0.m31 * m1.m33;
+    float mm32 = m0.m02 * m1.m30 + m0.m12 * m1.m31 + m0.m22 * m1.m32 + m0.m32 * m1.m33;
+    float mm33 = m0.m03 * m1.m30 + m0.m13 * m1.m31 + m0.m23 * m1.m32 + m0.m33 * m1.m33;
 
     return Matrix4f(
-      m00, m01, m02, m03,
-      m10, m11, m12, m13,
-      m20, m21, m22, m23,
-      m30, m31, m32, m33
-      );
+        mm00, mm01, mm02, mm03,
+        mm10, mm11, mm12, mm13,
+        mm20, mm21, mm22, mm23,
+        mm30, mm31, mm32, mm33
+    );
   }
 
 
-  SPC_FORCEINLINE friend Vector3f operator*(const Matrix4f& m, const Vector3f& v)
+  SPC_FORCEINLINE friend Vector3f operator*(const Matrix4f &m, const Vector3f &v)
   {
     float x = m.m00 * v.x + m.m10 * v.y + m.m20 * v.z;
     float y = m.m01 * v.x + m.m11 * v.y + m.m21 * v.z;
@@ -591,7 +531,17 @@ public:
   }
 
 
-  SPC_FORCEINLINE friend Vector4f operator*(const Matrix4f& m, const Vector4f& v)
+  SPC_NODISCARD SPC_FORCEINLINE static Vector3f Mult(const Matrix4f &m, const Vector3f &v)
+  {
+    float x = m.m00 * v.x + m.m10 * v.y + m.m20 * v.z;
+    float y = m.m01 * v.x + m.m11 * v.y + m.m21 * v.z;
+    float z = m.m02 * v.x + m.m12 * v.y + m.m22 * v.z;
+    return Vector3f(x, y, z);
+  }
+
+
+
+  SPC_FORCEINLINE friend Vector4f operator*(const Matrix4f &m, const Vector4f &v)
   {
     float x = m.m00 * v.x + m.m10 * v.y + m.m20 * v.z + m.m30 * v.w;
     float y = m.m01 * v.x + m.m11 * v.y + m.m21 * v.z + m.m31 * v.w;
@@ -601,83 +551,28 @@ public:
   }
 
 
-  SPC_FORCEINLINE static Matrix4f& Mult(const Matrix4f & m0, const Matrix4f & m1, Matrix4f & r)
-  {
-    float m00 = m0.m00 * m1.m00 + m0.m10 * m1.m01 + m0.m20 * m1.m02 + m0.m30 * m1.m03;
-    float m01 = m0.m01 * m1.m00 + m0.m11 * m1.m01 + m0.m21 * m1.m02 + m0.m31 * m1.m03;
-    float m02 = m0.m02 * m1.m00 + m0.m12 * m1.m01 + m0.m22 * m1.m02 + m0.m32 * m1.m03;
-    float m03 = m0.m03 * m1.m00 + m0.m13 * m1.m01 + m0.m23 * m1.m02 + m0.m33 * m1.m03;
 
-    float m10 = m0.m00 * m1.m10 + m0.m10 * m1.m11 + m0.m20 * m1.m12 + m0.m30 * m1.m13;
-    float m11 = m0.m01 * m1.m10 + m0.m11 * m1.m11 + m0.m21 * m1.m12 + m0.m31 * m1.m13;
-    float m12 = m0.m02 * m1.m10 + m0.m12 * m1.m11 + m0.m22 * m1.m12 + m0.m32 * m1.m13;
-    float m13 = m0.m03 * m1.m10 + m0.m13 * m1.m11 + m0.m23 * m1.m12 + m0.m33 * m1.m13;
-
-    float m20 = m0.m00 * m1.m20 + m0.m10 * m1.m21 + m0.m20 * m1.m22 + m0.m30 * m1.m23;
-    float m21 = m0.m01 * m1.m20 + m0.m11 * m1.m21 + m0.m21 * m1.m22 + m0.m31 * m1.m23;
-    float m22 = m0.m02 * m1.m20 + m0.m12 * m1.m21 + m0.m22 * m1.m22 + m0.m32 * m1.m23;
-    float m23 = m0.m03 * m1.m20 + m0.m13 * m1.m21 + m0.m23 * m1.m22 + m0.m33 * m1.m23;
-
-    float m30 = m0.m00 * m1.m30 + m0.m10 * m1.m31 + m0.m20 * m1.m32 + m0.m30 * m1.m33;
-    float m31 = m0.m01 * m1.m30 + m0.m11 * m1.m31 + m0.m21 * m1.m32 + m0.m31 * m1.m33;
-    float m32 = m0.m02 * m1.m30 + m0.m12 * m1.m31 + m0.m22 * m1.m32 + m0.m32 * m1.m33;
-    float m33 = m0.m03 * m1.m30 + m0.m13 * m1.m31 + m0.m23 * m1.m32 + m0.m33 * m1.m33;
-
-    r.m00 = m00;
-    r.m01 = m01;
-    r.m02 = m02;
-    r.m03 = m03;
-    r.m10 = m10;
-    r.m11 = m11;
-    r.m12 = m12;
-    r.m13 = m13;
-    r.m20 = m20;
-    r.m21 = m21;
-    r.m22 = m22;
-    r.m23 = m23;
-    r.m30 = m30;
-    r.m31 = m31;
-    r.m32 = m32;
-    r.m33 = m33;
-    return r;
-  }
-
-
-  static Vector3f& Mult(const Matrix4f & m, const Vector3f & v, Vector3f & res)
-  {
-    float x = m.m00 * v.x + m.m10 * v.y + m.m20 * v.z;
-    float y = m.m01 * v.x + m.m11 * v.y + m.m21 * v.z;
-    float z = m.m02 * v.x + m.m12 * v.y + m.m22 * v.z;
-    res.x = x;
-    res.y = y;
-    res.z = z;
-    return res;
-  }
-
-  static Vector3f& Transform(const Matrix4f & m, const Vector3f & v, Vector3f & res)
-  {
-    return res.Set(
-      m.m00 * v.x + m.m10 * v.y + m.m20 * v.z + m.m30,
-      m.m01 * v.x + m.m11 * v.y + m.m21 * v.z + m.m31,
-      m.m02 * v.x + m.m12 * v.y + m.m22 * v.z + m.m32
-    );
-  }
-
-
-  static Vector4f& Mult(const Matrix4f & m, const Vector4f & v, Vector4f & res)
+  SPC_NODISCARD SPC_FORCEINLINE static Vector4f Mult(const Matrix4f &m, const Vector4f &v)
   {
     float x = m.m00 * v.x + m.m10 * v.y + m.m20 * v.z + m.m30 * v.w;
     float y = m.m01 * v.x + m.m11 * v.y + m.m21 * v.z + m.m31 * v.w;
     float z = m.m02 * v.x + m.m12 * v.y + m.m22 * v.z + m.m32 * v.w;
     float w = m.m03 * v.x + m.m13 * v.y + m.m23 * v.z + m.m33 * v.w;
-    res.x = x;
-    res.y = y;
-    res.z = z;
-    res.w = w;
-    return res;
+    return Vector4f(x, y, z, w);
   }
 
-  SPC_FORCEINLINE void Debug(const char* message = 0) const
+
+
+  SPC_NODISCARD SPC_FORCEINLINE static Vector3f Transform(const Matrix4f &m, const Vector3f &v)
+  {
+    float x = m.m00 * v.x + m.m10 * v.y + m.m20 * v.z + m.m30;
+    float y = m.m01 * v.x + m.m11 * v.y + m.m21 * v.z + m.m31;
+    float z = m.m02 * v.x + m.m12 * v.y + m.m22 * v.z + m.m32;
+    return Vector3f(x, y, z);
+  }
+
+
+  SPC_FORCEINLINE void Debug(const char *message = nullptr) const
   {
     if (message)
     {
@@ -696,24 +591,24 @@ public:
   }
 
 
-  SPC_FORCEINLINE bool IsIdentity() const
+  SPC_NODISCARD SPC_FORCEINLINE bool IsIdentity() const
   {
     return SPC_FLOAT_IS_ONE(m00) &&
-      SPC_FLOAT_IS_ONE(m11) &&
-      SPC_FLOAT_IS_ONE(m22) &&
-      SPC_FLOAT_IS_ONE(m33) &&
-      SPC_FLOAT_IS_ZERO(m01) &&
-      SPC_FLOAT_IS_ZERO(m02) &&
-      SPC_FLOAT_IS_ZERO(m03) &&
-      SPC_FLOAT_IS_ZERO(m10) &&
-      SPC_FLOAT_IS_ZERO(m12) &&
-      SPC_FLOAT_IS_ZERO(m13) &&
-      SPC_FLOAT_IS_ZERO(m20) &&
-      SPC_FLOAT_IS_ZERO(m21) &&
-      SPC_FLOAT_IS_ZERO(m23) &&
-      SPC_FLOAT_IS_ZERO(m30) &&
-      SPC_FLOAT_IS_ZERO(m31) &&
-      SPC_FLOAT_IS_ZERO(m32);
+           SPC_FLOAT_IS_ONE(m11) &&
+           SPC_FLOAT_IS_ONE(m22) &&
+           SPC_FLOAT_IS_ONE(m33) &&
+           SPC_FLOAT_IS_ZERO(m01) &&
+           SPC_FLOAT_IS_ZERO(m02) &&
+           SPC_FLOAT_IS_ZERO(m03) &&
+           SPC_FLOAT_IS_ZERO(m10) &&
+           SPC_FLOAT_IS_ZERO(m12) &&
+           SPC_FLOAT_IS_ZERO(m13) &&
+           SPC_FLOAT_IS_ZERO(m20) &&
+           SPC_FLOAT_IS_ZERO(m21) &&
+           SPC_FLOAT_IS_ZERO(m23) &&
+           SPC_FLOAT_IS_ZERO(m30) &&
+           SPC_FLOAT_IS_ZERO(m31) &&
+           SPC_FLOAT_IS_ZERO(m32);
   }
 
 };

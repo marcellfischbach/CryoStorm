@@ -289,9 +289,9 @@ void GL4ForwardDirectionalLightRenderer::RenderDirectionalShadowMaps(GL4Directio
       const Vector3f* bboxPoints = mesh->GetBoundingBox().GetPoints();
       for (unsigned i = 0; i < 8; i++)
       {
-        Vector3f v0 = Matrix4f::Transform(views[0], bboxPoints[i], v0);
-        Vector3f v1 = Matrix4f::Transform(views[1], bboxPoints[i], v1);
-        Vector3f v2 = Matrix4f::Transform(views[2], bboxPoints[i], v2);
+        Vector3f v0 = Matrix4f::Transform(views[0], bboxPoints[i]);
+        Vector3f v1 = Matrix4f::Transform(views[1], bboxPoints[i]);
+        Vector3f v2 = Matrix4f::Transform(views[2], bboxPoints[i]);
 
         near[0] = spcMin(near[0], v0.z);
         near[1] = spcMin(near[1], v1.z);
@@ -315,9 +315,9 @@ void GL4ForwardDirectionalLightRenderer::RenderDirectionalShadowMaps(GL4Directio
   };
 
 
-  Matrix4f::Mult(projections[0], views[0], m_shadowMatrices[0]);
-  Matrix4f::Mult(projections[1], views[1], m_shadowMatrices[1]);
-  Matrix4f::Mult(projections[2], views[2], m_shadowMatrices[2]);
+  m_shadowMatrices[0] = projections[0] * views[0];
+  m_shadowMatrices[1] = projections[1] * views[1];
+  m_shadowMatrices[2] = projections[2] * views[2];
 
 
   m_device->SetShadowMapProjectionMatrices(projections, 3);
