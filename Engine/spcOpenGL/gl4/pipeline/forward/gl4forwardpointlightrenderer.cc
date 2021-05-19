@@ -12,7 +12,7 @@
 #include <spcCore/math/clipper/sphereclipper.hh>
 
 #include <algorithm>
-
+#include <GL/glew.h>
 namespace spc::opengl
 {
 
@@ -233,12 +233,16 @@ void GL4ForwardPointLightRenderer::RenderPointShadowMaps(GL4PointLight* pointLig
   SphereClipper clipper(pos, pointLight->GetRange());
 
 
+  glColorMask(false, false, false, false);
   m_scene->ScanMeshes(nullptr, GfxScene::eSM_Dynamic | GfxScene::eSM_Static,
     [this](GfxMesh* mesh)
     {
       mesh->RenderUnlit(m_device, eRP_ShadowCube);
     }
   );
+
+  glColorMask(true, true, true, true);
+
 }
 
 

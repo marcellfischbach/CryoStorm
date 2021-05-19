@@ -16,7 +16,7 @@
 #include <spcCore/math/clipper/sphereclipper.hh>
 
 #include <algorithm>
-
+#include <GL/glew.h>
 namespace spc::opengl
 {
 
@@ -323,10 +323,12 @@ void GL4ForwardDirectionalLightRenderer::RenderDirectionalShadowMaps(GL4Directio
   m_device->SetShadowMapProjectionMatrices(projections, 3);
   m_device->SetShadowMapViewMatrices(views, 3);
 
+  glColorMask(false, false, false, false);
   for (auto mesh : m_meshesCache)
   {
     mesh->RenderUnlit(m_device, eRP_ShadowPSSM);
   }
+  glColorMask(true, true, true, true);
 }
 
 float GL4ForwardDirectionalLightRenderer::GetSplitSize(const Vector3f* near, const Vector3f* far)
