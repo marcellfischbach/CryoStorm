@@ -94,10 +94,10 @@ void Projector::GetPoints(float depth, Vector3f* out) const
   float b = m_bottom * depth_factor;
   float t = m_top * depth_factor;
 
-  out[0].Set(l, b, depth);
-  out[1].Set(l, t, depth);
-  out[2].Set(r, b, depth);
-  out[3].Set(r, t, depth);
+  out[0] = Vector3f(l, b, depth);
+  out[1] = Vector3f(l, t, depth);
+  out[2] = Vector3f(r, b, depth);
+  out[3] = Vector3f(r, t, depth);
 
 
 }

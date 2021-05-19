@@ -11,7 +11,7 @@ class SPC_CORE_API BoundingBox
 {
 public:
   BoundingBox();
-  ~BoundingBox();
+  ~BoundingBox() = default;
 
   void Add(const Vector3f& pos);
   void Add(const BoundingBox& bbox);
@@ -22,36 +22,36 @@ public:
   void Clear();
   void Finish();
 
-  SPC_FORCEINLINE bool IsValid() const
+  SPC_NODISCARD SPC_FORCEINLINE bool IsValid() const
   {
     return m_valid;
   }
 
-  SPC_FORCEINLINE const Vector3f& GetMin() const
+  SPC_NODISCARD SPC_FORCEINLINE const Vector3f& GetMin() const
   {
     return m_min;
   }
 
-  SPC_FORCEINLINE const Vector3f& GetMax() const
+  SPC_NODISCARD SPC_FORCEINLINE const Vector3f& GetMax() const
   {
     return m_max;
   }
-  SPC_FORCEINLINE const Vector3f& GetCenter() const
+  SPC_NODISCARD SPC_FORCEINLINE const Vector3f& GetCenter() const
   {
     return m_center;
   }
 
-  SPC_FORCEINLINE const Vector3f* GetPoints() const
+  SPC_NODISCARD SPC_FORCEINLINE const Vector3f* GetPoints() const
   {
     return m_points;
   }
 
-  SPC_FORCEINLINE const float GetDiagonal() const
+  SPC_NODISCARD SPC_FORCEINLINE float GetDiagonal() const
   {
     return m_diagonal;
   }
 
-  void Debug(const char* message = 0) const;
+  void Debug(const char* message = nullptr) const;
 
 private:
   bool m_valid;

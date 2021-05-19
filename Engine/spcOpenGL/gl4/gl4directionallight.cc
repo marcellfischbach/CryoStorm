@@ -15,13 +15,9 @@ GL4DirectionalLight::GL4DirectionalLight()
   , m_split(10.0f, 25.0f, 100.0f)
   , m_direction(0.0f, 0.0f, 1.0f)
 {
-
+  SPC_CLASS_GEN_CONSTR;
 }
 
-GL4DirectionalLight::~GL4DirectionalLight()
-{
-
-}
 
 
 void GL4DirectionalLight::SetChangeMode(eLightChangeMode changeMode)
@@ -89,7 +85,7 @@ void GL4DirectionalLight::SetSplits(float split0, float split1, float split2)
 {
   if (split0 < split1 && split1 < split2)
   {
-    m_split.Set(split0, split1, split2);
+    m_split = Vector3f(split0, split1, split2);
   }
 }
 

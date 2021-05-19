@@ -407,7 +407,7 @@ int main(int argc, char **argv)
   lightState->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 1.0f);
   lightState->SetRange(50);
   lightState->SetStatic(true);
-  lightState->SetCastShadow(false);
+  lightState->SetCastShadow(true);
   lightState->SetTransform(spc::Transform(spc::Vector3f(5.0f, 5.0f, 5.0f)));
   world->Attach(lightEntity);
 

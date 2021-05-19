@@ -15,9 +15,9 @@ class SPC_OGL_API GL4DirectionalLight : public SPC_SUPER(iDirectionalLight)
   SPC_CLASS_GEN_OBJECT;
 public:
   GL4DirectionalLight();
-  virtual ~GL4DirectionalLight();
+  ~GL4DirectionalLight() override = default;
 
-  eLightType GetType() const
+  SPC_NODISCARD SPC_FORCEINLINE eLightType GetType() const override
   {
     return eLT_Directional;
   }

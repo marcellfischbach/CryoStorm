@@ -341,10 +341,15 @@ float GL4ForwardDirectionalLightRenderer::GetSplitSize(const Vector3f* near, con
   *     0         2
   */
   Vector3f tmp;
-  float dotFar03 = Vector3f::Sub(far[0], far[3], tmp).Dot();
-  float dotFar21 = Vector3f::Sub(far[2], far[1], tmp).Dot();
-  float dotNearFar03 = Vector3f::Sub(near[0], far[3], tmp).Dot();
-  float dotNearFar21 = Vector3f::Sub(near[2], far[1], tmp).Dot();
+  float dotFar03 = (far[0] - far[3]).Dot();
+  float dotFar21 = (far[2] - far[1]).Dot();
+  float dotNearFar03 = (near[0] - far[3]).Dot();
+  float dotNearFar21 = (near[2] - far[1]).Dot();
+
+//  float dotFar03 = Vector3f::Sub(far[0], far[3], tmp).Dot();
+//  float dotFar21 = Vector3f::Sub(far[2], far[1], tmp).Dot();
+//  float dotNearFar03 = Vector3f::Sub(near[0], far[3], tmp).Dot();
+//  float dotNearFar21 = Vector3f::Sub(near[2], far[1], tmp).Dot();
   float maxDist = spcMax(spcMax(dotFar03, dotFar21), spcMax(dotNearFar03, dotNearFar21));
 
   // add a 10% extra

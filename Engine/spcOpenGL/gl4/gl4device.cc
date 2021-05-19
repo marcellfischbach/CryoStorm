@@ -413,17 +413,17 @@ void GL4Device::SetPointLightShadowMap(iLight* light, iTextureCube* colorMap, iT
   data.Light = light;
   data.Color = colorMap;
   data.Depth = depthMap;
-  data.Mapping.Set(near, far, bias);
+  data.Mapping = Vector3f(near, far, bias);
   m_pointLightShadowData[light] = data;
 }
 
 void GL4Device::SetDirectionalLightShadowMap(iLight* light, const Vector3f& layers, iTexture2DArray* colorMap, iTexture2DArray* depthMap, Matrix4f matrices[3], float bias)
 {
-  DirectionalLightShadowData data{};
+  DirectionalLightShadowData data;
   data.Light = light;
   data.Color = colorMap;
   data.Depth = depthMap;
-  data.LayersBias.Set(layers.x, layers.y, layers.z, bias);;
+  data.LayersBias = Vector4f (layers.x, layers.y, layers.z, bias);;
   memcpy(data.Matrices, matrices, sizeof(Matrix4f) * 3);
   m_directionalLightShadowData[light] = data;
 }

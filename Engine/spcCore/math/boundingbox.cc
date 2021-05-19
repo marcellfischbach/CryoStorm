@@ -1,7 +1,6 @@
 
 
 #include <spcCore/math/boundingbox.hh>
-#include <float.h>
 
 
 namespace spc {
@@ -11,14 +10,11 @@ BoundingBox::BoundingBox()
   : m_valid(false)
   , m_min(FLT_MAX, FLT_MAX, FLT_MAX)
   , m_max(-FLT_MAX, -FLT_MAX, -FLT_MAX)
+  , m_diagonal(-FLT_MAX)
 {
 
 }
 
-BoundingBox::~BoundingBox()
-{
-
-}
 
 void BoundingBox::Add(const Vector3f &p)
 {
@@ -54,9 +50,9 @@ void BoundingBox::Add(const Matrix4f &M, const Vector3f &p)
 
 void BoundingBox::Add(const Matrix4f &M, const BoundingBox &bbox)
 {
-  for (size_t i = 0; i < 8; ++i)
+  for (auto m_point : bbox.m_points)
   {
-    Add(M, bbox.m_points[i]);
+    Add(M, m_point);
   }
 }
 
@@ -64,15 +60,13 @@ void BoundingBox::Add(const Matrix4f &M, const BoundingBox &bbox)
 void BoundingBox::Clear()
 {
   m_valid = false;
-  m_min.Set(FLT_MAX, FLT_MAX, FLT_MAX);
-  m_max.Set(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+  m_min = Vector3f(FLT_MAX, FLT_MAX, FLT_MAX);
+  m_max = Vector3f(-FLT_MAX, -FLT_MAX, -FLT_MAX);
 }
 
 void BoundingBox::Finish()
 {
-  m_center.Set(m_min);
-  m_center += m_max;
-  m_center *= 0.5f;
+  m_center = (m_min + m_max) * 0.5f;
 
   m_points[0] = Vector3f(m_min.x, m_min.y, m_min.z);
   m_points[1] = Vector3f(m_min.x, m_min.y, m_max.z);

@@ -322,7 +322,7 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
       vBuffer[c++] = v.y;
       vBuffer[c++] = v.z;
       vBuffer[c++] = v.w;
-      bbox.Add(v.AsVector3f());
+      bbox.Add((Vector3f)v);
     }
 
     if (!m_normals.empty())

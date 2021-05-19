@@ -5,6 +5,8 @@
 #include <spcCore/defs.hh>
 #include <spcCore/types.hh>
 #include <spcCore/math/eaxis.hh>
+#include <spcCore/math/vector2f.hh>
+#include <spcCore/math/vector3f.hh>
 #include <spcCore/math/vector4f.hh>
 
 
@@ -461,11 +463,13 @@ public:
 
   SPC_FORCEINLINE void SetLookAt(const Vector3f &eye, const Vector3f &spot, const Vector3f &up)
   {
-    Vector3f xAxis, yAxis, zAxis;
 
-    Vector3f::Sub(spot, eye, zAxis).Normalize();
-    Vector3f::Cross(up, zAxis, xAxis).Normalize();
-    Vector3f::Cross(zAxis, xAxis, yAxis);
+    Vector3f zAxis = (spot - eye).Normalized();
+    Vector3f xAxis = (up % zAxis).Normalized();
+    Vector3f yAxis = zAxis % xAxis;
+//    Vector3f::Sub(spot, eye, zAxis).Normalize();
+//    Vector3f::Cross(up, zAxis, xAxis).Normalize();
+//    Vector3f::Cross(zAxis, xAxis, yAxis);
     SetXAxis(xAxis.x, yAxis.x, zAxis.x);
     SetYAxis(xAxis.y, yAxis.y, zAxis.y);
     SetZAxis(xAxis.z, yAxis.z, zAxis.z);
@@ -474,14 +478,18 @@ public:
 
   SPC_FORCEINLINE void SetLookAtInv(const Vector3f &eye, const Vector3f &spot, const Vector3f &up)
   {
-    Vector3f xAxis, yAxis, zAxis;
-    Vector3f::Sub(eye, spot, zAxis).Normalize();
-    Vector3f::Cross(up, zAxis, xAxis).Normalize();
-    Vector3f::Cross(zAxis, xAxis, yAxis);
+//    Vector3f xAxis, yAxis, zAxis;
+//    Vector3f::Sub(eye, spot, zAxis).Normalize();
+//    Vector3f::Cross(up, zAxis, xAxis).Normalize();
+//    Vector3f::Cross(zAxis, xAxis, yAxis);
+//
+//    Vector3f::Sub(spot, eye, zAxis).Normalize();
+//    Vector3f::Cross(up, zAxis, xAxis).Normalize();
+//    Vector3f::Cross(zAxis, xAxis, yAxis);
 
-    Vector3f::Sub(spot, eye, zAxis).Normalize();
-    Vector3f::Cross(up, zAxis, xAxis).Normalize();
-    Vector3f::Cross(zAxis, xAxis, yAxis);
+    Vector3f zAxis = (spot - eye).Normalized();
+    Vector3f xAxis = (up % zAxis).Normalized();
+    Vector3f yAxis = zAxis % xAxis;
 
     SetXAxis(xAxis);
     SetYAxis(yAxis);

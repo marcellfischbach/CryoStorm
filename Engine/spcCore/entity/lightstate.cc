@@ -201,7 +201,7 @@ void LightState::SetSplits(float split0, float split1, float split2)
 {
   if (split0 < split1 && split1 < split2)
   {
-    m_splits.Set(split0, split1, split2);
+    m_splits = Vector3f(split0, split1, split2);
     UpdateValues();
   }
 }
