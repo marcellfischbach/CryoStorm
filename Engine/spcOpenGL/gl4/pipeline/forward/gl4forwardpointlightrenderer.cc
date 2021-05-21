@@ -234,7 +234,7 @@ void GL4ForwardPointLightRenderer::RenderPointShadowMaps(GL4PointLight* pointLig
 
 
   glColorMask(false, false, false, false);
-  m_scene->ScanMeshes(nullptr, GfxScene::eSM_Dynamic | GfxScene::eSM_Static,
+  m_scene->ScanMeshes(&clipper, GfxScene::eSM_Dynamic | GfxScene::eSM_Static,
     [this](GfxMesh* mesh)
     {
       mesh->RenderUnlit(m_device, eRP_ShadowCube);

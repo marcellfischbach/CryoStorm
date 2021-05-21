@@ -36,6 +36,10 @@ public:
   void SetShadowMapViewMatrices(const Matrix4f * viewMatrices, Size numMatrices) override;
   void SetShadowMapProjectionMatrices(const Matrix4f * projectionMatrices, Size numMatrices) override;
 
+  const Matrix4f &GetViewMatrix() const override;
+  const Matrix4f &GetViewMatrixInv() const override;
+  const Matrix4f &GetProjectionMatrix() const override;
+  const Matrix4f &GetProjectionMatrixInv() const override;
 
   Matrix4f& GetPerspectiveProjection(float l, float r, float b, float t, float n, float f, Matrix4f & m) override;
   Matrix4f& GetPerspectiveProjectionInv(float l, float r, float b, float t, float n, float f, Matrix4f & m) override;

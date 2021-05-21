@@ -228,6 +228,28 @@ void GL4Device::SetShadowMapProjectionMatrices(const Matrix4f* matrices, Size nu
 }
 
 
+const Matrix4f &GL4Device::GetViewMatrix() const
+{
+  return m_viewMatrix;
+}
+
+const Matrix4f &GL4Device::GetViewMatrixInv() const
+{
+  return m_viewMatrixInv;
+}
+
+
+const Matrix4f &GL4Device::GetProjectionMatrix() const
+{
+  return m_projectionMatrix;
+}
+
+const Matrix4f &GL4Device::GetProjectionMatrixInv() const
+{
+  return m_projectionMatrixInv;
+}
+
+
 Matrix4f& GL4Device::GetPerspectiveProjection(float l, float r, float b, float t, float n, float f, Matrix4f& m)
 {
   float z2 = 2.0f * n;

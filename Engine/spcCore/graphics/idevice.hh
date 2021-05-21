@@ -49,6 +49,11 @@ struct SPC_CORE_API iDevice : public SPC_SUPER(iObject)
   virtual void SetShadowMapViewMatrices(const Matrix4f* viewMatrices, Size numMatrices) = 0;
   virtual void SetShadowMapProjectionMatrices(const Matrix4f* projectionMatrices, Size numMatrices) = 0;
 
+  virtual const Matrix4f &GetViewMatrix() const = 0;
+  virtual const Matrix4f &GetViewMatrixInv() const = 0;
+  virtual const Matrix4f &GetProjectionMatrix() const = 0;
+  virtual const Matrix4f &GetProjectionMatrixInv() const = 0;
+
 
   virtual Matrix4f& GetPerspectiveProjection(float l, float r, float b, float t, float n, float f, Matrix4f& m) = 0;
   virtual Matrix4f& GetPerspectiveProjectionInv(float l, float r, float b, float t, float n, float f, Matrix4f& m) = 0;

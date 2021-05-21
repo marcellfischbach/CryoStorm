@@ -10,11 +10,16 @@
 namespace spc
 {
 
+class Camera;
+class Projector;
+class Matrix4f;
 
 class SPC_CORE_API MultiPlaneClipper : public iClipper
 {
 public:
   MultiPlaneClipper();
+  MultiPlaneClipper(const Camera &camera, const Projector &projector, bool near = true, bool far = true);
+  MultiPlaneClipper(const Matrix4f &camera, const Matrix4f &projector, bool near = true, bool far = true);
   ~MultiPlaneClipper() override = default;
 
   MultiPlaneClipper& operator <<(const Plane& plane);

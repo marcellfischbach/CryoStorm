@@ -35,6 +35,21 @@ public:
     d = -pos.Dot(nn);
   }
 
+  SPC_FORCEINLINE Plane(const Vector3f& p0, const Vector3f &p1, const Vector3f &p2)
+  {
+    Vector3f n0 = (p1 - p0).Normalized();
+    Vector3f n1 = (p2 - p0).Normalized();
+    Vector3f norm = n0 % n1;
+
+
+    Vector3f nn = norm.Normalized();
+    x = nn.x;
+    y = nn.y;
+    z = nn.z;
+    d = -p0.Dot(nn);
+  }
+
+
   SPC_NODISCARD SPC_FORCEINLINE float Distance(const Vector3f& pos) const
   {
     return x * pos.x + y * pos.y + z * pos.z + d;
