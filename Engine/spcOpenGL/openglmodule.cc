@@ -24,6 +24,7 @@ bool OpenGLModule::Register(int argc, char** argv)
   ObjectRegistry::Register<iDevice>(new GL4Device());
   ObjectRegistry::Register<iRenderPipeline>(new GL4ForwardPipeline());
   ObjectRegistry::Register<iRenderMeshGeneratorFactory>(new GL4RenderMeshGeneratorFactory());
+  ObjectRegistry::Register<iRenderMeshBatchGeneratorFactory>(new GL4RenderMeshBatchGeneratorFactory());
   return true;
 }
 

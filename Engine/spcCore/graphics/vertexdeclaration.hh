@@ -7,6 +7,7 @@
 #include <spcCore/graphics/edatatype.hh>
 #include <spcCore/graphics/evertexstream.hh>
 #include <vector>
+#include <spcCore/defs.hh>
 
 namespace spc
 {
@@ -36,11 +37,11 @@ public:
   };
 
 
-
+  VertexDeclaration() = default;
   VertexDeclaration(const Attribute* attributes, Size count);
-  VertexDeclaration(const std::vector<Attribute>& attributes);
+  explicit VertexDeclaration(const std::vector<Attribute>& attributes);
 
-  const std::vector<Attribute>& GetAttributes(UInt8 streamID) const;
+  SPC_NODISCARD const std::vector<Attribute>& GetAttributes(UInt8 streamID) const;
 
 private:
   void Init(const Attribute* attributes, Size count);

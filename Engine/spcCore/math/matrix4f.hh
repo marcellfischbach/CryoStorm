@@ -5,6 +5,7 @@
 #include <spcCore/defs.hh>
 #include <spcCore/types.hh>
 #include <spcCore/math/eaxis.hh>
+#include <spcCore/math/matrix3f.hh>
 #include <spcCore/math/vector2f.hh>
 #include <spcCore/math/vector3f.hh>
 #include <spcCore/math/vector4f.hh>
@@ -579,6 +580,14 @@ public:
     return Vector3f(x, y, z);
   }
 
+  explicit SPC_FORCEINLINE operator Matrix3f() const
+  {
+    return Matrix3f(
+        m00, m01, m02,
+        m10, m11, m12,
+        m20, m21, m22
+        );
+  }
 
   SPC_FORCEINLINE void Debug(const char *message = nullptr) const
   {

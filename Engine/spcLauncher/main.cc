@@ -282,6 +282,46 @@ void debug(spc::SpatialState *state, int indent)
   }
 }
 
+
+void create_suzannes_plain(spc::Mesh* suzanneMesh, spc::World* world)
+{
+  size_t num = 20;
+  for (size_t i=0; i<num; i++)
+  {
+    float x = -40.0f + (float)i / (float)num * 80.0f;
+    for (size_t j=0; j<num; j++)
+    {
+      float y = -40.0f + (float)j / (float)num * 80.0f;
+
+      spc::Entity *suzanneEntity = new spc::Entity("Entity1");
+      spc::StaticMeshState *meshState1 = new spc::StaticMeshState("StaticMesh1");
+      meshState1->SetTransform(spc::Transform(spc::Vector3f(x, 0, y)));
+      meshState1->SetMesh(suzanneMesh);
+      meshState1->SetStatic(true);
+      suzanneEntity->Attach(meshState1);
+      world->Attach(suzanneEntity);
+    }
+  }
+}
+
+
+void create_suzanne_batch(spc::Mesh* suzanneMesh, int a, int b, spc::World *world)
+{
+
+
+}
+
+void create_suzannes_batched(spc::Mesh* suzanneMesh, spc::World* world)
+{
+  for (int a=0; a < 4; a++)
+  {
+    for  (int b=0; b < 4; b++)
+    {
+      create_suzanne_batch(suzanneMesh, a, b, world);
+    }
+  }
+}
+
 #include <regex>
 #include <sstream>
 
@@ -380,25 +420,7 @@ int main(int argc, char **argv)
   world->Attach(entity0);
 
 
-  spc::Entity *suzanneEntity = nullptr;
-
-  size_t num = 20;
-  for (size_t i=0; i<num; i++)
-  {
-    float x = -40.0f + (float)i / (float)num * 80.0f;
-    for (size_t j=0; j<num; j++)
-    {
-      float y = -40.0f + (float)j / (float)num * 80.0f;
-
-      suzanneEntity = new spc::Entity("Entity1");
-      spc::StaticMeshState *meshState1 = new spc::StaticMeshState("StaticMesh1");
-      meshState1->SetTransform(spc::Transform(spc::Vector3f(x, 0, y)));
-      meshState1->SetMesh(suzanneMesh);
-      meshState1->SetStatic(true);
-      suzanneEntity->Attach(meshState1);
-      world->Attach(suzanneEntity);
-    }
-  }
+  create_suzannes_plain(suzanneMesh, world);
 
   spc::Entity *lightEntity = new spc::Entity("Light_0");
   spc::LightState *lightState = new spc::LightState("LightState");

@@ -32,6 +32,7 @@ static GLenum DataTypeMap[] = {
 
 
 GL4RenderMesh::GL4RenderMesh(UInt32 vao,
+                             const VertexDeclaration& vd,
                              GL4VertexBuffer* vb,
                              GL4IndexBuffer* ib,
                              ePrimitiveType primitiveType,
@@ -40,9 +41,11 @@ GL4RenderMesh::GL4RenderMesh(UInt32 vao,
                              const BoundingBox& boundingBox)
         : iRenderMesh()
         , m_vao(vao)
+        , m_vertexDeclaration(vd)
         , m_vertexBuffer(nullptr)
         , m_indexBuffer(nullptr)
         , m_primType(PrimitiveTypeMap[primitiveType])
+        , m_indexDataType(indexType)
         , m_indexType(DataTypeMap[indexType])
         , m_count(count)
         , m_boundingBox(boundingBox)
@@ -67,9 +70,24 @@ GL4RenderMesh::~GL4RenderMesh()
   m_indexBuffer = nullptr;
 }
 
+Size GL4RenderMesh::GetNumberOfIndices() const
+{
+  return m_count;
+}
+
+Size GL4RenderMesh::GetNumberOfVertices() const
+{
+  return m_vertexCount;
+}
+
 const BoundingBox& GL4RenderMesh::GetBoundingBox() const
 {
   return m_boundingBox;
+}
+
+const VertexDeclaration &GL4RenderMesh::GetVertexDeclaration() const
+{
+  return m_vertexDeclaration;
 }
 
 void GL4RenderMesh::Render(iDevice* graphics, eRenderPass pass)
@@ -165,6 +183,73 @@ void GL4RenderMeshGenerator::SetUV3(const std::vector<Vector2f>& uv)
 void GL4RenderMeshGenerator::SetIndices(const std::vector<UInt32>& indices)
 {
   m_indices = indices;
+}
+
+void GL4RenderMeshGenerator::AddVertices(const std::vector<Vector2f>& vertices)
+{
+  m_vertices2.insert(m_vertices2.end(), vertices.begin(), vertices.end());
+}
+
+void GL4RenderMeshGenerator::AddVertices(const std::vector<Vector3f>& vertices)
+{
+  m_vertices3.insert(m_vertices3.end(), vertices.begin(), vertices.end());
+}
+
+void GL4RenderMeshGenerator::AddVertices(const std::vector<Vector4f>& vertices)
+{
+  m_vertices4.insert(m_vertices4.end(), vertices.begin(), vertices.end());
+}
+
+
+void GL4RenderMeshGenerator::AddNormals(const std::vector<Vector3f>& normals)
+{
+  m_normals.insert(m_normals.end(), normals.begin(), normals.end());
+}
+
+void GL4RenderMeshGenerator::AddColors(const std::vector<Color4f>& colors)
+{
+  m_colors.insert(m_colors.end(), colors.begin(), colors.end());
+}
+
+void GL4RenderMeshGenerator::AddTangents(const std::vector<Vector3f>& tangents)
+{
+  m_tangents.insert(m_tangents.end(), tangents.begin(), tangents.end());
+}
+
+void GL4RenderMeshGenerator::AddUV0(const std::vector<Vector2f>& uv)
+{
+  m_uv02.insert(m_uv02.end(), uv.begin(), uv.end());
+}
+
+void GL4RenderMeshGenerator::AddUV0(const std::vector<Vector3f>& uv)
+{
+  m_uv03.insert(m_uv03.end(), uv.begin(), uv.end());
+}
+
+void GL4RenderMeshGenerator::AddUV1(const std::vector<Vector2f>& uv)
+{
+  m_uv1.insert(m_uv1.end(), uv.begin(), uv.end());
+}
+
+void GL4RenderMeshGenerator::AddUV2(const std::vector<Vector2f>& uv)
+{
+  m_uv2.insert(m_uv2.end(), uv.begin(), uv.end());
+}
+
+void GL4RenderMeshGenerator::AddUV3(const std::vector<Vector2f>& uv)
+{
+  m_uv3.insert(m_uv3.end(), uv.begin(), uv.end());
+}
+
+void GL4RenderMeshGenerator::AddIndices(const std::vector<UInt32>& indices)
+{
+  m_indices.insert(m_indices.end(), indices.begin(), indices.end());
+}
+
+
+size_t GL4RenderMeshGenerator::GetNumberOfVertices() const
+{
+  return std::max(m_vertices2.size(), std::max(m_vertices3.size(), m_vertices4.size()));
 }
 
 iRenderMesh* GL4RenderMeshGenerator::Generate()
@@ -389,7 +474,7 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
 
   auto ib = new GL4IndexBuffer();
   eDataType indexType;
-  if (vertexCount >= 65536 || true)
+  if (vertexCount >= 65536)
   {
     ib->Bind();
     ib->CreateForRendering(m_indices.size() * sizeof(UInt32), eBU_Static);
@@ -434,6 +519,7 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
 
   auto mesh = new GL4RenderMesh(
           vao,
+          vd,
           vb,
           ib,
           ePT_Triangles,
@@ -455,13 +541,168 @@ GL4RenderMeshGeneratorFactory::GL4RenderMeshGeneratorFactory()
   SPC_CLASS_GEN_CONSTR;
 }
 
-GL4RenderMeshGeneratorFactory::~GL4RenderMeshGeneratorFactory() = default;
-
 iRenderMeshGenerator* GL4RenderMeshGeneratorFactory::Create()
 {
   return new GL4RenderMeshGenerator();
 }
 
+
+void GL4RenderMeshBatchGenerator::Add(const iRenderMesh *mesh, const Matrix4f &matrix)
+{
+  auto gl4Mesh = static_cast<const GL4RenderMesh*>(mesh);
+  std::vector<Vector2f> vertices2;
+  std::vector<Vector3f> vertices3;
+  std::vector<Vector4f> vertices4;
+  std::vector<Vector3f> normals;
+  std::vector<Color4f> colors;
+  std::vector<Vector3f> tangents;
+  std::vector<Vector2f> uv02;
+  std::vector<Vector3f> uv03;
+  std::vector<Vector2f> uv1;
+  std::vector<Vector2f> uv2;
+  std::vector<Vector2f> uv3;
+  std::vector<UInt32> indices;
+
+  size_t vertexOffset = m_generator.GetNumberOfVertices();
+  auto rotMat = (Matrix3f)matrix;
+  size_t numVertices = gl4Mesh->GetNumberOfVertices();
+  void* buffer = nullptr;
+  Size bufferSize = 0;
+  gl4Mesh->m_vertexBuffer->Map(&buffer, bufferSize);
+  auto* b8 = reinterpret_cast<uint8_t*>(buffer);
+  for (const auto& attribute : mesh->GetVertexDeclaration().GetAttributes(0))
+  {
+    for (size_t i=0; i<numVertices; i++)
+    {
+      switch(attribute.Location)
+      {
+        case eVS_Vertices:
+          switch (attribute.Size)
+          {
+            case 2:
+            {
+              Vector2f v2 = *reinterpret_cast<Vector2f*>(&b8[i * attribute.Stride + attribute.Offset]);
+              vertices2.push_back((Vector2f)(matrix * Vector4f(v2, 0, 1)));
+              break;
+            }
+            case 3:
+            {
+              Vector3f v3 = *reinterpret_cast<Vector3f*>(&b8[i * attribute.Stride + attribute.Offset]);
+              vertices3.push_back((Vector3f)(matrix * Vector4f(v3, 1)));
+              break;
+            }
+            case 4:
+            {
+              Vector4f v4 = *reinterpret_cast<Vector4f*>(&b8[i * attribute.Stride + attribute.Offset]);
+              vertices4.push_back(matrix * v4);
+              break;
+            }
+          }
+          break;
+        case eVS_Normals:
+        {
+          Vector3f v3 = *reinterpret_cast<Vector3f *>(&b8[i * attribute.Stride + attribute.Offset]);
+          normals.push_back(rotMat * v3);
+          break;
+        }
+        case eVS_Tangents:
+        {
+          Vector3f v3 = *reinterpret_cast<Vector3f *>(&b8[i * attribute.Stride + attribute.Offset]);
+          tangents.push_back(rotMat * v3);
+          break;
+        }
+        case eVS_Colors:
+        {
+          Color4f c = *reinterpret_cast<Color4f *>(&b8[i * attribute.Stride + attribute.Offset]);
+          colors.push_back(c);
+          break;
+        }
+        case eVS_UV0:
+        switch (attribute.Size){
+          case 2:
+          {
+            Vector2f v2 = *reinterpret_cast<Vector2f*>(&b8[i * attribute.Stride + attribute.Offset]);
+            uv02.push_back(v2);
+            break;
+          }
+          case 3:
+          {
+            Vector3f v3 = *reinterpret_cast<Vector3f*>(&b8[i * attribute.Stride + attribute.Offset]);
+            uv03.push_back(v3);
+            break;
+          }
+        }
+        break;
+        case eVS_UV1:
+        {
+          Vector2f v2 = *reinterpret_cast<Vector2f*>(&b8[i * attribute.Stride + attribute.Offset]);
+          uv1.push_back(v2);
+          break;
+        }
+        case eVS_UV2:
+        {
+          Vector2f v2 = *reinterpret_cast<Vector2f*>(&b8[i * attribute.Stride + attribute.Offset]);
+          uv2.push_back(v2);
+          break;
+        }
+        case eVS_UV3:
+        {
+          Vector2f v2 = *reinterpret_cast<Vector2f*>(&b8[i * attribute.Stride + attribute.Offset]);
+          uv3.push_back(v2);
+          break;
+        }
+      }
+    }
+  }
+  gl4Mesh->m_vertexBuffer->Unbind();
+
+  gl4Mesh->m_indexBuffer->Map(&buffer, bufferSize);
+  switch (gl4Mesh->m_indexDataType)
+  {
+    case eDT_UnsignedShort:
+    {
+      auto *s16 = reinterpret_cast<uint16_t *>(buffer);
+      for (unsigned i = 0; i < gl4Mesh->GetNumberOfIndices(); i++)
+      {
+        uint16_t idx = *s16++;
+        indices.push_back(idx + vertexOffset);
+      }
+      break;
+    }
+    case eDT_UnsignedInt:
+    {
+      auto *s32 = reinterpret_cast<uint32_t *>(buffer);
+      for (unsigned i = 0; i < gl4Mesh->GetNumberOfIndices(); i++)
+      {
+        uint32_t idx = *s32++;
+        indices.push_back(idx + vertexOffset);
+      }
+      break;
+
+    }
+    default:
+      break;
+  }
+  gl4Mesh->m_indexBuffer->Unmap();
+}
+
+iRenderMesh * GL4RenderMeshBatchGenerator::Generate()
+{
+  return m_generator.Generate();
+}
+
+
+GL4RenderMeshBatchGeneratorFactory::GL4RenderMeshBatchGeneratorFactory()
+    :
+    iRenderMeshBatchGeneratorFactory()
+{
+  SPC_CLASS_GEN_CONSTR;
+}
+
+iRenderMeshBatchGenerator* GL4RenderMeshBatchGeneratorFactory::Create()
+{
+  return new GL4RenderMeshBatchGenerator();
+}
 
 }
 

@@ -12,7 +12,7 @@ namespace spc
 
 class Camera;
 class Projector;
-class Matrix4f;
+struct Matrix4f;
 
 class SPC_CORE_API MultiPlaneClipper : public iClipper
 {

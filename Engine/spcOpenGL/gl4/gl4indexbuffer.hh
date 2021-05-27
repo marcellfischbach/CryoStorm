@@ -13,18 +13,23 @@ class SPC_OGL_API GL4IndexBuffer : public SPC_SUPER(iIndexBuffer)
 	SPC_CLASS_GEN_OBJECT;
 public:
 	GL4IndexBuffer();
-	virtual ~GL4IndexBuffer();
+	~GL4IndexBuffer() override;
 
-	virtual void CreateForRendering(Size size, eBufferUsage usage = eBU_Static);
+	void CreateForRendering(Size size, eBufferUsage usage = eBU_Static) override;
 
-	virtual void Bind();
+	void Bind() override;
 
-	virtual void Unbind();
+	void Unbind() override;
 
-	virtual void Copy(const void* data, Size count, Size targetOffset = 0);
+  void Map(void **data, Size &dataSize) override;
+
+  void Unmap() override;
+
+	void Copy(const void* data, Size count, Size targetOffset = 0);
 
 private:
 	UInt32 m_name;
+	Size m_size;
 
 };
 

@@ -14,18 +14,23 @@ class SPC_OGL_API GL4VertexBuffer : public SPC_SUPER(iVertexBuffer)
 	SPC_CLASS_GEN_OBJECT;
 public:
 	GL4VertexBuffer();
-	virtual ~GL4VertexBuffer();
+	~GL4VertexBuffer() override;
 
-	virtual void CreateForRendering(Size size, eBufferUsage usage = eBU_Static);
+	void CreateForRendering(Size size, eBufferUsage usage = eBU_Static) override;
 
-	virtual void Bind();
+	void Bind() override;
 
-	virtual void Unbind();
+	void Unbind() override;
 
-	virtual void Copy(const void* data, Size count, Size targetOffset = 0);
+  void Map(void **data, Size &dataSize) override;
+
+  void Unmap() override;
+
+  void Copy(const void* data, Size count, Size targetOffset = 0) override;
 
 private:
 	UInt32 m_name;
+	Size m_size;
 };
 
 }

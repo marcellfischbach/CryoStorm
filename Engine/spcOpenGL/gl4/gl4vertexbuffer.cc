@@ -8,6 +8,7 @@ namespace spc::opengl
 
 GL4VertexBuffer::GL4VertexBuffer()
   : iVertexBuffer()
+  , m_size(0)
 {
   SPC_CLASS_GEN_CONSTR;
   glGenBuffers(1, &m_name);
@@ -32,6 +33,7 @@ void GL4VertexBuffer::CreateForRendering(Size size, eBufferUsage usage)
   case eBU_Dynamic: mode = GL_DYNAMIC_DRAW; break;
   }
   glBufferData(GL_ARRAY_BUFFER, size, 0, mode);
+  m_size = size;
 }
 
 void GL4VertexBuffer::Bind()
@@ -47,6 +49,18 @@ void GL4VertexBuffer::Unbind()
 void GL4VertexBuffer::Copy(const void* data, Size count, Size targetOffset)
 {
   glBufferSubData(GL_ARRAY_BUFFER, targetOffset, count, data);
+}
+
+void GL4VertexBuffer::Map(void **data, Size &dataSize)
+{
+  Bind();
+  *data = glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
+  dataSize = m_size;
+}
+
+void GL4VertexBuffer::Unmap()
+{
+  glUnmapBuffer(GL_ARRAY_BUFFER);
 }
 
 }

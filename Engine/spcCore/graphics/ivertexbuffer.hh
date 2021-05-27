@@ -21,6 +21,10 @@ struct SPC_CORE_API iVertexBuffer : public SPC_SUPER(iObject)
 
   virtual void Unbind() = 0;
 
+  virtual void Map(void** data, Size &dataSize) = 0;
+
+  virtual void Unmap() = 0;
+
   virtual void Copy(const void* data, Size count, Size targetOffset = 0) = 0;
 
 

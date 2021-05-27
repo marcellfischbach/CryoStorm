@@ -16,14 +16,16 @@ namespace spc
 {
 
 struct iDevice;
+class VertexDeclaration;
 
 SPC_CLASS()
 struct SPC_CORE_API iRenderMesh : SPC_SUPER(iObject)
 {
   SPC_CLASS_GEN;
-  virtual ~iRenderMesh() { }
+  ~iRenderMesh() override = default;
 
-  virtual const BoundingBox &GetBoundingBox() const = 0;
+  SPC_NODISCARD virtual const BoundingBox &GetBoundingBox() const = 0;
+  SPC_NODISCARD virtual const VertexDeclaration &GetVertexDeclaration () const = 0;
 
   virtual void Render(iDevice * graphics, eRenderPass pass) = 0;
 
@@ -39,7 +41,7 @@ struct SPC_CORE_API iRenderMeshGenerator : SPC_SUPER(iObject)
 {
   SPC_CLASS_GEN;
 
-  virtual ~iRenderMeshGenerator() { }
+  ~iRenderMeshGenerator() override = default;
 
   virtual void SetVertices(const std::vector<Vector2f> & vertices) = 0;
   virtual void SetVertices(const std::vector<Vector3f> & vertices) = 0;
@@ -48,11 +50,12 @@ struct SPC_CORE_API iRenderMeshGenerator : SPC_SUPER(iObject)
   virtual void SetColors(const std::vector<Color4f> & colors) = 0;
   virtual void SetTangents(const std::vector<Vector3f> & tangents) = 0;
   virtual void SetUV0(const std::vector<Vector2f> & uv) = 0;
+  virtual void SetUV0(const std::vector<Vector3f> & uv) = 0;
   virtual void SetUV1(const std::vector<Vector2f> & uv) = 0;
   virtual void SetUV2(const std::vector<Vector2f> & uv) = 0;
   virtual void SetUV3(const std::vector<Vector2f> & uv) = 0;
   virtual void SetIndices(const std::vector<UInt32> & indices) = 0;
-  virtual iRenderMesh* Generate() = 0;
+  SPC_NODISCARD virtual iRenderMesh* Generate() = 0;
 };
 
 
@@ -60,9 +63,33 @@ SPC_CLASS()
 struct SPC_CORE_API iRenderMeshGeneratorFactory : SPC_SUPER(iObject)
 {
   SPC_CLASS_GEN;
-  virtual ~iRenderMeshGeneratorFactory() { }
+  ~iRenderMeshGeneratorFactory() override = default;
 
-  virtual iRenderMeshGenerator* Create() = 0;
+  SPC_NODISCARD virtual iRenderMeshGenerator* Create() = 0;
+};
+
+
+
+SPC_CLASS()
+struct SPC_CORE_API iRenderMeshBatchGenerator : SPC_SUPER(iObject)
+{
+SPC_CLASS_GEN;
+
+  ~iRenderMeshBatchGenerator() override = default;
+
+  virtual void Add(const iRenderMesh* mesh, const Matrix4f &matrix) = 0;
+
+  SPC_NODISCARD virtual iRenderMesh* Generate() = 0;
+};
+
+
+SPC_CLASS()
+struct SPC_CORE_API iRenderMeshBatchGeneratorFactory : SPC_SUPER(iObject)
+{
+SPC_CLASS_GEN;
+  ~iRenderMeshBatchGeneratorFactory() override = default;
+
+  SPC_NODISCARD virtual iRenderMeshBatchGenerator* Create() = 0;
 };
 
 
