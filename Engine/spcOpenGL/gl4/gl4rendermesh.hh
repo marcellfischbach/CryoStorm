@@ -24,7 +24,15 @@ class SPC_OGL_API GL4RenderMesh : public SPC_SUPER(iRenderMesh)
   friend class GL4RenderMeshBatchGenerator;
   SPC_CLASS_GEN_OBJECT;
 public:
-  GL4RenderMesh(UInt32 vao, const VertexDeclaration &vd, GL4VertexBuffer *vb, GL4IndexBuffer *ib, ePrimitiveType type, eDataType indexType, Size count, const BoundingBox &boundingBox);
+  GL4RenderMesh(UInt32 vao,
+                const VertexDeclaration &vd,
+                Size vertexCount,
+                GL4VertexBuffer *vb,
+                GL4IndexBuffer *ib,
+                ePrimitiveType type,
+                eDataType indexType,
+                Size count,
+                const BoundingBox &boundingBox);
   ~GL4RenderMesh() override;
 
   SPC_NODISCARD Size GetNumberOfIndices() const;

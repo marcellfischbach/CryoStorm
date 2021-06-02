@@ -64,7 +64,8 @@ iObject* AssimpMeshLoader::Load(const Class* cls, const ResourceLocator& locator
     aiProcess_GenNormals |
     aiProcess_MakeLeftHanded |
     aiProcess_FlipWindingOrder |
-    aiProcess_JoinIdenticalVertices);
+    aiProcess_JoinIdenticalVertices |
+    aiProcess_OptimizeMeshes);
 
 
   

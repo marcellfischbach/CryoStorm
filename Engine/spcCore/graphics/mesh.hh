@@ -29,7 +29,7 @@ public:
 
 
 
-  class SubMesh
+  class SPC_CORE_API SubMesh
   {
     friend class Mesh;
   private:
@@ -52,7 +52,7 @@ public:
   };
 
 
-  class MaterialSlot
+  class SPC_CORE_API MaterialSlot
   {
     friend class Mesh;
   private:

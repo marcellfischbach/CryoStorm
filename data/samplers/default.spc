@@ -1,6 +1,6 @@
 sampler name:"OffscreenDepth"
-		filter: "Anisotropic"
-		anisotropy: 16
+		filter: "MinMagMipLinear"
+		anisotropy: 1
 		minLOD: -1000
 		maxLOD: 1000
 		addressU: "Repeat"

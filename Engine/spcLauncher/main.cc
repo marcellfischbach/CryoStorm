@@ -305,19 +305,49 @@ void create_suzannes_plain(spc::Mesh* suzanneMesh, spc::World* world)
 }
 
 
-void create_suzanne_batch(spc::Mesh* suzanneMesh, int a, int b, spc::World *world)
+void create_suzanne_batch(spc::Mesh* suzanneMesh, int a, int b, size_t numI, size_t numJ, size_t maxI, size_t maxJ, spc::World *world)
 {
+  auto generator = spc::ObjectRegistry::Get<spc::iRenderMeshBatchGeneratorFactory>()->Create();
 
+  for (size_t ni=0, i=a * numI; ni<numI; ni++, i++)
+  {
+    float x = -40.0f + (float)i / (float)maxI * 80.0f;
+    for (size_t nj=0, j=b * numJ; nj<numJ; nj++, j++)
+    {
+      float y = -40.0f + (float)j / (float)maxJ * 80.0f;
+      spc::Matrix4f mat;
+      mat.SetTranslation(spc::Vector3f(x, 0, y));
+      generator->Add(suzanneMesh->GetSubMesh(0).GetMesh(), mat);
+    }
+  }
 
+  spc::iRenderMesh* batchedRM = generator->Generate();
+
+  spc::Mesh* suzyMesh = new spc::Mesh();
+  for (size_t i=0; i<suzanneMesh->GetNumberOfMaterialSlots(); i++)
+  {
+    suzyMesh->AddMaterialSlot(suzanneMesh->GetMaterialSlot(i).GetName(), suzanneMesh->GetMaterialSlot(i).GetDefaultMaterial());
+  }
+  suzyMesh->AddSubMesh(batchedRM, 0);
+
+  spc::Entity *suzanneEntity = new spc::Entity("Entity1");
+  spc::StaticMeshState *meshState1 = new spc::StaticMeshState("StaticMesh1");
+  meshState1->SetTransform(spc::Transform(spc::Vector3f(0, 0, 0)));
+  meshState1->SetMesh(suzyMesh);
+  meshState1->SetStatic(true);
+  suzanneEntity->Attach(meshState1);
+  world->Attach(suzanneEntity);
+
+  generator->Release();
 }
 
 void create_suzannes_batched(spc::Mesh* suzanneMesh, spc::World* world)
 {
-  for (int a=0; a < 4; a++)
+  for (int a=0; a < 5; a++)
   {
-    for  (int b=0; b < 4; b++)
+    for  (int b=0; b < 5; b++)
     {
-      create_suzanne_batch(suzanneMesh, a, b, world);
+      create_suzanne_batch(suzanneMesh, a, b, 4, 4, 20, 20, world);
     }
   }
 }
@@ -420,7 +450,8 @@ int main(int argc, char **argv)
   world->Attach(entity0);
 
 
-  create_suzannes_plain(suzanneMesh, world);
+//  create_suzannes_plain(suzanneMesh, world);
+  create_suzannes_batched(suzanneMesh, world);
 
   spc::Entity *lightEntity = new spc::Entity("Light_0");
   spc::LightState *lightState = new spc::LightState("LightState");
@@ -429,7 +460,7 @@ int main(int argc, char **argv)
   lightState->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 1.0f);
   lightState->SetRange(50);
   lightState->SetStatic(true);
-  lightState->SetCastShadow(true);
+  lightState->SetCastShadow(false);
   lightState->SetTransform(spc::Transform(spc::Vector3f(5.0f, 5.0f, 5.0f)));
   world->Attach(lightEntity);
 

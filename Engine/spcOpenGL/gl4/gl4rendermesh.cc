@@ -33,6 +33,7 @@ static GLenum DataTypeMap[] = {
 
 GL4RenderMesh::GL4RenderMesh(UInt32 vao,
                              const VertexDeclaration& vd,
+                             Size vertexCount,
                              GL4VertexBuffer* vb,
                              GL4IndexBuffer* ib,
                              ePrimitiveType primitiveType,
@@ -49,6 +50,7 @@ GL4RenderMesh::GL4RenderMesh(UInt32 vao,
         , m_indexType(DataTypeMap[indexType])
         , m_count(count)
         , m_boundingBox(boundingBox)
+        , m_vertexCount(vertexCount)
 {
   SPC_CLASS_GEN_CONSTR;
   SPC_SET(m_vertexBuffer, vb);
@@ -520,6 +522,7 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
   auto mesh = new GL4RenderMesh(
           vao,
           vd,
+          vertexCount,
           vb,
           ib,
           ePT_Triangles,
@@ -654,7 +657,7 @@ void GL4RenderMeshBatchGenerator::Add(const iRenderMesh *mesh, const Matrix4f &m
       }
     }
   }
-  gl4Mesh->m_vertexBuffer->Unbind();
+  gl4Mesh->m_vertexBuffer->Unmap();
 
   gl4Mesh->m_indexBuffer->Map(&buffer, bufferSize);
   switch (gl4Mesh->m_indexDataType)
@@ -665,7 +668,7 @@ void GL4RenderMeshBatchGenerator::Add(const iRenderMesh *mesh, const Matrix4f &m
       for (unsigned i = 0; i < gl4Mesh->GetNumberOfIndices(); i++)
       {
         uint16_t idx = *s16++;
-        indices.push_back(idx + vertexOffset);
+        indices.push_back(idx + (uint32_t)vertexOffset);
       }
       break;
     }
@@ -675,7 +678,7 @@ void GL4RenderMeshBatchGenerator::Add(const iRenderMesh *mesh, const Matrix4f &m
       for (unsigned i = 0; i < gl4Mesh->GetNumberOfIndices(); i++)
       {
         uint32_t idx = *s32++;
-        indices.push_back(idx + vertexOffset);
+        indices.push_back(idx + (uint32_t)vertexOffset);
       }
       break;
 
@@ -684,6 +687,71 @@ void GL4RenderMeshBatchGenerator::Add(const iRenderMesh *mesh, const Matrix4f &m
       break;
   }
   gl4Mesh->m_indexBuffer->Unmap();
+
+  printf ("Add mesh: V2(%d) V3(%d) V4(%d) N(%d) T(%d) C(%d) U02(%d) U03(%d) U1(%d) U2(%d) U3(%d)\n",
+  vertices2.size(),
+  vertices3.size(),
+  vertices4.size(),
+  normals.size(),
+  tangents.size(),
+  colors.size(),
+  uv02.size(),
+  uv03.size(),
+  uv1.size(),
+  uv2.size(),
+  uv3.size());
+  fflush(stdout);
+
+  if (!vertices2.empty())
+  {
+    m_generator.AddVertices(vertices2);
+  }
+  if (!vertices3.empty())
+  {
+    m_generator.AddVertices(vertices3);
+  }
+  if (!vertices4.empty())
+  {
+    m_generator.AddVertices(vertices4);
+  }
+  if (!normals.empty())
+  {
+    m_generator.AddNormals(normals);
+  }
+  if (!tangents.empty())
+  {
+    m_generator.AddTangents(tangents);
+  }
+  if (!colors.empty())
+  {
+    m_generator.AddColors(colors);
+  }
+  if (!uv02.empty())
+  {
+    m_generator.AddUV0(uv02);
+  }
+  if (!uv03.empty())
+  {
+    m_generator.AddUV0(uv03);
+  }
+  if (!uv1.empty())
+  {
+    m_generator.AddUV1(uv1);
+  }
+  if (!uv2.empty())
+  {
+    m_generator.AddUV2(uv2);
+  }
+  if (!uv3.empty())
+  {
+    m_generator.AddUV3(uv3);
+  }
+  if (!indices.empty())
+  {
+    m_generator.AddIndices(indices);
+  }
+
+
 }
 
 iRenderMesh * GL4RenderMeshBatchGenerator::Generate()
