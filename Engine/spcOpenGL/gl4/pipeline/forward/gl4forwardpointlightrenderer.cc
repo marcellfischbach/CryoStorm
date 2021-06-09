@@ -88,7 +88,8 @@ Size GL4ForwardPointLightRenderer::RenderShadowMaps(Size maxShadowLights)
     {
       break;
     }
-    RenderPointShadowMaps(pointLight, shadowMap);
+//    RenderPointShadowMaps(pointLight, shadowMap);
+    RenderPointShadowMapsStraight(pointLight, shadowMap);
     m_device->SetPointLightShadowMap(
       pointLight,
       shadowMap->GetColorTexture(0),
@@ -245,5 +246,55 @@ void GL4ForwardPointLightRenderer::RenderPointShadowMaps(GL4PointLight* pointLig
 
 }
 
+
+
+void GL4ForwardPointLightRenderer::RenderPointShadowMapsStraight(GL4PointLight *pointLight, GL4RenderTargetCube *shadowMap)
+{
+  m_device->SetRenderTarget(shadowMap);
+  m_device->SetViewport(0, 0, shadowMap->GetSize(), shadowMap->GetSize());
+  m_device->Clear(true, Color4f(0.0f, 0.0f, 0.5f, 1.0f), true, 1.0f, false, 0);
+
+
+  float near = 0.1f;
+  float far = pointLight->GetRange();
+  Matrix4f projection;
+  m_device->GetPerspectiveProjection(-near, near, -near, near, near, far, projection);
+  Matrix4f projections[] = {
+      projection,
+      projection,
+      projection,
+      projection,
+      projection,
+      projection
+  };
+  Vector3f pos = pointLight->GetPosition();
+  Matrix4f views[6];
+  views[0].SetLookAt(pos, pos + Vector3f(1, 0, 0), Vector3f(0, -1, 0));
+  views[1].SetLookAt(pos, pos + Vector3f(-1, 0, 0), Vector3f(0, -1, 0));
+  views[2].SetLookAt(pos, pos + Vector3f(0, 1, 0), Vector3f(0, 0, -1));
+  views[3].SetLookAt(pos, pos + Vector3f(0, -1, 0), Vector3f(0, 0, 1));
+  views[4].SetLookAt(pos, pos + Vector3f(0, 0, -1), Vector3f(0, -1, 0));
+  views[5].SetLookAt(pos, pos + Vector3f(0, 0, 1), Vector3f(0, -1, 0));
+
+
+  glColorMask(false, false, false, false);
+  for (int i=0; i<6; i++)
+  {
+    m_device->SetProjectionMatrix(projections[i]);
+    m_device->SetViewMatrix(views[i]);
+
+
+    SphereClipper clipper(pos, pointLight->GetRange());
+
+
+    m_scene->ScanMeshes(&clipper, GfxScene::eSM_Dynamic | GfxScene::eSM_Static,
+                        [this](GfxMesh *mesh) {
+                          mesh->RenderUnlit(m_device, eRP_Shadow);
+                        }
+    );
+
+  }
+  glColorMask(true, true, true, true);
+}
 
 }

@@ -283,15 +283,15 @@ void debug(spc::SpatialState *state, int indent)
 }
 
 
-void create_suzannes_plain(spc::Mesh* suzanneMesh, spc::World* world)
+void create_suzannes_plain(spc::Mesh *suzanneMesh, spc::World *world)
 {
   size_t num = 20;
-  for (size_t i=0; i<num; i++)
+  for (size_t i = 0; i < num; i++)
   {
-    float x = -40.0f + (float)i / (float)num * 80.0f;
-    for (size_t j=0; j<num; j++)
+    float x = -40.0f + (float) i / (float) num * 80.0f;
+    for (size_t j = 0; j < num; j++)
     {
-      float y = -40.0f + (float)j / (float)num * 80.0f;
+      float y = -40.0f + (float) j / (float) num * 80.0f;
 
       spc::Entity *suzanneEntity = new spc::Entity("Entity1");
       spc::StaticMeshState *meshState1 = new spc::StaticMeshState("StaticMesh1");
@@ -305,26 +305,26 @@ void create_suzannes_plain(spc::Mesh* suzanneMesh, spc::World* world)
 }
 
 
-void create_suzanne_batch(spc::Mesh* suzanneMesh, int a, int b, size_t numI, size_t numJ, size_t maxI, size_t maxJ, spc::World *world)
+void create_suzanne_batch(spc::Mesh *suzanneMesh, int a, int b, size_t numI, size_t numJ, size_t maxI, size_t maxJ, spc::World *world)
 {
   auto generator = spc::ObjectRegistry::Get<spc::iRenderMeshBatchGeneratorFactory>()->Create();
 
-  for (size_t ni=0, i=a * numI; ni<numI; ni++, i++)
+  for (size_t ni = 0, i = a * numI; ni < numI; ni++, i++)
   {
-    float x = -40.0f + (float)i / (float)maxI * 80.0f;
-    for (size_t nj=0, j=b * numJ; nj<numJ; nj++, j++)
+    float x = -40.0f + (float) i / (float) maxI * 80.0f;
+    for (size_t nj = 0, j = b * numJ; nj < numJ; nj++, j++)
     {
-      float y = -40.0f + (float)j / (float)maxJ * 80.0f;
+      float y = -40.0f + (float) j / (float) maxJ * 80.0f;
       spc::Matrix4f mat;
       mat.SetTranslation(spc::Vector3f(x, 0, y));
       generator->Add(suzanneMesh->GetSubMesh(0).GetMesh(), mat);
     }
   }
 
-  spc::iRenderMesh* batchedRM = generator->Generate();
+  spc::iRenderMesh *batchedRM = generator->Generate();
 
-  spc::Mesh* suzyMesh = new spc::Mesh();
-  for (size_t i=0; i<suzanneMesh->GetNumberOfMaterialSlots(); i++)
+  spc::Mesh *suzyMesh = new spc::Mesh();
+  for (size_t i = 0; i < suzanneMesh->GetNumberOfMaterialSlots(); i++)
   {
     suzyMesh->AddMaterialSlot(suzanneMesh->GetMaterialSlot(i).GetName(), suzanneMesh->GetMaterialSlot(i).GetDefaultMaterial());
   }
@@ -341,11 +341,11 @@ void create_suzanne_batch(spc::Mesh* suzanneMesh, int a, int b, size_t numI, siz
   generator->Release();
 }
 
-void create_suzannes_batched(spc::Mesh* suzanneMesh, spc::World* world)
+void create_suzannes_batched(spc::Mesh *suzanneMesh, spc::World *world)
 {
-  for (int a=0; a < 5; a++)
+  for (int a = 0; a < 5; a++)
   {
-    for  (int b=0; b < 5; b++)
+    for (int b = 0; b < 5; b++)
     {
       create_suzanne_batch(suzanneMesh, a, b, 4, 4, 20, 20, world);
     }
@@ -373,6 +373,7 @@ int main(int argc, char **argv)
   spc::iShader *forwardShader = spc::AssetManager::Get()->Load<spc::iShader>(spc::ResourceLocator("/shaders/test_color_program.spc"));
   spc::iShader *shadowCubeShader = spc::AssetManager::Get()->Load<spc::iShader>(spc::ResourceLocator("/shaders/test_shadow_point_program.spc"));
   spc::iShader *shadowPSSMShader = spc::AssetManager::Get()->Load<spc::iShader>(spc::ResourceLocator("/shaders/test_shadow_pssm_program.spc"));
+  spc::iShader *shadowShader = spc::AssetManager::Get()->Load<spc::iShader>(spc::ResourceLocator("/shaders/test_shadow_program.spc"));
 
 
   spc::iSampler *sampler = spc::AssetManager::Get()->Load<spc::iSampler>(spc::ResourceLocator("sampler_default.spc"));
@@ -398,6 +399,7 @@ int main(int argc, char **argv)
 
   spc::Material *material = new spc::Material();
   material->SetShader(spc::eRP_Forward, forwardShader);
+  material->SetShader(spc::eRP_Shadow, shadowShader);
   material->SetShader(spc::eRP_ShadowCube, shadowCubeShader);
   material->SetShader(spc::eRP_ShadowPSSM, shadowPSSMShader);
 
@@ -460,7 +462,7 @@ int main(int argc, char **argv)
   lightState->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 1.0f);
   lightState->SetRange(50);
   lightState->SetStatic(true);
-  lightState->SetCastShadow(false);
+  lightState->SetCastShadow(true);
   lightState->SetTransform(spc::Transform(spc::Vector3f(5.0f, 5.0f, 5.0f)));
   world->Attach(lightEntity);
 
@@ -487,10 +489,10 @@ int main(int argc, char **argv)
   sunLightState->SetSplits(25.0f, 50.0f, 100.0f);
   sunLightState->SetShadowMapBias(0.003f);
   sunLightState->SetStatic(true);
-  sunLightState->SetCastShadow(true);
+  sunLightState->SetCastShadow(false);
   sunLightState->SetTransform(sunLightState->GetTransform()
           //.SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(1.0f, 0.0f, 0.0f), spc::spcDeg2Rad(-45.0f)))
-      .SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(1.0f, 1.0f, 1.0f).Normalize(), spc::spcDeg2Rad(-45.0f)))
+                                  .SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(1.0f, 1.0f, 1.0f).Normalize(), spc::spcDeg2Rad(-45.0f)))
   );
 
   world->Attach(sunEntity);
@@ -536,11 +538,11 @@ int main(int argc, char **argv)
     printf("Render target complete\n");
   }
 
-  spc::Quaternion myRot  = spc::Quaternion::FromAxisAngle(spc::Vector3f(1, 2, 3).Normalize(), 1.234f);
-  printf ("Quaternion: %.2f %.2f %.2f %.2f\n", myRot.x, myRot.y, myRot.z, myRot.w);
+  spc::Quaternion myRot = spc::Quaternion::FromAxisAngle(spc::Vector3f(1, 2, 3).Normalize(), 1.234f);
+  printf("Quaternion: %.2f %.2f %.2f %.2f\n", myRot.x, myRot.y, myRot.z, myRot.w);
   spc::Matrix3f myMat = myRot.ToMatrix3();
   myRot = spc::Quaternion::FromMatrix(myMat);
-  printf ("Quaternion: %.2f %.2f %.2f %.2f\n", myRot.x, myRot.y, myRot.z, myRot.w);
+  printf("Quaternion: %.2f %.2f %.2f %.2f\n", myRot.x, myRot.y, myRot.z, myRot.w);
 
 
   spc::iRenderPipeline *renderPipeline = spc::ObjectRegistry::Get<spc::iRenderPipeline>();
@@ -616,12 +618,12 @@ int main(int argc, char **argv)
     }
 
 //    lightEntity->GetRoot()->SetTransform(spc::Transform(spc::Vector3f(spc::spcSin(entRot) * 5.0f, 5.0f, spc::spcCos(entRot) * 5.0f)));
-  /*
-    suzanneEntity->GetRoot()->SetTransform(spc::Transform(
-        spc::Vector3f(spc::spcCos(entRot * 3.5f) * 5.0f, 0.0f, spc::spcSin(entRot * 3.5f) * 5.0f),
-        spc::Quaternion::FromAxisAngle(spc::Vector3f(0, 1, 0), entRot * 3.5f - (float) M_PI / 2.0f)
-    ));
-    */
+    /*
+      suzanneEntity->GetRoot()->SetTransform(spc::Transform(
+          spc::Vector3f(spc::spcCos(entRot * 3.5f) * 5.0f, 0.0f, spc::spcSin(entRot * 3.5f) * 5.0f),
+          spc::Quaternion::FromAxisAngle(spc::Vector3f(0, 1, 0), entRot * 3.5f - (float) M_PI / 2.0f)
+      ));
+      */
 
     float dist = 10.0f;
     camera->SetSpot(spc::Vector3f(0, 0.0f, 0.0f));

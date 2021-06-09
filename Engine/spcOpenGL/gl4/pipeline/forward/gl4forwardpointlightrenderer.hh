@@ -46,6 +46,7 @@ private:
   iSampler* GetShadowMapColorSampler();
   iSampler* GetShadowMapDepthSampler();
   void RenderPointShadowMaps(GL4PointLight* pointLight, GL4RenderTargetCube* shadowMap);
+  void RenderPointShadowMapsStraight(GL4PointLight* pointLight, GL4RenderTargetCube* shadowMap);
 
 private:
   iDevice* m_device;

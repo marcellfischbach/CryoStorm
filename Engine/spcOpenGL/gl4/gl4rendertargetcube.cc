@@ -91,7 +91,6 @@ void GL4RenderTargetCube::AddColorTexture(iTextureCube *colorTexture)
   txt->AddRef();
 
 
-  GLenum attachment = GL_DEPTH_ATTACHMENT;
   if (colorTexture->GetFormat() == ePF_DepthStencil) {
     return;
   }
