@@ -64,8 +64,6 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target, Camera &camera, Project
   m_directionalLightRenderer.SetScene(scene);
 
 
-  camera.Bind(device);
-  projector.Bind(device);
 //  BoxClipper clipper(Vector3f(-1000.0f, -1000.0f, -1000.0f), Vector3f(1000.0f, 1000.0f, 1000.0f));
 
 
@@ -111,6 +109,9 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target, Camera &camera, Project
   //
   // Render up to MasLights shadow maps
   RenderShadowMaps();
+
+  camera.Bind(device);
+  projector.Bind(device);
 
   SPC_GL_ERROR();
 

@@ -7,10 +7,10 @@ namespace spc::opengl
 {
 
 GL4RenderTargetCube::GL4RenderTargetCube()
-    : iRenderTargetCube()
-      , m_name(0)
-      , m_size(0)
-      , m_depthTexture(nullptr)
+  : iRenderTargetCube()
+  , m_name(0)
+  , m_size(0)
+  , m_depthTexture(nullptr)
 {
   SPC_CLASS_GEN_CONSTR;
   glGenFramebuffers(1, &m_name);
@@ -18,11 +18,15 @@ GL4RenderTargetCube::GL4RenderTargetCube()
 
 GL4RenderTargetCube::~GL4RenderTargetCube()
 {
-  glDeleteFramebuffers(1, &m_name);
+  if (!m_external)
+  {
+    glDeleteFramebuffers(1, &m_name);
+  }
   m_name = 0;
 
   SPC_RELEASE(m_depthTexture);
-  for (auto color : m_colorTextures) {
+  for (auto color : m_colorTextures)
+  {
     color->Release();
   }
   m_colorTextures.clear();
@@ -42,52 +46,62 @@ UInt16 GL4RenderTargetCube::GetSize() const
 bool GL4RenderTargetCube::Initialize(UInt16 size)
 {
   m_size = size;
+  m_external = false;
   Bind();
 
   return true;
 }
 
-void GL4RenderTargetCube::SetDepthTexture(iTextureCube *depthTexture)
+bool GL4RenderTargetCube::Initialize(UInt32 name, UInt16 size)
+{
+  m_size = size;
+  m_name = name;
+  m_external = true;
+  Bind();
+  return true;
+}
+
+void GL4RenderTargetCube::SetDepthTexture(iTextureCube* depthTexture)
 {
   if (!depthTexture) {
     return;
   }
 
 
-  GL4TextureCube *txt = depthTexture->Query<GL4TextureCube>();
+  GL4TextureCube* txt = depthTexture->Query<GL4TextureCube>();
 
 
   GLenum attachment = 0;
   switch (depthTexture->GetFormat()) {
-    case ePF_Depth:
-      attachment = GL_DEPTH_ATTACHMENT;
-      break;
-    case ePF_DepthStencil:
-      attachment = GL_DEPTH_STENCIL_ATTACHMENT;
-      break;
-    default:
-      return;
+  case ePF_Depth:
+    attachment = GL_DEPTH_ATTACHMENT;
+    break;
+  case ePF_DepthStencil:
+    attachment = GL_DEPTH_STENCIL_ATTACHMENT;
+    break;
+  default:
+    return;
   }
 
   SPC_SET(m_depthTexture, txt);
 
 
   glFramebufferTexture(GL_FRAMEBUFFER,
-                       attachment,
-                       txt->GetName(),
-                       0);
+    attachment,
+    txt->GetName(),
+    0);
 
 }
 
 
-void GL4RenderTargetCube::AddColorTexture(iTextureCube *colorTexture)
+void GL4RenderTargetCube::AddColorTexture(iTextureCube* colorTexture)
 {
   if (!colorTexture) {
     return;
   }
 
 
-  GL4TextureCube *txt = colorTexture->Query<GL4TextureCube>();
+  GL4TextureCube* txt = colorTexture->Query<GL4TextureCube>();
   txt->AddRef();
 
 
@@ -97,9 +111,9 @@ void GL4RenderTargetCube::AddColorTexture(iTextureCube *colorTexture)
 
 
   glFramebufferTexture(GL_FRAMEBUFFER,
-                       (GLenum) (GL_COLOR_ATTACHMENT0 + m_colorTextures.size()),
-                       txt->GetName(),
-                       0);
+    (GLenum)(GL_COLOR_ATTACHMENT0 + m_colorTextures.size()),
+    txt->GetName(),
+    0);
   m_colorTextures.push_back(txt);
 }
 
@@ -114,33 +128,33 @@ bool GL4RenderTargetCube::Compile()
   GLenum res = glCheckFramebufferStatus(GL_FRAMEBUFFER);
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
   switch (res) {
-    case GL_FRAMEBUFFER_COMPLETE:
-      m_log = "Complete";
-      return true;
-    case GL_FRAMEBUFFER_UNDEFINED:
-      m_log = "Framebuffer undefined";
-      break;
-    case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
-      m_log = "Framebuffer incomplete attachment";
-      break;
-    case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
-      m_log = "Framebuffer incomplete missing attachment";
-      break;
-    case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
-      m_log = "Framebuffer incomplete draw buffer";
-      break;
-    case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
-      m_log = "Framebuffer incomplete read buffer";
-      break;
-    case GL_FRAMEBUFFER_UNSUPPORTED:
-      m_log = "Framebuffer unsupported";
-      break;
-    case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE:
-      m_log = "Framebuffer incomplete multisample";
-      break;
-    case GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS:
-      m_log = "Framebuffer incomplete layer targets";
-      break;
+  case GL_FRAMEBUFFER_COMPLETE:
+    m_log = "Complete";
+    return true;
+  case GL_FRAMEBUFFER_UNDEFINED:
+    m_log = "Framebuffer undefined";
+    break;
+  case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+    m_log = "Framebuffer incomplete attachment";
+    break;
+  case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+    m_log = "Framebuffer incomplete missing attachment";
+    break;
+  case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
+    m_log = "Framebuffer incomplete draw buffer";
+    break;
+  case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
+    m_log = "Framebuffer incomplete read buffer";
+    break;
+  case GL_FRAMEBUFFER_UNSUPPORTED:
+    m_log = "Framebuffer unsupported";
+    break;
+  case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE:
+    m_log = "Framebuffer incomplete multisample";
+    break;
+  case GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS:
+    m_log = "Framebuffer incomplete layer targets";
+    break;
   }
   return false;
 }
@@ -150,12 +164,12 @@ std::string GL4RenderTargetCube::GetCompileLog() const
   return m_log;
 }
 
-iTextureCube *GL4RenderTargetCube::GetDepthTexture()
+iTextureCube* GL4RenderTargetCube::GetDepthTexture()
 {
   return m_depthTexture;
 }
 
-const iTextureCube *GL4RenderTargetCube::GetDepthTexture() const
+const iTextureCube* GL4RenderTargetCube::GetDepthTexture() const
 {
   return m_depthTexture;
 }
@@ -165,7 +179,7 @@ Size GL4RenderTargetCube::GetNumberOfColorTextures() const
   return m_colorTextures.size();
 }
 
-iTextureCube *GL4RenderTargetCube::GetColorTexture(Size idx)
+iTextureCube* GL4RenderTargetCube::GetColorTexture(Size idx)
 {
   if (idx >= m_colorTextures.size()) {
     return nullptr;
@@ -174,7 +188,7 @@ iTextureCube *GL4RenderTargetCube::GetColorTexture(Size idx)
 }
 
 
-const iTextureCube *GL4RenderTargetCube::GetColorTexture(Size idx) const
+const iTextureCube* GL4RenderTargetCube::GetColorTexture(Size idx) const
 {
   if (idx >= m_colorTextures.size()) {
     return nullptr;

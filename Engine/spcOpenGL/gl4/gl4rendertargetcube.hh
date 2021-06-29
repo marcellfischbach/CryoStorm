@@ -20,6 +20,7 @@ public:
   void Bind();
 
   bool Initialize (UInt16 size);
+  bool Initialize (UInt32 name, UInt16 size);
 
   UInt16 GetSize() const override;
 
@@ -40,11 +41,13 @@ public:
 private:
   UInt32 m_name;
   UInt16 m_size;
+  bool m_external;
 
   iTextureCube *m_depthTexture;
   std::vector<GL4TextureCube*> m_colorTextures;
 
   std::string m_log;
+
 };
 
 }

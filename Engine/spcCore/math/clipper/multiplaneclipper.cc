@@ -59,7 +59,7 @@ MultiPlaneClipper::MultiPlaneClipper(const Matrix4f &camera, const Matrix4f &pro
     : iClipper()
 {
 
-  Matrix4f M =  camera * projector;
+  Matrix4f M = camera * projector;
 
   // TODO: Reduce multiplications of not needed position
   Vector4f n0 = M * Vector4f(-1.0f, -1.0f, -1.0f, 1.0f);

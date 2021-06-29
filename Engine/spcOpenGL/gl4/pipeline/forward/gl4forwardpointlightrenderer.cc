@@ -3,12 +3,14 @@
 #include <spcOpenGL/gl4/pipeline/forward/gl4forwardpointlightrenderer.hh>
 #include <spcOpenGL/gl4/gl4pointlight.hh>
 #include <spcOpenGL/gl4/gl4rendertargetcube.hh>
+#include <spcOpenGL/gl4/gl4texturecube.hh>
 
 #include <spcCore/settings.hh>
 #include <spcCore/graphics/idevice.hh>
 #include <spcCore/graphics/isampler.hh>
 #include <spcCore/graphics/scene/gfxmesh.hh>
 #include <spcCore/graphics/scene/gfxscene.hh>
+#include <spcCore/math/clipper/multiplaneclipper.hh>
 #include <spcCore/math/clipper/sphereclipper.hh>
 
 #include <algorithm>
@@ -88,7 +90,7 @@ Size GL4ForwardPointLightRenderer::RenderShadowMaps(Size maxShadowLights)
     {
       break;
     }
-//    RenderPointShadowMaps(pointLight, shadowMap);
+    //RenderPointShadowMaps(pointLight, shadowMap);
     RenderPointShadowMapsStraight(pointLight, shadowMap);
     m_device->SetPointLightShadowMap(
       pointLight,
@@ -246,19 +248,31 @@ void GL4ForwardPointLightRenderer::RenderPointShadowMaps(GL4PointLight* pointLig
 
 }
 
+GLuint fbo_shadow = 0;
 
 
 void GL4ForwardPointLightRenderer::RenderPointShadowMapsStraight(GL4PointLight *pointLight, GL4RenderTargetCube *shadowMap)
 {
-  m_device->SetRenderTarget(shadowMap);
-  m_device->SetViewport(0, 0, shadowMap->GetSize(), shadowMap->GetSize());
-  m_device->Clear(true, Color4f(0.0f, 0.0f, 0.5f, 1.0f), true, 1.0f, false, 0);
 
+  if (fbo_shadow == 0)
+  {
+    glGenFramebuffers(1, &fbo_shadow);
+    if (fbo_shadow == 0)
+    {
+      return;
+    }
+  }
+
+  
+
+  
 
   float near = 0.1f;
   float far = pointLight->GetRange();
   Matrix4f projection;
+  Matrix4f projectionInv;
   m_device->GetPerspectiveProjection(-near, near, -near, near, near, far, projection);
+  m_device->GetPerspectiveProjectionInv(-near, near, -near, near, near, far, projectionInv);
   Matrix4f projections[] = {
       projection,
       projection,
@@ -276,25 +290,56 @@ void GL4ForwardPointLightRenderer::RenderPointShadowMapsStraight(GL4PointLight *
   views[4].SetLookAt(pos, pos + Vector3f(0, 0, -1), Vector3f(0, -1, 0));
   views[5].SetLookAt(pos, pos + Vector3f(0, 0, 1), Vector3f(0, -1, 0));
 
+  iTextureCube* cubeColorTexture = shadowMap->GetColorTexture(0);
+  iTextureCube* cubeDepthTexture = shadowMap->GetDepthTexture();
+
+  GL4TextureCube* colorTexture = cubeColorTexture ? cubeColorTexture->Query<GL4TextureCube>() : nullptr;
+  GL4TextureCube* depthTexture = cubeDepthTexture ? cubeDepthTexture->Query<GL4TextureCube>() : nullptr;
+
 
   glColorMask(false, false, false, false);
   for (int i=0; i<6; i++)
   {
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo_shadow);
+    
+    if (colorTexture)
+    {
+      glFramebufferTexture2D(GL_FRAMEBUFFER,
+        GL_COLOR_ATTACHMENT0,
+        GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+        colorTexture->GetName(),
+        0);
+    }
+    if (depthTexture)
+    {
+      glFramebufferTexture2D(GL_FRAMEBUFFER,
+        //GL_DEPTH_STENCIL_ATTACHMENT,
+        GL_DEPTH_ATTACHMENT,
+        GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+        depthTexture->GetName(),
+        0);
+    }
+    
+
+    m_device->SetViewport(0, 0, shadowMap->GetSize(), shadowMap->GetSize());
+    m_device->Clear(true, Color4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, false, 0);
+
     m_device->SetProjectionMatrix(projections[i]);
     m_device->SetViewMatrix(views[i]);
 
 
-    SphereClipper clipper(pos, pointLight->GetRange());
-
+    //SphereClipper clipper(pos, pointLight->GetRange());
+    MultiPlaneClipper clipper(views[i], projectionInv);
 
     m_scene->ScanMeshes(&clipper, GfxScene::eSM_Dynamic | GfxScene::eSM_Static,
                         [this](GfxMesh *mesh) {
                           mesh->RenderUnlit(m_device, eRP_Shadow);
                         }
     );
-
   }
   glColorMask(true, true, true, true);
+  m_device->SetRenderTarget(nullptr);
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 }
