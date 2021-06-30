@@ -96,8 +96,8 @@ private:
   iRenderTarget* m_renderTarget;
   iShader* m_shader;
   eTextureUnit ShiftTextureUnit();
-
   eTextureUnit m_nextTextureUnit;
+  iTexture* m_textures[eTU_COUNT];
 
 
   /*

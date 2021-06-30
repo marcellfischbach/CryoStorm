@@ -49,6 +49,7 @@ GL4Device::GL4Device()
   , m_fullscreenBlitCubeNegZRenderMesh(nullptr)
 {
   SPC_CLASS_GEN_CONSTR;
+
 }
 
 GL4Device::~GL4Device()
@@ -66,7 +67,7 @@ bool GL4Device::Initialize()
   }
 
   GLint units, imageUnits, combinedUnits;
-  
+
   glGetIntegerv(GL_MAX_TEXTURE_UNITS, &units);
   glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &imageUnits);
   glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &combinedUnits);
@@ -101,6 +102,10 @@ bool GL4Device::Initialize()
   m_viewProjectionMatrixInv.SetIdentity();
   m_modelViewProjectionMatrixInv.SetIdentity();
 
+  for (Size i = 0; i < eTU_COUNT; i++)
+  {
+    m_textures[i] = nullptr;
+  }
 
   SPC_GL_ERROR();
 
@@ -228,23 +233,23 @@ void GL4Device::SetShadowMapProjectionMatrices(const Matrix4f* matrices, Size nu
 }
 
 
-const Matrix4f &GL4Device::GetViewMatrix() const
+const Matrix4f& GL4Device::GetViewMatrix() const
 {
   return m_viewMatrix;
 }
 
-const Matrix4f &GL4Device::GetViewMatrixInv() const
+const Matrix4f& GL4Device::GetViewMatrixInv() const
 {
   return m_viewMatrixInv;
 }
 
 
-const Matrix4f &GL4Device::GetProjectionMatrix() const
+const Matrix4f& GL4Device::GetProjectionMatrix() const
 {
   return m_projectionMatrix;
 }
 
-const Matrix4f &GL4Device::GetProjectionMatrixInv() const
+const Matrix4f& GL4Device::GetProjectionMatrixInv() const
 {
   return m_projectionMatrixInv;
 }
@@ -349,7 +354,7 @@ Matrix4f& GL4Device::GetOrthographicProjectionInv(float l, float r, float b, flo
 
 void GL4Device::SetShader(iShader* shader)
 {
-  if (shader == m_shader && false)
+  if (shader == m_shader)
   {
     return;
   }
@@ -445,7 +450,7 @@ void GL4Device::SetDirectionalLightShadowMap(iLight* light, const Vector3f& laye
   data.Light = light;
   data.Color = colorMap;
   data.Depth = depthMap;
-  data.LayersBias = Vector4f (layers.x, layers.y, layers.z, bias);;
+  data.LayersBias = Vector4f(layers.x, layers.y, layers.z, bias);;
   memcpy(data.Matrices, matrices, sizeof(Matrix4f) * 3);
   m_directionalLightShadowData[light] = data;
 }
@@ -562,23 +567,34 @@ eTextureUnit GL4Device::BindTexture(iTexture* texture)
   }
 
 
+  static unsigned prebound = 0;
+  static unsigned bound = 0;
+  bound++;
   // TODO keep track of the texture units... store them in arrays to not bind the same texture to a unity twice
   eTextureUnit unit = ShiftTextureUnit();
-  glActiveTexture(GL_TEXTURE0 + unit);
-  SetSampler(unit, texture->GetSampler());
-  switch (texture->GetType())
+  if (m_textures[unit] != texture)
   {
-  case eTT_Texture2D:
-    static_cast<GL4Texture2D*>(texture)->Bind();
-    break;
-  case eTT_Texture2DArray:
-    static_cast<GL4Texture2DArray*>(texture)->Bind();
-    break;
+    m_textures[unit] = texture;
+    glActiveTexture(GL_TEXTURE0 + unit);
+    SetSampler(unit, texture->GetSampler());
+    switch (texture->GetType())
+    {
+    case eTT_Texture2D:
+      static_cast<GL4Texture2D*>(texture)->Bind();
+      break;
+    case eTT_Texture2DArray:
+      static_cast<GL4Texture2DArray*>(texture)->Bind();
+      break;
 
-  case eTT_TextureCube:
-    static_cast<GL4TextureCube*>(texture)->Bind();
-    break;
+    case eTT_TextureCube:
+      static_cast<GL4TextureCube*>(texture)->Bind();
+      break;
 
+    }
+  }
+  else
+  {
+    prebound++;
   }
 
 

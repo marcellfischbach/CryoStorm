@@ -489,7 +489,7 @@ int main(int argc, char **argv)
   sunLightState->SetSplits(25.0f, 50.0f, 100.0f);
   sunLightState->SetShadowMapBias(0.003f);
   sunLightState->SetStatic(true);
-  sunLightState->SetCastShadow(true);
+  sunLightState->SetCastShadow(false);
   sunLightState->SetTransform(sunLightState->GetTransform()
           //.SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(1.0f, 0.0f, 0.0f), spc::spcDeg2Rad(-45.0f)))
                                   .SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(1.0f, 1.0f, 1.0f).Normalize(), spc::spcDeg2Rad(-45.0f)))
