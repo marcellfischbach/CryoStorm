@@ -343,11 +343,11 @@ void create_suzanne_batch(spc::Mesh *suzanneMesh, int a, int b, size_t numI, siz
 
 void create_suzannes_batched(spc::Mesh *suzanneMesh, spc::World *world)
 {
-  for (int a = 0; a < 5; a++)
+  for (int a = 0; a < 10; a++)
   {
-    for (int b = 0; b < 5; b++)
+    for (int b = 0; b < 10; b++)
     {
-      create_suzanne_batch(suzanneMesh, a, b, 4, 4, 20, 20, world);
+      create_suzanne_batch(suzanneMesh, a, b, 2, 2, 20, 20, world);
     }
   }
 }
@@ -452,8 +452,8 @@ int main(int argc, char **argv)
   world->Attach(entity0);
 
 
-//  create_suzannes_plain(suzanneMesh, world);
-  create_suzannes_batched(suzanneMesh, world);
+  create_suzannes_plain(suzanneMesh, world);
+//  create_suzannes_batched(suzanneMesh, world);
 
   spc::Entity *lightEntity = new spc::Entity("Light_0");
   spc::LightState *lightState = new spc::LightState("LightState");
@@ -641,8 +641,10 @@ int main(int argc, char **argv)
 
     device->SetRenderTarget(nullptr);
     device->SetViewport(0, 0, wnd_width, wnd_height);
-    device->Clear(true, spc::Color4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, true, 0);
+    glDisable(GL_DEPTH_TEST);
+    //device->Clear(true, spc::Color4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, true, 0);
     device->RenderFullscreen(color_texture);
+    glEnable(GL_DEPTH_TEST);
 
 #if _DEBUG
     numDrawCallsPerSec += device->GetNumberOfDrawCalls();

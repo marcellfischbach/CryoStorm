@@ -3,7 +3,7 @@
 #pragma once
 
 
-#ifdef NDEBUG
+#ifdef _DEBUG
 
 #define SPC_GL_ERROR() \
   switch (glGetError()) \

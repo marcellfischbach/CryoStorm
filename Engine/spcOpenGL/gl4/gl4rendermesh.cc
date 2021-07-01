@@ -688,19 +688,7 @@ void GL4RenderMeshBatchGenerator::Add(const iRenderMesh *mesh, const Matrix4f &m
   }
   gl4Mesh->m_indexBuffer->Unmap();
 
-  printf ("Add mesh: V2(%d) V3(%d) V4(%d) N(%d) T(%d) C(%d) U02(%d) U03(%d) U1(%d) U2(%d) U3(%d)\n",
-  vertices2.size(),
-  vertices3.size(),
-  vertices4.size(),
-  normals.size(),
-  tangents.size(),
-  colors.size(),
-  uv02.size(),
-  uv03.size(),
-  uv1.size(),
-  uv2.size(),
-  uv3.size());
-  fflush(stdout);
+
 
   if (!vertices2.empty())
   {

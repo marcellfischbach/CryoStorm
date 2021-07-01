@@ -304,9 +304,9 @@ void GL4ForwardPointLightRenderer::RenderPointShadowMapsStraight(GL4PointLight *
   GL4TextureCube* depthTexture = cubeDepthTexture ? cubeDepthTexture->Query<GL4TextureCube>() : nullptr;
 
 
+  glBindFramebuffer(GL_FRAMEBUFFER, fbo_shadow);
   for (int i=0; i<6; i++)
   {
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo_shadow);
     
     if (colorTexture)
     {
