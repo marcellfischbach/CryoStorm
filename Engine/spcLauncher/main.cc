@@ -5,6 +5,7 @@
 #include <spcLauncher/launchermodule.hh>
 #include <spcCore/coremodule.hh>
 #include <spcCore/settings.hh>
+#include <spcCore/entity/camerastate.hh>
 #include <spcCore/entity/entity.hh>
 #include <spcCore/entity/entitystate.hh>
 #include <spcCore/entity/lightstate.hh>
@@ -432,10 +433,6 @@ int main(int argc, char **argv)
   float aspect = (float) wnd_height / (float) wnd_width;
 
 
-  spc::Camera *camera = new spc::Camera();
-  spc::Projector projector;
-  projector.UpdatePerspective(spc::spcDeg2Rad(90.0f), aspect, 1.0f, 1024.0f);
-
 
   spc::Mesh *suzanneMesh = spc::AssetManager::Get()->Load<spc::Mesh>(spc::ResourceLocator("file:///suzanne.fbx"));
   spc::Mesh *cube = spc::AssetManager::Get()->Load<spc::Mesh>(spc::ResourceLocator("cube.fbx"));
@@ -497,6 +494,12 @@ int main(int argc, char **argv)
 
   world->Attach(sunEntity);
 
+  spc::Entity* cameraEntity = new spc::Entity("Camera");
+  spc::CameraState* cameraState = new spc::CameraState();
+  cameraEntity->Attach(cameraState);
+  world->Attach(cameraEntity);
+
+
 
   spc::iSampler *colorSampler = device->CreateSampler();
   colorSampler->SetFilterMode(spc::eFM_MinMagNearest);
@@ -555,6 +558,8 @@ int main(int argc, char **argv)
   spc::UInt32 frames = 0;
   spc::UInt32 lastTime = SDL_GetTicks();
 
+
+  bool useCs = true;
   bool anim = true;
 #if _DEBUG
   spc::Size numDrawCallsPerSec = 0;
@@ -602,6 +607,10 @@ int main(int argc, char **argv)
     {
       anim = !anim;
     }
+    if (spc::Input::IsKeyPressed(spc::Key::eK_Space))
+    {
+      useCs = !useCs;
+    }
 
     /*
     entityX->GetRoot()->GetTransform()
@@ -626,17 +635,18 @@ int main(int argc, char **argv)
       */
 
     float dist = 10.0f;
-    camera->SetSpot(spc::Vector3f(0, 0.0f, 0.0f));
-    camera->SetEye(spc::Vector3f(spc::spcCos(entRot + (float) M_PI / 2.0f + 0.2f) * dist, dist, spc::spcSin(entRot + (float) M_PI / 2.0f + 0.2f) * dist));
-    camera->SetUp(spc::Vector3f(0.0f, 1.0f, 0.0f));
+    cameraEntity->GetRoot()->LookAt(
+      spc::Vector3f(spc::spcCos(entRot + (float)M_PI / 2.0f + 0.2f) * dist, dist, spc::spcSin(entRot + (float)M_PI / 2.0f + 0.2f) * dist),
+      spc::Vector3f(0.0f, 0.0f, 0.0f)
+    );
 
     //rot += 0.005f;
 
     world->Update((float) deltaTime / 1000.0f);
-    //world->UpdateTransformation();
 
 
-    renderPipeline->Render(renderTarget, *camera, projector, device, world->GetScene());
+    cameraState->Update(renderTarget->GetWidth(), renderTarget->GetHeight());
+    renderPipeline->Render(renderTarget, cameraState->GetCamera(), cameraState->GetProjector(), device, world->GetScene());
 
 
     device->SetRenderTarget(nullptr);

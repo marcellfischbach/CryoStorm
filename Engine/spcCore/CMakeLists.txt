@@ -21,6 +21,8 @@ set(SOURCES
         string.hh
         types.hh
 
+        entity/camerastate.cc
+        entity/camerastate.hh
         entity/entity.cc
         entity/entity.hh
         entity/entitystate.cc

@@ -57,6 +57,8 @@ static Key Map(SDL_Scancode scanCode)
     case SDL_SCANCODE_RCTRL: return eK_RightCtrl;
     case SDL_SCANCODE_RGUI: return eK_RightWin;
 
+    case SDL_SCANCODE_SPACE: return eK_Space;
+
     case SDL_SCANCODE_LEFT: return eK_Left;
     case SDL_SCANCODE_RIGHT: return eK_Right;
     case SDL_SCANCODE_UP: return eK_Up;

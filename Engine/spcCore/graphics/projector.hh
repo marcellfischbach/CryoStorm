@@ -23,7 +23,7 @@ public:
   SPC_NODISCARD float GetNear() const;
   SPC_NODISCARD float GetFar() const;
 
-  void Bind(iDevice* device);
+  void Bind(iDevice* device) const;
 
 private:
 

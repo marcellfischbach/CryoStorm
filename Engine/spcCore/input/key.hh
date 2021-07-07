@@ -52,10 +52,13 @@ enum Key
     eK_RightCtrl,
     eK_RightWin,
 
+    eK_Space,
+
     eK_Left,
     eK_Right,
     eK_Up,
     eK_Down,
+
 
     eK_Undefined,
     eK_COUNT

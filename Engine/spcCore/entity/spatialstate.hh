@@ -42,6 +42,7 @@ public:
   const Matrix4f& GetGlobalMatrix() const;
   const Matrix4f& GetLocalMatrix() const;
   void SetLocalMatrix(const Matrix4f &matrix);
+  void LookAt(const Vector3f & from, const Vector3f & at, const Vector3f & up = Vector3f(0.0f, 1.0f, 0.0f));
   void UpdateTransformation();
   /**
    * @}

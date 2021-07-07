@@ -29,7 +29,7 @@ public:
   const Vector3f &GetUp() const;
 
 
-  void Bind(iDevice * device);
+  void Bind(iDevice * device) const;
 
 private:
 

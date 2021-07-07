@@ -56,7 +56,7 @@ const Vector3f& Camera::GetUp() const
   return m_up;
 }
 
-void Camera::Bind(iDevice* device)
+void Camera::Bind(iDevice* device) const
 {
   Matrix4f viewMatrix, viewMatrixInv;
   viewMatrix.SetLookAt(m_eye, m_spot, m_up);

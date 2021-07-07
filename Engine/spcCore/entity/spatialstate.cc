@@ -142,6 +142,20 @@ void SpatialState::SetLocalMatrix(const Matrix4f &matrix)
   UpdateTransformation();
 }
 
+void SpatialState::LookAt(const Vector3f& from, const Vector3f& at, const Vector3f& up)
+{
+  m_localMatrix.SetLookAtInv(from, at, up);
+
+  if (m_parent)
+  {
+    Matrix4f parent = m_parent->GetGlobalMatrix();
+    parent.Invert();
+    m_localMatrix = m_localMatrix * parent;
+  }
+
+  UpdateTransformation();
+}
+
 
 void SpatialState::UpdateGlobalMatrix()
 {

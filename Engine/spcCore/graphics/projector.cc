@@ -23,7 +23,7 @@ void Projector::UpdatePerspective(float angleRad, float aspect, float near, floa
   m_mode = ePM_Perspective;
 
   float halfAngle = angleRad / 2.0f;
-  m_right = spcTan(halfAngle);
+  m_right = near * spcTan(halfAngle);
   m_left = -m_right;
 
   m_top = m_right * aspect;
@@ -31,6 +31,7 @@ void Projector::UpdatePerspective(float angleRad, float aspect, float near, floa
 
   m_near = near;
   m_far = far;
+
 }
 
 void Projector::UpdatePerspective(float left, float right, float bottom, float top, float near, float far)
@@ -55,7 +56,7 @@ void Projector::UpdateOrtho(float left, float right, float bottom, float top, fl
   m_far = far;
 }
 
-void Projector::Bind(iDevice* device)
+void Projector::Bind(iDevice* device) const
 {
 
   Matrix4f projection, projectionInv;

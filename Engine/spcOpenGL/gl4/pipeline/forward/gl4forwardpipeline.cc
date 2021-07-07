@@ -48,7 +48,7 @@ GL4ForwardPipeline::~GL4ForwardPipeline() noexcept
 }
 
 
-void GL4ForwardPipeline::Render(iRenderTarget2D *target, Camera &camera, Projector &projector, iDevice *device, GfxScene *scene)
+void GL4ForwardPipeline::Render(iRenderTarget2D *target, const Camera &camera, const Projector &projector, iDevice *device, GfxScene *scene)
 {
   SPC_GL_ERROR();
   ++m_frame;
