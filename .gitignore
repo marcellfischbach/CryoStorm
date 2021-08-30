@@ -4,6 +4,7 @@
 .user
 .idea
 out/
+build/
 Docs/html
 Docs/latex
 
