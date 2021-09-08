@@ -386,10 +386,7 @@ int main(int argc, char **argv)
     image = spc::AssetManager::Get()->Load<spc::Image>(spc::ResourceLocator("snowflake_64.png"));
   }
 
-  if (image)
-  {
-    image->GenerateMipMaps(spc::Image::eMipMapProcedure::eMMP_Linear4x4);
-  }
+  image->GenerateMipMaps(spc::Image::eMipMapProcedure::eMMP_Linear4x4);
 
   spc::iTexture2D::Descriptor desc = {};
   desc.Format = image->GetPixelFormat();
@@ -399,6 +396,7 @@ int main(int argc, char **argv)
   spc::iTexture2D *texture = device->CreateTexture(desc);
   texture->Data(image);
 
+  /*
   spc::Material *material = new spc::Material();
   material->SetShader(spc::eRP_Forward, forwardShader);
   material->SetShader(spc::eRP_Shadow, shadowShader);
@@ -407,12 +405,17 @@ int main(int argc, char **argv)
 
   material->RegisterAttribute("Diffuse");
   material->RegisterAttribute("Color");
-  material->Set(material->IndexOf("Diffuse"), texture);
-  material->Set(material->IndexOf("Color"), spc::Color4f(1, 1, 1, 1));
+  */
+
+  spc::Material* material = spc::AssetManager::Get()->Get<spc::Material>(spc::ResourceLocator("/materials/test_material.spc"));
+
+
+  // material->Set(material->IndexOf("Diffuse"), texture);
+  //material->Set(material->IndexOf("Color"), spc::Color4f(1, 1, 1, 1));
 
   spc::MaterialInstance *instance = new spc::MaterialInstance();
   instance->SetMaterial(material);
-  instance->Set(instance->IndexOf("Color"), spc::Color4f(0, 0, 1, 1));
+  //instance->Set(instance->IndexOf("Color"), spc::Color4f(0, 0, 1, 1));
 
 
   spc::iRenderMesh *renderMesh = create_plane_mesh(8, 8);
@@ -487,7 +490,7 @@ int main(int argc, char **argv)
   sunLightState->SetSplits(25.0f, 50.0f, 100.0f);
   sunLightState->SetShadowMapBias(0.003f);
   sunLightState->SetStatic(true);
-  sunLightState->SetCastShadow(true);
+  sunLightState->SetCastShadow(false);
   sunLightState->SetTransform(sunLightState->GetTransform()
           //.SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(1.0f, 0.0f, 0.0f), spc::spcDeg2Rad(-45.0f)))
                                   .SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(1.0f, 1.0f, 1.0f).Normalize(), spc::spcDeg2Rad(-45.0f)))

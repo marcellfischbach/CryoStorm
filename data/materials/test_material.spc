@@ -6,8 +6,8 @@ material {
         shader "Shadow" "/shaders/test_shadow_program.spc"
     },
     attributes {
-        texture "Diffuse" ,
-        color "Color"
+        attribute "Diffuse" "Texture",
+        attribute "Color" "Color4" 1 1 1 1
     }
 
 }
