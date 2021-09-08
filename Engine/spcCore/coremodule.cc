@@ -3,11 +3,11 @@
 #include <master.refl.cc>
 #include <spcCore/resource/assetmanager.hh>
 #include <spcCore/loaders/samplerloader.hh>
+#include <spcCore/loaders/materialloader.hh>
 
 
 namespace spc
 {
-
 
 
 bool CoreModule::Register(int argc, char** argv)
@@ -16,7 +16,7 @@ bool CoreModule::Register(int argc, char** argv)
 
   AssetManager::Set(new AssetManager());
   AssetManager::Get()->RegisterLoader(new SamplerLoaderSpc());
-
+  AssetManager::Get()->RegisterLoader(new MaterialLoaderSpc());
 
   return true;
 }

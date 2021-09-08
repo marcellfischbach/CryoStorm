@@ -110,6 +110,8 @@ set(SOURCES
         input/input.hh
         input/key.hh
 
+        loaders/materialloader.cc
+        loaders/materialloader.hh
         loaders/samplerloader.cc
         loaders/samplerloader.hh
 
