@@ -54,6 +54,9 @@ private:
   ePixelFormat m_pixelFormat;
   UInt16 m_numberOfLayers;
   Layer* m_layers;
+
+  bool m_mipmapCreated;
+  eMipMapProcedure m_mipMapProcedure;
 };
 
 }

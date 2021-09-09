@@ -71,13 +71,13 @@ bool Material::BindShader(iDevice* device, eRenderPass pass)
 }
 
 
-void Material::BindAttribute(iDevice* device, eRenderPass pass, Size idx)
+bool Material::BindAttribute(iDevice* device, eRenderPass pass, Size idx)
 {
   Attribute& attr = m_attributes[idx];
-  BindAttribute(device, pass, idx, attr.Floats, attr.Ints, attr.Texture);
+  return BindAttribute(device, pass, idx, attr.Floats, attr.Ints, attr.Texture);
 }
 
-void Material::BindAttribute(iDevice *device, eRenderPass pass, Size idx, float *floats, int* ints, iTexture*texture)
+bool Material::BindAttribute(iDevice *device, eRenderPass pass, Size idx, float *floats, int* ints, iTexture*texture)
 {
   Attribute& attribute = m_attributes[idx];
   iShaderAttribute* shaderAttribute = attribute.Attributes[pass];
@@ -113,13 +113,15 @@ void Material::BindAttribute(iDevice *device, eRenderPass pass, Size idx, float 
       break;
     case eMAT_Texture:
       eTextureUnit unit = device->BindTexture(texture);
-      if (unit != eTU_Invalid)
+      if (unit == eTU_Invalid)
       {
-        shaderAttribute->Bind(unit);
+        return false;
       }
+      shaderAttribute->Bind(unit);
       break;
     }
   }
+  return true;
 }
 
 
@@ -145,7 +147,7 @@ const iShader* Material::GetShader(eRenderPass pass) const
 
 
 
-void Material::RegisterAttribute(const std::string& attributeName)
+void Material::RegisterAttribute(const std::string& attributeName, eMaterialAttributeType attributeType)
 {
   Attribute attribute;
   //memset(&attribute, 0, sizeof(Attribute));
@@ -155,7 +157,7 @@ void Material::RegisterAttribute(const std::string& attributeName)
   {
     attribute.Attributes[i] = m_shader[i] ? m_shader[i]->GetShaderAttribute(attributeName) : nullptr;
   }
-  attribute.Type = eMAT_Undefined;
+  attribute.Type = attributeType;
   m_attributes.push_back(attribute);
 }
 

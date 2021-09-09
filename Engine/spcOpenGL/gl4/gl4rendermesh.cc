@@ -98,6 +98,10 @@ void GL4RenderMesh::Render(iDevice* graphics, eRenderPass pass)
   glBindVertexArray(m_vao);
   SPC_GL_ERROR();
   glDrawElements(m_primType, (GLsizei) m_count, m_indexType, nullptr);
+  if (glGetError() != GL_NO_ERROR)
+  {
+    printf ("Narf\n");
+  }
   SPC_GL_ERROR();
   glBindVertexArray(0);
   SPC_GL_ERROR();

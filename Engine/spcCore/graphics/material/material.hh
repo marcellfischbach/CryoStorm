@@ -44,7 +44,7 @@ public:
   iShader* GetShader(eRenderPass pass);
   const iShader* GetShader(eRenderPass pass) const;
 
-  void RegisterAttribute(const std::string & attributeName);
+  void RegisterAttribute(const std::string & attributeName, eMaterialAttributeType attributeType);
   UInt16 GetNumberOfAttributes() const;
 
   std::vector<std::string> GetAttributeNames() const;
@@ -64,8 +64,8 @@ public:
 
 private:
   bool BindShader(iDevice * device, eRenderPass pass);
-  void BindAttribute(iDevice * device, eRenderPass pass, Size idx);
-  void BindAttribute(iDevice * device, eRenderPass pass, Size idx, float* floats, int* ints, iTexture * texture);
+  bool BindAttribute(iDevice * device, eRenderPass pass, Size idx);
+  bool BindAttribute(iDevice * device, eRenderPass pass, Size idx, float* floats, int* ints, iTexture * texture);
   void UpdateShaderAttributes(eRenderPass pass);
 
   struct Attribute

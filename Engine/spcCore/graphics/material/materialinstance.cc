@@ -38,11 +38,17 @@ bool MaterialInstance::Bind(iDevice* device, eRenderPass pass)
     Attribute& attribute = m_attributes[i];
     if (attribute.Override)
     {
-      m_material->BindAttribute(device, pass, (UInt16)i, attribute.Floats, attribute.Ints, attribute.Texture);
+      if (!m_material->BindAttribute(device, pass, (UInt16)i, attribute.Floats, attribute.Ints, attribute.Texture))
+      {
+        return false;
+      }
     }
     else
     {
-      m_material->BindAttribute(device, pass, (UInt16)i);
+      if (!m_material->BindAttribute(device, pass, (UInt16)i))
+      {
+        return false;
+      }
     }
   }
   return true;

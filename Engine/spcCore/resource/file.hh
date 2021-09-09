@@ -28,6 +28,7 @@ public:
   const std::string& GetName() const;
   const std::string& GetValue() const;
   int GetIntValue() const;
+  float GetFloatValue() const;
   double GetDoubleValue() const;
   AttributeType GetType() const;
 
@@ -71,8 +72,14 @@ public:
   int GetAttribute(size_t idx, int defaultValue) const;
   int GetAttribute(const std::string& attributeName, int defaultValue) const;
 
+  float GetAttribute(size_t idx, float defaultValue) const;
+  float GetAttribute(const std::string& attributeName, float defaultValue) const;
+
+
   double GetAttribute(size_t idx, double defaultValue) const;
   double GetAttribute(const std::string& attributeName, double defaultValue) const;
+
+
 
 private:
   std::string m_tagName;

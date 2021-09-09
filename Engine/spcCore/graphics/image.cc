@@ -8,6 +8,7 @@ namespace spc
 
 Image::Image(UInt16 width, UInt16 height, ePixelFormat format)
   : m_pixelFormat(format)
+  , m_mipmapCreated(false)
 {
   SPC_CLASS_GEN_CONSTR;
   GenerateLayers(width, height);
@@ -70,16 +71,26 @@ void Image::GenerateLayer(UInt16 layer)
 
 void Image::GenerateMipMaps(eMipMapProcedure procedure)
 {
-  GenerateMipMapLayers();
-  switch (procedure)
+  if (!m_mipmapCreated)
   {
-    case eMipMapProcedure::eMMP_Linear4x4:
-      GenerateMipMapsLinear4x4();
-      break;
-    case eMipMapProcedure::eMMP_Normal:
-      GenerateMipMapsNormal();
-      break;
+    GenerateMipMapLayers();
   }
+
+  if (!m_mipmapCreated || m_mipMapProcedure != procedure)
+  {
+    switch (procedure)
+    {
+      case eMipMapProcedure::eMMP_Linear4x4:
+        GenerateMipMapsLinear4x4();
+        break;
+      case eMipMapProcedure::eMMP_Normal:
+        GenerateMipMapsNormal();
+        break;
+    }
+  }
+
+  m_mipmapCreated = true;
+  m_mipMapProcedure = procedure;
 }
 
 void Image::GenerateMipMapLayers()

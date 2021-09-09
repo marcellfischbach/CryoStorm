@@ -1,6 +1,7 @@
 #pragma  once
 
 #include <spcCore/coreexport.hh>
+#include <spcCore/graphics/material/ematerialattributetype.hh>
 #include <spcCore/resource/iassetloader.hh>
 
 namespace spc
@@ -8,6 +9,7 @@ namespace spc
 
 struct iMaterial;
 class Material;
+class MaterialInstance;
 
 SPC_CLASS()
 class SPC_CORE_API MaterialLoaderSpc : public SPC_SUPER(iAssetLoaderSpc)
@@ -22,28 +24,30 @@ public:
   iObject* Load(const Class * cls, const file::File * file, const ResourceLocator * locator) const override;
 
 private:
-  Material* LoadMaterial(const Class* cls, const file::File* file, const ResourceLocator* locator) const;
-  iObject* LoadMaterialInstance(const Class* cls, const file::File* file, const ResourceLocator* locator) const;
+  static Material* LoadMaterial(const Class* cls, const file::File* file, const ResourceLocator* locator);
+  static iObject* LoadMaterialInstance(const Class* cls, const file::File* file, const ResourceLocator* locator);
 
 
-  bool LoadShaders(Material* material, const file::Element* materialElement) const;
-  bool LoadShader(Material* material, const file::Element* shaderElement) const;
-  bool LoadAttributes(Material* material, const file::Element* materialElement) const;
-  bool LoadAttribute(Material* material, const file::Element* attributeElement) const;
+  static bool LoadShaders(Material* material, const file::Element* materialElement);
+  static bool LoadShader(Material* material, const file::Element* shaderElement);
+  static bool LoadAttributes(Material* material, const file::Element* materialElement);
+  static bool LoadAttribute(Material* material, const file::Element* attributeElement);
+
+  static bool LoadReferenceMaterial (MaterialInstance *materialInstance, const file::Element *materialInstanceElement);
+  static bool LoadAttributes(MaterialInstance* materialInstance, const file::Element* materialInstanceElement);
+  static bool LoadAttribute(MaterialInstance* materialInstance, const file::Element* attributeElement);
 
 
-
-
-  bool LoadAttributeDefault(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement) const;
-  bool LoadAttributeFloat(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement) const;
-  bool LoadAttributeVec2(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement) const;
-  bool LoadAttributeVec3(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement) const;
-  bool LoadAttributeVec4(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement) const;
-  bool LoadAttributeColor4(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement) const;
-  bool LoadAttributeInt(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement) const;
-  bool LoadAttributeMatrix3(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement) const;
-  bool LoadAttributeMatrix4(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement) const;
-  bool LoadAttributeTexture(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement) const;
+  static eMaterialAttributeType GetAttributeType (const file::Element *attributeElement);
+  static bool LoadAttributeDefault(iMaterial* material, size_t attributeIdx, eMaterialAttributeType attributeType, const file::Element* attributeElement);
+  static bool LoadAttributeFloat(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement);
+  static bool LoadAttributeVec2(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement);
+  static bool LoadAttributeVec3(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement);
+  static bool LoadAttributeVec4(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement);
+  static bool LoadAttributeInt(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement);
+  static bool LoadAttributeMatrix3(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement);
+  static bool LoadAttributeMatrix4(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement);
+  static bool LoadAttributeTexture(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement);
 };
 
 

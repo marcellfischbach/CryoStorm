@@ -353,6 +353,46 @@ void create_suzannes_batched(spc::Mesh *suzanneMesh, spc::World *world)
   }
 }
 
+spc::iRenderTarget2D *create_render_target (spc::iDevice *device, uint32_t width, uint32_t height)
+{
+  spc::iSampler *colorSampler = device->CreateSampler();
+  colorSampler->SetFilterMode(spc::eFM_MinMagNearest);
+
+  spc::iSampler *depthSampler = device->CreateSampler();
+  depthSampler->SetFilterMode(spc::eFM_MinMagNearest);
+
+  spc::iTexture2D::Descriptor rt_col_desc = {};
+  rt_col_desc.Width = width;
+  rt_col_desc.Height = height;
+  rt_col_desc.Format = spc::ePF_RGBA;
+  rt_col_desc.MipMaps = false;
+  spc::iTexture2D *color_texture = device->CreateTexture(rt_col_desc);
+  color_texture->SetSampler(colorSampler);
+
+  spc::iTexture2D::Descriptor rt_dpth_desc = {};
+  rt_dpth_desc.Width = width;
+  rt_dpth_desc.Height = height;
+  rt_dpth_desc.Format = spc::ePF_Depth;
+  rt_dpth_desc.MipMaps = false;
+  spc::iTexture2D *depth_texture = device->CreateTexture(rt_dpth_desc);
+  depth_texture->SetSampler(depthSampler);
+
+
+  spc::iRenderTarget2D::Descriptor rt_desc = {};
+  rt_desc.Width = width;
+  rt_desc.Height = height;
+
+  spc::iRenderTarget2D *renderTarget = device->CreateRenderTarget(rt_desc);
+  renderTarget->AddColorTexture(color_texture);
+  renderTarget->SetDepthBuffer(spc::ePF_Depth);
+  if (!renderTarget->Compile())
+  {
+    printf("Unable to compile render target: %s\n", renderTarget->GetCompileLog().c_str());
+    return nullptr;
+  }
+  return renderTarget;
+}
+
 #include <regex>
 #include <sstream>
 
@@ -371,56 +411,16 @@ int main(int argc, char **argv)
 
   spc::iDevice *device = spc::ObjectRegistry::Get<spc::iDevice>();
 
-  spc::iShader *forwardShader = spc::AssetManager::Get()->Load<spc::iShader>(spc::ResourceLocator("/shaders/test_color_program.spc"));
-  spc::iShader *shadowCubeShader = spc::AssetManager::Get()->Load<spc::iShader>(spc::ResourceLocator("/shaders/test_shadow_point_program.spc"));
-  spc::iShader *shadowPSSMShader = spc::AssetManager::Get()->Load<spc::iShader>(spc::ResourceLocator("/shaders/test_shadow_pssm_program.spc"));
-  spc::iShader *shadowShader = spc::AssetManager::Get()->Load<spc::iShader>(spc::ResourceLocator("/shaders/test_shadow_program.spc"));
 
 
-  spc::iSampler *sampler = spc::AssetManager::Get()->Load<spc::iSampler>(spc::ResourceLocator("sampler_default.spc"));
-  spc::Material *test_material = spc::AssetManager::Get()->Load<spc::Material>(spc::ResourceLocator("/materials/test_material.spc"));
-
-  spc::Image *image = spc::AssetManager::Get()->Load<spc::Image>(spc::ResourceLocator("GrassGreenTexture0003.jpg"));
-  if (!image)
-  {
-    image = spc::AssetManager::Get()->Load<spc::Image>(spc::ResourceLocator("snowflake_64.png"));
-  }
-
-  image->GenerateMipMaps(spc::Image::eMipMapProcedure::eMMP_Linear4x4);
-
-  spc::iTexture2D::Descriptor desc = {};
-  desc.Format = image->GetPixelFormat();
-  desc.Width = image->GetWidth();
-  desc.Height = image->GetHeight();
-  desc.MipMaps = true;
-  spc::iTexture2D *texture = device->CreateTexture(desc);
-  texture->Data(image);
-
-  /*
-  spc::Material *material = new spc::Material();
-  material->SetShader(spc::eRP_Forward, forwardShader);
-  material->SetShader(spc::eRP_Shadow, shadowShader);
-  material->SetShader(spc::eRP_ShadowCube, shadowCubeShader);
-  material->SetShader(spc::eRP_ShadowPSSM, shadowPSSMShader);
-
-  material->RegisterAttribute("Diffuse");
-  material->RegisterAttribute("Color");
-  */
-
-  spc::Material* material = spc::AssetManager::Get()->Get<spc::Material>(spc::ResourceLocator("/materials/test_material.spc"));
 
 
-  // material->Set(material->IndexOf("Diffuse"), texture);
-  //material->Set(material->IndexOf("Color"), spc::Color4f(1, 1, 1, 1));
-
-  spc::MaterialInstance *instance = new spc::MaterialInstance();
-  instance->SetMaterial(material);
-  //instance->Set(instance->IndexOf("Color"), spc::Color4f(0, 0, 1, 1));
+  spc::MaterialInstance *materialInstance = spc::AssetManager::Get()->Get<spc::MaterialInstance>(spc::ResourceLocator("/materials/test_material_instance.spc"));
 
 
   spc::iRenderMesh *renderMesh = create_plane_mesh(8, 8);
   spc::Mesh *mesh = new spc::Mesh();
-  mesh->AddMaterialSlot("Default", instance);
+  mesh->AddMaterialSlot("Default", materialInstance);
   mesh->AddSubMesh(renderMesh, 0);
 
 
@@ -440,8 +440,8 @@ int main(int argc, char **argv)
 
   spc::Mesh *suzanneMesh = spc::AssetManager::Get()->Load<spc::Mesh>(spc::ResourceLocator("file:///suzanne.fbx"));
   spc::Mesh *cube = spc::AssetManager::Get()->Load<spc::Mesh>(spc::ResourceLocator("cube.fbx"));
-  suzanneMesh->SetDefaultMaterial(0, material);
-  cube->SetDefaultMaterial(0, material);
+  suzanneMesh->SetDefaultMaterial(0, materialInstance);
+  cube->SetDefaultMaterial(0, materialInstance);
 
   spc::Entity *entity0 = new spc::Entity("Entity0");
   spc::StaticMeshState *meshState0 = new spc::StaticMeshState("StaticMesh0");
@@ -505,52 +505,8 @@ int main(int argc, char **argv)
 
 
 
-  spc::iSampler *colorSampler = device->CreateSampler();
-  colorSampler->SetFilterMode(spc::eFM_MinMagNearest);
-
-  spc::iSampler *depthSampler = device->CreateSampler();
-  depthSampler->SetFilterMode(spc::eFM_MinMagNearest);
-
-  spc::iTexture2D::Descriptor rt_col_desc = {};
-  rt_col_desc.Width = width;
-  rt_col_desc.Height = height;
-  rt_col_desc.Format = spc::ePF_RGBA;
-  rt_col_desc.MipMaps = false;
-  spc::iTexture2D *color_texture = device->CreateTexture(rt_col_desc);
-  color_texture->SetSampler(colorSampler);
-
-  spc::iTexture2D::Descriptor rt_dpth_desc = {};
-  rt_dpth_desc.Width = width;
-  rt_dpth_desc.Height = height;
-  rt_dpth_desc.Format = spc::ePF_Depth;
-  rt_dpth_desc.MipMaps = false;
-  spc::iTexture2D *depth_texture = device->CreateTexture(rt_dpth_desc);
-  depth_texture->SetSampler(depthSampler);
-
-
-  spc::iRenderTarget2D::Descriptor rt_desc = {};
-  rt_desc.Width = width;
-  rt_desc.Height = height;
-
-  spc::iRenderTarget2D *renderTarget = device->CreateRenderTarget(rt_desc);
-  renderTarget->AddColorTexture(color_texture);
-  renderTarget->SetDepthBuffer(spc::ePF_Depth);
-  if (!renderTarget->Compile())
-  {
-    printf("Unable to compile render target: %s\n", renderTarget->GetCompileLog().c_str());
-    return 0;
-  }
-  else
-  {
-    printf("Render target complete\n");
-  }
-
-  spc::Quaternion myRot = spc::Quaternion::FromAxisAngle(spc::Vector3f(1, 2, 3).Normalize(), 1.234f);
-  printf("Quaternion: %.2f %.2f %.2f %.2f\n", myRot.x, myRot.y, myRot.z, myRot.w);
-  spc::Matrix3f myMat = myRot.ToMatrix3();
-  myRot = spc::Quaternion::FromMatrix(myMat);
-  printf("Quaternion: %.2f %.2f %.2f %.2f\n", myRot.x, myRot.y, myRot.z, myRot.w);
-
+  auto renderTarget = create_render_target(device, width, height);
+  auto colorTexture = renderTarget->GetColorTexture(0);
 
   spc::iRenderPipeline *renderPipeline = spc::ObjectRegistry::Get<spc::iRenderPipeline>();
 
@@ -616,27 +572,12 @@ int main(int argc, char **argv)
       useCs = !useCs;
     }
 
-    /*
-    entityX->GetRoot()->GetTransform()
-      .SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(0.0f, 1.0f, 0.0f), entRot * 2))
-      .Finish();
 
-    entityZ->GetRoot()->GetTransform()
-      .SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(0.0f, 1.0f, 0.0f), entRot / 2.0f))
-      .Finish();
-    */
     if (anim)
     {
       entRot += 0.003f;
     }
 
-//    lightEntity->GetRoot()->SetTransform(spc::Transform(spc::Vector3f(spc::spcSin(entRot) * 5.0f, 5.0f, spc::spcCos(entRot) * 5.0f)));
-    /*
-      suzanneEntity->GetRoot()->SetTransform(spc::Transform(
-          spc::Vector3f(spc::spcCos(entRot * 3.5f) * 5.0f, 0.0f, spc::spcSin(entRot * 3.5f) * 5.0f),
-          spc::Quaternion::FromAxisAngle(spc::Vector3f(0, 1, 0), entRot * 3.5f - (float) M_PI / 2.0f)
-      ));
-      */
 
     float dist = 10.0f;
     cameraEntity->GetRoot()->LookAt(
@@ -644,7 +585,6 @@ int main(int argc, char **argv)
       spc::Vector3f(0.0f, 0.0f, 0.0f)
     );
 
-    //rot += 0.005f;
 
     world->Update((float) deltaTime / 1000.0f);
 
@@ -657,7 +597,7 @@ int main(int argc, char **argv)
     device->SetViewport(0, 0, wnd_width, wnd_height);
     glDisable(GL_DEPTH_TEST);
     //device->Clear(true, spc::Color4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, true, 0);
-    device->RenderFullscreen(color_texture);
+    device->RenderFullscreen(colorTexture);
     glEnable(GL_DEPTH_TEST);
 
 #if _DEBUG

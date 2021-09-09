@@ -29,7 +29,7 @@ iObject* MaterialLoaderSpc::Load(const Class* cls, const file::File* file, const
 }
 
 
-Material* MaterialLoaderSpc::LoadMaterial(const Class* cls, const file::File* file, const ResourceLocator* locator) const
+Material* MaterialLoaderSpc::LoadMaterial(const Class*, const file::File* file, const ResourceLocator*)
 {
   const file::Element* root = file->Root();
   const file::Element* materialElement = root->GetChild("material");
@@ -38,7 +38,7 @@ Material* MaterialLoaderSpc::LoadMaterial(const Class* cls, const file::File* fi
     return nullptr;
   }
 
-  Material* material = new Material();
+  auto material = new Material();
 
   if (!LoadShaders(material, materialElement))
   {
@@ -56,8 +56,37 @@ Material* MaterialLoaderSpc::LoadMaterial(const Class* cls, const file::File* fi
   return material;
 }
 
+iObject* MaterialLoaderSpc::LoadMaterialInstance(const Class* , const file::File* file, const ResourceLocator* )
+{
 
-bool MaterialLoaderSpc::LoadShaders(Material* material, const file::Element* materialElement) const
+  const file::Element* root = file->Root();
+  const file::Element* materialElement = root->GetChild("materialinstance");
+  if (!materialElement)
+  {
+    return nullptr;
+  }
+
+  auto materialInstance = new MaterialInstance();
+
+  if (!LoadReferenceMaterial(materialInstance, materialElement))
+  {
+    SPC_RELEASE(materialInstance);
+    return nullptr;
+  }
+
+  if (!LoadAttributes(materialInstance, materialElement))
+  {
+    SPC_RELEASE(materialInstance);
+    return nullptr;
+  }
+
+
+  return materialInstance;
+}
+
+
+
+bool MaterialLoaderSpc::LoadShaders(Material* material, const file::Element* materialElement)
 {
   const file::Element* shadersElement = materialElement->GetChild("shaders");
   if (!shadersElement)
@@ -81,7 +110,7 @@ bool MaterialLoaderSpc::LoadShaders(Material* material, const file::Element* mat
 
 
 
-#define IF(prefix, name, text) if (std::string(#name) == text) return prefix##name
+#define IF(prefix, name, text) if (std::string(#name) == (text)) return prefix##name
 
 eRenderPass RenderPass(const std::string& renderPass)
 {
@@ -99,7 +128,7 @@ eRenderPass RenderPass(const std::string& renderPass)
 }
 
 
-bool MaterialLoaderSpc::LoadShader(Material* material, const file::Element* shaderElement) const
+bool MaterialLoaderSpc::LoadShader(Material* material, const file::Element* shaderElement)
 {
   if (shaderElement->GetNumberOfAttributes() != 2)
   {
@@ -121,7 +150,7 @@ bool MaterialLoaderSpc::LoadShader(Material* material, const file::Element* shad
   }
 
   ResourceLocator shaderLocator(shaderLoc);
-  iShader* shader = AssetManager::Get()->Get<iShader>(shaderLocator);
+  auto shader = AssetManager::Get()->Get<iShader>(shaderLocator);
   if (!shader)
   {
     return false;
@@ -133,7 +162,7 @@ bool MaterialLoaderSpc::LoadShader(Material* material, const file::Element* shad
   return true;
 }
 
-bool MaterialLoaderSpc::LoadAttributes(Material* material, const file::Element* materialElement) const
+bool MaterialLoaderSpc::LoadAttributes(Material* material, const file::Element* materialElement)
 {
   const file::Element* attributesElement = materialElement->GetChild("attributes");
   if (!attributesElement)
@@ -156,33 +185,31 @@ bool MaterialLoaderSpc::LoadAttributes(Material* material, const file::Element* 
 }
 
 
-
-iObject* MaterialLoaderSpc::LoadMaterialInstance(const Class* cls, const file::File* file, const ResourceLocator* locator) const
+bool MaterialLoaderSpc::LoadAttribute(Material* material, const file::Element* attributeElement)
 {
-  return nullptr;
-}
-
-
-
-
-
-bool MaterialLoaderSpc::LoadAttribute(Material* material, const file::Element* attributeElement) const
-{
-  if (attributeElement->GetNumberOfAttributes() == 0)
+  if (attributeElement->GetNumberOfAttributes() < 2)
   {
     return false;
   }
 
-  std::string name = attributeElement->GetAttribute(0, "");
+  eMaterialAttributeType attributeType = GetAttributeType(attributeElement);
+  if (attributeType == eMAT_Undefined)
+  {
+    return false;
+  }
+
+  std::string name = attributeElement->GetAttribute(1, "");
   if (name.empty())
   {
     return false;
   }
 
-  material->RegisterAttribute(name);
+
+
+  material->RegisterAttribute(name, attributeType);
   size_t idx = material->IndexOf(name);
 
-  if (!LoadAttributeDefault(material, idx, attributeElement))
+  if (!LoadAttributeDefault(material, idx, attributeType, attributeElement))
   {
     return false;
   }
@@ -191,125 +218,221 @@ bool MaterialLoaderSpc::LoadAttribute(Material* material, const file::Element* a
   return true;
 }
 
-bool MaterialLoaderSpc::LoadAttributeDefault(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement) const
+
+
+
+bool MaterialLoaderSpc::LoadReferenceMaterial(MaterialInstance *materialInstance, const file::Element *materialInstanceElement)
+{
+  const file::Element *materialElement = materialInstanceElement->GetChild("material");
+  if (!materialElement)
+  {
+    return false;
+  }
+
+  if (materialElement->GetNumberOfAttributes() < 1)
+  {
+    return false;
+  }
+
+  ResourceLocator locator (materialElement->GetAttribute(0, ""));
+  auto material = AssetManager::Get()->Get<Material>(locator);
+  if (!material)
+  {
+    return false;
+  }
+
+  materialInstance->SetMaterial(material);
+  return true;
+}
+
+
+bool MaterialLoaderSpc::LoadAttributes(MaterialInstance* materialInstance, const file::Element* materialInstanceElement)
+{
+  const file::Element* attributesElement = materialInstanceElement->GetChild("attributes");
+  if (!attributesElement)
+  {
+    return true;
+  }
+
+  for (size_t i = 0; i < attributesElement->GetNumberOfChildren(); ++i)
+  {
+    const file::Element* attributeElement = attributesElement->GetChild(i);
+    if (attributeElement && attributeElement->GetTagName() == std::string("attribute"))
+    {
+      if (!LoadAttribute(materialInstance, attributeElement))
+      {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+bool MaterialLoaderSpc::LoadAttribute(MaterialInstance* materialInstance, const file::Element* attributeElement)
 {
   if (attributeElement->GetNumberOfAttributes() < 2)
   {
-    // no default defined... thats ok
-    return true;
+    return false;
   }
-  std::string type = attributeElement->GetAttribute(1, "");
+
+  eMaterialAttributeType attributeType = GetAttributeType(attributeElement);
+  if (attributeType == eMAT_Undefined)
+  {
+    return false;
+  }
+
+  std::string name = attributeElement->GetAttribute(1, "");
+  if (name.empty())
+  {
+    return false;
+  }
+
+
+
+  size_t idx = materialInstance->IndexOf(name);
+  if (idx == Material::UndefinedIndex)
+  {
+    return false;
+  }
+
+  if (!LoadAttributeDefault(materialInstance, idx, attributeType, attributeElement))
+  {
+    return false;
+  }
+
+
+  return true;
+}
+
+
+eMaterialAttributeType MaterialLoaderSpc::GetAttributeType(const file::Element *attributeElement)
+{
+  std::string type = attributeElement->GetAttribute(0, "");
   if (type == "Float")
   {
-    LoadAttributeFloat(material, attributeIdx, attributeElement);
+    return eMAT_Float;
   }
   else if (type == "Vec2")
   {
-    LoadAttributeVec2(material, attributeIdx, attributeElement);
+    return eMAT_Vec2;
   }
   else if (type == "Vec3")
   {
-    LoadAttributeVec3(material, attributeIdx, attributeElement);
+    return eMAT_Vec3;
   }
   else if (type == "Vec4")
   {
-    LoadAttributeVec4(material, attributeIdx, attributeElement);
+    return eMAT_Vec4;
   }
   else if (type == "Color4")
   {
-    LoadAttributeColor4(material, attributeIdx, attributeElement);
+    return eMAT_Vec4;
   }
   else if (type == "Int")
   {
-    LoadAttributeInt(material, attributeIdx, attributeElement);
+    return eMAT_Int;
   }
   else if (type == "Matrix3")
   {
-    LoadAttributeMatrix3(material, attributeIdx, attributeElement);
+    return eMAT_Matrix3;
   }
   else if (type == "Matrix4")
   {
-    LoadAttributeMatrix4(material, attributeIdx, attributeElement);
+    return eMAT_Matrix4;
   }
   else if (type == "Texture")
   {
-    LoadAttributeTexture(material, attributeIdx, attributeElement);
+    return eMAT_Texture;
   }
+  return eMAT_Undefined;
+}
+
+bool MaterialLoaderSpc::LoadAttributeDefault(iMaterial* material, size_t attributeIdx, eMaterialAttributeType attributeType, const file::Element* attributeElement)
+{
+  switch (attributeType)
+  {
+    case eMAT_Float:
+      return LoadAttributeFloat(material, attributeIdx, attributeElement);
+    case eMAT_Vec2:
+      return LoadAttributeVec2(material, attributeIdx, attributeElement);
+    case eMAT_Vec3:
+      return LoadAttributeVec3(material, attributeIdx, attributeElement);
+    case eMAT_Vec4:
+      return LoadAttributeVec4(material, attributeIdx, attributeElement);
+    case eMAT_Int:
+      return LoadAttributeInt(material, attributeIdx, attributeElement);
+
+    case eMAT_Matrix3:
+      return LoadAttributeMatrix3(material, attributeIdx, attributeElement);
+    case eMAT_Matrix4:
+      return LoadAttributeMatrix4(material, attributeIdx, attributeElement);
+
+    case eMAT_Texture:
+      return LoadAttributeTexture(material, attributeIdx, attributeElement);
+    default:
+      break;
+  }
+  return false;
 }
 
 
 
-bool MaterialLoaderSpc::LoadAttributeFloat(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement) const 
+bool MaterialLoaderSpc::LoadAttributeFloat(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement) 
 { 
   if (attributeElement->GetNumberOfAttributes() < 3)
   {
     return false;
   }
 
-  double v0 = attributeElement->GetAttribute(2, 0.0);
+  auto v0 = (float)attributeElement->GetAttribute(2, 0.0);
   material->Set(attributeIdx, (float)v0);
   return true;
 }
 
-bool MaterialLoaderSpc::LoadAttributeVec2(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement) const 
+bool MaterialLoaderSpc::LoadAttributeVec2(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement) 
 {
   if (attributeElement->GetNumberOfAttributes() < 4)
   {
     return false;
   }
 
-  double v0 = attributeElement->GetAttribute(2, 0.0);
-  double v1 = attributeElement->GetAttribute(3, 0.0);
+  auto v0 = (float)attributeElement->GetAttribute(2, 0.0);
+  auto v1 = (float)attributeElement->GetAttribute(3, 0.0);
   material->Set(attributeIdx, Vector2f(v0, v1));
   return true;
 }
 
-bool MaterialLoaderSpc::LoadAttributeVec3(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement) const 
+bool MaterialLoaderSpc::LoadAttributeVec3(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement) 
 {
   if (attributeElement->GetNumberOfAttributes() < 5)
   {
     return false;
   }
 
-  double v0 = attributeElement->GetAttribute(2, 0.0);
-  double v1 = attributeElement->GetAttribute(3, 0.0);
-  double v2 = attributeElement->GetAttribute(4, 0.0);
+  auto v0 = (float)attributeElement->GetAttribute(2, 0.0);
+  auto v1 = (float)attributeElement->GetAttribute(3, 0.0);
+  auto v2 = (float)attributeElement->GetAttribute(4, 0.0);
   material->Set(attributeIdx, Vector3f(v0, v1, v2));
   return true;
 }
 
 
-bool MaterialLoaderSpc::LoadAttributeVec4(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement) const 
+bool MaterialLoaderSpc::LoadAttributeVec4(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement) 
 {
   if (attributeElement->GetNumberOfAttributes() < 6)
   {
     return false;
   }
 
-  double v0 = attributeElement->GetAttribute(2, 0.0);
-  double v1 = attributeElement->GetAttribute(3, 0.0);
-  double v2 = attributeElement->GetAttribute(4, 0.0);
-  double v3 = attributeElement->GetAttribute(5, 0.0);
+  auto v0 = (float)attributeElement->GetAttribute(2, 0.0);
+  auto v1 = (float)attributeElement->GetAttribute(3, 0.0);
+  auto v2 = (float)attributeElement->GetAttribute(4, 0.0);
+  auto v3 = (float)attributeElement->GetAttribute(5, 0.0);
   material->Set(attributeIdx, Vector4f(v0, v1, v2, v3));
   return true;
 }
 
-bool MaterialLoaderSpc::LoadAttributeColor4(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement) const 
-{
-  if (attributeElement->GetNumberOfAttributes() < 6)
-  {
-    return false;
-  }
-
-  double v0 = attributeElement->GetAttribute(2, 0.0);
-  double v1 = attributeElement->GetAttribute(3, 0.0);
-  double v2 = attributeElement->GetAttribute(4, 0.0);
-  double v3 = attributeElement->GetAttribute(5, 0.0);
-  material->Set(attributeIdx, Color4f(v0, v1, v2, v3));
-  return true;
-}
-
-bool MaterialLoaderSpc::LoadAttributeInt(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement) const 
+bool MaterialLoaderSpc::LoadAttributeInt(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement) 
 {
   if (attributeElement->GetNumberOfAttributes() < 3)
   {
@@ -321,7 +444,7 @@ bool MaterialLoaderSpc::LoadAttributeInt(iMaterial* material, size_t attributeId
   return true;
 }
 
-bool MaterialLoaderSpc::LoadAttributeMatrix3(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement) const 
+bool MaterialLoaderSpc::LoadAttributeMatrix3(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement) 
 {
   if ( !attributeElement->HasAttribute("m00")
     || !attributeElement->HasAttribute("m01")
@@ -337,23 +460,24 @@ bool MaterialLoaderSpc::LoadAttributeMatrix3(iMaterial* material, size_t attribu
     return false;
   }
 
-  float m00 = attributeElement->GetAttribute("m00", 1.0);
-  float m01 = attributeElement->GetAttribute("m01", 0.0);
-  float m02 = attributeElement->GetAttribute("m02", 0.0);
-  float m10 = attributeElement->GetAttribute("m10", 0.0);
-  float m11 = attributeElement->GetAttribute("m11", 1.0);
-  float m12 = attributeElement->GetAttribute("m12", 0.0);
-  float m20 = attributeElement->GetAttribute("m20", 0.0);
-  float m21 = attributeElement->GetAttribute("m21", 0.0);
-  float m22 = attributeElement->GetAttribute("m22", 1.0);
+  auto m00 = (float)attributeElement->GetAttribute("m00", 1.0);
+  auto m01 = (float)attributeElement->GetAttribute("m01", 0.0);
+  auto m02 = (float)attributeElement->GetAttribute("m02", 0.0);
+  auto m10 = (float)attributeElement->GetAttribute("m10", 0.0);
+  auto m11 = (float)attributeElement->GetAttribute("m11", 1.0);
+  auto m12 = (float)attributeElement->GetAttribute("m12", 0.0);
+  auto m20 = (float)attributeElement->GetAttribute("m20", 0.0);
+  auto m21 = (float)attributeElement->GetAttribute("m21", 0.0);
+  auto m22 = (float)attributeElement->GetAttribute("m22", 1.0);
   material->Set(attributeIdx, Matrix3f(
     m00, m01, m02,
     m10, m11, m12,
     m20, m21, m22
   ));
+  return true;
 }
 
-bool MaterialLoaderSpc::LoadAttributeMatrix4(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement) const 
+bool MaterialLoaderSpc::LoadAttributeMatrix4(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement) 
 { 
   if (!attributeElement->HasAttribute("m00")
     || !attributeElement->HasAttribute("m01")
@@ -376,50 +500,52 @@ bool MaterialLoaderSpc::LoadAttributeMatrix4(iMaterial* material, size_t attribu
     return false;
   }
 
-  float m00 = attributeElement->GetAttribute("m00", 1.0);
-  float m01 = attributeElement->GetAttribute("m01", 0.0);
-  float m02 = attributeElement->GetAttribute("m02", 0.0);
-  float m03 = attributeElement->GetAttribute("m03", 0.0);
-  float m10 = attributeElement->GetAttribute("m10", 0.0);
-  float m11 = attributeElement->GetAttribute("m11", 1.0);
-  float m12 = attributeElement->GetAttribute("m12", 0.0);
-  float m13 = attributeElement->GetAttribute("m13", 0.0);
-  float m20 = attributeElement->GetAttribute("m20", 0.0);
-  float m21 = attributeElement->GetAttribute("m21", 0.0);
-  float m22 = attributeElement->GetAttribute("m22", 1.0);
-  float m23 = attributeElement->GetAttribute("m23", 0.0);
-  float m30 = attributeElement->GetAttribute("m30", 0.0);
-  float m31 = attributeElement->GetAttribute("m31", 0.0);
-  float m32 = attributeElement->GetAttribute("m32", 0.0);
-  float m33 = attributeElement->GetAttribute("m33", 1.0);
+  float m00 = (float)attributeElement->GetAttribute("m00", 1.0);
+  float m01 = (float)attributeElement->GetAttribute("m01", 0.0);
+  float m02 = (float)attributeElement->GetAttribute("m02", 0.0);
+  float m03 = (float)attributeElement->GetAttribute("m03", 0.0);
+  float m10 = (float)attributeElement->GetAttribute("m10", 0.0);
+  float m11 = (float)attributeElement->GetAttribute("m11", 1.0);
+  float m12 = (float)attributeElement->GetAttribute("m12", 0.0);
+  float m13 = (float)attributeElement->GetAttribute("m13", 0.0);
+  float m20 = (float)attributeElement->GetAttribute("m20", 0.0);
+  float m21 = (float)attributeElement->GetAttribute("m21", 0.0);
+  float m22 = (float)attributeElement->GetAttribute("m22", 1.0);
+  float m23 = (float)attributeElement->GetAttribute("m23", 0.0);
+  float m30 = (float)attributeElement->GetAttribute("m30", 0.0);
+  float m31 = (float)attributeElement->GetAttribute("m31", 0.0);
+  float m32 = (float)attributeElement->GetAttribute("m32", 0.0);
+  float m33 = (float)attributeElement->GetAttribute("m33", 1.0);
   material->Set(attributeIdx, Matrix4f(
     m00, m01, m02, m03,
     m10, m11, m12, m13,
     m20, m21, m22, m23,
     m30, m31, m32, m33
   ));
+  return true;
 }
 
-bool MaterialLoaderSpc::LoadAttributeTexture(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement) const 
+bool MaterialLoaderSpc::LoadAttributeTexture(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement) 
 {
   if (attributeElement->GetNumberOfAttributes() < 3)
   {
     return false;
   }
 
-  std::string textureLoc = attributeElement->GetAttribute(3, "");
+  std::string textureLoc = attributeElement->GetAttribute(2, "");
   if (textureLoc.empty())
   {
     return false;
   }
 
-  iTexture* texture = AssetManager::Get()->Get<iTexture>(ResourceLocator(textureLoc));
+  auto texture = AssetManager::Get()->Get<iTexture>(ResourceLocator(textureLoc));
   if (!texture)
   {
     return false;
   }
 
   material->Set(attributeIdx, texture);
+  return true;
 }
 
 

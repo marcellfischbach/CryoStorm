@@ -114,6 +114,8 @@ set(SOURCES
         loaders/materialloader.hh
         loaders/samplerloader.cc
         loaders/samplerloader.hh
+        loaders/textureloader.cc
+        loaders/textureloader.hh
 
         math/boundingbox.cc
         math/boundingbox.hh
