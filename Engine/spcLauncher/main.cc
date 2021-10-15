@@ -573,21 +573,25 @@ int main(int argc, char **argv)
     }
 
 
-    if (anim)
+    if (deltaTime != 0)
     {
-      entRot += 0.003f;
+      float tpf = (float)deltaTime / 1000.0f;
+
+      if (anim)
+      {
+          entRot += tpf * 2.0f;
+      }
+
+
+      float dist = 10.0f;
+      cameraEntity->GetRoot()->LookAt(
+          spc::Vector3f(spc::spcCos(entRot + (float) M_PI / 2.0f + 0.2f) * dist, dist, spc::spcSin(entRot + (float) M_PI / 2.0f + 0.2f) * dist),
+          spc::Vector3f(0.0f, 0.0f, 0.0f)
+      );
+
+
+      world->Update(tpf);
     }
-
-
-    float dist = 10.0f;
-    cameraEntity->GetRoot()->LookAt(
-      spc::Vector3f(spc::spcCos(entRot + (float)M_PI / 2.0f + 0.2f) * dist, dist, spc::spcSin(entRot + (float)M_PI / 2.0f + 0.2f) * dist),
-      spc::Vector3f(0.0f, 0.0f, 0.0f)
-    );
-
-
-    world->Update((float) deltaTime / 1000.0f);
-
 
     cameraState->Update(renderTarget->GetWidth(), renderTarget->GetHeight());
     renderPipeline->Render(renderTarget, cameraState->GetCamera(), cameraState->GetProjector(), device, world->GetScene());

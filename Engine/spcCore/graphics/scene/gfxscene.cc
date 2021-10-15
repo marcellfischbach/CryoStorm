@@ -3,7 +3,6 @@
 #include <spcCore/graphics/ilight.hh>
 #include <spcCore/graphics/ipointlight.hh>
 #include <spcCore/graphics/mesh.hh>
-#include <spcCore/graphics/scene/gfxmesh.hh>
 #include <algorithm>
 
 
@@ -90,7 +89,7 @@ void GfxScene::Add(GfxLight *light)
     else if (light->IsStatic())
     {
       Add(light, m_staticLights);
-      AddStaticLightToMeshes(light);
+      AddStaticLightToStaticMeshes(light);
     }
     else
     {
@@ -147,7 +146,7 @@ void GfxScene::Remove(GfxLight *light, std::vector<GfxLight *> &lights)
 }
 
 Size assign_lights(
-    GfxMesh *mesh,
+    GfxMesh */*mesh*/,
     const GfxMesh::Light *static_lights,
     Size num_static,
     const GfxMesh::Light *dynamic_lights,
@@ -202,16 +201,16 @@ void GfxScene::Render(iDevice *device, eRenderPass pass)
       lights[offset++] = globalLight;
     }
 
-    GfxMesh::Light* dynamic_lights = new GfxMesh::Light[m_dynamicLights.size()];
-    GfxMesh::Light* static_lights = new GfxMesh::Light[m_staticLights.size()];
+    auto dynamic_lights = new GfxMesh::Light[m_dynamicLights.size()];
+    auto static_lights = new GfxMesh::Light[m_staticLights.size()];
     for (auto mesh : m_staticMeshes)
     {
       Size numberOfLights = offset;
       if (offset < MaxLights)
       {
-        const std::vector<GfxMesh::Light> &static_lights = mesh->GetLights();
+        const std::vector<GfxMesh::Light> &stat_lights = mesh->GetLights();
         Size numDynamic = CalcMeshLightInfluences(mesh, m_dynamicLights, dynamic_lights);
-        numberOfLights = assign_lights(mesh, &static_lights[0], static_lights.size(), dynamic_lights, numDynamic, lights, offset, MaxLights);
+        numberOfLights = assign_lights(mesh, &stat_lights[0], stat_lights.size(), dynamic_lights, numDynamic, lights, offset, MaxLights);
       }
       mesh->RenderForward(device, pass, lights, numberOfLights);
     }
@@ -267,7 +266,7 @@ void GfxScene::AddStaticLightsToMesh(GfxMesh *mesh)
   }
 }
 
-void GfxScene::AddStaticLightToMeshes(GfxLight *light)
+void GfxScene::AddStaticLightToStaticMeshes(GfxLight *light)
 {
   for (auto mesh : m_staticMeshes)
   {
@@ -363,7 +362,7 @@ Size GfxScene::CalcMeshLightInfluences(const GfxMesh *mesh, const std::vector<Gf
   return num;
 }
 
-void GfxScene::ScanMeshes(const iClipper *clipper, UInt32 scanMask, std::function<void(GfxMesh *)> callback) const
+void GfxScene::ScanMeshes(const iClipper *clipper, UInt32 scanMask, const std::function<void(GfxMesh *)> &callback) const
 {
   if (scanMask & eSM_Static)
   {
@@ -388,7 +387,7 @@ void GfxScene::ScanMeshes(const iClipper *clipper, UInt32 scanMask, std::functio
   }
 }
 
-void GfxScene::ScanLights(const iClipper *clipper, UInt32 scanMask, std::function<bool(GfxLight *)> callback) const
+void GfxScene::ScanLights(const iClipper *clipper, UInt32 scanMask, const std::function<bool(GfxLight *)> &callback) const
 {
   if (scanMask & eSM_Global)
   {

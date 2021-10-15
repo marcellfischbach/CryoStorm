@@ -42,18 +42,18 @@ public:
 
   void Render(iDevice * device, eRenderPass pass);
 
-  void ScanMeshes(const iClipper* clipper, UInt32 scanMask, std::function<void(GfxMesh*)> callback) const;
-  void ScanLights(const iClipper* clipper, UInt32 scanMask, std::function<bool(GfxLight*)> callback) const;
+  void ScanMeshes(const iClipper* clipper, UInt32 scanMask, const std::function<void(GfxMesh*)> &callback) const;
+  void ScanLights(const iClipper* clipper, UInt32 scanMask, const std::function<bool(GfxLight*)> &callback) const;
 
 private:
-  void Add(GfxLight *light, std::vector<GfxLight*> &lights);
+  static void Add(GfxLight *light, std::vector<GfxLight*> &lights);
   void Remove(GfxLight *light, std::vector<GfxLight*> &lights);
 
 
   void AddStaticLightsToMesh(GfxMesh *mesh);
-  void AddStaticLightToMeshes(GfxLight *light);
-  float CalcMeshLightInfluence( GfxLight* light, const GfxMesh* mesh);
-  Size CalcMeshLightInfluences(const GfxMesh * mesh, const std::vector<GfxLight*> &lights, GfxMesh::Light *influencesOut);
+  void AddStaticLightToStaticMeshes(GfxLight *light);
+  static float CalcMeshLightInfluence( GfxLight* light, const GfxMesh* mesh);
+  static Size CalcMeshLightInfluences(const GfxMesh * mesh, const std::vector<GfxLight*> &lights, GfxMesh::Light *influencesOut);
 
 
   std::vector<GfxMesh*> m_dynamicMeshes;

@@ -16,6 +16,7 @@
 #include <spcCore/math/clipper/sphereclipper.hh>
 #include <spcCore/settings.hh>
 #include <algorithm>
+#include <array>
 #include <GL/glew.h>
 
 namespace spc::opengl
@@ -64,9 +65,6 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target, const Camera &camera, c
   m_directionalLightRenderer.SetScene(scene);
 
 
-//  BoxClipper clipper(Vector3f(-1000.0f, -1000.0f, -1000.0f), Vector3f(1000.0f, 1000.0f, 1000.0f));
-
-
   MultiPlaneClipper clipper(camera, projector);
 
   m_pointLightRenderer.Clear();
@@ -107,7 +105,7 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target, const Camera &camera, c
   SPC_GL_ERROR();
 
   //
-  // Render up to MasLights shadow maps
+  // Render up to MaxLights shadow maps
   RenderShadowMaps();
 
   camera.Bind(device);
@@ -116,16 +114,14 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target, const Camera &camera, c
   SPC_GL_ERROR();
 
   // 
-  // and finaly render all visible objects
+  // and finally render all visible objects
   device->SetRenderTarget(m_target);
   device->Clear(true, spc::Color4f(0.0f, 0.0, 0.0, 1.0f), true, 1.0f, true, 0);
-  //printf("Render - start\n");
   scene->ScanMeshes(&clipper, GfxScene::eSM_Dynamic | GfxScene::eSM_Static,
                     [this, &finalRenderLights, &finalRenderLightOffset](GfxMesh *mesh) {
                       RenderMesh(mesh, finalRenderLights, finalRenderLightOffset);
                     }
   );
-  //printf("Render - done\n");
 
   SPC_GL_ERROR();
 
@@ -239,16 +235,14 @@ void GL4ForwardPipeline::CollectShadowLights(GfxLight *light)
   switch (lght->GetType())
   {
     case eLT_Point:
-    {
-      GL4PointLight *pointLight = static_cast<GL4PointLight *>(light->GetLight());
-      m_pointLightRenderer.Add(pointLight);
-    }
+      m_pointLightRenderer.Add(static_cast<GL4PointLight *>(light->GetLight()));
       break;
+
     case eLT_Directional:
-    {
-      GL4DirectionalLight *directionalLight = static_cast<GL4DirectionalLight *>(light->GetLight());
-      m_directionalLightRenderer.Add(directionalLight);
-    }
+      m_directionalLightRenderer.Add(static_cast<GL4DirectionalLight *>(light->GetLight()));
+      break;
+
+    default:
       break;
   }
 }
@@ -309,7 +303,7 @@ float GL4ForwardPipeline::CalcMeshLightInfluence(const GfxLight *light, const Gf
     return 0.0f;
   }
 
-  float halfSize = mesh->GetMesh()->GetBoundingBox().GetDiagonal() / 2.0f;
+
   // TODO: Take the power of the light from the light ... currently there is no power in the light
   float lightPower = 1.0f;
   float lightDistanceFactor = 0.0f;
@@ -323,6 +317,7 @@ float GL4ForwardPipeline::CalcMeshLightInfluence(const GfxLight *light, const Gf
       Vector3f lightPos = pointLight->GetPosition();
       Vector3f meshPos = mesh->GetModelMatrix().GetTranslation();
       Vector3f delta = lightPos - meshPos;
+      float halfSize = mesh->GetMesh()->GetBoundingBox().GetDiagonal() / 2.0f;
       float distance = delta.Length();
       float overlap = pointLight->GetRange() + halfSize - distance;
       if (overlap > 0.0f)

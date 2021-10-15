@@ -147,6 +147,7 @@ void LightState::RemoveFromScene(World* world)
 
   SPC_RELEASE(m_light);
   SPC_RELEASE(m_gfxLight);
+  m_gfxLight = nullptr;
   m_light = nullptr;
   m_pointLight = nullptr;
   m_directionalLight = nullptr;
