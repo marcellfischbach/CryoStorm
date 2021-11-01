@@ -35,12 +35,10 @@ void Transform::ExtractTRS()
                      m_matrix.GetYAxis().Length(),
                      m_matrix.GetZAxis().Length());
 
-#define m m_matrix
-  Matrix3f rotMat(m.m00 / m_scale.x, m.m01 / m_scale.x, m.m02 / m_scale.x,
-                  m.m10 / m_scale.y, m.m11 / m_scale.y, m.m12 / m_scale.y,
-                  m.m20 / m_scale.z, m.m21 / m_scale.z, m.m22 / m_scale.z
+  Matrix3f rotMat(m_matrix.m00 / m_scale.x, m_matrix.m01 / m_scale.x, m_matrix.m02 / m_scale.x,
+                  m_matrix.m10 / m_scale.y, m_matrix.m11 / m_scale.y, m_matrix.m12 / m_scale.y,
+                  m_matrix.m20 / m_scale.z, m_matrix.m21 / m_scale.z, m_matrix.m22 / m_scale.z
   );
-#undef m
   m_rotation = Quaternion::FromMatrix(rotMat);
 }
 

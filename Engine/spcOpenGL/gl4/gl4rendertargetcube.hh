@@ -19,10 +19,10 @@ public:
 
   void Bind();
 
-  bool Initialize (UInt16 size);
-  bool Initialize (UInt32 name, UInt16 size);
+  bool Initialize (uint16_t size);
+  bool Initialize (uint32_t name, uint16_t size);
 
-  UInt16 GetSize() const override;
+  uint16_t GetSize() const override;
 
   void SetDepthTexture(iTextureCube* depthTexture) override;
   void AddColorTexture(iTextureCube* colorTexture) override;
@@ -39,8 +39,8 @@ public:
   const iTextureCube* GetColorTexture(Size idx) const override;
 
 private:
-  UInt32 m_name;
-  UInt16 m_size;
+  uint32_t m_name;
+  uint16_t m_size;
   bool m_external;
 
   iTextureCube *m_depthTexture;

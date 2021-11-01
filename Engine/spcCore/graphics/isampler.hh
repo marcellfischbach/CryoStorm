@@ -22,14 +22,14 @@ struct SPC_CORE_API iSampler : public SPC_SUPER(iObject)
   virtual void SetFilterMode(eFilterMode filterMode) = 0;
   virtual eFilterMode GetFilterMode() const = 0;
 
-  virtual void SetAnisotropy(UInt8 anisotropy) = 0;
-  virtual UInt8 GetAnisotropy() const = 0;
+  virtual void SetAnisotropy(uint8_t anisotropy) = 0;
+  virtual uint8_t GetAnisotropy() const = 0;
 
-  virtual void SetMinLOD(UInt16 minLOD) = 0;
-  virtual UInt16 GetMinLOD() const = 0;
+  virtual void SetMinLOD(uint16_t minLOD) = 0;
+  virtual uint16_t GetMinLOD() const = 0;
 
-  virtual void SetMaxLOD(UInt16 maxLOD) = 0;
-  virtual UInt16 GetMaxLOD() const = 0;
+  virtual void SetMaxLOD(uint16_t maxLOD) = 0;
+  virtual uint16_t GetMaxLOD() const = 0;
 
   virtual void SetAddressU(eTextureAddressMode mode) = 0;
   virtual eTextureAddressMode GetAddressU() const = 0;

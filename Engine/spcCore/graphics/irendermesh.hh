@@ -54,7 +54,7 @@ struct SPC_CORE_API iRenderMeshGenerator : SPC_SUPER(iObject)
   virtual void SetUV1(const std::vector<Vector2f> & uv) = 0;
   virtual void SetUV2(const std::vector<Vector2f> & uv) = 0;
   virtual void SetUV3(const std::vector<Vector2f> & uv) = 0;
-  virtual void SetIndices(const std::vector<UInt32> & indices) = 0;
+  virtual void SetIndices(const std::vector<uint32_t> & indices) = 0;
   SPC_NODISCARD virtual iRenderMesh* Generate() = 0;
 };
 

@@ -23,13 +23,13 @@ public:
 
 	void Link();
 
-	UInt32 GetName() const;
+	uint32_t GetName() const;
 
 	Size RegisterAttribute(const std::string & attributeName) override;
 
 	Size GetAttributeId(const std::string & attributeName) override;
 
-	iShaderAttribute* GetShaderAttribute(UInt32 id) override;
+	iShaderAttribute* GetShaderAttribute(uint32_t id) override;
 
 	iShaderAttribute* GetShaderAttribute(const std::string& attributeName) override;
 
@@ -39,7 +39,7 @@ public:
 private:
 	void RegisterRenderAttributes();
 
-	UInt32 m_name;
+	uint32_t m_name;
 
 	std::vector<GL4Shader*> m_shaders;
 

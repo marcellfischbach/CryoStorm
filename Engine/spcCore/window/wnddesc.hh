@@ -8,8 +8,8 @@ namespace spc {
 
 struct WndDesc
 {
-  UInt16 width;
-  UInt16 height;
+  uint16_t width;
+  uint16_t height;
   Int16 x;
   Int16 y;
 

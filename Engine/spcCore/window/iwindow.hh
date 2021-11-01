@@ -23,7 +23,7 @@ struct SPC_CORE_API iWindow : public iObject
 
   virtual void SetPosition (Int16 x, Int16 y) = 0;
 
-  virtual void SetResolution(UInt16 width, UInt16 height) = 0;
+  virtual void SetResolution(uint16_t width, uint16_t height) = 0;
 
   virtual void Show () = 0;
 

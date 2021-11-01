@@ -19,14 +19,14 @@ class SPC_CORE_API VertexDeclaration
 public:
   struct Attribute 
   {
-    UInt8 Stream;
+    uint8_t Stream;
     eVertexStream Location;
-    UInt8 Size;
+    uint8_t Size;
     eDataType Type;
-    UInt16 Stride;
-    UInt16 Offset;
+    uint16_t Stride;
+    uint16_t Offset;
     Attribute() {}
-    Attribute(UInt8 stream, eVertexStream location, UInt8 size, eDataType type, UInt16 stride, UInt16 offset)
+    Attribute(uint8_t stream, eVertexStream location, uint8_t size, eDataType type, uint16_t stride, uint16_t offset)
       : Stream(stream)
       , Location(location)
       , Size(size)
@@ -41,13 +41,13 @@ public:
   VertexDeclaration(const Attribute* attributes, Size count);
   explicit VertexDeclaration(const std::vector<Attribute>& attributes);
 
-  SPC_NODISCARD const std::vector<Attribute>& GetAttributes(UInt8 streamID) const;
+  SPC_NODISCARD const std::vector<Attribute>& GetAttributes(uint8_t streamID) const;
 
 private:
   void Init(const Attribute* attributes, Size count);
   struct Stream 
   {
-    UInt8 StreamID;
+    uint8_t StreamID;
     std::vector<Attribute> Attributes;
   };
 

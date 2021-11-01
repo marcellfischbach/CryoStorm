@@ -30,6 +30,7 @@ public:
   virtual ~MaterialInstance();
 
   eRenderQueue GetRenderQueue() const override;
+  eShadingMode GetShadingMode() const override;
 
   bool Bind(iDevice * device, eRenderPass pass) override;
 
@@ -59,8 +60,8 @@ private:
   struct Attribute
   {
     bool Override;
-    float Floats[16];
-    int Ints[4];
+    std::array<float, 16> Floats;
+    std::array<int, 4> Ints;
     iTexture* Texture;
   };
 

@@ -1,5 +1,6 @@
 
 #include <spcOpenGL/gl4/gl4device.hh>
+#include <spcOpenGL/gl4/gl4blendfactormap.hh>
 #include <spcOpenGL/gl4/gl4directionallight.hh>
 #include <spcOpenGL/gl4/gl4pointlight.hh>
 #include <spcOpenGL/gl4/gl4rendertarget2d.hh>
@@ -28,6 +29,15 @@ GL4Device::GL4Device()
   : iDevice()
   , m_renderTarget(nullptr)
   , m_shader(nullptr)
+  , m_nextTextureUnit(eTU_Unit0)
+  , m_colorWrite(0x0f)
+  , m_depthWrite(true)
+  , m_depthTest(true)
+  , m_blending(false)
+  , m_srcFactorColor(eBlendFactor::One)
+  , m_srcFactorAlpha(eBlendFactor::One)
+  , m_dstFactorColor(eBlendFactor::Zero)
+  , m_dstFactorAlpha(eBlendFactor::Zero)
   , m_modelViewMatrixDirty(false)
   , m_viewProjectionMatrixDirty(false)
   , m_modelViewProjectionMatrixDirty(false)
@@ -82,7 +92,11 @@ bool GL4Device::Initialize()
 
   glPixelStorei(GL_PACK_ALIGNMENT, 1);
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+  glColorMask(true, true, true, true);
+  glDepthMask(true);
   glEnable(GL_DEPTH_TEST);
+  glDisable(GL_BLEND);
+  glBlendFuncSeparate(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO);
 
 
   glEnable(GL_CULL_FACE);
@@ -112,7 +126,7 @@ bool GL4Device::Initialize()
   return true;
 }
 
-void GL4Device::SetViewport(Int16 x, Int16 y, UInt16 width, UInt16 height)
+void GL4Device::SetViewport(Int16 x, Int16 y, uint16_t width, uint16_t height)
 {
   glViewport(x, y, width, height);
 }
@@ -122,7 +136,7 @@ void GL4Device::Clear(bool clearColor,
   bool clearDepth,
   float depth,
   bool clearStencil,
-  UInt8 stencil)
+  uint8_t stencil)
 {
   GLenum flags = 0;
   if (clearColor)
@@ -141,6 +155,90 @@ void GL4Device::Clear(bool clearColor,
     glClearStencil(stencil);
   }
   glClear(flags);
+}
+
+void GL4Device::SetColorWrite(bool redWrite, bool greenWrite, bool blueWrite, bool alphaWrite)
+{
+  uint8_t colorWrite = 0x00
+    | (redWrite ? 0x08 : 0x00)
+    | (greenWrite ? 0x04 : 0x00)
+    | (blueWrite ? 0x02 : 0x00)
+    | (alphaWrite ? 0x01 : 0x00);
+  if (m_colorWrite != colorWrite)
+  {
+    m_colorWrite = colorWrite;
+    glColorMask(redWrite, greenWrite, blueWrite, alphaWrite);
+  }
+  
+}
+
+void GL4Device::SetDepthWrite(bool depthWrite)
+{
+  if (m_depthTest != depthWrite)
+  {
+    m_depthWrite = depthWrite;
+    glDepthMask(depthWrite);
+  }
+}
+
+void GL4Device::SetDepthTest(bool depthTest)
+{
+  if (m_depthTest != depthTest)
+  {
+    m_depthTest = depthTest;
+    if (depthTest)
+    {
+      glEnable(GL_DEPTH_TEST);
+    }
+    else
+    {
+      glDisable(GL_DEPTH_TEST);
+    }
+  }
+}
+
+
+void GL4Device::SetBlending(bool blending)
+{
+  if (m_blending != blending)
+  {
+    m_blending = blending;
+    if (m_blending)
+    {
+      glEnable(GL_BLEND);
+    }
+    else
+    {
+      glDisable(GL_BLEND);
+    }
+  }
+}
+
+void GL4Device::SetBlendFactor(eBlendFactor srcFactor, eBlendFactor dstFactor)
+{
+  SetBlendFactor(srcFactor, srcFactor, dstFactor, dstFactor);
+}
+
+void GL4Device::SetBlendFactor(eBlendFactor srcFactorColor,
+                               eBlendFactor srcFactorAlpha,
+                               eBlendFactor dstFactorColor,
+                               eBlendFactor dstFactorAlpha)
+{
+  if (srcFactorColor != m_srcFactorColor
+      || srcFactorAlpha != m_srcFactorAlpha
+      || dstFactorColor != m_dstFactorColor
+      || dstFactorAlpha != m_dstFactorAlpha)
+  {
+    m_srcFactorColor = srcFactorColor;
+    m_srcFactorAlpha = srcFactorAlpha;
+    m_dstFactorColor = dstFactorColor;
+    m_dstFactorAlpha = dstFactorAlpha;
+    GLenum glSrcColor = GL4BlendFactorMap[static_cast<int>(m_srcFactorColor)];
+    GLenum glSrcAlpha = GL4BlendFactorMap[static_cast<int>(m_srcFactorAlpha)];
+    GLenum glDstColor = GL4BlendFactorMap[static_cast<int>(m_dstFactorColor)];
+    GLenum glDstAlpha = GL4BlendFactorMap[static_cast<int>(m_dstFactorAlpha)];
+    glBlendFuncSeparate(glSrcColor, glDstColor, glSrcAlpha, glDstAlpha);
+  }
 }
 
 void GL4Device::SetModelMatrix(const Matrix4f& modelMatrix)
@@ -1203,7 +1301,7 @@ iRenderMesh* GL4Device::FullscreenBlitRenderMesh()
     uv.push_back(Vector2f(0.0f, 1.0f));
     uv.push_back(Vector2f(1.0f, 0.0f));
     uv.push_back(Vector2f(1.0f, 1.0f));
-    std::vector<UInt32> indices;
+    std::vector<uint32_t> indices;
     indices.push_back(0);
     indices.push_back(1);
     indices.push_back(3);
@@ -1249,7 +1347,7 @@ iRenderMesh* GL4Device::FullscreenBlitCubeRenderMesh(int layer)
   vertices4.push_back(Vector4f(-1.0f, 1.0f, 0.0f, 1.0f));
   vertices4.push_back(Vector4f(1.0f, -1.0f, 0.0f, 1.0f));
   vertices4.push_back(Vector4f(1.0f, 1.0f, 0.0f, 1.0f));
-  std::vector<UInt32> indices;
+  std::vector<uint32_t> indices;
   indices.push_back(0);
   indices.push_back(1);
   indices.push_back(3);
@@ -1308,6 +1406,7 @@ iRenderMesh* GL4Device::FullscreenBlitCubeRenderMesh(int layer)
   }
   return nullptr;
 }
+
 
 
 #if _DEBUG

@@ -84,7 +84,7 @@ void GL4Program::Link()
   RegisterRenderAttributes();
 }
 
-UInt32 GL4Program::GetName() const
+uint32_t GL4Program::GetName() const
 {
   return m_name;
 }
@@ -129,7 +129,7 @@ void GL4Program::RegisterRenderAttributes()
 
 Size GL4Program::RegisterAttribute(const std::string& attributeName)
 {
-  for (UInt32 i = 0; i < m_attributes.size(); i++)
+  for (uint32_t i = 0; i < m_attributes.size(); i++)
   {
     iShaderAttribute* attribute = m_attributes[i];
     if (attribute && attribute->GetName() == attributeName)
@@ -151,7 +151,7 @@ Size GL4Program::RegisterAttribute(const std::string& attributeName)
 
 Size GL4Program::GetAttributeId(const std::string& attributeName)
 {
-  for (UInt32 i = 0; i < m_attributes.size(); i++)
+  for (uint32_t i = 0; i < m_attributes.size(); i++)
   {
     iShaderAttribute* attribute = m_attributes[i];
 
@@ -165,7 +165,7 @@ Size GL4Program::GetAttributeId(const std::string& attributeName)
 }
 
 
-iShaderAttribute* GL4Program::GetShaderAttribute(UInt32 id)
+iShaderAttribute* GL4Program::GetShaderAttribute(uint32_t id)
 {
   if (id >= m_attributes.size())
   {
@@ -177,7 +177,7 @@ iShaderAttribute* GL4Program::GetShaderAttribute(UInt32 id)
 
 iShaderAttribute* GL4Program::GetShaderAttribute(const std::string& attributeName)
 {
-  for (UInt32 i = 0; i < m_attributes.size(); i++)
+  for (uint32_t i = 0; i < m_attributes.size(); i++)
   {
     iShaderAttribute* attribute = m_attributes[i];
     if (attribute && attribute->GetName() == attributeName)

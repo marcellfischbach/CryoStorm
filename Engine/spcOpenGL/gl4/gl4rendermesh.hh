@@ -24,7 +24,7 @@ class SPC_OGL_API GL4RenderMesh : public SPC_SUPER(iRenderMesh)
   friend class GL4RenderMeshBatchGenerator;
   SPC_CLASS_GEN_OBJECT;
 public:
-  GL4RenderMesh(UInt32 vao,
+  GL4RenderMesh(uint32_t vao,
                 const VertexDeclaration &vd,
                 Size vertexCount,
                 GL4VertexBuffer *vb,
@@ -48,15 +48,15 @@ public:
 
 private:
 
-  UInt32 m_vao;
+  uint32_t m_vao;
   VertexDeclaration m_vertexDeclaration;
   GL4VertexBuffer* m_vertexBuffer;
   GL4IndexBuffer* m_indexBuffer;
   BoundingBox m_boundingBox;
 
-  UInt32 m_indexType;
+  uint32_t m_indexType;
   eDataType m_indexDataType;
-  UInt32 m_primType;
+  uint32_t m_primType;
   Size m_count;
   Size m_vertexCount;
 };
@@ -81,7 +81,7 @@ public:
   void SetUV1(const std::vector<Vector2f> & uv) override;
   void SetUV2(const std::vector<Vector2f> & uv) override;
   void SetUV3(const std::vector<Vector2f> & uv) override;
-  void SetIndices(const std::vector<UInt32> & indices) override;
+  void SetIndices(const std::vector<uint32_t> & indices) override;
   void SetUV0(const std::vector<Vector2f> & uv) override;
   void AddVertices(const std::vector<Vector2f> & vertices);
   void AddVertices(const std::vector<Vector3f> & vertices);
@@ -94,7 +94,7 @@ public:
   void AddUV1(const std::vector<Vector2f> & uv);
   void AddUV2(const std::vector<Vector2f> & uv);
   void AddUV3(const std::vector<Vector2f> & uv) ;
-  void AddIndices(const std::vector<UInt32> & indices);
+  void AddIndices(const std::vector<uint32_t> & indices);
 
   SPC_NODISCARD size_t GetNumberOfVertices() const;
   iRenderMesh* Generate() override;
@@ -110,7 +110,7 @@ private:
   std::vector<Vector2f> m_uv1;
   std::vector<Vector2f> m_uv2;
   std::vector<Vector2f> m_uv3;
-  std::vector<UInt32> m_indices;
+  std::vector<uint32_t> m_indices;
 
 
 };

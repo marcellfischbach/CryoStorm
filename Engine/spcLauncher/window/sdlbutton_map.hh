@@ -7,7 +7,7 @@
 namespace spc
 {
 
-static MouseButton Map(UInt8 button)
+static MouseButton Map(uint8_t button)
 {
   switch (button) {
   case 1: return eMB_Left;

@@ -26,7 +26,7 @@ SPC_CLASS_GEN;
 
 	virtual Size GetAttributeId(const std::string& attributeName) = 0;
 
-	virtual iShaderAttribute* GetShaderAttribute(UInt32 id) = 0;
+	virtual iShaderAttribute* GetShaderAttribute(uint32_t id) = 0;
 
 	virtual iShaderAttribute* GetShaderAttribute(const std::string& attributeName) = 0;
 

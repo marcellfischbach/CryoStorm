@@ -122,7 +122,7 @@ GL4RenderTargetCube* GL4ForwardPointLightRenderer::GetPointLightShadowMap(Size i
   if (m_pointLightShadowMap.size() <= idx)
   {
     iRenderTargetCube::Descriptor desc{};
-    desc.Size = static_cast<UInt16>(m_pointLightShadowMapSize);
+    desc.Size = static_cast<uint16_t>(m_pointLightShadowMapSize);
     GL4RenderTargetCube* cubeMap = static_cast<GL4RenderTargetCube*>(m_device->CreateRenderTarget(desc));
 
 

@@ -31,7 +31,7 @@ static GLenum DataTypeMap[] = {
 };
 
 
-GL4RenderMesh::GL4RenderMesh(UInt32 vao,
+GL4RenderMesh::GL4RenderMesh(uint32_t vao,
                              const VertexDeclaration& vd,
                              Size vertexCount,
                              GL4VertexBuffer* vb,
@@ -186,7 +186,7 @@ void GL4RenderMeshGenerator::SetUV3(const std::vector<Vector2f>& uv)
   m_uv3 = uv;
 }
 
-void GL4RenderMeshGenerator::SetIndices(const std::vector<UInt32>& indices)
+void GL4RenderMeshGenerator::SetIndices(const std::vector<uint32_t>& indices)
 {
   m_indices = indices;
 }
@@ -247,7 +247,7 @@ void GL4RenderMeshGenerator::AddUV3(const std::vector<Vector2f>& uv)
   m_uv3.insert(m_uv3.end(), uv.begin(), uv.end());
 }
 
-void GL4RenderMeshGenerator::AddIndices(const std::vector<UInt32>& indices)
+void GL4RenderMeshGenerator::AddIndices(const std::vector<uint32_t>& indices)
 {
   m_indices.insert(m_indices.end(), indices.begin(), indices.end());
 }
@@ -274,8 +274,8 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
   }
 
   std::vector<VertexDeclaration::Attribute> attributes;
-  UInt16 offset = 0;
-  UInt16 count = 0;
+  uint16_t offset = 0;
+  uint16_t count = 0;
   Size vertexCount = 0;
   if (!m_vertices2.empty())
   {
@@ -483,20 +483,20 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
   if (vertexCount >= 65536)
   {
     ib->Bind();
-    ib->CreateForRendering(m_indices.size() * sizeof(UInt32), eBU_Static);
-    ib->Copy(&m_indices[0], m_indices.size() * sizeof(UInt32));
+    ib->CreateForRendering(m_indices.size() * sizeof(uint32_t), eBU_Static);
+    ib->Copy(&m_indices[0], m_indices.size() * sizeof(uint32_t));
     indexType = eDT_UnsignedInt;
   }
   else
   {
-    auto iBuffer = new UInt16[m_indices.size()];
+    auto iBuffer = new uint16_t[m_indices.size()];
     for (Size i = 0, in = m_indices.size(); i < in; ++i)
     {
-      iBuffer[i] = static_cast<UInt16>(m_indices[i]);
+      iBuffer[i] = static_cast<uint16_t>(m_indices[i]);
     }
     ib->Bind();
-    ib->CreateForRendering(m_indices.size() * sizeof(UInt16), eBU_Static);
-    ib->Copy(iBuffer, m_indices.size() * sizeof(UInt16));
+    ib->CreateForRendering(m_indices.size() * sizeof(uint16_t), eBU_Static);
+    ib->Copy(iBuffer, m_indices.size() * sizeof(uint16_t));
     delete[] iBuffer;
 
     indexType = eDT_UnsignedShort;
@@ -568,7 +568,7 @@ void GL4RenderMeshBatchGenerator::Add(const iRenderMesh *mesh, const Matrix4f &m
   std::vector<Vector2f> uv1;
   std::vector<Vector2f> uv2;
   std::vector<Vector2f> uv3;
-  std::vector<UInt32> indices;
+  std::vector<uint32_t> indices;
 
   size_t vertexOffset = m_generator.GetNumberOfVertices();
   auto rotMat = (Matrix3f)matrix;

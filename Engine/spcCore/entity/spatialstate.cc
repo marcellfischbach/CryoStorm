@@ -7,8 +7,8 @@
 
 namespace spc
 {
-SpatialState::SpatialState(const std::string &name)
-    : EntityState(name), m_parent(nullptr), m_static(false)
+SpatialState::SpatialState(const std::string& name)
+  : EntityState(name), m_parent(nullptr), m_static(false)
 {
 
 }
@@ -28,7 +28,7 @@ bool SpatialState::IsStatic() const
   return m_static;
 }
 
-bool SpatialState::Attach(SpatialState *child)
+bool SpatialState::Attach(SpatialState* child)
 {
   if (!child)
   {
@@ -58,7 +58,7 @@ bool SpatialState::DetachSelf()
   return m_parent && m_parent->Detach(this);
 }
 
-bool SpatialState::Detach(SpatialState *child)
+bool SpatialState::Detach(SpatialState* child)
 {
   if (!child)
   {
@@ -80,12 +80,12 @@ bool SpatialState::Detach(SpatialState *child)
   return true;
 }
 
-SpatialState *SpatialState::GetParent()
+SpatialState* SpatialState::GetParent()
 {
   return m_parent;
 }
 
-const SpatialState *SpatialState::GetParent() const
+const SpatialState* SpatialState::GetParent() const
 {
   return m_parent;
 }
@@ -95,7 +95,7 @@ Size SpatialState::GetNumberOfChildren() const
   return m_children.size();
 }
 
-const SpatialState *SpatialState::GetChild(Size idx) const
+const SpatialState* SpatialState::GetChild(Size idx) const
 {
   if (idx >= m_children.size())
   {
@@ -105,12 +105,12 @@ const SpatialState *SpatialState::GetChild(Size idx) const
   return m_children[idx];
 }
 
-SpatialState *SpatialState::GetChild(Size idx)
+SpatialState* SpatialState::GetChild(Size idx)
 {
-  return const_cast<SpatialState *>(static_cast<const SpatialState *>(this)->GetChild(idx));
+  return const_cast<SpatialState*>(static_cast<const SpatialState*>(this)->GetChild(idx));
 }
 
-void SpatialState::UpdateEntity(Entity *oldEntity, Entity *newEntity)
+void SpatialState::UpdateEntity(Entity* oldEntity, Entity* newEntity)
 {
   EntityState::UpdateEntity(oldEntity, newEntity);
   for (auto child : m_children)
@@ -124,19 +124,19 @@ Transform SpatialState::GetTransform()
   return Transform(m_localMatrix);
 }
 
-void SpatialState::SetTransform(const Transform &transform)
+void SpatialState::SetTransform(const Transform& transform)
 {
   m_localMatrix = transform.GetMatrix();
 
   UpdateTransformation();
 }
 
-const Matrix4f &SpatialState::GetLocalMatrix() const
+const Matrix4f& SpatialState::GetLocalMatrix() const
 {
   return m_localMatrix;
 }
 
-void SpatialState::SetLocalMatrix(const Matrix4f &matrix)
+void SpatialState::SetLocalMatrix(const Matrix4f& matrix)
 {
   m_localMatrix = matrix;
   UpdateTransformation();
@@ -183,7 +183,7 @@ void SpatialState::UpdateTransformation()
   TransformationUpdatedPostChildren();
 }
 
-const Matrix4f &SpatialState::GetGlobalMatrix() const
+const Matrix4f& SpatialState::GetGlobalMatrix() const
 {
   return m_globalMatrix;
 }

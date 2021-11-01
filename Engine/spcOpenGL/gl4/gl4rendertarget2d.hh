@@ -19,10 +19,10 @@ public:
 
   void Bind();
 
-  bool Initialize (UInt16 width, UInt16 height);
+  bool Initialize (uint16_t width, uint16_t height);
 
-  UInt16 GetWidth() const override;
-  UInt16 GetHeight() const override;
+  uint16_t GetWidth() const override;
+  uint16_t GetHeight() const override;
 
   void SetDepthTexture(iTexture2D* depthTexture) override;
   void SetDepthBuffer(ePixelFormat format) override;
@@ -40,11 +40,11 @@ public:
   const iTexture2D* GetColorTexture(Size idx) const override;
 
 private:
-  UInt32 m_name;
-  UInt16 m_width;
-  UInt16 m_height;
+  uint32_t m_name;
+  uint16_t m_width;
+  uint16_t m_height;
 
-  UInt32  m_depthBuffer;
+  uint32_t  m_depthBuffer;
   iTexture2D *m_depthTexture;
   std::vector<GL4Texture2D*> m_colorTextures;
 

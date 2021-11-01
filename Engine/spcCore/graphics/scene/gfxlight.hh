@@ -28,15 +28,15 @@ public:
   iLight* GetLight() ;
   SPC_NODISCARD const iLight* GetLight() const;
 
-  void SetFrame(UInt64 frame);
-  SPC_NODISCARD UInt64 GetFrame() const;
+  void SetFrame(uint64_t frame);
+  SPC_NODISCARD uint64_t GetFrame() const;
 
 
 private:
   bool m_static;
   iLight* m_light;
 
-  UInt64  m_frame;
+  uint64_t  m_frame;
 
 };
 

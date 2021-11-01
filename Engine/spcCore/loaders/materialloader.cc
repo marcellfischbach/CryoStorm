@@ -8,6 +8,7 @@
 namespace spc
 {
 
+#define IF(prefix, name, text) if (std::string(#name) == (text)) return prefix##name
 
 bool MaterialLoaderSpc::CanLoad(const Class* cls, const file::File* file, const ResourceLocator* locator) const
 {
@@ -39,6 +40,10 @@ Material* MaterialLoaderSpc::LoadMaterial(const Class*, const file::File* file, 
   }
 
   auto material = new Material();
+
+  LoadQueue(material, materialElement);
+  LoadBlending(material, materialElement);
+  LoadDepth(material, materialElement);
 
   if (!LoadShaders(material, materialElement))
   {
@@ -85,6 +90,102 @@ iObject* MaterialLoaderSpc::LoadMaterialInstance(const Class* , const file::File
 }
 
 
+void MaterialLoaderSpc::LoadQueue(Material* material, const file::Element* materialElement)
+{
+  const file::Element* queueElement = materialElement->GetChild("queue");
+  if (!queueElement)
+  {
+    return;
+  }
+
+  eRenderQueue queue = eRenderQueue::Default;
+  auto queueString = queueElement->GetAttribute(0, "Default");
+  if (queueString == std::string("Transparency"))
+  {
+    queue = eRenderQueue::Transparency;
+  }
+
+  material->SetRenderQueue(queue);
+}
+
+eBlendFactor BlendFactor(const std::string& blendFactor, eBlendFactor defaultFactor)
+{
+#define IF_(name) IF(eBlendFactor::, name, blendFactor)
+#define ELSE_IF_(name) else IF(eBlendFactor::, name, blendFactor)
+  if (std::string("One") == blendFactor) return eBlendFactor::One;
+  IF_(One);
+  ELSE_IF_(Zero);
+  ELSE_IF_(SrcColor);
+  ELSE_IF_(SrcAlpha);
+  ELSE_IF_(DstColor);
+  ELSE_IF_(DstAlpha);
+  ELSE_IF_(OneMinusSrcColor);
+  ELSE_IF_(OneMinusSrcAlpha);
+  ELSE_IF_(OneMinusDstColor);
+  ELSE_IF_(OneMinusDstAlpha);
+#undef IF_
+#undef ELSE_IF_
+  return defaultFactor;
+}
+
+
+void MaterialLoaderSpc::LoadBlending(Material *material, const file::Element *materialElement)
+{
+  auto blendElement = materialElement->GetChild("blend");
+  bool  blending = false;
+  eBlendFactor srcColor = eBlendFactor::One;
+  eBlendFactor srcAlpha = eBlendFactor::One;
+  eBlendFactor dstColor = eBlendFactor::Zero;
+  eBlendFactor dstAlpha = eBlendFactor::Zero;
+
+  if (blendElement)
+  {
+    if (blendElement->GetNumberOfAttributes() == 2)
+    {
+      blending = true;
+      srcColor = BlendFactor(blendElement->GetAttribute(0, "One"), eBlendFactor::One);
+      srcAlpha = srcColor;
+      dstColor = BlendFactor(blendElement->GetAttribute(1, "Zero"), eBlendFactor::Zero);
+      dstAlpha = dstColor;
+    }
+    else if (blendElement->GetNumberOfAttributes() == 4)
+    {
+      blending = true;
+      srcColor = BlendFactor(blendElement->GetAttribute(0, "One"), eBlendFactor::One);
+      srcAlpha = BlendFactor(blendElement->GetAttribute(1, "One"), eBlendFactor::One);
+      dstColor = BlendFactor(blendElement->GetAttribute(2, "Zero"), eBlendFactor::Zero);
+      dstAlpha = BlendFactor(blendElement->GetAttribute(3, "Zero"), eBlendFactor::Zero);
+    }
+  }
+
+  material->SetBlending(blending);
+  material->SetBlendFactor(srcColor, srcAlpha, dstColor, dstAlpha);
+}
+
+void MaterialLoaderSpc::LoadDepth(Material *material, const file::Element *materialElement)
+{
+  auto *depthElement = materialElement->GetChild("depth");
+  if (!depthElement)
+  {
+    return;
+  }
+  bool depthTest = false;
+  bool depthWrite = false;
+  for (int i = 0; i < depthElement->GetNumberOfAttributes(); ++i)
+  {
+    std::string depthValue = depthElement->GetAttribute(i, std::string());
+    if (std::string("Test") == depthValue)
+    {
+      depthTest = true;
+    }
+    else if (std::string("Write") == depthValue)
+    {
+      depthWrite = true;
+    }
+  }
+  material->SetDepthTest(depthTest);
+  material->SetDepthWrite(depthWrite);
+}
 
 bool MaterialLoaderSpc::LoadShaders(Material* material, const file::Element* materialElement)
 {
@@ -110,7 +211,6 @@ bool MaterialLoaderSpc::LoadShaders(Material* material, const file::Element* mat
 
 
 
-#define IF(prefix, name, text) if (std::string(#name) == (text)) return prefix##name
 
 eRenderPass RenderPass(const std::string& renderPass)
 {

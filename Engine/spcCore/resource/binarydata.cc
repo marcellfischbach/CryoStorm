@@ -43,7 +43,7 @@ namespace spc
       return *this;
     }
     
-    BinaryOutputStream &BinaryOutputStream::operator<<(const UInt8 d)
+    BinaryOutputStream &BinaryOutputStream::operator<<(const uint8_t d)
     {
       Reserve(sizeof(d));
       memcpy(m_buffer + m_idx, &d, sizeof(d));
@@ -59,7 +59,7 @@ namespace spc
       return *this;
     }
     
-    BinaryOutputStream &BinaryOutputStream::operator<<(const UInt16 d)
+    BinaryOutputStream &BinaryOutputStream::operator<<(const uint16_t d)
     {
       Reserve(sizeof(d));
       memcpy(m_buffer + m_idx, &d, sizeof(d));
@@ -75,7 +75,7 @@ namespace spc
       return *this;
     }
     
-    BinaryOutputStream &BinaryOutputStream::operator<<(const UInt32 d)
+    BinaryOutputStream &BinaryOutputStream::operator<<(const uint32_t d)
     {
       Reserve(sizeof(d));
       memcpy(m_buffer + m_idx, &d, sizeof(d));
@@ -91,7 +91,7 @@ namespace spc
       return *this;
     }
     
-    BinaryOutputStream &BinaryOutputStream::operator<<(const UInt64 d)
+    BinaryOutputStream &BinaryOutputStream::operator<<(const uint64_t d)
     {
       Reserve(sizeof(d));
       memcpy(m_buffer + m_idx, &d, sizeof(d));
@@ -133,7 +133,7 @@ namespace spc
       return *this;
     }
     
-    BinaryOutputStream &BinaryOutputStream::Write(const UInt8 *data, Size size)
+    BinaryOutputStream &BinaryOutputStream::Write(const uint8_t *data, Size size)
     {
       Reserve(size);
       memcpy(m_buffer + m_idx, data, size);
@@ -158,7 +158,7 @@ namespace spc
       }
       
       Size newCapacity = m_capacity + parts + m_sizeIncrement;
-      UInt8 *newBuffer = new UInt8[newCapacity];
+      uint8_t *newBuffer = new uint8_t[newCapacity];
       memcpy(newBuffer, m_buffer, m_capacity);
       delete[] m_buffer;
       
@@ -176,7 +176,7 @@ namespace spc
  */
     
     
-    BinaryInputStream::BinaryInputStream(const UInt8 *buffer, Size bufferSize)
+    BinaryInputStream::BinaryInputStream(const uint8_t *buffer, Size bufferSize)
       : m_buffer(buffer)
       , m_bufferSize(bufferSize)
       , m_idx(0)
@@ -200,11 +200,11 @@ namespace spc
       return *this;
     }
     
-    const BinaryInputStream &BinaryInputStream::operator>>(UInt8 &d) const
+    const BinaryInputStream &BinaryInputStream::operator>>(uint8_t &d) const
     {
-      CheckSize(sizeof(UInt8));
-      memcpy(&d, m_buffer + m_idx, sizeof(UInt8));
-      m_idx += sizeof(UInt8);
+      CheckSize(sizeof(uint8_t));
+      memcpy(&d, m_buffer + m_idx, sizeof(uint8_t));
+      m_idx += sizeof(uint8_t);
       return *this;
     }
     
@@ -216,11 +216,11 @@ namespace spc
       return *this;
     }
     
-    const BinaryInputStream &BinaryInputStream::operator>>(UInt16 &d) const
+    const BinaryInputStream &BinaryInputStream::operator>>(uint16_t &d) const
     {
-      CheckSize(sizeof(UInt16));
-      memcpy(&d, m_buffer + m_idx, sizeof(UInt16));
-      m_idx += sizeof(UInt16);
+      CheckSize(sizeof(uint16_t));
+      memcpy(&d, m_buffer + m_idx, sizeof(uint16_t));
+      m_idx += sizeof(uint16_t);
       return *this;
     }
     
@@ -232,11 +232,11 @@ namespace spc
       return *this;
     }
     
-    const BinaryInputStream &BinaryInputStream::operator>>(UInt32 &d) const
+    const BinaryInputStream &BinaryInputStream::operator>>(uint32_t &d) const
     {
-      CheckSize(sizeof(UInt32));
-      memcpy(&d, m_buffer + m_idx, sizeof(UInt32));
-      m_idx += sizeof(UInt32);
+      CheckSize(sizeof(uint32_t));
+      memcpy(&d, m_buffer + m_idx, sizeof(uint32_t));
+      m_idx += sizeof(uint32_t);
       return *this;
     }
     
@@ -248,11 +248,11 @@ namespace spc
       return *this;
     }
     
-    const BinaryInputStream &BinaryInputStream::operator>>(UInt64 &d) const
+    const BinaryInputStream &BinaryInputStream::operator>>(uint64_t &d) const
     {
-      CheckSize(sizeof(UInt64));
-      memcpy(&d, m_buffer + m_idx, sizeof(UInt64));
-      m_idx += sizeof(UInt64);
+      CheckSize(sizeof(uint64_t));
+      memcpy(&d, m_buffer + m_idx, sizeof(uint64_t));
+      m_idx += sizeof(uint64_t);
       return *this;
     }
     
@@ -290,7 +290,7 @@ namespace spc
       return *this;
     }
     
-    const BinaryInputStream &BinaryInputStream::Read(UInt8 *buffer, Size size) const
+    const BinaryInputStream &BinaryInputStream::Read(uint8_t *buffer, Size size) const
     {
       CheckSize(size);
       memcpy(buffer, m_buffer + m_idx, size);
@@ -402,7 +402,7 @@ namespace spc
       _Entry entry;
       entry.Name = name;
       entry.m_dataSize = dataSize;
-      entry.m_data = new UInt8[entry.m_dataSize];
+      entry.m_data = new uint8_t[entry.m_dataSize];
       stream.Read(entry.m_data, entry.m_dataSize);
       m_entries[name] = entry;
     }
@@ -418,7 +418,7 @@ namespace spc
       return Entry(name, entry->second.m_data, entry->second.m_dataSize);
     }
     
-    void BinaryDictionary::Put(const std::string &name, const UInt8 *data, Size dataSize)
+    void BinaryDictionary::Put(const std::string &name, const uint8_t *data, Size dataSize)
     {
       if (Contains(name))
       {
@@ -427,7 +427,7 @@ namespace spc
       
       _Entry entry;
       entry.Name = name;
-      entry.m_data = new UInt8[dataSize];
+      entry.m_data = new uint8_t[dataSize];
       entry.m_dataSize = dataSize;
       memcpy(entry.m_data, data, dataSize);
       m_entries[name] = entry;

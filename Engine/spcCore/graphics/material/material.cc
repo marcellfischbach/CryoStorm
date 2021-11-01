@@ -2,20 +2,18 @@
 #include <spcCore/graphics/material/material.hh>
 #include <spcCore/graphics/shading/ishader.hh>
 #include <spcCore/graphics/shading/ishaderattribute.hh>
-
+#include <bit>
 
 namespace spc
 {
 
 Material::Material()
   : iMaterial()
-  , m_queue(eRenderQueue::Default)
 {
   SPC_CLASS_GEN_CONSTR;
-
-  for (Size i = 0; i < eRP_COUNT; i++)
+  for (auto &item : m_shader)
   {
-    m_shader[i] = nullptr;
+    item = nullptr;
   }
 }
 
@@ -44,12 +42,94 @@ eRenderQueue Material::GetRenderQueue() const
   return m_queue;
 }
 
+void Material::SetBlending(bool blending)
+{
+  m_blending = blending;
+}
+
+bool Material::IsBlending() const
+{
+  return m_blending;
+}
+
+void Material::SetBlendFactor(eBlendFactor srcFactor, eBlendFactor dstFactor)
+{
+  m_srcFactorColor = srcFactor;
+  m_srcFactorAlpha = srcFactor;
+  m_dstFactorColor = dstFactor;
+  m_dstFactorAlpha = dstFactor;
+}
+
+void Material::SetBlendFactor(eBlendFactor srcFactorColor,
+                              eBlendFactor srcFactorAlpha,
+                              eBlendFactor dstFactorColor,
+                              eBlendFactor dstFactorAlpha)
+{
+  m_srcFactorColor = srcFactorColor;
+  m_srcFactorAlpha = srcFactorAlpha;
+  m_dstFactorColor = dstFactorColor;
+  m_dstFactorAlpha = dstFactorAlpha;
+}
+
+eBlendFactor Material::GetBlendFactorSrcColor() const
+{
+  return m_srcFactorColor;
+}
+
+eBlendFactor Material::GetBlendFactorSrcAlpha() const
+{
+  return m_srcFactorAlpha;
+}
+
+
+eBlendFactor Material::GetBlendFactorDstColor() const
+{
+  return m_dstFactorColor;
+}
+
+eBlendFactor Material::GetBlendFactorDstAlpha() const
+{
+  return m_dstFactorAlpha;
+}
+
+bool Material::IsDepthWrite() const
+{
+  return m_depthWrite;
+}
+
+void Material::SetDepthWrite(bool depthWrite)
+{
+  m_depthWrite = depthWrite;
+}
+
+bool Material::IsDepthTest() const
+{
+  return m_depthTest;
+}
+
+void Material::SetDepthTest(bool depthTest)
+{
+  m_depthTest = depthTest;
+}
+
+void Material::SetShadingMode(eShadingMode shadingMode)
+{
+  m_shadingMode = shadingMode;
+}
+
+eShadingMode Material::GetShadingMode() const
+{
+  return m_shadingMode;
+}
+
 bool Material::Bind(iDevice* device, eRenderPass pass)
 {
   if (!BindShader(device, pass))
   {
     return false;
   }
+  BindBlending (device);
+  BindDepthMode(device);
   device->ResetTextures();
   for (Size i = 0, in = m_attributes.size(); i < in; ++i)
   {
@@ -58,7 +138,7 @@ bool Material::Bind(iDevice* device, eRenderPass pass)
   return true;
 }
 
-bool Material::BindShader(iDevice* device, eRenderPass pass)
+bool Material::BindShader(iDevice* device, eRenderPass pass) const
 {
   iShader* shader = m_shader[pass];
   if (!shader)
@@ -70,18 +150,31 @@ bool Material::BindShader(iDevice* device, eRenderPass pass)
   return true;
 }
 
-
-bool Material::BindAttribute(iDevice* device, eRenderPass pass, Size idx)
+void Material::BindBlending(iDevice *device) const
 {
-  Attribute& attr = m_attributes[idx];
+  device->SetBlending(m_blending);
+  if (m_blending)
+  {
+    device->SetBlendFactor(m_srcFactorColor, m_srcFactorAlpha, m_dstFactorColor, m_dstFactorAlpha);
+  }
+}
+
+void Material::BindDepthMode(iDevice *device) const
+{
+  device->SetDepthWrite(m_depthWrite);
+  device->SetDepthTest(m_depthTest);
+}
+
+bool Material::BindAttribute(iDevice* device, eRenderPass pass, size_t idx) const
+{
+  const Attribute& attr = m_attributes[idx];
   return BindAttribute(device, pass, idx, attr.Floats, attr.Ints, attr.Texture);
 }
 
-bool Material::BindAttribute(iDevice *device, eRenderPass pass, Size idx, float *floats, int* ints, iTexture*texture)
+bool Material::BindAttribute(iDevice *device, eRenderPass pass, size_t idx, const std::array<float, 16> &floats, const std::array< int, 4> &ints, iTexture *texture) const
 {
-  Attribute& attribute = m_attributes[idx];
-  iShaderAttribute* shaderAttribute = attribute.Attributes[pass];
-  if (shaderAttribute)
+
+  if (const Attribute& attribute = m_attributes[idx]; iShaderAttribute* shaderAttribute = attribute.Attributes[pass])
   {
     switch (attribute.Type)
     {
@@ -89,13 +182,13 @@ bool Material::BindAttribute(iDevice *device, eRenderPass pass, Size idx, float 
       shaderAttribute->Bind(floats[0]);
       break;
     case eMAT_Vec2:
-      shaderAttribute->Bind(*reinterpret_cast<Vector2f*>(floats));
+      shaderAttribute->Bind(*std::bit_cast<const Vector2f*>(floats.data()));
       break;
     case eMAT_Vec3:
-      shaderAttribute->Bind(*reinterpret_cast<Vector3f*>(floats));
+      shaderAttribute->Bind(*std::bit_cast<const Vector3f*>(floats.data()));
       break;
     case eMAT_Vec4:
-      shaderAttribute->Bind(*reinterpret_cast<Vector4f*>(floats));
+      shaderAttribute->Bind(*std::bit_cast<const Vector4f*>(floats.data()));
       break;
     case eMAT_Int:
       shaderAttribute->Bind(ints[0]);
@@ -106,25 +199,34 @@ bool Material::BindAttribute(iDevice *device, eRenderPass pass, Size idx, float 
       // TODO: Need integer based vectors
       break;
     case eMAT_Matrix3:
-      shaderAttribute->Bind(*reinterpret_cast<Matrix3f*>(floats));
+      shaderAttribute->Bind(*std::bit_cast<const Matrix3f*>(floats.data()));
       break;
     case eMAT_Matrix4:
-      shaderAttribute->Bind(*reinterpret_cast<Matrix4f*>(floats));
+      shaderAttribute->Bind(*std::bit_cast<const Matrix4f*>(floats.data()));
       break;
     case eMAT_Texture:
-      eTextureUnit unit = device->BindTexture(texture);
-      if (unit == eTU_Invalid)
+      if (!BindTexture(device, shaderAttribute, texture))
       {
         return false;
       }
-      shaderAttribute->Bind(unit);
+      break;
+    default:
       break;
     }
   }
   return true;
 }
 
-
+bool Material::BindTexture(iDevice *device, iShaderAttribute *attribute, iTexture *texture)
+{
+  eTextureUnit unit = device->BindTexture(texture);
+  if (unit == eTU_Invalid)
+  {
+    return false;
+  }
+  attribute->Bind(unit);
+  return true;
+}
 
 void Material::SetShader(eRenderPass pass, iShader* shader)
 {
@@ -150,7 +252,6 @@ const iShader* Material::GetShader(eRenderPass pass) const
 void Material::RegisterAttribute(const std::string& attributeName, eMaterialAttributeType attributeType)
 {
   Attribute attribute;
-  //memset(&attribute, 0, sizeof(Attribute));
   attribute.Name = attributeName;
   attribute.Texture = nullptr;
   for (int i = 0; i < eRP_COUNT; ++i)
@@ -280,7 +381,7 @@ void Material::Set(Size idx, const Matrix3f& m)
   }
   Attribute& attr = m_attributes[idx];
   attr.Type = eMAT_Matrix3;
-  memcpy(attr.Floats, &m, sizeof(float) * 9);
+  memcpy(attr.Floats.data(), &m, sizeof(float) * 9);
 }
 
 void Material::Set(Size idx, const Matrix4f& m)
@@ -291,7 +392,7 @@ void Material::Set(Size idx, const Matrix4f& m)
   }
   Attribute& attr = m_attributes[idx];
   attr.Type = eMAT_Matrix4;
-  memcpy(attr.Floats, &m, sizeof(float) * 16);
+  memcpy(attr.Floats.data(), &m, sizeof(float) * 16);
 }
 
 void Material::Set(Size idx, iTexture* texture)

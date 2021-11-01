@@ -6,6 +6,7 @@
 #include <spcCore/math/color4f.hh>
 #include <spcCore/math/matrix.hh>
 #include <spcCore/class.hh>
+#include <spcCore/graphics/eblendfactor.hh>
 #include <spcCore/graphics/erenderpass.hh>
 #include <spcCore/graphics/etextureunit.hh>
 #include <spcCore/graphics/idirectionallight.hh>
@@ -35,8 +36,16 @@ struct SPC_CORE_API iDevice : public SPC_SUPER(iObject)
 
   virtual ~iDevice(){}
 
-  virtual void SetViewport(Int16 x, Int16 y, UInt16 width, UInt16 height) = 0;
-  virtual void Clear(bool clearColor, const Color4f& color, bool clearDepth, float depth, bool clearStencil, UInt8 stencil) = 0;
+  virtual void SetViewport(Int16 x, Int16 y, uint16_t width, uint16_t height) = 0;
+  virtual void Clear(bool clearColor, const Color4f& color, bool clearDepth, float depth, bool clearStencil, uint8_t stencil) = 0;
+
+  virtual void SetColorWrite(bool redMask, bool greenMask, bool blueMask, bool alphaMask) = 0;
+  virtual void SetDepthWrite(bool depthMask) = 0;
+  virtual void SetDepthTest(bool depthTest) = 0;
+
+  virtual void SetBlending(bool blending) = 0;
+  virtual void SetBlendFactor (eBlendFactor srcFactor, eBlendFactor dstFactor) = 0;
+  virtual void SetBlendFactor (eBlendFactor srcFactorColor, eBlendFactor srcFactorAlpha, eBlendFactor dstFactorColor, eBlendFactor dstFactorAlpha) = 0;
 
   virtual void SetModelMatrix(const Matrix4f& modelMatrix) = 0;
   virtual void SetViewMatrix(const Matrix4f& viewMatrix) = 0;
@@ -90,6 +99,7 @@ struct SPC_CORE_API iDevice : public SPC_SUPER(iObject)
 
   virtual void BindForwardLight(const iLight* light, Size idx) = 0;
   virtual void FinishForwardLights(Size numLights) = 0;
+
 
 #if _DEBUG
   virtual void ResetDebug () = 0;

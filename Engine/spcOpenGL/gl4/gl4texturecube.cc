@@ -28,7 +28,7 @@ void GL4TextureCube::Bind()
   glBindTexture(GL_TEXTURE_CUBE_MAP, m_name);
 }
 
-bool GL4TextureCube::Initialize(UInt16 size, ePixelFormat format, bool generateMipMaps)
+bool GL4TextureCube::Initialize(uint16_t size, ePixelFormat format, bool generateMipMaps)
 {
   m_size = size;
   m_format = format;
@@ -40,7 +40,7 @@ bool GL4TextureCube::Initialize(UInt16 size, ePixelFormat format, bool generateM
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-  UInt8 level = 0;
+  uint8_t level = 0;
 
   while (true)
   {
@@ -74,18 +74,18 @@ bool GL4TextureCube::Initialize(UInt16 size, ePixelFormat format, bool generateM
 
 void GL4TextureCube::Data(eCubeFace face, const Image* image)
 {
-  for (UInt16 l=0; l<image->GetNumberOfLayers(); l++)
+  for (uint16_t l=0; l<image->GetNumberOfLayers(); l++)
   {
     Data(face, l, image->GetPixelFormat(), image->GetData(l));
   }
 }
 
-void GL4TextureCube::Data(eCubeFace face, UInt16 level, const Image* image)
+void GL4TextureCube::Data(eCubeFace face, uint16_t level, const Image* image)
 {
   Data(face, level, image->GetPixelFormat(), image->GetData(level));
 }
 
-void GL4TextureCube::Data(eCubeFace face, UInt16 level, ePixelFormat format, const void* data)
+void GL4TextureCube::Data(eCubeFace face, uint16_t level, ePixelFormat format, const void* data)
 {
   if (level >= m_level.size())
   {
@@ -105,7 +105,7 @@ void GL4TextureCube::Data(eCubeFace face, UInt16 level, ePixelFormat format, con
   );
 }
 
-void GL4TextureCube::Data(eCubeFace face, UInt16 level, UInt16 x, UInt16 y, UInt16 width, UInt16 height, ePixelFormat format, const void* data)
+void GL4TextureCube::Data(eCubeFace face, uint16_t level, uint16_t x, uint16_t y, uint16_t width, uint16_t height, ePixelFormat format, const void* data)
 {
   if (level >= m_level.size())
   {

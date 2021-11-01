@@ -39,18 +39,18 @@ void GL4RenderTarget2D::Bind()
   glBindFramebuffer(GL_FRAMEBUFFER, m_name);
 }
 
-UInt16 GL4RenderTarget2D::GetWidth() const
+uint16_t GL4RenderTarget2D::GetWidth() const
 {
   return m_width;
 }
 
 
-UInt16 GL4RenderTarget2D::GetHeight() const
+uint16_t GL4RenderTarget2D::GetHeight() const
 {
   return m_height;
 }
 
-bool GL4RenderTarget2D::Initialize(UInt16 width, UInt16 height)
+bool GL4RenderTarget2D::Initialize(uint16_t width, uint16_t height)
 {
   m_width = width;
   m_height = height;

@@ -48,12 +48,12 @@ const iLight * GfxLight::GetLight() const
 }
 
 
-void GfxLight::SetFrame(UInt64 frame)
+void GfxLight::SetFrame(uint64_t frame)
 {
   m_frame = frame;
 }
 
-UInt64 GfxLight::GetFrame() const
+uint64_t GfxLight::GetFrame() const
 {
   return m_frame;
 }

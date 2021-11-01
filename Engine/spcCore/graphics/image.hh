@@ -17,7 +17,7 @@ class SPC_CORE_API Image : public SPC_SUPER(iObject)
 {
   SPC_CLASS_GEN_OBJECT;
 public:
-  Image(UInt16 width, UInt16 height, ePixelFormat pixelFormat);
+  Image(uint16_t width, uint16_t height, ePixelFormat pixelFormat);
 
   enum class eMipMapProcedure
   {
@@ -26,33 +26,33 @@ public:
   };
   void GenerateMipMaps(eMipMapProcedure procedure);
 
-  void Copy(UInt16 layer, const UInt8* buffer);
+  void Copy(uint16_t layer, const uint8_t* buffer);
   
-  UInt16 GetNumberOfLayers() const;
-  UInt16 GetWidth(UInt16 layer = 0) const;
-  UInt16 GetHeight(UInt16 layer = 0) const;
-  const UInt8* GetData(UInt16 layer = 0) const;
+  uint16_t GetNumberOfLayers() const;
+  uint16_t GetWidth(uint16_t layer = 0) const;
+  uint16_t GetHeight(uint16_t layer = 0) const;
+  const uint8_t* GetData(uint16_t layer = 0) const;
   ePixelFormat GetPixelFormat() const;
 
 
 
 private:
-  void GenerateLayers(UInt16 width, UInt16 height);
+  void GenerateLayers(uint16_t width, uint16_t height);
   void GenerateMipMapLayers();
-  void GenerateLayer(UInt16 layer);
+  void GenerateLayer(uint16_t layer);
   void GenerateMipMapsLinear4x4();
   void GenerateMipMapsNormal();
 
   struct Layer
   {
-    UInt16 width;
-    UInt16 height;
-    UInt32 size;
-    UInt8* buffer;
+    uint16_t width;
+    uint16_t height;
+    uint32_t size;
+    uint8_t* buffer;
   };
 
   ePixelFormat m_pixelFormat;
-  UInt16 m_numberOfLayers;
+  uint16_t m_numberOfLayers;
   Layer* m_layers;
 
   bool m_mipmapCreated;

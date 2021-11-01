@@ -37,13 +37,13 @@ void GL4RenderTargetCube::Bind()
   glBindFramebuffer(GL_FRAMEBUFFER, m_name);
 }
 
-UInt16 GL4RenderTargetCube::GetSize() const
+uint16_t GL4RenderTargetCube::GetSize() const
 {
   return m_size;
 }
 
 
-bool GL4RenderTargetCube::Initialize(UInt16 size)
+bool GL4RenderTargetCube::Initialize(uint16_t size)
 {
   m_size = size;
   m_external = false;
@@ -52,7 +52,7 @@ bool GL4RenderTargetCube::Initialize(UInt16 size)
   return true;
 }
 
-bool GL4RenderTargetCube::Initialize(UInt32 name, UInt16 size)
+bool GL4RenderTargetCube::Initialize(uint32_t name, uint16_t size)
 {
   m_size = size;
   m_name = name;

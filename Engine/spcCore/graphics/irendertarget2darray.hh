@@ -13,17 +13,17 @@ struct SPC_CORE_API iRenderTarget2DArray : public SPC_SUPER(iRenderTarget)
 {
   struct Descriptor
   {
-    UInt16 Width;
-    UInt16 Height;
-    UInt16 Layer;
+    uint16_t Width;
+    uint16_t Height;
+    uint16_t Layer;
   };
 
   SPC_CLASS_GEN;
   ~iRenderTarget2DArray() override = default;
 
-  virtual UInt16 GetWidth() const = 0;
-  virtual UInt16 GetHeight() const = 0;
-  virtual UInt16 GetLayer() const = 0;
+  virtual uint16_t GetWidth() const = 0;
+  virtual uint16_t GetHeight() const = 0;
+  virtual uint16_t GetLayer() const = 0;
 
   virtual void SetDepthTexture(iTexture2DArray* depthTexture) = 0;
   virtual void AddColorTexture(iTexture2DArray*colorTexture) = 0;

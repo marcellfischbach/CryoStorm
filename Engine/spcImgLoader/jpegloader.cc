@@ -65,8 +65,8 @@ iObject* JpegLoader::Load(const Class* cls, const ResourceLocator& locator) cons
   JSAMPARRAY buffer = (*cinfo.mem->alloc_sarray)
     ((j_common_ptr)&cinfo, JPOOL_IMAGE, row_stride, 1);
 
-  UInt8* image_buffer = new UInt8[row_stride * cinfo.output_height];
-  UInt16 row = 0;
+  uint8_t* image_buffer = new uint8_t[row_stride * cinfo.output_height];
+  uint16_t row = 0;
   while (cinfo.output_scanline < cinfo.output_height) {
     /* jpeg_read_scanlines expects an array of pointers to scanlines.
      * Here the array is only one element long, but you could ask for

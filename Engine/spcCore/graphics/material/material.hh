@@ -6,7 +6,10 @@
 #include <spcCore/coreexport.hh>
 #include <spcCore/class.hh>
 #include <spcCore/types.hh>
+#include <spcCore/graphics/eblendfactor.hh>
+#include <spcCore/graphics/edepthmode.hh>
 #include <spcCore/graphics/erenderpass.hh>
+#include <spcCore/graphics/eshadingmode.hh>
 #include <spcCore/graphics/idevice.hh>
 #include <spcCore/graphics/itexture.hh>
 #include <spcCore/graphics/material/ematerialattributetype.hh>
@@ -15,6 +18,7 @@
 #include <spcCore/math/matrix.hh>
 #include <spcCore/math/vector.hh>
 #include <string>
+#include <array>
 
 namespace spc
 {
@@ -38,16 +42,33 @@ public:
   bool Bind(iDevice * device, eRenderPass pass) override;
 
   void SetRenderQueue(eRenderQueue queue);
-  SPC_NODISCARD eRenderQueue GetRenderQueue() const;
+  SPC_NODISCARD eRenderQueue GetRenderQueue() const override;
+
+  void SetBlending(bool  blending);
+  SPC_NODISCARD bool IsBlending () const;
+  void SetBlendFactor (eBlendFactor srcFactor, eBlendFactor dstFactor);
+  void SetBlendFactor (eBlendFactor srcFactorColor, eBlendFactor srcFactorAlpha, eBlendFactor dstFactorColor, eBlendFactor dstFactorAlpha);
+  SPC_NODISCARD eBlendFactor GetBlendFactorSrcColor () const;
+  SPC_NODISCARD eBlendFactor GetBlendFactorSrcAlpha () const;
+  SPC_NODISCARD eBlendFactor GetBlendFactorDstColor () const;
+  SPC_NODISCARD eBlendFactor GetBlendFactorDstAlpha () const;
+
+  void SetDepthWrite (bool depthWrite);
+  SPC_NODISCARD bool IsDepthWrite() const;
+  void SetDepthTest (bool depthTest);
+  SPC_NODISCARD bool IsDepthTest() const;
+  void SetShadingMode (eShadingMode shadingMode);
+  SPC_NODISCARD eShadingMode GetShadingMode () const override;
+
 
   void SetShader(eRenderPass pass, iShader * shader);
-  iShader* GetShader(eRenderPass pass);
-  const iShader* GetShader(eRenderPass pass) const;
+  SPC_NODISCARD iShader* GetShader(eRenderPass pass);
+  SPC_NODISCARD const iShader* GetShader(eRenderPass pass) const;
 
   void RegisterAttribute(const std::string & attributeName, eMaterialAttributeType attributeType);
-  UInt16 GetNumberOfAttributes() const;
+  SPC_NODISCARD uint16_t GetNumberOfAttributes() const;
 
-  std::vector<std::string> GetAttributeNames() const;
+  SPC_NODISCARD std::vector<std::string> GetAttributeNames() const;
 
   Size IndexOf(const std::string & attributeName) override;
 
@@ -63,26 +84,40 @@ public:
 
 
 private:
-  bool BindShader(iDevice * device, eRenderPass pass);
-  bool BindAttribute(iDevice * device, eRenderPass pass, Size idx);
-  bool BindAttribute(iDevice * device, eRenderPass pass, Size idx, float* floats, int* ints, iTexture * texture);
+  bool BindShader(iDevice * device, eRenderPass pass) const;
+  void BindBlending(iDevice *device) const;
+  void BindDepthMode(iDevice *device) const;
+  bool BindAttribute(iDevice * device, eRenderPass pass, size_t idx) const;
+  bool BindAttribute(iDevice * device, eRenderPass pass, size_t idx, const std::array<float, 16> &floats, const std::array<int, 4> &ints, iTexture * texture) const;
+  static bool BindTexture (iDevice *device, iShaderAttribute *attribute, iTexture *texture);
   void UpdateShaderAttributes(eRenderPass pass);
 
   struct Attribute
   {
-    iShaderAttribute* Attributes[eRP_COUNT];
+    std::array<iShaderAttribute*, eRP_COUNT> Attributes;
     std::string Name;
     eMaterialAttributeType Type;
-    float Floats[16];
-    int Ints[4];
+    std::array<float, 16> Floats;
+    std::array<int, 4> Ints;
     iTexture* Texture;
   };
 
 
-  iShader* m_shader[eRP_COUNT];
+  std::array<iShader*, eRP_COUNT> m_shader;
   std::vector<Attribute> m_attributes;
 
-  eRenderQueue m_queue;
+  eRenderQueue m_queue = eRenderQueue::Default;
+
+  bool  m_blending = false;
+  eBlendFactor m_srcFactorColor = eBlendFactor::One;
+  eBlendFactor m_srcFactorAlpha = eBlendFactor::One;
+  eBlendFactor m_dstFactorColor = eBlendFactor::Zero;
+  eBlendFactor m_dstFactorAlpha = eBlendFactor::Zero;
+
+  bool m_depthWrite = true;
+  bool m_depthTest  = true;
+
+  eShadingMode m_shadingMode = eShadingMode::Shaded;
 };
 
 

@@ -6,7 +6,7 @@ namespace spc
 {
 
 
-Image::Image(UInt16 width, UInt16 height, ePixelFormat format)
+Image::Image(uint16_t width, uint16_t height, ePixelFormat format)
   : m_pixelFormat(format)
   , m_mipmapCreated(false)
 {
@@ -16,11 +16,11 @@ Image::Image(UInt16 width, UInt16 height, ePixelFormat format)
 }
 
 
-void Image::GenerateLayers(UInt16 width, UInt16 height)
+void Image::GenerateLayers(uint16_t width, uint16_t height)
 {
   // count the layers
-  UInt16 w = width;
-  UInt16 h = height;
+  uint16_t w = width;
+  uint16_t h = height;
   m_numberOfLayers = 0;
   do {
     m_numberOfLayers++;
@@ -44,7 +44,7 @@ void Image::GenerateLayers(UInt16 width, UInt16 height)
   } while (w != 1 || h != 1);
 }
 
-UInt32 byte_per_pixel(ePixelFormat format)
+uint32_t byte_per_pixel(ePixelFormat format)
 {
   switch (format)
   {
@@ -56,17 +56,17 @@ UInt32 byte_per_pixel(ePixelFormat format)
   return 0;
 }
 
-void Image::GenerateLayer(UInt16 layer)
+void Image::GenerateLayer(uint16_t layer)
 {
   if (layer >= m_numberOfLayers)
   {
     return;
   }
 
-  UInt32 bpp = byte_per_pixel(m_pixelFormat);
+  uint32_t bpp = byte_per_pixel(m_pixelFormat);
   Layer& l = m_layers[layer];
   l.size = l.width * l.height * bpp;
-  l.buffer = new UInt8[l.size];
+  l.buffer = new uint8_t[l.size];
 }
 
 void Image::GenerateMipMaps(eMipMapProcedure procedure)
@@ -95,13 +95,13 @@ void Image::GenerateMipMaps(eMipMapProcedure procedure)
 
 void Image::GenerateMipMapLayers()
 {
-  for (UInt16 layer = 1; layer < m_numberOfLayers; layer++)
+  for (uint16_t layer = 1; layer < m_numberOfLayers; layer++)
   {
     GenerateLayer(layer);
   }
 }
 
-void Image::Copy(UInt16 layer, const UInt8* buffer)
+void Image::Copy(uint16_t layer, const uint8_t* buffer)
 {
   if (layer >= m_numberOfLayers)
   {
@@ -116,12 +116,12 @@ void Image::Copy(UInt16 layer, const UInt8* buffer)
   memcpy(l.buffer, buffer, l.size);
 }
 
-UInt16 Image::GetNumberOfLayers() const
+uint16_t Image::GetNumberOfLayers() const
 {
   return m_numberOfLayers;
 }
 
-UInt16 Image::GetWidth(UInt16 layer) const
+uint16_t Image::GetWidth(uint16_t layer) const
 {
   if (layer >= m_numberOfLayers)
   {
@@ -130,7 +130,7 @@ UInt16 Image::GetWidth(UInt16 layer) const
   return m_layers[layer].width;
 }
 
-UInt16 Image::GetHeight(UInt16 layer) const
+uint16_t Image::GetHeight(uint16_t layer) const
 {
   if (layer >= m_numberOfLayers)
   {
@@ -139,7 +139,7 @@ UInt16 Image::GetHeight(UInt16 layer) const
   return m_layers[layer].height;
 }
 
-const UInt8* Image::GetData(UInt16 layer) const
+const uint8_t* Image::GetData(uint16_t layer) const
 {
   if (layer >= m_numberOfLayers)
   {
@@ -157,31 +157,31 @@ ePixelFormat Image::GetPixelFormat() const
 
 void Image::GenerateMipMapsLinear4x4()
 {
-  for (UInt16 l = 1; l<m_numberOfLayers; ++l)
+  for (uint16_t l = 1; l<m_numberOfLayers; ++l)
   {
     Layer& src = m_layers[l-1];
     Layer& dst = m_layers[l];
 
-    UInt32 bpp = byte_per_pixel(m_pixelFormat);
-    UInt8* dptr = dst.buffer;
+    uint32_t bpp = byte_per_pixel(m_pixelFormat);
+    uint8_t* dptr = dst.buffer;
     for (int y=0; y<dst.height; y++)
     {
-      UInt32 srcRow0Idx = spcMin(y * 2, src.height-1) * src.width * bpp;
-      UInt32 srcRow1Idx = spcMin(y * 2 + 1, src.height-1) * src.width * bpp;
+      uint32_t srcRow0Idx = spcMin(y * 2, src.height-1) * src.width * bpp;
+      uint32_t srcRow1Idx = spcMin(y * 2 + 1, src.height-1) * src.width * bpp;
       for (int x=0; x<dst.width; x++)
       {
-        UInt32 src00Idx = srcRow0Idx + spcMin(x * 2, src.width-1) * bpp;
-        UInt32 src01Idx = srcRow0Idx + spcMin(x * 2 + 1, src.width-1) * bpp;
-        UInt32 src10Idx = srcRow1Idx + spcMin(x * 2, src.width-1) * bpp;
-        UInt32 src11Idx = srcRow1Idx + spcMin(x * 2 + 1, src.width-1) * bpp;
-        for (UInt32 c = 0; c<bpp; c++)
+        uint32_t src00Idx = srcRow0Idx + spcMin(x * 2, src.width-1) * bpp;
+        uint32_t src01Idx = srcRow0Idx + spcMin(x * 2 + 1, src.width-1) * bpp;
+        uint32_t src10Idx = srcRow1Idx + spcMin(x * 2, src.width-1) * bpp;
+        uint32_t src11Idx = srcRow1Idx + spcMin(x * 2 + 1, src.width-1) * bpp;
+        for (uint32_t c = 0; c<bpp; c++)
         {
-          UInt32 s = src.buffer[src00Idx+c]
+          uint32_t s = src.buffer[src00Idx+c]
                   + src.buffer[src01Idx+c]
                   + src.buffer[src10Idx+c]
                   + src.buffer[src11Idx+c];
           s >>= 2;
-          *dptr++ = (UInt8)(s & 0x000000ff);
+          *dptr++ = (uint8_t)(s & 0x000000ff);
         }
       }
     }
@@ -190,31 +190,31 @@ void Image::GenerateMipMapsLinear4x4()
 
 void Image::GenerateMipMapsNormal()
 {
-  for (UInt16 l = 1; l<m_numberOfLayers; ++l)
+  for (uint16_t l = 1; l<m_numberOfLayers; ++l)
   {
     Layer& src = m_layers[l-1];
     Layer& dst = m_layers[l];
 
-    UInt32 bpp = byte_per_pixel(m_pixelFormat);
-    UInt8* dptr = dst.buffer;
+    uint32_t bpp = byte_per_pixel(m_pixelFormat);
+    uint8_t* dptr = dst.buffer;
     for (int y=0; y<dst.height; y++)
     {
-      UInt32 srcRow0Idx = spcMin(y * 2, src.height-1) * src.width * bpp;
-      UInt32 srcRow1Idx = spcMin(y * 2 + 1, src.height-1) * src.width * bpp;
+      uint32_t srcRow0Idx = spcMin(y * 2, src.height-1) * src.width * bpp;
+      uint32_t srcRow1Idx = spcMin(y * 2 + 1, src.height-1) * src.width * bpp;
       for (int x=0; x<dst.width; x++)
       {
-        UInt32 src00Idx = srcRow0Idx + spcMin(x * 2, src.width-1) * bpp;
-        UInt32 src01Idx = srcRow0Idx + spcMin(x * 2 + 1, src.width-1) * bpp;
-        UInt32 src10Idx = srcRow1Idx + spcMin(x * 2, src.width-1) * bpp;
-        UInt32 src11Idx = srcRow1Idx + spcMin(x * 2 + 1, src.width-1) * bpp;
-        for (UInt32 c = 0; c<bpp; c++)
+        uint32_t src00Idx = srcRow0Idx + spcMin(x * 2, src.width-1) * bpp;
+        uint32_t src01Idx = srcRow0Idx + spcMin(x * 2 + 1, src.width-1) * bpp;
+        uint32_t src10Idx = srcRow1Idx + spcMin(x * 2, src.width-1) * bpp;
+        uint32_t src11Idx = srcRow1Idx + spcMin(x * 2 + 1, src.width-1) * bpp;
+        for (uint32_t c = 0; c<bpp; c++)
         {
-          UInt32 s = src.buffer[src00Idx+c]
+          uint32_t s = src.buffer[src00Idx+c]
                      + src.buffer[src01Idx+c]
                      + src.buffer[src10Idx+c]
                      + src.buffer[src11Idx+c];
           s >>= 2;
-          *dptr++ = (UInt8)(s & 0x000000ff);
+          *dptr++ = (uint8_t)(s & 0x000000ff);
         }
       }
     }

@@ -1,10 +1,10 @@
 #include <spcCore/coremodule.hh>
-//#include <spcCore/master.refl.cc>
 #include <master.refl.cc>
 #include <spcCore/resource/assetmanager.hh>
 #include <spcCore/loaders/materialloader.hh>
 #include <spcCore/loaders/samplerloader.hh>
 #include <spcCore/loaders/textureloader.hh>
+
 
 
 namespace spc

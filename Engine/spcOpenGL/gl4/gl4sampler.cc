@@ -125,9 +125,9 @@ eFilterMode GL4Sampler::GetFilterMode() const
   return m_filterMode;
 }
 
-void GL4Sampler::SetAnisotropy(UInt8 anisotropy)
+void GL4Sampler::SetAnisotropy(uint8_t anisotropy)
 {
-  anisotropy = spcClamp<UInt8>(anisotropy, 1, 16);
+  anisotropy = spcClamp<uint8_t>(anisotropy, 1, 16);
   if (m_anisotropy != anisotropy)
   {
     m_anisotropy = anisotropy;
@@ -136,12 +136,12 @@ void GL4Sampler::SetAnisotropy(UInt8 anisotropy)
   }
 }
 
-UInt8 GL4Sampler::GetAnisotropy() const
+uint8_t GL4Sampler::GetAnisotropy() const
 {
   return m_anisotropy;
 }
 
-void GL4Sampler::SetMinLOD(UInt16 minLOD)
+void GL4Sampler::SetMinLOD(uint16_t minLOD)
 {
   if (m_minLOD != minLOD)
   {
@@ -150,12 +150,12 @@ void GL4Sampler::SetMinLOD(UInt16 minLOD)
   }
 }
 
-UInt16 GL4Sampler::GetMinLOD() const
+uint16_t GL4Sampler::GetMinLOD() const
 {
   return m_minLOD;
 }
 
-void GL4Sampler::SetMaxLOD(UInt16 maxLOD)
+void GL4Sampler::SetMaxLOD(uint16_t maxLOD)
 {
   if (m_maxLOD != maxLOD)
   {
@@ -164,12 +164,12 @@ void GL4Sampler::SetMaxLOD(UInt16 maxLOD)
   }
 }
 
-UInt16 GL4Sampler::GetMaxLOD() const
+uint16_t GL4Sampler::GetMaxLOD() const
 {
   return m_maxLOD;
 }
 
-static UInt32 Address(eTextureAddressMode tam)
+static uint32_t Address(eTextureAddressMode tam)
 {
   switch (tam)
   {

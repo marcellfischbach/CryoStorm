@@ -35,23 +35,23 @@ void GL4RenderTarget2DArray::Bind()
   glBindFramebuffer(GL_FRAMEBUFFER, m_name);
 }
 
-UInt16 GL4RenderTarget2DArray::GetWidth() const
+uint16_t GL4RenderTarget2DArray::GetWidth() const
 {
   return m_width;
 }
 
 
-UInt16 GL4RenderTarget2DArray::GetHeight() const
+uint16_t GL4RenderTarget2DArray::GetHeight() const
 {
   return m_height;
 }
 
-UInt16 GL4RenderTarget2DArray::GetLayer() const
+uint16_t GL4RenderTarget2DArray::GetLayer() const
 {
   return m_layer;
 }
 
-bool GL4RenderTarget2DArray::Initialize(UInt16 width, UInt16 height, UInt16 layer)
+bool GL4RenderTarget2DArray::Initialize(uint16_t width, uint16_t height, uint16_t layer)
 {
   m_width = width;
   m_height = height;

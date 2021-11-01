@@ -138,8 +138,8 @@ GL4RenderTarget2DArray *GL4ForwardDirectionalLightRenderer::GetDirectionalLightS
   if (m_directionalLightShadowMap.size() <= idx)
   {
     iRenderTarget2DArray::Descriptor desc{};
-    desc.Width = (UInt16) m_directionalLightShadowMapSize;
-    desc.Height = (UInt16) m_directionalLightShadowMapSize;
+    desc.Width = (uint16_t) m_directionalLightShadowMapSize;
+    desc.Height = (uint16_t) m_directionalLightShadowMapSize;
     desc.Layer = 3;
     GL4RenderTarget2DArray *shadowRenderTarget = static_cast<GL4RenderTarget2DArray *>(m_device->CreateRenderTarget(desc));
 

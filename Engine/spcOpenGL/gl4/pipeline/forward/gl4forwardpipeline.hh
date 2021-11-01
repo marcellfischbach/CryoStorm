@@ -22,6 +22,7 @@ struct iSampler;
 
 namespace opengl
 {
+const int   MaxLights         = 4;
 
 class GL4DirectionalLight;
 class GL4PointLight;
@@ -42,7 +43,8 @@ public:
 private:
 
   void LightScanned(GfxLight * light);
-  void RenderMesh(GfxMesh * mesh, const GfxLight * *lights, Size offset);
+  void RenderUnlitMesh(GfxMesh * mesh);
+  void RenderMesh(GfxMesh * mesh, std::array<const GfxLight*, MaxLights> &lights, Size offset);
 
   void CollectShadowLights(GfxLight * light);
   void RenderShadowMaps();
@@ -50,7 +52,7 @@ private:
 
   Size AssignLights(const std::vector<GfxMesh::Light> &staticLights,
     const std::vector<GfxMesh::Light> &dynamicLights,
-    const GfxLight * *lights,
+    std::array<const GfxLight *, MaxLights> &lights,
     Size offset);
 
 
@@ -60,7 +62,7 @@ private:
 
 
 
-  UInt64 m_frame;
+  uint64_t m_frame;
   iDevice* m_device;
   Camera m_camera;
   Projector m_projector;
@@ -71,6 +73,7 @@ private:
   std::vector<GfxLight*> m_dynamicLights;
   std::vector<GfxLight*> m_staticLights;
   std::vector<GfxLight*> m_staticLightsNew;
+  std::vector<GfxMesh*> m_transparentMeshes;
 
   GL4ForwardPointLightRenderer m_pointLightRenderer;
   GL4ForwardDirectionalLightRenderer m_directionalLightRenderer;

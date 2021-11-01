@@ -18,7 +18,7 @@ VertexDeclaration::VertexDeclaration(const VertexDeclaration::Attribute* attribu
 
 void VertexDeclaration::Init(const VertexDeclaration::Attribute* attributes, Size count)
 {
-  UInt8 maxStream = 0;
+  uint8_t maxStream = 0;
   const Attribute* aptr = attributes;
   for (Size i = 0; i < count; i++, aptr++)
   {
@@ -26,7 +26,7 @@ void VertexDeclaration::Init(const VertexDeclaration::Attribute* attributes, Siz
   }
 
   m_streams.clear();
-  for (UInt8 streamId = 0; streamId <= maxStream; ++streamId)
+  for (uint8_t streamId = 0; streamId <= maxStream; ++streamId)
   {
     m_streams.push_back(Stream());
     Stream& stream = m_streams[streamId];
@@ -45,7 +45,7 @@ void VertexDeclaration::Init(const VertexDeclaration::Attribute* attributes, Siz
 
 }
 
-const std::vector<VertexDeclaration::Attribute>& VertexDeclaration::GetAttributes(UInt8 streamID) const
+const std::vector<VertexDeclaration::Attribute>& VertexDeclaration::GetAttributes(uint8_t streamID) const
 {
   if (streamID >= m_streams.size())
   {

@@ -36,6 +36,11 @@ public:
   void SetStatic(bool _static);
   SPC_NODISCARD bool IsStatic() const;
 
+  void SetReceiveShadow (bool receiveShadow);
+  SPC_NODISCARD bool IsReceiveShadow () const;
+  void SetCastShadow(bool castShadow);
+  SPC_NODISCARD bool IsCastShadow() const;
+
   void SetMaterial(iMaterial* material);
   SPC_NODISCARD iMaterial* GetMaterial();
   SPC_NODISCARD const iMaterial* GetMaterial() const;
@@ -60,8 +65,8 @@ public:
   void RenderUnlit(iDevice* device, eRenderPass pass);
   void RenderForward(iDevice* device, eRenderPass pass, const GfxLight** lights, Size numberOfLights);
 
-  void SetFrame(UInt64 frame);
-  SPC_NODISCARD UInt64 GetFrame() const;
+  void SetFrame(uint64_t frame);
+  SPC_NODISCARD uint64_t GetFrame() const;
 
   void SetLightingDirty(bool lightingDirty);
   SPC_NODISCARD bool IsLightingDirty() const;
@@ -70,13 +75,15 @@ public:
 private:
   void UpdateBoundingBox();
 
-  bool m_static;
-  iMaterial* m_material;
-  iRenderMesh* m_mesh;
+  bool m_static = false;
+  bool m_receiveShadow = true;
+  bool m_castShadow = true;
+  iMaterial* m_material = nullptr;
+  iRenderMesh* m_mesh = nullptr;
   Matrix4f m_modelMatrix;
   BoundingBox m_boundingBox;
-  UInt64  m_frame;
-  bool m_lightingDirty;
+  uint64_t  m_frame = 0;
+  bool m_lightingDirty = true;
 
   std::vector<Light> m_lights;
 

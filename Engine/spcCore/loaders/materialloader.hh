@@ -27,6 +27,9 @@ private:
   static Material* LoadMaterial(const Class* cls, const file::File* file, const ResourceLocator* locator);
   static iObject* LoadMaterialInstance(const Class* cls, const file::File* file, const ResourceLocator* locator);
 
+  static void LoadQueue(Material* material, const file::Element* materialElement);
+  static void LoadBlending(Material* material, const file::Element* materialElement);
+  static void LoadDepth(Material* material, const file::Element* materialElement);
 
   static bool LoadShaders(Material* material, const file::Element* materialElement);
   static bool LoadShader(Material* material, const file::Element* shaderElement);

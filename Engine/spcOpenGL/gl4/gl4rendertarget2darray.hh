@@ -19,11 +19,11 @@ public:
 
   void Bind();
 
-  bool Initialize (UInt16 width, UInt16 height, UInt16 layer);
+  bool Initialize (uint16_t width, uint16_t height, uint16_t layer);
 
-  UInt16 GetWidth() const override;
-  UInt16 GetHeight() const override;
-  UInt16 GetLayer() const override;
+  uint16_t GetWidth() const override;
+  uint16_t GetHeight() const override;
+  uint16_t GetLayer() const override;
 
   void SetDepthTexture(iTexture2DArray* depthTexture) override;
   void AddColorTexture(iTexture2DArray* colorTexture) override;
@@ -40,10 +40,10 @@ public:
   const iTexture2DArray* GetColorTexture(Size idx) const override;
 
 private:
-  UInt32 m_name;
-  UInt16 m_width;
-  UInt16 m_height;
-  UInt16 m_layer;
+  uint32_t m_name;
+  uint16_t m_width;
+  uint16_t m_height;
+  uint16_t m_layer;
 
   iTexture2DArray*m_depthTexture;
   std::vector<iTexture2DArray*> m_colorTextures;

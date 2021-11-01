@@ -54,7 +54,7 @@ void GL4Shader::SetSource(const std::string& source)
   glShaderSource(m_name, 1, sources, length);
 }
 
-UInt32 GL4Shader::GetName() const
+uint32_t GL4Shader::GetName() const
 {
   return m_name;
 }

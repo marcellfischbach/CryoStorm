@@ -18,8 +18,8 @@ struct SPC_CORE_API iTexture2D : public SPC_SUPER(iTexture)
   struct Descriptor
   {
     ePixelFormat Format;
-    UInt16 Width;
-    UInt16 Height;
+    uint16_t Width;
+    uint16_t Height;
     bool MipMaps;
   };
 
@@ -28,9 +28,9 @@ struct SPC_CORE_API iTexture2D : public SPC_SUPER(iTexture)
   virtual ~iTexture2D() { }
 
   virtual void Data(const Image* image) = 0;
-  virtual void Data(UInt16 level, const Image* image) = 0;
-  virtual void Data(UInt16 level, ePixelFormat format, const void* data) = 0;
-  virtual void Data(UInt16 level, UInt16 x, UInt16 y, UInt16 width, UInt16 height, ePixelFormat format, const void* data) = 0;
+  virtual void Data(uint16_t level, const Image* image) = 0;
+  virtual void Data(uint16_t level, ePixelFormat format, const void* data) = 0;
+  virtual void Data(uint16_t level, uint16_t x, uint16_t y, uint16_t width, uint16_t height, ePixelFormat format, const void* data) = 0;
 
 };
 

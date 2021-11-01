@@ -29,7 +29,7 @@ void GL4Texture2D::Bind()
   glBindTexture(GL_TEXTURE_2D, m_name);
 }
 
-bool GL4Texture2D::Initialize(UInt16 width, UInt16 height, ePixelFormat format, bool generateMipMaps)
+bool GL4Texture2D::Initialize(uint16_t width, uint16_t height, ePixelFormat format, bool generateMipMaps)
 {
   m_width = width;
   m_height = height;
@@ -41,7 +41,7 @@ bool GL4Texture2D::Initialize(UInt16 width, UInt16 height, ePixelFormat format, 
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-  UInt8 level = 0;
+  uint8_t level = 0;
 
   while (true)
   {
@@ -75,18 +75,18 @@ bool GL4Texture2D::Initialize(UInt16 width, UInt16 height, ePixelFormat format, 
 
 void GL4Texture2D::Data(const Image* image)
 {
-  for (UInt16 l=0; l<image->GetNumberOfLayers(); l++)
+  for (uint16_t l=0; l<image->GetNumberOfLayers(); l++)
   {
     Data(l, image->GetPixelFormat(), image->GetData(l));
   }
 }
 
-void GL4Texture2D::Data(UInt16 level, const Image* image)
+void GL4Texture2D::Data(uint16_t level, const Image* image)
 {
   Data(level, image->GetPixelFormat(), image->GetData(level));
 }
 
-void GL4Texture2D::Data(UInt16 level, ePixelFormat format, const void* data)
+void GL4Texture2D::Data(uint16_t level, ePixelFormat format, const void* data)
 {
   if (level >= m_level.size())
   {
@@ -106,7 +106,7 @@ void GL4Texture2D::Data(UInt16 level, ePixelFormat format, const void* data)
   );
 }
 
-void GL4Texture2D::Data(UInt16 level, UInt16 x, UInt16 y, UInt16 width, UInt16 height, ePixelFormat format, const void* data)
+void GL4Texture2D::Data(uint16_t level, uint16_t x, uint16_t y, uint16_t width, uint16_t height, ePixelFormat format, const void* data)
 {
   if (level >= m_level.size())
   {

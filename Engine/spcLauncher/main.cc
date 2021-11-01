@@ -167,7 +167,7 @@ bool initialize_modules(int argc, char **argv)
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 4);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
-  Uint32 flags = SDL_WINDOW_OPENGL;
+  uint32_t flags = SDL_WINDOW_OPENGL;
   // flags |= SDL_WINDOW_BORDERLESS;
   std::string title = settings.GetText("title");
   spc::Vector2i res = settings.GetVector2i("resolution");
@@ -220,16 +220,16 @@ bool initialize_modules(int argc, char **argv)
   return true;
 }
 
-spc::iRenderMesh *create_plane_mesh(float nx, float ny)
+spc::iRenderMesh *create_plane_mesh(float size, float nx, float ny)
 {
   //
   // create a render mesh
   spc::iRenderMeshGenerator *generator = spc::ObjectRegistry::Get<spc::iRenderMeshGeneratorFactory>()->Create();
   std::vector<spc::Vector3f> positions;
-  positions.push_back(spc::Vector3f(-40.0f, 0.0f, -40.0f));
-  positions.push_back(spc::Vector3f(-40.0f, 0.0f, 40.0f));
-  positions.push_back(spc::Vector3f(40.0f, 0.0f, -40.0f));
-  positions.push_back(spc::Vector3f(40.0f, 0.0f, 40.0f));
+  positions.push_back(spc::Vector3f(-size, 0.0f, -size));
+  positions.push_back(spc::Vector3f(-size, 0.0f, size));
+  positions.push_back(spc::Vector3f(size, 0.0f, -size));
+  positions.push_back(spc::Vector3f(size, 0.0f, size));
   std::vector<spc::Vector3f> normals;
   normals.push_back(spc::Vector3f(0.0f, 1.0f, 0.0f));
   normals.push_back(spc::Vector3f(0.0f, 1.0f, 0.0f));
@@ -240,7 +240,7 @@ spc::iRenderMesh *create_plane_mesh(float nx, float ny)
   uv.push_back(spc::Vector2f(0.0f, ny));
   uv.push_back(spc::Vector2f(nx, 0.0f));
   uv.push_back(spc::Vector2f(nx, ny));
-  std::vector<spc::UInt32> indices;
+  std::vector<spc::uint32_t> indices;
   indices.push_back(0);
   indices.push_back(1);
   indices.push_back(3);
@@ -413,15 +413,27 @@ int main(int argc, char **argv)
 
 
 
+  spc::Material *transMaterial = spc::AssetManager::Get()->Get<spc::Material>(spc::ResourceLocator("/materials/test_trans_material.spc"));
+  spc::MaterialInstance *transRedMaterial = spc::AssetManager::Get()->Get<spc::MaterialInstance>(spc::ResourceLocator("/materials/red_transparent_material_instance.spc"));
+  spc::MaterialInstance *transBlueMaterial = spc::AssetManager::Get()->Get<spc::MaterialInstance>(spc::ResourceLocator("/materials/blue_transparent_material_instance.spc"));
 
 
   spc::MaterialInstance *materialInstance = spc::AssetManager::Get()->Get<spc::MaterialInstance>(spc::ResourceLocator("/materials/test_material_instance.spc"));
 
 
-  spc::iRenderMesh *renderMesh = create_plane_mesh(8, 8);
+  spc::iRenderMesh *renderMesh = create_plane_mesh(40.0f, 8, 8);
   spc::Mesh *mesh = new spc::Mesh();
   mesh->AddMaterialSlot("Default", materialInstance);
   mesh->AddSubMesh(renderMesh, 0);
+
+  spc::iRenderMesh *transPlaneMesh = create_plane_mesh(10.0f, 8, 8);
+  spc::Mesh *transRedMesh          = new spc::Mesh();
+  transRedMesh->AddMaterialSlot("Default", transRedMaterial);
+  transRedMesh->AddSubMesh(transPlaneMesh, 0);
+  spc::Mesh *transBlueMesh          = new spc::Mesh();
+  transBlueMesh->AddMaterialSlot("Default", transBlueMaterial);
+  transBlueMesh->AddSubMesh(transPlaneMesh, 0);
+
 
 
   spc::World *world = new spc::World();
@@ -451,6 +463,26 @@ int main(int argc, char **argv)
   meshState0->SetStatic(true);
   entity0->Attach(meshState0);
   world->Attach(entity0);
+
+
+
+  spc::Entity *entityTransPlaneRed = new spc::Entity("Entity0");
+  spc::StaticMeshState *meshStateTransPlaneRed = new spc::StaticMeshState("StaticMeshTransPlane");
+
+  meshStateTransPlaneRed->SetTransform(spc::Transform(spc::Vector3f(0, 2.0f, 0)));
+  meshStateTransPlaneRed->SetMesh(transRedMesh);
+  meshStateTransPlaneRed->SetStatic(true);
+  entityTransPlaneRed->Attach(meshStateTransPlaneRed);
+
+  spc::Entity* entityTransPlaneBlue = new spc::Entity("Entity0");
+  spc::StaticMeshState *meshStateTransPlaneBlue = new spc::StaticMeshState("StaticMeshTransPlane");
+  meshStateTransPlaneBlue->SetTransform(spc::Transform(spc::Vector3f(0, 0.10f, 0)));
+  meshStateTransPlaneBlue->SetMesh(transBlueMesh);
+  meshStateTransPlaneBlue->SetStatic(true);
+  entityTransPlaneBlue->Attach(meshStateTransPlaneBlue);
+
+
+  world->Attach(entityTransPlaneBlue);
 
 
   create_suzannes_plain(suzanneMesh, world);
@@ -514,9 +546,9 @@ int main(int argc, char **argv)
   float rot = 0.0f;
   float entRot = 0.0f;
 
-  spc::UInt32 nextSec = SDL_GetTicks() + 1000;
-  spc::UInt32 frames = 0;
-  spc::UInt32 lastTime = SDL_GetTicks();
+  spc::uint32_t nextSec = SDL_GetTicks() + 1000;
+  spc::uint32_t frames = 0;
+  spc::uint32_t lastTime = SDL_GetTicks();
 
 
   bool useCs = true;
@@ -530,7 +562,7 @@ int main(int argc, char **argv)
 #if _DEBUG
     device->ResetDebug();
 #endif
-    Uint32 time = SDL_GetTicks();
+    uint32_t time = SDL_GetTicks();
     if (time > nextSec)
     {
       nextSec += 1000;
@@ -552,7 +584,7 @@ int main(int argc, char **argv)
     {
       frames++;
     }
-    spc::UInt32 deltaTime = time - lastTime;
+    spc::uint32_t deltaTime = time - lastTime;
     lastTime = time;
 
     SDL_GL_MakeCurrent(wnd, context);
@@ -579,7 +611,7 @@ int main(int argc, char **argv)
 
       if (anim)
       {
-          entRot += tpf * 2.0f;
+          entRot += tpf * 1.0f;
       }
 
 
@@ -599,10 +631,10 @@ int main(int argc, char **argv)
 
     device->SetRenderTarget(nullptr);
     device->SetViewport(0, 0, wnd_width, wnd_height);
-    glDisable(GL_DEPTH_TEST);
+    device->SetDepthTest(false);
     //device->Clear(true, spc::Color4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, true, 0);
     device->RenderFullscreen(colorTexture);
-    glEnable(GL_DEPTH_TEST);
+    device->SetDepthTest(true);
 
 #if _DEBUG
     numDrawCallsPerSec += device->GetNumberOfDrawCalls();

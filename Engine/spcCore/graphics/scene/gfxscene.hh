@@ -29,7 +29,8 @@ public:
   {
     eSM_Global = 1,
     eSM_Static = 2,
-    eSM_Dynamic = 4
+    eSM_Dynamic = 4,
+    eSM_Unshaded = 8,
   };
 
   GfxScene();
@@ -42,8 +43,8 @@ public:
 
   void Render(iDevice * device, eRenderPass pass);
 
-  void ScanMeshes(const iClipper* clipper, UInt32 scanMask, const std::function<void(GfxMesh*)> &callback) const;
-  void ScanLights(const iClipper* clipper, UInt32 scanMask, const std::function<bool(GfxLight*)> &callback) const;
+  void ScanMeshes(const iClipper* clipper, uint32_t scanMask, const std::function<void(GfxMesh*)> &callback) const;
+  void ScanLights(const iClipper* clipper, uint32_t scanMask, const std::function<bool(GfxLight*)> &callback) const;
 
 private:
   static void Add(GfxLight *light, std::vector<GfxLight*> &lights);
@@ -55,9 +56,14 @@ private:
   static float CalcMeshLightInfluence( GfxLight* light, const GfxMesh* mesh);
   static Size CalcMeshLightInfluences(const GfxMesh * mesh, const std::vector<GfxLight*> &lights, GfxMesh::Light *influencesOut);
 
+  void ScanGlobalLights (const std::function<bool(GfxLight *)> &callback) const;
+  void ScanStaticLights (const iClipper* clipper, const std::function<bool(GfxLight *)> &callback) const;
+  void ScanDynamicLights (const iClipper* clipper, const std::function<bool(GfxLight *)> &callback) const;
+
 
   std::vector<GfxMesh*> m_dynamicMeshes;
   std::vector<GfxMesh*> m_staticMeshes;
+  std::vector<GfxMesh*> m_unshadedMeshes;
 
   std::vector<GfxLight*> m_globalLights;
   std::vector<GfxLight*> m_staticLights;

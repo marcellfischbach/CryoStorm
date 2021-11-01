@@ -16,7 +16,7 @@ class SPC_OGL_API GL4Texture2DArray : public SPC_SUPER(iTexture2DArray)
 public:
   GL4Texture2DArray();
   ~GL4Texture2DArray();
-  SPC_NODISCARD UInt32 GetName()
+  SPC_NODISCARD uint32_t GetName()
   {
     return m_name;
   }
@@ -34,23 +34,23 @@ public:
 
   void Bind();
 
-  bool Initialize(UInt16 width, UInt16 height, UInt16 layer, ePixelFormat format, bool generateMipMaps);
+  bool Initialize(uint16_t width, uint16_t height, uint16_t layer, ePixelFormat format, bool generateMipMaps);
 
-  void Data(UInt16 layer, const Image * image) override;
-  void Data(UInt16 layer, UInt16 level, const Image * image) override;
-  void Data(UInt16 layer, UInt16 level, ePixelFormat format, const void* data) override;
-  void Data(UInt16 layer, UInt16 level, UInt16 x, UInt16 y, UInt16 width, UInt16 height, ePixelFormat format, const void* data) override;
+  void Data(uint16_t layer, const Image * image) override;
+  void Data(uint16_t layer, uint16_t level, const Image * image) override;
+  void Data(uint16_t layer, uint16_t level, ePixelFormat format, const void* data) override;
+  void Data(uint16_t layer, uint16_t level, uint16_t x, uint16_t y, uint16_t width, uint16_t height, ePixelFormat format, const void* data) override;
 private:
-  UInt32 m_name;
-  UInt16 m_width;
-  UInt16 m_height;
-  UInt16 m_layer;
+  uint32_t m_name;
+  uint16_t m_width;
+  uint16_t m_height;
+  uint16_t m_layer;
   ePixelFormat m_format;
 
   struct Level
   {
-    UInt16 Width;
-    UInt16 Height;
+    uint16_t Width;
+    uint16_t Height;
   };
   std::vector<Level> m_level;
   iSampler* m_sampler;

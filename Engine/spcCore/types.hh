@@ -9,10 +9,10 @@ namespace spc {
 
 #ifdef SPC_WIN32
 
-typedef unsigned __int8  UInt8;
-typedef unsigned __int16 UInt16;
-typedef unsigned __int32 UInt32;
-typedef unsigned __int64 UInt64;
+typedef unsigned __int8  uint8_t;
+typedef unsigned __int16 uint16_t;
+typedef unsigned __int32 uint32_t;
+typedef unsigned __int64 uint64_t;
 
 typedef signed __int8  Int8;
 typedef signed __int16 Int16;

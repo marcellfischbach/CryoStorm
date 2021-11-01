@@ -25,14 +25,14 @@ public:
   void SetFilterMode(eFilterMode filterMode) override;
   eFilterMode GetFilterMode() const override;
 
-  void SetAnisotropy(UInt8 anisotropy) override;
-  UInt8 GetAnisotropy() const override;
+  void SetAnisotropy(uint8_t anisotropy) override;
+  uint8_t GetAnisotropy() const override;
 
-  void SetMinLOD(UInt16 minLOD) override;
-  UInt16 GetMinLOD() const override;
+  void SetMinLOD(uint16_t minLOD) override;
+  uint16_t GetMinLOD() const override;
 
-  void SetMaxLOD(UInt16 maxLOD) override;
-  UInt16 GetMaxLOD() const override;
+  void SetMaxLOD(uint16_t maxLOD) override;
+  uint16_t GetMaxLOD() const override;
 
   void SetAddressU(eTextureAddressMode mode) override;
   eTextureAddressMode GetAddressU() const override;
@@ -55,13 +55,13 @@ public:
   bool NeedsMipMaps() const override;
 
 private:
-  UInt32 m_name;
+  uint32_t m_name;
 
   eFilterMode m_filterMode;
-  UInt8 m_anisotropy;
+  uint8_t m_anisotropy;
 
-  UInt16 m_minLOD;
-  UInt16 m_maxLOD;
+  uint16_t m_minLOD;
+  uint16_t m_maxLOD;
 
   eTextureAddressMode m_addressU;
   eTextureAddressMode m_addressV;

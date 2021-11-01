@@ -54,8 +54,8 @@ iObject* AssimpMeshLoader::Load(const Class* cls, const ResourceLocator& locator
   long size = file->Tell();
   file->Seek(eSM_Set, 0);
 
-  UInt8* buffer = new UInt8[size];
-  file->Read(sizeof(UInt8), size, buffer);
+  uint8_t* buffer = new uint8_t[size];
+  file->Read(sizeof(uint8_t), size, buffer);
 
   Assimp::Importer importer;
   const aiScene *scene = importer.ReadFileFromMemory(buffer, size,
@@ -201,7 +201,7 @@ iRenderMesh* AssimpMeshLoaderLoadMesh(aiMesh* mesh, const Matrix4f &matrix)
 //    printf("\n");
   }
 
-  std::vector<UInt32> indices;
+  std::vector<uint32_t> indices;
   for (unsigned i = 0, in = mesh->mNumFaces; i < in; ++i)
   {
     aiFace face = mesh->mFaces[i];

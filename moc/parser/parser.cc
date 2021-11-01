@@ -762,7 +762,8 @@ TypeDef Parser::GetType(Tokenizer & tokenizer, size_t & idx)
         }
         else
         {
-          throw ParseException(__FILE__, __LINE__, "Unexpected token '" + token.Get() + "'");
+          idx++;
+          //throw ParseException(__FILE__, __LINE__, "Unexpected token '" + token.Get() + "' -> " + std::to_string(token.GetType()));
         }
       }
       continue;

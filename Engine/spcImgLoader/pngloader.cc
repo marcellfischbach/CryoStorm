@@ -64,13 +64,13 @@ iObject* PngLoader::Load(const Class* cls, const ResourceLocator& locator) const
   png_set_sig_bytes(png_ptr, 8);
   png_read_info(png_ptr, info_ptr);
 
-  UInt32 width = png_get_image_width(png_ptr, info_ptr);
-  UInt32 height = png_get_image_height(png_ptr, info_ptr);
-  UInt8 color_type = png_get_color_type(png_ptr, info_ptr);
-  UInt8 bit_depth = png_get_bit_depth(png_ptr, info_ptr);
+  uint32_t width = png_get_image_width(png_ptr, info_ptr);
+  uint32_t height = png_get_image_height(png_ptr, info_ptr);
+  uint8_t color_type = png_get_color_type(png_ptr, info_ptr);
+  uint8_t bit_depth = png_get_bit_depth(png_ptr, info_ptr);
 
   ePixelFormat imageFormat;
-  UInt8 bpp = 0;
+  uint8_t bpp = 0;
   switch (color_type)
   {
   case PNG_COLOR_TYPE_GRAY:
@@ -94,38 +94,38 @@ iObject* PngLoader::Load(const Class* cls, const ResourceLocator& locator) const
 
   //Size stride = png_get_rowbytes(png_ptr, info_ptr);
   png_bytep* row_pointers = new png_bytep[height];
-  for (UInt32 y = 0; y < height; y++)
+  for (uint32_t y = 0; y < height; y++)
   {
     row_pointers[y] = new png_byte[png_get_rowbytes(png_ptr, info_ptr)];
   }
   png_read_image(png_ptr, row_pointers);
 
-  UInt8* image_buffer = new UInt8[width * height * bpp];
-  UInt8* iptr = image_buffer;
+  uint8_t* image_buffer = new uint8_t[width * height * bpp];
+  uint8_t* iptr = image_buffer;
 
   //
   // convert row by row and delete the buffer
-  for (UInt32 y = 0; y < height; y++)
+  for (uint32_t y = 0; y < height; y++)
   {
     Size rowId = height - y - 1;
     png_bytep ptr = row_pointers[rowId];
     switch (color_type)
     {
     case PNG_COLOR_TYPE_GRAY:
-      for (UInt32 x = 0; x < width; x++)
+      for (uint32_t x = 0; x < width; x++)
       {
         *iptr++ = ptr[x];
       }
       break;
     case PNG_COLOR_TYPE_GA:
-      for (UInt32 x = 0; x < width; x++)
+      for (uint32_t x = 0; x < width; x++)
       {
         *iptr++ = ptr[x * 2 + 0];
         *iptr++ = ptr[x * 2 + 1];
       }
       break;
     case PNG_COLOR_TYPE_RGB:
-      for (UInt32 x = 0; x < width; x++)
+      for (uint32_t x = 0; x < width; x++)
       {
         *iptr++ = ptr[x * 3 + 0];
         *iptr++ = ptr[x * 3 + 1];
@@ -133,7 +133,7 @@ iObject* PngLoader::Load(const Class* cls, const ResourceLocator& locator) const
       }
       break;
     case PNG_COLOR_TYPE_RGBA:
-      for (UInt32 x = 0; x < width; x++)
+      for (uint32_t x = 0; x < width; x++)
       {
         *iptr++ = ptr[x * 4 + 0];
         *iptr++ = ptr[x * 4 + 1];

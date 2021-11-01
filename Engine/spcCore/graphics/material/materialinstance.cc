@@ -32,20 +32,23 @@ bool MaterialInstance::Bind(iDevice* device, eRenderPass pass)
     return false;
   }
 
+  m_material->BindBlending(device);
+  m_material->BindDepthMode(device);
+
   device->ResetTextures();
   for (Size i = 0, in = m_attributes.size(); i < in; i++)
   {
     Attribute& attribute = m_attributes[i];
     if (attribute.Override)
     {
-      if (!m_material->BindAttribute(device, pass, (UInt16)i, attribute.Floats, attribute.Ints, attribute.Texture))
+      if (!m_material->BindAttribute(device, pass, (uint16_t)i, attribute.Floats, attribute.Ints, attribute.Texture))
       {
         return false;
       }
     }
     else
     {
-      if (!m_material->BindAttribute(device, pass, (UInt16)i))
+      if (!m_material->BindAttribute(device, pass, (uint16_t)i))
       {
         return false;
       }
@@ -165,7 +168,7 @@ void MaterialInstance::Set(Size idx, const Matrix3f& m)
   }
   Attribute& attr = m_attributes[idx];
   attr.Override = true;
-  memcpy(attr.Floats, &m, sizeof(float) * 9);
+  memcpy(attr.Floats.data(), &m, sizeof(float) * 9);
 }
 
 void MaterialInstance::Set(Size idx, const Matrix4f& m)
@@ -176,7 +179,7 @@ void MaterialInstance::Set(Size idx, const Matrix4f& m)
   }
   Attribute& attr = m_attributes[idx];
   attr.Override = true;
-  memcpy(attr.Floats, &m, sizeof(float) * 16);
+  memcpy(attr.Floats.data(), &m, sizeof(float) * 16);
 }
 
 void MaterialInstance::Set(Size idx, iTexture* texture)
@@ -228,6 +231,11 @@ void MaterialInstance::RebuildAttributes()
 eRenderQueue MaterialInstance::GetRenderQueue() const
 {
   return m_material ? m_material->GetRenderQueue() : eRenderQueue::Default;
+}
+
+eShadingMode MaterialInstance::GetShadingMode() const
+{
+  return m_material ? m_material->GetShadingMode() : eShadingMode::Shaded;
 }
 
 }

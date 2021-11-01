@@ -2,6 +2,7 @@
 #pragma once
 
 
+
 #include <spcCore/coreexport.hh>
 #include <spcCore/class.hh>
 #include <spcCore/math/color4f.hh>
@@ -10,6 +11,7 @@
 #include <spcCore/graphics/erenderqueue.hh>
 #include <spcCore/graphics/itexture.hh>
 #include <string>
+#include <spcCore/graphics/eshadingmode.hh>
 
 
 namespace spc
@@ -23,6 +25,7 @@ struct SPC_CORE_API iMaterial : public SPC_SUPER(iObject)
   ~iMaterial() override = default;
 
   SPC_NODISCARD virtual eRenderQueue GetRenderQueue() const = 0;
+  SPC_NODISCARD virtual eShadingMode GetShadingMode () const = 0;
 
   virtual bool Bind(iDevice * device, eRenderPass pass) = 0;
 

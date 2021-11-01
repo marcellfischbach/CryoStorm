@@ -78,7 +78,7 @@ void SDLMouse::Update()
   memcpy(m_last, m_current, sizeof(bool) * eMB_COUNT);
 }
 
-void SDLMouse::Update(UInt8 button, bool down)
+void SDLMouse::Update(uint8_t button, bool down)
 {
   if (button < eMB_COUNT)
   {

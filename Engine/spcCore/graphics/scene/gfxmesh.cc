@@ -12,11 +12,6 @@ namespace spc
 
 GfxMesh::GfxMesh()
   : iObject()
-  , m_static(false)
-  , m_material(nullptr)
-  , m_mesh(nullptr)
-  , m_frame(0)
-  , m_lightingDirty(true)
 {
   SPC_CLASS_GEN_CONSTR;
 }
@@ -81,13 +76,34 @@ void GfxMesh::RenderForward(iDevice* device, eRenderPass pass, const GfxLight** 
 void GfxMesh::SetStatic(bool _static)
 {
   m_static = _static;
-
 }
 
 bool GfxMesh::IsStatic() const
 {
   return m_static;
 }
+
+void GfxMesh::SetReceiveShadow(bool receiveShadow)
+{
+  m_receiveShadow = receiveShadow;
+}
+
+bool GfxMesh::IsReceiveShadow() const
+{
+  return m_receiveShadow;
+}
+
+
+void GfxMesh::SetCastShadow(bool castShadow)
+{
+  m_castShadow = castShadow;
+}
+
+bool GfxMesh::IsCastShadow() const
+{
+  return m_castShadow;
+}
+
 
 void GfxMesh::SetMaterial(iMaterial* material)
 {
@@ -199,12 +215,12 @@ const BoundingBox &GfxMesh::GetBoundingBox() const
   return m_boundingBox;
 }
 
-void GfxMesh::SetFrame(UInt64 frame)
+void GfxMesh::SetFrame(uint64_t frame)
 {
   m_frame = frame;
 }
 
-UInt64 GfxMesh::GetFrame() const
+uint64_t GfxMesh::GetFrame() const
 {
   return m_frame;
 }

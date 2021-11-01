@@ -18,7 +18,7 @@ public:
 	GL4Shader(eGL4ShaderType type);
 	virtual ~GL4Shader();
 
-	UInt32 GetName () const;
+	uint32_t GetName () const;
 
 	void SetSource(const std::string &source);
 
@@ -26,9 +26,9 @@ public:
 
 
 private:
-	UInt32 m_name;
+	uint32_t m_name;
 
-	UInt32 m_type;
+	uint32_t m_type;
 
 	std::string m_source;
 

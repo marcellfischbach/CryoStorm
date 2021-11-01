@@ -15,7 +15,7 @@ public:
   virtual ~SDLMouse() { }
 
   void Update();
-  void Update(UInt8 button, bool down);
+  void Update(uint8_t button, bool down);
   void Update(Int32 wheel, Int32 wheelHorizontal);
   void Update(Int16 x, Int16 y, Int16 xrel, Int16 yrel);
 

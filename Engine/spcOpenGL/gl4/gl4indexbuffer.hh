@@ -28,7 +28,7 @@ public:
 	void Copy(const void* data, Size count, Size targetOffset = 0);
 
 private:
-	UInt32 m_name;
+	uint32_t m_name;
 	Size m_size;
 
 };

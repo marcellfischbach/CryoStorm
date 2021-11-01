@@ -13,14 +13,14 @@ struct SPC_CORE_API iRenderTargetCube : public SPC_SUPER(iRenderTarget)
 {
   struct Descriptor
   {
-    UInt16 Size;
+    uint16_t Size;
 
   };
 
   SPC_CLASS_GEN;
   ~iRenderTargetCube() override = default;
 
-  virtual UInt16 GetSize() const = 0;
+  virtual uint16_t GetSize() const = 0;
 
   virtual void SetDepthTexture(iTextureCube* depthTexture) = 0;
 

@@ -22,14 +22,10 @@
 namespace spc::opengl
 {
 
-const int MaxLights = 4;
 const float MinLightInfluence = 0.0f;
 
 GL4ForwardPipeline::GL4ForwardPipeline()
-    : m_frame(0)
-      , m_device(nullptr)
-      , m_scene(nullptr)
-      , m_target(nullptr)
+        : m_frame(0), m_device(nullptr), m_scene(nullptr), m_target(nullptr)
 {
   SPC_CLASS_GEN_CONSTR;
 
@@ -48,16 +44,25 @@ GL4ForwardPipeline::~GL4ForwardPipeline() noexcept
 
 }
 
+bool transparent_mesh_compare_less(const GfxMesh *mesh0, const GfxMesh *mesh1)
+{
+  return false;
+}
 
-void GL4ForwardPipeline::Render(iRenderTarget2D *target, const Camera &camera, const Projector &projector, iDevice *device, GfxScene *scene)
+
+void GL4ForwardPipeline::Render(iRenderTarget2D *target,
+                                const Camera &camera,
+                                const Projector &projector,
+                                iDevice *device,
+                                GfxScene *scene)
 {
   SPC_GL_ERROR();
   ++m_frame;
-  m_device = device;
-  m_camera = camera;
-  m_projector = projector;
-  m_scene = scene;
-  m_target = target;
+  m_device                                                       = device;
+  m_camera                                                       = camera;
+  m_projector                                                    = projector;
+  m_scene                                                        = scene;
+  m_target                                                       = target;
 
   m_pointLightRenderer.SetDevice(device);
   m_pointLightRenderer.SetScene(scene);
@@ -73,9 +78,9 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target, const Camera &camera, c
 
 
   // get all global lights from the scene....
-  // global lights are always along the final renderlights 
-  const GfxLight *finalRenderLights[MaxLights] = {};
-  Size finalRenderLightOffset = 0;
+  // global lights are always along the final renderlights
+  std::array<const GfxLight *, MaxLights> finalRenderLights = {};
+  Size                                    finalRenderLightOffset = 0;
   scene->ScanLights(&clipper, GfxScene::eSM_Global,
                     [this, &finalRenderLights, &finalRenderLightOffset](GfxLight *light) {
 
@@ -83,7 +88,8 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target, const Camera &camera, c
                       {
                         return false;
                       }
-                      finalRenderLights[finalRenderLightOffset++] = light;
+                      finalRenderLights[finalRenderLightOffset] = light;
+                      finalRenderLightOffset++;
                       CollectShadowLights(light);
                       return true;
                     });
@@ -101,7 +107,6 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target, const Camera &camera, c
                       CollectShadowLights(light);
                       return true;
                     });
-
   SPC_GL_ERROR();
 
   //
@@ -113,15 +118,50 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target, const Camera &camera, c
 
   SPC_GL_ERROR();
 
-  // 
+  //
   // and finally render all visible objects
+  m_transparentMeshes.clear();
   device->SetRenderTarget(m_target);
   device->Clear(true, spc::Color4f(0.0f, 0.0, 0.0, 1.0f), true, 1.0f, true, 0);
+  int  countBefore = 0;
+  int  countAfter  = 0;
+  bool trans       = false;
   scene->ScanMeshes(&clipper, GfxScene::eSM_Dynamic | GfxScene::eSM_Static,
-                    [this, &finalRenderLights, &finalRenderLightOffset](GfxMesh *mesh) {
-                      RenderMesh(mesh, finalRenderLights, finalRenderLightOffset);
+                    [this, &finalRenderLights, &finalRenderLightOffset, &trans](GfxMesh *mesh) {
+                      auto material = mesh->GetMaterial();
+                      if (material->GetRenderQueue() == eRenderQueue::Transparency)
+                      {
+                        trans = true;
+                        m_transparentMeshes.emplace_back(mesh);
+                      }
+                      else if (material->GetShadingMode() == eShadingMode::Shaded)
+                      {
+                        RenderMesh(mesh, finalRenderLights, finalRenderLightOffset);
+                      }
+                      else
+                      {
+                        RenderUnlitMesh(mesh);
+                      }
                     }
   );
+
+
+  //std::sort(m_transparentMeshes.begin(), m_transparentMeshes.end(), transparent_mesh_compare_less);
+  for (auto mesh: m_transparentMeshes)
+  {
+    auto material = mesh->GetMaterial();
+    if (material->GetShadingMode() == eShadingMode::Shaded)
+    {
+      RenderMesh(mesh, finalRenderLights, finalRenderLightOffset);
+    }
+    else
+    {
+      RenderUnlitMesh(mesh);
+    }
+  }
+  device->SetBlending(false);
+  device->SetDepthWrite(true);
+  device->SetDepthTest(true);
 
   SPC_GL_ERROR();
 
@@ -133,7 +173,7 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target, const Camera &camera, c
     Size size = target->GetWidth() / 3;
 
 
-    m_device->SetViewport(0, 0, static_cast<UInt16>(size), static_cast<UInt16>(size));
+    m_device->SetViewport(0, 0, static_cast<uint16_t>(size), static_cast<uint16_t>(size));
     m_device->RenderFullscreen(debugColor, 0);
 
     /*
@@ -149,11 +189,11 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target, const Camera &camera, c
 
 
   //scene->Render(device, spc::eRP_Forward);
-  m_device = nullptr;
-  m_camera = camera;
+  m_device    = nullptr;
+  m_camera    = camera;
   m_projector = projector;
-  m_scene = nullptr;
-  m_target = nullptr;
+  m_scene     = nullptr;
+  m_target    = nullptr;
 
   SPC_GL_ERROR();
 
@@ -177,10 +217,14 @@ void GL4ForwardPipeline::LightScanned(GfxLight *light)
   }
 }
 
-
-void GL4ForwardPipeline::RenderMesh(GfxMesh *mesh, const GfxLight **lights, Size offset)
+void GL4ForwardPipeline::RenderUnlitMesh(GfxMesh *mesh)
 {
-  // printf("  RenderMesh - start\n");
+  mesh->RenderUnlit(m_device, eRP_Forward);
+}
+
+
+void GL4ForwardPipeline::RenderMesh(GfxMesh *mesh, std::array<const GfxLight *, MaxLights> &lights, Size offset)
+{
   if (mesh->IsStatic())
   {
     if (mesh->IsLightingDirty())
@@ -195,31 +239,32 @@ void GL4ForwardPipeline::RenderMesh(GfxMesh *mesh, const GfxLight **lights, Size
     }
 
     auto dynamicLights = CalcMeshLightInfluences(mesh, m_dynamicLights, true);
-    Size numLights = AssignLights(
-        mesh->GetLights(),
-        dynamicLights,
-        lights,
-        offset);
+    Size numLights     = AssignLights(
+            mesh->GetLights(),
+            dynamicLights,
+            lights,
+            offset);
     SPC_GL_ERROR();
-    mesh->RenderForward(m_device, eRP_Forward, lights, numLights);
+    mesh->RenderForward(m_device, eRP_Forward, lights.data(), numLights);
     SPC_GL_ERROR();
   }
   else
   {
-    auto staticLights = CalcMeshLightInfluences(mesh, m_staticLights, true);
+    auto staticLights  = CalcMeshLightInfluences(mesh, m_staticLights, true);
     auto dynamicLights = CalcMeshLightInfluences(mesh, m_dynamicLights, true);
-    Size numLights = AssignLights(
-        staticLights,
-        dynamicLights,
-        lights,
-        offset);
+    Size numLights     = AssignLights(
+            staticLights,
+            dynamicLights,
+            lights,
+            offset);
     SPC_GL_ERROR();
-    mesh->RenderForward(m_device, eRP_Forward, lights, numLights);
+    mesh->RenderForward(m_device, eRP_Forward, lights.data(), numLights);
     SPC_GL_ERROR();
   }
 
-  //printf("  RenderMesh - done\n");
+  //printf("  RenderUnlitMesh - done\n");
 }
+
 
 void GL4ForwardPipeline::CollectShadowLights(GfxLight *light)
 {
@@ -234,16 +279,16 @@ void GL4ForwardPipeline::CollectShadowLights(GfxLight *light)
   }
   switch (lght->GetType())
   {
-    case eLT_Point:
-      m_pointLightRenderer.Add(static_cast<GL4PointLight *>(light->GetLight()));
-      break;
+  case eLT_Point:
+    m_pointLightRenderer.Add(static_cast<GL4PointLight *>(light->GetLight()));
+    break;
 
-    case eLT_Directional:
-      m_directionalLightRenderer.Add(static_cast<GL4DirectionalLight *>(light->GetLight()));
-      break;
+  case eLT_Directional:
+    m_directionalLightRenderer.Add(static_cast<GL4DirectionalLight *>(light->GetLight()));
+    break;
 
-    default:
-      break;
+  default:
+    break;
   }
 }
 
@@ -259,10 +304,10 @@ void GL4ForwardPipeline::RenderShadowMaps()
 
 
 Size GL4ForwardPipeline::AssignLights(
-    const std::vector<GfxMesh::Light> &static_lights,
-    const std::vector<GfxMesh::Light> &dynamic_lights,
-    const GfxLight **lights,
-    Size offset)
+        const std::vector<GfxMesh::Light> &static_lights,
+        const std::vector<GfxMesh::Light> &dynamic_lights,
+        std::array<const GfxLight *, MaxLights> &lights,
+        Size offset)
 {
   for (Size s = 0, d = 0, sn = static_lights.size(), dn = dynamic_lights.size();
        offset < MaxLights && (s < sn || d < dn); offset++)
@@ -305,35 +350,38 @@ float GL4ForwardPipeline::CalcMeshLightInfluence(const GfxLight *light, const Gf
 
 
   // TODO: Take the power of the light from the light ... currently there is no power in the light
-  float lightPower = 1.0f;
+  float lightPower          = 1.0f;
   float lightDistanceFactor = 0.0f;
   switch (light->GetLight()->GetType())
   {
-    case eLT_Directional:
-      lightDistanceFactor = 1.0f;
-      break;
-    case eLT_Point:
-      auto pointLight = light->GetLight()->Query<iPointLight>();
-      Vector3f lightPos = pointLight->GetPosition();
-      Vector3f meshPos = mesh->GetModelMatrix().GetTranslation();
-      Vector3f delta = lightPos - meshPos;
-      float halfSize = mesh->GetMesh()->GetBoundingBox().GetDiagonal() / 2.0f;
-      float distance = delta.Length();
-      float overlap = pointLight->GetRange() + halfSize - distance;
-      if (overlap > 0.0f)
-      {
-        lightDistanceFactor = overlap / pointLight->GetRange();
-      }
-      break;
+  case eLT_Directional:
+    lightDistanceFactor = 1.0f;
+    break;
+  case eLT_Point:
+    auto     pointLight = light->GetLight()->Query<iPointLight>();
+    Vector3f lightPos   = pointLight->GetPosition();
+    Vector3f meshPos    = mesh->GetModelMatrix().GetTranslation();
+    Vector3f delta      = lightPos - meshPos;
+    float    halfSize   = mesh->GetMesh()->GetBoundingBox().GetDiagonal() / 2.0f;
+    float    distance   = delta.Length();
+    float    overlap    = pointLight->GetRange() + halfSize - distance;
+    if (overlap > 0.0f)
+    {
+      lightDistanceFactor = overlap / pointLight->GetRange();
+    }
+    break;
+
   }
   return lightPower * lightDistanceFactor;
 }
 
 
-std::vector<GfxMesh::Light> GL4ForwardPipeline::CalcMeshLightInfluences(const GfxMesh *mesh, const std::vector<GfxLight *> &lights, bool sorted) const
+std::vector<GfxMesh::Light> GL4ForwardPipeline::CalcMeshLightInfluences(const GfxMesh *mesh,
+                                                                        const std::vector<GfxLight *> &lights,
+                                                                        bool sorted) const
 {
   std::vector<GfxMesh::Light> influences;
-  for (GfxLight *light : lights)
+  for (GfxLight               *light: lights)
   {
     float influence = CalcMeshLightInfluence(light, mesh);
     if (influence <= MinLightInfluence)
@@ -341,14 +389,16 @@ std::vector<GfxMesh::Light> GL4ForwardPipeline::CalcMeshLightInfluences(const Gf
       continue;
     }
     GfxMesh::Light l{};
-    l.Light = light;
+    l.Light     = light;
     l.Influence = influence;
     influences.push_back(l);
   }
 
   if (sorted)
   {
-    std::sort(influences.begin(), influences.end(), [](GfxMesh::Light &l0, GfxMesh::Light &l1) { return l0.Influence > l1.Influence; });
+    std::sort(influences.begin(),
+              influences.end(),
+              [](GfxMesh::Light &l0, GfxMesh::Light &l1) { return l0.Influence > l1.Influence; });
   }
 
 
@@ -362,8 +412,8 @@ void GL4ForwardPipeline::AppendLights(GfxMesh *mesh, const std::vector<GfxLight 
     return;
   }
 
-  auto meshLights = CalcMeshLightInfluences(mesh, lights, false);
-  for (auto &meshLight : meshLights)
+  auto      meshLights = CalcMeshLightInfluences(mesh, lights, false);
+  for (auto &meshLight: meshLights)
   {
     mesh->AddLight(meshLight.Light, meshLight.Influence);
   }
