@@ -2,6 +2,7 @@
 cmake_minimum_required(VERSION 3.3)
 
 
+
 project(SpiceEngine)
 
 set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${SpiceEngine_BINARY_DIR}/bin)
@@ -19,6 +20,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 unset(CMAKE_CXX_CL_SHOWINCLUDE)
+
 
 
 include(${SpiceEngine_SOURCE_DIR}/Scripts/SpiceEngine.cmake) 

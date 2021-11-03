@@ -510,7 +510,7 @@ bool File::Parse(iBuffer *buffer)
         case TokenType::String:
           if (!currentElement)
           {
-            printf("No current elemnt\n");
+            printf("No current element for string '%s'\n", token.value.c_str());
             return false;
           }
           currentElement->AddAttribute(Attribute(token.value, Attribute::AttributeType::String));
@@ -518,7 +518,7 @@ bool File::Parse(iBuffer *buffer)
         case TokenType::Number:
           if (!currentElement)
           {
-            printf("No current elemnt\n");
+            printf("No current element for number '%s'\n", token.value.c_str());
             return false;
           }
           currentElement->AddAttribute(Attribute(token.value, Attribute::AttributeType::Number));

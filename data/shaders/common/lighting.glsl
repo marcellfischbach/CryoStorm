@@ -15,7 +15,7 @@ uniform int spc_LightCastShadow[4];
 
 
 
-vec4 calc_point_light(vec4 light_color, vec3 light_position, float light_range, vec3 frag_position, vec3  frag_normal)
+vec3 calc_point_light(vec3 light_color, vec3 light_position, float light_range, vec3 frag_position, vec3  frag_normal)
 {
     vec3 v_to_l = light_position - frag_position;
     float distance = length(v_to_l);
@@ -28,12 +28,12 @@ vec4 calc_point_light(vec4 light_color, vec3 light_position, float light_range, 
 }
 
 
-vec4 calc_directional_light(vec4 light_color, vec3 light_vector, vec3 frag_normal)
+vec3 calc_directional_light(vec3 light_color, vec3 light_vector, vec3 frag_normal)
 {
     return light_color * clamp(dot(light_vector, frag_normal), 0.0, 1.0);
 }
 
-vec4 calc_light(int idx, vec4 light_color, vec4 light_vector, float light_range, vec3 frag_position, vec3  frag_normal, vec3 camera_space_position)
+vec3 calc_light(int idx, vec3 light_color, vec4 light_vector, float light_range, vec3 frag_position, vec3  frag_normal, vec3 camera_space_position)
 {
     if (light_vector.w == 1.0)
     {
@@ -47,12 +47,12 @@ vec4 calc_light(int idx, vec4 light_color, vec4 light_vector, float light_range,
     }
 }
 
-vec4 calc_lights(vec3 frag_position, vec3 frag_normal, vec3 camera_space_position)
+vec3 calc_lights(vec3 frag_position, vec3 frag_normal, vec3 camera_space_position)
 {
-    vec4 res = vec4(0, 0, 0, 0);
+    vec3 res = vec3(0, 0, 0);
     for (int i = 0; i < spc_LightCount; i++)
     {
-        res += calc_light(i, spc_LightColor[i], spc_LightVector[i], spc_LightRange[i], frag_position, frag_normal, camera_space_position);
+        res += calc_light(i, spc_LightColor[i].rgb, spc_LightVector[i], spc_LightRange[i], frag_position, frag_normal, camera_space_position);
     }
     return res;
 }

@@ -18,11 +18,8 @@ in vec3 camera_space_position;
 void main()
 {
     vec3 norm = normalize(world_normal);
-    vec4 frag_color = calc_lights(world_position, norm, camera_space_position);
-//    frag_color *= color;
-    frag_color *= spc_Color;
-    frag_color *= texture(spc_Diffuse, texCoord * 3);
-//    frag_color = vec4(norm * 0.5 + 0.5, 1.0);
-    spc_FragColor = frag_color;
+    vec3 frag_light = calc_lights(world_position, norm, camera_space_position);
+    vec4 texColor = texture(spc_Diffuse, texCoord * 3);
+    spc_FragColor = vec4(frag_light, 1.0) * spc_Color * texColor;
 }
 
