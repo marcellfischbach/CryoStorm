@@ -613,7 +613,7 @@ int main(int argc, char **argv)
   sunLightState->SetTransform(sunLightState->GetTransform()
                                                //.SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(1.0f, 0.0f, 0.0f), spc::spcDeg2Rad(-45.0f)))
                                            .SetRotation(
-                                               spc::Quaternion::FromAxisAngle(spc::Vector3f(1.0f, 1.0f, 1.0f)
+                                               spc::Quaternion::FromAxisAngle(spc::Vector3f(1.0f, 0.0f, 0.0f)
                                                                                   .Normalize(),
                                                                               spc::spcDeg2Rad(-45.0f)))
   );
@@ -695,22 +695,6 @@ int main(int argc, char **argv)
     {
       useCs = !useCs;
     }
-    if (spc::Input::IsKeyPressed(spc::Key::eK_Up))
-    {
-      roughness += 0.1f;
-      roughness = roughness <= 1.0 ? roughness : 1.0;
-      printf ("Roughness: %.2f\n", roughness);
-      fflush(stdout);
-      materialInstance->Set(2, roughness);
-    }
-    if (spc::Input::IsKeyPressed(spc::Key::eK_Down))
-    {
-      roughness -= 0.1f;
-      roughness = roughness >= 0.0 ? roughness : 0.0;
-      printf ("Roughness: %.2f\n", roughness);
-      fflush(stdout);
-      materialInstance->Set(2, roughness);
-    }
 
 
 
@@ -721,6 +705,19 @@ int main(int argc, char **argv)
       if (anim)
       {
         entRot += tpf * 1.0f;
+      }
+
+      if (spc::Input::IsKeyDown(spc::Key::eK_Up))
+      {
+        roughness += 0.5f * tpf;
+        roughness = roughness <= 10.0 ? roughness : 10.0;
+        materialInstance->Set(2, roughness);
+      }
+      if (spc::Input::IsKeyDown(spc::Key::eK_Down))
+      {
+        roughness -= 0.5f * tpf;
+        roughness = roughness >= 0.0 ? roughness : 0.0;
+        materialInstance->Set(2, roughness);
       }
 
 
