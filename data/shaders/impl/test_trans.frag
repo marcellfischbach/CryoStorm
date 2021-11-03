@@ -11,6 +11,7 @@ in vec2 texCoord;
 in vec3 world_position;
 in vec3 world_normal;
 in vec3 camera_space_position;
+in vec3 viewer_world_position;
 
 #include <../common/lighting.glsl>
 
@@ -18,7 +19,7 @@ in vec3 camera_space_position;
 void main()
 {
     vec3 norm = normalize(world_normal);
-    vec3 lightColor = calc_lights(world_position, norm, camera_space_position);
+    vec3 lightColor = calc_lights(world_position, norm, camera_space_position, viewer_world_position, 1.0);
     spc_FragColor = vec4(lightColor, 1.0) * spc_Color;
 }
 

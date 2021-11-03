@@ -7,7 +7,7 @@ material {
     },
     attributes {
         attribute Texture "Diffuse" "/textures/grass_texture.spc",
-        attribute Color4 "Color" 1 1 1 1
+        attribute Color4 "Color" 1 1 1 1,
+        attribute Float "Roughness" 1.0
     }
-
 }

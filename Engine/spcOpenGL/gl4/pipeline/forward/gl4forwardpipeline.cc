@@ -146,7 +146,7 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target,
   );
 
 
-  //std::sort(m_transparentMeshes.begin(), m_transparentMeshes.end(), transparent_mesh_compare_less);
+  std::sort(m_transparentMeshes.begin(), m_transparentMeshes.end(), transparent_mesh_compare_less);
   for (auto mesh: m_transparentMeshes)
   {
     auto material = mesh->GetMaterial();

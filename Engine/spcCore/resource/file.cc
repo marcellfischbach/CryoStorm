@@ -22,7 +22,7 @@ enum class TokenType
 
 struct Token
 {
-  TokenType type;
+  TokenType   type;
   std::string value;
 
   Token(TokenType type)
@@ -30,13 +30,11 @@ struct Token
   {}
 
   Token(TokenType type, std::string value)
-      : type(type)
-        , value(value)
+      : type(type), value(value)
   {}
 
   Token(TokenType type, char ch)
-      : type(type)
-        , value("")
+      : type(type), value("")
   {
     value += ch;
   }
@@ -73,24 +71,20 @@ public:
 
 private:
   const char *m_buffer;
-  size_t m_bufferSize;
-  size_t m_idx;
+  size_t     m_bufferSize;
+  size_t     m_idx;
 
 };
 
 Token GetNextToken(iBuffer *buffer);
 
 Attribute::Attribute(const std::string &value, AttributeType type)
-    : m_name("")
-      , m_value(value)
-      , m_type(type)
+    : m_name(""), m_value(value), m_type(type)
 {
 }
 
 Attribute::Attribute(const std::string &name, const std::string &value, AttributeType type)
-    : m_name(name)
-      , m_value(value)
-      , m_type(type)
+    : m_name(name), m_value(value), m_type(type)
 {
 }
 
@@ -206,7 +200,7 @@ const Element *Element::GetChild(const std::string &childName) const
         }
         else
         {
-          std::string tail = childName.substr(path.length() + 1);
+          std::string   tail     = childName.substr(path.length() + 1);
           const Element *element = child->GetChild(tail);
           if (element)
           {
@@ -331,8 +325,7 @@ double Element::GetAttribute(const std::string &attributeName, double defaultVal
 
 
 File::File()
-    : m_data(nullptr)
-      , m_dataSize(0)
+    : m_data(nullptr), m_dataSize(0)
 {
 
 }
@@ -386,14 +379,16 @@ bool File::Parse(const std::string &filename)
   fseek(file, 0, SEEK_END);
   long size = ftell(file);
   fseek(file, 0, SEEK_SET);
+  printf("File size: %d\n", size);
+  fflush(stdout);
 
-  char *buffer = new char[size];
+  char *buffer         = new char[size];
   fread(buffer, 1, size, file);
   fclose(file);
 
 
   BufferBuffer bbuf(buffer, size);
-  bool success = Parse(&bbuf);
+  bool         success = Parse(&bbuf);
   delete[] buffer;
   return success;
 }
@@ -409,11 +404,12 @@ bool File::Parse(iFile *file)
   long size = file->Tell();
   file->Seek(eSM_Set, 0);
 
-  char *buffer = new char[size];
+  char *buffer         = new char[size+1];
   file->Read(1, size, buffer);
+  buffer[size] = '\0';
 
   BufferBuffer bbuf(buffer, size);
-  bool success = Parse(&bbuf);
+  bool         success = Parse(&bbuf);
   delete[] buffer;
   return success;
 }
@@ -433,7 +429,7 @@ bool File::Parse(iBuffer *buffer)
     return false;
   }
 
-  Element *parent = &m_root;
+  Element *parent         = &m_root;
   Element *currentElement = nullptr;
   while (true)
   {
@@ -448,81 +444,81 @@ bool File::Parse(iBuffer *buffer)
       bool revoke = false;
       switch (token.type)
       {
-        case TokenType::CurlyBraceOpen:
-          parent = currentElement;
-          currentElement = nullptr;
-          break;
-        case TokenType::CurlyBraceClose:
-          parent = parent->GetParent();
-          currentElement = nullptr;
-          break;
-        case TokenType::Comma:
-          currentElement = nullptr;
-          break;
-        case TokenType::Colon:
-          printf("Invalid token colon\n");
+      case TokenType::CurlyBraceOpen:
+        parent         = currentElement;
+        currentElement = nullptr;
+        break;
+      case TokenType::CurlyBraceClose:
+        parent         = parent->GetParent();
+        currentElement = nullptr;
+        break;
+      case TokenType::Comma:
+        currentElement = nullptr;
+        break;
+      case TokenType::Colon:
+        printf("Invalid token colon\n");
+        return false;
+      case TokenType::EOD:
+        if (parent != &m_root || currentElement != nullptr)
+        {
+          printf("Unexpected End of Document found\n");
           return false;
-        case TokenType::EOD:
-          if (parent != &m_root || currentElement != nullptr)
-          {
-            printf("Unexpected End of Document found\n");
-            return false;
-          }
-          buffer->ReadRest(&m_data, m_dataSize);
-          return true;
+        }
+        buffer->ReadRest(&m_data, m_dataSize);
+        return true;
 
-        case TokenType::Identifier:
-          if (!currentElement)
+      case TokenType::Identifier:
+        if (!currentElement)
+        {
+          currentElement = new Element();
+          currentElement->SetTagName(token.value);
+          parent->AddChild(currentElement);
+        }
+        else
+        {
+          std::string attributeName = token.value;
+          token = GetNextToken(buffer);
+          if (token.type != TokenType::Colon)
           {
-            currentElement = new Element();
-            currentElement->SetTagName(token.value);
-            parent->AddChild(currentElement);
+            currentElement->AddAttribute(Attribute(attributeName, Attribute::AttributeType::String));
+            revoke = true;
           }
           else
           {
-            std::string attributeName = token.value;
             token = GetNextToken(buffer);
-            if (token.type != TokenType::Colon)
+            if (token.type == TokenType::String)
             {
-              currentElement->AddAttribute(Attribute(attributeName, Attribute::AttributeType::String));
-              revoke = true;
+              currentElement->AddAttribute(Attribute(attributeName, token.value, Attribute::AttributeType::String));
+            }
+            else if (token.type == TokenType::Number)
+            {
+              currentElement->AddAttribute(Attribute(attributeName, token.value, Attribute::AttributeType::Number));
             }
             else
             {
-              token = GetNextToken(buffer);
-              if (token.type == TokenType::String)
-              {
-                currentElement->AddAttribute(Attribute(attributeName, token.value, Attribute::AttributeType::String));
-              }
-              else if (token.type == TokenType::Number)
-              {
-                currentElement->AddAttribute(Attribute(attributeName, token.value, Attribute::AttributeType::Number));
-              }
-              else
-              {
-                printf("Expecting string or number\n");
-                return false;
-              }
+              printf("Expecting string or number\n");
+              return false;
             }
           }
-          break;
+        }
+        break;
 
-        case TokenType::String:
-          if (!currentElement)
-          {
-            printf("No current element for string '%s'\n", token.value.c_str());
-            return false;
-          }
-          currentElement->AddAttribute(Attribute(token.value, Attribute::AttributeType::String));
-          break;
-        case TokenType::Number:
-          if (!currentElement)
-          {
-            printf("No current element for number '%s'\n", token.value.c_str());
-            return false;
-          }
-          currentElement->AddAttribute(Attribute(token.value, Attribute::AttributeType::Number));
-          break;
+      case TokenType::String:
+        if (!currentElement)
+        {
+          printf("No current element for string '%s'\n", token.value.c_str());
+          return false;
+        }
+        currentElement->AddAttribute(Attribute(token.value, Attribute::AttributeType::String));
+        break;
+      case TokenType::Number:
+        if (!currentElement)
+        {
+          printf("No current element for number '%s'\n", token.value.c_str());
+          return false;
+        }
+        currentElement->AddAttribute(Attribute(token.value, Attribute::AttributeType::Number));
+        break;
       }
       if (!revoke)
       {
@@ -537,16 +533,14 @@ bool File::Parse(iBuffer *buffer)
 
 
 BufferBuffer::BufferBuffer(const char *buffer, size_t bufferSize)
-    : m_buffer(buffer)
-      , m_bufferSize(bufferSize)
-      , m_idx(0)
+    : m_buffer(buffer), m_bufferSize(bufferSize), m_idx(0)
 {
 
 }
 
 BufferBuffer::~BufferBuffer()
 {
-  m_buffer = nullptr;
+  m_buffer     = nullptr;
   m_bufferSize = 0;
 }
 
@@ -594,16 +588,16 @@ Token GetNextToken(iBuffer *buffer)
 
   switch (ch)
   {
-    case '{':
-      return Token(TokenType::CurlyBraceOpen, ch);
-    case '}':
-      return Token(TokenType::CurlyBraceClose, ch);
-    case ',':
-      return Token(TokenType::Comma, ch);
-    case ':':
-      return Token(TokenType::Colon, ch);
-    case '@':
-      return Token(TokenType::EOD, ch);
+  case '{':
+    return Token(TokenType::CurlyBraceOpen, ch);
+  case '}':
+    return Token(TokenType::CurlyBraceClose, ch);
+  case ',':
+    return Token(TokenType::Comma, ch);
+  case ':':
+    return Token(TokenType::Colon, ch);
+  case '@':
+    return Token(TokenType::EOD, ch);
   }
 
 
@@ -683,6 +677,7 @@ Token GetNextToken(iBuffer *buffer)
         return Token(TokenType::Number, num);
       }
     }
+    return Token(TokenType::Number, num);
   }
 
 
@@ -720,7 +715,7 @@ void Debug(const Element *element, int indent)
     {
       Debug(element->GetChild(i), indent + 1);
     }
-    for (int i = 0; i < indent; i++)
+    for (int    i = 0; i < indent; i++)
     {
       printf("  ");
     }
@@ -800,7 +795,7 @@ std::string Print(const Element *element, bool format, int ind, const std::strin
       }
     }
     line += "}";
-    endWithCurly = true;
+    endWithCurly  = true;
   }
   return line;
 }
@@ -808,7 +803,7 @@ std::string Print(const Element *element, bool format, int ind, const std::strin
 std::string File::Print(bool format, int indent)
 {
   std::string indentStr;
-  for (int i = 0; i < indent; i++)
+  for (int    i = 0; i < indent; i++)
   {
     indentStr += " ";
   }

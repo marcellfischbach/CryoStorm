@@ -15,6 +15,7 @@ out vec2 texCoord;
 out vec3 world_position;
 out vec3 world_normal;
 out vec3 camera_space_position;
+out vec3 viewer_world_position;
 
 void main()
 {
@@ -22,6 +23,7 @@ void main()
   world_position = position.xyz;
   world_normal = (spc_ModelMatrix * vec4(spc_Normal, 0.0)).xyz;
 
+  viewer_world_position = -(spc_ViewMatrix * vec4(0, 0, 0, 1)).xyz;
   camera_space_position = (spc_ViewMatrix * position).xyz;
 
   gl_Position = spc_ViewProjectionMatrix * position;

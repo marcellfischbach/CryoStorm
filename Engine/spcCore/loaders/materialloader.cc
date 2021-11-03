@@ -30,7 +30,7 @@ iObject* MaterialLoaderSpc::Load(const Class* cls, const file::File* file, const
 }
 
 
-Material* MaterialLoaderSpc::LoadMaterial(const Class*, const file::File* file, const ResourceLocator*)
+Material* MaterialLoaderSpc::LoadMaterial(const Class*, const file::File* file, const ResourceLocator* locator)
 {
   const file::Element* root = file->Root();
   const file::Element* materialElement = root->GetChild("material");

@@ -21,7 +21,7 @@ Settings::Settings(const ResourceLocator& locator)
 
 void Settings::Initialize(const ResourceLocator& locator)
 {
-  iFile* file = VFS::Get()->Open(locator, eAM_Read, eOM_Text);
+  iFile* file = VFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (file)
   {
     m_file = new file::File();

@@ -5,6 +5,7 @@ program {
   }
   attributes {
     attribute "Diffuse",
-    attribute "Color"
+    attribute "Color",
+    attribute "Roughness"
   }
 }
