@@ -7,7 +7,7 @@ point_light {
 
 directional_light {
 	shadow_map {
-		size 1024,
+		size 2048,
 		filter "PCF",
 	}
 },

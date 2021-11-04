@@ -26,37 +26,37 @@ namespace spc::opengl
 {
 
 GL4Device::GL4Device()
-  : iDevice()
-  , m_renderTarget(nullptr)
-  , m_shader(nullptr)
-  , m_nextTextureUnit(eTU_Unit0)
-  , m_colorWrite(0x0f)
-  , m_depthWrite(true)
-  , m_depthTest(true)
-  , m_blending(false)
-  , m_srcFactorColor(eBlendFactor::One)
-  , m_srcFactorAlpha(eBlendFactor::One)
-  , m_dstFactorColor(eBlendFactor::Zero)
-  , m_dstFactorAlpha(eBlendFactor::Zero)
-  , m_modelViewMatrixDirty(false)
-  , m_viewProjectionMatrixDirty(false)
-  , m_modelViewProjectionMatrixDirty(false)
-  , m_modelMatrixInvDirty(false)
-  , m_viewMatrixInvDirty(false)
-  , m_projectionMatrixInvDirty(false)
-  , m_modelViewMatrixInvDirty(false)
-  , m_viewProjectionMatrixInvDirty(false)
-  , m_modelViewProjectionMatrixInvDirty(false)
-  , m_fullscreenBlitProgram(nullptr)
-  , m_fullscreenBlitRenderMesh(nullptr)
-  , m_fullscreenBlitArrayProgram(nullptr)
-  , m_fullscreenBlitCubeProgram(nullptr)
-  , m_fullscreenBlitCubePosXRenderMesh(nullptr)
-  , m_fullscreenBlitCubePosYRenderMesh(nullptr)
-  , m_fullscreenBlitCubePosZRenderMesh(nullptr)
-  , m_fullscreenBlitCubeNegXRenderMesh(nullptr)
-  , m_fullscreenBlitCubeNegYRenderMesh(nullptr)
-  , m_fullscreenBlitCubeNegZRenderMesh(nullptr)
+    : iDevice(),
+      m_renderTarget(nullptr),
+      m_shader(nullptr),
+      m_nextTextureUnit(eTU_Unit0),
+      m_colorWrite(0x0f),
+      m_depthWrite(true),
+      m_depthTest(true),
+      m_blending(false),
+      m_srcFactorColor(eBlendFactor::One),
+      m_srcFactorAlpha(eBlendFactor::One),
+      m_dstFactorColor(eBlendFactor::Zero),
+      m_dstFactorAlpha(eBlendFactor::Zero),
+      m_modelViewMatrixDirty(false),
+      m_viewProjectionMatrixDirty(false),
+      m_modelViewProjectionMatrixDirty(false),
+      m_modelMatrixInvDirty(false),
+      m_viewMatrixInvDirty(false),
+      m_projectionMatrixInvDirty(false),
+      m_modelViewMatrixInvDirty(false),
+      m_viewProjectionMatrixInvDirty(false),
+      m_modelViewProjectionMatrixInvDirty(false),
+      m_fullscreenBlitProgram(nullptr),
+      m_fullscreenBlitRenderMesh(nullptr),
+      m_fullscreenBlitArrayProgram(nullptr),
+      m_fullscreenBlitCubeProgram(nullptr),
+      m_fullscreenBlitCubePosXRenderMesh(nullptr),
+      m_fullscreenBlitCubePosYRenderMesh(nullptr),
+      m_fullscreenBlitCubePosZRenderMesh(nullptr),
+      m_fullscreenBlitCubeNegXRenderMesh(nullptr),
+      m_fullscreenBlitCubeNegYRenderMesh(nullptr),
+      m_fullscreenBlitCubeNegZRenderMesh(nullptr)
 {
   SPC_CLASS_GEN_CONSTR;
 
@@ -82,10 +82,10 @@ bool GL4Device::Initialize()
   glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &imageUnits);
   glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &combinedUnits);
   printf("OpenGL capabilities:\n");
-  printf("  Vendor  : %s\n", (const char*)glGetString(GL_VENDOR));
-  printf("  Renderer: %s\n", (const char*)glGetString(GL_RENDERER));
-  printf("  Version : %s\n", (const char*)glGetString(GL_VERSION));
-  printf("  GLSL    : %s\n", (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION));
+  printf("  Vendor  : %s\n", (const char *) glGetString(GL_VENDOR));
+  printf("  Renderer: %s\n", (const char *) glGetString(GL_RENDERER));
+  printf("  Version : %s\n", (const char *) glGetString(GL_VERSION));
+  printf("  GLSL    : %s\n", (const char *) glGetString(GL_SHADING_LANGUAGE_VERSION));
   printf("  Max texture units: %d\n", units);
   printf("  Max images units: %d\n", imageUnits);
   printf("  Max combined textures: %d\n", combinedUnits);
@@ -132,11 +132,12 @@ void GL4Device::SetViewport(Int16 x, Int16 y, uint16_t width, uint16_t height)
 }
 
 void GL4Device::Clear(bool clearColor,
-  const Color4f& color,
-  bool clearDepth,
-  float depth,
-  bool clearStencil,
-  uint8_t stencil)
+                      const Color4f &color,
+                      bool clearDepth,
+                      float depth,
+                      bool clearStencil,
+                      uint8_t stencil
+                     )
 {
   GLenum flags = 0;
   if (clearColor)
@@ -160,16 +161,16 @@ void GL4Device::Clear(bool clearColor,
 void GL4Device::SetColorWrite(bool redWrite, bool greenWrite, bool blueWrite, bool alphaWrite)
 {
   uint8_t colorWrite = 0x00
-    | (redWrite ? 0x08 : 0x00)
-    | (greenWrite ? 0x04 : 0x00)
-    | (blueWrite ? 0x02 : 0x00)
-    | (alphaWrite ? 0x01 : 0x00);
+                       | (redWrite ? 0x08 : 0x00)
+                       | (greenWrite ? 0x04 : 0x00)
+                       | (blueWrite ? 0x02 : 0x00)
+                       | (alphaWrite ? 0x01 : 0x00);
   if (m_colorWrite != colorWrite)
   {
     m_colorWrite = colorWrite;
     glColorMask(redWrite, greenWrite, blueWrite, alphaWrite);
   }
-  
+
 }
 
 void GL4Device::SetDepthWrite(bool depthWrite)
@@ -222,7 +223,8 @@ void GL4Device::SetBlendFactor(eBlendFactor srcFactor, eBlendFactor dstFactor)
 void GL4Device::SetBlendFactor(eBlendFactor srcFactorColor,
                                eBlendFactor srcFactorAlpha,
                                eBlendFactor dstFactorColor,
-                               eBlendFactor dstFactorAlpha)
+                               eBlendFactor dstFactorAlpha
+                              )
 {
   if (srcFactorColor != m_srcFactorColor
       || srcFactorAlpha != m_srcFactorAlpha
@@ -241,89 +243,89 @@ void GL4Device::SetBlendFactor(eBlendFactor srcFactorColor,
   }
 }
 
-void GL4Device::SetModelMatrix(const Matrix4f& modelMatrix)
+void GL4Device::SetModelMatrix(const Matrix4f &modelMatrix)
 {
   m_modelMatrix = modelMatrix;
 
-  m_modelViewMatrixDirty = true;
+  m_modelViewMatrixDirty           = true;
   m_modelViewProjectionMatrixDirty = true;
 
-  m_modelMatrixInvDirty = true;
-  m_modelViewMatrixInvDirty = true;
+  m_modelMatrixInvDirty               = true;
+  m_modelViewMatrixInvDirty           = true;
   m_modelViewProjectionMatrixInvDirty = true;
 }
 
-void GL4Device::SetViewMatrix(const Matrix4f& viewMatrix)
+void GL4Device::SetViewMatrix(const Matrix4f &viewMatrix)
 {
   m_viewMatrix = viewMatrix;
 
-  m_modelViewMatrixDirty = true;
+  m_modelViewMatrixDirty      = true;
   m_viewProjectionMatrixDirty = true;
 
 
-  m_viewMatrixInvDirty = true;
-  m_modelViewMatrixInvDirty = true;
+  m_viewMatrixInvDirty           = true;
+  m_modelViewMatrixInvDirty      = true;
   m_viewProjectionMatrixInvDirty = true;
 }
 
-void GL4Device::SetProjectionMatrix(const Matrix4f& projectionMatrix)
+void GL4Device::SetProjectionMatrix(const Matrix4f &projectionMatrix)
 {
   m_projectionMatrix = projectionMatrix;
 
-  m_viewProjectionMatrixDirty = true;
+  m_viewProjectionMatrixDirty      = true;
   m_modelViewProjectionMatrixDirty = true;
 
-  m_projectionMatrixInvDirty = true;
-  m_viewProjectionMatrixInvDirty = true;
+  m_projectionMatrixInvDirty          = true;
+  m_viewProjectionMatrixInvDirty      = true;
   m_modelViewProjectionMatrixInvDirty = true;
 }
 
 
-void GL4Device::SetModelMatrix(const Matrix4f& modelMatrix, const Matrix4f& modelMatrixInv)
+void GL4Device::SetModelMatrix(const Matrix4f &modelMatrix, const Matrix4f &modelMatrixInv)
 {
-  m_modelMatrix = modelMatrix;
+  m_modelMatrix    = modelMatrix;
   m_modelMatrixInv = modelMatrixInv;
 
-  m_modelViewMatrixDirty = true;
+  m_modelViewMatrixDirty           = true;
   m_modelViewProjectionMatrixDirty = true;
 
-  m_modelViewMatrixInvDirty = true;
+  m_modelViewMatrixInvDirty           = true;
   m_modelViewProjectionMatrixInvDirty = true;
 }
 
-void GL4Device::SetViewMatrix(const Matrix4f& viewMatrix, const Matrix4f& viewMatrixInv)
+void GL4Device::SetViewMatrix(const Matrix4f &viewMatrix, const Matrix4f &viewMatrixInv)
 {
-  m_viewMatrix = viewMatrix;
+  m_viewMatrix    = viewMatrix;
   m_viewMatrixInv = viewMatrixInv;
 
-  m_modelViewMatrixDirty = true;
+  m_modelViewMatrixDirty      = true;
   m_viewProjectionMatrixDirty = true;
 
 
-  m_modelViewMatrixInvDirty = true;
+  m_modelViewMatrixInvDirty      = true;
   m_viewProjectionMatrixInvDirty = true;
 }
 
-void GL4Device::SetProjectionMatrix(const Matrix4f& projectionMatrix, const Matrix4f& projectionMatrixInv)
+void GL4Device::SetProjectionMatrix(const Matrix4f &projectionMatrix, const Matrix4f &projectionMatrixInv)
 {
-  m_projectionMatrix = projectionMatrix;
+  m_projectionMatrix    = projectionMatrix;
   m_projectionMatrixInv = projectionMatrixInv;
 
-  m_viewProjectionMatrixDirty = true;
+  m_viewProjectionMatrixDirty      = true;
   m_modelViewProjectionMatrixDirty = true;
 
-  m_viewProjectionMatrixInvDirty = true;
+  m_viewProjectionMatrixInvDirty      = true;
   m_modelViewProjectionMatrixInvDirty = true;
 }
 
-void GL4Device::SetShadowMapViewMatrices(const Matrix4f* matrices, Size numberOfMatrices)
+void GL4Device::SetShadowMapViewMatrices(const Matrix4f *matrices, Size numberOfMatrices)
 {
   m_shadowMapMatrixCount = numberOfMatrices;
   memcpy(m_shadowMapViewMatrices, matrices, sizeof(Matrix4f) * numberOfMatrices);
   m_shadowMapViewProjectionMatrixDirty = true;
 }
 
-void GL4Device::SetShadowMapProjectionMatrices(const Matrix4f* matrices, Size numberOfMatrices)
+void GL4Device::SetShadowMapProjectionMatrices(const Matrix4f *matrices, Size numberOfMatrices)
 {
   m_shadowMapMatrixCount = numberOfMatrices;
   memcpy(m_shadowMapProjectionMatrices, matrices, sizeof(Matrix4f) * numberOfMatrices);
@@ -331,29 +333,29 @@ void GL4Device::SetShadowMapProjectionMatrices(const Matrix4f* matrices, Size nu
 }
 
 
-const Matrix4f& GL4Device::GetViewMatrix() const
+const Matrix4f &GL4Device::GetViewMatrix() const
 {
   return m_viewMatrix;
 }
 
-const Matrix4f& GL4Device::GetViewMatrixInv() const
+const Matrix4f &GL4Device::GetViewMatrixInv() const
 {
   return m_viewMatrixInv;
 }
 
 
-const Matrix4f& GL4Device::GetProjectionMatrix() const
+const Matrix4f &GL4Device::GetProjectionMatrix() const
 {
   return m_projectionMatrix;
 }
 
-const Matrix4f& GL4Device::GetProjectionMatrixInv() const
+const Matrix4f &GL4Device::GetProjectionMatrixInv() const
 {
   return m_projectionMatrixInv;
 }
 
 
-Matrix4f& GL4Device::GetPerspectiveProjection(float l, float r, float b, float t, float n, float f, Matrix4f& m)
+Matrix4f &GL4Device::GetPerspectiveProjection(float l, float r, float b, float t, float n, float f, Matrix4f &m)
 {
   float z2 = 2.0f * n;
   float dx = r - l;
@@ -364,35 +366,59 @@ Matrix4f& GL4Device::GetPerspectiveProjection(float l, float r, float b, float t
   float sz = n + f;
 
 
-  m.m00 = z2 / dx; m.m10 = 0.0f;    m.m20 = -sx / dx; m.m30 = 0.0f;
-  m.m01 = 0.0f;    m.m11 = z2 / dy; m.m21 = -sy / dy; m.m31 = 0.0f;
-  m.m02 = 0.0f;    m.m12 = 0.0f;    m.m22 = sz / dz;  m.m32 = -2.0f * n * f / dz;
-  m.m03 = 0.0f;    m.m13 = 0.0f;    m.m23 = 1.0f;     m.m33 = 0.0f;
+  m.m00 = z2 / dx;
+  m.m10 = 0.0f;
+  m.m20 = -sx / dx;
+  m.m30 = 0.0f;
+  m.m01 = 0.0f;
+  m.m11 = z2 / dy;
+  m.m21 = -sy / dy;
+  m.m31 = 0.0f;
+  m.m02 = 0.0f;
+  m.m12 = 0.0f;
+  m.m22 = sz / dz;
+  m.m32 = -2.0f * n * f / dz;
+  m.m03 = 0.0f;
+  m.m13 = 0.0f;
+  m.m23 = 1.0f;
+  m.m33 = 0.0f;
   return m;
 }
 
-Matrix4f& GL4Device::GetPerspectiveProjectionInv(float l, float r, float b, float t, float n, float f, Matrix4f& m)
+Matrix4f &GL4Device::GetPerspectiveProjectionInv(float l, float r, float b, float t, float n, float f, Matrix4f &m)
 {
-  float z2 = 2.0f * n;
-  float dx = r - l;
-  float dy = t - b;
-  float dz = f - n;
-  float sx = r + l;
-  float sy = t + b;
-  float sz = n + f;
+  float z2  = 2.0f * n;
+  float dx  = r - l;
+  float dy  = t - b;
+  float dz  = f - n;
+  float sx  = r + l;
+  float sy  = t + b;
+  float sz  = n + f;
   float nf2 = z2 * f;
 
 
-  m.m00 = dx / z2;  m.m10 = 0.0f;     m.m20 = 0.0f;       m.m30 = sx / z2;
-  m.m01 = 0.0f;     m.m11 = dy / z2;  m.m21 = 0.0f;       m.m31 = sy / z2;
-  m.m02 = 0.0f;     m.m12 = 0.0f;     m.m22 = 0.0f;       m.m32 = 1.0f;
-  m.m03 = 0.0f;     m.m13 = 0.0f;     m.m23 = -dz / nf2;  m.m33 = sz / nf2;
+  m.m00 = dx / z2;
+  m.m10 = 0.0f;
+  m.m20 = 0.0f;
+  m.m30 = sx / z2;
+  m.m01 = 0.0f;
+  m.m11 = dy / z2;
+  m.m21 = 0.0f;
+  m.m31 = sy / z2;
+  m.m02 = 0.0f;
+  m.m12 = 0.0f;
+  m.m22 = 0.0f;
+  m.m32 = 1.0f;
+  m.m03 = 0.0f;
+  m.m13 = 0.0f;
+  m.m23 = -dz / nf2;
+  m.m33 = sz / nf2;
 
 
   return m;
 }
 
-Matrix4f& GL4Device::GetOrthographicProjection(float l, float r, float b, float t, float n, float f, Matrix4f& m)
+Matrix4f &GL4Device::GetOrthographicProjection(float l, float r, float b, float t, float n, float f, Matrix4f &m)
 {
   float dx = r - l;
   float dy = t - b;
@@ -420,7 +446,7 @@ Matrix4f& GL4Device::GetOrthographicProjection(float l, float r, float b, float 
   return m;
 }
 
-Matrix4f& GL4Device::GetOrthographicProjectionInv(float l, float r, float b, float t, float n, float f, Matrix4f& m)
+Matrix4f &GL4Device::GetOrthographicProjectionInv(float l, float r, float b, float t, float n, float f, Matrix4f &m)
 {
   float dx = r - l;
   float dy = t - b;
@@ -450,7 +476,7 @@ Matrix4f& GL4Device::GetOrthographicProjectionInv(float l, float r, float b, flo
 }
 
 
-void GL4Device::SetShader(iShader* shader)
+void GL4Device::SetShader(iShader *shader)
 {
   if (shader == m_shader)
   {
@@ -459,7 +485,7 @@ void GL4Device::SetShader(iShader* shader)
   m_shader = shader;
   if (m_shader)
   {
-    GL4Program* program = static_cast<GL4Program*>(m_shader);
+    GL4Program *program = static_cast<GL4Program *>(m_shader);
     glUseProgram(program->GetName());
   }
   else
@@ -469,7 +495,7 @@ void GL4Device::SetShader(iShader* shader)
 
 }
 
-void GL4Device::SetRenderTarget(iRenderTarget* renderTarget)
+void GL4Device::SetRenderTarget(iRenderTarget *renderTarget)
 {
   if (m_renderTarget == renderTarget)
   {
@@ -482,26 +508,26 @@ void GL4Device::SetRenderTarget(iRenderTarget* renderTarget)
     switch (renderTarget->GetType())
     {
     case eTT_Texture2D:
-      {
-        GL4RenderTarget2D* rt2d = static_cast<GL4RenderTarget2D*>(renderTarget);
-        rt2d->Bind();
-        SetViewport(0, 0, rt2d->GetWidth(), rt2d->GetHeight());
-        break;
-      }
+    {
+      GL4RenderTarget2D *rt2d = static_cast<GL4RenderTarget2D *>(renderTarget);
+      rt2d->Bind();
+      SetViewport(0, 0, rt2d->GetWidth(), rt2d->GetHeight());
+      break;
+    }
     case eTT_Texture2DArray:
-      {
-        GL4RenderTarget2DArray* rt2dArray = static_cast<GL4RenderTarget2DArray*>(renderTarget);
-        rt2dArray->Bind();
-        SetViewport(0, 0, rt2dArray->GetWidth(), rt2dArray->GetHeight());
-        break;
-      }
+    {
+      GL4RenderTarget2DArray *rt2dArray = static_cast<GL4RenderTarget2DArray *>(renderTarget);
+      rt2dArray->Bind();
+      SetViewport(0, 0, rt2dArray->GetWidth(), rt2dArray->GetHeight());
+      break;
+    }
     case eTT_TextureCube:
-      {
-        GL4RenderTargetCube* rtcube = static_cast<GL4RenderTargetCube*>(renderTarget);
-        rtcube->Bind();
-        SetViewport(0, 0, rtcube->GetSize(), rtcube->GetSize());
-        break;
-      }
+    {
+      GL4RenderTargetCube *rtcube = static_cast<GL4RenderTargetCube *>(renderTarget);
+      rtcube->Bind();
+      SetViewport(0, 0, rtcube->GetSize(), rtcube->GetSize());
+      break;
+    }
     default:
       break;
     }
@@ -532,102 +558,115 @@ void GL4Device::ClearShadowMaps()
   m_directionalLightShadowData.clear();
 }
 
-void GL4Device::SetPointLightShadowMap(iLight* light, iTextureCube* colorMap, iTextureCube* depthMap, float near, float far, float bias)
+void GL4Device::SetPointLightShadowMap(iLight *light,
+                                       iTextureCube *colorMap,
+                                       iTextureCube *depthMap,
+                                       float near,
+                                       float far,
+                                       float bias
+                                      )
 {
   PointLightShadowData data{};
-  data.Light = light;
-  data.Color = colorMap;
-  data.Depth = depthMap;
+  data.Light   = light;
+  data.Color   = colorMap;
+  data.Depth   = depthMap;
   data.Mapping = Vector3f(near, far, bias);
   m_pointLightShadowData[light] = data;
 }
 
-void GL4Device::SetDirectionalLightShadowMap(iLight* light, const Vector3f& layers, iTexture2DArray* colorMap, iTexture2DArray* depthMap, Matrix4f matrices[3], float bias)
+void GL4Device::SetDirectionalLightShadowMap(iLight *light,
+                                             const Vector3f &layers,
+                                             iTexture2DArray *colorMap,
+                                             iTexture2DArray *depthMap,
+                                             Matrix4f matrices[3],
+                                             float bias
+                                            )
 {
   DirectionalLightShadowData data;
-  data.Light = light;
-  data.Color = colorMap;
-  data.Depth = depthMap;
+  data.Light      = light;
+  data.Color      = colorMap;
+  data.Depth      = depthMap;
   data.LayersBias = Vector4f(layers.x, layers.y, layers.z, bias);;
   memcpy(data.Matrices, matrices, sizeof(Matrix4f) * 3);
   m_directionalLightShadowData[light] = data;
 }
 
 
-
-iSampler* GL4Device::CreateSampler()
+iSampler *GL4Device::CreateSampler()
 {
   return new GL4Sampler();
 }
 
-iTexture2D* GL4Device::CreateTexture(const iTexture2D::Descriptor& descriptor)
+iTexture2D *GL4Device::CreateTexture(const iTexture2D::Descriptor &descriptor)
 {
-  GL4Texture2D* texture = new GL4Texture2D();
+  GL4Texture2D *texture = new GL4Texture2D();
   texture->Initialize(
-    descriptor.Width,
-    descriptor.Height,
-    descriptor.Format,
-    descriptor.MipMaps);
+      descriptor.Width,
+      descriptor.Height,
+      descriptor.Format,
+      descriptor.MipMaps
+  );
   texture->SetSampler(ObjectRegistry::Get<Samplers>()->GetDefault());
   return texture;
 }
 
 
-iTexture2DArray* GL4Device::CreateTexture(const iTexture2DArray::Descriptor& descriptor)
+iTexture2DArray *GL4Device::CreateTexture(const iTexture2DArray::Descriptor &descriptor)
 {
-  GL4Texture2DArray* texture = new GL4Texture2DArray();
+  GL4Texture2DArray *texture = new GL4Texture2DArray();
   texture->Initialize(
-    descriptor.Width,
-    descriptor.Height,
-    descriptor.Layers,
-    descriptor.Format,
-    descriptor.MipMaps);
+      descriptor.Width,
+      descriptor.Height,
+      descriptor.Layers,
+      descriptor.Format,
+      descriptor.MipMaps
+  );
   texture->SetSampler(ObjectRegistry::Get<Samplers>()->GetDefault());
   return texture;
 }
 
 
-
-iTextureCube* GL4Device::CreateTexture(const iTextureCube::Descriptor& descriptor)
+iTextureCube *GL4Device::CreateTexture(const iTextureCube::Descriptor &descriptor)
 {
-  GL4TextureCube* texture = new GL4TextureCube();
+  GL4TextureCube *texture = new GL4TextureCube();
   texture->Initialize(
-    descriptor.Size,
-    descriptor.Format,
-    descriptor.MipMaps);
+      descriptor.Size,
+      descriptor.Format,
+      descriptor.MipMaps
+  );
   texture->SetSampler(ObjectRegistry::Get<Samplers>()->GetDefault());
   return texture;
 }
 
-iRenderTarget2D* GL4Device::CreateRenderTarget(const iRenderTarget2D::Descriptor& descriptor)
+iRenderTarget2D *GL4Device::CreateRenderTarget(const iRenderTarget2D::Descriptor &descriptor)
 {
-  GL4RenderTarget2D* target = new GL4RenderTarget2D();
+  GL4RenderTarget2D *target = new GL4RenderTarget2D();
   target->Initialize(descriptor.Width, descriptor.Height);
   return target;
 }
 
 
-iRenderTarget2DArray* GL4Device::CreateRenderTarget(const iRenderTarget2DArray::Descriptor& descriptor)
+iRenderTarget2DArray *GL4Device::CreateRenderTarget(const iRenderTarget2DArray::Descriptor &descriptor)
 {
-  GL4RenderTarget2DArray* target = new GL4RenderTarget2DArray();
+  GL4RenderTarget2DArray *target = new GL4RenderTarget2DArray();
   target->Initialize(descriptor.Width, descriptor.Height, descriptor.Layer);
   return target;
 }
 
-iRenderTargetCube* GL4Device::CreateRenderTarget(const iRenderTargetCube::Descriptor& descriptor)
+iRenderTargetCube *GL4Device::CreateRenderTarget(const iRenderTargetCube::Descriptor &descriptor)
 {
-  GL4RenderTargetCube* target = new GL4RenderTargetCube();
+  GL4RenderTargetCube *target = new GL4RenderTargetCube();
   target->Initialize(descriptor.Size);
   return target;
 }
 
 
-iPointLight* GL4Device::CreatePointLight()
+iPointLight *GL4Device::CreatePointLight()
 {
   return new GL4PointLight();
 }
 
-iDirectionalLight* GL4Device::CreateDirectionalLight()
+iDirectionalLight *GL4Device::CreateDirectionalLight()
 {
   return new GL4DirectionalLight();
 }
@@ -648,16 +687,16 @@ eTextureUnit GL4Device::ShiftTextureUnit()
   return unit;
 }
 
-void GL4Device::SetSampler(eTextureUnit unit, iSampler* sampler)
+void GL4Device::SetSampler(eTextureUnit unit, iSampler *sampler)
 {
   if (sampler)
   {
-    static_cast<GL4Sampler*>(sampler)->Bind(unit);
+    static_cast<GL4Sampler *>(sampler)->Bind(unit);
   }
 }
 
 
-eTextureUnit GL4Device::BindTexture(iTexture* texture)
+eTextureUnit GL4Device::BindTexture(iTexture *texture)
 {
   if (!texture || m_nextTextureUnit == eTU_Invalid)
   {
@@ -666,7 +705,7 @@ eTextureUnit GL4Device::BindTexture(iTexture* texture)
 
 
   static unsigned prebound = 0;
-  static unsigned bound = 0;
+  static unsigned bound    = 0;
   bound++;
   // TODO keep track of the texture units... store them in arrays to not bind the same texture to a unity twice
   eTextureUnit unit = ShiftTextureUnit();
@@ -678,14 +717,14 @@ eTextureUnit GL4Device::BindTexture(iTexture* texture)
     switch (texture->GetType())
     {
     case eTT_Texture2D:
-      static_cast<GL4Texture2D*>(texture)->Bind();
+      static_cast<GL4Texture2D *>(texture)->Bind();
       break;
     case eTT_Texture2DArray:
-      static_cast<GL4Texture2DArray*>(texture)->Bind();
+      static_cast<GL4Texture2DArray *>(texture)->Bind();
       break;
 
     case eTT_TextureCube:
-      static_cast<GL4TextureCube*>(texture)->Bind();
+      static_cast<GL4TextureCube *>(texture)->Bind();
       break;
 
     }
@@ -699,12 +738,12 @@ eTextureUnit GL4Device::BindTexture(iTexture* texture)
   return unit;
 }
 
-bool GL4Device::BindMaterial(iMaterial* material, eRenderPass pass)
+bool GL4Device::BindMaterial(iMaterial *material, eRenderPass pass)
 {
   return material && material->Bind(this, pass);
 }
 
-void GL4Device::Render(iRenderMesh* mesh, eRenderPass pass)
+void GL4Device::Render(iRenderMesh *mesh, eRenderPass pass)
 {
   if (mesh)
   {
@@ -716,14 +755,14 @@ void GL4Device::Render(iRenderMesh* mesh, eRenderPass pass)
   }
 }
 
-void GL4Device::RenderFullscreen(iTexture2D* texture)
+void GL4Device::RenderFullscreen(iTexture2D *texture)
 {
-  iRenderMesh* mesh = FullscreenBlitRenderMesh();
-  GL4Program* prog = FullscreenBlitProgram();
+  iRenderMesh *mesh = FullscreenBlitRenderMesh();
+  GL4Program  *prog = FullscreenBlitProgram();
   SetShader(prog);
   ResetTextures();
   eTextureUnit unit = BindTexture(texture);
-  iShaderAttribute* attrib = prog->GetShaderAttribute("Diffuse");
+  iShaderAttribute *attrib = prog->GetShaderAttribute("Diffuse");
   if (attrib)
   {
     attrib->Bind(unit);
@@ -732,15 +771,14 @@ void GL4Device::RenderFullscreen(iTexture2D* texture)
 }
 
 
-
-void GL4Device::RenderFullscreen(iTexture2DArray* texture, int layer)
+void GL4Device::RenderFullscreen(iTexture2DArray *texture, int layer)
 {
-  iRenderMesh* mesh = FullscreenBlitRenderMesh();
-  GL4Program* prog = FullscreenBlitArrayProgram();
+  iRenderMesh *mesh = FullscreenBlitRenderMesh();
+  GL4Program  *prog = FullscreenBlitArrayProgram();
   SetShader(prog);
   ResetTextures();
   eTextureUnit unit = BindTexture(texture);
-  iShaderAttribute* attrib = prog->GetShaderAttribute("Diffuse");
+  iShaderAttribute *attrib = prog->GetShaderAttribute("Diffuse");
   if (attrib)
   {
     attrib->Bind(unit);
@@ -748,19 +786,19 @@ void GL4Device::RenderFullscreen(iTexture2DArray* texture, int layer)
   attrib = prog->GetShaderAttribute("ArrayIndex");
   if (attrib)
   {
-    attrib->Bind((float)layer);
+    attrib->Bind((float) layer);
   }
   mesh->Render(this, eRP_Forward);
 }
 
-void GL4Device::RenderFullscreen(iTextureCube* texture, int layer)
+void GL4Device::RenderFullscreen(iTextureCube *texture, int layer)
 {
-  iRenderMesh* mesh = FullscreenBlitCubeRenderMesh(layer);
-  GL4Program* prog = FullscreenBlitCubeProgram();
+  iRenderMesh *mesh = FullscreenBlitCubeRenderMesh(layer);
+  GL4Program  *prog = FullscreenBlitCubeProgram();
   SetShader(prog);
   ResetTextures();
   eTextureUnit unit = BindTexture(texture);
-  iShaderAttribute* attrib = prog->GetShaderAttribute("Diffuse");
+  iShaderAttribute *attrib = prog->GetShaderAttribute("Diffuse");
   if (attrib)
   {
     attrib->Bind(unit);
@@ -769,9 +807,7 @@ void GL4Device::RenderFullscreen(iTextureCube* texture, int layer)
 }
 
 
-
-
-void GL4Device::BindForwardLight(const iLight* light, Size idx)
+void GL4Device::BindForwardLight(const iLight *light, Size idx)
 {
   if (!m_shader || idx >= SPC_MAX_LIGHTS)
   {
@@ -780,22 +816,30 @@ void GL4Device::BindForwardLight(const iLight* light, Size idx)
 
   SPC_GL_ERROR();
 
-  iShaderAttribute* lightColor = m_shader->GetShaderAttribute(eSA_LightColor);
-  iShaderAttribute* lightVector = m_shader->GetShaderAttribute(eSA_LightVector);
-  iShaderAttribute* lightRange = m_shader->GetShaderAttribute(eSA_LightRange);
-  iShaderAttribute* lightCastShadow = m_shader->GetShaderAttribute(eSA_LightCastShadow);
+  iShaderAttribute *lightColor      = m_shader->GetShaderAttribute(eSA_LightColor);
+  iShaderAttribute *lightVector     = m_shader->GetShaderAttribute(eSA_LightVector);
+  iShaderAttribute *lightRange      = m_shader->GetShaderAttribute(eSA_LightRange);
+  iShaderAttribute *lightCastShadow = m_shader->GetShaderAttribute(eSA_LightCastShadow);
   SPC_GL_ERROR();
 
-  iShaderAttribute* pointLightShadowMapMappingBias = m_shader->GetShaderAttribute(eSA_PointLightShadowMapMappingBias);
-  iShaderAttribute* pointLightShadowMapColor = m_shader->GetShaderAttribute(eSA_PointLightShadowMapColor);
-  iShaderAttribute* pointLightShadowMapDepth = m_shader->GetShaderAttribute(eSA_PointLightShadowMapDepth);
+  iShaderAttribute *pointLightShadowMapMappingBias = m_shader->GetShaderAttribute(eSA_PointLightShadowMapMappingBias);
+  iShaderAttribute *pointLightShadowMapColor       = m_shader->GetShaderAttribute(eSA_PointLightShadowMapColor);
+  iShaderAttribute *pointLightShadowMapDepth       = m_shader->GetShaderAttribute(eSA_PointLightShadowMapDepth);
   SPC_GL_ERROR();
 
 
-  iShaderAttribute* directionalLightShadowMapLayersBias = m_shader->GetShaderAttribute(eSA_DirectionalLightShadowMapLayersBias);
-  iShaderAttribute* directionalLightShadowMapMatrices = m_shader->GetShaderAttribute(eSA_DirectionalLightShadowMapMatrices);
-  iShaderAttribute* directionalLightShadowMapColor = m_shader->GetShaderAttribute(eSA_DirectionalLightShadowMapColor);
-  iShaderAttribute* directionalLightShadowMapDepth = m_shader->GetShaderAttribute(eSA_DirectionalLightShadowMapDepth);
+  iShaderAttribute *directionalLightShadowMapLayersBias = m_shader->GetShaderAttribute(
+      eSA_DirectionalLightShadowMapLayersBias
+  );
+  iShaderAttribute *directionalLightShadowMapMatrices   = m_shader->GetShaderAttribute(
+      eSA_DirectionalLightShadowMapMatrices
+  );
+  iShaderAttribute *directionalLightShadowMapColor      = m_shader->GetShaderAttribute(
+      eSA_DirectionalLightShadowMapColor
+  );
+  iShaderAttribute *directionalLightShadowMapDepth      = m_shader->GetShaderAttribute(
+      eSA_DirectionalLightShadowMapDepth
+  );
   SPC_GL_ERROR();
 
   if (lightColor)
@@ -856,146 +900,145 @@ void GL4Device::BindForwardLight(const iLight* light, Size idx)
     switch (light->GetType())
     {
     case eLT_Point:
+    {
+      SPC_GL_ERROR();
+      auto pointLight = static_cast<const iPointLight *>(light);
+      if (lightVector)
+      {
+        lightVector->Bind(Vector4f(pointLight->GetPosition(), 1.0f));
+      }
+      SPC_GL_ERROR();
+      if (lightRange)
+      {
+        lightRange->Bind(pointLight->GetRange());
+      }
+      if (directionalLightShadowMapDepth)
+      {
+        directionalLightShadowMapDepth->Bind(0);
+      }
+      if (directionalLightShadowMapColor)
+      {
+        directionalLightShadowMapColor->Bind(0);
+      }
+      //
+      // Bind the shadow mapping.
+      auto it = m_pointLightShadowData.find(pointLight);
+      if (it != m_pointLightShadowData.end())
       {
         SPC_GL_ERROR();
-        auto pointLight = static_cast<const iPointLight*>(light);
-        if (lightVector)
+        PointLightShadowData &data = it->second;
+        if (lightCastShadow)
         {
-          lightVector->Bind(Vector4f(pointLight->GetPosition(), 1.0f));
+          lightCastShadow->Bind(1);
         }
         SPC_GL_ERROR();
-        if (lightRange)
+        if (pointLightShadowMapMappingBias)
         {
-          lightRange->Bind(pointLight->GetRange());
+          pointLightShadowMapMappingBias->Bind(data.Mapping);
         }
-        if (directionalLightShadowMapDepth)
+        SPC_GL_ERROR();
+        if (pointLightShadowMapColor && data.Color)
         {
-          directionalLightShadowMapDepth->Bind(0);
+          eTextureUnit unit = BindTexture(data.Color);
+          if (unit != eTU_Invalid)
+          {
+            pointLightShadowMapColor->Bind(unit);
+          }
         }
-
-        //
-        // Bind the shadow mapping.
-        auto it = m_pointLightShadowData.find(pointLight);
-        if (it != m_pointLightShadowData.end())
+        SPC_GL_ERROR();
+        if (pointLightShadowMapDepth)
         {
-          SPC_GL_ERROR();
-          PointLightShadowData& data = it->second;
-          if (lightCastShadow)
+          if (data.Depth)
           {
-            lightCastShadow->Bind(1);
-          }
-          SPC_GL_ERROR();
-          if (pointLightShadowMapMappingBias)
-          {
-            pointLightShadowMapMappingBias->Bind(data.Mapping);
-          }
-          SPC_GL_ERROR();
-          if (pointLightShadowMapColor && data.Color)
-          {
-            eTextureUnit unit = BindTexture(data.Color);
+            eTextureUnit unit = BindTexture(data.Depth);
             if (unit != eTU_Invalid)
             {
-              pointLightShadowMapColor->Bind(unit);
+              pointLightShadowMapDepth->Bind(unit);
             }
           }
-          SPC_GL_ERROR();
-          if (pointLightShadowMapDepth)
-          {
-            if (data.Depth)
-            {
-              eTextureUnit unit = BindTexture(data.Depth);
-              if (unit != eTU_Invalid)
-              {
-                pointLightShadowMapDepth->Bind(unit);
-              }
-            }
-            else
-            {
-              pointLightShadowMapDepth->Bind(0);
-            }
-          }
-          SPC_GL_ERROR();
-        }
-        else
-        {
-          if (lightCastShadow)
-          {
-            lightCastShadow->Bind(0);
-          }
-          if (pointLightShadowMapDepth)
+          else
           {
             pointLightShadowMapDepth->Bind(0);
           }
         }
+        SPC_GL_ERROR();
       }
-      break;
-    case eLT_Directional:
+      else
       {
-        auto directionalLight = static_cast<const iDirectionalLight*>(light);
-        if (lightVector)
+        if (lightCastShadow)
         {
-          lightVector->Bind(Vector4f(-directionalLight->GetDirection(), 0.0f));
+          lightCastShadow->Bind(0);
         }
         if (pointLightShadowMapDepth)
         {
           pointLightShadowMapDepth->Bind(0);
         }
+      }
+    }
+      break;
+    case eLT_Directional:
+    {
+      auto directionalLight = static_cast<const iDirectionalLight *>(light);
+      if (lightVector)
+      {
+        lightVector->Bind(Vector4f(-directionalLight->GetDirection(), 0.0f));
+      }
+      if (pointLightShadowMapDepth)
+      {
+        pointLightShadowMapDepth->Bind(0);
+      }
 
 
-        auto it = m_directionalLightShadowData.find(directionalLight);
-        if (it != m_directionalLightShadowData.end())
+      auto it = m_directionalLightShadowData.find(directionalLight);
+      if (it != m_directionalLightShadowData.end())
+      {
+        DirectionalLightShadowData &data = it->second;
+        if (lightCastShadow)
         {
-          DirectionalLightShadowData& data = it->second;
-          if (lightCastShadow)
-          {
-            lightCastShadow->Bind(1);
-          }
+          lightCastShadow->Bind(1);
+        }
 
-          if (directionalLightShadowMapLayersBias)
+        if (directionalLightShadowMapLayersBias)
+        {
+          directionalLightShadowMapLayersBias->Bind(data.LayersBias);
+        }
+        if (directionalLightShadowMapMatrices)
+        {
+          directionalLightShadowMapMatrices->Bind(data.Matrices, 3);
+        }
+        if (directionalLightShadowMapColor && data.Color)
+        {
+          eTextureUnit unit = BindTexture(data.Color);
+          if (unit != eTU_Invalid)
           {
-            directionalLightShadowMapLayersBias->Bind(data.LayersBias);
+            directionalLightShadowMapColor->Bind(unit);
           }
-          if (directionalLightShadowMapMatrices)
+        }
+        if (directionalLightShadowMapDepth && data.Depth)
+        {
+          eTextureUnit unit = BindTexture(data.Depth);
+          if (unit != eTU_Invalid)
           {
-            directionalLightShadowMapMatrices->Bind(data.Matrices, 3);
-          }
-          if (directionalLightShadowMapColor && data.Color)
-          {
-            eTextureUnit unit = BindTexture(data.Color);
-            if (unit != eTU_Invalid)
-            {
-              directionalLightShadowMapColor->Bind(unit);
-            }
-          }
-          if (directionalLightShadowMapDepth)
-          {
-            if (data.Depth)
-            {
-              eTextureUnit unit = BindTexture(data.Depth);
-              //printf("    Bind directional light shadow map: %p -> %d\n", data.Depth, unit);
-              if (unit != eTU_Invalid)
-              {
-                directionalLightShadowMapDepth->Bind(unit);
-              }
-            }
-            else
-            {
-              directionalLightShadowMapDepth->Bind(0);
-            }
+            directionalLightShadowMapDepth->Bind(unit);
           }
         }
         else
         {
-          if (lightCastShadow)
-          {
-            lightCastShadow->Bind(0);
-          }
-          if (directionalLightShadowMapDepth)
-          {
-            directionalLightShadowMapDepth->Bind(0);
-          }
+          directionalLightShadowMapDepth->Bind(0);
         }
       }
+      else
+      {
+        if (lightCastShadow)
+        {
+          lightCastShadow->Bind(0);
+        }
+        if (directionalLightShadowMapDepth)
+        {
+          directionalLightShadowMapDepth->Bind(0);
+        }
+      }
+    }
       break;
     }
   }
@@ -1030,10 +1073,10 @@ void GL4Device::FinishForwardLights(Size numLights)
   SPC_GL_ERROR();
   if (m_shader)
   {
-    iShaderAttribute* count = m_shader->GetShaderAttribute(eSA_LightCount);
+    iShaderAttribute *count = m_shader->GetShaderAttribute(eSA_LightCount);
     if (count)
     {
-      count->Bind((int)numLights);
+      count->Bind((int) numLights);
     }
   }
   SPC_GL_ERROR();
@@ -1046,7 +1089,7 @@ void GL4Device::BindMatrices()
     return;
   }
 
-  iShaderAttribute* attr = m_shader->GetShaderAttribute(eSA_ModelMatrix);
+  iShaderAttribute *attr = m_shader->GetShaderAttribute(eSA_ModelMatrix);
   if (attr)
   {
     attr->Bind(m_modelMatrix);
@@ -1182,14 +1225,14 @@ void GL4Device::BindMatrices()
 
 void GL4Device::UpdateModelViewMatrix()
 {
-  m_modelViewMatrix = m_viewMatrix * m_modelMatrix;
+  m_modelViewMatrix      = m_viewMatrix * m_modelMatrix;
   m_modelViewMatrixDirty = false;
 }
 
 
 void GL4Device::UpdateViewProjectionMatrix()
 {
-  m_viewProjectionMatrix = m_projectionMatrix * m_viewMatrix;
+  m_viewProjectionMatrix      = m_projectionMatrix * m_viewMatrix;
   m_viewProjectionMatrixDirty = false;
 }
 
@@ -1199,26 +1242,26 @@ void GL4Device::UpdateModelViewProjectionMatrix()
   {
     UpdateModelViewMatrix();
   }
-  m_modelViewProjectionMatrix = m_projectionMatrix * m_modelViewMatrix;
+  m_modelViewProjectionMatrix      = m_projectionMatrix * m_modelViewMatrix;
   m_modelViewProjectionMatrixDirty = false;
 }
 
 void GL4Device::UpdateModelMatrixInv()
 {
-  m_modelMatrixInv = m_modelMatrix.Inverted();
+  m_modelMatrixInv      = m_modelMatrix.Inverted();
   m_modelMatrixInvDirty = false;
 }
 
 
 void GL4Device::UpdateViewMatrixInv()
 {
-  m_viewMatrixInv = m_viewMatrix.Inverted();
+  m_viewMatrixInv      = m_viewMatrix.Inverted();
   m_viewMatrixInvDirty = false;
 }
 
 void GL4Device::UpdateProjectionMatrixInv()
 {
-  m_projectionMatrixInv = m_projectionMatrix.Inverted();
+  m_projectionMatrixInv      = m_projectionMatrix.Inverted();
   m_projectionMatrixInvDirty = false;
 }
 
@@ -1229,7 +1272,7 @@ void GL4Device::UpdateModelViewMatrixInv()
   {
     UpdateModelViewMatrix();
   }
-  m_modelViewMatrixInv = m_modelViewMatrix.Inverted();
+  m_modelViewMatrixInv      = m_modelViewMatrix.Inverted();
   m_modelViewMatrixInvDirty = false;
 }
 
@@ -1240,7 +1283,7 @@ void GL4Device::UpdateViewProjectionMatrixInv()
   {
     UpdateViewProjectionMatrix();
   }
-  m_viewProjectionMatrixInv = m_viewProjectionMatrix.Inverted();
+  m_viewProjectionMatrixInv      = m_viewProjectionMatrix.Inverted();
   m_viewProjectionMatrixInvDirty = false;
 }
 
@@ -1250,7 +1293,7 @@ void GL4Device::UpdateModelViewProjectionMatrixInv()
   {
     UpdateModelViewProjectionMatrix();
   }
-  m_modelViewProjectionMatrixInv = m_modelViewProjectionMatrix.Inverted();
+  m_modelViewProjectionMatrixInv      = m_modelViewProjectionMatrix.Inverted();
   m_modelViewProjectionMatrixInvDirty = false;
 }
 
@@ -1265,7 +1308,7 @@ void GL4Device::UpdateShadowMapViewProjectionMatrix()
 }
 
 
-GL4Program* GL4Device::FullscreenBlitProgram()
+GL4Program *GL4Device::FullscreenBlitProgram()
 {
   if (!m_fullscreenBlitProgram)
   {
@@ -1275,17 +1318,19 @@ GL4Program* GL4Device::FullscreenBlitProgram()
 }
 
 
-GL4Program* GL4Device::FullscreenBlitArrayProgram()
+GL4Program *GL4Device::FullscreenBlitArrayProgram()
 {
   if (!m_fullscreenBlitArrayProgram)
   {
-    m_fullscreenBlitArrayProgram = AssetManager::Get()->Load<GL4Program>("file:///engine/opengl/gl4/fullscreen_blit_array.spc");
+    m_fullscreenBlitArrayProgram = AssetManager::Get()->Load<GL4Program>(
+        "file:///engine/opengl/gl4/fullscreen_blit_array.spc"
+    );
   }
   return m_fullscreenBlitArrayProgram;
 }
 
 
-iRenderMesh* GL4Device::FullscreenBlitRenderMesh()
+iRenderMesh *GL4Device::FullscreenBlitRenderMesh()
 {
   if (!m_fullscreenBlitRenderMesh)
   {
@@ -1319,30 +1364,46 @@ iRenderMesh* GL4Device::FullscreenBlitRenderMesh()
 }
 
 
-GL4Program* GL4Device::FullscreenBlitCubeProgram()
+GL4Program *GL4Device::FullscreenBlitCubeProgram()
 {
   if (!m_fullscreenBlitCubeProgram)
   {
-    m_fullscreenBlitCubeProgram = AssetManager::Get()->Load<GL4Program>("file:///engine/opengl/gl4/fullscreen_blit_cube.spc");
+    m_fullscreenBlitCubeProgram = AssetManager::Get()->Load<GL4Program>(
+        "file:///engine/opengl/gl4/fullscreen_blit_cube.spc"
+    );
   }
   return m_fullscreenBlitCubeProgram;
 }
 
-iRenderMesh* GL4Device::FullscreenBlitCubeRenderMesh(int layer)
+iRenderMesh *GL4Device::FullscreenBlitCubeRenderMesh(int layer)
 {
-  switch (layer) {
-  case 0: if (m_fullscreenBlitCubePosXRenderMesh) return m_fullscreenBlitCubePosXRenderMesh; else break;
-  case 1: if (m_fullscreenBlitCubeNegXRenderMesh) return m_fullscreenBlitCubeNegXRenderMesh; else break;
-  case 2: if (m_fullscreenBlitCubePosYRenderMesh) return m_fullscreenBlitCubePosYRenderMesh; else break;
-  case 3: if (m_fullscreenBlitCubeNegYRenderMesh) return m_fullscreenBlitCubeNegYRenderMesh; else break;
-  case 4: if (m_fullscreenBlitCubePosZRenderMesh) return m_fullscreenBlitCubePosZRenderMesh; else break;
-  case 5: if (m_fullscreenBlitCubeNegZRenderMesh) return m_fullscreenBlitCubeNegZRenderMesh; else break;
-  default: break;
+  switch (layer)
+  {
+  case 0:
+    if (m_fullscreenBlitCubePosXRenderMesh) return m_fullscreenBlitCubePosXRenderMesh;
+    else break;
+  case 1:
+    if (m_fullscreenBlitCubeNegXRenderMesh) return m_fullscreenBlitCubeNegXRenderMesh;
+    else break;
+  case 2:
+    if (m_fullscreenBlitCubePosYRenderMesh) return m_fullscreenBlitCubePosYRenderMesh;
+    else break;
+  case 3:
+    if (m_fullscreenBlitCubeNegYRenderMesh) return m_fullscreenBlitCubeNegYRenderMesh;
+    else break;
+  case 4:
+    if (m_fullscreenBlitCubePosZRenderMesh) return m_fullscreenBlitCubePosZRenderMesh;
+    else break;
+  case 5:
+    if (m_fullscreenBlitCubeNegZRenderMesh) return m_fullscreenBlitCubeNegZRenderMesh;
+    else break;
+  default:
+    break;
   }
 
 
   GL4RenderMeshGenerator gen;
-  std::vector<Vector4f> vertices4;
+  std::vector<Vector4f>  vertices4;
   vertices4.push_back(Vector4f(-1.0f, -1.0f, 0.0f, 1.0f));
   vertices4.push_back(Vector4f(-1.0f, 1.0f, 0.0f, 1.0f));
   vertices4.push_back(Vector4f(1.0f, -1.0f, 0.0f, 1.0f));
@@ -1406,7 +1467,6 @@ iRenderMesh* GL4Device::FullscreenBlitCubeRenderMesh(int layer)
   }
   return nullptr;
 }
-
 
 
 #if _DEBUG

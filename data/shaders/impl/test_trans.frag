@@ -15,6 +15,14 @@ in vec3 viewer_world_position;
 
 #include <../common/lighting.glsl>
 
+lighting_result_t calc_lighting (float n_dot_l, float n_dot_v, float roughness)
+{
+    lighting_result_t res;
+    res.ambient = 0.0;
+    res.diffuse = oren_nayar (n_dot_l, n_dot_v, roughness);
+    res.specular = 0.0;
+    return res;
+}
 
 void main()
 {

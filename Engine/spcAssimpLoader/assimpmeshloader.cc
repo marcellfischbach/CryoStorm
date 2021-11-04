@@ -18,14 +18,15 @@
 namespace spc::assimp
 {
 
-Matrix4f ConvertMatrix4x4(aiMatrix4x4& aiMat);
-iRenderMesh* AssimpMeshLoaderLoadMesh(aiMesh* mesh, const Matrix4f& matrix);
+Matrix4f ConvertMatrix4x4(aiMatrix4x4 &aiMat);
+
+iRenderMesh *AssimpMeshLoaderLoadMesh(aiMesh *mesh, const Matrix4f &matrix);
 
 struct LoaderData
 {
-  const aiScene* scene = nullptr;
+  const aiScene *scene = nullptr;
   std::map<std::string, Size> materialSlots;
-  Mesh* mesh = nullptr;
+  Mesh *mesh = nullptr;
 
 };
 
@@ -35,16 +36,16 @@ AssimpMeshLoader::AssimpMeshLoader()
 }
 
 
-bool AssimpMeshLoader::CanLoad(const Class* cls, const ResourceLocator& locator) const
+bool AssimpMeshLoader::CanLoad(const Class *cls, const ResourceLocator &locator) const
 {
-  const std::string& ext = locator.GetExtension();
+  const std::string &ext = locator.GetExtension();
   return cls == Mesh::GetStaticClass()
-    && ext == std::string("FBX");
+         && ext == std::string("FBX");
 }
 
-iObject* AssimpMeshLoader::Load(const Class* cls, const ResourceLocator& locator) const
+iObject *AssimpMeshLoader::Load(const Class *cls, const ResourceLocator &locator) const
 {
-  iFile* file = spc::VFS::Get()->Open(locator, eAM_Read, eOM_Binary);
+  iFile *file = spc::VFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (!file)
   {
     return nullptr;
@@ -54,30 +55,28 @@ iObject* AssimpMeshLoader::Load(const Class* cls, const ResourceLocator& locator
   long size = file->Tell();
   file->Seek(eSM_Set, 0);
 
-  uint8_t* buffer = new uint8_t[size];
+  uint8_t *buffer         = new uint8_t[size];
   file->Read(sizeof(uint8_t), size, buffer);
 
   Assimp::Importer importer;
-  const aiScene *scene = importer.ReadFileFromMemory(buffer, size,
-    aiProcess_CalcTangentSpace |
-    aiProcess_Triangulate |
-    aiProcess_GenNormals |
-    aiProcess_MakeLeftHanded |
-    aiProcess_FlipWindingOrder |
-    aiProcess_JoinIdenticalVertices |
-    aiProcess_OptimizeMeshes);
+  const aiScene    *scene = importer.ReadFileFromMemory(buffer, size,
+                                                        aiProcess_Triangulate
+                                                        | aiProcess_CalcTangentSpace
+                                                        | aiProcess_GenNormals
+                                                        | aiProcess_MakeLeftHanded
+                                                        | aiProcess_FlipWindingOrder
+                                                        | aiProcess_JoinIdenticalVertices
+                                                        | aiProcess_OptimizeMeshes
+  );
 
-
-  
-  
 
   LoaderData d;
   d.scene = scene;
-  d.mesh = new Mesh();
+  d.mesh  = new Mesh();
   for (unsigned i = 0, in = scene->mNumMeshes; i < in; ++i)
   {
-    aiMesh* mesh = scene->mMeshes[i];
-    aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+    aiMesh     *mesh     = scene->mMeshes[i];
+    aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
 
     aiString aiMatName;
     material->Get(AI_MATKEY_NAME, aiMatName);
@@ -97,29 +96,26 @@ iObject* AssimpMeshLoader::Load(const Class* cls, const ResourceLocator& locator
   return d.mesh;
 }
 
-void AssimpMeshLoader::ReadNode(aiNode* node, const Matrix4f &parentMatrix, LoaderData& d) const
+void AssimpMeshLoader::ReadNode(aiNode *node, const Matrix4f &parentMatrix, LoaderData &d) const
 {
-  Matrix4f localMatrix = ConvertMatrix4x4(node->mTransformation);
+  Matrix4f localMatrix  = ConvertMatrix4x4(node->mTransformation);
   Matrix4f globalMatrix = parentMatrix * localMatrix;
 
 
   for (unsigned i = 0, in = node->mNumMeshes; i < in; ++i)
   {
-    aiMesh* mesh = d.scene->mMeshes[node->mMeshes[i]];
-    iRenderMesh* renderMesh = AssimpMeshLoaderLoadMesh(mesh, globalMatrix);
-    aiMaterial* material = d.scene->mMaterials[mesh->mMaterialIndex];
+    aiMesh      *mesh        = d.scene->mMeshes[node->mMeshes[i]];
+    iRenderMesh *renderMesh  = AssimpMeshLoaderLoadMesh(mesh, globalMatrix);
+    aiMaterial  *material    = d.scene->mMaterials[mesh->mMaterialIndex];
 
     aiString aiMatName;
     material->Get(AI_MATKEY_NAME, aiMatName);
     std::string materialName(aiMatName.C_Str());
-    Size materialSlot = d.materialSlots[materialName];
+    Size        materialSlot = d.materialSlots[materialName];
 
 
     d.mesh->AddSubMesh(renderMesh, materialSlot);
   }
-
-
-  
 
 
   for (unsigned i = 0, in = node->mNumChildren; i < in; ++i)
@@ -129,33 +125,32 @@ void AssimpMeshLoader::ReadNode(aiNode* node, const Matrix4f &parentMatrix, Load
 }
 
 
-
-Matrix4f ConvertMatrix4x4(aiMatrix4x4& aiMat)
+Matrix4f ConvertMatrix4x4(aiMatrix4x4 &aiMat)
 {
   return Matrix4f(
-    aiMat.a1, aiMat.a2, aiMat.a3, aiMat.a4,
-    aiMat.b1, aiMat.b2, aiMat.b3, aiMat.b4,
-    aiMat.c1, aiMat.c2, aiMat.c3, aiMat.c4,
-    aiMat.d1, aiMat.d2, aiMat.d3, aiMat.d4
+      aiMat.a1, aiMat.a2, aiMat.a3, aiMat.a4,
+      aiMat.b1, aiMat.b2, aiMat.b3, aiMat.b4,
+      aiMat.c1, aiMat.c2, aiMat.c3, aiMat.c4,
+      aiMat.d1, aiMat.d2, aiMat.d3, aiMat.d4
   );
 }
 
-Color4f ConvertRGBA(aiColor4D& v)
+Color4f ConvertRGBA(aiColor4D &v)
 {
   return Color4f(v.r, v.g, v.b, v.a);
 }
 
-Vector3f Convert3f(aiVector3D& v)
+Vector3f Convert3f(aiVector3D &v)
 {
   return Vector3f(v.x, v.y, v.z);
 }
 
-Vector2f Convert2f(aiVector3D& v)
+Vector2f Convert2f(aiVector3D &v)
 {
   return Vector2f(v.x, v.y);
 }
 
-iRenderMesh* AssimpMeshLoaderLoadMesh(aiMesh* mesh, const Matrix4f &matrix)
+iRenderMesh *AssimpMeshLoaderLoadMesh(aiMesh *mesh, const Matrix4f &matrix)
 {
 
   std::vector<Vector3f> vertices;
@@ -164,7 +159,7 @@ iRenderMesh* AssimpMeshLoaderLoadMesh(aiMesh* mesh, const Matrix4f &matrix)
   std::vector<Vector2f> uvs;
   std::vector<Color4f>  colors;
 
-  for (unsigned i = 0, in = mesh->mNumVertices; i < in; ++i)
+  for (unsigned i         = 0, in = mesh->mNumVertices; i < in; ++i)
   {
     Vector3f vertex = Convert3f(mesh->mVertices[i]);
     vertices.push_back(Matrix4f::Transform(matrix, vertex));
@@ -202,7 +197,7 @@ iRenderMesh* AssimpMeshLoaderLoadMesh(aiMesh* mesh, const Matrix4f &matrix)
   }
 
   std::vector<uint32_t> indices;
-  for (unsigned i = 0, in = mesh->mNumFaces; i < in; ++i)
+  for (unsigned         i = 0, in = mesh->mNumFaces; i < in; ++i)
   {
     aiFace face = mesh->mFaces[i];
     if (face.mNumIndices == 3)
@@ -216,7 +211,7 @@ iRenderMesh* AssimpMeshLoaderLoadMesh(aiMesh* mesh, const Matrix4f &matrix)
 
 
   auto renderMeshGenFact = ObjectRegistry::Get<iRenderMeshGeneratorFactory>();
-  iRenderMeshGenerator* generator = renderMeshGenFact->Create();
+  iRenderMeshGenerator *generator = renderMeshGenFact->Create();
   generator->SetVertices(vertices);
   if (mesh->mNormals)
   {
@@ -234,9 +229,9 @@ iRenderMesh* AssimpMeshLoaderLoadMesh(aiMesh* mesh, const Matrix4f &matrix)
   {
     generator->SetColors(colors);
   }
-  
+
   generator->SetIndices(indices);
-  iRenderMesh* renderMesh = generator->Generate();
+  iRenderMesh *renderMesh = generator->Generate();
   generator->Release();
 
   return renderMesh;

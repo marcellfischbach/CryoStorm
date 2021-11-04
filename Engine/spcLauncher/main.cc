@@ -264,7 +264,7 @@ spc::iRenderMesh *create_plane_mesh(float size, float nx, float ny)
   return renderMesh;
 }
 
-spc::iRenderMesh *create_sphere_mesh(float radius, size_t detail)
+spc::iRenderMesh *create_sphere_mesh(float radius, size_t detail, float uv_f)
 {
   spc::iRenderMeshGenerator  *generator = spc::ObjectRegistry::Get<spc::iRenderMeshGeneratorFactory>()->Create();
   std::vector<spc::Vector3f> positions;
@@ -290,7 +290,7 @@ spc::iRenderMesh *create_sphere_mesh(float radius, size_t detail)
       );
       positions.push_back(normal * radius);
       normals.emplace_back(normal);
-      uv.emplace_back(spc::Vector2f(factH, factV));
+      uv.emplace_back(spc::Vector2f(factH * 2.0f * uv_f, factV * uv_f));
       colors.emplace_back(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f));
     }
   }
@@ -558,7 +558,7 @@ int main(int argc, char **argv)
   entityTransPlaneBlue->Attach(meshStateTransPlaneBlue);
 
   float                sphereRadius      = 4.0f;
-  spc::iRenderMesh     *renderMeshSphere = create_sphere_mesh(sphereRadius, 32);
+  spc::iRenderMesh     *renderMeshSphere = create_sphere_mesh(sphereRadius, 32, 4.0f);
   spc::Mesh            *meshSphere       = new spc::Mesh();
   spc::Entity          *entitySphere     = new spc::Entity("Sphere");
   spc::StaticMeshState *meshStateSphere  = new spc::StaticMeshState("Mesh.Sphere");
@@ -567,9 +567,9 @@ int main(int argc, char **argv)
   meshStateSphere->SetTransform(spc::Transform(spc::Vector3f(0.0f, sphereRadius * 1.5f, 0.0f)));
   meshStateSphere->SetMesh(meshSphere);
   entitySphere->Attach(meshStateSphere);
-  world->Attach(entitySphere);
+//  world->Attach(entitySphere);
 
-  world->Attach(entityTransPlaneBlue);
+//  world->Attach(entityTransPlaneBlue);
 
 
   create_suzannes_plain(suzanneMesh, world);
@@ -584,7 +584,7 @@ int main(int argc, char **argv)
   lightState->SetStatic(true);
   lightState->SetCastShadow(true);
   lightState->SetTransform(spc::Transform(spc::Vector3f(5.0f, 5.0f, 5.0f)));
-//  world->Attach(lightEntity);
+  world->Attach(lightEntity);
 
   /*
   lightEntity = new spc::Entity("Light_0");
@@ -609,7 +609,7 @@ int main(int argc, char **argv)
   sunLightState->SetSplits(25.0f, 50.0f, 100.0f);
   sunLightState->SetShadowMapBias(0.003f);
   sunLightState->SetStatic(true);
-  sunLightState->SetCastShadow(false);
+  sunLightState->SetCastShadow(true);
   sunLightState->SetTransform(sunLightState->GetTransform()
                                                //.SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(1.0f, 0.0f, 0.0f), spc::spcDeg2Rad(-45.0f)))
                                            .SetRotation(
@@ -619,6 +619,26 @@ int main(int argc, char **argv)
   );
 
   world->Attach(sunEntity);
+
+  sunEntity     = new spc::Entity("Sun");
+  sunLightState = new spc::LightState("SunLight");
+  sunEntity->Attach(sunLightState);
+  sunLightState->SetType(spc::eLT_Directional);
+  sunLightState->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 0.2f);
+  sunLightState->SetSplits(25.0f, 50.0f, 100.0f);
+  sunLightState->SetShadowMapBias(0.003f);
+  sunLightState->SetStatic(true);
+  sunLightState->SetCastShadow(false);
+  sunLightState->SetTransform(sunLightState->GetTransform()
+                                               //.SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(1.0f, 0.0f, 0.0f), spc::spcDeg2Rad(-45.0f)))
+                                           .SetRotation(
+                                               spc::Quaternion::FromAxisAngle(spc::Vector3f(1.0f, 0.0f, 0.0f)
+                                                                                  .Normalize(),
+                                                                              spc::spcDeg2Rad(-135.0f)))
+  );
+
+  world->Attach(sunEntity);
+
 
   spc::Entity      *cameraEntity = new spc::Entity("Camera");
   spc::CameraState *cameraState  = new spc::CameraState();
@@ -679,7 +699,7 @@ int main(int argc, char **argv)
     spc::uint32_t deltaTime = time - lastTime;
     lastTime = time;
 
-    SDL_GL_MakeCurrent(wnd, context);
+//    SDL_GL_MakeCurrent(wnd, context);
     UpdateEvents();
 
     if (spc::Input::IsKeyPressed(spc::Key::eK_Escape))
@@ -720,7 +740,7 @@ int main(int argc, char **argv)
         materialInstance->Set(2, roughness);
       }
 
-
+    sphereRadius = 0.0f;
       float dist = 10.0f;
       cameraEntity->GetRoot()->LookAt(
           spc::Vector3f(spc::spcCos(entRot + (float) M_PI / 2.0f + 0.2f) * dist,

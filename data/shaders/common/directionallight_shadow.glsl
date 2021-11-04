@@ -55,7 +55,7 @@ float calc_directional_shadow(int idx, vec3 light_direction, vec3 frag_position,
 
 
 	float v = mix(
-		texture(spc_DirectionalLightShadowMapDepth[0], vec4(camSpace.xy, layer, camSpace.z)),
+		texture(spc_DirectionalLightShadowMapDepth[idx], vec4(camSpace.xy, layer, camSpace.z)),
 		1.0,
 		fadeOut);
 	return v; //* fact;
