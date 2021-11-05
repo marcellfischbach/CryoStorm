@@ -17,9 +17,9 @@ struct lighting_result_t
     float specular;
 };
 
-lighting_result_t calc_lighting (float n_dot_l, float n_dot_v, float roughness);
+lighting_result_t calc_lighting (float n_dot_l, float n_dot_v);
 
-vec3 calc_light(int idx, vec3 light_color, vec4 light_vector, float light_range, vec3 frag_position, vec3  frag_normal, vec3 camera_space_position, float n_dot_v, float roughness)
+vec3 calc_light(int idx, vec3 light_color, vec4 light_vector, float light_range, vec3 frag_position, vec3  frag_normal, vec3 camera_space_position, float n_dot_v)
 {
     float diffuse = 1.0;
     float specular = 0.0;
@@ -35,7 +35,7 @@ vec3 calc_light(int idx, vec3 light_color, vec4 light_vector, float light_range,
 
         float n_dot_l = clamp(dot(frag_normal, frag_to_light), 0.0, 1.0);
 
-        lighting_result_t lighting_result = calc_lighting(n_dot_l, n_dot_v, roughness);
+        lighting_result_t lighting_result = calc_lighting(n_dot_l, n_dot_v);
         ambient = lighting_result.ambient;
         diffuse = lighting_result.diffuse;
         specular = lighting_result.specular;
@@ -48,7 +48,7 @@ vec3 calc_light(int idx, vec3 light_color, vec4 light_vector, float light_range,
     {
         float n_dot_l = clamp(dot(frag_normal, light_vector.xyz), 0.0, 1.0);
 
-        lighting_result_t lighting_result = calc_lighting(n_dot_l, n_dot_v, roughness);
+        lighting_result_t lighting_result = calc_lighting(n_dot_l, n_dot_v);
         ambient = lighting_result.ambient;
         diffuse = lighting_result.diffuse;
         specular = lighting_result.specular;
@@ -62,7 +62,7 @@ vec3 calc_light(int idx, vec3 light_color, vec4 light_vector, float light_range,
     * attenuation;
 }
 
-vec3 calc_lights(vec3 frag_position, vec3 frag_normal, vec3 camera_space_position, vec3 viewer_position, float roughness)
+vec3 calc_lights(vec3 frag_position, vec3 frag_normal, vec3 camera_space_position, vec3 viewer_position)
 {
     vec3 frag_to_viewer = normalize(viewer_position - frag_position);
     float n_dot_v = clamp(dot(frag_normal, frag_to_viewer), 0.0, 1.0);
@@ -70,7 +70,7 @@ vec3 calc_lights(vec3 frag_position, vec3 frag_normal, vec3 camera_space_positio
     vec3 res = vec3(0, 0, 0);
     for (int i = 0; i < spc_LightCount; i++)
     {
-        res += calc_light(i, spc_LightColor[i].rgb, spc_LightVector[i], spc_LightRange[i], frag_position, frag_normal, camera_space_position, n_dot_v, roughness);
+        res += calc_light(i, spc_LightColor[i].rgb, spc_LightVector[i], spc_LightRange[i], frag_position, frag_normal, camera_space_position, n_dot_v);
     }
     return res;
 }

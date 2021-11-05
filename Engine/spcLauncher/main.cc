@@ -264,7 +264,7 @@ spc::iRenderMesh *create_plane_mesh(float size, float nx, float ny)
   return renderMesh;
 }
 
-spc::iRenderMesh *create_sphere_mesh(float radius, size_t detail, float uv_f)
+spc::iRenderMesh *create_sphere_mesh(float radius, uint32_t detail, float uv_f)
 {
   spc::iRenderMeshGenerator  *generator = spc::ObjectRegistry::Get<spc::iRenderMeshGeneratorFactory>()->Create();
   std::vector<spc::Vector3f> positions;
@@ -273,12 +273,12 @@ spc::iRenderMesh *create_sphere_mesh(float radius, size_t detail, float uv_f)
   std::vector<spc::Color4f>  colors;
   std::vector<spc::uint32_t> indices;
 
-  for (size_t v = 0; v < detail; v++)
+  for (uint32_t v = 0; v < detail; v++)
   {
     float factV  = (float) v / (float) (detail - 1);
     float angleV = -(float) M_PI_2 + factV * (float) M_PI;
 
-    for (size_t h = 0; h < detail * 2; h++)
+    for (uint32_t h = 0; h < detail * 2; h++)
     {
       float factH  = (float) h / (float) (detail * 2 - 1);
       float angleH = factH * (float) M_PI * 2.0f;
@@ -295,11 +295,11 @@ spc::iRenderMesh *create_sphere_mesh(float radius, size_t detail, float uv_f)
     }
   }
 
-  for (size_t v = 0; v < detail - 1; v++)
+  for (uint32_t v = 0; v < detail - 1; v++)
   {
     uint32_t    i0 = v * detail * 2;
     uint32_t    i1 = i0 + detail * 2;
-    for (size_t h  = 0; h < detail * 2 - 1; h++)
+    for (uint32_t h  = 0; h < detail * 2 - 1; h++)
     {
       uint32_t i00 = i0 + h;
       uint32_t i01 = i00 + 1;
@@ -582,9 +582,9 @@ int main(int argc, char **argv)
   lightState->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 1.0f);
   lightState->SetRange(50);
   lightState->SetStatic(true);
-  lightState->SetCastShadow(true);
+  lightState->SetCastShadow(false);
   lightState->SetTransform(spc::Transform(spc::Vector3f(5.0f, 5.0f, 5.0f)));
-  world->Attach(lightEntity);
+//  world->Attach(lightEntity);
 
   /*
   lightEntity = new spc::Entity("Light_0");
@@ -637,7 +637,7 @@ int main(int argc, char **argv)
                                                                               spc::spcDeg2Rad(-135.0f)))
   );
 
-  world->Attach(sunEntity);
+//  world->Attach(sunEntity);
 
 
   spc::Entity      *cameraEntity = new spc::Entity("Camera");
