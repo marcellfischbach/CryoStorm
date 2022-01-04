@@ -191,12 +191,13 @@ const Matrix4f& SpatialState::GetGlobalMatrix() const
 
 void SpatialState::TransformationUpdatedPreChildren()
 {
-
+  // no default implementation for transformation update
 }
 
 
 void SpatialState::TransformationUpdatedPostChildren()
 {
-
+  // no default implementation for transformation update
 }
+
 }
