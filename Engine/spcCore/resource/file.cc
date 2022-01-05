@@ -404,9 +404,9 @@ bool File::Parse(iFile *file)
   long size = file->Tell();
   file->Seek(eSM_Set, 0);
 
-  char *buffer         = new char[size+1];
+  char *buffer = new char[size + 1];
   file->Read(1, size, buffer);
-  buffer[size] = '\0';
+  buffer[size]         = '\0';
 
   BufferBuffer bbuf(buffer, size);
   bool         success = Parse(&bbuf);
@@ -585,6 +585,31 @@ Token GetNextToken(iBuffer *buffer)
 
     ch = buffer->GetNext();
   }
+  if (ch == '#')
+  {
+
+    // Skip to the end of the line
+    while (ch != '\r' && ch != '\n')
+    {
+      if (buffer->IsEOF())
+      {
+        return Token(TokenType::Invalid);
+      }
+
+      ch = buffer->GetNext();
+    }
+    // now skip all the trailing new lines
+    while (ch == '\r' || ch == '\n')
+    {
+      if (buffer->IsEOF())
+      {
+        return Token(TokenType::Invalid);
+      }
+
+      ch = buffer->GetNext();
+    }
+  }
+
 
   switch (ch)
   {
