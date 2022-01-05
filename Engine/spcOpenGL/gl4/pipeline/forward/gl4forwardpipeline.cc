@@ -1,5 +1,6 @@
 
 #include <spcOpenGL/gl4/pipeline/forward/gl4forwardpipeline.hh>
+#include <spcOpenGL/gl4/pipeline/forward/gl4forwardmeshsorter.hh>
 #include <spcOpenGL/gl4/gl4device.hh>
 #include <spcOpenGL/gl4/gl4directionallight.hh>
 #include <spcOpenGL/gl4/gl4pointlight.hh>
@@ -18,7 +19,6 @@
 #include <algorithm>
 #include <array>
 #include <GL/glew.h>
-
 namespace spc::opengl
 {
 
@@ -48,6 +48,7 @@ bool transparent_mesh_compare_less(const GfxMesh *mesh0, const GfxMesh *mesh1)
 {
   return false;
 }
+
 
 
 void GL4ForwardPipeline::Render(iRenderTarget2D *target,
@@ -123,33 +124,44 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target,
 
   //
   // and finally render all visible objects
+  m_shadedMeshes.clear();
   m_transparentMeshes.clear();
+  m_unshadedMeshes.clear();
   device->SetRenderTarget(m_target);
   device->Clear(true, spc::Color4f(0.0f, 0.0, 0.0, 1.0f), true, 1.0f, true, 0);
   int  countBefore = 0;
   int  countAfter  = 0;
-  bool trans       = false;
   scene->ScanMeshes(&clipper, GfxScene::eSM_Dynamic | GfxScene::eSM_Static,
-                    [this, &finalRenderLights, &finalRenderLightOffset, &trans](GfxMesh *mesh) {
+                    [this /* , &finalRenderLights, &finalRenderLightOffset, &trans*/](GfxMesh *mesh) {
                       auto material = mesh->GetMaterial();
                       if (material->GetRenderQueue() == eRenderQueue::Transparency)
                       {
-                        trans = true;
                         m_transparentMeshes.emplace_back(mesh);
                       }
                       else if (material->GetShadingMode() == eShadingMode::Shaded)
                       {
-                        RenderMesh(mesh, finalRenderLights, finalRenderLightOffset);
+                        m_shadedMeshes.emplace_back(mesh);
                       }
                       else
                       {
-                        RenderUnlitMesh(mesh);
+                        m_unshadedMeshes.emplace_back(mesh);
                       }
                     }
   );
-
-
+  std::sort(m_shadedMeshes.begin(), m_shadedMeshes.end(), material_shader_compare_less_forward);
+  std::sort(m_unshadedMeshes.begin(), m_unshadedMeshes.end(), material_shader_compare_less_forward);
   std::sort(m_transparentMeshes.begin(), m_transparentMeshes.end(), transparent_mesh_compare_less);
+
+  for (auto mesh: m_shadedMeshes)
+  {
+    RenderMesh(mesh, finalRenderLights, finalRenderLightOffset);
+  }
+  for (auto mesh: m_unshadedMeshes)
+  {
+    RenderUnlitMesh(mesh);
+  }
+
+
   for (auto mesh: m_transparentMeshes)
   {
     auto material = mesh->GetMaterial();
@@ -162,6 +174,8 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target,
       RenderUnlitMesh(mesh);
     }
   }
+  device->BindMaterial(nullptr, eRP_COUNT);
+
   device->SetBlending(false);
   device->SetDepthWrite(true);
   device->SetDepthTest(true);

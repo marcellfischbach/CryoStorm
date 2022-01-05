@@ -228,6 +228,13 @@ void MaterialInstance::RebuildAttributes()
     }
   }
 }
+
+
+const iShader *MaterialInstance::GetShader(eRenderPass pass) const
+{
+  return m_material ? m_material->GetShader(pass) : nullptr;
+}
+
 eRenderQueue MaterialInstance::GetRenderQueue() const
 {
   return m_material ? m_material->GetRenderQueue() : eRenderQueue::Default;

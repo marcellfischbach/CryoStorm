@@ -29,6 +29,8 @@ public:
   MaterialInstance();
   virtual ~MaterialInstance();
 
+  const iShader *GetShader(eRenderPass pass) const override;
+
   eRenderQueue GetRenderQueue() const override;
   eShadingMode GetShadingMode() const override;
 

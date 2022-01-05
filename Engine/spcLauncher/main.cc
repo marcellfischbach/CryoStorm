@@ -347,7 +347,7 @@ void debug(spc::SpatialState *state, int indent)
 }
 
 
-void create_suzannes_plain(spc::Mesh *suzanneMesh, spc::World *world)
+void create_suzannes_plain(spc::Mesh *suzanneMesh, spc::World *world, spc::iMaterial *alternativeMaterial)
 {
   size_t      num = 20;
   for (size_t i   = 0; i < num; i++)
@@ -362,6 +362,11 @@ void create_suzannes_plain(spc::Mesh *suzanneMesh, spc::World *world)
       meshState1->SetTransform(spc::Transform(spc::Vector3f(x, 0, y)));
       meshState1->SetMesh(suzanneMesh);
       meshState1->SetStatic(true);
+      meshState1->SetCastShadow(true);
+      if ((i + j) % 2 == 0)
+      {
+        meshState1->SetMaterial(0, alternativeMaterial);
+      }
       suzanneEntity->Attach(meshState1);
       world->Attach(suzanneEntity);
     }
@@ -499,6 +504,10 @@ int main(int argc, char **argv)
       "/materials/test_material_instance.spc"
   ));
 
+  spc::MaterialInstance *materialInstance2 = spc::AssetManager::Get()->Get<spc::MaterialInstance>(spc::ResourceLocator(
+      "/materials/test_material2_instance.spc"
+  ));
+
 
   spc::iRenderMesh *renderMesh = create_plane_mesh(40.0f, 8, 8);
   spc::Mesh        *mesh       = new spc::Mesh();
@@ -572,7 +581,7 @@ int main(int argc, char **argv)
 //  world->Attach(entityTransPlaneBlue);
 
 
-  create_suzannes_plain(suzanneMesh, world);
+  create_suzannes_plain(suzanneMesh, world, materialInstance2);
 //  create_suzannes_batched(suzanneMesh, world);
 
   spc::Entity     *lightEntity = new spc::Entity("Light_0");
@@ -662,12 +671,12 @@ int main(int argc, char **argv)
 
   bool useCs = true;
   bool anim  = true;
-  float roughness = 1.0;
+  float roughness = 1.0f;
   materialInstance->Set(2, roughness);
 #if _DEBUG
   spc::Size numDrawCallsPerSec = 0;
   spc::Size numTrianglesPerSec = 0;
-  float roughness = 1.0;
+  spc::Size numShaderStateChanges = 0;
 #endif
   while (true)
   {
@@ -680,9 +689,10 @@ int main(int argc, char **argv)
       nextSec += 1000;
       char buffer[1024];
 #if _DEBUG
-      sprintf_s<1024>(buffer, "%s  %d FPS  #%llu calls (%llu triangles)", title.c_str(), frames, numDrawCallsPerSec, numTrianglesPerSec);
+      sprintf_s<1024>(buffer, "%s  %d FPS  #%llu calls (%llu triangles) %.2f shader changes", title.c_str(), frames, numDrawCallsPerSec, numTrianglesPerSec, (float)numShaderStateChanges / frames);
       numDrawCallsPerSec = 0;
       numTrianglesPerSec = 0;
+      numShaderStateChanges = 0;
 #else
       sprintf_s<1024>(buffer, "%s  %d FPS", title.c_str(), frames);
 #endif
@@ -772,6 +782,7 @@ int main(int argc, char **argv)
 #if _DEBUG
     numDrawCallsPerSec += device->GetNumberOfDrawCalls();
     numTrianglesPerSec += device->GetNumberOfTriangles();
+    numShaderStateChanges += device->GetNumberOfShaderStateChanges();
 #endif
 
     SDL_GL_SwapWindow(wnd);

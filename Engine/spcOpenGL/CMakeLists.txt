@@ -47,6 +47,8 @@ set(SOURCES
 
 		gl4/pipeline/forward/gl4forwarddirectionallightrenderer.cc
 		gl4/pipeline/forward/gl4forwarddirectionallightrenderer.hh
+		gl4/pipeline/forward/gl4forwardmeshsorter.cc
+		gl4/pipeline/forward/gl4forwardmeshsorter.hh
 		gl4/pipeline/forward/gl4forwardpipeline.cc
 		gl4/pipeline/forward/gl4forwardpipeline.hh
 		gl4/pipeline/forward/gl4forwardpointlightrenderer.cc

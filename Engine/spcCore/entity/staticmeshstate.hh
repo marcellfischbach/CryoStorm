@@ -12,6 +12,7 @@ namespace spc
 
 class Mesh;
 class GfxMesh;
+struct iMaterial;
 
 SPC_CLASS()
 class SPC_CORE_API StaticMeshState : public SPC_SUPER(SpatialState)
@@ -25,6 +26,16 @@ public:
   void SetMesh(Mesh* mesh);
   const Mesh* GetMesh() const;
   Mesh* GetMesh();
+
+  void SetMaterial (Size idx, iMaterial* material);
+  const iMaterial *GetMaterial (Size idx) const;
+  iMaterial *GetMaterial (Size idx);
+
+  void SetReceiveShadow (bool receiveShadow);
+  SPC_NODISCARD bool IsReceiveShadow () const;
+
+  void SetCastShadow (bool castShadow);
+  SPC_NODISCARD bool IsCastShadow () const;
 
   /**
    * @name Livecycle
@@ -43,8 +54,14 @@ protected:
 private:
   void AddMeshToScene(World* world);
   void RemoveMeshFromScene(World* world);
+
+  void Clear();
+
   Mesh* m_mesh;
+  bool m_receiveShadow = true;
+  bool m_castShadow = true;
   std::vector<GfxMesh*> m_gfxMeshes;
+  std::vector<iMaterial*> m_materials;
 };
 
 

@@ -32,6 +32,8 @@ Material::~Material()
   }
 }
 
+
+
 void Material::SetRenderQueue(eRenderQueue queue)
 {
   m_queue = queue;

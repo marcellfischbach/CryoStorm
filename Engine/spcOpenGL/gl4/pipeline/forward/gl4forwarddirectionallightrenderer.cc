@@ -1,6 +1,7 @@
 
 
 #include <spcOpenGL/gl4/pipeline/forward/gl4forwarddirectionallightrenderer.hh>
+#include <spcOpenGL/gl4/pipeline/forward/gl4forwardmeshsorter.hh>
 #include <spcOpenGL/gl4/gl4directionallight.hh>
 #include <spcOpenGL/gl4/gl4rendertarget2darray.hh>
 
@@ -298,21 +299,24 @@ void GL4ForwardDirectionalLightRenderer::RenderDirectionalShadowMaps(GL4Directio
   m_meshesCache.clear();
   m_scene->ScanMeshes(&cameraClipper, GfxScene::eSM_Dynamic | GfxScene::eSM_Static,
                       [this, &views, &near, &far](GfxMesh *mesh) {
-                        const Vector3f *bboxPoints = mesh->GetBoundingBox().GetPoints();
-                        for (unsigned i = 0; i < 8; i++)
+                        if (mesh->IsCastShadow())
                         {
-                          Vector3f v0 = Matrix4f::Transform(views[0], bboxPoints[i]);
-                          Vector3f v1 = Matrix4f::Transform(views[1], bboxPoints[i]);
-                          Vector3f v2 = Matrix4f::Transform(views[2], bboxPoints[i]);
+                          const Vector3f *bboxPoints = mesh->GetBoundingBox().GetPoints();
+                          for (unsigned  i           = 0; i < 8; i++)
+                          {
+                            Vector3f v0 = Matrix4f::Transform(views[0], bboxPoints[i]);
+                            Vector3f v1 = Matrix4f::Transform(views[1], bboxPoints[i]);
+                            Vector3f v2 = Matrix4f::Transform(views[2], bboxPoints[i]);
 
-                          near[0] = spcMin(near[0], v0.z);
-                          near[1] = spcMin(near[1], v1.z);
-                          near[2] = spcMin(near[2], v2.z);
-                          far[0] = spcMax(far[0], v0.z);
-                          far[1] = spcMax(far[1], v1.z);
-                          far[2] = spcMax(far[2], v2.z);
+                            near[0] = spcMin(near[0], v0.z);
+                            near[1] = spcMin(near[1], v1.z);
+                            near[2] = spcMin(near[2], v2.z);
+                            far[0]  = spcMax(far[0], v0.z);
+                            far[1]  = spcMax(far[1], v1.z);
+                            far[2]  = spcMax(far[2], v2.z);
+                          }
+                          m_meshesCache.emplace_back(mesh);
                         }
-                        m_meshesCache.emplace_back(mesh);
                       }
   );
 
@@ -336,10 +340,13 @@ void GL4ForwardDirectionalLightRenderer::RenderDirectionalShadowMaps(GL4Directio
   m_device->SetShadowMapViewMatrices(views, 3);
 
   m_device->SetColorWrite(false, false, false, false);
+  std::sort(m_meshesCache.begin(), m_meshesCache.end(), material_shader_compare_less_forward);
+
   for (auto mesh : m_meshesCache)
   {
     mesh->RenderUnlit(m_device, eRP_ShadowPSSM);
   }
+  m_device->BindMaterial(nullptr, eRP_COUNT);
   m_device->SetColorWrite(true, true, true, true);
 }
 

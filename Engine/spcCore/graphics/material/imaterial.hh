@@ -17,12 +17,16 @@
 namespace spc
 {
 
+struct iShader;
+
 SPC_CLASS()
 struct SPC_CORE_API iMaterial : public SPC_SUPER(iObject)
 {
   SPC_CLASS_GEN;
 
   ~iMaterial() override = default;
+
+  SPC_NODISCARD virtual const iShader *GetShader (eRenderPass pass) const = 0;
 
   SPC_NODISCARD virtual eRenderQueue GetRenderQueue() const = 0;
   SPC_NODISCARD virtual eShadingMode GetShadingMode () const = 0;
