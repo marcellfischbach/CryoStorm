@@ -43,6 +43,8 @@
 
 #include <spcImgLoader/imgloadermodule.hh>
 
+#include <spcLauncher/camerahandler.hh>
+
 #include <iostream>
 #include <SDL.h>
 #include <regex>
@@ -298,8 +300,8 @@ spc::iRenderMesh *create_sphere_mesh(float radius, uint32_t detail, float uv_f)
 
   for (uint32_t v = 0; v < detail - 1; v++)
   {
-    uint32_t    i0 = v * detail * 2;
-    uint32_t    i1 = i0 + detail * 2;
+    uint32_t      i0 = v * detail * 2;
+    uint32_t      i1 = i0 + detail * 2;
     for (uint32_t h  = 0; h < detail * 2 - 1; h++)
     {
       uint32_t i00 = i0 + h;
@@ -360,7 +362,9 @@ void create_suzannes_plain(spc::Mesh *suzanneMesh, spc::World *world, spc::iMate
 
       spc::Entity          *suzanneEntity = new spc::Entity("Entity1");
       spc::StaticMeshState *meshState1    = new spc::StaticMeshState("StaticMesh1");
-      meshState1->SetTransform(spc::Transform(spc::Vector3f(x, 0, y)));
+      meshState1->GetTransform()
+                .SetTranslation(spc::Vector3f(x, 0, y))
+                .Finish();
       meshState1->SetMesh(suzanneMesh);
       meshState1->SetStatic(true);
       meshState1->SetCastShadow(true);
@@ -411,7 +415,9 @@ void create_suzanne_batch(spc::Mesh *suzanneMesh,
 
   spc::Entity          *suzanneEntity = new spc::Entity("Entity1");
   spc::StaticMeshState *meshState1    = new spc::StaticMeshState("StaticMesh1");
-  meshState1->SetTransform(spc::Transform(spc::Vector3f(0, 0, 0)));
+  meshState1->GetTransform()
+            .SetTranslation(spc::Vector3f(0, 0, 0))
+            .Finish();
   meshState1->SetMesh(suzyMesh);
   meshState1->SetStatic(true);
   suzanneEntity->Attach(meshState1);
@@ -545,7 +551,9 @@ int main(int argc, char **argv)
   spc::Entity          *entity0    = new spc::Entity("Entity0");
   spc::StaticMeshState *meshState0 = new spc::StaticMeshState("StaticMesh0");
 
-  meshState0->SetTransform(spc::Transform(spc::Vector3f(0, 0, 0)));
+  meshState0->GetTransform()
+            .SetTranslation(spc::Vector3f(0, 0, 0))
+            .Finish();
   meshState0->SetMesh(mesh);
   meshState0->SetStatic(true);
   entity0->Attach(meshState0);
@@ -555,14 +563,18 @@ int main(int argc, char **argv)
   spc::Entity          *entityTransPlaneRed    = new spc::Entity("Entity0");
   spc::StaticMeshState *meshStateTransPlaneRed = new spc::StaticMeshState("StaticMeshTransPlane");
 
-  meshStateTransPlaneRed->SetTransform(spc::Transform(spc::Vector3f(0, 2.0f, 0)));
+  meshStateTransPlaneRed->GetTransform()
+                        .SetTranslation(spc::Vector3f(0, 2.0f, 0))
+                        .Finish();
   meshStateTransPlaneRed->SetMesh(transRedMesh);
   meshStateTransPlaneRed->SetStatic(true);
   entityTransPlaneRed->Attach(meshStateTransPlaneRed);
 
   spc::Entity          *entityTransPlaneBlue    = new spc::Entity("Entity0");
   spc::StaticMeshState *meshStateTransPlaneBlue = new spc::StaticMeshState("StaticMeshTransPlane");
-  meshStateTransPlaneBlue->SetTransform(spc::Transform(spc::Vector3f(0, 0.10f, 0)));
+  meshStateTransPlaneBlue->GetTransform()
+                         .SetTranslation(spc::Vector3f(0, 0.10f, 0))
+                         .Finish();
   meshStateTransPlaneBlue->SetMesh(transBlueMesh);
   meshStateTransPlaneBlue->SetStatic(true);
   entityTransPlaneBlue->Attach(meshStateTransPlaneBlue);
@@ -574,7 +586,9 @@ int main(int argc, char **argv)
   spc::StaticMeshState *meshStateSphere  = new spc::StaticMeshState("Mesh.Sphere");
   meshSphere->AddMaterialSlot("Default", materialInstance);
   meshSphere->AddSubMesh(renderMeshSphere, 0);
-  meshStateSphere->SetTransform(spc::Transform(spc::Vector3f(0.0f, sphereRadius * 1.5f, 0.0f)));
+  meshStateSphere->GetTransform()
+                 .SetTranslation(spc::Vector3f(0.0f, sphereRadius * 1.5f, 0.0f))
+                 .Finish();
   meshStateSphere->SetMesh(meshSphere);
   entitySphere->Attach(meshStateSphere);
 //  world->Attach(entitySphere);
@@ -593,7 +607,9 @@ int main(int argc, char **argv)
   lightState->SetRange(50);
   lightState->SetStatic(true);
   lightState->SetCastShadow(false);
-  lightState->SetTransform(spc::Transform(spc::Vector3f(5.0f, 5.0f, 5.0f)));
+  lightState->GetTransform()
+            .SetTranslation(spc::Vector3f(5.0f, 5.0f, 5.0f))
+            .Finish();
 //  world->Attach(lightEntity);
 
   /*
@@ -650,9 +666,15 @@ int main(int argc, char **argv)
 //  world->Attach(sunEntity);
 
 
-  spc::Entity      *cameraEntity = new spc::Entity("Camera");
-  spc::CameraState *cameraState  = new spc::CameraState();
+  spc::Entity      *cameraEntity  = new spc::Entity("Camera");
+  spc::CameraState *cameraState   = new spc::CameraState();
+  CameraHandler    *cameraHandler = new CameraHandler();
   cameraEntity->Attach(cameraState);
+  cameraEntity->Attach(cameraHandler);
+  cameraEntity->GetRoot()->GetTransform()
+              .SetTranslation(spc::Vector3f(20, 20, 20))
+              .LookAt(spc::Vector3f(0, 0, 0))
+              .Finish();
   world->Attach(cameraEntity);
 
 
@@ -670,8 +692,8 @@ int main(int argc, char **argv)
   spc::uint32_t lastTime = SDL_GetTicks();
 
 
-  bool useCs = true;
-  bool anim  = true;
+  bool  useCs     = true;
+  bool  anim      = true;
   float roughness = 1.0f;
   materialInstance->Set(2, roughness);
 #if _DEBUG
@@ -728,7 +750,6 @@ int main(int argc, char **argv)
     }
 
 
-
     if (deltaTime != 0)
     {
       float tpf = (float) deltaTime / 1000.0f;
@@ -753,13 +774,14 @@ int main(int argc, char **argv)
 
       sphereRadius = 0.0f;
       float dist = 10.0f;
-      cameraEntity->GetRoot()->LookAt(
-          spc::Vector3f(spc::spcCos(entRot + (float) M_PI / 2.0f + 0.2f) * dist,
-                        dist + sphereRadius * 1.5f,
-                        spc::spcSin(entRot + (float) M_PI / 2.0f + 0.2f) * dist
-          ),
-          spc::Vector3f(0.0f, sphereRadius * 1.5f, 0.0f)
-      );
+//      spc::SpatialState *cameraState = cameraEntity->GetRoot();
+//      cameraState->GetTransform()
+//                 .SetTranslation(spc::Vector3f(spc::spcCos(entRot + (float) M_PI / 2.0f + 0.2f) * dist,
+//                                               dist + sphereRadius * 1.5f,
+//                                               spc::spcSin(entRot + (float) M_PI / 2.0f + 0.2f) * dist
+//                 ))
+//                 .LookAt(spc::Vector3f(0.0f, sphereRadius * 1.5f, 0.0f))
+//                 .Finish();
 
 
       world->Update(tpf);

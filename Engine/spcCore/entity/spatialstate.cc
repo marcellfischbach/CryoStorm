@@ -121,7 +121,11 @@ void SpatialState::UpdateEntity(Entity* oldEntity, Entity* newEntity)
 
 Transform SpatialState::GetTransform()
 {
-  return Transform(m_localMatrix);
+  if (m_parent)
+  {
+    return Transform(this, m_parent->GetGlobalMatrix(), m_localMatrix);
+  }
+  return Transform(this, m_localMatrix);
 }
 
 void SpatialState::SetTransform(const Transform& transform)
@@ -139,20 +143,6 @@ const Matrix4f& SpatialState::GetLocalMatrix() const
 void SpatialState::SetLocalMatrix(const Matrix4f& matrix)
 {
   m_localMatrix = matrix;
-  UpdateTransformation();
-}
-
-void SpatialState::LookAt(const Vector3f& from, const Vector3f& at, const Vector3f& up)
-{
-  m_localMatrix.SetLookAtInv(from, at, up);
-
-  if (m_parent)
-  {
-    Matrix4f parent = m_parent->GetGlobalMatrix();
-    parent.Invert();
-    m_localMatrix = m_localMatrix * parent;
-  }
-
   UpdateTransformation();
 }
 
