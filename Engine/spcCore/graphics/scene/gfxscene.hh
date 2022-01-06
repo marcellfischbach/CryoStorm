@@ -15,6 +15,7 @@ namespace spc
 
 struct iDevice;
 class GfxLight;
+class GfxCamera;
 struct LightInfluenceOnMesh;
 
 
@@ -34,32 +35,30 @@ public:
   };
 
   GfxScene();
-  
+
+  void Add(GfxCamera *camera);
+  void Remove(GfxCamera *camera);
   void Add(GfxMesh * sceneMesh);
   void Remove(GfxMesh * sceneMesh);
   void Add(GfxLight* light);
   void Remove(GfxLight* light);
 
+  const std::vector<GfxCamera*> &GetCameras () const;
 
-  void Render(iDevice * device, eRenderPass pass);
 
   void ScanMeshes(const iClipper* clipper, uint32_t scanMask, const std::function<void(GfxMesh*)> &callback) const;
   void ScanLights(const iClipper* clipper, uint32_t scanMask, const std::function<bool(GfxLight*)> &callback) const;
+
 
 private:
   static void Add(GfxLight *light, std::vector<GfxLight*> &lights);
   void Remove(GfxLight *light, std::vector<GfxLight*> &lights);
 
-
-  void AddStaticLightsToMesh(GfxMesh *mesh);
-  void AddStaticLightToStaticMeshes(GfxLight *light);
-  static float CalcMeshLightInfluence( GfxLight* light, const GfxMesh* mesh);
-  static Size CalcMeshLightInfluences(const GfxMesh * mesh, const std::vector<GfxLight*> &lights, GfxMesh::Light *influencesOut);
-
   void ScanGlobalLights (const std::function<bool(GfxLight *)> &callback) const;
   void ScanStaticLights (const iClipper* clipper, const std::function<bool(GfxLight *)> &callback) const;
   void ScanDynamicLights (const iClipper* clipper, const std::function<bool(GfxLight *)> &callback) const;
 
+  std::vector<GfxCamera*> m_cameras;
 
   std::vector<GfxMesh*> m_dynamicMeshes;
   std::vector<GfxMesh*> m_staticMeshes;

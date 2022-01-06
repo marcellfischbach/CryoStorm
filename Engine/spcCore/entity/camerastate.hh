@@ -11,6 +11,7 @@
 namespace spc
 {
 
+class GfxCamera;
 
 
 SPC_CLASS()
@@ -19,7 +20,7 @@ class SPC_CORE_API CameraState : public SPC_SUPER(SpatialState)
   SPC_CLASS_GEN_OBJECT;
 public:
   CameraState();
-  ~CameraState () override = default;
+  ~CameraState () override;
 
 
   void SetNear(float near);
@@ -39,6 +40,11 @@ public:
 
   void Update(u32 width, u32 height);
 
+  void OnAttachedToWorld(World *world) override;
+  void OnDetachedFromWorld(World *world) override;
+
+protected:
+  void TransformationUpdatedPreChildren() override;
 
 private:
   SPC_PROPERTY()
@@ -55,6 +61,10 @@ private:
 
   Camera m_camera;
   Projector m_projector;
+
+  void UpdateGfxCamera ();
+  GfxCamera *m_gfxCamera;
+
 
 };
 

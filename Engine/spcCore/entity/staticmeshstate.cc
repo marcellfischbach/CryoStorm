@@ -14,7 +14,6 @@ namespace spc
 StaticMeshState::StaticMeshState(const std::string &name)
     : SpatialState(name), m_mesh(nullptr)
 {
-  SetNeedUpdate(true);
 }
 
 StaticMeshState::~StaticMeshState()

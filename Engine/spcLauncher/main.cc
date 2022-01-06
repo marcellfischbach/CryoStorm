@@ -17,6 +17,7 @@
 #include <spcCore/objectregistry.hh>
 #include <spcCore/graphics/camera.hh>
 #include <spcCore/graphics/idevice.hh>
+#include <spcCore/graphics/iframerenderer.hh>
 #include <spcCore/graphics/image.hh>
 #include <spcCore/graphics/ipointlight.hh>
 #include <spcCore/graphics/irendermesh.hh>
@@ -658,7 +659,7 @@ int main(int argc, char **argv)
   auto renderTarget = create_render_target(device, width, height);
   auto colorTexture = renderTarget->GetColorTexture(0);
 
-  spc::iRenderPipeline *renderPipeline = spc::ObjectRegistry::Get<spc::iRenderPipeline>();
+  spc::iFrameRenderer *frameRenderer = spc::ObjectRegistry::Get<spc::iFrameRenderer>();
 
   std::string title  = spc::Settings("display.spc").GetText("title");
   float       rot    = 0.0f;
@@ -740,17 +741,17 @@ int main(int argc, char **argv)
       if (spc::Input::IsKeyDown(spc::Key::eK_Up))
       {
         roughness += 0.5f * tpf;
-        roughness = roughness <= 10.0 ? roughness : 10.0;
+        roughness = roughness <= 10.0f ? roughness : 10.0f;
         materialInstance->Set(2, roughness);
       }
       if (spc::Input::IsKeyDown(spc::Key::eK_Down))
       {
         roughness -= 0.5f * tpf;
-        roughness = roughness >= 0.0 ? roughness : 0.0;
+        roughness = roughness >= 0.0f ? roughness : 0.0f;
         materialInstance->Set(2, roughness);
       }
 
-    sphereRadius = 0.0f;
+      sphereRadius = 0.0f;
       float dist = 10.0f;
       cameraEntity->GetRoot()->LookAt(
           spc::Vector3f(spc::spcCos(entRot + (float) M_PI / 2.0f + 0.2f) * dist,
@@ -764,18 +765,12 @@ int main(int argc, char **argv)
       world->Update(tpf);
     }
 
-    cameraState->Update(renderTarget->GetWidth(), renderTarget->GetHeight());
-    renderPipeline->Render(renderTarget,
-                           cameraState->GetCamera(),
-                           cameraState->GetProjector(),
-                           device,
-                           world->GetScene());
 
+    frameRenderer->Render(renderTarget, device, world->GetScene());
 
     device->SetRenderTarget(nullptr);
     device->SetViewport(0, 0, wnd_width, wnd_height);
     device->SetDepthTest(false);
-    //device->Clear(true, spc::Color4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, true, 0);
     device->RenderFullscreen(colorTexture);
     device->SetDepthTest(true);
 

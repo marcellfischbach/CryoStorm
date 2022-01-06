@@ -41,8 +41,9 @@ set(SOURCES
 
         graphics/camera.cc
         graphics/camera.hh
+        graphics/defaultframerenderer.cc
+        graphics/defaultframerenderer.hh
         graphics/ebufferusage.hh
-        math/eclippingresult.hh
         graphics/ecomparefunc.hh
         graphics/edatatype.hh
         graphics/efiltermode.hh
@@ -59,6 +60,7 @@ set(SOURCES
         graphics/graphicsexceptions.hh
         graphics/idevice.hh
         graphics/idirectionallight.hh
+        graphics/iframerenderer.hh
         graphics/iindexbuffer.hh
         graphics/ilight.hh
         graphics/image.cc
@@ -93,6 +95,8 @@ set(SOURCES
         graphics/material/materialinstance.cc
         graphics/material/materialinstance.hh
 
+        graphics/scene/gfxcamera.cc
+        graphics/scene/gfxcamera.hh
         graphics/scene/gfxlight.cc
         graphics/scene/gfxlight.hh
         graphics/scene/gfxscene.cc
@@ -117,9 +121,11 @@ set(SOURCES
         loaders/textureloader.cc
         loaders/textureloader.hh
 
+
         math/boundingbox.cc
         math/boundingbox.hh
         math/color4f.hh
+        math/eclippingresult.hh
         math/hysteresis.hh
         math/iclipper.hh
         math/math.hh

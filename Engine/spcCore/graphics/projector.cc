@@ -1,7 +1,6 @@
 
 #include <spcCore/graphics/projector.hh>
 #include <spcCore/graphics/idevice.hh>
-#include <spcCore/math/math.hh>
 
 namespace spc
 {
@@ -15,6 +14,7 @@ Projector::Projector()
   , m_near(1.0f)
   , m_far(1024.0)
 {
+  SPC_CLASS_GEN_CONSTR;
 }
 
 

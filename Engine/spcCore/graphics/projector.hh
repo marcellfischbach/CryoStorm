@@ -3,6 +3,7 @@
 #pragma once
 
 #include <spcCore/coreexport.hh>
+#include <spcCore/class.hh>
 #include <spcCore/graphics/eprojectionmode.hh>
 #include <spcCore/math/vector3f.hh>
 
@@ -11,10 +12,14 @@ namespace spc
 
 struct iDevice;
 
-class SPC_CORE_API Projector
+SPC_CLASS()
+class SPC_CORE_API Projector : public SPC_SUPER(iObject)
 {
+SPC_CLASS_GEN_OBJECT;
 public:
   Projector();
+  ~Projector() override = default;
+
   void UpdatePerspective(float angle, float aspect, float near, float far);
   void UpdatePerspective(float left, float right, float bottom, float top, float near, float far);
   void UpdateOrtho(float left, float right, float bottom, float top, float near, float far);
