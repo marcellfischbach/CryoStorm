@@ -194,6 +194,7 @@ bool initialize_modules(int argc, char **argv)
                              pos.x, pos.y,
                              res.x, res.y, flags
   );
+  mouse.SetWindow(wnd);
   //  wnd = SDL_CreateWindow("Spice", 0, 0, 1920, 1080, flags);
   context = SDL_GL_CreateContext(wnd);
   SDL_GL_SetSwapInterval(vsync ? 1 : 0);
@@ -696,6 +697,7 @@ int main(int argc, char **argv)
   bool  anim      = true;
   float roughness = 1.0f;
   materialInstance->Set(2, roughness);
+
 #if _DEBUG
   spc::Size numDrawCallsPerSec = 0;
   spc::Size numTrianglesPerSec = 0;
@@ -796,6 +798,7 @@ int main(int argc, char **argv)
     device->RenderFullscreen(colorTexture);
     device->SetDepthTest(true);
 
+
 #if _DEBUG
     numDrawCallsPerSec += device->GetNumberOfDrawCalls();
     numTrianglesPerSec += device->GetNumberOfTriangles();
@@ -806,6 +809,9 @@ int main(int argc, char **argv)
 
   }
 
+  spc::iMouse *mouse = spc::Input::GetMouse();
+  mouse->SetCursorMode(spc::eCursorMode::Free);
+  mouse->SetVisible(true);
 
   return 0;
 }

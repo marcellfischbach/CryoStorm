@@ -140,6 +140,17 @@ static SPC_FORCEINLINE double spcClamp01(double v)
   return v < 0.0 ? 0.0 : (v > 1.0 ? 1.0 : v);
 }
 
+static SPC_FORCEINLINE float spcClamp(float v, float min, float max)
+{
+  return v < min ? min : (v > max ? max : v);
+}
+
+static SPC_FORCEINLINE double spcClamp(double v, double min, double max)
+{
+  return v < min ? min : (v > max ? max : v);
+}
+
+
 template <typename T>
 static SPC_FORCEINLINE T spcClamp(T v, T min, T max)
 {

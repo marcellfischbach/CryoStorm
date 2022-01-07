@@ -13,12 +13,12 @@ SDLInputSystem::SDLInputSystem(SDLKeyboard* keyboard, SDLMouse* mouse)
 }
 
 
-const iKeyboard* SDLInputSystem::GetKeyboard() const
+iKeyboard* SDLInputSystem::GetKeyboard() const
 {
   return m_keyboard;
 }
 
-const iMouse* SDLInputSystem::GetMouse() const
+iMouse* SDLInputSystem::GetMouse() const
 {
   return m_mouse;
 }

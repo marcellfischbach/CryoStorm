@@ -131,7 +131,6 @@ void EntityState::DetachFromWorld(World *world)
 
 void EntityState::OnAttachedToWorld(World* world)
 {
-
 }
 
 void EntityState::OnDetachedFromWorld(World* world)
