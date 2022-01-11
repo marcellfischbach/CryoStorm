@@ -13,14 +13,10 @@ class SDLInputSystem : public SPC_SUPER(iInputSystem)
   SPC_CLASS_GEN_OBJECT;
 public:
   SDLInputSystem(SDLKeyboard * keyboard, SDLMouse * mouse);
+  ~SDLInputSystem() override = default;
 
-  virtual ~SDLInputSystem()
-  {
-
-  }
-
-  virtual const iKeyboard* GetKeyboard() const;
-  virtual const iMouse* GetMouse() const;
+  SPC_NODISCARD virtual iKeyboard* GetKeyboard() const;
+  SPC_NODISCARD virtual iMouse* GetMouse() const;
 
 
 private:

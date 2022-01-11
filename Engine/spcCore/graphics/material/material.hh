@@ -41,6 +41,7 @@ public:
 
   bool Bind(iDevice * device, eRenderPass pass) override;
 
+
   void SetRenderQueue(eRenderQueue queue);
   SPC_NODISCARD eRenderQueue GetRenderQueue() const override;
 
@@ -63,7 +64,7 @@ public:
 
   void SetShader(eRenderPass pass, iShader * shader);
   SPC_NODISCARD iShader* GetShader(eRenderPass pass);
-  SPC_NODISCARD const iShader* GetShader(eRenderPass pass) const;
+  SPC_NODISCARD const iShader* GetShader(eRenderPass pass) const override;
 
   void RegisterAttribute(const std::string & attributeName, eMaterialAttributeType attributeType);
   SPC_NODISCARD uint16_t GetNumberOfAttributes() const;

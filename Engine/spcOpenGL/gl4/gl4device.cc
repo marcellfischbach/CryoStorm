@@ -155,7 +155,10 @@ void GL4Device::Clear(bool clearColor,
     flags |= GL_STENCIL_BUFFER_BIT;
     glClearStencil(stencil);
   }
-  glClear(flags);
+  if (flags != 0)
+  {
+    glClear(flags);
+  }
 }
 
 void GL4Device::SetColorWrite(bool redWrite, bool greenWrite, bool blueWrite, bool alphaWrite)
@@ -483,6 +486,9 @@ void GL4Device::SetShader(iShader *shader)
     return;
   }
   m_shader = shader;
+#if  _DEBUG
+  m_numShaderStatesChanges ++;
+#endif
   if (m_shader)
   {
     GL4Program *program = static_cast<GL4Program *>(m_shader);
@@ -740,6 +746,12 @@ eTextureUnit GL4Device::BindTexture(iTexture *texture)
 
 bool GL4Device::BindMaterial(iMaterial *material, eRenderPass pass)
 {
+  if (m_material == material && m_materialPass == pass)
+  {
+    return true;
+  }
+  m_material = material;
+  m_materialPass = pass;
   return material && material->Bind(this, pass);
 }
 
@@ -1485,6 +1497,7 @@ void GL4Device::ResetDebug()
 {
   m_numDrawCalls = 0;
   m_numTriangles = 0;
+  m_numShaderStatesChanges = 0;
 }
 
 Size GL4Device::GetNumberOfDrawCalls() const
@@ -1495,6 +1508,11 @@ Size GL4Device::GetNumberOfDrawCalls() const
 Size GL4Device::GetNumberOfTriangles() const
 {
   return m_numTriangles;
+}
+
+Size GL4Device::GetNumberOfShaderStateChanges() const
+{
+  return m_numShaderStatesChanges;
 }
 
 #endif

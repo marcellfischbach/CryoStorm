@@ -55,6 +55,17 @@ const Entity* EntityState::GetEntity() const
   return m_entity;
 }
 
+SpatialState* EntityState::GetRoot()
+{
+  return m_entity ? m_entity->GetRoot() : nullptr;
+}
+
+
+const SpatialState* EntityState::GetRoot() const
+{
+  return m_entity ? m_entity->GetRoot() : nullptr;
+}
+
 World* EntityState::GetWorld()
 {
   return m_entity ? m_entity->GetWorld() : nullptr;
@@ -120,7 +131,6 @@ void EntityState::DetachFromWorld(World *world)
 
 void EntityState::OnAttachedToWorld(World* world)
 {
-
 }
 
 void EntityState::OnDetachedFromWorld(World* world)

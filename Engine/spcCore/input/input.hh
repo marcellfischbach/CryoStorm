@@ -4,6 +4,8 @@
 #include <spcCore/input/key.hh>
 #include <spcCore/input/button.hh>
 #include <spcCore/math/vector2f.hh>
+#include <spcCore/input/ikeyboard.hh>
+#include <spcCore/input/imouse.hh>
 
 namespace spc
 {
@@ -18,8 +20,6 @@ public:
   static bool IsKeyUp(Key key);
   static bool IsKeyPressed(Key key);
   static bool IsKeyReleased(Key key);
-  
-
 
   static Vector2f GetMousePosition();
   static Vector2f GetMouseDelta();
@@ -29,6 +29,8 @@ public:
   static bool IsButtonPressed(MouseButton mouseButton);
   static bool IsButtonReleased(MouseButton mouseButton);
 
+  static iMouse *GetMouse ();
+  static iKeyboard *GetKeyboard ();
 private:
   Input() { }
   static iInputSystem* Get();

@@ -39,8 +39,6 @@ bool Input::IsKeyReleased(Key key)
   return Get()->GetKeyboard()->IsKeyReleased(key);
 }
 
-
-
 Vector2f Input::GetMousePosition()
 {
   const iMouse* mouse = Get()->GetMouse();
@@ -56,7 +54,7 @@ Vector2f Input::GetMouseDelta()
 Vector2f Input::GetWheel()
 {
   const iMouse* mouse = Get()->GetMouse();
-  return Vector2f(mouse->GetWheelHorizontal(), mouse->GetWheel());
+  return Vector2f((float)mouse->GetWheelHorizontal(), (float)mouse->GetWheel());
 }
 
 
@@ -80,6 +78,15 @@ bool Input::IsButtonReleased(MouseButton mouseButton)
   return Get()->GetMouse()->IsButtonReleased(mouseButton);
 }
 
+iMouse *Input::GetMouse()
+{
+  return Get()->GetMouse();
+}
+
+iKeyboard *Input::GetKeyboard()
+{
+  return Get()->GetKeyboard();
+}
 
 
 }

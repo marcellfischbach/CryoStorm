@@ -17,6 +17,7 @@
 #include <spcCore/objectregistry.hh>
 #include <spcCore/graphics/camera.hh>
 #include <spcCore/graphics/idevice.hh>
+#include <spcCore/graphics/iframerenderer.hh>
 #include <spcCore/graphics/image.hh>
 #include <spcCore/graphics/ipointlight.hh>
 #include <spcCore/graphics/irendermesh.hh>
@@ -41,6 +42,8 @@
 #include <GL/glew.h>
 
 #include <spcImgLoader/imgloadermodule.hh>
+
+#include <spcLauncher/camerahandler.hh>
 
 #include <iostream>
 #include <SDL.h>
@@ -191,6 +194,7 @@ bool initialize_modules(int argc, char **argv)
                              pos.x, pos.y,
                              res.x, res.y, flags
   );
+  mouse.SetWindow(wnd);
   //  wnd = SDL_CreateWindow("Spice", 0, 0, 1920, 1080, flags);
   context = SDL_GL_CreateContext(wnd);
   SDL_GL_SetSwapInterval(vsync ? 1 : 0);
@@ -297,8 +301,8 @@ spc::iRenderMesh *create_sphere_mesh(float radius, uint32_t detail, float uv_f)
 
   for (uint32_t v = 0; v < detail - 1; v++)
   {
-    uint32_t    i0 = v * detail * 2;
-    uint32_t    i1 = i0 + detail * 2;
+    uint32_t      i0 = v * detail * 2;
+    uint32_t      i1 = i0 + detail * 2;
     for (uint32_t h  = 0; h < detail * 2 - 1; h++)
     {
       uint32_t i00 = i0 + h;
@@ -347,7 +351,7 @@ void debug(spc::SpatialState *state, int indent)
 }
 
 
-void create_suzannes_plain(spc::Mesh *suzanneMesh, spc::World *world)
+void create_suzannes_plain(spc::Mesh *suzanneMesh, spc::World *world, spc::iMaterial *alternativeMaterial)
 {
   size_t      num = 20;
   for (size_t i   = 0; i < num; i++)
@@ -359,9 +363,16 @@ void create_suzannes_plain(spc::Mesh *suzanneMesh, spc::World *world)
 
       spc::Entity          *suzanneEntity = new spc::Entity("Entity1");
       spc::StaticMeshState *meshState1    = new spc::StaticMeshState("StaticMesh1");
-      meshState1->SetTransform(spc::Transform(spc::Vector3f(x, 0, y)));
+      meshState1->GetTransform()
+                .SetTranslation(spc::Vector3f(x, 0, y))
+                .Finish();
       meshState1->SetMesh(suzanneMesh);
       meshState1->SetStatic(true);
+      meshState1->SetCastShadow(true);
+      if ((i + j) % 2 == 0)
+      {
+        meshState1->SetMaterial(0, alternativeMaterial);
+      }
       suzanneEntity->Attach(meshState1);
       world->Attach(suzanneEntity);
     }
@@ -405,7 +416,9 @@ void create_suzanne_batch(spc::Mesh *suzanneMesh,
 
   spc::Entity          *suzanneEntity = new spc::Entity("Entity1");
   spc::StaticMeshState *meshState1    = new spc::StaticMeshState("StaticMesh1");
-  meshState1->SetTransform(spc::Transform(spc::Vector3f(0, 0, 0)));
+  meshState1->GetTransform()
+            .SetTranslation(spc::Vector3f(0, 0, 0))
+            .Finish();
   meshState1->SetMesh(suzyMesh);
   meshState1->SetStatic(true);
   suzanneEntity->Attach(meshState1);
@@ -499,6 +512,10 @@ int main(int argc, char **argv)
       "/materials/test_material_instance.spc"
   ));
 
+  spc::MaterialInstance *materialInstance2 = spc::AssetManager::Get()->Get<spc::MaterialInstance>(spc::ResourceLocator(
+      "/materials/test_material2_instance.spc"
+  ));
+
 
   spc::iRenderMesh *renderMesh = create_plane_mesh(40.0f, 8, 8);
   spc::Mesh        *mesh       = new spc::Mesh();
@@ -535,7 +552,9 @@ int main(int argc, char **argv)
   spc::Entity          *entity0    = new spc::Entity("Entity0");
   spc::StaticMeshState *meshState0 = new spc::StaticMeshState("StaticMesh0");
 
-  meshState0->SetTransform(spc::Transform(spc::Vector3f(0, 0, 0)));
+  meshState0->GetTransform()
+            .SetTranslation(spc::Vector3f(0, 0, 0))
+            .Finish();
   meshState0->SetMesh(mesh);
   meshState0->SetStatic(true);
   entity0->Attach(meshState0);
@@ -545,14 +564,18 @@ int main(int argc, char **argv)
   spc::Entity          *entityTransPlaneRed    = new spc::Entity("Entity0");
   spc::StaticMeshState *meshStateTransPlaneRed = new spc::StaticMeshState("StaticMeshTransPlane");
 
-  meshStateTransPlaneRed->SetTransform(spc::Transform(spc::Vector3f(0, 2.0f, 0)));
+  meshStateTransPlaneRed->GetTransform()
+                        .SetTranslation(spc::Vector3f(0, 2.0f, 0))
+                        .Finish();
   meshStateTransPlaneRed->SetMesh(transRedMesh);
   meshStateTransPlaneRed->SetStatic(true);
   entityTransPlaneRed->Attach(meshStateTransPlaneRed);
 
   spc::Entity          *entityTransPlaneBlue    = new spc::Entity("Entity0");
   spc::StaticMeshState *meshStateTransPlaneBlue = new spc::StaticMeshState("StaticMeshTransPlane");
-  meshStateTransPlaneBlue->SetTransform(spc::Transform(spc::Vector3f(0, 0.10f, 0)));
+  meshStateTransPlaneBlue->GetTransform()
+                         .SetTranslation(spc::Vector3f(0, 0.10f, 0))
+                         .Finish();
   meshStateTransPlaneBlue->SetMesh(transBlueMesh);
   meshStateTransPlaneBlue->SetStatic(true);
   entityTransPlaneBlue->Attach(meshStateTransPlaneBlue);
@@ -564,7 +587,9 @@ int main(int argc, char **argv)
   spc::StaticMeshState *meshStateSphere  = new spc::StaticMeshState("Mesh.Sphere");
   meshSphere->AddMaterialSlot("Default", materialInstance);
   meshSphere->AddSubMesh(renderMeshSphere, 0);
-  meshStateSphere->SetTransform(spc::Transform(spc::Vector3f(0.0f, sphereRadius * 1.5f, 0.0f)));
+  meshStateSphere->GetTransform()
+                 .SetTranslation(spc::Vector3f(0.0f, sphereRadius * 1.5f, 0.0f))
+                 .Finish();
   meshStateSphere->SetMesh(meshSphere);
   entitySphere->Attach(meshStateSphere);
 //  world->Attach(entitySphere);
@@ -572,7 +597,7 @@ int main(int argc, char **argv)
 //  world->Attach(entityTransPlaneBlue);
 
 
-  create_suzannes_plain(suzanneMesh, world);
+  create_suzannes_plain(suzanneMesh, world, materialInstance2);
 //  create_suzannes_batched(suzanneMesh, world);
 
   spc::Entity     *lightEntity = new spc::Entity("Light_0");
@@ -583,7 +608,9 @@ int main(int argc, char **argv)
   lightState->SetRange(50);
   lightState->SetStatic(true);
   lightState->SetCastShadow(false);
-  lightState->SetTransform(spc::Transform(spc::Vector3f(5.0f, 5.0f, 5.0f)));
+  lightState->GetTransform()
+            .SetTranslation(spc::Vector3f(5.0f, 5.0f, 5.0f))
+            .Finish();
 //  world->Attach(lightEntity);
 
   /*
@@ -640,16 +667,22 @@ int main(int argc, char **argv)
 //  world->Attach(sunEntity);
 
 
-  spc::Entity      *cameraEntity = new spc::Entity("Camera");
-  spc::CameraState *cameraState  = new spc::CameraState();
+  spc::Entity      *cameraEntity  = new spc::Entity("Camera");
+  spc::CameraState *cameraState   = new spc::CameraState();
+  CameraHandler    *cameraHandler = new CameraHandler();
   cameraEntity->Attach(cameraState);
+  cameraEntity->Attach(cameraHandler);
+  cameraEntity->GetRoot()->GetTransform()
+              .SetTranslation(spc::Vector3f(20, 20, 20))
+              .LookAt(spc::Vector3f(0, 0, 0))
+              .Finish();
   world->Attach(cameraEntity);
 
 
   auto renderTarget = create_render_target(device, width, height);
   auto colorTexture = renderTarget->GetColorTexture(0);
 
-  spc::iRenderPipeline *renderPipeline = spc::ObjectRegistry::Get<spc::iRenderPipeline>();
+  spc::iFrameRenderer *frameRenderer = spc::ObjectRegistry::Get<spc::iFrameRenderer>();
 
   std::string title  = spc::Settings("display.spc").GetText("title");
   float       rot    = 0.0f;
@@ -660,14 +693,15 @@ int main(int argc, char **argv)
   spc::uint32_t lastTime = SDL_GetTicks();
 
 
-  bool useCs = true;
-  bool anim  = true;
-  float roughness = 1.0;
+  bool  useCs     = true;
+  bool  anim      = true;
+  float roughness = 1.0f;
   materialInstance->Set(2, roughness);
+
 #if _DEBUG
   spc::Size numDrawCallsPerSec = 0;
   spc::Size numTrianglesPerSec = 0;
-  float roughness = 1.0;
+  spc::Size numShaderStateChanges = 0;
 #endif
   while (true)
   {
@@ -680,9 +714,10 @@ int main(int argc, char **argv)
       nextSec += 1000;
       char buffer[1024];
 #if _DEBUG
-      sprintf_s<1024>(buffer, "%s  %d FPS  #%llu calls (%llu triangles)", title.c_str(), frames, numDrawCallsPerSec, numTrianglesPerSec);
+      sprintf_s<1024>(buffer, "%s  %d FPS  #%llu calls (%llu triangles) %.2f shader changes", title.c_str(), frames, numDrawCallsPerSec, numTrianglesPerSec, (float)numShaderStateChanges / frames);
       numDrawCallsPerSec = 0;
       numTrianglesPerSec = 0;
+      numShaderStateChanges = 0;
 #else
       sprintf_s<1024>(buffer, "%s  %d FPS", title.c_str(), frames);
 #endif
@@ -717,7 +752,6 @@ int main(int argc, char **argv)
     }
 
 
-
     if (deltaTime != 0)
     {
       float tpf = (float) deltaTime / 1000.0f;
@@ -730,54 +764,54 @@ int main(int argc, char **argv)
       if (spc::Input::IsKeyDown(spc::Key::eK_Up))
       {
         roughness += 0.5f * tpf;
-        roughness = roughness <= 10.0 ? roughness : 10.0;
+        roughness = roughness <= 10.0f ? roughness : 10.0f;
         materialInstance->Set(2, roughness);
       }
       if (spc::Input::IsKeyDown(spc::Key::eK_Down))
       {
         roughness -= 0.5f * tpf;
-        roughness = roughness >= 0.0 ? roughness : 0.0;
+        roughness = roughness >= 0.0f ? roughness : 0.0f;
         materialInstance->Set(2, roughness);
       }
 
-    sphereRadius = 0.0f;
+      sphereRadius = 0.0f;
       float dist = 10.0f;
-      cameraEntity->GetRoot()->LookAt(
-          spc::Vector3f(spc::spcCos(entRot + (float) M_PI / 2.0f + 0.2f) * dist,
-                        dist + sphereRadius * 1.5f,
-                        spc::spcSin(entRot + (float) M_PI / 2.0f + 0.2f) * dist
-          ),
-          spc::Vector3f(0.0f, sphereRadius * 1.5f, 0.0f)
-      );
+//      spc::SpatialState *cameraState = cameraEntity->GetRoot();
+//      cameraState->GetTransform()
+//                 .SetTranslation(spc::Vector3f(spc::spcCos(entRot + (float) M_PI / 2.0f + 0.2f) * dist,
+//                                               dist + sphereRadius * 1.5f,
+//                                               spc::spcSin(entRot + (float) M_PI / 2.0f + 0.2f) * dist
+//                 ))
+//                 .LookAt(spc::Vector3f(0.0f, sphereRadius * 1.5f, 0.0f))
+//                 .Finish();
 
 
       world->Update(tpf);
     }
 
-    cameraState->Update(renderTarget->GetWidth(), renderTarget->GetHeight());
-    renderPipeline->Render(renderTarget,
-                           cameraState->GetCamera(),
-                           cameraState->GetProjector(),
-                           device,
-                           world->GetScene());
 
+    frameRenderer->Render(renderTarget, device, world->GetScene());
 
     device->SetRenderTarget(nullptr);
     device->SetViewport(0, 0, wnd_width, wnd_height);
     device->SetDepthTest(false);
-    //device->Clear(true, spc::Color4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, true, 0);
     device->RenderFullscreen(colorTexture);
     device->SetDepthTest(true);
+
 
 #if _DEBUG
     numDrawCallsPerSec += device->GetNumberOfDrawCalls();
     numTrianglesPerSec += device->GetNumberOfTriangles();
+    numShaderStateChanges += device->GetNumberOfShaderStateChanges();
 #endif
 
     SDL_GL_SwapWindow(wnd);
 
   }
 
+  spc::iMouse *mouse = spc::Input::GetMouse();
+  mouse->SetCursorMode(spc::eCursorMode::Free);
+  mouse->SetVisible(true);
 
   return 0;
 }

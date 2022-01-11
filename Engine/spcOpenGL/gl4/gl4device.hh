@@ -99,12 +99,15 @@ public:
   void ResetDebug() override;
   SPC_NODISCARD Size GetNumberOfDrawCalls() const override;
   SPC_NODISCARD Size GetNumberOfTriangles () const override;
+  SPC_NODISCARD Size GetNumberOfShaderStateChanges () const override;
 #endif
 
 
 private:
   iRenderTarget* m_renderTarget;
   iShader* m_shader;
+  iMaterial* m_material;
+  eRenderPass m_materialPass;
   eTextureUnit ShiftTextureUnit();
   eTextureUnit m_nextTextureUnit;
   iTexture* m_textures[eTU_COUNT];
@@ -218,6 +221,7 @@ private:
 #if _DEBUG
   Size m_numDrawCalls;
   Size m_numTriangles;
+  Size m_numShaderStatesChanges;
 #endif
 
   /**

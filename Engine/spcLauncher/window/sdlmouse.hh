@@ -12,37 +12,49 @@ class SDLMouse : public iMouse
 {
 public:
   SDLMouse();
-  virtual ~SDLMouse() { }
+  ~SDLMouse() override = default;
+
+  void SetWindow (SDL_Window *window);
 
   void Update();
   void Update(uint8_t button, bool down);
-  void Update(Int32 wheel, Int32 wheelHorizontal);
-  void Update(Int16 x, Int16 y, Int16 xrel, Int16 yrel);
-
-  virtual Int16 GetX() const;
-  virtual Int16 GetY() const;
-
-  virtual Int16 GetDeltaX() const;
-  virtual Int16 GetDeltaY() const;
-  virtual Int16 GetWheel() const;
-  virtual Int16 GetWheelHorizontal() const;
+  void Update(int32_t wheel, int32_t wheelHorizontal);
+  void Update(int32_t x, int32_t y, int32_t xrel, int32_t yrel);
 
 
-  virtual bool IsButtonDown(MouseButton mouseButton) const;
-  virtual bool IsButtonUp(MouseButton mouseButton) const;
-  virtual bool IsButtonPressed(MouseButton mouseButton) const;
-  virtual bool IsButtonReleased(MouseButton mouseButton) const;
+  void SetVisible (bool visible) override;
+  SPC_NODISCARD  bool IsVisible () const override;
+  void SetCursorMode (eCursorMode mode) override;
+  SPC_NODISCARD eCursorMode GetCursorMode () const override;
+
+
+  SPC_NODISCARD int32_t GetX() const override;
+  SPC_NODISCARD int32_t GetY() const override;
+
+  SPC_NODISCARD int32_t GetDeltaX() const override;
+  SPC_NODISCARD int32_t GetDeltaY() const override;
+  SPC_NODISCARD int32_t GetWheel() const override;
+  SPC_NODISCARD int32_t GetWheelHorizontal() const override;
+
+
+  SPC_NODISCARD bool IsButtonDown(MouseButton mouseButton) const override;
+  SPC_NODISCARD bool IsButtonUp(MouseButton mouseButton) const override;
+  SPC_NODISCARD bool IsButtonPressed(MouseButton mouseButton) const override;
+  SPC_NODISCARD bool IsButtonReleased(MouseButton mouseButton) const override;
 private:
 
-  Int16 m_x;
-  Int16 m_y;
-  Int16 m_relX;
-  Int16 m_relY;
-  Int16 m_wheel;
-  Int16 m_wheelHorizontal;
+  int32_t m_x;
+  int32_t m_y;
+  int32_t m_relX;
+  int32_t m_relY;
+  int32_t m_wheel;
+  int32_t m_wheelHorizontal;
   bool m_current[eMB_COUNT];
   bool m_last[eMB_COUNT];
 
+  bool m_cursorVisible;
+  eCursorMode m_cursorMode;
+  SDL_Window *m_window;
 };
 
 }

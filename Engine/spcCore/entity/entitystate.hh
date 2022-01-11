@@ -9,6 +9,7 @@ namespace spc
 
 class Entity;
 class World;
+class SpatialState;
 
 SPC_CLASS()
 class SPC_CORE_API EntityState : public SPC_SUPER(iObject)
@@ -25,6 +26,10 @@ public:
   void SetEntity(Entity* entity);
   Entity* GetEntity();
   const Entity* GetEntity() const;
+
+
+  SpatialState* GetRoot();
+  const SpatialState* GetRoot() const;
 
   World* GetWorld();
   const World* GetWorld() const;

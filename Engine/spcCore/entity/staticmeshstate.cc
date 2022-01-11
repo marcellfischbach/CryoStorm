@@ -11,32 +11,46 @@ namespace spc
 {
 
 
-StaticMeshState::StaticMeshState(const std::string& name)
-  : SpatialState(name)
-  , m_mesh(nullptr)
+StaticMeshState::StaticMeshState(const std::string &name)
+    : SpatialState(name), m_mesh(nullptr)
 {
-  SetNeedUpdate(true);
 }
 
 StaticMeshState::~StaticMeshState()
 {
   SPC_RELEASE(m_mesh);
-  for (auto gfxMesh : m_gfxMeshes)
+  Clear();
+}
+
+void StaticMeshState::Clear()
+{
+  for (auto gfxMesh: m_gfxMeshes)
   {
     gfxMesh->Release();
   }
   m_gfxMeshes.clear();
+
+  for (auto material: m_materials)
+  {
+    SPC_RELEASE(material);
+  }
+  m_materials.clear();
 }
 
 
-void StaticMeshState::SetMesh(Mesh* mesh)
+void StaticMeshState::SetMesh(Mesh *mesh)
 {
-  World* world = GetWorld();
+  World *world = GetWorld();
   if (m_mesh && world)
   {
     RemoveMeshFromScene(world);
   }
+  Clear();
   SPC_SET(m_mesh, mesh);
+  if (m_mesh)
+  {
+    m_materials.resize(m_mesh->GetNumberOfMaterialSlots(), nullptr);
+  }
   if (m_mesh && world)
   {
     AddMeshToScene(world);
@@ -44,15 +58,67 @@ void StaticMeshState::SetMesh(Mesh* mesh)
 
 }
 
-const Mesh* StaticMeshState::GetMesh() const
+const Mesh *StaticMeshState::GetMesh() const
 {
   return m_mesh;
 }
 
-Mesh* StaticMeshState::GetMesh()
+Mesh *StaticMeshState::GetMesh()
 {
   return m_mesh;
 }
+
+void StaticMeshState::SetMaterial(Size idx, iMaterial *material)
+{
+  if (idx < m_materials.size())
+  {
+    SPC_SET(m_materials[idx], material);
+  }
+}
+
+const iMaterial *StaticMeshState::GetMaterial(Size idx) const
+{
+  return idx < m_materials.size()
+         ? m_materials[idx]
+         : nullptr;
+}
+
+iMaterial *StaticMeshState::GetMaterial(Size idx)
+{
+  return idx < m_materials.size()
+         ? m_materials[idx]
+         : nullptr;
+}
+
+void StaticMeshState::SetReceiveShadow(bool receiveShadow)
+{
+  m_receiveShadow = receiveShadow;
+  for (auto mesh : m_gfxMeshes)
+  {
+    mesh->SetReceiveShadow(m_receiveShadow);
+  }
+}
+
+bool StaticMeshState::IsReceiveShadow() const
+{
+  return m_receiveShadow;
+}
+
+
+void StaticMeshState::SetCastShadow(bool castShadow)
+{
+  m_castShadow = castShadow;
+  for (auto mesh : m_gfxMeshes)
+  {
+    mesh->SetCastShadow(m_castShadow);
+  }
+}
+
+bool StaticMeshState::IsCastShadow() const
+{
+  return m_castShadow;
+}
+
 
 void StaticMeshState::OnAttachedToWorld(World *world)
 {
@@ -75,16 +141,28 @@ void StaticMeshState::AddMeshToScene(World *world)
 {
   if (m_mesh && world)
   {
-    GfxScene* scene = world->GetScene();
+    GfxScene *scene = world->GetScene();
     for (Size i = 0, in = m_mesh->GetNumberOfSubMeshes(); i < in; i++)
     {
-      const Mesh::SubMesh& subMesh = m_mesh->GetSubMesh(i);
-      const Mesh::MaterialSlot& matSlot = m_mesh->GetMaterialSlot(subMesh.GetMaterialSlotIdx());
+      const Mesh::SubMesh &subMesh = m_mesh->GetSubMesh(i);
+      Size materialSlotIdx = subMesh.GetMaterialSlotIdx();
+      iMaterial *material = nullptr;
+      if (materialSlotIdx < m_materials.size())
+      {
+        material = m_materials[materialSlotIdx];
+      }
+      if (!material)
+      {
+        const Mesh::MaterialSlot &matSlot = m_mesh->GetMaterialSlot(materialSlotIdx);
+        material                          = matSlot.GetDefaultMaterial();
+      }
 
-      GfxMesh* sceneMesh = new GfxMesh();
+      GfxMesh *sceneMesh = new GfxMesh();
       sceneMesh->SetStatic(IsStatic());
+      sceneMesh->SetReceiveShadow(m_receiveShadow);
+      sceneMesh->SetCastShadow(m_castShadow);;
       sceneMesh->SetMesh(subMesh.GetMesh());
-      sceneMesh->SetMaterial(matSlot.GetDefaultMaterial());
+      sceneMesh->SetMaterial(material);
       sceneMesh->SetModelMatrix(GetGlobalMatrix());
       m_gfxMeshes.push_back(sceneMesh);
 
@@ -94,12 +172,12 @@ void StaticMeshState::AddMeshToScene(World *world)
 }
 
 
-void StaticMeshState::RemoveMeshFromScene(World* world)
+void StaticMeshState::RemoveMeshFromScene(World *world)
 {
   if (m_mesh && world)
   {
-    GfxScene* scene = world->GetScene();
-    for (auto gfxMesh : m_gfxMeshes)
+    GfxScene *scene = world->GetScene();
+    for (auto gfxMesh: m_gfxMeshes)
     {
       scene->Remove(gfxMesh);
       gfxMesh->Release();
@@ -110,8 +188,8 @@ void StaticMeshState::RemoveMeshFromScene(World* world)
 
 void StaticMeshState::TransformationUpdatedPreChildren()
 {
-  Matrix4f mat = GetGlobalMatrix();
-  for (auto gfxMesh : m_gfxMeshes)
+  Matrix4f  mat = GetGlobalMatrix();
+  for (auto gfxMesh: m_gfxMeshes)
   {
     gfxMesh->SetModelMatrix(mat);
   }

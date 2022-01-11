@@ -105,6 +105,7 @@ struct SPC_CORE_API iDevice : public SPC_SUPER(iObject)
   virtual void ResetDebug () = 0;
   SPC_NODISCARD virtual Size GetNumberOfDrawCalls() const = 0;
   SPC_NODISCARD virtual Size GetNumberOfTriangles () const = 0;
+  SPC_NODISCARD virtual Size GetNumberOfShaderStateChanges () const = 0;
 #endif
 
 
