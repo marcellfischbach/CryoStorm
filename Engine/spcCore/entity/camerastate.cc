@@ -76,6 +76,39 @@ float CameraState::GetAngleWidthHeight() const
   return m_angleWidthHeight;
 }
 
+void CameraState::SetClearMode(eClearMode clearMode)
+{
+  m_clearMode = clearMode;
+  UpdateGfxCamera();
+}
+
+eClearMode CameraState::GetClearMode() const
+{
+  return m_clearMode;
+}
+
+void CameraState::SetClearColor(const Color4f &clearColor)
+{
+  m_clearColor = clearColor;
+  UpdateGfxCamera();
+}
+
+const Color4f &CameraState::GetClearColor() const
+{
+  return m_clearColor;
+}
+
+void CameraState::SetClearDepth(float clearDepth)
+{
+  m_clearDepth = clearDepth;
+  UpdateGfxCamera();
+}
+
+float CameraState::GetClearDepth() const
+{
+  return m_clearDepth;
+}
+
 const Camera &CameraState::GetCamera() const
 {
   return m_camera;
@@ -115,6 +148,7 @@ void CameraState::TransformationUpdatedPreChildren()
 void CameraState::UpdateGfxCamera()
 {
   m_gfxCamera->UpdateData(m_near, m_far, m_angle, m_angleWidthHeight);
+  m_gfxCamera->UpdateClear(m_clearMode, m_clearColor, m_clearDepth);
 }
 
 }

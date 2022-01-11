@@ -20,6 +20,8 @@ public:
 
   void Render(iRenderTarget2D *target, iDevice *device, GfxScene *scene) override;
 
+  void Render(iRenderTarget2D *target, GfxCamera *camera, iDevice* device,  GfxScene *scene) override;
+
 private:
   iRenderPipeline *GetRenderPipeline ();
 

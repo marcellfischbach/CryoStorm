@@ -2,18 +2,15 @@
 #include <spcCore/graphics/scene/gfxcamera.hh>
 #include <spcCore/graphics/camera.hh>
 #include <spcCore/graphics/projector.hh>
-
+#include <spcCore/graphics/irendertarget.hh>
 namespace spc
 {
 
 
 GfxCamera::GfxCamera()
-    : m_camera(nullptr)
-    , m_projector(nullptr)
-    , m_near(0.0f)
-    , m_far(1024.0f)
-    , m_angle(0.0f)
-    , m_angleWidthHeight(0.0f)
+    : m_camera(nullptr), m_projector(nullptr), m_near(0.0f), m_far(1024.0f), m_angle(0.0f), m_angleWidthHeight(0.0f)
+    , m_renderTarget(nullptr)
+    , m_priority(0)
 {
   SPC_CLASS_GEN_CONSTR;
 }
@@ -55,12 +52,60 @@ const Projector *GfxCamera::GetProjector() const
   return m_projector;
 }
 
+eClearMode GfxCamera::GetClearMode() const
+{
+  return m_clearMode;
+}
+
+const Color4f &GfxCamera::GetClearColor() const
+{
+  return m_clearColor;
+}
+
+float GfxCamera::GetClearDepth() const
+{
+  return m_clearDepth;
+}
+
+void GfxCamera::SetRenderTarget(iRenderTarget *renderTarget)
+{
+  SPC_SET(m_renderTarget, renderTarget);
+}
+
+iRenderTarget* GfxCamera::GetRenderTarget()
+{
+  return m_renderTarget;
+}
+
+const iRenderTarget* GfxCamera::GetRenderTarget() const
+{
+  return m_renderTarget;
+}
+
+
+void GfxCamera::SetPriority(int priority)
+{
+  m_priority = priority;
+}
+
+int GfxCamera::GetPriority() const
+{
+  return m_priority;
+}
+
 void GfxCamera::UpdateData(float near, float far, float angle, float angleWidthHeight)
 {
   m_near             = near;
   m_far              = far;
   m_angle            = angle;
   m_angleWidthHeight = angleWidthHeight;
+}
+
+void GfxCamera::UpdateClear(eClearMode mode, const Color4f &color, float depth)
+{
+  m_clearMode  = mode;
+  m_clearColor = color;
+  m_clearDepth = depth;
 }
 
 void GfxCamera::UpdateProjector(uint32_t width, uint32_t height)

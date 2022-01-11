@@ -155,7 +155,10 @@ void GL4Device::Clear(bool clearColor,
     flags |= GL_STENCIL_BUFFER_BIT;
     glClearStencil(stencil);
   }
-  glClear(flags);
+  if (flags != 0)
+  {
+    glClear(flags);
+  }
 }
 
 void GL4Device::SetColorWrite(bool redWrite, bool greenWrite, bool blueWrite, bool alphaWrite)

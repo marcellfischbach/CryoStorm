@@ -128,7 +128,6 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target,
   m_transparentMeshes.clear();
   m_unshadedMeshes.clear();
   device->SetRenderTarget(m_target);
-  device->Clear(true, spc::Color4f(0.0f, 0.0, 0.0, 1.0f), true, 1.0f, true, 0);
   int  countBefore = 0;
   int  countAfter  = 0;
   scene->ScanMeshes(&clipper, GfxScene::eSM_Dynamic | GfxScene::eSM_Static,

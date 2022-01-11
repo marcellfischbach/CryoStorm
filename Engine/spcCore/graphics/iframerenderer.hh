@@ -12,6 +12,7 @@ struct iDevice;
 struct iRenderTarget2D;
 
 class GfxScene;
+class GfxCamera;
 
 class Camera;
 
@@ -22,9 +23,11 @@ struct SPC_CORE_API iFrameRenderer : public SPC_SUPER(iObject)
 {
   SPC_CLASS_GEN;
 
-  virtual ~iFrameRenderer() = default;
+  ~iFrameRenderer() override = default;
 
   virtual void Render(iRenderTarget2D* target, iDevice* device, GfxScene* scene) = 0;
+
+  virtual void Render(iRenderTarget2D* target, GfxCamera *camera, iDevice* device,  GfxScene *scene) = 0;
 
 };
 
