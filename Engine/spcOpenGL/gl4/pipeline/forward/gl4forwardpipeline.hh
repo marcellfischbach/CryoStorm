@@ -73,6 +73,8 @@ private:
   std::vector<GfxLight*> m_dynamicLights;
   std::vector<GfxLight*> m_staticLights;
   std::vector<GfxLight*> m_staticLightsNew;
+  std::vector<GfxMesh*> m_shadedMeshes;
+  std::vector<GfxMesh*> m_unshadedMeshes;
   std::vector<GfxMesh*> m_transparentMeshes;
 
   GL4ForwardPointLightRenderer m_pointLightRenderer;

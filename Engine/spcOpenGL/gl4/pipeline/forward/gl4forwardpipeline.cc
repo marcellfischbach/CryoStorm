@@ -120,31 +120,40 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target,
 
   //
   // and finally render all visible objects
+  m_shadedMeshes.clear();
+  m_unshadedMeshes.clear();
   m_transparentMeshes.clear();
   device->SetRenderTarget(m_target);
   device->Clear(true, spc::Color4f(0.0f, 0.0, 0.0, 1.0f), true, 1.0f, true, 0);
   int  countBefore = 0;
   int  countAfter  = 0;
-  bool trans       = false;
   scene->ScanMeshes(&clipper, GfxScene::eSM_Dynamic | GfxScene::eSM_Static,
-                    [this, &finalRenderLights, &finalRenderLightOffset, &trans](GfxMesh *mesh) {
+                    [this, &finalRenderLights, &finalRenderLightOffset](GfxMesh *mesh) {
                       auto material = mesh->GetMaterial();
                       if (material->GetRenderQueue() == eRenderQueue::Transparency)
                       {
-                        trans = true;
                         m_transparentMeshes.emplace_back(mesh);
                       }
                       else if (material->GetShadingMode() == eShadingMode::Shaded)
                       {
-                        RenderMesh(mesh, finalRenderLights, finalRenderLightOffset);
+                        m_shadedMeshes.emplace_back(mesh);
                       }
                       else
                       {
-                        RenderUnlitMesh(mesh);
+                        m_unshadedMeshes.emplace_back(mesh);
                       }
                     }
   );
 
+  for (auto mesh : m_shadedMeshes)
+  {
+    RenderMesh(mesh, finalRenderLights, finalRenderLightOffset);
+  }
+
+  for (auto mesh : m_unshadedMeshes)
+  {
+    RenderUnlitMesh(mesh);
+  }
 
   std::sort(m_transparentMeshes.begin(), m_transparentMeshes.end(), transparent_mesh_compare_less);
   for (auto mesh: m_transparentMeshes)

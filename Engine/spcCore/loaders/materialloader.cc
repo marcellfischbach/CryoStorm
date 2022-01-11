@@ -41,6 +41,7 @@ Material* MaterialLoaderSpc::LoadMaterial(const Class*, const file::File* file, 
 
   auto material = new Material();
 
+  LoadShading(material, materialElement);
   LoadQueue(material, materialElement);
   LoadBlending(material, materialElement);
   LoadDepth(material, materialElement);
@@ -87,6 +88,23 @@ iObject* MaterialLoaderSpc::LoadMaterialInstance(const Class* , const file::File
 
 
   return materialInstance;
+}
+void MaterialLoaderSpc::LoadShading(Material* material, const file::Element* materialElement)
+{
+  const file::Element* shadingElement = materialElement->GetChild("shading");
+  if (!shadingElement)
+  {
+    return;
+  }
+
+  eShadingMode shading = eShadingMode::Shaded;
+  auto queueString = shadingElement->GetAttribute(0, "Shaded");
+  if (queueString == std::string("Unshaded"))
+  {
+    shading = eShadingMode::Unshaded;
+  }
+
+  material->SetShadingMode(shading);
 }
 
 

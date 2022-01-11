@@ -1021,11 +1021,12 @@ void GL4Device::BindForwardLight(const iLight *light, Size idx)
           {
             directionalLightShadowMapDepth->Bind(unit);
           }
+          else
+          {
+            directionalLightShadowMapDepth->Bind(0);
+          }
         }
-        else
-        {
-          directionalLightShadowMapDepth->Bind(0);
-        }
+      
       }
       else
       {
