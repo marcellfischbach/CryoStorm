@@ -44,6 +44,7 @@
 #include <spcImgLoader/imgloadermodule.hh>
 
 #include <spcLauncher/camerahandler.hh>
+#include <spcLauncher/mirrorhandler.hh>
 
 #include <iostream>
 #include <SDL.h>
@@ -190,9 +191,9 @@ bool initialize_modules(int argc, char **argv)
   }
 
   bool vsync = settings.GetBool("vsync");
-  wnd     = SDL_CreateWindow(title.c_str(),
-                             pos.x, pos.y,
-                             res.x, res.y, flags
+  wnd = SDL_CreateWindow(title.c_str(),
+                         pos.x, pos.y,
+                         res.x, res.y, flags
   );
   mouse.SetWindow(wnd);
   //  wnd = SDL_CreateWindow("Spice", 0, 0, 1920, 1080, flags);
@@ -517,6 +518,10 @@ int main(int argc, char **argv)
   ));
 
 
+  spc::Material *materialMirror = spc::AssetManager::Get()->Get<spc::Material>(spc::ResourceLocator(
+      "/materials/test_material_mirror.spc"
+  ));
+
   spc::iRenderMesh *renderMesh = create_plane_mesh(40.0f, 8, 8);
   spc::Mesh        *mesh       = new spc::Mesh();
   mesh->AddMaterialSlot("Default", materialInstance);
@@ -556,6 +561,7 @@ int main(int argc, char **argv)
             .SetTranslation(spc::Vector3f(0, 0, 0))
             .Finish();
   meshState0->SetMesh(mesh);
+  meshState0->SetMaterial(0, materialMirror);
   meshState0->SetStatic(true);
   entity0->Attach(meshState0);
   world->Attach(entity0);
@@ -592,9 +598,6 @@ int main(int argc, char **argv)
                  .Finish();
   meshStateSphere->SetMesh(meshSphere);
   entitySphere->Attach(meshStateSphere);
-//  world->Attach(entitySphere);
-
-//  world->Attach(entityTransPlaneBlue);
 
 
   create_suzannes_plain(suzanneMesh, world, materialInstance2);
@@ -677,6 +680,21 @@ int main(int argc, char **argv)
               .LookAt(spc::Vector3f(0, 0, 0))
               .Finish();
   world->Attach(cameraEntity);
+
+
+  spc::Entity      *mirrorCameraEntity = new spc::Entity("MirrorCamera");
+  spc::CameraState *mirrorCameraState  = new spc::CameraState();
+  MirrorHandler    *mirrorHandler = new MirrorHandler();
+  mirrorCameraEntity->Attach(mirrorCameraState);
+  mirrorCameraEntity->Attach(mirrorHandler);
+  mirrorCameraState->SetRenderShadows(true);
+  mirrorHandler->SetCameraState(cameraState);
+  world->Attach(mirrorCameraEntity);
+
+  auto mirrorRenderTarget = create_render_target(device, width / 2, height / 2);
+  mirrorCameraState->SetRenderTarget(mirrorRenderTarget);
+  materialMirror->Set(materialMirror->IndexOf("Mirror"), mirrorRenderTarget->GetColorTexture(0));
+
 
 
   auto renderTarget = create_render_target(device, width, height);

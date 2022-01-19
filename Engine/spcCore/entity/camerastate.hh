@@ -13,7 +13,7 @@ namespace spc
 {
 
 class GfxCamera;
-
+struct iRenderTarget2D;
 
 SPC_CLASS()
 class SPC_CORE_API CameraState : public SPC_SUPER(SpatialState)
@@ -36,6 +36,13 @@ public:
   void SetAngleWidthHeight(float angleWidtHeight);
   float GetAngleWidthHeight() const;
 
+  void SetOrder(int order);
+  int GetOrder() const;
+
+  void SetRenderTarget(iRenderTarget2D* renderTarget);
+  iRenderTarget2D *GetRenderTarget();
+  const iRenderTarget2D *GetRenderTarget() const;
+
   void SetClearMode (eClearMode clearMode);
   eClearMode GetClearMode () const;
 
@@ -44,6 +51,9 @@ public:
 
   void SetClearDepth(float clearDepth);
   float GetClearDepth () const;
+
+  void SetRenderShadows (bool renderShadows);
+  bool IsRenderShadows () const;
 
   const Camera& GetCamera() const;
   const Projector& GetProjector() const;
@@ -69,6 +79,12 @@ private:
     float m_angleWidthHeight;
 
   SPC_PROPERTY()
+    int m_order;
+
+  SPC_PROPERTY()
+    iRenderTarget2D *m_renderTarget;
+
+  SPC_PROPERTY()
     eClearMode m_clearMode = eClearMode::DepthColor;
 
   SPC_PROPERTY()
@@ -76,6 +92,9 @@ private:
 
   SPC_PROPERTY()
     float m_clearDepth = 1.0f;
+
+  SPC_PROPERTY()
+    bool m_renderShadows = true;
 
 
   Camera m_camera;

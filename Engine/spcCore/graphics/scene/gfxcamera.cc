@@ -2,7 +2,7 @@
 #include <spcCore/graphics/scene/gfxcamera.hh>
 #include <spcCore/graphics/camera.hh>
 #include <spcCore/graphics/projector.hh>
-#include <spcCore/graphics/irendertarget.hh>
+#include <spcCore/graphics/irendertarget2d.hh>
 namespace spc
 {
 
@@ -10,7 +10,8 @@ namespace spc
 GfxCamera::GfxCamera()
     : m_camera(nullptr), m_projector(nullptr), m_near(0.0f), m_far(1024.0f), m_angle(0.0f), m_angleWidthHeight(0.0f)
     , m_renderTarget(nullptr)
-    , m_priority(0)
+    , m_order(0)
+    , m_renderShadows(true)
 {
   SPC_CLASS_GEN_CONSTR;
 }
@@ -67,30 +68,40 @@ float GfxCamera::GetClearDepth() const
   return m_clearDepth;
 }
 
-void GfxCamera::SetRenderTarget(iRenderTarget *renderTarget)
+void GfxCamera::SetRenderTarget(iRenderTarget2D *renderTarget)
 {
   SPC_SET(m_renderTarget, renderTarget);
 }
 
-iRenderTarget* GfxCamera::GetRenderTarget()
+iRenderTarget2D* GfxCamera::GetRenderTarget()
 {
   return m_renderTarget;
 }
 
-const iRenderTarget* GfxCamera::GetRenderTarget() const
+const iRenderTarget2D* GfxCamera::GetRenderTarget() const
 {
   return m_renderTarget;
 }
 
 
-void GfxCamera::SetPriority(int priority)
+void GfxCamera::SetOrder(int order)
 {
-  m_priority = priority;
+  m_order = order;
 }
 
-int GfxCamera::GetPriority() const
+int GfxCamera::GetOrder() const
 {
-  return m_priority;
+  return m_order;
+}
+
+void GfxCamera::SetRenderShadows(bool renderShadows)
+{
+  m_renderShadows = renderShadows;
+}
+
+bool GfxCamera::IsRenderShadows() const
+{
+  return m_renderShadows;
 }
 
 void GfxCamera::UpdateData(float near, float far, float angle, float angleWidthHeight)

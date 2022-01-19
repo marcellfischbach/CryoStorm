@@ -9,9 +9,8 @@ namespace spc
 
 struct iDevice;
 struct iRenderTarget2D;
+class GfxCamera;
 class GfxScene;
-class Camera;
-class Projector;
 
 SPC_CLASS()
 struct SPC_CORE_API iRenderPipeline : public SPC_SUPER(iObject)
@@ -22,7 +21,7 @@ SPC_CLASS_GEN;
 
   virtual void Initialize() = 0;
 
-  virtual void Render(iRenderTarget2D* target, const Camera& camera, const Projector& projector, iDevice* device, GfxScene* scene) = 0;
+  virtual void Render(iRenderTarget2D* target, const GfxCamera* camera, iDevice* device, GfxScene* scene) = 0;
 };
 
 

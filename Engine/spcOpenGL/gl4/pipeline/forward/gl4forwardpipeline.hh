@@ -38,7 +38,7 @@ public:
 
   void Initialize() override;
 
-  void Render(iRenderTarget2D * taget, const Camera & camera, const Projector & projector, iDevice * device, GfxScene * scene) override;
+  void Render(iRenderTarget2D * taget, const GfxCamera * camera, iDevice * device, GfxScene * scene) override;
 
 private:
 
@@ -64,8 +64,8 @@ private:
 
   uint64_t m_frame;
   iDevice* m_device;
-  Camera m_camera;
-  Projector m_projector;
+  const Camera *m_camera;
+  const Projector *m_projector;
   GfxScene* m_scene;
   iRenderTarget2D* m_target;
 

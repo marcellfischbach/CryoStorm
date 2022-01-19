@@ -8,6 +8,7 @@
 #include <spcOpenGL/glerror.hh>
 #include <spcCore/graphics/camera.hh>
 #include <spcCore/graphics/projector.hh>
+#include <spcCore/graphics/scene/gfxcamera.hh>
 #include <spcCore/graphics/scene/gfxscene.hh>
 #include <spcCore/graphics/irendertarget2d.hh>
 #include <spcCore/graphics/irendertargetcube.hh>
@@ -52,8 +53,7 @@ bool transparent_mesh_compare_less(const GfxMesh *mesh0, const GfxMesh *mesh1)
 
 
 void GL4ForwardPipeline::Render(iRenderTarget2D *target,
-                                const Camera &camera,
-                                const Projector &projector,
+                                const GfxCamera *camera,
                                 iDevice *device,
                                 GfxScene *scene
                                )
@@ -61,8 +61,8 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target,
   SPC_GL_ERROR();
   ++m_frame;
   m_device    = device;
-  m_camera    = camera;
-  m_projector = projector;
+  m_camera    = camera->GetCamera();
+  m_projector = camera->GetProjector();
   m_scene     = scene;
   m_target    = target;
 
@@ -72,7 +72,7 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target,
   m_directionalLightRenderer.SetScene(scene);
 
 
-  MultiPlaneClipper clipper(camera, projector);
+  MultiPlaneClipper clipper(*m_camera, *m_projector);
 
   m_pointLightRenderer.Clear();
   m_directionalLightRenderer.Clear();
@@ -115,10 +115,13 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target,
 
   //
   // Render up to MaxLights shadow maps
-  RenderShadowMaps();
+  if (camera->IsRenderShadows())
+  {
+    RenderShadowMaps();
+  }
 
-  camera.Bind(device);
-  projector.Bind(device);
+  m_camera->Bind(device);
+  m_projector->Bind(device);
 
   SPC_GL_ERROR();
 
@@ -127,7 +130,7 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target,
   m_shadedMeshes.clear();
   m_transparentMeshes.clear();
   m_unshadedMeshes.clear();
-  device->SetRenderTarget(m_target);
+
   int  countBefore = 0;
   int  countAfter  = 0;
   scene->ScanMeshes(&clipper, GfxScene::eSM_Dynamic | GfxScene::eSM_Static,
@@ -150,6 +153,19 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target,
   std::sort(m_shadedMeshes.begin(), m_shadedMeshes.end(), material_shader_compare_less_forward);
   std::sort(m_unshadedMeshes.begin(), m_unshadedMeshes.end(), material_shader_compare_less_forward);
   std::sort(m_transparentMeshes.begin(), m_transparentMeshes.end(), transparent_mesh_compare_less);
+
+
+  device->SetRenderTarget(m_target);
+  eClearMode mode = camera->GetClearMode();
+  device->Clear(
+      mode == eClearMode::Color || mode == eClearMode::DepthColor,
+      camera->GetClearColor(),
+      mode == eClearMode::Depth || mode == eClearMode::DepthColor,
+      camera->GetClearDepth(),
+      true,
+      0
+  );
+
 
   for (auto mesh: m_shadedMeshes)
   {
@@ -206,8 +222,8 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target,
 
   //scene->Render(device, spc::eRP_Forward);
   m_device    = nullptr;
-  m_camera    = camera;
-  m_projector = projector;
+  m_camera    = nullptr;
+  m_projector = nullptr;
   m_scene     = nullptr;
   m_target    = nullptr;
 
@@ -315,7 +331,7 @@ void GL4ForwardPipeline::RenderShadowMaps()
 {
   m_device->ClearShadowMaps();
 
-  Size i = m_directionalLightRenderer.RenderShadowMaps(MaxLights, m_camera, m_projector);
+  Size i = m_directionalLightRenderer.RenderShadowMaps(MaxLights, *m_camera, *m_projector);
   m_pointLightRenderer.RenderShadowMaps(MaxLights - i);
 
 }

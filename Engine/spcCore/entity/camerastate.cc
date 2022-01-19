@@ -5,6 +5,7 @@
 #include <spcCore/math/vector3f.hh>
 #include <spcCore/math/vector4f.hh>
 #include <math.h>
+#include <spcCore/graphics/irendertarget2d.hh>
 #include <spcCore/graphics/scene/gfxcamera.hh>
 #include <spcCore/graphics/scene/gfxscene.hh>
 #include <spcCore/entity/world.hh>
@@ -19,7 +20,9 @@ CameraState::CameraState()
       m_far(1024.0f),
       m_angle((float) M_PI / 4.0f),
       m_angleWidthHeight(0.0f),
-      m_gfxCamera(new GfxCamera())
+      m_gfxCamera(new GfxCamera()),
+      m_order(0),
+      m_renderTarget(nullptr)
 {
   SPC_CLASS_GEN_CONSTR;
   m_gfxCamera->SetCamera(&m_camera);
@@ -76,6 +79,36 @@ float CameraState::GetAngleWidthHeight() const
   return m_angleWidthHeight;
 }
 
+void CameraState::SetOrder(int order)
+{
+  m_order = order;
+  UpdateGfxCamera();
+}
+
+int CameraState::GetOrder() const
+{
+  return m_order;
+}
+
+
+void CameraState::SetRenderTarget(iRenderTarget2D *renderTarget)
+{
+  SPC_SET(m_renderTarget, renderTarget);
+  UpdateGfxCamera();
+}
+
+iRenderTarget2D* CameraState::GetRenderTarget()
+{
+  return m_renderTarget;
+}
+
+const iRenderTarget2D* CameraState::GetRenderTarget() const
+{
+  return m_renderTarget;
+}
+
+
+
 void CameraState::SetClearMode(eClearMode clearMode)
 {
   m_clearMode = clearMode;
@@ -107,6 +140,17 @@ void CameraState::SetClearDepth(float clearDepth)
 float CameraState::GetClearDepth() const
 {
   return m_clearDepth;
+}
+
+void CameraState::SetRenderShadows(bool renderShadows)
+{
+  m_renderShadows = renderShadows;
+  UpdateGfxCamera();
+}
+
+bool CameraState::IsRenderShadows() const
+{
+  return m_renderShadows;
 }
 
 const Camera &CameraState::GetCamera() const
@@ -147,6 +191,9 @@ void CameraState::TransformationUpdatedPreChildren()
 
 void CameraState::UpdateGfxCamera()
 {
+  m_gfxCamera->SetOrder(m_order);
+  m_gfxCamera->SetRenderTarget(m_renderTarget);
+  m_gfxCamera->SetRenderShadows(m_renderShadows);
   m_gfxCamera->UpdateData(m_near, m_far, m_angle, m_angleWidthHeight);
   m_gfxCamera->UpdateClear(m_clearMode, m_clearColor, m_clearDepth);
 }
