@@ -10,10 +10,10 @@ namespace spc
 
 class Camera;
 class Projector;
-struct iRenderTarget;
+struct iRenderTarget2D;
 
 SPC_CLASS()
-class GfxCamera : public SPC_SUPER(iObject)
+class SPC_CORE_API GfxCamera : public SPC_SUPER(iObject)
 {
   SPC_CLASS_GEN_OBJECT;
 public:
@@ -32,12 +32,15 @@ public:
   const Color4f &GetClearColor () const;
   float GetClearDepth() const;
 
-  void SetRenderTarget (iRenderTarget* renderTarget);
-  iRenderTarget* GetRenderTarget();
-  const iRenderTarget* GetRenderTarget() const;
+  void SetRenderTarget (iRenderTarget2D* renderTarget);
+  iRenderTarget2D* GetRenderTarget();
+  const iRenderTarget2D* GetRenderTarget() const;
 
-  void SetPriority (int priority);
-  int GetPriority() const;
+  void SetOrder(int order);
+  int GetOrder() const;
+
+  void SetRenderShadows (bool renderShadows);
+  bool IsRenderShadows () const;
 
   void UpdateData (float near, float far, float angle, float angleWidthHeight);
 
@@ -52,6 +55,7 @@ private:
   float m_angle;
   float m_angleWidthHeight;
 
+
   eClearMode m_clearMode;
   Color4f m_clearColor;
   float m_clearDepth;
@@ -59,8 +63,9 @@ private:
   Camera* m_camera;
   Projector *m_projector;
 
-  iRenderTarget *m_renderTarget;
-  int m_priority;
+  iRenderTarget2D *m_renderTarget;
+  int           m_order;
+  bool  m_renderShadows;
 
 };
 

@@ -647,13 +647,15 @@ bool MaterialLoaderSpc::LoadAttributeTexture(iMaterial* material, size_t attribu
 {
   if (attributeElement->GetNumberOfAttributes() < 3)
   {
-    return false;
+    material->Set(attributeIdx, nullptr);
+    return true;
   }
 
   std::string textureLoc = attributeElement->GetAttribute(2, "");
   if (textureLoc.empty())
   {
-    return false;
+    material->Set(attributeIdx, nullptr);
+    return true;
   }
 
   auto texture = AssetManager::Get()->Get<iTexture>(ResourceLocator(textureLoc));

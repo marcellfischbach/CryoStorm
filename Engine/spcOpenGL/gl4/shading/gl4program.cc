@@ -171,7 +171,7 @@ iShaderAttribute* GL4Program::GetShaderAttribute(uint32_t id)
   {
     return nullptr;
   }
-  return m_attributes[id];;
+  return m_attributes[id];
 }
 
 
