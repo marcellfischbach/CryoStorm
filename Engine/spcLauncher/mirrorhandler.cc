@@ -9,6 +9,11 @@ MirrorHandler::MirrorHandler()
   SetNeedUpdate(true);
 }
 
+MirrorHandler::~MirrorHandler()
+{
+  SPC_RELEASE(m_cameraState);
+}
+
 void MirrorHandler::SetCameraState(spc::SpatialState *cameraState)
 {
   SPC_SET(m_cameraState, cameraState);

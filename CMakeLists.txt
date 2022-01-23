@@ -21,6 +21,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 unset(CMAKE_CXX_CL_SHOWINCLUDE)
 
+set(DISABLE_RENDERING OFF)
 
 
 include(${SpiceEngine_SOURCE_DIR}/Scripts/SpiceEngine.cmake) 
@@ -34,6 +35,10 @@ add_definitions(-DSPC_WIN32)
 else()
 message("Use Linux")
 add_definitions(-DSPC_LINUX)
+endif()
+
+if (${DISABLE_RENDERING})
+add_definitions(-DSPC_DISABLE_RENDERING)
 endif()
 
 

@@ -143,6 +143,8 @@ set(SOURCES
 
         math/clipper/boxclipper.cc
         math/clipper/boxclipper.hh
+        math/clipper/cameraclipper.cc
+        math/clipper/cameraclipper.hh
         math/clipper/compoundclipper.cc
         math/clipper/compoundclipper.hh
         math/clipper/multiplaneclipper.cc

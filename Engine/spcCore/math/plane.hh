@@ -26,6 +26,14 @@ public:
 
   }
 
+  SPC_FORCEINLINE void Set(float x = 0.0f, float y = 0.0f, float z = 0.0f, float d = 0.0f)
+  {
+    this->x = x;
+    this->y = y;
+    this->z = z;
+    this->d = d;
+  }
+
   SPC_FORCEINLINE Plane(const Vector3f& pos, const Vector3f& norm)
   {
     Vector3f nn = norm.Normalized();
@@ -35,7 +43,30 @@ public:
     d = -pos.Dot(nn);
   }
 
+  SPC_FORCEINLINE void Set(const Vector3f& pos, const Vector3f& norm)
+  {
+    Vector3f nn = norm.Normalized();
+    x = nn.x;
+    y = nn.y;
+    z = nn.z;
+    d = -pos.Dot(nn);
+  }
+
   SPC_FORCEINLINE Plane(const Vector3f& p0, const Vector3f &p1, const Vector3f &p2)
+  {
+    Vector3f n0 = (p1 - p0).Normalized();
+    Vector3f n1 = (p2 - p0).Normalized();
+    Vector3f norm = n0 % n1;
+
+
+    Vector3f nn = norm.Normalized();
+    x = nn.x;
+    y = nn.y;
+    z = nn.z;
+    d = -p0.Dot(nn);
+  }
+
+  SPC_FORCEINLINE void Set(const Vector3f& p0, const Vector3f &p1, const Vector3f &p2)
   {
     Vector3f n0 = (p1 - p0).Normalized();
     Vector3f n1 = (p2 - p0).Normalized();

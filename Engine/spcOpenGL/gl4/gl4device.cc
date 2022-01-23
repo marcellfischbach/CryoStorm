@@ -704,6 +704,7 @@ void GL4Device::SetSampler(eTextureUnit unit, iSampler *sampler)
 
 eTextureUnit GL4Device::BindTexture(iTexture *texture)
 {
+#ifndef SPC_DISABLE_RENDERING
   if (!texture || m_nextTextureUnit == eTU_Invalid)
   {
     return eTU_Invalid;
@@ -742,10 +743,14 @@ eTextureUnit GL4Device::BindTexture(iTexture *texture)
 
 
   return unit;
+#else
+  return eTU_Invalid;
+#endif
 }
 
 bool GL4Device::BindMaterial(iMaterial *material, eRenderPass pass)
 {
+#ifndef SPC_DISABLE_RENDERING
   if (m_material == material && m_materialPass == pass)
   {
     return true;
@@ -753,10 +758,15 @@ bool GL4Device::BindMaterial(iMaterial *material, eRenderPass pass)
   m_material = material;
   m_materialPass = pass;
   return material && material->Bind(this, pass);
+#else
+  return true;
+#endif
+
 }
 
 void GL4Device::Render(iRenderMesh *mesh, eRenderPass pass)
 {
+#ifndef SPC_DISABLE_RENDERING
   if (mesh)
   {
     SPC_GL_ERROR();
@@ -765,10 +775,12 @@ void GL4Device::Render(iRenderMesh *mesh, eRenderPass pass)
     mesh->Render(this, pass);
     SPC_GL_ERROR();
   }
+#endif
 }
 
 void GL4Device::RenderFullscreen(iTexture2D *texture)
 {
+#ifndef SPC_DISABLE_RENDERING
   iRenderMesh *mesh = FullscreenBlitRenderMesh();
   GL4Program  *prog = FullscreenBlitProgram();
   SetShader(prog);
@@ -780,11 +792,13 @@ void GL4Device::RenderFullscreen(iTexture2D *texture)
     attrib->Bind(unit);
   }
   mesh->Render(this, eRP_Forward);
+#endif
 }
 
 
 void GL4Device::RenderFullscreen(iTexture2DArray *texture, int layer)
 {
+#ifndef SPC_DISABLE_RENDERING
   iRenderMesh *mesh = FullscreenBlitRenderMesh();
   GL4Program  *prog = FullscreenBlitArrayProgram();
   SetShader(prog);
@@ -801,10 +815,12 @@ void GL4Device::RenderFullscreen(iTexture2DArray *texture, int layer)
     attrib->Bind((float) layer);
   }
   mesh->Render(this, eRP_Forward);
+#endif
 }
 
 void GL4Device::RenderFullscreen(iTextureCube *texture, int layer)
 {
+#ifndef SPC_DISABLE_RENDERING
   iRenderMesh *mesh = FullscreenBlitCubeRenderMesh(layer);
   GL4Program  *prog = FullscreenBlitCubeProgram();
   SetShader(prog);
@@ -816,11 +832,14 @@ void GL4Device::RenderFullscreen(iTextureCube *texture, int layer)
     attrib->Bind(unit);
   }
   mesh->Render(this, eRP_Forward);
+#endif
 }
 
 
 void GL4Device::BindForwardLight(const iLight *light, Size idx)
 {
+#ifndef SPC_DISABLE_RENDERING
+
   if (!m_shader || idx >= SPC_MAX_LIGHTS)
   {
     return;
@@ -1093,10 +1112,13 @@ void GL4Device::BindForwardLight(const iLight *light, Size idx)
     }
   }
   SPC_GL_ERROR();
+#endif
 }
 
 void GL4Device::FinishForwardLights(Size numLights)
 {
+#ifndef SPC_DISABLE_RENDERING
+
   SPC_GL_ERROR();
   if (m_shader)
   {
@@ -1107,10 +1129,12 @@ void GL4Device::FinishForwardLights(Size numLights)
     }
   }
   SPC_GL_ERROR();
+#endif
 }
 
 void GL4Device::BindMatrices()
 {
+#ifndef SPC_DISABLE_RENDERING
   if (!m_shader)
   {
     return;
@@ -1247,6 +1271,7 @@ void GL4Device::BindMatrices()
       attr->Bind(m_shadowMapViewProjectionMatrices[i]);
     }
   }
+#endif
 }
 
 

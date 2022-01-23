@@ -8,7 +8,6 @@ set(SOURCES
         openglexport.hh
         openglmodule.cc
         openglmodule.hh
-
         gl4/gl4device.cc
         gl4/gl4device.hh
         gl4/gl4directionallight.cc
@@ -66,6 +65,7 @@ set(SOURCES
 		gl4/shading/gl4shadersourcefragment.hh
 		gl4/shading/gl4shadertype.hh
         )
+
 
 add_library(spcOpenGL SHARED
         ${SOURCES}

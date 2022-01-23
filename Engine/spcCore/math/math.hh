@@ -65,46 +65,19 @@ static SPC_FORCEINLINE float spcMod(float x, float y)
   return ::fmodf(x, y);
 }
 
-
-static SPC_FORCEINLINE double spcMin(double x, double y)
+template<typename T>
+static SPC_FORCEINLINE T spcMin(const T &x, const T &y)
 {
-  return ::fmin(x, y);
-}
-
-static SPC_FORCEINLINE float spcMin(float x, float y)
-{
-  return ::fminf(x, y);
-}
-
-static SPC_FORCEINLINE int spcMin(int x, int y)
-{
-  return x < y ? x : y;
-}
-
-static SPC_FORCEINLINE Size spcMin(Size x, Size y)
-{
-  return x < y ? x : y;
+  bool v = x < y;
+  return v * x + !v * y;
 }
 
 
-static SPC_FORCEINLINE double spcMax(double x, double y)
+template<typename T>
+static SPC_FORCEINLINE T spcMax( const T &x, const T &y)
 {
-  return ::fmax(x, y);
-}
-
-static SPC_FORCEINLINE float spcMax(float x, float y)
-{
-  return ::fmaxf(x, y);
-}
-
-static SPC_FORCEINLINE int spcMax(int x, int y)
-{
-  return x > y ? x : y;
-}
-
-static SPC_FORCEINLINE Size spcMax(Size x, Size y)
-{
-  return x > y ? x : y;
+  bool v = x > y;
+  return v * x + !v * y;
 }
 
 

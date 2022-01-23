@@ -14,6 +14,7 @@
 #include <spcCore/graphics/scene/gfxscene.hh>
 #include <spcCore/input/input.hh>
 #include <spcCore/math/math.hh>
+#include <spcCore/math/clipper/cameraclipper.hh>
 #include <spcCore/math/clipper/multiplaneclipper.hh>
 #include <spcCore/math/clipper/sphereclipper.hh>
 
@@ -292,28 +293,29 @@ void GL4ForwardDirectionalLightRenderer::RenderDirectionalShadowMaps(GL4Directio
   m_device->GetOrthographicProjectionInv(-sizeSplitTot - modTotX, sizeSplitTot - modTotX, -sizeSplitTot - modTotY, sizeSplitTot - mod2Y, -1.0f, 1.0f, projectionTot);
 
 
-  MultiPlaneClipper cameraClipper(viewTot, projectionTot, false, false);
+  CameraClipper clpr(viewTot, projectionTot, false, false);
 
   float near[] = {FLT_MAX, FLT_MAX, FLT_MAX};
   float far[] = {-FLT_MAX, -FLT_MAX, -FLT_MAX};
   m_meshesCache.clear();
-  m_scene->ScanMeshes(&cameraClipper, GfxScene::eSM_Dynamic | GfxScene::eSM_Static,
+  m_scene->ScanMeshes(&clpr, GfxScene::eSM_Dynamic | GfxScene::eSM_Static,
                       [this, &views, &near, &far](GfxMesh *mesh) {
                         if (mesh->IsCastShadow())
                         {
                           const Vector3f *bboxPoints = mesh->GetBoundingBox().GetPoints();
                           for (unsigned  i           = 0; i < 8; i++)
                           {
-                            Vector3f v0 = Matrix4f::Transform(views[0], bboxPoints[i]);
-                            Vector3f v1 = Matrix4f::Transform(views[1], bboxPoints[i]);
-                            Vector3f v2 = Matrix4f::Transform(views[2], bboxPoints[i]);
+                            Vector3f point = bboxPoints[i];
+                            float v0 = Matrix4f::TransformZ(views[0], point);
+                            float v1 = Matrix4f::TransformZ (views[1], point);
+                            float v2 = Matrix4f::TransformZ(views[2], point);
 
-                            near[0] = spcMin(near[0], v0.z);
-                            near[1] = spcMin(near[1], v1.z);
-                            near[2] = spcMin(near[2], v2.z);
-                            far[0]  = spcMax(far[0], v0.z);
-                            far[1]  = spcMax(far[1], v1.z);
-                            far[2]  = spcMax(far[2], v2.z);
+                            near[0] = spcMin(near[0], v0);
+                            near[1] = spcMin(near[1], v1);
+                            near[2] = spcMin(near[2], v2);
+                            far[0]  = spcMax(far[0], v0);
+                            far[1]  = spcMax(far[1], v1);
+                            far[2]  = spcMax(far[2], v2);
                           }
                           m_meshesCache.emplace_back(mesh);
                         }

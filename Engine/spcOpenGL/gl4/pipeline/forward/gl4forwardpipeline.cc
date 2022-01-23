@@ -14,6 +14,7 @@
 #include <spcCore/graphics/irendertargetcube.hh>
 #include <spcCore/graphics/isampler.hh>
 #include <spcCore/math/clipper/boxclipper.hh>
+#include <spcCore/math/clipper/cameraclipper.hh>
 #include <spcCore/math/clipper/multiplaneclipper.hh>
 #include <spcCore/math/clipper/sphereclipper.hh>
 #include <spcCore/settings.hh>
@@ -72,8 +73,7 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target,
   m_directionalLightRenderer.SetScene(scene);
 
 
-  MultiPlaneClipper clipper(*m_camera, *m_projector);
-
+  CameraClipper clppr (*m_camera, *m_projector);
   m_pointLightRenderer.Clear();
   m_directionalLightRenderer.Clear();
   SPC_GL_ERROR();
@@ -83,7 +83,7 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target,
   // global lights are always along the final renderlights
   std::array<const GfxLight *, MaxLights> finalRenderLights      = {};
   Size                                    finalRenderLightOffset = 0;
-  scene->ScanLights(&clipper, GfxScene::eSM_Global,
+  scene->ScanLights(&clppr, GfxScene::eSM_Global,
                     [this, &finalRenderLights, &finalRenderLightOffset](GfxLight *light) {
 
                       if (finalRenderLightOffset >= MaxLights)
@@ -104,7 +104,7 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target,
   m_dynamicLights.clear();
   m_staticLights.clear();
   m_staticLightsNew.clear();
-  scene->ScanLights(&clipper, GfxScene::eSM_Dynamic | GfxScene::eSM_Static,
+  scene->ScanLights(&clppr, GfxScene::eSM_Dynamic | GfxScene::eSM_Static,
                     [this](GfxLight *light) {
                       LightScanned(light);
                       CollectShadowLights(light);
@@ -133,7 +133,7 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target,
 
   int  countBefore = 0;
   int  countAfter  = 0;
-  scene->ScanMeshes(&clipper, GfxScene::eSM_Dynamic | GfxScene::eSM_Static,
+  scene->ScanMeshes(&clppr, GfxScene::eSM_Dynamic | GfxScene::eSM_Static,
                     [this /* , &finalRenderLights, &finalRenderLightOffset, &trans*/](GfxMesh *mesh) {
                       auto material = mesh->GetMaterial();
                       if (material->GetRenderQueue() == eRenderQueue::Transparency)
@@ -150,9 +150,11 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target,
                       }
                     }
   );
+
   std::sort(m_shadedMeshes.begin(), m_shadedMeshes.end(), material_shader_compare_less_forward);
   std::sort(m_unshadedMeshes.begin(), m_unshadedMeshes.end(), material_shader_compare_less_forward);
   std::sort(m_transparentMeshes.begin(), m_transparentMeshes.end(), transparent_mesh_compare_less);
+
 
 
   device->SetRenderTarget(m_target);

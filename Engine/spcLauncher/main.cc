@@ -54,7 +54,6 @@
 spc::SDLKeyboard keyboard;
 spc::SDLMouse    mouse;
 
-
 void UpdateEvents()
 {
   keyboard.Update();
@@ -518,9 +517,9 @@ int main(int argc, char **argv)
   ));
 
 
-  spc::Material *materialMirror = spc::AssetManager::Get()->Get<spc::Material>(spc::ResourceLocator(
-      "/materials/test_material_mirror.spc"
-  ));
+//  spc::Material *materialMirror = spc::AssetManager::Get()->Get<spc::Material>(spc::ResourceLocator(
+//      "/materials/test_material_mirror.spc"
+//  ));
 
   spc::iRenderMesh *renderMesh = create_plane_mesh(40.0f, 8, 8);
   spc::Mesh        *mesh       = new spc::Mesh();
@@ -561,7 +560,7 @@ int main(int argc, char **argv)
             .SetTranslation(spc::Vector3f(0, 0, 0))
             .Finish();
   meshState0->SetMesh(mesh);
-  meshState0->SetMaterial(0, materialMirror);
+//  meshState0->SetMaterial(0, materialMirror);
   meshState0->SetStatic(true);
   entity0->Attach(meshState0);
   world->Attach(entity0);
@@ -689,11 +688,11 @@ int main(int argc, char **argv)
   mirrorCameraEntity->Attach(mirrorHandler);
   mirrorCameraState->SetRenderShadows(true);
   mirrorHandler->SetCameraState(cameraState);
-  world->Attach(mirrorCameraEntity);
+//  world->Attach(mirrorCameraEntity);
 
   auto mirrorRenderTarget = create_render_target(device, width / 2, height / 2);
   mirrorCameraState->SetRenderTarget(mirrorRenderTarget);
-  materialMirror->Set(materialMirror->IndexOf("Mirror"), mirrorRenderTarget->GetColorTexture(0));
+//  materialMirror->Set(materialMirror->IndexOf("Mirror"), mirrorRenderTarget->GetColorTexture(0));
 
 
 
@@ -768,8 +767,6 @@ int main(int argc, char **argv)
     {
       useCs = !useCs;
     }
-
-
     if (deltaTime != 0)
     {
       float tpf = (float) deltaTime / 1000.0f;

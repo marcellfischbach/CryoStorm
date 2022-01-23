@@ -379,8 +379,6 @@ bool File::Parse(const std::string &filename)
   fseek(file, 0, SEEK_END);
   long size = ftell(file);
   fseek(file, 0, SEEK_SET);
-  printf("File size: %d\n", size);
-  fflush(stdout);
 
   char *buffer         = new char[size];
   fread(buffer, 1, size, file);
@@ -585,11 +583,11 @@ Token GetNextToken(iBuffer *buffer)
 
     ch = buffer->GetNext();
   }
-  if (ch == '#')
+  while (ch == '#')
   {
 
     // Skip to the end of the line
-    while (ch != '\r' && ch != '\n')
+    while (ch != '\n')
     {
       if (buffer->IsEOF())
       {

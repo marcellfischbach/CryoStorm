@@ -580,6 +580,11 @@ public:
     return Vector3f(x, y, z);
   }
 
+  SPC_NODISCARD SPC_FORCEINLINE static float TransformZ(const Matrix4f &m, const Vector3f &v)
+  {
+    return m.m02 * v.x + m.m12 * v.y + m.m22 * v.z + m.m32;
+  }
+
   explicit SPC_FORCEINLINE operator Matrix3f() const
   {
     return Matrix3f(

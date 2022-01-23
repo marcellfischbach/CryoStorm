@@ -177,9 +177,8 @@ iShaderAttribute* GL4Program::GetShaderAttribute(uint32_t id)
 
 iShaderAttribute* GL4Program::GetShaderAttribute(const std::string& attributeName)
 {
-  for (uint32_t i = 0; i < m_attributes.size(); i++)
+  for (auto attribute : m_attributes)
   {
-    iShaderAttribute* attribute = m_attributes[i];
     if (attribute && attribute->GetName() == attributeName)
     {
       return attribute;

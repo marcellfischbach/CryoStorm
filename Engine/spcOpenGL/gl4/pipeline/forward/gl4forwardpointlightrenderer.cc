@@ -10,6 +10,7 @@
 #include <spcCore/graphics/isampler.hh>
 #include <spcCore/graphics/scene/gfxmesh.hh>
 #include <spcCore/graphics/scene/gfxscene.hh>
+#include <spcCore/math/clipper/cameraclipper.hh>
 #include <spcCore/math/clipper/multiplaneclipper.hh>
 #include <spcCore/math/clipper/sphereclipper.hh>
 
@@ -334,10 +335,9 @@ void GL4ForwardPointLightRenderer::RenderPointShadowMapsStraight(GL4PointLight *
     m_device->SetViewMatrix(views[i]);
 
 
-    //SphereClipper clipper(pos, pointLight->GetRange());
-    MultiPlaneClipper clipper(viewsInv[i], projectionInv, false, true);
+    CameraClipper clppr (viewsInv[i], projectionInv, false, true);
 
-    m_scene->ScanMeshes(&clipper, GfxScene::eSM_Dynamic | GfxScene::eSM_Static,
+    m_scene->ScanMeshes(&clppr, GfxScene::eSM_Dynamic | GfxScene::eSM_Static,
                         [this](GfxMesh *mesh) {
                           mesh->RenderUnlit(m_device, eRP_Shadow);
                         }
