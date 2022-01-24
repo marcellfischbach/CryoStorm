@@ -40,10 +40,6 @@ public:
   void SetIntensity(float intensity) override;
   float GetIntensity() const override;
 
-  void SetSplits(float split0, float split1, float split2) override;
-  SPC_NODISCARD float GetSplit0() const override;
-  SPC_NODISCARD float GetSplit1() const override;
-  SPC_NODISCARD float GetSplit2() const override;
 
 private:
 
@@ -52,7 +48,6 @@ private:
   float m_shadowBias;
   Color4f m_color;
   float m_intensity;
-  Vector3f m_split;
 
   Vector3f m_direction;
 

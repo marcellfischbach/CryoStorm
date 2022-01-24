@@ -73,6 +73,10 @@ private:
     VSM
   };
 
+  float m_shadowNear;
+  float m_shadowFar;
+  float m_splits[3];
+
   Matrix4f m_shadowMatrices[3];
   Size m_directionalLightShadowMapSize;
   ShadowMapFilter m_shadowMapFilter;

@@ -24,7 +24,6 @@ LightState::LightState(const std::string& name)
   , m_shadowBias(0.001f)
   , m_color(1.0f, 1.0f, 1.0f, 1.0f)
   , m_range (100.0f)
-  , m_splits(10.0f, 25.0f, 100.0f)
 {
   SPC_CLASS_GEN_CONSTR;
 }
@@ -103,10 +102,6 @@ void LightState::UpdateValues()
     if (m_pointLight)
     {
       m_pointLight->SetRange(m_range);
-    }
-    if (m_directionalLight)
-    {
-      m_directionalLight->SetSplits(m_splits.x, m_splits.y, m_splits.z);
     }
 
     TransformationUpdatedPreChildren();
@@ -198,29 +193,6 @@ float LightState::GetRange() const
 }
 
 
-void LightState::SetSplits(float split0, float split1, float split2)
-{
-  if (split0 < split1 && split1 < split2)
-  {
-    m_splits = Vector3f(split0, split1, split2);
-    UpdateValues();
-  }
-}
 
-float LightState::GetSplit0() const
-{
-  return m_splits.x;
-}
-
-
-float LightState::GetSplit1() const
-{
-  return m_splits.y;
-}
-
-float LightState::GetSplit2() const
-{
-  return m_splits.z;
-}
 
 }

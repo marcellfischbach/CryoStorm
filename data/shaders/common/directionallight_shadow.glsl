@@ -38,7 +38,7 @@ float calc_directional_shadow(int idx, vec3 light_direction, vec3 frag_position,
 	}
 	else
 	{
-		return 1.0;
+		//return 1.0;
 	}
 
 	vec4 camSpace = spc_DirectionalLightShadowMapMatrices[matIndex] * vec4(frag_position, 1.0);
@@ -46,17 +46,16 @@ float calc_directional_shadow(int idx, vec3 light_direction, vec3 frag_position,
 	camSpace = camSpace * 0.5 + 0.5;
 	camSpace.z -= layerBias.w;
 
-	if (camSpace.x < 0.0 || camSpace.x > 1.0 
-	|| camSpace.y < 0.0 || camSpace.y > 1.0) 
-	{
-		return 1.0;
-	}
+//	if (camSpace.x < 0.0 || camSpace.x > 1.0
+//	|| camSpace.y < 0.0 || camSpace.y > 1.0)
+//	{
+//		return 1.0;
+//	}
 
 
 
-	float v = mix(
+	return mix(
 		texture(spc_DirectionalLightShadowMapDepth[idx], vec4(camSpace.xy, layer, camSpace.z)),
 		1.0,
 		fadeOut);
-	return v; //* fact;
 }

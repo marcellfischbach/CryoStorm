@@ -70,7 +70,9 @@ void CameraHandler::Update(float tpf)
   tr.SetTranslation(tr.GetTranslation() + dir)
     .SetRotation(rot)
     .Finish();
+  /*
   tr.SetTranslation(spc::Vector3f(15.0f, 15.0f, 15.0f))
     .LookAt(spc::Vector3f(0.0f, 5.0f, 0.0f))
     .Finish();
+  */
 }

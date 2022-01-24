@@ -41,10 +41,6 @@ public:
   void SetRange(float range);
   SPC_NODISCARD float GetRange() const;
 
-  SPC_NODISCARD void SetSplits(float split0, float split1, float split2);
-  SPC_NODISCARD SPC_NODISCARD float GetSplit0() const;
-  SPC_NODISCARD SPC_NODISCARD float GetSplit1() const;
-  SPC_NODISCARD SPC_NODISCARD float GetSplit2() const;
 
   void OnAttachedToWorld(World * world) override;
   void OnDetachedFromWorld(World * world) override;
@@ -72,7 +68,6 @@ private:
   float m_shadowBias;
   Color4f m_color;
   float m_range;
-  Vector3f m_splits;
 };
 
 }

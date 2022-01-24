@@ -101,13 +101,32 @@ Vector2f Settings::GetVector2f(const std::string& path, const Vector2f& defaultV
 Vector3f Settings::GetVector3f(const std::string& path, const Vector3f& defaultValue) const
 {
   file::Element* element = GetElement(path);
-  if (element && element->GetNumberOfAttributes() >= 3)
+  if (element)
   {
-    return Vector3f(
-            (float) element->GetAttribute(0)->GetDoubleValue(),
-            (float) element->GetAttribute(1)->GetDoubleValue(),
-            (float) element->GetAttribute(2)->GetDoubleValue()
-    );
+    if (element->GetNumberOfAttributes() >= 3)
+    {
+      return Vector3f(
+          (float) element->GetAttribute(0)->GetDoubleValue(),
+          (float) element->GetAttribute(1)->GetDoubleValue(),
+          (float) element->GetAttribute(2)->GetDoubleValue()
+      );
+    }
+    else if (element->GetNumberOfAttributes() >= 2)
+    {
+      return Vector3f(
+          (float) element->GetAttribute(0)->GetDoubleValue(),
+          (float) element->GetAttribute(1)->GetDoubleValue(),
+          defaultValue.z
+      );
+    }
+    else if (element->GetNumberOfAttributes() >= 1)
+    {
+      return Vector3f(
+          (float) element->GetAttribute(0)->GetDoubleValue(),
+          defaultValue.y,
+          defaultValue.z
+      );
+    }
   }
   return defaultValue;
 }

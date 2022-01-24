@@ -40,6 +40,18 @@ GL4ForwardDirectionalLightRenderer::~GL4ForwardDirectionalLightRenderer()
 
 void GL4ForwardDirectionalLightRenderer::Initialize(Settings &settings)
 {
+  m_shadowNear = settings.GetFloat("directional_light.shadow_map.near", 1.0f);
+  m_shadowFar = settings.GetFloat("directional_light.shadow_map.far", 1.0f);
+  Vector3f splits = settings.GetVector3f("directional_light.shadow_map.cascades", Vector3f(0.0f, 0.0f, 0.0f));
+  if (splits.z == 0.0f)
+  {
+    splits.z = 1.0f - splits.x - splits.y;
+  }
+  m_splits[0] = m_shadowNear + (m_shadowFar - m_shadowNear) * splits.x;
+  m_splits[1] = m_splits[0] + (m_shadowFar - m_shadowNear) * splits.y;
+  m_splits[2] = m_splits[1] + (m_shadowFar - m_shadowNear) * splits.z;
+
+
   m_directionalLightShadowMapSize = settings.GetInt("directional_light.shadow_map.size", 1024);
   std::string filter = settings.GetText("directional_light.shadow_map.filter", "PCF");
   if (filter == std::string("Plain"))
@@ -112,7 +124,7 @@ Size GL4ForwardDirectionalLightRenderer::RenderShadowMaps(Size maxShadowLights, 
     RenderDirectionalShadowMaps(directionalLight, shadowMap, camera, projector);
     m_device->SetDirectionalLightShadowMap(
         directionalLight,
-        Vector3f(directionalLight->GetSplit0(), directionalLight->GetSplit1(), directionalLight->GetSplit2()),
+        Vector3f(m_splits[0], m_splits[1], m_splits[2]),
         shadowMap->GetColorTexture(0),
         shadowMap->GetDepthTexture(),
         m_shadowMatrices,
@@ -235,10 +247,10 @@ void GL4ForwardDirectionalLightRenderer::RenderDirectionalShadowMaps(GL4Directio
   Vector3f split1Points[4];
   Vector3f split2Points[4];
 
-  projector.GetPoints(projector.GetNear(), nearPoints);
-  projector.GetPoints(directionalLight->GetSplit0(), split0Points);
-  projector.GetPoints(directionalLight->GetSplit1(), split1Points);
-  projector.GetPoints(directionalLight->GetSplit2(), split2Points);
+  projector.GetPoints(m_shadowNear, nearPoints);
+  projector.GetPoints(m_splits[0], split0Points);
+  projector.GetPoints(m_splits[1], split1Points);
+  projector.GetPoints(m_splits[2], split2Points);
 
   float sizeSplit0 = GetSplitSize(nearPoints, split0Points) / 2.0f;
   float sizeSplit1 = GetSplitSize(split0Points, split1Points) / 2.0f;
@@ -246,10 +258,10 @@ void GL4ForwardDirectionalLightRenderer::RenderDirectionalShadowMaps(GL4Directio
   float sizeSplitTot = GetSplitSize(nearPoints, split2Points) / 2.0f;
 
   Vector3f direction = (camera.GetSpot() - camera.GetEye()).Normalize();
-  Vector3f pos0 = camera.GetEye() + direction * (projector.GetNear() + directionalLight->GetSplit0()) / 2.0f;
-  Vector3f pos1 = camera.GetEye() + direction * (directionalLight->GetSplit0() + directionalLight->GetSplit1()) / 2.0f;
-  Vector3f pos2 = camera.GetEye() + direction * (directionalLight->GetSplit1() + directionalLight->GetSplit2()) / 2.0f;
-  Vector3f posTot = camera.GetEye() + direction * (projector.GetNear() + directionalLight->GetSplit2()) / 2.0f;
+  Vector3f pos0 = camera.GetEye() + direction * (m_shadowNear + m_splits[0]) / 2.0f;
+  Vector3f pos1 = camera.GetEye() + direction * (m_splits[0] + m_splits[1]) / 2.0f;
+  Vector3f pos2 = camera.GetEye() + direction * (m_splits[1] + m_splits[2]) / 2.0f;
+  Vector3f posTot = camera.GetEye() + direction * (m_shadowNear + m_splits[2]) / 2.0f;
 
   Matrix4f mat;
   mat.SetLookAtInv(Vector3f(0, 0, 0), directionalLight->GetDirection(), Vector3f(0, 1, 0));
