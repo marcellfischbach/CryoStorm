@@ -1,5 +1,5 @@
 
-#include <spcCore/graphics/scene/gfxscene.hh>
+#include <spcCore/graphics/scene/gfxsimplescene.hh>
 #include <spcCore/graphics/scene/gfxcamera.hh>
 #include <spcCore/graphics/ilight.hh>
 #include <spcCore/graphics/ipointlight.hh>
@@ -10,13 +10,13 @@
 namespace spc
 {
 
-GfxScene::GfxScene()
-        : iObject()
+GfxSimpleScene::GfxSimpleScene()
+        : iGfxScene()
 {
   SPC_CLASS_GEN_CONSTR;
 }
 
-void GfxScene::Add(GfxCamera *camera)
+void GfxSimpleScene::Add(GfxCamera *camera)
 {
   if (std::ranges::find(m_cameras, camera) == m_cameras.end())
   {
@@ -25,7 +25,7 @@ void GfxScene::Add(GfxCamera *camera)
   }
 }
 
-void GfxScene::Remove (GfxCamera*camera)
+void GfxSimpleScene::Remove(GfxCamera*camera)
 {
   auto it = std::ranges::find(m_cameras, camera);
   if (it != m_cameras.end())
@@ -35,7 +35,7 @@ void GfxScene::Remove (GfxCamera*camera)
   }
 }
 
-void GfxScene::Add(GfxMesh *mesh)
+void GfxSimpleScene::Add(GfxMesh *mesh)
 {
   if (!mesh)
   {
@@ -72,7 +72,7 @@ void GfxScene::Add(GfxMesh *mesh)
 
 }
 
-void GfxScene::Remove(GfxMesh *mesh)
+void GfxSimpleScene::Remove(GfxMesh *mesh)
 {
   if (!mesh)
   {
@@ -113,7 +113,7 @@ void GfxScene::Remove(GfxMesh *mesh)
   mesh->Release();
 }
 
-void GfxScene::Add(GfxLight *light)
+void GfxSimpleScene::Add(GfxLight *light)
 {
   if (light)
   {
@@ -132,7 +132,7 @@ void GfxScene::Add(GfxLight *light)
   }
 }
 
-void GfxScene::Add(GfxLight *light, std::vector<GfxLight *> &lights)
+void GfxSimpleScene::Add(GfxLight *light, std::vector<GfxLight *> &lights)
 {
   if (std::find(lights.begin(), lights.end(), light) != lights.end())
   {
@@ -144,7 +144,7 @@ void GfxScene::Add(GfxLight *light, std::vector<GfxLight *> &lights)
 
 }
 
-void GfxScene::Remove(GfxLight *light)
+void GfxSimpleScene::Remove(GfxLight *light)
 {
   if (light)
   {
@@ -163,7 +163,7 @@ void GfxScene::Remove(GfxLight *light)
   }
 }
 
-void GfxScene::Remove(GfxLight *light, std::vector<GfxLight *> &lights)
+void GfxSimpleScene::Remove(GfxLight *light, std::vector<GfxLight *> &lights)
 {
   auto it = std::find(lights.begin(), lights.end(), light);
   if (it == lights.end())
@@ -180,7 +180,7 @@ void GfxScene::Remove(GfxLight *light, std::vector<GfxLight *> &lights)
 }
 
 
-const std::vector<GfxCamera*> &GfxScene::GetCameras() const
+const std::vector<GfxCamera*> &GfxSimpleScene::GetCameras() const
 {
   return m_cameras;
 }
@@ -188,9 +188,9 @@ const std::vector<GfxCamera*> &GfxScene::GetCameras() const
 
 
 
-void GfxScene::ScanMeshes(const iClipper *clipper,
-                          uint32_t scanMask,
-                          const std::function<void(GfxMesh *)> &callback) const
+void GfxSimpleScene::ScanMeshes(const iClipper *clipper,
+                                uint32_t scanMask,
+                                const std::function<void(GfxMesh *)> &callback) const
 {
   if (scanMask & eSM_Static)
   {
@@ -227,7 +227,7 @@ void GfxScene::ScanMeshes(const iClipper *clipper,
 
 }
 
-void GfxScene::ScanGlobalLights(const std::function<bool(GfxLight *)> &callback) const
+void GfxSimpleScene::ScanGlobalLights(const std::function<bool(GfxLight *)> &callback) const
 {
   for (auto light: m_globalLights)
   {
@@ -238,7 +238,7 @@ void GfxScene::ScanGlobalLights(const std::function<bool(GfxLight *)> &callback)
   }
 }
 
-void GfxScene::ScanStaticLights(const iClipper *clipper, const std::function<bool(GfxLight *)> &callback) const
+void GfxSimpleScene::ScanStaticLights(const iClipper *clipper, const std::function<bool(GfxLight *)> &callback) const
 {
   for (auto light: m_staticLights)
   {
@@ -256,7 +256,7 @@ void GfxScene::ScanStaticLights(const iClipper *clipper, const std::function<boo
   }
 }
 
-void GfxScene::ScanDynamicLights(const iClipper *clipper, const std::function<bool(GfxLight *)> &callback) const
+void GfxSimpleScene::ScanDynamicLights(const iClipper *clipper, const std::function<bool(GfxLight *)> &callback) const
 {
   for (auto light: m_dynamicLights)
   {
@@ -275,9 +275,9 @@ void GfxScene::ScanDynamicLights(const iClipper *clipper, const std::function<bo
   }
 }
 
-void GfxScene::ScanLights(const iClipper *clipper,
-                          uint32_t scanMask,
-                          const std::function<bool(GfxLight *)> &callback) const
+void GfxSimpleScene::ScanLights(const iClipper *clipper,
+                                uint32_t scanMask,
+                                const std::function<bool(GfxLight *)> &callback) const
 {
   if (scanMask & eSM_Global)
   {

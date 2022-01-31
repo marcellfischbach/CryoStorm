@@ -31,7 +31,7 @@
 #include <spcCore/graphics/shading/ishaderattribute.hh>
 #include <spcCore/graphics/material/material.hh>
 #include <spcCore/graphics/material/materialinstance.hh>
-#include <spcCore/graphics/scene/gfxscene.hh>
+#include <spcCore/graphics/scene/igfxscene.hh>
 #include <spcCore/graphics/scene/gfxmesh.hh>
 #include <spcCore/resource/assetmanager.hh>
 #include <spcCore/resource/vfs.hh>

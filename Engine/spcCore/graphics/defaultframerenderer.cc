@@ -3,7 +3,7 @@
 #include <spcCore/graphics/irenderpipeline.hh>
 #include <spcCore/graphics/irendertarget2d.hh>
 #include <spcCore/graphics/scene/gfxcamera.hh>
-#include <spcCore/graphics/scene/gfxscene.hh>
+#include <spcCore/graphics/scene/igfxscene.hh>
 #include <spcCore/objectregistry.hh>
 #include <spcCore/graphics/idevice.hh>
 #include <spcCore/graphics/eclearmode.hh>
@@ -36,7 +36,7 @@ bool gfx_camera_sorter(GfxCamera *cam0, GfxCamera *cam1)
 }
 
 
-void DefaultFrameRenderer::Render(iRenderTarget2D *target, iDevice *device, GfxScene *scene)
+void DefaultFrameRenderer::Render(iRenderTarget2D *target, iDevice *device, iGfxScene *scene)
 {
   auto                     cameras = std::vector<GfxCamera *>(scene->GetCameras());
   std::vector<GfxCamera *> plainCameras;
@@ -61,7 +61,7 @@ void DefaultFrameRenderer::Render(iRenderTarget2D *target, iDevice *device, GfxS
   }
 }
 
-void DefaultFrameRenderer::Render(iRenderTarget2D *target, GfxCamera *camera, iDevice *device, GfxScene *scene)
+void DefaultFrameRenderer::Render(iRenderTarget2D *target, GfxCamera *camera, iDevice *device, iGfxScene *scene)
 {
   iRenderPipeline *renderPipeline = GetRenderPipeline();
   if (!renderPipeline)

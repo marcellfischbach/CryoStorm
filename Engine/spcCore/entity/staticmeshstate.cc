@@ -3,7 +3,7 @@
 #include <spcCore/entity/entity.hh>
 #include <spcCore/entity/world.hh>
 #include <spcCore/graphics/mesh.hh>
-#include <spcCore/graphics/scene/gfxscene.hh>
+#include <spcCore/graphics/scene/igfxscene.hh>
 #include <spcCore/graphics/scene/gfxmesh.hh>
 
 
@@ -141,7 +141,7 @@ void StaticMeshState::AddMeshToScene(World *world)
 {
   if (m_mesh && world)
   {
-    GfxScene *scene = world->GetScene();
+    iGfxScene *scene = world->GetScene();
     for (Size i = 0, in = m_mesh->GetNumberOfSubMeshes(); i < in; i++)
     {
       const Mesh::SubMesh &subMesh = m_mesh->GetSubMesh(i);
@@ -176,7 +176,7 @@ void StaticMeshState::RemoveMeshFromScene(World *world)
 {
   if (m_mesh && world)
   {
-    GfxScene *scene = world->GetScene();
+    iGfxScene *scene = world->GetScene();
     for (auto gfxMesh: m_gfxMeshes)
     {
       scene->Remove(gfxMesh);

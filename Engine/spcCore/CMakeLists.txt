@@ -99,10 +99,15 @@ set(SOURCES
         graphics/scene/gfxcamera.hh
         graphics/scene/gfxlight.cc
         graphics/scene/gfxlight.hh
-        graphics/scene/gfxscene.cc
-        graphics/scene/gfxscene.hh
         graphics/scene/gfxmesh.cc
         graphics/scene/gfxmesh.hh
+        graphics/scene/gfxoctreescene.cc
+        graphics/scene/gfxoctreescene.hh
+        graphics/scene/gfxquadtreescene.cc
+        graphics/scene/gfxquadtreescene.hh
+        graphics/scene/gfxsimplescene.cc
+        graphics/scene/gfxsimplescene.hh
+        graphics/scene/igfxscene.hh
 
         graphics/shading/ishader.hh
         graphics/shading/ishaderattribute.hh

@@ -7,7 +7,7 @@
 #include <math.h>
 #include <spcCore/graphics/irendertarget2d.hh>
 #include <spcCore/graphics/scene/gfxcamera.hh>
-#include <spcCore/graphics/scene/gfxscene.hh>
+#include <spcCore/graphics/scene/igfxscene.hh>
 #include <spcCore/entity/world.hh>
 
 namespace spc
@@ -166,13 +166,13 @@ const Projector &CameraState::GetProjector() const
 
 void CameraState::OnAttachedToWorld(World *world)
 {
-  GfxScene *scene = world->GetScene();
+  iGfxScene *scene = world->GetScene();
   scene->Add(m_gfxCamera);
 }
 
 void CameraState::OnDetachedFromWorld(World *world)
 {
-  GfxScene *scene = world->GetScene();
+  iGfxScene *scene = world->GetScene();
   scene->Remove(m_gfxCamera);
 }
 

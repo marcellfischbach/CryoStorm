@@ -6,7 +6,7 @@
 #include <spcCore/graphics/idirectionallight.hh>
 #include <spcCore/graphics/idevice.hh>
 #include <spcCore/graphics/scene/gfxlight.hh>
-#include <spcCore/graphics/scene/gfxscene.hh>
+#include <spcCore/graphics/scene/igfxscene.hh>
 #include <spcCore/objectregistry.hh>
 
 namespace spc
@@ -119,7 +119,7 @@ void LightState::AddToScene(World* world)
   }
   if (world)
   {
-    GfxScene* scene = world->GetScene();
+    iGfxScene * scene = world->GetScene();
     if (m_gfxLight)
     {
       m_gfxLight->Release();

@@ -11,7 +11,7 @@
 #include <spcCore/graphics/isampler.hh>
 #include <spcCore/graphics/projector.hh>
 #include <spcCore/graphics/scene/gfxmesh.hh>
-#include <spcCore/graphics/scene/gfxscene.hh>
+#include <spcCore/graphics/scene/igfxscene.hh>
 #include <spcCore/input/input.hh>
 #include <spcCore/math/math.hh>
 #include <spcCore/math/clipper/cameraclipper.hh>
@@ -73,7 +73,7 @@ void GL4ForwardDirectionalLightRenderer::SetDevice(iDevice *device)
   m_device = device;
 }
 
-void GL4ForwardDirectionalLightRenderer::SetScene(GfxScene *scene)
+void GL4ForwardDirectionalLightRenderer::SetScene(iGfxScene *scene)
 {
   m_scene = scene;
 }
@@ -310,7 +310,7 @@ void GL4ForwardDirectionalLightRenderer::RenderDirectionalShadowMaps(GL4Directio
   float near[] = {FLT_MAX, FLT_MAX, FLT_MAX};
   float far[] = {-FLT_MAX, -FLT_MAX, -FLT_MAX};
   m_meshesCache.clear();
-  m_scene->ScanMeshes(&clpr, GfxScene::eSM_Dynamic | GfxScene::eSM_Static,
+  m_scene->ScanMeshes(&clpr, iGfxScene::eSM_Dynamic | iGfxScene::eSM_Static,
                       [this, &views, &near, &far](GfxMesh *mesh) {
                         if (mesh->IsCastShadow())
                         {

@@ -18,9 +18,9 @@ public:
   virtual ~DefaultFrameRenderer() = default;
 
 
-  void Render(iRenderTarget2D *target, iDevice *device, GfxScene *scene) override;
+  void Render(iRenderTarget2D *target, iDevice *device, iGfxScene *scene) override;
 
-  void Render(iRenderTarget2D *target, GfxCamera *camera, iDevice* device,  GfxScene *scene) override;
+  void Render(iRenderTarget2D *target, GfxCamera *camera, iDevice* device, iGfxScene *scene) override;
 
 private:
   iRenderPipeline *GetRenderPipeline ();

@@ -9,7 +9,7 @@
 #include <spcCore/graphics/idevice.hh>
 #include <spcCore/graphics/isampler.hh>
 #include <spcCore/graphics/scene/gfxmesh.hh>
-#include <spcCore/graphics/scene/gfxscene.hh>
+#include <spcCore/graphics/scene/igfxscene.hh>
 #include <spcCore/math/clipper/cameraclipper.hh>
 #include <spcCore/math/clipper/multiplaneclipper.hh>
 #include <spcCore/math/clipper/sphereclipper.hh>
@@ -56,7 +56,7 @@ void GL4ForwardPointLightRenderer::SetDevice(iDevice* device)
   m_device = device;
 }
 
-void GL4ForwardPointLightRenderer::SetScene(GfxScene* scene)
+void GL4ForwardPointLightRenderer::SetScene(iGfxScene* scene)
 {
   m_scene = scene;
 }
@@ -238,8 +238,8 @@ void GL4ForwardPointLightRenderer::RenderPointShadowMaps(GL4PointLight* pointLig
 
 
   glColorMask(false, false, false, false);
-  m_scene->ScanMeshes(&clipper, GfxScene::eSM_Dynamic | GfxScene::eSM_Static,
-    [this](GfxMesh* mesh)
+  m_scene->ScanMeshes(&clipper, iGfxScene::eSM_Dynamic | iGfxScene::eSM_Static,
+                      [this](GfxMesh* mesh)
     {
       mesh->RenderUnlit(m_device, eRP_ShadowCube);
     }
@@ -337,7 +337,7 @@ void GL4ForwardPointLightRenderer::RenderPointShadowMapsStraight(GL4PointLight *
 
     CameraClipper clppr (viewsInv[i], projectionInv, false, true);
 
-    m_scene->ScanMeshes(&clppr, GfxScene::eSM_Dynamic | GfxScene::eSM_Static,
+    m_scene->ScanMeshes(&clppr, iGfxScene::eSM_Dynamic | iGfxScene::eSM_Static,
                         [this](GfxMesh *mesh) {
                           mesh->RenderUnlit(m_device, eRP_Shadow);
                         }

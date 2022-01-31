@@ -8,7 +8,7 @@ namespace spc
 {
 
 class Entity;
-class GfxScene;
+struct iGfxScene;
 class EntityState;
 class SpatialState;
 
@@ -19,9 +19,9 @@ class SPC_CORE_API World : public SPC_SUPER(iObject)
 public:
   World();
   
-  void SetScene(GfxScene * scene);
-  GfxScene* GetScene();
-  const GfxScene* GetScene() const;
+  void SetScene(iGfxScene * scene);
+  iGfxScene* GetScene();
+  const iGfxScene* GetScene() const;
 
   bool Attach(Entity * entity);
   bool Detach(Entity * entity);
@@ -32,7 +32,7 @@ public:
   void Update (float tpf);
 
 private:
-  GfxScene* m_scene;
+  iGfxScene * m_scene;
   SpatialState *m_rootState;
   
   std::vector<Entity*> m_entities;

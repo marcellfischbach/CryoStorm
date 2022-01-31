@@ -2,8 +2,8 @@
 #include <spcCore/entity/world.hh>
 #include <spcCore/entity/entity.hh>
 #include <spcCore/entity/spatialstate.hh>
-#include <spcCore/graphics/scene/gfxscene.hh>
-
+#include <spcCore/graphics/scene/igfxscene.hh>
+#include <spcCore/graphics/scene/gfxsimplescene.hh>
 namespace spc
 {
 
@@ -13,20 +13,20 @@ World::World()
   , m_rootState(new SpatialState())
 {
   SPC_CLASS_GEN_CONSTR;
-  SetScene(new GfxScene());
+  SetScene(new GfxSimpleScene());
 }
 
-void World::SetScene(GfxScene *scene)
+void World::SetScene(iGfxScene *scene)
 {
   SPC_SET(m_scene, scene);
 }
 
-GfxScene* World::GetScene()
+iGfxScene* World::GetScene()
 {
   return m_scene;
 }
 
-const GfxScene* World::GetScene() const
+const iGfxScene* World::GetScene() const
 {
   return m_scene;
 }

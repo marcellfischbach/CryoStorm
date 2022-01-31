@@ -12,7 +12,7 @@ namespace spc
 
 struct iDevice;
 struct iSampler;
-class GfxScene;
+struct iGfxScene;
 class Settings;
 
 }
@@ -32,7 +32,7 @@ public:
   void Initialize(Settings &settings);
 
   void SetDevice(iDevice* device);
-  void SetScene(GfxScene* scene);
+  void SetScene(iGfxScene* scene);
 
 
   void Clear();
@@ -49,8 +49,8 @@ private:
   void RenderPointShadowMapsStraight(GL4PointLight* pointLight, GL4RenderTargetCube* shadowMap);
 
 private:
-  iDevice* m_device;
-  GfxScene* m_scene;
+  iDevice        * m_device;
+  iGfxScene * m_scene;
 
   std::vector<GL4PointLight*> m_shadowPointLights;
 

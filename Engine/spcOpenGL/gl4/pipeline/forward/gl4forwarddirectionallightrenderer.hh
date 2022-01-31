@@ -15,8 +15,8 @@ struct iDevice;
 struct iSampler;
 struct iTexture2DArray;
 class Camera;
-class GfxScene;
 class GfxMesh;
+struct iGfxScene;
 class Projector;
 class Settings;
 
@@ -37,7 +37,7 @@ public:
   void Initialize(Settings &settings);
 
   void SetDevice(iDevice* device);
-  void SetScene(GfxScene* scene);
+  void SetScene(iGfxScene* scene);
 
 
   void Clear();
@@ -59,8 +59,8 @@ private:
 
 
 private:
-  iDevice* m_device;
-  GfxScene* m_scene;
+  iDevice        * m_device;
+  iGfxScene * m_scene;
 
   std::vector<GL4DirectionalLight*> m_shadowDirectionalLights;
 

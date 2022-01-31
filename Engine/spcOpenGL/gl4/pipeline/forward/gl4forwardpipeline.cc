@@ -9,7 +9,7 @@
 #include <spcCore/graphics/camera.hh>
 #include <spcCore/graphics/projector.hh>
 #include <spcCore/graphics/scene/gfxcamera.hh>
-#include <spcCore/graphics/scene/gfxscene.hh>
+#include <spcCore/graphics/scene/igfxscene.hh>
 #include <spcCore/graphics/irendertarget2d.hh>
 #include <spcCore/graphics/irendertargetcube.hh>
 #include <spcCore/graphics/isampler.hh>
@@ -52,11 +52,10 @@ bool transparent_mesh_compare_less(const GfxMesh *mesh0, const GfxMesh *mesh1)
 }
 
 
-
 void GL4ForwardPipeline::Render(iRenderTarget2D *target,
                                 const GfxCamera *camera,
                                 iDevice *device,
-                                GfxScene *scene
+                                iGfxScene *scene
                                )
 {
   SPC_GL_ERROR();
@@ -83,7 +82,7 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target,
   // global lights are always along the final renderlights
   std::array<const GfxLight *, MaxLights> finalRenderLights      = {};
   Size                                    finalRenderLightOffset = 0;
-  scene->ScanLights(&clppr, GfxScene::eSM_Global,
+  scene->ScanLights(&clppr, iGfxScene::eSM_Global,
                     [this, &finalRenderLights, &finalRenderLightOffset](GfxLight *light) {
 
                       if (finalRenderLightOffset >= MaxLights)
@@ -104,7 +103,7 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target,
   m_dynamicLights.clear();
   m_staticLights.clear();
   m_staticLightsNew.clear();
-  scene->ScanLights(&clppr, GfxScene::eSM_Dynamic | GfxScene::eSM_Static,
+  scene->ScanLights(&clppr, iGfxScene::eSM_Dynamic | iGfxScene::eSM_Static,
                     [this](GfxLight *light) {
                       LightScanned(light);
                       CollectShadowLights(light);
@@ -133,7 +132,7 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target,
 
   int  countBefore = 0;
   int  countAfter  = 0;
-  scene->ScanMeshes(&clppr, GfxScene::eSM_Dynamic | GfxScene::eSM_Static,
+  scene->ScanMeshes(&clppr, iGfxScene::eSM_Dynamic | iGfxScene::eSM_Static,
                     [this /* , &finalRenderLights, &finalRenderLightOffset, &trans*/](GfxMesh *mesh) {
                       auto material = mesh->GetMaterial();
                       if (material->GetRenderQueue() == eRenderQueue::Transparency)

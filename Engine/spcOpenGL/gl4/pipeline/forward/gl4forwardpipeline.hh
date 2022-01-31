@@ -38,7 +38,7 @@ public:
 
   void Initialize() override;
 
-  void Render(iRenderTarget2D * taget, const GfxCamera * camera, iDevice * device, GfxScene * scene) override;
+  void Render(iRenderTarget2D * taget, const GfxCamera * camera, iDevice * device, iGfxScene * scene) override;
 
 private:
 
@@ -66,8 +66,8 @@ private:
   iDevice* m_device;
   const Camera *m_camera;
   const Projector *m_projector;
-  GfxScene* m_scene;
-  iRenderTarget2D* m_target;
+  iGfxScene  * m_scene;
+  iRenderTarget2D * m_target;
 
   
   std::vector<GfxLight*> m_dynamicLights;
