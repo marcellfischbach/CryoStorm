@@ -148,6 +148,11 @@ void GfxSimpleScene::Remove(GfxLight *light)
 {
   if (light)
   {
+    for (auto mesh: m_staticMeshes)
+    {
+      mesh->RemoveLight(light);
+    }
+
     if (light->GetLight()->GetType() == eLT_Directional)
     {
       Remove(light, m_globalLights);
@@ -172,10 +177,6 @@ void GfxSimpleScene::Remove(GfxLight *light, std::vector<GfxLight *> &lights)
   }
 
   lights.erase(it);
-  for (auto mesh: m_staticMeshes)
-  {
-    mesh->RemoveLight(light);
-  }
   light->Release();
 }
 

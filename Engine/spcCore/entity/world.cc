@@ -4,6 +4,9 @@
 #include <spcCore/entity/spatialstate.hh>
 #include <spcCore/graphics/scene/igfxscene.hh>
 #include <spcCore/graphics/scene/gfxsimplescene.hh>
+#include <spcCore/graphics/scene/gfxquadtreescene.hh>
+
+
 namespace spc
 {
 
@@ -13,7 +16,8 @@ World::World()
   , m_rootState(new SpatialState())
 {
   SPC_CLASS_GEN_CONSTR;
-  SetScene(new GfxSimpleScene());
+  SetScene(new GfxQuadtreeScene());
+//  SetScene(new GfxSimpleScene());
 }
 
 void World::SetScene(iGfxScene *scene)

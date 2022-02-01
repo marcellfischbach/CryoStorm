@@ -67,12 +67,12 @@ void CameraHandler::Update(float tpf)
   spc::Quaternion rotX = spc::Quaternion::FromAxisAngle(1.0f, 0.0f, 0.0f, m_rotX);
   spc::Quaternion rot  = rotX * rotY;
 
+  /*
   tr.SetTranslation(tr.GetTranslation() + dir)
     .SetRotation(rot)
     .Finish();
-  /*
-  tr.SetTranslation(spc::Vector3f(15.0f, 15.0f, 15.0f))
-    .LookAt(spc::Vector3f(0.0f, 5.0f, 0.0f))
-    .Finish();
   */
+  tr.SetTranslation(spc::Vector3f(5.0f, 10.0f, 5.0f))
+    .LookAt(spc::Vector3f(0.0f, 0.0f, 0.0f))
+    .Finish();
 }

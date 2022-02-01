@@ -45,7 +45,7 @@ public:
 
 private:
   static void Add(GfxLight *light, std::vector<GfxLight*> &lights);
-  void Remove(GfxLight *light, std::vector<GfxLight*> &lights);
+  static void Remove(GfxLight *light, std::vector<GfxLight*> &lights);
 
   void ScanGlobalLights (const std::function<bool(GfxLight *)> &callback) const;
   void ScanStaticLights (const iClipper* clipper, const std::function<bool(GfxLight *)> &callback) const;
