@@ -3,6 +3,7 @@
 #include <spcLauncher/window/sdlkeyboard.hh>
 #include <spcLauncher/window/sdlmouse.hh>
 #include <spcLauncher/launchermodule.hh>
+#include <spcBullet/bulletmodule.hh>
 #include <spcCore/coremodule.hh>
 #include <spcCore/settings.hh>
 #include <spcCore/entity/camerastate.hh>
@@ -127,6 +128,11 @@ bool register_modules(int argc, char **argv)
     printf("Unable to register core\n");
     return false;
   }
+  if (!spc::bullet::BulletModule::Register(argc, argv))
+  {
+    printf("Unable to register bullet");
+    return false;
+  }
   if (!spc::opengl::OpenGLModule::Register(argc, argv))
   {
     printf("Unable to register opengl\n");
@@ -205,6 +211,11 @@ bool initialize_modules(int argc, char **argv)
   if (!spc::CoreModule::Initialize(argc, argv))
   {
     printf("Unable to initialize core\n");
+    return false;
+  }
+  if (!spc::bullet::BulletModule::Initialize(argc, argv))
+  {
+    printf("Unable to initialize bullet\n");
     return false;
   }
   if (!spc::opengl::OpenGLModule::Initialize(argc, argv))
@@ -637,7 +648,7 @@ int main(int argc, char **argv)
   sunLightState->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 1.0f);
   sunLightState->SetShadowMapBias(0.003f);
   sunLightState->SetStatic(true);
-  sunLightState->SetCastShadow(true);
+  sunLightState->SetCastShadow(false);
   sunLightState->SetTransform(sunLightState->GetTransform()
                                                //.SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(1.0f, 0.0f, 0.0f), spc::spcDeg2Rad(-45.0f)))
                                            .SetRotation(

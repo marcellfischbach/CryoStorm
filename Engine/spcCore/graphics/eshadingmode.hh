@@ -5,6 +5,7 @@ namespace spc
 enum class eShadingMode
 {
   Shaded,
-  Unshaded
+  Unshaded,
+  COUNT,
 };
 }

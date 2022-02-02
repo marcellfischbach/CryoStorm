@@ -21,7 +21,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 unset(CMAKE_CXX_CL_SHOWINCLUDE)
 
-set(DISABLE_RENDERING ON)
+set(DISABLE_RENDERING OFF)
 
 
 include(${SpiceEngine_SOURCE_DIR}/Scripts/SpiceEngine.cmake) 
@@ -63,7 +63,7 @@ include(${SpiceEngine_SOURCE_DIR}/Scripts/Findassimp.cmake)
 include(${SpiceEngine_SOURCE_DIR}/Scripts/FindGLEW.cmake)
 include(${SpiceEngine_SOURCE_DIR}/Scripts/FindSDL2.cmake)
 #include(${SpiceEngine_SOURCE_DIR}/Scripts/FindPhysX3.cmake)
-#include(${SpiceEngine_SOURCE_DIR}/Scripts/FindBullet.cmake)
+include(${SpiceEngine_SOURCE_DIR}/Scripts/FindBullet.cmake)
 
 
 include_directories("3rdparty")

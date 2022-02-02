@@ -64,7 +64,6 @@ _FIND_BULLET_LIBRARY(BULLET_MATH_LIBRARY_DEBUG      LinearMath_Debug BulletMath_
 _FIND_BULLET_LIBRARY(BULLET_SOFTBODY_LIBRARY        BulletSoftBody)
 _FIND_BULLET_LIBRARY(BULLET_SOFTBODY_LIBRARY_DEBUG  BulletSoftBody_Debug)
 
-message ("Bullet:")
 
 # handle the QUIETLY and REQUIRED arguments and set BULLET_FOUND to TRUE if 
 # all listed variables are TRUE
@@ -84,5 +83,6 @@ if(BULLET_FOUND)
    _BULLET_APPEND_LIBRARIES(BULLET_LIBRARIES BULLET_SOFTBODY_LIBRARY)
 endif()
 
+message("Bullet Include: ${BULLET_INCLUDE_DIRS}")
 message("Bullet Libraries: ${BULLET_LIBRARIES}")
 

@@ -124,14 +124,62 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target,
 
   SPC_GL_ERROR();
 
+#define USE_COLLECTOR
+
+#ifdef USE_COLLECTOR
+  m_collector.Clear();
+  scene->ScanMeshes(&clppr, m_collector);
+
+  std::vector<GfxMesh*> &defaultMeshes = m_collector.GetMeshes(eRenderQueue::Default);
+  std::vector<GfxMesh*> &transparentMeshes = m_collector.GetMeshes(eRenderQueue::Transparency);
+
+  std::sort(defaultMeshes.begin(), defaultMeshes.end(), material_shader_compare_less_forward);
+  std::sort(transparentMeshes.begin(), transparentMeshes.end(), transparent_mesh_compare_less);
+
+
+
+  device->SetRenderTarget(m_target);
+  eClearMode mode = camera->GetClearMode();
+  device->Clear(
+      mode == eClearMode::Color || mode == eClearMode::DepthColor,
+      camera->GetClearColor(),
+      mode == eClearMode::Depth || mode == eClearMode::DepthColor,
+      camera->GetClearDepth(),
+      true,
+      0
+  );
+
+  for (auto &mesh : defaultMeshes)
+  {
+    auto material = mesh->GetMaterial();
+    if (material->GetShadingMode() == eShadingMode::Shaded)
+    {
+      RenderMesh(mesh, finalRenderLights, finalRenderLightOffset);
+    }
+    else
+    {
+      RenderUnlitMesh(mesh);
+    }
+  }
+  for (auto &mesh: m_transparentMeshes)
+  {
+    auto material = mesh->GetMaterial();
+    if (material->GetShadingMode() == eShadingMode::Shaded)
+    {
+      RenderMesh(mesh, finalRenderLights, finalRenderLightOffset);
+    }
+    else
+    {
+      RenderUnlitMesh(mesh);
+    }
+  }
+#else
   //
   // and finally render all visible objects
   m_shadedMeshes.clear();
   m_transparentMeshes.clear();
   m_unshadedMeshes.clear();
 
-  int  countBefore = 0;
-  int  countAfter  = 0;
   scene->ScanMeshes(&clppr, iGfxScene::eSM_Dynamic | iGfxScene::eSM_Static,
                     [this /* , &finalRenderLights, &finalRenderLightOffset, &trans*/](GfxMesh *mesh) {
                       auto material = mesh->GetMaterial();
@@ -168,17 +216,17 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target,
   );
 
 
-  for (auto mesh: m_shadedMeshes)
+  for (auto &mesh: m_shadedMeshes)
   {
     RenderMesh(mesh, finalRenderLights, finalRenderLightOffset);
   }
-  for (auto mesh: m_unshadedMeshes)
+  for (auto &mesh: m_unshadedMeshes)
   {
     RenderUnlitMesh(mesh);
   }
 
 
-  for (auto mesh: m_transparentMeshes)
+  for (auto &mesh: m_transparentMeshes)
   {
     auto material = mesh->GetMaterial();
     if (material->GetShadingMode() == eShadingMode::Shaded)
@@ -190,6 +238,7 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target,
       RenderUnlitMesh(mesh);
     }
   }
+#endif
   device->BindMaterial(nullptr, eRP_COUNT);
 
   device->SetBlending(false);

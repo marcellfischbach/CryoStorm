@@ -105,6 +105,8 @@ set(SOURCES
         graphics/scene/gfxoctreescene.hh
         graphics/scene/gfxquadtreescene.cc
         graphics/scene/gfxquadtreescene.hh
+        graphics/scene/gfxscenecollector.cc
+        graphics/scene/gfxscenecollector.hh
         graphics/scene/gfxsimplescene.cc
         graphics/scene/gfxsimplescene.hh
         graphics/scene/igfxscene.hh

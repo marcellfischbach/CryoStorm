@@ -25,6 +25,8 @@ public:
 
   SPC_NODISCARD const std::vector<GfxCamera *> &GetCameras() const override;
 
+  void ScanMeshes(const iClipper *clipper, GfxSceneCollector &collector) const override;
+
   void ScanMeshes(const iClipper *clipper,
                   uint32_t scanMask,
                   const std::function<void(GfxMesh *)> &callback

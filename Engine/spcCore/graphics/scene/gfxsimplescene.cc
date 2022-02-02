@@ -296,5 +296,10 @@ void GfxSimpleScene::ScanLights(const iClipper *clipper,
   }
 }
 
+void GfxSimpleScene::ScanMeshes(const iClipper *clipper, GfxSceneCollector &collector) const
+{
+
+}
+
 
 }

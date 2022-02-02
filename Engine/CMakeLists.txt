@@ -2,6 +2,7 @@
 
 
 add_subdirectory(spcAssimpLoader)
+add_subdirectory(spcBullet)
 add_subdirectory(spcCore)
 add_subdirectory(spcLauncher)
 add_subdirectory(spcImgLoader)

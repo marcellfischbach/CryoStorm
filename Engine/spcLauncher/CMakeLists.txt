@@ -32,6 +32,7 @@ SPC_MOC(spcLauncher spcLauncher)
 
 target_link_libraries(spcLauncher
         spcCore
+        spcBullet
         spcOpenGL
         spcImgLoader
         spcAssimpLoader

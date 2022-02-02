@@ -8,6 +8,7 @@
 #include <spcCore/graphics/irenderpipeline.hh>
 #include <spcCore/graphics/projector.hh>
 #include <spcCore/graphics/scene/gfxmesh.hh>
+#include <spcCore/graphics/scene/gfxscenecollector.hh>
 #include <spcCore/types.hh>
 #include <map>
 #include <vector>
@@ -69,10 +70,13 @@ private:
   iGfxScene  * m_scene;
   iRenderTarget2D * m_target;
 
-  
+
+
   std::vector<GfxLight*> m_dynamicLights;
   std::vector<GfxLight*> m_staticLights;
   std::vector<GfxLight*> m_staticLightsNew;
+
+  GfxSceneCollector m_collector;
   std::vector<GfxMesh*> m_shadedMeshes;
   std::vector<GfxMesh*> m_transparentMeshes;
   std::vector<GfxMesh*> m_unshadedMeshes;

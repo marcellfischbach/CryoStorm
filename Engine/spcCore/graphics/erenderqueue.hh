@@ -8,6 +8,7 @@ enum class eRenderQueue
 {
   Default,
   Transparency,
+  COUNT
 };
 
 

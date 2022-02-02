@@ -3,6 +3,7 @@
 #include <spcCore/graphics/scene/gfxcamera.hh>
 #include <spcCore/graphics/scene/gfxmesh.hh>
 #include <spcCore/graphics/scene/gfxlight.hh>
+#include <spcCore/graphics/scene/gfxscenecollector.hh>
 #include <spcCore/graphics/material/imaterial.hh>
 #include <spcCore/graphics/ilight.hh>
 #include <spcCore/graphics/ipointlight.hh>
@@ -36,6 +37,7 @@ struct GfxQuadtreeScene::Cell
   SPC_NODISCARD size_t Idx(const Vector3f &v) const;
   void UpdateBoundingBox();
   void RemoveLight (GfxLight*light) const;
+  void ScanMeshes(const iClipper *clipper, GfxSceneCollector &collector) const;
   void ScanMeshes(const iClipper *clipper,
                                     uint32_t scanMask,
                                     const std::function<void(GfxMesh *)> &callback
@@ -240,6 +242,28 @@ void GfxQuadtreeScene::ScanMeshes(const iClipper *clipper,
 }
 
 
+void GfxQuadtreeScene::ScanMeshes(const iClipper *clipper, GfxSceneCollector &collector) const
+{
+  for (auto mesh: m_shadedMeshes)
+  {
+    if (!clipper || clipper->Test(mesh->GetBoundingBox()) != eClippingResult::eCR_Outside)
+    {
+      collector.AddMesh(mesh);
+    }
+  }
+
+  for (auto mesh: m_unshadedMeshes)
+  {
+    if (!clipper || clipper->Test(mesh->GetBoundingBox()) != eClippingResult::eCR_Outside)
+    {
+      collector.AddMesh(mesh);
+    }
+  }
+  m_root->ScanMeshes(clipper, collector);
+}
+
+
+
 void GfxQuadtreeScene::ScanGlobalLights(const std::function<bool(GfxLight *)> &callback) const
 {
   for (auto light: m_globalLights)
@@ -307,7 +331,6 @@ void GfxQuadtreeScene::ScanLights(const iClipper *clipper,
     ScanDynamicLights(clipper, callback);
   }
 }
-
 
 GfxQuadtreeScene::Cell::Cell(Cell* parent, size_t depth, const Vector2f &min, const Vector2f &max)
   : m_parent(parent)
@@ -504,6 +527,46 @@ void GfxQuadtreeScene::Cell::UpdateBoundingBox()
   if (m_parent)
   {
     m_parent->UpdateBoundingBox();
+  }
+}
+
+void GfxQuadtreeScene::Cell::ScanMeshes(const iClipper *clipper, GfxSceneCollector &collector) const
+{
+  eClippingResult  res = clipper
+                         ? clipper->Test(m_bbox)
+                         : eClippingResult::eCR_Inside;
+  switch (res)
+  {
+  case eClippingResult::eCR_Outside:
+    return;
+  case eClippingResult::eCR_Inside:
+    clipper = nullptr;
+    break;
+  default:
+    break;
+  }
+
+
+  for (auto mesh: m_unshaded)
+  {
+    if (!clipper || clipper->Test(mesh->GetBoundingBox()) != eClippingResult::eCR_Outside)
+    {
+      collector.AddMesh(mesh);
+    }
+  }
+  for (auto mesh: m_shaded)
+  {
+    if (!clipper || clipper->Test(mesh->GetBoundingBox()) != eClippingResult::eCR_Outside)
+    {
+      collector.AddMesh(mesh);
+    }
+  }
+  if (m_cells[0])
+  {
+    for (auto m_cell : m_cells)
+    {
+      m_cell->ScanMeshes(clipper, collector);
+    }
   }
 }
 
