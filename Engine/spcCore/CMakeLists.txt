@@ -161,6 +161,9 @@ set(SOURCES
         math/clipper/sphereclipper.cc
         math/clipper/sphereclipper.hh
 
+        physics/iphysicssystem.hh
+        physics/iphysicsworld.hh
+
         resource/assetmanager.cc
         resource/assetmanager.hh
         resource/binarydata.cc

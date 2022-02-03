@@ -4,11 +4,13 @@
 #include <spcCore/coreexport.hh>
 #include <spcCore/class.hh>
 
+
 namespace spc
 {
 
 class Entity;
 struct iGfxScene;
+struct iPhysicsWorld;
 class EntityState;
 class SpatialState;
 
@@ -23,6 +25,10 @@ public:
   iGfxScene* GetScene();
   const iGfxScene* GetScene() const;
 
+  void SetPhysicsWorld(iPhysicsWorld *world);
+  iPhysicsWorld *GetPhysicsWorld();
+  const iPhysicsWorld *GetPhysicsWorld() const;
+
   bool Attach(Entity * entity);
   bool Detach(Entity * entity);
 
@@ -33,6 +39,9 @@ public:
 
 private:
   iGfxScene * m_scene;
+  iPhysicsWorld *m_physicsWorld;
+  float m_physicsUpdateCounter;
+
   SpatialState *m_rootState;
   
   std::vector<Entity*> m_entities;

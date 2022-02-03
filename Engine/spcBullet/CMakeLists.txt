@@ -7,6 +7,10 @@ set(SOURCES
         bulletexport.hh
         bulletmodule.cc
         bulletmodule.hh
+        bulletsystem.cc
+        bulletsystem.hh
+        bulletworld.cc
+        bulletworld.hh
         )
 
 

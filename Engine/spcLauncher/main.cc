@@ -34,6 +34,7 @@
 #include <spcCore/graphics/material/materialinstance.hh>
 #include <spcCore/graphics/scene/igfxscene.hh>
 #include <spcCore/graphics/scene/gfxmesh.hh>
+#include <spcCore/physics/physics.hh>
 #include <spcCore/resource/assetmanager.hh>
 #include <spcCore/resource/vfs.hh>
 #include <spcCore/resource/resourcelocator.hh>
