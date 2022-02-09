@@ -135,6 +135,7 @@ void SpatialState::SetTransform(const Transform& transform)
   UpdateTransformation();
 }
 
+
 const Matrix4f& SpatialState::GetLocalMatrix() const
 {
   return m_localMatrix;

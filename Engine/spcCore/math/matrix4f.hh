@@ -257,14 +257,21 @@ public:
     m11 = c;
   }
 
-  SPC_FORCEINLINE void SetScale(Vector3f s)
+  SPC_FORCEINLINE void SetScale(float x, float y, float z)
+  {
+    m00 = x;
+    m11 = y;
+    m22 = z;
+  }
+
+  SPC_FORCEINLINE void SetScale(const Vector3f &s)
   {
     m00 = s.x;
     m11 = s.y;
     m22 = s.z;
   }
 
-  SPC_FORCEINLINE void Scale(Vector3f s)
+  SPC_FORCEINLINE void Scale(const Vector3f &s)
   {
     m00 *= s.x;
     m11 *= s.y;
@@ -446,6 +453,44 @@ public:
         mm30, mm31, mm32, mm33
     );
   }
+
+
+  SPC_FORCEINLINE static Matrix4f Translation(float x, float y, float z)
+  {
+    Matrix4f m;
+    m.SetIdentity();
+    m.SetTranslation(x, y, z);
+    return m;
+  }
+
+  SPC_FORCEINLINE static Matrix4f Translation(const Vector3f &tr)
+  {
+    Matrix4f m;
+    m.SetIdentity();
+    m.SetTranslation(tr.x, tr.y, tr.z);
+    return m;
+  }
+
+
+
+  SPC_FORCEINLINE static Matrix4f Rotation(float ax, float ay, float az, float angle)
+  {
+    Matrix4f m;
+    m.SetIdentity();
+    m.SetRotation(Vector3f(ax, ay, az), angle);
+    return m;
+  }
+
+  SPC_FORCEINLINE static Matrix4f Rotation(const Vector3f& axis, float angle)
+  {
+    Matrix4f m;
+    m.SetIdentity();
+    m.SetRotation(axis,angle);
+      
+    return m;
+  }
+
+
 
 #define SWAP(a, b, s) (s) = (a); (a)=(b); (b)=(s)
 

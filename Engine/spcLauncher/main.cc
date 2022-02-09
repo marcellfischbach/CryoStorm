@@ -38,7 +38,7 @@
 #include <spcCore/resource/assetmanager.hh>
 #include <spcCore/resource/vfs.hh>
 #include <spcCore/resource/resourcelocator.hh>
-
+#include <spcCore/physics/physics.hh>
 #include <spcAssimpLoader/assimploadermodule.hh>
 #include <spcOpenGL/openglmodule.hh>
 #include <GL/glew.h>
@@ -649,7 +649,7 @@ int main(int argc, char **argv)
   sunLightState->SetColor(spc::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 1.0f);
   sunLightState->SetShadowMapBias(0.003f);
   sunLightState->SetStatic(true);
-  sunLightState->SetCastShadow(false);
+  sunLightState->SetCastShadow(true);
   sunLightState->SetTransform(sunLightState->GetTransform()
                                                //.SetRotation(spc::Quaternion::FromAxisAngle(spc::Vector3f(1.0f, 0.0f, 0.0f), spc::spcDeg2Rad(-45.0f)))
                                            .SetRotation(
@@ -724,6 +724,50 @@ int main(int argc, char **argv)
   bool  anim      = true;
   float roughness = 1.0f;
   materialInstance->Set(2, roughness);
+
+
+
+  spc::iPhysicsSystem* physics = spc::ObjectRegistry::Get<spc::iPhysicsSystem>();
+  spc::iPhysicsWorld* physWorld = physics->CreateWorld();
+
+
+  // add the ground plane
+  spc::BoxShapeDesc floorDesc{ spc::Vector3f(100.0f, 1.0f, 100.0f) };
+  spc::iCollisionShape* floorShape = physics->CreateShape(floorDesc);
+  spc::iStaticCollider* floorCollider = physics->CreateStaticCollider();
+  floorCollider->Attach(floorShape);
+  floorCollider->SetTransform(spc::Matrix4f::Translation(0.0f, -1.0f, 0.0f));
+  physWorld->AddCollider(floorCollider);
+
+  sphereRadius = 0.5f;
+  renderMeshSphere = create_sphere_mesh(sphereRadius, 32, 4.0f);
+  for (int i = 0; i < 10; i++)
+  {
+    spc::Mesh* meshSphere = new spc::Mesh();
+    spc::Entity* entitySphere = new spc::Entity("Sphere");
+    spc::StaticMeshState* meshStateSphere = new spc::StaticMeshState("Mesh.Sphere");
+    meshSphere->AddMaterialSlot("Default", materialInstance);
+    meshSphere->AddSubMesh(renderMeshSphere, 0);
+    meshStateSphere->GetTransform()
+      .SetTranslation(spc::Vector3f(0.0f, sphereRadius * 2.5f, 0.0f) * (i+2))
+      .Finish();
+    meshStateSphere->SetMesh(meshSphere);
+    entitySphere->Attach(meshStateSphere);
+    world->Attach(entitySphere);
+
+
+    spc::SphereShapeDesc sphereDesc{ sphereRadius };
+    spc::iCollisionShape* sphereShape = physics->CreateShape(sphereDesc);
+    spc::iDynamicCollider* sphereCollider = physics->CreateDynamicCollider();
+    sphereCollider->Attach(sphereShape);
+    sphereCollider->SetTransform(entitySphere->GetRoot()->GetGlobalMatrix());
+    sphereCollider->SetUserData(meshStateSphere);
+    physWorld->AddCollider(sphereCollider);
+
+  }
+
+
+
 
 #if _DEBUG
   spc::Size numDrawCallsPerSec = 0;
@@ -832,6 +876,12 @@ int main(int argc, char **argv)
 
     SDL_GL_SwapWindow(wnd);
 
+    physWorld->Step(1.0f / 60.0f);
+    const std::vector<spc::iPhysicsWorld::DynamicResult>& result = physWorld->SwapResult();
+    for (auto& res : result)
+    {
+      res.Collider->GetUserData()->SetLocalMatrix(res.Matrix);
+    }
   }
 
   spc::iMouse *mouse = spc::Input::GetMouse();

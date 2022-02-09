@@ -1,5 +1,19 @@
-//
-// Created by mcel on 03.02.2022.
-//
+#include <spcCore/entity/collisionstate.hh>
 
-#include "collisionstate.hh"
+
+namespace spc
+{
+
+
+CollisionState::CollisionState()
+{
+  SPC_CLASS_GEN_CONSTR;
+}
+
+CollisionState::~CollisionState()
+{
+
+}
+
+
+}

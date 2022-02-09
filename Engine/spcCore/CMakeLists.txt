@@ -23,6 +23,8 @@ set(SOURCES
 
         entity/camerastate.cc
         entity/camerastate.hh
+        entity/collisionstate.cc
+        entity/collisionstate.hh
         entity/entity.cc
         entity/entity.hh
         entity/entitystate.cc
@@ -161,6 +163,8 @@ set(SOURCES
         math/clipper/sphereclipper.cc
         math/clipper/sphereclipper.hh
 
+        physics/icollider.hh
+        physics/icollisionshape.hh
         physics/iphysicssystem.hh
         physics/iphysicsworld.hh
 

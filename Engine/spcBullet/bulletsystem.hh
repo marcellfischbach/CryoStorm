@@ -17,7 +17,18 @@ public:
 
   ~BulletSystem() override;
 
-  iPhysicsWorld *CreateWorld() const override;
+  SPC_NODISCARD iPhysicsWorld *CreateWorld() override;
+
+
+  SPC_NODISCARD iCollisionShape* CreateShape(const SphereShapeDesc & desc) override;
+  SPC_NODISCARD iCollisionShape* CreateShape(const BoxShapeDesc & desc) override;
+  SPC_NODISCARD iCollisionShape* CreateShape(const CylinderShapeDesc & desc) override;
+  SPC_NODISCARD iCollisionShape* CreateShape(const CapsuleShapeDesc & desc) override;
+
+
+  SPC_NODISCARD iStaticCollider* CreateStaticCollider() override;
+  SPC_NODISCARD iDynamicCollider* CreateDynamicCollider() override;
+  SPC_NODISCARD iTriggerCollider* CreateTriggerCollider() override;
 
 };
 

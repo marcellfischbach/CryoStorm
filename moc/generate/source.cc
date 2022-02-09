@@ -727,7 +727,7 @@ std::string ClassGenerator::GenerateClass(ClassNode * classNode, std::list<Names
 
   cls += "spc::iObject *" + fns + classClassName + "::CreateInstance() const\n";
   cls += "{\n";
-  if (!classNode->HasPureVirtualMethod() && classNode->HasPublicDefaultConstructor() && !meta->Has("NoInstance"))
+  if (!classNode->HasPureVirtualMethod() && classNode->HasPublicDefaultConstructor() && !meta->Has("Virtual"))
   {
     cls += "  return static_cast<spc::iObject*>(new " + fns + className + "());\n";
   }

@@ -12,7 +12,7 @@ namespace spc
 
 struct iSampler;
 
-SPC_CLASS(NoInstance)
+SPC_CLASS(virtual)
 struct SPC_CORE_API iTexture : public SPC_SUPER(iObject)
 {
   SPC_CLASS_GEN;
