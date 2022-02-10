@@ -1,14 +1,14 @@
 #version 330
 
-layout(location = eVS_Vertices) in vec4 spc_Position;
-layout(location = eVS_Normals) in vec3 spc_Normal;
-layout(location = eVS_Colors) in vec4 spc_Color;
-layout(location = eVS_UV) in vec2 spc_UV;
+layout(location = eVS_Vertices) in vec4 ce_Position;
+layout(location = eVS_Normals) in vec3 ce_Normal;
+layout(location = eVS_Colors) in vec4 ce_Color;
+layout(location = eVS_UV) in vec2 ce_UV;
 
 
-uniform mat4 spc_ModelMatrix;
-uniform mat4 spc_ViewMatrix;
-uniform mat4 spc_ViewProjectionMatrix;
+uniform mat4 ce_ModelMatrix;
+uniform mat4 ce_ViewMatrix;
+uniform mat4 ce_ViewProjectionMatrix;
 
 out vec4 color;
 out vec2 texCoord;
@@ -19,15 +19,15 @@ out vec3 viewer_world_position;
 
 void main()
 {
-  vec4 position = spc_ModelMatrix * spc_Position;
+  vec4 position = ce_ModelMatrix * ce_Position;
   world_position = position.xyz;
-  world_normal = (spc_ModelMatrix * vec4(spc_Normal, 0.0)).xyz;
+  world_normal = (ce_ModelMatrix * vec4(ce_Normal, 0.0)).xyz;
 
-  viewer_world_position = -(spc_ViewMatrix * vec4(0, 0, 0, 1)).xyz;
-  camera_space_position = (spc_ViewMatrix * position).xyz;
+  viewer_world_position = -(ce_ViewMatrix * vec4(0, 0, 0, 1)).xyz;
+  camera_space_position = (ce_ViewMatrix * position).xyz;
 
-  gl_Position = spc_ViewProjectionMatrix * position;
-  color = spc_Color;
-  texCoord = spc_UV;
+  gl_Position = ce_ViewProjectionMatrix * position;
+  color = ce_Color;
+  texCoord = ce_UV;
 }
 

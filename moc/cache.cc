@@ -11,13 +11,13 @@
 #include <Windows.h>
 
 
-namespace spc::moc
+namespace ce::moc
 {
 
 
 void Cache::Load(const std::string& path)
 {
-  std::ifstream stream(path + "/.spccache");
+  std::ifstream stream(path + "/.ceCache");
   std::string line;
   int l = 1;
   while (std::getline(stream, line))
@@ -81,7 +81,7 @@ void Cache::Load(const std::string& path)
 
 void Cache::Store(const std::string& path)
 {
-  std::ofstream stream(path + "/.spccache");
+  std::ofstream stream(path + "/.ceCache");
   for (auto it: m_fileCache)
   {
     Data& data = it.second;

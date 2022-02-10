@@ -1,12 +1,12 @@
 #version 330
 
-layout(location = eVS_Vertices) in vec4 spc_Position;
+layout(location = eVS_Vertices) in vec4 ce_Position;
 
-uniform mat4 spc_ModelMatrix;
+uniform mat4 ce_ModelMatrix;
 
 
 void main()
 {
-	gl_Position = spc_ModelMatrix * spc_Position;
+	gl_Position = ce_ModelMatrix * ce_Position;
 }
 

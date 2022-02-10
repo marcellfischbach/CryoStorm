@@ -5,9 +5,9 @@
 #include <deque>
 #include <list>
 
-#define CHECK_IDX(tokens, idx) if ((idx) >= tokens.size()) throw spc::moc::ParseException(__FILE__, __LINE__, "Index out of boundx " + std::to_string(idx) + " >= " + std::to_string(tokens.size()))
+#define CHECK_IDX(tokens, idx) if ((idx) >= tokens.size()) throw ce::moc::ParseException(__FILE__, __LINE__, "Index out of boundx " + std::to_string(idx) + " >= " + std::to_string(tokens.size()))
 
-namespace spc::moc
+namespace ce::moc
 {
 
 Parser::Parser()
@@ -240,7 +240,7 @@ ClassSuperDefinition Parser::ParseSuperDefinition(Tokenizer & tokenizer, size_t 
 
     case eTT_Identifier:
       CHECK_IDX(tokens, idx + 1);
-      if (token.Get() == std::string("SPC_SUPER") && idx + 1 < tokens.size() && tokens[idx + 1].GetType() == eTT_ParenOpen)
+      if (token.Get() == std::string("CE_SUPER") && idx + 1 < tokens.size() && tokens[idx + 1].GetType() == eTT_ParenOpen)
       {
         csSuper = true;
         idx += 2;
@@ -682,7 +682,7 @@ TypeDef Parser::GetType(Tokenizer & tokenizer, size_t & idx)
     }
     if (token.GetType() == eTT_Identifier)
     {
-      if (token.Get() == std::string("SPC_FORCEINLINE")
+      if (token.Get() == std::string("CE_FORCEINLINE")
         || token.Get() == std::string("inline")
         || token.Get() == std::string("__forceinline"))
       {

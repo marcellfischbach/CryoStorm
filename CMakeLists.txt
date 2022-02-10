@@ -2,18 +2,17 @@
 cmake_minimum_required(VERSION 3.3)
 
 
+project(CrimsonEdge)
 
-project(SpiceEngine)
-
-set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${SpiceEngine_BINARY_DIR}/bin)
-set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${SpiceEngine_BINARY_DIR}/bin)
-set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${SpiceEngine_BINARY_DIR}/bin)
-set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${SpiceEngine_BINARY_DIR}/bin)
-set (CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${SpiceEngine_BINARY_DIR}/bin)
-set (CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${SpiceEngine_BINARY_DIR}/bin)
-set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${SpiceEngine_BINARY_DIR}/bin)
-set (CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${SpiceEngine_BINARY_DIR}/bin)
-set (CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${SpiceEngine_BINARY_DIR}/bin)
+set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CrimsonEdge_BINARY_DIR}/bin)
+set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CrimsonEdge_BINARY_DIR}/bin)
+set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CrimsonEdge_BINARY_DIR}/bin)
+set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CrimsonEdge_BINARY_DIR}/bin)
+set (CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CrimsonEdge_BINARY_DIR}/bin)
+set (CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CrimsonEdge_BINARY_DIR}/bin)
+set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CrimsonEdge_BINARY_DIR}/bin)
+set (CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CrimsonEdge_BINARY_DIR}/bin)
+set (CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CrimsonEdge_BINARY_DIR}/bin)
 
 
 set(CMAKE_CXX_STANDARD 20)
@@ -24,21 +23,21 @@ unset(CMAKE_CXX_CL_SHOWINCLUDE)
 set(DISABLE_RENDERING OFF)
 
 
-include(${SpiceEngine_SOURCE_DIR}/Scripts/SpiceEngine.cmake) 
+include(${CrimsonEdge_SOURCE_DIR}/Scripts/CrimsonEdge.cmake) 
 
 # SET CMakePolicy 0100 to new to include .hh files in automoc und autouic of QT5
 #cmake_policy(SET CMP0100 NEW)
 
 if (WIN32)
 message("Use Win32")
-add_definitions(-DSPC_WIN32)
+add_definitions(-DCE_WIN32)
 else()
 message("Use Linux")
-add_definitions(-DSPC_LINUX)
+add_definitions(-DCE_LINUX)
 endif()
 
 if (${DISABLE_RENDERING})
-add_definitions(-DSPC_DISABLE_RENDERING)
+add_definitions(-DCE_DISABLE_RENDERING)
 endif()
 
 
@@ -59,11 +58,11 @@ find_package(Bullet)
 
 
 
-include(${SpiceEngine_SOURCE_DIR}/Scripts/Findassimp.cmake)
-include(${SpiceEngine_SOURCE_DIR}/Scripts/FindGLEW.cmake)
-include(${SpiceEngine_SOURCE_DIR}/Scripts/FindSDL2.cmake)
-#include(${SpiceEngine_SOURCE_DIR}/Scripts/FindPhysX3.cmake)
-include(${SpiceEngine_SOURCE_DIR}/Scripts/FindBullet.cmake)
+include(${CrimsonEdge_SOURCE_DIR}/Scripts/Findassimp.cmake)
+include(${CrimsonEdge_SOURCE_DIR}/Scripts/FindGLEW.cmake)
+include(${CrimsonEdge_SOURCE_DIR}/Scripts/FindSDL2.cmake)
+#include(${CrimsonEdge_SOURCE_DIR}/Scripts/FindPhysX3.cmake)
+include(${CrimsonEdge_SOURCE_DIR}/Scripts/FindBullet.cmake)
 
 
 include_directories("3rdparty")
@@ -71,10 +70,10 @@ include_directories(${SDL_INCLUDE_DIR})
 include_directories(${PNG_INCLUDE_DIRS})
 include_directories(${JPEG_INCLUDE_DIRS})
 include_directories(${BULLET_INCLUDE_DIRS})
-include_directories(${SpiceEngine_SOURCE_DIR}/Engine)
-#include_directories(${SpiceEngine_BINARY_DIR}/Engine)
-include_directories(${SpiceEngine_SOURCE_DIR}/Editor)
-#include_directories(${SpiceEngine_BINARY_DIR}/Editor)
+include_directories(${CrimsonEdge_SOURCE_DIR}/Engine)
+#include_directories(${CrimsonEdge_BINARY_DIR}/Engine)
+include_directories(${CrimsonEdge_SOURCE_DIR}/Editor)
+#include_directories(${CrimsonEdge_BINARY_DIR}/Editor)
 
 
 add_subdirectory(3rdparty)

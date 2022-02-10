@@ -1,19 +1,19 @@
 #version 330
 
-layout(location = eVS_Vertices) in vec4 spc_Position;
-layout(location = eVS_Colors) in vec4 spc_Color;
-layout(location = eVS_UV) in vec2 spc_UV;
+layout(location = eVS_Vertices) in vec4 ce_Position;
+layout(location = eVS_Colors) in vec4 ce_Color;
+layout(location = eVS_UV) in vec2 ce_UV;
 
 
-uniform mat4 spc_ModelViewProjectionMatrix;
+uniform mat4 ce_ModelViewProjectionMatrix;
 
 out vec4 color;
 out vec2 texCoord;
 
 void main()
 {
-  gl_Position = spc_ModelViewProjectionMatrix * spc_Position;
-  color = spc_Color;
-  texCoord = spc_UV;
+  gl_Position = ce_ModelViewProjectionMatrix * ce_Position;
+  color = ce_Color;
+  texCoord = ce_UV;
 }
 

@@ -1,8 +1,8 @@
-uniform int spc_LightCount;
-uniform vec4 spc_LightColor[4];
-uniform vec4 spc_LightVector[4];
-uniform float spc_LightRange[4];
-uniform int spc_LightCastShadow[4];
+uniform int ce_LightCount;
+uniform vec4 ce_LightColor[4];
+uniform vec4 ce_LightVector[4];
+uniform float ce_LightRange[4];
+uniform int ce_LightCastShadow[4];
 
 
 #include <directionallight_shadow.glsl>
@@ -68,9 +68,9 @@ vec3 calc_lights(vec3 frag_position, vec3 frag_normal, vec3 camera_space_positio
     float n_dot_v = clamp(dot(frag_normal, frag_to_viewer), 0.0, 1.0);
 
     vec3 res = vec3(0, 0, 0);
-    for (int i = 0; i < spc_LightCount; i++)
+    for (int i = 0; i < ce_LightCount; i++)
     {
-        res += calc_light(i, spc_LightColor[i].rgb, spc_LightVector[i], spc_LightRange[i], frag_position, frag_normal, camera_space_position, n_dot_v);
+        res += calc_light(i, ce_LightColor[i].rgb, ce_LightVector[i], ce_LightRange[i], frag_position, frag_normal, camera_space_position, n_dot_v);
     }
     return res;
 }

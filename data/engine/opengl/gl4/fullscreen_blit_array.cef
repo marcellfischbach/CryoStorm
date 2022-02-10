@@ -1,0 +1,10 @@
+program {
+  shaders {
+    shader "fullscreen_blit_array_vert.cef",
+    shader "fullscreen_blit_array_frag.cef",
+  }
+  attributes {
+    attribute "Diffuse",
+    attribute "ArrayIndex",
+  }
+}

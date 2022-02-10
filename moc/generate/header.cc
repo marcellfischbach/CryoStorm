@@ -3,7 +3,7 @@
 #include <generate/ioutput.hh>
 #include <ast.hh>
 
-namespace spc::moc
+namespace ce::moc
 {
 
 
@@ -55,12 +55,12 @@ std::string HeaderGenerator::OutputClass(ClassNode* clsNode)
     source += "{\n";
   }
 
-  source += "\nclass " + clsName + " : public spc::Class\n";
+  source += "\nclass " + clsName + " : public ce::Class\n";
   source += "{\n";
   source += "public:\n";
   source += " " + clsName + "();\n";
   source += " static " + clsName  + " *Get();\n";
-  source += " virtual spc::iObject *CreateInstance() const;\n";
+  source += " virtual ce::iObject *CreateInstance() const;\n";
   source += "};\n";
 
 

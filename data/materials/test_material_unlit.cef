@@ -1,0 +1,12 @@
+material {
+    shaders {
+        shader Forward "/shaders/test_color_unlit_program.cef",
+        shader ShadowCube "/shaders/test_shadow_point_program.cef",
+        shader ShadowPSSM "/shaders/test_shadow_pssm_program.cef",
+        shader Shadow "/shaders/test_shadow_program.cef"
+    },
+    attributes {
+        attribute Texture "Diffuse" "/textures/grass_texture.cef",
+        attribute Color4 "Color" 1 1 1 1,
+    }
+}

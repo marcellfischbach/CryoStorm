@@ -1,9 +1,9 @@
 #version 330
 
-layout(location = 0) out vec4 spc_FragColor;
+layout(location = 0) out vec4 ce_FragColor;
 
-uniform sampler2D spc_Diffuse;
-uniform vec4 spc_Color;
+uniform sampler2D ce_Diffuse;
+uniform vec4 ce_Color;
 
 
 in vec4 color;
@@ -28,6 +28,6 @@ void main()
 {
     vec3 norm = normalize(world_normal);
     vec3 lightColor = calc_lights(world_position, norm, camera_space_position, viewer_world_position);
-    spc_FragColor = vec4(lightColor, 1.0) * spc_Color;
+    ce_FragColor = vec4(lightColor, 1.0) * ce_Color;
 }
 

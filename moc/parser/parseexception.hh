@@ -4,7 +4,7 @@
 #include <exception>
 #include <string>
 
-namespace spc::moc
+namespace ce::moc
 {
 
 

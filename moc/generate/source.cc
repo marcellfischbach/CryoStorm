@@ -4,7 +4,7 @@
 #include <ast.hh>
 
 
-namespace spc::moc
+namespace ce::moc
 {
 
 SourceGenerator::SourceGenerator()
@@ -109,17 +109,17 @@ std::string GetValueDeclarationMem(TypeDef& typeDef)
 {
   if (typeDef.IsReference())
   {
-    return "spc::eVMM_Reference";
+    return "ce::eVMM_Reference";
   }
   else if (typeDef.IsPointer())
   {
-    return "spc::eVMM_Pointer";
+    return "ce::eVMM_Pointer";
   }
   else if (typeDef.IsPointerToPointer())
   {
-    return "spc::eVMM_PointerToPointer";
+    return "ce::eVMM_PointerToPointer";
   }
-  return "spc::eVMM_Value";
+  return "ce::eVMM_Value";
 }
 
 std::string ClassGenerator::GenerateFunctionClass(ClassNode* classNode, std::list<NamespaceNode*>& nss, FunctionNode* function, const std::string&, CSMetaNode*)
@@ -140,17 +140,17 @@ std::string ClassGenerator::GenerateFunctionClass(ClassNode* classNode, std::lis
     source += "{\n";
   }
 
-  source += "\nclass " + fnctClassName + " : public spc::Function\n";
+  source += "\nclass " + fnctClassName + " : public ce::Function\n";
   source += "{\n";
   source += "public:\n";
 
   // create the constructor
   source += "  " + fnctClassName + "()\n";
-  source += std::string("    : spc::Function (") +
-    (function->IsVirtual() ? "spc::eFV_Virtual, " : "spc::eFV_NonVirtual, ") +
+  source += std::string("    : ce::Function (") +
+    (function->IsVirtual() ? "ce::eFV_Virtual, " : "ce::eFV_NonVirtual, ") +
     GenerateCSValueDeclaration(function->GetReturnValue()) + ", " +
     "\"" + function->GetName() + "\", " +
-    (function->IsConst() ? "spc::eC_Const" : "spc::eC_NonConst") +
+    (function->IsConst() ? "ce::eC_Const" : "ce::eC_NonConst") +
     ")\n";
   source += "  {\n";
 
@@ -196,18 +196,18 @@ std::string ClassGenerator::GenerateFunctionVoidInvokeMethod(ClassNode *classNod
   std::string sConst = constMethod ? "const " : "";
 
   fkt += "\n";
-  fkt += "  virtual void InvokeVoidImpl (" + sConst + "spc::iObject* obj, ...) const\n";
+  fkt += "  virtual void InvokeVoidImpl (" + sConst + "ce::iObject* obj, ...) const\n";
   fkt += "  {\n";
   if (constMethod && !function->IsConst())
   {
-    fkt += "    throw spc::BadMethodInvokation(\"[" + function->GetName() + "] No const-call\");\n";
+    fkt += "    throw ce::BadMethodInvokation(\"[" + function->GetName() + "] No const-call\");\n";
   }
   else
   {
-    fkt += "    " + sConst + classNode->GetName() + " *d = spc::QueryClass<" + sConst + classNode->GetName() + ">(obj);\n";
+    fkt += "    " + sConst + classNode->GetName() + " *d = ce::QueryClass<" + sConst + classNode->GetName() + ">(obj);\n";
     fkt += "    if (!d)\n";
     fkt += "    {\n";
-    fkt += "      throw spc::BadMethodInvokation(\"[" + function->GetName() + "] Object is not instance of " + classNode->GetName() + "\");\n";
+    fkt += "      throw ce::BadMethodInvokation(\"[" + function->GetName() + "] Object is not instance of " + classNode->GetName() + "\");\n";
     fkt += "    }\n\n";
 
     fkt += "    va_list lst;\n";
@@ -246,22 +246,22 @@ std::string ClassGenerator::GenerateFunctionValueInvokeMethod(ClassNode *classNo
   std::string sConst = constMethod ? "const " : "";
 
   fkt += "\n";
-  fkt += "  virtual void InvokeValueImpl (" + sConst + "spc::iObject* obj, ...) const\n";
+  fkt += "  virtual void InvokeValueImpl (" + sConst + "ce::iObject* obj, ...) const\n";
   fkt += "  {\n";
   if (!function->GetReturnValue().IsValue() || function->GetReturnValue().IsVoid())
   {
-    fkt += "    throw spc::BadMethodInvokation(\"[" + function->GetName() + "] No value-call\");\n";
+    fkt += "    throw ce::BadMethodInvokation(\"[" + function->GetName() + "] No value-call\");\n";
   }
   else if (constMethod && !function->IsConst())
   {
-    fkt += "    throw spc::BadMethodInvokation(\"[" + function->GetName() + "] No const-call\");\n";
+    fkt += "    throw ce::BadMethodInvokation(\"[" + function->GetName() + "] No const-call\");\n";
   }
   else
   {
-    fkt += "    " + sConst + classNode->GetName() + " *d = spc::QueryClass<" + sConst + classNode->GetName() + ">(obj);\n";
+    fkt += "    " + sConst + classNode->GetName() + " *d = ce::QueryClass<" + sConst + classNode->GetName() + ">(obj);\n";
     fkt += "    if (!d)\n";
     fkt += "    {\n";
-    fkt += "      throw spc::BadMethodInvokation(\"[" + function->GetName() + "] Object is not instance of " + classNode->GetName() + "\");\n";
+    fkt += "      throw ce::BadMethodInvokation(\"[" + function->GetName() + "] Object is not instance of " + classNode->GetName() + "\");\n";
     fkt += "    }\n\n";
 
     fkt += "    va_list lst;\n";
@@ -307,26 +307,26 @@ std::string ClassGenerator::GenerateFunctionReferenceInvokeMethod(ClassNode *cla
   std::string mConst = constReturn ? "Const" : "";
 
   fkt += "\n";
-  fkt += "  virtual " + rConst + "void *Invoke" + mConst + "ReferenceImpl (" + sConst + "spc::iObject* obj, ...) const\n";
+  fkt += "  virtual " + rConst + "void *Invoke" + mConst + "ReferenceImpl (" + sConst + "ce::iObject* obj, ...) const\n";
   fkt += "  {\n";
   if (!function->GetReturnValue().IsReference() )
   {
-    fkt += "    throw spc::BadMethodInvokation(\"[" + function->GetName() + "] No reference-call\");\n";
+    fkt += "    throw ce::BadMethodInvokation(\"[" + function->GetName() + "] No reference-call\");\n";
   }
   else if (!constReturn && function->GetReturnValue().IsConst())
   {
-    fkt += "    throw spc::BadMethodInvokation(\"[" + function->GetName() + "] Return value is non-const\");\n";
+    fkt += "    throw ce::BadMethodInvokation(\"[" + function->GetName() + "] Return value is non-const\");\n";
   }
   else if (constMethod && !function->IsConst())
   {
-    fkt += "    throw spc::BadMethodInvokation(\"[" + function->GetName() + "] No const-call\");\n";
+    fkt += "    throw ce::BadMethodInvokation(\"[" + function->GetName() + "] No const-call\");\n";
   }
   else
   {
-    fkt += "    " + sConst + classNode->GetName() + " *d = spc::QueryClass<" + sConst + classNode->GetName() + ">(obj);\n";
+    fkt += "    " + sConst + classNode->GetName() + " *d = ce::QueryClass<" + sConst + classNode->GetName() + ">(obj);\n";
     fkt += "    if (!d)\n";
     fkt += "    {\n";
-    fkt += "      throw spc::BadMethodInvokation(\"[" + function->GetName() + "] Object is not instance of " + classNode->GetName() + "\");\n";
+    fkt += "      throw ce::BadMethodInvokation(\"[" + function->GetName() + "] Object is not instance of " + classNode->GetName() + "\");\n";
     fkt += "    }\n\n";
 
     fkt += "    va_list lst;\n";
@@ -370,26 +370,26 @@ std::string ClassGenerator::GenerateFunctionPointerInvokeMethod(ClassNode *class
   std::string mConst = constReturn ? "Const" : "";
 
   fkt += "\n";
-  fkt += "  virtual " + rConst + "void *Invoke" + mConst + "PointerImpl (" + sConst + "spc::iObject* obj, ...) const\n";
+  fkt += "  virtual " + rConst + "void *Invoke" + mConst + "PointerImpl (" + sConst + "ce::iObject* obj, ...) const\n";
   fkt += "  {\n";
   if (!function->GetReturnValue().IsPointer())
   {
-    fkt += "    throw spc::BadMethodInvokation(\"[" + function->GetName() + "] No pointer-call\");\n";
+    fkt += "    throw ce::BadMethodInvokation(\"[" + function->GetName() + "] No pointer-call\");\n";
   }
   else if (!constReturn && function->GetReturnValue().IsConst())
   {
-    fkt += "    throw spc::BadMethodInvokation(\"[" + function->GetName() + "] Return value is non-const\");\n";
+    fkt += "    throw ce::BadMethodInvokation(\"[" + function->GetName() + "] Return value is non-const\");\n";
   }
   else if (constMethod && !function->IsConst())
   {
-    fkt += "    throw spc::BadMethodInvokation(\"[" + function->GetName() + "] No const-call\");\n";
+    fkt += "    throw ce::BadMethodInvokation(\"[" + function->GetName() + "] No const-call\");\n";
   }
   else
   {
-    fkt += "    " + sConst + classNode->GetName() + " *d = spc::QueryClass<" + sConst + classNode->GetName() + ">(obj);\n";
+    fkt += "    " + sConst + classNode->GetName() + " *d = ce::QueryClass<" + sConst + classNode->GetName() + ">(obj);\n";
     fkt += "    if (!d)\n";
     fkt += "    {\n";
-    fkt += "      throw spc::BadMethodInvokation(\"Object is not instance of " + classNode->GetName() + "\");\n";
+    fkt += "      throw ce::BadMethodInvokation(\"Object is not instance of " + classNode->GetName() + "\");\n";
     fkt += "    }\n\n";
 
     fkt += "    va_list lst;\n";
@@ -522,25 +522,25 @@ std::string ClassGenerator::GenerateAttribute(ClassNode* classNode, std::list<Na
     prop += "namespace " + ns->GetName() + "\n";
     prop += "{\n";
   }
-  prop += "\nclass " + propClassName + " : public spc::Property\n";
+  prop += "\nclass " + propClassName + " : public ce::Property\n";
   prop += "{\n";
   prop += "public:\n";
   prop += "  " + propClassName + "()\n";
-  prop += "    : spc::Property(" + GenerateCSValueDeclaration(containerType, false) + ", \"" + propName + "\", " + GenerateCSValueDeclaration(type, true) + ")\n";
+  prop += "    : ce::Property(" + GenerateCSValueDeclaration(containerType, false) + ", \"" + propName + "\", " + GenerateCSValueDeclaration(type, true) + ")\n";
   prop += "  {\n";
   prop += "  }\n\n";
 
 
   std::string sType = GenerateTypeForAttribute(type);
   std::string sInputType = GenerateInputTypeForAttribute(type);
-  prop += "  virtual void SetValue (spc::iObject *object, void *data) const\n";
+  prop += "  virtual void SetValue (ce::iObject *object, void *data) const\n";
   prop += "  {\n";
   if (visibility == std::string("public") && !type.IsConst())
   {
-    prop += "    " + classNode->GetName() + " *d = spc::QueryClass<" + classNode->GetName() + ">(object);\n";
+    prop += "    " + classNode->GetName() + " *d = ce::QueryClass<" + classNode->GetName() + ">(object);\n";
     prop += "    if (!d)\n";
     prop += "    {\n";
-    prop += "      throw spc::BadMethodInvokation(\"Object is not instance of " + classNode->GetName() + "\");\n";
+    prop += "      throw ce::BadMethodInvokation(\"Object is not instance of " + classNode->GetName() + "\");\n";
     prop += "    }\n\n";
 
     if (!type.IsPointer() || meta->Has("Native"))
@@ -556,42 +556,42 @@ std::string ClassGenerator::GenerateAttribute(ClassNode* classNode, std::list<Na
   }
   else
   {
-    prop += "    throw spc::BadMethodInvokation(\"Property [" + classNode->GetName() + "::" + member->GetName() + "] is not public\");\n";
+    prop += "    throw ce::BadMethodInvokation(\"Property [" + classNode->GetName() + "::" + member->GetName() + "] is not public\");\n";
   }
   prop += "  }\n\n";
 
-  prop += "  virtual const void* GetValue (const spc::iObject *object) const\n";
+  prop += "  virtual const void* GetValue (const ce::iObject *object) const\n";
   prop += "  {\n";
   if (visibility == std::string("public"))
   {
-    prop += "    const " + classNode->GetName() + " *d = spc::QueryClass<const " + classNode->GetName() + ">(object);\n";
+    prop += "    const " + classNode->GetName() + " *d = ce::QueryClass<const " + classNode->GetName() + ">(object);\n";
     prop += "    if (!d)\n";
     prop += "    {\n";
-    prop += "      throw spc::BadMethodInvokation(\"Object is not instance of " + classNode->GetName() + "\");\n";
+    prop += "      throw ce::BadMethodInvokation(\"Object is not instance of " + classNode->GetName() + "\");\n";
     prop += "    }\n\n";
     prop += "    return reinterpret_cast<const void*>(&d->" + member->GetName() + ");";
   }
   else
   {
-    prop += "    throw spc::BadMethodInvokation(\"Property [" + classNode->GetName() + "::" + member->GetName() + "] is not public\");\n";
+    prop += "    throw ce::BadMethodInvokation(\"Property [" + classNode->GetName() + "::" + member->GetName() + "] is not public\");\n";
   }
   prop += "  }\n\n";
 
 
-  prop += "  virtual void* GetValue (spc::iObject *object) const\n";
+  prop += "  virtual void* GetValue (ce::iObject *object) const\n";
   prop += "  {\n";
   if (visibility == std::string("public"))
   {
-    prop += "    " + classNode->GetName() + " *d = spc::QueryClass<" + classNode->GetName() + ">(object);\n";
+    prop += "    " + classNode->GetName() + " *d = ce::QueryClass<" + classNode->GetName() + ">(object);\n";
     prop += "    if (!d)\n";
     prop += "    {\n";
-    prop += "      throw spc::BadMethodInvokation(\"Object is not instance of " + classNode->GetName() + "\");\n";
+    prop += "      throw ce::BadMethodInvokation(\"Object is not instance of " + classNode->GetName() + "\");\n";
     prop += "    }\n\n";
     prop += "    return reinterpret_cast<void*>(&d->" + member->GetName() + ");";
   }
   else
   {
-    prop += "    throw spc::BadMethodInvokation(\"Property [" + classNode->GetName() + "::" + member->GetName() + "] is not public\");\n";
+    prop += "    throw ce::BadMethodInvokation(\"Property [" + classNode->GetName() + "::" + member->GetName() + "] is not public\");\n";
   }
   prop += "  }\n\n";
 
@@ -654,30 +654,30 @@ std::string ClassGenerator::GenerateInputTypeForAttribute(const TypeDef& typeDef
 
 std::string ClassGenerator::GenerateCSValueDeclaration(const TypeDef& typeDef, bool withSubTypes)
 {
-  std::string evmm = "spc::eVMM_Value";
+  std::string evmm = "ce::eVMM_Value";
   if (typeDef.IsReference())
   {
-    evmm = "spc::eVMM_Reference";
+    evmm = "ce::eVMM_Reference";
   }
   else if (typeDef.IsPointer())
   {
-    evmm = "spc::eVMM_Pointer";
+    evmm = "ce::eVMM_Pointer";
   }
   else if (typeDef.IsPointerToPointer())
   {
-    evmm = "spc::eVMM_PointerToPointer";
+    evmm = "ce::eVMM_PointerToPointer";
   }
 
 
-  return std::string("spc::ValueDeclaration(") +
-    (typeDef.IsConst() ? "spc::eC_Const" : "spc::eC_NonConst") + ", " +
+  return std::string("ce::ValueDeclaration(") +
+    (typeDef.IsConst() ? "ce::eC_Const" : "ce::eC_NonConst") + ", " +
     "\"" + typeDef.GetTypeName(withSubTypes) + "\", " +
     evmm + ")";
 }
 
 std::string ClassGenerator::GenerateAddAttribute(const Argument & argument)
 {
-  return std::string("AddAttribute(spc::FunctionAttribute (") +
+  return std::string("AddAttribute(ce::FunctionAttribute (") +
     GenerateCSValueDeclaration(argument.GetType()) + ", " +
     "\"" + argument.GetName() + "\"))";
 
@@ -703,7 +703,7 @@ std::string ClassGenerator::GenerateClass(ClassNode * classNode, std::list<Names
   // 
   // Class constructor
   cls += fns + classClassName + "::" + classClassName + "()\n";
-  cls += "  : spc::Class(\"" + fns + className + "\")\n";
+  cls += "  : ce::Class(\"" + fns + className + "\")\n";
   cls += "{\n";
   for (auto super : classNode->GetSupers())
   {
@@ -725,24 +725,24 @@ std::string ClassGenerator::GenerateClass(ClassNode * classNode, std::list<Names
 
   cls += "}\n\n";
 
-  cls += "spc::iObject *" + fns + classClassName + "::CreateInstance() const\n";
+  cls += "ce::iObject *" + fns + classClassName + "::CreateInstance() const\n";
   cls += "{\n";
   if (!classNode->HasPureVirtualMethod() && classNode->HasPublicDefaultConstructor() && !meta->Has("Virtual"))
   {
-    cls += "  return static_cast<spc::iObject*>(new " + fns + className + "());\n";
+    cls += "  return static_cast<ce::iObject*>(new " + fns + className + "());\n";
   }
   else
   {
-    cls += "  throw spc::InstanciationException(\"" + fns + className + "\");\n";
+    cls += "  throw ce::InstanciationException(\"" + fns + className + "\");\n";
   }
   cls += "}\n\n";
 
 
-  cls += "const spc::Class *" + fns + className + "::GetClass() const\n";
+  cls += "const ce::Class *" + fns + className + "::GetClass() const\n";
   cls += "{\n";
   cls += "  return " + fns + classClassName + "::Get();\n";
   cls += "}\n\n";
-  cls += "const spc::Class *" + fns + className + "::GetStaticClass()\n";
+  cls += "const ce::Class *" + fns + className + "::GetStaticClass()\n";
   cls += "{\n";
   cls += "  return " + fns + classClassName + "::Get();\n";
   cls += "}\n\n";
@@ -764,7 +764,7 @@ std::string ClassGenerator::GenerateQueryClass(ClassNode * classNode, std::list<
   std::string className = classNode->GetName();
   std::string classClassName = classNode->GetName() + "Class";
 
-  query += sConst + "void *" + fns + className + "::QueryClass(const spc::Class* clazz) " + sConst + "\n";
+  query += sConst + "void *" + fns + className + "::QueryClass(const ce::Class* clazz) " + sConst + "\n";
   query += "{\n";
   query += "  if (clazz == " + fns + classClassName + "::Get())\n";
   query += "  {\n";
@@ -777,9 +777,9 @@ std::string ClassGenerator::GenerateQueryClass(ClassNode * classNode, std::list<
     std::string superType = super.GetType().GetTypeName();
     if (!(super.IsCSSuper() 
       || superType == "iObject"
-      || superType == "spc::iObject"
+      || superType == "ce::iObject"
       || superType == "Object"
-      || superType == "spc::Object"
+      || superType == "ce::Object"
       ))
     {
       continue;

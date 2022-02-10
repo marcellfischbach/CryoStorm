@@ -1,20 +1,20 @@
 
 
-uniform vec4 spc_DirectionalLightShadowMapLayersBias[4];
-uniform mat4 spc_DirectionalLightShadowMapMatrices[12];
-uniform sampler2DArrayShadow spc_DirectionalLightShadowMapDepth[4];
+uniform vec4 ce_DirectionalLightShadowMapLayersBias[4];
+uniform mat4 ce_DirectionalLightShadowMapMatrices[12];
+uniform sampler2DArrayShadow ce_DirectionalLightShadowMapDepth[4];
 
 
 
 float calc_directional_shadow(int idx, vec3 light_direction, vec3 frag_position, vec3 camera_space_position)
 {
-    if (spc_LightCastShadow[idx] == 0)
+    if (ce_LightCastShadow[idx] == 0)
     {
         return 1.0;
     }
 
 
-	vec4 layerBias = spc_DirectionalLightShadowMapLayersBias[idx];
+	vec4 layerBias = ce_DirectionalLightShadowMapLayersBias[idx];
 
 	float fadeOut = 0.0f;
 	float layer = 0.0;
@@ -41,7 +41,7 @@ float calc_directional_shadow(int idx, vec3 light_direction, vec3 frag_position,
 		//return 1.0;
 	}
 
-	vec4 camSpace = spc_DirectionalLightShadowMapMatrices[matIndex] * vec4(frag_position, 1.0);
+	vec4 camSpace = ce_DirectionalLightShadowMapMatrices[matIndex] * vec4(frag_position, 1.0);
 	camSpace /= camSpace.w;
 	camSpace = camSpace * 0.5 + 0.5;
 	camSpace.z -= layerBias.w;
@@ -55,7 +55,7 @@ float calc_directional_shadow(int idx, vec3 light_direction, vec3 frag_position,
 
 
 	return mix(
-		texture(spc_DirectionalLightShadowMapDepth[idx], vec4(camSpace.xy, layer, camSpace.z)),
+		texture(ce_DirectionalLightShadowMapDepth[idx], vec4(camSpace.xy, layer, camSpace.z)),
 		1.0,
 		fadeOut);
 }

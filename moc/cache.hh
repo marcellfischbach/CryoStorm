@@ -7,7 +7,7 @@
 
 #include <Windows.h>
 
-namespace spc::moc
+namespace ce::moc
 {
 
 

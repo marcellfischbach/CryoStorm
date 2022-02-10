@@ -1,0 +1,7 @@
+materialinstance {
+    material "/materials/test_material.cef",
+    attributes {
+               
+    }
+
+}

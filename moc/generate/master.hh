@@ -4,7 +4,7 @@
 
 #include <string>
 
-namespace spc::moc
+namespace ce::moc
 {
 
 class Cache;

@@ -27,8 +27,8 @@ target_link_libraries(EdLauncher
         Qt6::Widgets
         Qt6::OpenGL
         Qt6::Xml
-        spcCore
-        spcOpenGL
+        ceCore
+        ceOpenGL
         )
 
-SPC_MOC(EdLauncher)
+CE_MOC(EdLauncher)

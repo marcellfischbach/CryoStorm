@@ -1,9 +1,9 @@
 
 
 
-include_directories(${SpiceEngine_SOURCE_DIR}/moc)
+include_directories(${CrimsonEdge_SOURCE_DIR}/moc)
 
-add_executable(spcMOC
+add_executable(ceMOC
 	ast.cc
 	ast.hh
 	cache.cc
@@ -30,4 +30,4 @@ add_executable(spcMOC
 
 
 
-install(TARGETS spcMOC RUNTIME DESTINATION bin)
+install(TARGETS ceMOC RUNTIME DESTINATION bin)

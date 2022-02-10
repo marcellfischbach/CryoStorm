@@ -3,7 +3,7 @@
 
 #include <generate/generator.hh>
 
-namespace spc::moc
+namespace ce::moc
 {
 
 struct iOutput;

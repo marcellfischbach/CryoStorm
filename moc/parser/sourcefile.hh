@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-namespace spc::moc
+namespace ce::moc
 {
 
 class SourceFile;

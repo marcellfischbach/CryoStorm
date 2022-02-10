@@ -1,12 +1,12 @@
 
 
 
-add_subdirectory(spcAssimpLoader)
-add_subdirectory(spcBullet)
-add_subdirectory(spcCore)
-add_subdirectory(spcLauncher)
-add_subdirectory(spcImgLoader)
-add_subdirectory(spcOpenGL)
+add_subdirectory(ceAssimpLoader)
+add_subdirectory(ceBullet)
+add_subdirectory(ceCore)
+add_subdirectory(ceLauncher)
+add_subdirectory(ceImgLoader)
+add_subdirectory(ceOpenGL)
 #add_subdirectory(SpiceRefl)
 
 #add_subdirectory(SpiceSDLWindow)

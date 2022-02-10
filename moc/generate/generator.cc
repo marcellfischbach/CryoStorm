@@ -4,7 +4,7 @@
 
 
 
-namespace spc::moc
+namespace ce::moc
 {
 
 
