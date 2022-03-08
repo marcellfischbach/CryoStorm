@@ -137,7 +137,7 @@ void SDLMouse::Update(uint8_t button, bool down)
   }
 }
 
-void SDLMouse::Update(Int32 wheel, Int32 wheelHorizontal)
+void SDLMouse::Update(int32_t wheel, int32_t wheelHorizontal)
 {
   m_wheel = wheel;
   m_wheelHorizontal = wheelHorizontal;

@@ -8,7 +8,6 @@
 #include <ceCore/resource/assetmanager.hh>
 #include <ceCore/graphics/image.hh>
 
-
 namespace ce::img
 {
 

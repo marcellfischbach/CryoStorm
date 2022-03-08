@@ -32,6 +32,7 @@ void print_usage(char* name)
   printf("  options:\n");
   printf("    --file   <file>        a single file that should be process\n");
   printf("    --source <source>      the cc file when a single file is processed\n");
+  printf("    --sourcepath <path>    the base path where the source code is located\n");
   printf("    --header <header>      the hh file when a single file is processed\n");
   printf("    --path   <path>        base path that contains the moc file and where to put the files\n");
   printf("    --prefix <prefix>      the inclue prefix where include files are located\n");
@@ -221,7 +222,7 @@ std::vector<std::string> scan_directory()
 }
 
 
-void generate_list(const std::string& path)
+void generate_list(const std::string& path, const std::string &sourcePath)
 {
   ce::moc::Cache cache;
   cache.Load(path);
@@ -282,7 +283,7 @@ void generate_list(const std::string& path)
   {
     ce::moc::MasterGenerator masterGenerator;
     FileOutput output(path + "/master.refl.cc");
-    masterGenerator.Generate(cache, &output);
+    masterGenerator.Generate(cache, &output, sourcePath);
   }
   cache.Store(path);
 
@@ -300,6 +301,7 @@ int main(int argc, char** argv)
   std::string file;
   std::string source;
   std::string header;
+  std::string sourcePath;
   std::string path;
 
   header = "header";
@@ -341,6 +343,16 @@ int main(int argc, char** argv)
       source = std::string(argv[++i]);
       // std::cout << " source: '" << source << "'";
     }
+    else if (arg == "--sourcepath")
+    {
+        if (i + 1 >= argc)
+        {
+            print_usage(argv[0]);
+            return -1;
+        }
+        sourcePath = std::string(argv[++i]);
+        // std::cout << " source: '" << source << "'";
+    }
     else if (arg == "--path")
     {
       if (i + 1 >= argc)
@@ -366,7 +378,7 @@ int main(int argc, char** argv)
   else if (!path.empty())
   {
 
-    generate_list(path);
+    generate_list(path, sourcePath);
   }
 
   return 0;

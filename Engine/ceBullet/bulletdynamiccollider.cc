@@ -5,7 +5,7 @@
 #include <btBulletCollisionCommon.h>
 #include <btBulletDynamicsCommon.h>
 #include <ceBullet/bulletutils.hh>
-
+#include <algorithm>
 
 namespace ce::bullet
 {

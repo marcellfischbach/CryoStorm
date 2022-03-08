@@ -3,6 +3,7 @@
 #include <ceBullet/bulletcollisionshape.hh>
 #include <ceBullet/bulletutils.hh>
 #include <btBulletCollisionCommon.h>
+#include <algorithm>
 
 namespace ce::bullet
 {

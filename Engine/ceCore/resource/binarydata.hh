@@ -29,13 +29,13 @@ public:
   BinaryOutputStream();
   ~BinaryOutputStream();
 
-  BinaryOutputStream& operator<<(const Int8 d);
+  BinaryOutputStream& operator<<(const int8_t d);
   BinaryOutputStream& operator<<(const uint8_t d);
-  BinaryOutputStream& operator<<(const Int16 d);
+  BinaryOutputStream& operator<<(const int16_t d);
   BinaryOutputStream& operator<<(const uint16_t d);
-  BinaryOutputStream& operator<<(const Int32 d);
+  BinaryOutputStream& operator<<(const int32_t d);
   BinaryOutputStream& operator<<(const uint32_t d);
-  BinaryOutputStream& operator<<(const Int64 d);
+  BinaryOutputStream& operator<<(const int64_t d);
   BinaryOutputStream& operator<<(const uint64_t d);
   BinaryOutputStream& operator<<(const float d);
   BinaryOutputStream& operator<<(const double d);
@@ -80,13 +80,13 @@ public:
   BinaryInputStream(const uint8_t* m_buffer, Size bufferSize);
   ~BinaryInputStream();
 
-  const BinaryInputStream& operator>>(Int8& d) const;
+  const BinaryInputStream& operator>>(int8_t& d) const;
   const BinaryInputStream& operator>>(uint8_t& d) const;
-  const BinaryInputStream& operator>>(Int16& d) const;
+  const BinaryInputStream& operator>>(int16_t& d) const;
   const BinaryInputStream& operator>>(uint16_t& d) const;
-  const BinaryInputStream& operator>>(Int32& d) const;
+  const BinaryInputStream& operator>>(int32_t& d) const;
   const BinaryInputStream& operator>>(uint32_t& d) const;
-  const BinaryInputStream& operator>>(Int64& d) const;
+  const BinaryInputStream& operator>>(int64_t& d) const;
   const BinaryInputStream& operator>>(uint64_t& d) const;
   const BinaryInputStream& operator>>(float& d) const;
   const BinaryInputStream& operator>>(double& d) const;

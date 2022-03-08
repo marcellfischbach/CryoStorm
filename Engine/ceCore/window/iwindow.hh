@@ -21,7 +21,7 @@ struct CE_CORE_API iWindow : public iObject
 
   virtual void SetTitle(const std::string& title) = 0;
 
-  virtual void SetPosition (Int16 x, Int16 y) = 0;
+  virtual void SetPosition (int16_t x, int16_t y) = 0;
 
   virtual void SetResolution(uint16_t width, uint16_t height) = 0;
 

@@ -22,7 +22,7 @@ public:
 
   bool Initialize();
 
-  void SetViewport(Int16 x, Int16 y, uint16_t width, uint16_t height) override;
+  void SetViewport(int16_t x, int16_t y, uint16_t width, uint16_t height) override;
   void Clear(bool clearColor, const Color4f & color, bool clearDepth, float depth, bool clearStencil, uint8_t stencil) override;
 
   void SetColorWrite(bool redWrite, bool greenWrite, bool blueWrite, bool alphaWrite) override;

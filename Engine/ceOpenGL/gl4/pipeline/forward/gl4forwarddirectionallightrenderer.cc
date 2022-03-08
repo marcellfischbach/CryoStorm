@@ -20,6 +20,7 @@
 
 #include <algorithm>
 #include <GL/glew.h>
+#include <float.h>
 
 namespace ce::opengl
 {

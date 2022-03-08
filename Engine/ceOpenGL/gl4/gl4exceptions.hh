@@ -14,15 +14,21 @@ public:
 
   const std::string& GetSource() const;
 
+  const char* what() const noexcept override;
+
 private:
   std::string m_source;
+  std::string m_message;
 };
 
 class GL4ProgramLinkException : public std::exception
 {
 public:
   GL4ProgramLinkException(const std::string& errorMessage);
+  const char* what() const noexcept override;
 
+private:
+    std::string m_message;
 
 };
 

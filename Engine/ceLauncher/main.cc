@@ -159,7 +159,7 @@ SDL_GLContext context;
 
 bool initialize_modules(int argc, char **argv)
 {
-  ce::VFS::Get()->SetBasePath("D:\\DEV\\SpiceEngine\\data");
+  ce::VFS::Get()->SetBasePath("D:\\DEV\\CrimsonEdge\\data");
   ce::Settings settings("file:///config/display.cef");
 
   SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE);
@@ -257,7 +257,7 @@ ce::iRenderMesh *create_plane_mesh(float size, float nx, float ny)
   uv.push_back(ce::Vector2f(0.0f, ny));
   uv.push_back(ce::Vector2f(nx, 0.0f));
   uv.push_back(ce::Vector2f(nx, ny));
-  std::vector<ce::uint32_t> indices;
+  std::vector<uint32_t> indices;
   indices.push_back(0);
   indices.push_back(1);
   indices.push_back(3);
@@ -287,7 +287,7 @@ ce::iRenderMesh *create_sphere_mesh(float radius, uint32_t detail, float uv_f)
   std::vector<ce::Vector3f> normals;
   std::vector<ce::Vector2f> uv;
   std::vector<ce::Color4f>  colors;
-  std::vector<ce::uint32_t> indices;
+  std::vector<uint32_t> indices;
 
   for (uint32_t v = 0; v < detail; v++)
   {
@@ -715,9 +715,9 @@ int main(int argc, char **argv)
   float       rot    = 0.0f;
   float       entRot = 0.0f;
 
-  ce::uint32_t nextSec  = SDL_GetTicks() + 1000;
-  ce::uint32_t frames   = 0;
-  ce::uint32_t lastTime = SDL_GetTicks();
+  uint32_t nextSec  = SDL_GetTicks() + 1000;
+  uint32_t frames   = 0;
+  uint32_t lastTime = SDL_GetTicks();
 
 
   bool  useCs     = true;
@@ -802,7 +802,7 @@ int main(int argc, char **argv)
     {
       frames++;
     }
-    ce::uint32_t deltaTime = time - lastTime;
+    uint32_t deltaTime = time - lastTime;
     lastTime = time;
 
 //    SDL_GL_MakeCurrent(wnd, context);

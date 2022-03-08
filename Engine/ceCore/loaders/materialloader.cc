@@ -9,6 +9,7 @@ namespace ce
 {
 
 #define IF(prefix, name, text) if (std::string(#name) == (text)) return prefix##name
+#define IF_CLASS(prefix, name, text) if (std::string(#name) == (text)) return prefix::name
 
 bool MaterialLoaderCEF::CanLoad(const Class* cls, const file::File* file, const ResourceLocator* locator) const
 {
@@ -128,8 +129,8 @@ void MaterialLoaderCEF::LoadQueue(Material* material, const file::Element* mater
 
 eBlendFactor BlendFactor(const std::string& blendFactor, eBlendFactor defaultFactor)
 {
-#define IF_(name) IF(eBlendFactor::, name, blendFactor)
-#define ELSE_IF_(name) else IF(eBlendFactor::, name, blendFactor)
+#define IF_(name) IF_CLASS(eBlendFactor, name, blendFactor)
+#define ELSE_IF_(name) else IF_CLASS(eBlendFactor, name, blendFactor)
   if (std::string("One") == blendFactor) return eBlendFactor::One;
   IF_(One);
   ELSE_IF_(Zero);

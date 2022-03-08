@@ -5,7 +5,7 @@
 #define CE_FLOAT_IS_ONE(e) (e < (1.0f + 1e-6f) && e > (1.0f - 1e-6f))
 #define CE_FLOAT_IS(e, v) (e < (v + 1e-6f) && e > (v - 1e-6f))
 
-#define CE_NODISCARD [[nodiscard]]
+
 
 #define CE_UNUSED(x) (void)x
 
@@ -13,6 +13,7 @@
 
 #ifdef CE_WIN32
 
+#define CE_NODISCARD [[nodiscard]]
 
 #define CE_FORCEINLINE __forceinline
 
@@ -20,6 +21,11 @@
 
 #else
 
+#define CE_NODISCARD
+
+#define CE_UNUSED(x) (void)x
+
 #define CE_FORCEINLINE inline
+#define CE_ZERO(e) memset(&e, 0, sizeof(e))
 
 #endif

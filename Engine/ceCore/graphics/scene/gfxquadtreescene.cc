@@ -11,6 +11,7 @@
 #include <ceCore/math/iclipper.hh>
 #include <ceCore/math/vector3f.hh>
 #include <array>
+#include <algorithm>
 
 
 namespace ce

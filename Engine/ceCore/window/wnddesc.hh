@@ -10,8 +10,8 @@ struct WndDesc
 {
   uint16_t width;
   uint16_t height;
-  Int16 x;
-  Int16 y;
+  int16_t x;
+  int16_t y;
 
 	bool fullscreen;
 };

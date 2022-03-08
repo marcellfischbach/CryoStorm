@@ -15,7 +15,7 @@ public:
 
   MasterGenerator();
 
-  void Generate(Cache &cache,  iOutput *output);
+  void Generate(Cache &cache,  iOutput *output, const std::string &sourcePath);
 };
 
 }

@@ -126,7 +126,7 @@ bool GL4Device::Initialize()
   return true;
 }
 
-void GL4Device::SetViewport(Int16 x, Int16 y, uint16_t width, uint16_t height)
+void GL4Device::SetViewport(int16_t x, int16_t y, uint16_t width, uint16_t height)
 {
   glViewport(x, y, width, height);
 }

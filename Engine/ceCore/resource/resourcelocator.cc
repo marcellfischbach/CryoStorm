@@ -8,11 +8,11 @@ namespace ce
 
 std::string extract_proto(const std::string& locator)
 {
-  if (locator._Starts_with("file://"))
+  if (locator.starts_with("file://"))
   {
     return "file://";
   }
-  else if (locator._Starts_with("bundle://"))
+  else if (locator.starts_with("bundle://"))
   {
     return "bundle://";
   }
@@ -31,11 +31,11 @@ std::string extract_path(const std::string& locator)
   }
 
   size_t startPos = 0;
-  if (locator._Starts_with("file://"))
+  if (locator.starts_with("file://"))
   {
     startPos = 7;
   }
-  else if (locator._Starts_with("bundle://"))
+  else if (locator.starts_with("bundle://"))
   {
     startPos = 9;
   }

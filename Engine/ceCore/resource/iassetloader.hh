@@ -10,7 +10,7 @@
 namespace ce
 {
 
-const Int16 DefaultPriority = 0;
+const int16_t DefaultPriority = 0;
 
 CE_CLASS()
 struct CE_CORE_API iAssetLoader : public iObject
@@ -21,7 +21,7 @@ struct CE_CORE_API iAssetLoader : public iObject
 
   }
 
-  virtual Int16 Priority() const
+  virtual int16_t Priority() const
   {
     return DefaultPriority;
   }
@@ -42,7 +42,7 @@ struct CE_CORE_API iAssetLoaderCEF : public iObject
 
   }
 
-  virtual Int16 Priority() const
+  virtual int16_t Priority() const
   {
     return DefaultPriority;
   }

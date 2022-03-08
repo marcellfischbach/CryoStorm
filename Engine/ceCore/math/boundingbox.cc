@@ -1,7 +1,7 @@
 
 
 #include <ceCore/math/boundingbox.hh>
-
+#include <cfloat>
 
 namespace ce {
 

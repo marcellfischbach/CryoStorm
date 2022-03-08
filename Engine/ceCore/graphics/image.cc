@@ -1,7 +1,8 @@
 
 #include <ceCore/graphics/image.hh>
 #include <ceCore/math/math.hh>
-#include <ceCore/math/math.hh>
+#include <string.h>
+
 namespace ce
 {
 

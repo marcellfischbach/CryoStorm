@@ -5,6 +5,9 @@ function(CE_MOC trgt)
 
 	set(MOC_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/__cmake__build__moc__")
 
+	message("MOC: ${CMAKE_CURRENT_SOURCE_DIR}")
+	message("MOC: ${CMAKE_SOURCE_DIR}")
+
 	set (EXEC_PATH "")
 	if (CrimsonEdge_BINARY_DIR) 
 		set(EXEC_PATH "${CrimsonEdge_BINARY_DIR}/bin/")
@@ -17,7 +20,7 @@ function(CE_MOC trgt)
 
 	set(TARGET_NAME "${trgt}-MOC")
 	add_custom_target(${TARGET_NAME}
-                            COMMAND ${EXEC_PATH}ceMOC  --path ${MOC_DIRECTORY}
+                            COMMAND ${EXEC_PATH}ceMOC  --path ${MOC_DIRECTORY} --sourcepath ${CMAKE_CURRENT_SOURCE_DIR}
 			WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 	)
 	if (CrimsonEdge_BINARY_DIR) 

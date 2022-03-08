@@ -36,7 +36,7 @@ struct CE_CORE_API iDevice : public CE_SUPER(iObject)
 
   virtual ~iDevice(){}
 
-  virtual void SetViewport(Int16 x, Int16 y, uint16_t width, uint16_t height) = 0;
+  virtual void SetViewport(int16_t x, int16_t y, uint16_t width, uint16_t height) = 0;
   virtual void Clear(bool clearColor, const Color4f& color, bool clearDepth, float depth, bool clearStencil, uint8_t stencil) = 0;
 
   virtual void SetColorWrite(bool redMask, bool greenMask, bool blueMask, bool alphaMask) = 0;

@@ -35,7 +35,7 @@ namespace ce
     }
     
     
-    BinaryOutputStream &BinaryOutputStream::operator<<(const Int8 d)
+    BinaryOutputStream &BinaryOutputStream::operator<<(const int8_t d)
     {
       Reserve(sizeof(d));
       memcpy(m_buffer + m_idx, &d, sizeof(d));
@@ -51,7 +51,7 @@ namespace ce
       return *this;
     }
     
-    BinaryOutputStream &BinaryOutputStream::operator<<(const Int16 d)
+    BinaryOutputStream &BinaryOutputStream::operator<<(const int16_t d)
     {
       Reserve(sizeof(d));
       memcpy(m_buffer + m_idx, &d, sizeof(d));
@@ -67,7 +67,7 @@ namespace ce
       return *this;
     }
     
-    BinaryOutputStream &BinaryOutputStream::operator<<(const Int32 d)
+    BinaryOutputStream &BinaryOutputStream::operator<<(const int32_t d)
     {
       Reserve(sizeof(d));
       memcpy(m_buffer + m_idx, &d, sizeof(d));
@@ -83,7 +83,7 @@ namespace ce
       return *this;
     }
     
-    BinaryOutputStream &BinaryOutputStream::operator<<(const Int64 d)
+    BinaryOutputStream &BinaryOutputStream::operator<<(const int64_t d)
     {
       Reserve(sizeof(d));
       memcpy(m_buffer + m_idx, &d, sizeof(d));
@@ -192,11 +192,11 @@ namespace ce
     }
     
     
-    const BinaryInputStream &BinaryInputStream::operator>>(Int8 &d) const
+    const BinaryInputStream &BinaryInputStream::operator>>(int8_t &d) const
     {
-      CheckSize(sizeof(Int8));
-      memcpy(&d, m_buffer + m_idx, sizeof(Int8));
-      m_idx += sizeof(Int8);
+      CheckSize(sizeof(int8_t));
+      memcpy(&d, m_buffer + m_idx, sizeof(int8_t));
+      m_idx += sizeof(int8_t);
       return *this;
     }
     
@@ -208,11 +208,11 @@ namespace ce
       return *this;
     }
     
-    const BinaryInputStream &BinaryInputStream::operator>>(Int16 &d) const
+    const BinaryInputStream &BinaryInputStream::operator>>(int16_t &d) const
     {
-      CheckSize(sizeof(Int16));
-      memcpy(&d, m_buffer + m_idx, sizeof(Int16));
-      m_idx += sizeof(Int16);
+      CheckSize(sizeof(int16_t));
+      memcpy(&d, m_buffer + m_idx, sizeof(int16_t));
+      m_idx += sizeof(int16_t);
       return *this;
     }
     
@@ -224,11 +224,11 @@ namespace ce
       return *this;
     }
     
-    const BinaryInputStream &BinaryInputStream::operator>>(Int32 &d) const
+    const BinaryInputStream &BinaryInputStream::operator>>(int32_t &d) const
     {
-      CheckSize(sizeof(Int32));
-      memcpy(&d, m_buffer + m_idx, sizeof(Int32));
-      m_idx += sizeof(Int32);
+      CheckSize(sizeof(int32_t));
+      memcpy(&d, m_buffer + m_idx, sizeof(int32_t));
+      m_idx += sizeof(int32_t);
       return *this;
     }
     
@@ -240,11 +240,11 @@ namespace ce
       return *this;
     }
     
-    const BinaryInputStream &BinaryInputStream::operator>>(Int64 &d) const
+    const BinaryInputStream &BinaryInputStream::operator>>(int64_t &d) const
     {
-      CheckSize(sizeof(Int64));
-      memcpy(&d, m_buffer + m_idx, sizeof(Int64));
-      m_idx += sizeof(Int64);
+      CheckSize(sizeof(int64_t));
+      memcpy(&d, m_buffer + m_idx, sizeof(int64_t));
+      m_idx += sizeof(int64_t);
       return *this;
     }
     
