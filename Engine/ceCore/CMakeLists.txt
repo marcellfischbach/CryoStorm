@@ -113,6 +113,12 @@ set(SOURCES
         graphics/scene/gfxsimplescene.hh
         graphics/scene/igfxscene.hh
 
+        graphics/shadergraph/esgvaluetype.hh
+        graphics/shadergraph/sgnode.cc
+        graphics/shadergraph/sgnode.hh
+        graphics/shadergraph/shadergraph.cc
+        graphics/shadergraph/shadergraph.hh
+
         graphics/shading/ishader.hh
         graphics/shading/ishaderattribute.hh
 
