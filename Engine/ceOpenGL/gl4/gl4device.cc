@@ -48,6 +48,7 @@ GL4Device::GL4Device()
       m_viewProjectionMatrixInvDirty(false),
       m_modelViewProjectionMatrixInvDirty(false),
       m_fullscreenBlitProgram(nullptr),
+      m_fullscreenBlitMSProgram(nullptr),
       m_fullscreenBlitRenderMesh(nullptr),
       m_fullscreenBlitArrayProgram(nullptr),
       m_fullscreenBlitCubeProgram(nullptr),
@@ -610,7 +611,8 @@ iTexture2D *GL4Device::CreateTexture(const iTexture2D::Descriptor &descriptor)
       descriptor.Width,
       descriptor.Height,
       descriptor.Format,
-      descriptor.MipMaps
+      descriptor.MipMaps,
+      descriptor.MultiSamples
   );
   texture->SetSampler(ObjectRegistry::Get<Samplers>()->GetDefault());
   return texture;
@@ -781,8 +783,11 @@ void GL4Device::Render(iRenderMesh *mesh, eRenderPass pass)
 void GL4Device::RenderFullscreen(iTexture2D *texture)
 {
 #ifndef CE_DISABLE_RENDERING
+  bool multiSampling = texture->IsMultiSampling();
+  uint16_t samples = texture->GetSamples();
+
   iRenderMesh *mesh = FullscreenBlitRenderMesh();
-  GL4Program  *prog = FullscreenBlitProgram();
+  GL4Program  *prog = multiSampling ? FullscreenBlitMSProgram() :  FullscreenBlitProgram();
   SetShader(prog);
   ResetTextures();
   eTextureUnit unit = BindTexture(texture);
@@ -791,6 +796,13 @@ void GL4Device::RenderFullscreen(iTexture2D *texture)
   {
     attrib->Bind(unit);
   }
+
+  attrib = prog->GetShaderAttribute("Samples");
+  if (attrib)
+  {
+    attrib->Bind(samples);
+  }
+
   mesh->Render(this, eRP_Forward);
 #endif
 }
@@ -1367,6 +1379,15 @@ GL4Program *GL4Device::FullscreenBlitProgram()
     m_fullscreenBlitProgram = AssetManager::Get()->Load<GL4Program>("file:///engine/opengl/gl4/fullscreen_blit.cef");
   }
   return m_fullscreenBlitProgram;
+}
+
+GL4Program *GL4Device::FullscreenBlitMSProgram()
+{
+  if (!m_fullscreenBlitMSProgram)
+  {
+    m_fullscreenBlitMSProgram = AssetManager::Get()->Load<GL4Program>("file:///engine/opengl/gl4/fullscreen_blit_ms.cef");
+  }
+  return m_fullscreenBlitMSProgram;
 }
 
 

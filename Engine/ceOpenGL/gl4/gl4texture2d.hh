@@ -34,17 +34,21 @@ public:
 
   void Bind();
 
-  bool Initialize(uint16_t width, uint16_t height, ePixelFormat format, bool generateMipMaps);
+  bool Initialize(uint16_t width, uint16_t height, ePixelFormat format, bool generateMipMaps, uint16_t multiSamples);
 
+  uint16_t GetSamples() const override;
   void Data(const Image * image) override;
   void Data(uint16_t level, const Image * image) override;
   void Data(uint16_t level, ePixelFormat format, const void* data) override;
   void Data(uint16_t level, uint16_t x, uint16_t y, uint16_t width, uint16_t height, ePixelFormat format, const void* data) override;
 private:
+  uint32_t m_target;
   uint32_t m_name;
   uint16_t m_width;
   uint16_t m_height;
   ePixelFormat m_format;
+  uint16_t m_samples;
+  bool  m_multiSampling;
 
   struct Level
   {

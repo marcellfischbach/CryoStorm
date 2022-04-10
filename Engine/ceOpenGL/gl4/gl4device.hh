@@ -200,7 +200,9 @@ private:
    * @{
    */
   GL4Program* FullscreenBlitProgram();
+  GL4Program* FullscreenBlitMSProgram();
   GL4Program* m_fullscreenBlitProgram;
+  GL4Program* m_fullscreenBlitMSProgram;
   iRenderMesh* FullscreenBlitRenderMesh();
   iRenderMesh* m_fullscreenBlitRenderMesh;
 

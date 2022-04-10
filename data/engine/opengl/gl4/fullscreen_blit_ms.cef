@@ -1,0 +1,10 @@
+program {
+  shaders {
+    shader "fullscreen_blit_vert.cef",
+    shader "fullscreen_blit_ms_frag.cef",
+  }
+  attributes {
+    attribute "Diffuse",
+    attribute "Samples"
+  }
+}

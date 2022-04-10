@@ -103,11 +103,7 @@ private:
 };
 
 
-class CE_CORE_API SGNodeADD : SGNode
-{
-public:
 
-};
 
 }
 

@@ -21,11 +21,19 @@ struct CE_CORE_API iTexture2D : public CE_SUPER(iTexture)
     uint16_t Width;
     uint16_t Height;
     bool MipMaps;
+    uint16_t MultiSamples;
   };
 
 
   CE_CLASS_GEN;
   virtual ~iTexture2D() { }
+
+  bool IsMultiSampling() const
+  {
+    return GetSamples() > 1;
+  }
+
+  virtual uint16_t GetSamples() const = 0;
 
   virtual void Data(const Image* image) = 0;
   virtual void Data(uint16_t level, const Image* image) = 0;

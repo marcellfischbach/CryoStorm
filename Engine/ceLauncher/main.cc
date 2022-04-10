@@ -54,7 +54,7 @@
 #include <string>
 
 ce::SDLKeyboard keyboard;
-ce::SDLMouse    mouse;
+ce::SDLMouse mouse;
 
 void UpdateEvents()
 {
@@ -65,24 +65,24 @@ void UpdateEvents()
   {
     switch (evt.type)
     {
-    case SDL_KEYDOWN:
-      keyboard.Update(evt.key.keysym.scancode, true);
-      break;
-    case SDL_KEYUP:
-      keyboard.Update(evt.key.keysym.scancode, false);
-      break;
-    case SDL_MOUSEBUTTONDOWN:
-      mouse.Update(evt.button.button, true);
-      break;
-    case SDL_MOUSEBUTTONUP:
-      mouse.Update(evt.button.button, false);
-      break;
-    case SDL_MOUSEWHEEL:
-      mouse.Update(evt.wheel.y, evt.wheel.x);
-      break;
-    case SDL_MOUSEMOTION:
-      mouse.Update(evt.motion.x, evt.motion.y, evt.motion.xrel, evt.motion.yrel);
-      break;
+      case SDL_KEYDOWN:
+        keyboard.Update(evt.key.keysym.scancode, true);
+        break;
+      case SDL_KEYUP:
+        keyboard.Update(evt.key.keysym.scancode, false);
+        break;
+      case SDL_MOUSEBUTTONDOWN:
+        mouse.Update(evt.button.button, true);
+        break;
+      case SDL_MOUSEBUTTONUP:
+        mouse.Update(evt.button.button, false);
+        break;
+      case SDL_MOUSEWHEEL:
+        mouse.Update(evt.wheel.y, evt.wheel.x);
+        break;
+      case SDL_MOUSEMOTION:
+        mouse.Update(evt.motion.x, evt.motion.y, evt.motion.xrel, evt.motion.yrel);
+        break;
 
     }
   }
@@ -92,15 +92,15 @@ void UpdateEvents()
 std::vector<std::string> split(const std::string &string)
 {
   std::vector<std::string> res;
-  size_t                   offset = 0;
-  size_t                   idx    = 0;
-  while ((idx                   = string.find('\n', offset)) != std::string::npos)
+  size_t offset = 0;
+  size_t idx = 0;
+  while ((idx = string.find('\n', offset)) != std::string::npos)
   {
     std::string part = string.substr(offset, idx - offset);
     res.push_back(part);
     offset = idx + 1;
   }
-  std::string              part = string.substr(offset, string.length() - offset);
+  std::string part = string.substr(offset, string.length() - offset);
   res.push_back(part);
 
   return res;
@@ -108,7 +108,7 @@ std::vector<std::string> split(const std::string &string)
 
 std::string merge(const std::vector<std::string> &lines)
 {
-  std::string            res;
+  std::string res;
   for (const std::string &str: lines)
   {
     res += str + "\n";
@@ -153,7 +153,7 @@ bool register_modules(int argc, char **argv)
   return true;
 }
 
-SDL_Window    *wnd;
+SDL_Window *wnd;
 SDL_GLContext context;
 
 
@@ -177,12 +177,12 @@ bool initialize_modules(int argc, char **argv)
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 4);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
-  uint32_t      flags    = SDL_WINDOW_OPENGL;
+  uint32_t flags = SDL_WINDOW_OPENGL;
   // flags |= SDL_WINDOW_BORDERLESS;
-  std::string   title    = settings.GetText("title");
-  ce::Vector2i res      = settings.GetVector2i("resolution");
-  ce::Vector2i pos      = settings.GetVector2i("pos");
-  std::string   viewMode = settings.GetText("viewmode", "windowed");
+  std::string title = settings.GetText("title");
+  ce::Vector2i res = settings.GetVector2i("resolution");
+  ce::Vector2i pos = settings.GetVector2i("pos");
+  std::string viewMode = settings.GetText("viewmode", "windowed");
   if (viewMode == "viewMode")
   {
     flags |= SDL_WINDOW_FULLSCREEN;
@@ -241,7 +241,7 @@ ce::iRenderMesh *create_plane_mesh(float size, float nx, float ny)
 {
   //
   // create a render mesh
-  ce::iRenderMeshGenerator  *generator = ce::ObjectRegistry::Get<ce::iRenderMeshGeneratorFactory>()->Create();
+  ce::iRenderMeshGenerator *generator = ce::ObjectRegistry::Get<ce::iRenderMeshGeneratorFactory>()->Create();
   std::vector<ce::Vector3f> positions;
   positions.push_back(ce::Vector3f(-size, 0.0f, -size));
   positions.push_back(ce::Vector3f(-size, 0.0f, size));
@@ -265,7 +265,7 @@ ce::iRenderMesh *create_plane_mesh(float size, float nx, float ny)
   indices.push_back(3);
   indices.push_back(2);
   std::vector<ce::Color4f> colors;
-  ce::Color4f              color(1.0f, 1.0f, 1.0f, 1.0f);
+  ce::Color4f color(1.0f, 1.0f, 1.0f, 1.0f);
   colors.push_back(color);
   colors.push_back(color);
   colors.push_back(color);
@@ -282,21 +282,21 @@ ce::iRenderMesh *create_plane_mesh(float size, float nx, float ny)
 
 ce::iRenderMesh *create_sphere_mesh(float radius, uint32_t detail, float uv_f)
 {
-  ce::iRenderMeshGenerator  *generator = ce::ObjectRegistry::Get<ce::iRenderMeshGeneratorFactory>()->Create();
+  ce::iRenderMeshGenerator *generator = ce::ObjectRegistry::Get<ce::iRenderMeshGeneratorFactory>()->Create();
   std::vector<ce::Vector3f> positions;
   std::vector<ce::Vector3f> normals;
   std::vector<ce::Vector2f> uv;
-  std::vector<ce::Color4f>  colors;
+  std::vector<ce::Color4f> colors;
   std::vector<uint32_t> indices;
 
   for (uint32_t v = 0; v < detail; v++)
   {
-    float factV  = (float) v / (float) (detail - 1);
+    float factV = (float) v / (float) (detail - 1);
     float angleV = -(float) M_PI_2 + factV * (float) M_PI;
 
     for (uint32_t h = 0; h < detail * 2; h++)
     {
-      float factH  = (float) h / (float) (detail * 2 - 1);
+      float factH = (float) h / (float) (detail * 2 - 1);
       float angleH = factH * (float) M_PI * 2.0f;
 
       ce::Vector3f normal(
@@ -313,9 +313,9 @@ ce::iRenderMesh *create_sphere_mesh(float radius, uint32_t detail, float uv_f)
 
   for (uint32_t v = 0; v < detail - 1; v++)
   {
-    uint32_t      i0 = v * detail * 2;
-    uint32_t      i1 = i0 + detail * 2;
-    for (uint32_t h  = 0; h < detail * 2 - 1; h++)
+    uint32_t i0 = v * detail * 2;
+    uint32_t i1 = i0 + detail * 2;
+    for (uint32_t h = 0; h < detail * 2 - 1; h++)
     {
       uint32_t i00 = i0 + h;
       uint32_t i01 = i00 + 1;
@@ -365,16 +365,16 @@ void debug(ce::SpatialState *state, int indent)
 
 void create_suzannes_plain(ce::Mesh *suzanneMesh, ce::World *world, ce::iMaterial *alternativeMaterial)
 {
-  size_t      num = 20;
-  for (size_t i   = 0; i < num; i++)
+  size_t num = 20;
+  for (size_t i = 0; i < num; i++)
   {
-    float       x = -40.0f + (float) i / (float) num * 80.0f;
+    float x = -40.0f + (float) i / (float) num * 80.0f;
     for (size_t j = 0; j < num; j++)
     {
       float y = -40.0f + (float) j / (float) num * 80.0f;
 
-      ce::Entity          *suzanneEntity = new ce::Entity("Entity1");
-      ce::StaticMeshState *meshState1    = new ce::StaticMeshState("StaticMesh1");
+      ce::Entity *suzanneEntity = new ce::Entity("Entity1");
+      ce::StaticMeshState *meshState1 = new ce::StaticMeshState("StaticMesh1");
       meshState1->GetTransform()
                 .SetTranslation(ce::Vector3f(x, 0, y))
                 .Finish();
@@ -400,16 +400,16 @@ void create_suzanne_batch(ce::Mesh *suzanneMesh,
                           size_t maxI,
                           size_t maxJ,
                           ce::World *world
-                         )
+)
 {
   auto generator = ce::ObjectRegistry::Get<ce::iRenderMeshBatchGeneratorFactory>()->Create();
 
   for (size_t ni = 0, i = a * numI; ni < numI; ni++, i++)
   {
-    float       x  = -40.0f + (float) i / (float) maxI * 80.0f;
+    float x = -40.0f + (float) i / (float) maxI * 80.0f;
     for (size_t nj = 0, j = b * numJ; nj < numJ; nj++, j++)
     {
-      float         y = -40.0f + (float) j / (float) maxJ * 80.0f;
+      float y = -40.0f + (float) j / (float) maxJ * 80.0f;
       ce::Matrix4f mat;
       mat.SetTranslation(ce::Vector3f(x, 0, y));
       generator->Add(suzanneMesh->GetSubMesh(0).GetMesh(), mat);
@@ -418,16 +418,16 @@ void create_suzanne_batch(ce::Mesh *suzanneMesh,
 
   ce::iRenderMesh *batchedRM = generator->Generate();
 
-  ce::Mesh   *suzyMesh = new ce::Mesh();
-  for (size_t i         = 0; i < suzanneMesh->GetNumberOfMaterialSlots(); i++)
+  ce::Mesh *suzyMesh = new ce::Mesh();
+  for (size_t i = 0; i < suzanneMesh->GetNumberOfMaterialSlots(); i++)
   {
     suzyMesh->AddMaterialSlot(suzanneMesh->GetMaterialSlot(i).GetName(),
                               suzanneMesh->GetMaterialSlot(i).GetDefaultMaterial());
   }
   suzyMesh->AddSubMesh(batchedRM, 0);
 
-  ce::Entity          *suzanneEntity = new ce::Entity("Entity1");
-  ce::StaticMeshState *meshState1    = new ce::StaticMeshState("StaticMesh1");
+  ce::Entity *suzanneEntity = new ce::Entity("Entity1");
+  ce::StaticMeshState *meshState1 = new ce::StaticMeshState("StaticMesh1");
   meshState1->GetTransform()
             .SetTranslation(ce::Vector3f(0, 0, 0))
             .Finish();
@@ -458,30 +458,34 @@ ce::iRenderTarget2D *create_render_target(ce::iDevice *device, uint32_t width, u
   ce::iSampler *depthSampler = device->CreateSampler();
   depthSampler->SetFilterMode(ce::eFM_MinMagNearest);
 
+  uint16_t samples = 1;
   ce::iTexture2D::Descriptor rt_col_desc = {};
-  rt_col_desc.Width   = width;
-  rt_col_desc.Height  = height;
-  rt_col_desc.Format  = ce::ePF_RGBA;
+  rt_col_desc.Width = width;
+  rt_col_desc.Height = height;
+  rt_col_desc.Format = ce::ePF_RGBA;
   rt_col_desc.MipMaps = false;
+  rt_col_desc.MultiSamples = samples;
   ce::iTexture2D *color_texture = device->CreateTexture(rt_col_desc);
   color_texture->SetSampler(colorSampler);
 
   ce::iTexture2D::Descriptor rt_dpth_desc = {};
-  rt_dpth_desc.Width   = width;
-  rt_dpth_desc.Height  = height;
-  rt_dpth_desc.Format  = ce::ePF_Depth;
+  rt_dpth_desc.Width = width;
+  rt_dpth_desc.Height = height;
+  rt_dpth_desc.Format = ce::ePF_Depth;
   rt_dpth_desc.MipMaps = false;
+  rt_dpth_desc.MultiSamples = samples;
   ce::iTexture2D *depth_texture = device->CreateTexture(rt_dpth_desc);
   depth_texture->SetSampler(depthSampler);
 
 
   ce::iRenderTarget2D::Descriptor rt_desc = {};
-  rt_desc.Width  = width;
+  rt_desc.Width = width;
   rt_desc.Height = height;
 
   ce::iRenderTarget2D *renderTarget = device->CreateRenderTarget(rt_desc);
   renderTarget->AddColorTexture(color_texture);
-  renderTarget->SetDepthBuffer(ce::ePF_Depth);
+//  renderTarget->SetDepthBuffer(ce::ePF_Depth);
+  renderTarget->SetDepthTexture(depth_texture);
   if (!renderTarget->Compile())
   {
     printf("Unable to compile render target: %s\n", renderTarget->GetCompileLog().c_str());
@@ -509,10 +513,10 @@ int main(int argc, char **argv)
   ce::iDevice *device = ce::ObjectRegistry::Get<ce::iDevice>();
 
 
-  ce::Material         *transMaterial     = ce::AssetManager::Get()->Get<ce::Material>(ce::ResourceLocator(
+  ce::Material *transMaterial = ce::AssetManager::Get()->Get<ce::Material>(ce::ResourceLocator(
       "/materials/test_trans_material.cef"
   ));
-  ce::MaterialInstance *transRedMaterial  = ce::AssetManager::Get()->Get<ce::MaterialInstance>(ce::ResourceLocator(
+  ce::MaterialInstance *transRedMaterial = ce::AssetManager::Get()->Get<ce::MaterialInstance>(ce::ResourceLocator(
       "/materials/red_transparent_material_instance.cef"
   ));
   ce::MaterialInstance *transBlueMaterial = ce::AssetManager::Get()->Get<ce::MaterialInstance>(ce::ResourceLocator(
@@ -534,12 +538,12 @@ int main(int argc, char **argv)
 //  ));
 
   ce::iRenderMesh *renderMesh = create_plane_mesh(40.0f, 8, 8);
-  ce::Mesh        *mesh       = new ce::Mesh();
+  ce::Mesh *mesh = new ce::Mesh();
   mesh->AddMaterialSlot("Default", materialInstance);
   mesh->AddSubMesh(renderMesh, 0);
 
   ce::iRenderMesh *transPlaneMesh = create_plane_mesh(10.0f, 8, 8);
-  ce::Mesh        *transRedMesh   = new ce::Mesh();
+  ce::Mesh *transRedMesh = new ce::Mesh();
   transRedMesh->AddMaterialSlot("Default", transRedMaterial);
   transRedMesh->AddSubMesh(transPlaneMesh, 0);
   ce::Mesh *transBlueMesh = new ce::Mesh();
@@ -547,25 +551,25 @@ int main(int argc, char **argv)
   transBlueMesh->AddSubMesh(transPlaneMesh, 0);
 
 
-  ce::World *world        = new ce::World();
+  ce::World *world = new ce::World();
 
   int wnd_width, wnd_height;
   SDL_GetWindowSize(wnd, &wnd_width, &wnd_height);
 
   ce::Settings settings("file:///config/display.cef");
   ce::Vector2i resolution = settings.GetVector2i("resolution", ce::Vector2i(wnd_width, wnd_height));
-  int           width      = resolution.x;
-  int           height     = resolution.y;
+  int width = resolution.x;
+  int height = resolution.y;
 
   float aspect = (float) wnd_height / (float) wnd_width;
 
 
   ce::Mesh *suzanneMesh = ce::AssetManager::Get()->Load<ce::Mesh>(ce::ResourceLocator("file:///suzanne.fbx"));
-  ce::Mesh *cube        = ce::AssetManager::Get()->Load<ce::Mesh>(ce::ResourceLocator("cube.fbx"));
+  ce::Mesh *cube = ce::AssetManager::Get()->Load<ce::Mesh>(ce::ResourceLocator("cube.fbx"));
   suzanneMesh->SetDefaultMaterial(0, materialInstance);
   cube->SetDefaultMaterial(0, materialInstance);
 
-  ce::Entity          *entity0    = new ce::Entity("Entity0");
+  ce::Entity *entity0 = new ce::Entity("Entity0");
   ce::StaticMeshState *meshState0 = new ce::StaticMeshState("StaticMesh0");
 
   meshState0->GetTransform()
@@ -578,7 +582,7 @@ int main(int argc, char **argv)
   world->Attach(entity0);
 
 
-  ce::Entity          *entityTransPlaneRed    = new ce::Entity("Entity0");
+  ce::Entity *entityTransPlaneRed = new ce::Entity("Entity0");
   ce::StaticMeshState *meshStateTransPlaneRed = new ce::StaticMeshState("StaticMeshTransPlane");
 
   meshStateTransPlaneRed->GetTransform()
@@ -588,7 +592,7 @@ int main(int argc, char **argv)
   meshStateTransPlaneRed->SetStatic(true);
   entityTransPlaneRed->Attach(meshStateTransPlaneRed);
 
-  ce::Entity          *entityTransPlaneBlue    = new ce::Entity("Entity0");
+  ce::Entity *entityTransPlaneBlue = new ce::Entity("Entity0");
   ce::StaticMeshState *meshStateTransPlaneBlue = new ce::StaticMeshState("StaticMeshTransPlane");
   meshStateTransPlaneBlue->GetTransform()
                          .SetTranslation(ce::Vector3f(0, 0.10f, 0))
@@ -597,11 +601,11 @@ int main(int argc, char **argv)
   meshStateTransPlaneBlue->SetStatic(true);
   entityTransPlaneBlue->Attach(meshStateTransPlaneBlue);
 
-  float                sphereRadius      = 4.0f;
-  ce::iRenderMesh     *renderMeshSphere = create_sphere_mesh(sphereRadius, 32, 4.0f);
-  ce::Mesh            *meshSphere       = new ce::Mesh();
-  ce::Entity          *entitySphere     = new ce::Entity("Sphere");
-  ce::StaticMeshState *meshStateSphere  = new ce::StaticMeshState("Mesh.Sphere");
+  float sphereRadius = 4.0f;
+  ce::iRenderMesh *renderMeshSphere = create_sphere_mesh(sphereRadius, 32, 4.0f);
+  ce::Mesh *meshSphere = new ce::Mesh();
+  ce::Entity *entitySphere = new ce::Entity("Sphere");
+  ce::StaticMeshState *meshStateSphere = new ce::StaticMeshState("Mesh.Sphere");
   meshSphere->AddMaterialSlot("Default", materialInstance);
   meshSphere->AddSubMesh(renderMeshSphere, 0);
   meshStateSphere->GetTransform()
@@ -614,8 +618,8 @@ int main(int argc, char **argv)
   create_suzannes_plain(suzanneMesh, world, materialInstance2);
 //  create_suzannes_batched(suzanneMesh, world);
 
-  ce::Entity     *lightEntity = new ce::Entity("Light_0");
-  ce::LightState *lightState  = new ce::LightState("LightState");
+  ce::Entity *lightEntity = new ce::Entity("Light_0");
+  ce::LightState *lightState = new ce::LightState("LightState");
   lightEntity->Attach(lightState);
   lightState->SetType(ce::eLT_Point);
   lightState->SetColor(ce::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 1.0f);
@@ -642,7 +646,7 @@ int main(int argc, char **argv)
   world->Attach(lightEntity);
   */
 
-  ce::Entity     *sunEntity     = new ce::Entity("Sun");
+  ce::Entity *sunEntity = new ce::Entity("Sun");
   ce::LightState *sunLightState = new ce::LightState("SunLight");
   sunEntity->Attach(sunLightState);
   sunLightState->SetType(ce::eLT_Directional);
@@ -654,13 +658,13 @@ int main(int argc, char **argv)
                                                //.SetRotation(ce::Quaternion::FromAxisAngle(ce::Vector3f(1.0f, 0.0f, 0.0f), ce::ceDeg2Rad(-45.0f)))
                                            .SetRotation(
                                                ce::Quaternion::FromAxisAngle(ce::Vector3f(1.0f, 0.0f, 0.0f)
-                                                                                  .Normalize(),
-                                                                              ce::ceDeg2Rad(-45.0f)))
+                                                                                 .Normalize(),
+                                                                             ce::ceDeg2Rad(-45.0f)))
   );
 
   world->Attach(sunEntity);
 
-  sunEntity     = new ce::Entity("Sun");
+  sunEntity = new ce::Entity("Sun");
   sunLightState = new ce::LightState("SunLight");
   sunEntity->Attach(sunLightState);
   sunLightState->SetType(ce::eLT_Directional);
@@ -672,16 +676,16 @@ int main(int argc, char **argv)
                                                //.SetRotation(ce::Quaternion::FromAxisAngle(ce::Vector3f(1.0f, 0.0f, 0.0f), ce::ceDeg2Rad(-45.0f)))
                                            .SetRotation(
                                                ce::Quaternion::FromAxisAngle(ce::Vector3f(1.0f, 0.0f, 0.0f)
-                                                                                  .Normalize(),
-                                                                              ce::ceDeg2Rad(-135.0f)))
+                                                                                 .Normalize(),
+                                                                             ce::ceDeg2Rad(-135.0f)))
   );
 
 //  world->Attach(sunEntity);
 
 
-  ce::Entity      *cameraEntity  = new ce::Entity("Camera");
-  ce::CameraState *cameraState   = new ce::CameraState();
-  CameraHandler    *cameraHandler = new CameraHandler();
+  ce::Entity *cameraEntity = new ce::Entity("Camera");
+  ce::CameraState *cameraState = new ce::CameraState();
+  CameraHandler *cameraHandler = new CameraHandler();
   cameraEntity->Attach(cameraState);
   cameraEntity->Attach(cameraHandler);
   cameraEntity->GetRoot()->GetTransform()
@@ -691,9 +695,9 @@ int main(int argc, char **argv)
   world->Attach(cameraEntity);
 
 
-  ce::Entity      *mirrorCameraEntity = new ce::Entity("MirrorCamera");
-  ce::CameraState *mirrorCameraState  = new ce::CameraState();
-  MirrorHandler    *mirrorHandler = new MirrorHandler();
+  ce::Entity *mirrorCameraEntity = new ce::Entity("MirrorCamera");
+  ce::CameraState *mirrorCameraState = new ce::CameraState();
+  MirrorHandler *mirrorHandler = new MirrorHandler();
   mirrorCameraEntity->Attach(mirrorCameraState);
   mirrorCameraEntity->Attach(mirrorHandler);
   mirrorCameraState->SetRenderShadows(true);
@@ -711,30 +715,29 @@ int main(int argc, char **argv)
 
   ce::iFrameRenderer *frameRenderer = ce::ObjectRegistry::Get<ce::iFrameRenderer>();
 
-  std::string title  = ce::Settings("display.cef").GetText("title");
-  float       rot    = 0.0f;
-  float       entRot = 0.0f;
+  std::string title = ce::Settings("display.cef").GetText("title");
+  float rot = 0.0f;
+  float entRot = 0.0f;
 
-  uint32_t nextSec  = SDL_GetTicks() + 1000;
-  uint32_t frames   = 0;
+  uint32_t nextSec = SDL_GetTicks() + 1000;
+  uint32_t frames = 0;
   uint32_t lastTime = SDL_GetTicks();
 
 
-  bool  useCs     = true;
-  bool  anim      = true;
+  bool useCs = true;
+  bool anim = true;
   float roughness = 1.0f;
   materialInstance->Set(2, roughness);
 
 
-
-  ce::iPhysicsSystem* physics = ce::ObjectRegistry::Get<ce::iPhysicsSystem>();
-  ce::iPhysicsWorld* physWorld = physics->CreateWorld();
+  ce::iPhysicsSystem *physics = ce::ObjectRegistry::Get<ce::iPhysicsSystem>();
+  ce::iPhysicsWorld *physWorld = physics->CreateWorld();
 
 
   // add the ground plane
-  ce::BoxShapeDesc floorDesc{ ce::Vector3f(100.0f, 1.0f, 100.0f) };
-  ce::iCollisionShape* floorShape = physics->CreateShape(floorDesc);
-  ce::iStaticCollider* floorCollider = physics->CreateStaticCollider();
+  ce::BoxShapeDesc floorDesc{ce::Vector3f(100.0f, 1.0f, 100.0f)};
+  ce::iCollisionShape *floorShape = physics->CreateShape(floorDesc);
+  ce::iStaticCollider *floorCollider = physics->CreateStaticCollider();
   floorCollider->Attach(floorShape);
   floorCollider->SetTransform(ce::Matrix4f::Translation(0.0f, -1.0f, 0.0f));
   physWorld->AddCollider(floorCollider);
@@ -743,30 +746,28 @@ int main(int argc, char **argv)
   renderMeshSphere = create_sphere_mesh(sphereRadius, 32, 4.0f);
   for (int i = 0; i < 10; i++)
   {
-    ce::Mesh* meshSphere = new ce::Mesh();
-    ce::Entity* entitySphere = new ce::Entity("Sphere");
-    ce::StaticMeshState* meshStateSphere = new ce::StaticMeshState("Mesh.Sphere");
+    ce::Mesh *meshSphere = new ce::Mesh();
+    ce::Entity *entitySphere = new ce::Entity("Sphere");
+    ce::StaticMeshState *meshStateSphere = new ce::StaticMeshState("Mesh.Sphere");
     meshSphere->AddMaterialSlot("Default", materialInstance);
     meshSphere->AddSubMesh(renderMeshSphere, 0);
     meshStateSphere->GetTransform()
-      .SetTranslation(ce::Vector3f(0.0f, sphereRadius * 2.5f, 0.0f) * (i+2))
-      .Finish();
+                   .SetTranslation(ce::Vector3f(0.0f, sphereRadius * 2.5f, 0.0f) * (i + 2))
+                   .Finish();
     meshStateSphere->SetMesh(meshSphere);
     entitySphere->Attach(meshStateSphere);
     world->Attach(entitySphere);
 
 
-    ce::SphereShapeDesc sphereDesc{ sphereRadius };
-    ce::iCollisionShape* sphereShape = physics->CreateShape(sphereDesc);
-    ce::iDynamicCollider* sphereCollider = physics->CreateDynamicCollider();
+    ce::SphereShapeDesc sphereDesc{sphereRadius};
+    ce::iCollisionShape *sphereShape = physics->CreateShape(sphereDesc);
+    ce::iDynamicCollider *sphereCollider = physics->CreateDynamicCollider();
     sphereCollider->Attach(sphereShape);
     sphereCollider->SetTransform(entitySphere->GetRoot()->GetGlobalMatrix());
     sphereCollider->SetUserData(meshStateSphere);
     physWorld->AddCollider(sphereCollider);
 
   }
-
-
 
 
 #if _DEBUG
@@ -877,8 +878,8 @@ int main(int argc, char **argv)
     SDL_GL_SwapWindow(wnd);
 
     physWorld->Step(1.0f / 60.0f);
-    const std::vector<ce::iPhysicsWorld::DynamicResult>& result = physWorld->SwapResult();
-    for (auto& res : result)
+    const std::vector<ce::iPhysicsWorld::DynamicResult> &result = physWorld->SwapResult();
+    for (auto &res: result)
     {
       res.Collider->GetUserData()->SetLocalMatrix(res.Matrix);
     }
