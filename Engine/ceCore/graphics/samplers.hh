@@ -26,6 +26,8 @@ public:
   void SetUISprite(iSampler * sampler);
   iSampler* GetUISprite();
 
+  void SetTest(iSampler *sampler);
+  iSampler* GetTest();
 
   void Load();
 
@@ -34,6 +36,7 @@ private:
   iSampler* m_default;
   iSampler* m_normalMap;
   iSampler* m_uiSprite;
+  iSampler* m_test;
   iSampler* m_offscreen;
   iSampler* m_offscreenDepth;
 

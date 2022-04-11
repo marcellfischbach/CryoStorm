@@ -5,7 +5,7 @@
 #include <ceCore/entity/spatialstate.hh>
 
 CameraHandler::CameraHandler()
-        : ce::EntityState(), m_speed(4.0f), m_rotSpeed(0.0025f)
+        : ce::EntityState(), m_speed(4.0f), m_rotSpeed(0.0025f), m_rotY(0.0f), m_rotX(0.0f)
 {
   CE_CLASS_GEN_CONSTR;
   SetNeedUpdate(true);

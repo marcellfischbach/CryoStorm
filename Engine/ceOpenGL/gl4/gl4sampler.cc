@@ -141,7 +141,7 @@ uint8_t GL4Sampler::GetAnisotropy() const
   return m_anisotropy;
 }
 
-void GL4Sampler::SetMinLOD(uint16_t minLOD)
+void GL4Sampler::SetMinLOD(int16_t minLOD)
 {
   if (m_minLOD != minLOD)
   {
@@ -150,12 +150,12 @@ void GL4Sampler::SetMinLOD(uint16_t minLOD)
   }
 }
 
-uint16_t GL4Sampler::GetMinLOD() const
+int16_t GL4Sampler::GetMinLOD() const
 {
   return m_minLOD;
 }
 
-void GL4Sampler::SetMaxLOD(uint16_t maxLOD)
+void GL4Sampler::SetMaxLOD(int16_t maxLOD)
 {
   if (m_maxLOD != maxLOD)
   {
@@ -164,7 +164,7 @@ void GL4Sampler::SetMaxLOD(uint16_t maxLOD)
   }
 }
 
-uint16_t GL4Sampler::GetMaxLOD() const
+int16_t GL4Sampler::GetMaxLOD() const
 {
   return m_maxLOD;
 }

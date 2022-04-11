@@ -450,7 +450,7 @@ void create_suzannes_batched(ce::Mesh *suzanneMesh, ce::World *world)
   }
 }
 
-ce::iRenderTarget2D *create_render_target(ce::iDevice *device, uint32_t width, uint32_t height)
+ce::iRenderTarget2D *create_render_target(ce::iDevice *device, uint32_t width, uint32_t height, uint16_t multiSamples)
 {
   ce::iSampler *colorSampler = device->CreateSampler();
   colorSampler->SetFilterMode(ce::eFM_MinMagNearest);
@@ -458,13 +458,12 @@ ce::iRenderTarget2D *create_render_target(ce::iDevice *device, uint32_t width, u
   ce::iSampler *depthSampler = device->CreateSampler();
   depthSampler->SetFilterMode(ce::eFM_MinMagNearest);
 
-  uint16_t samples = 1;
   ce::iTexture2D::Descriptor rt_col_desc = {};
   rt_col_desc.Width = width;
   rt_col_desc.Height = height;
   rt_col_desc.Format = ce::ePF_RGBA;
   rt_col_desc.MipMaps = false;
-  rt_col_desc.MultiSamples = samples;
+  rt_col_desc.MultiSamples = multiSamples;
   ce::iTexture2D *color_texture = device->CreateTexture(rt_col_desc);
   color_texture->SetSampler(colorSampler);
 
@@ -473,7 +472,7 @@ ce::iRenderTarget2D *create_render_target(ce::iDevice *device, uint32_t width, u
   rt_dpth_desc.Height = height;
   rt_dpth_desc.Format = ce::ePF_Depth;
   rt_dpth_desc.MipMaps = false;
-  rt_dpth_desc.MultiSamples = samples;
+  rt_dpth_desc.MultiSamples = multiSamples;
   ce::iTexture2D *depth_texture = device->CreateTexture(rt_dpth_desc);
   depth_texture->SetSampler(depthSampler);
 
@@ -560,6 +559,7 @@ int main(int argc, char **argv)
   ce::Vector2i resolution = settings.GetVector2i("resolution", ce::Vector2i(wnd_width, wnd_height));
   int width = resolution.x;
   int height = resolution.y;
+  int multiSamples = settings.GetInt("multisamples", 1);
 
   float aspect = (float) wnd_height / (float) wnd_width;
 
@@ -704,13 +704,13 @@ int main(int argc, char **argv)
   mirrorHandler->SetCameraState(cameraState);
 //  world->Attach(mirrorCameraEntity);
 
-  auto mirrorRenderTarget = create_render_target(device, width / 2, height / 2);
+  auto mirrorRenderTarget = create_render_target(device, width / 2, height / 2, 1);
   mirrorCameraState->SetRenderTarget(mirrorRenderTarget);
 //  materialMirror->Set(materialMirror->IndexOf("Mirror"), mirrorRenderTarget->GetColorTexture(0));
 
 
 
-  auto renderTarget = create_render_target(device, width, height);
+  auto renderTarget = create_render_target(device, width, height, multiSamples);
   auto colorTexture = renderTarget->GetColorTexture(0);
 
   ce::iFrameRenderer *frameRenderer = ce::ObjectRegistry::Get<ce::iFrameRenderer>();

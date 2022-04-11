@@ -493,11 +493,15 @@ void GL4Device::SetShader(iShader *shader)
   if (m_shader)
   {
     GL4Program *program = static_cast<GL4Program *>(m_shader);
+    CE_GL_ERROR();
     glUseProgram(program->GetName());
+    CE_GL_ERROR();
   }
   else
   {
+    CE_GL_ERROR();
     glUseProgram(0);
+    CE_GL_ERROR();
   }
 
 }

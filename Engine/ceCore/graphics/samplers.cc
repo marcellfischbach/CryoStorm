@@ -52,6 +52,15 @@ iSampler* Samplers::GetUISprite()
   return m_uiSprite;
 }
 
+iSampler* Samplers::GetTest()
+{
+  return m_test;
+}
+
+void Samplers::SetTest(iSampler* mTest)
+{
+  m_test = mTest;
+}
 
 void Samplers::Load()
 {
@@ -59,6 +68,7 @@ void Samplers::Load()
   // mock the default stuff
 
   m_default = AssetManager::Get()->Load<iSampler>(ResourceLocator("/samplers/default.cef"));
+  m_test = AssetManager::Get()->Load<iSampler>(ResourceLocator("/samplers/test.cef"));
   m_normalMap = AssetManager::Get()->Load<iSampler>(ResourceLocator("/samplers/normal_map.cef"));
   m_uiSprite = AssetManager::Get()->Load<iSampler>(ResourceLocator("/samplers/ui_sprite.cef"));
 

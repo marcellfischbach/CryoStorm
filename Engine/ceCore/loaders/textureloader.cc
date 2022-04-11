@@ -124,6 +124,10 @@ iSampler *TextureLoaderCEF::LoadSampler(const file::Element *samplerElement)
   {
     sampler = ObjectRegistry::Get<Samplers>()->GetDefault();
   }
+  else if (samplerName == std::string("Test"))
+  {
+    sampler = ObjectRegistry::Get<Samplers>()->GetTest();
+  }
   else if (samplerName == std::string("NormalMap"))
   {
     sampler = ObjectRegistry::Get<Samplers>()->GetNormalMap();

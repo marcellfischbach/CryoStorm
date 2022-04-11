@@ -28,11 +28,11 @@ public:
   void SetAnisotropy(uint8_t anisotropy) override;
   uint8_t GetAnisotropy() const override;
 
-  void SetMinLOD(uint16_t minLOD) override;
-  uint16_t GetMinLOD() const override;
+  void SetMinLOD(int16_t minLOD) override;
+  int16_t GetMinLOD() const override;
 
-  void SetMaxLOD(uint16_t maxLOD) override;
-  uint16_t GetMaxLOD() const override;
+  void SetMaxLOD(int16_t maxLOD) override;
+  int16_t GetMaxLOD() const override;
 
   void SetAddressU(eTextureAddressMode mode) override;
   eTextureAddressMode GetAddressU() const override;
@@ -60,8 +60,8 @@ private:
   eFilterMode m_filterMode;
   uint8_t m_anisotropy;
 
-  uint16_t m_minLOD;
-  uint16_t m_maxLOD;
+  int16_t m_minLOD;
+  int16_t m_maxLOD;
 
   eTextureAddressMode m_addressU;
   eTextureAddressMode m_addressV;

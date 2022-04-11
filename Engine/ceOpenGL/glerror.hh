@@ -6,7 +6,9 @@
 #ifdef _DEBUG
 
 #define CE_GL_ERROR() \
-  switch (glGetError()) \
+  {                   \
+  GLenum error = glGetError();\
+  switch (error) \
   {\
   case GL_NO_ERROR:\
     break;\
@@ -30,7 +32,11 @@
     break;\
   case GL_STACK_OVERFLOW:\
     printf("[GL_STACK_OVERFLOW] @ %s : %d\n", __FILE__, __LINE__); \
-    break;\
+    break;            \
+  default:            \
+    printf("[Unknown: 0x%08x] @ %s : %d\n", error, __FILE__, __LINE__); \
+    break;            \
+  }                   \
   }
 
 #else

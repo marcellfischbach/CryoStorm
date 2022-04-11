@@ -25,11 +25,11 @@ struct CE_CORE_API iSampler : public CE_SUPER(iObject)
   virtual void SetAnisotropy(uint8_t anisotropy) = 0;
   virtual uint8_t GetAnisotropy() const = 0;
 
-  virtual void SetMinLOD(uint16_t minLOD) = 0;
-  virtual uint16_t GetMinLOD() const = 0;
+  virtual void SetMinLOD(int16_t minLOD) = 0;
+  virtual int16_t GetMinLOD() const = 0;
 
-  virtual void SetMaxLOD(uint16_t maxLOD) = 0;
-  virtual uint16_t GetMaxLOD() const = 0;
+  virtual void SetMaxLOD(int16_t maxLOD) = 0;
+  virtual int16_t GetMaxLOD() const = 0;
 
   virtual void SetAddressU(eTextureAddressMode mode) = 0;
   virtual eTextureAddressMode GetAddressU() const = 0;
