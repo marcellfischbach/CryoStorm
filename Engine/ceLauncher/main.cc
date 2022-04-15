@@ -680,7 +680,7 @@ int main(int argc, char **argv)
                                                                              ce::ceDeg2Rad(-135.0f)))
   );
 
-//  world->Attach(sunEntity);
+  world->Attach(sunEntity);
 
 
   ce::Entity *cameraEntity = new ce::Entity("Camera");
@@ -883,7 +883,7 @@ int main(int argc, char **argv)
     {
       res.Collider->GetUserData()->SetLocalMatrix(res.Matrix);
     }
-    break;
+//    break;
   }
 
   ce::iMouse *mouse = ce::Input::GetMouse();

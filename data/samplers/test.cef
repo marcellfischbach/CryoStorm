@@ -1,5 +1,5 @@
 sampler name:"Test"
-		filter: "MinMagNearest"
+		filter: "MinMagLinear"
 		anisotropy: 1
 		minLOD: -1000
 		maxLOD: 1000

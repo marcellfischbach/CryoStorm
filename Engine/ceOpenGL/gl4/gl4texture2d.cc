@@ -124,6 +124,7 @@ uint16_t GL4Texture2D::GetSamples() const
 
 void GL4Texture2D::Data(const Image* image)
 {
+
   for (uint16_t l = 0; l < image->GetNumberOfLayers(); l++)
   {
     Data(l, image->GetPixelFormat(), image->GetData(l));

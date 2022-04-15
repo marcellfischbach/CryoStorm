@@ -105,7 +105,8 @@ public:
 #endif
 
 private:
-  void UnbindAllTextures();
+  static void BindUnsafe (iTexture *texture);
+  static void UnbindUnsafe (iTexture *texture);
 
 private:
   iRenderTarget* m_renderTarget;
@@ -116,6 +117,8 @@ private:
   eTextureUnit m_nextTextureUnit;
   eTextureUnit m_markTextureUnit;
   iTexture* m_textures[eTU_COUNT];
+  iSampler* m_samplers[eTU_COUNT];
+  iTexture* m_tempTexture = nullptr;
 
 
   /*

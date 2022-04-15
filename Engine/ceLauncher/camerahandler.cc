@@ -71,7 +71,7 @@ void CameraHandler::Update(float tpf)
   tr.SetTranslation(tr.GetTranslation() + dir)
     .SetRotation(rot)
     .Finish();
-  tr.SetTranslation(ce::Vector3f(5.0f, 10.0f, 5.0f))
-    .LookAt(ce::Vector3f(0.0f, 0.0f, 0.0f))
-    .Finish();
+//  tr.SetTranslation(ce::Vector3f(5.0f, 10.0f, 5.0f))
+//    .LookAt(ce::Vector3f(0.0f, 0.0f, 0.0f))
+//    .Finish();
 }
