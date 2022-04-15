@@ -17,6 +17,16 @@ static GLint GL4PixelFormatInternal[] = {
         GL_DEPTH_STENCIL,   // ePF_DepthStencil
 };
 
+static GLint GL4PixelFormatSizedInternal[] = {
+
+  GL_R8,             // ePF_R,
+  GL_RG8,              // ePF_RG,
+  GL_RGB8,             // ePF_RGB,
+  GL_RGBA8,            // ePF_RGBA
+  GL_DEPTH_COMPONENT32, // ePF_Depth
+  GL_DEPTH24_STENCIL8,   // ePF_DepthStencil
+};
+
 static GLint GL4PixelFormatClient[] = {
         GL_RED,   // ePF_R,
         GL_RG,    // ePF_RG,

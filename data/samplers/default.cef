@@ -1,4 +1,4 @@
-sampler name:"OffscreenDepth"
+sampler name:"Default"
 		filter: "MinMagMipLinear"
 		anisotropy: 1
 		minLOD: -1000

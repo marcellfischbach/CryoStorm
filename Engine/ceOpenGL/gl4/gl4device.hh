@@ -77,6 +77,8 @@ public:
 
 
   void ResetTextures() override;
+  void MarkTexture() override;
+  void ResetTexturesToMark() override;
   void SetSampler(eTextureUnit unit, iSampler * sampler);
   eTextureUnit BindTexture(iTexture * texture) override;
   bool BindMaterial(iMaterial * material, eRenderPass pass) override;
@@ -102,6 +104,8 @@ public:
   CE_NODISCARD Size GetNumberOfShaderStateChanges () const override;
 #endif
 
+private:
+  void UnbindAllTextures();
 
 private:
   iRenderTarget* m_renderTarget;
@@ -110,6 +114,7 @@ private:
   eRenderPass m_materialPass;
   eTextureUnit ShiftTextureUnit();
   eTextureUnit m_nextTextureUnit;
+  eTextureUnit m_markTextureUnit;
   iTexture* m_textures[eTU_COUNT];
 
 

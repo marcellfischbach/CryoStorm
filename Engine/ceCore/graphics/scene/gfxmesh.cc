@@ -26,6 +26,7 @@ GfxMesh::~GfxMesh()
 
 void GfxMesh::Render(iDevice* device, eRenderPass pass)
 {
+  //printf ("Render(mat: %p)\n", m_material);
   if (device->BindMaterial(m_material, pass))
   {
     if (pass == eRP_Forward)
@@ -46,6 +47,7 @@ void GfxMesh::Render(iDevice* device, eRenderPass pass)
 
 void GfxMesh::RenderUnlit(iDevice* device, eRenderPass pass)
 {
+  //printf ("RenderUnlit(mat: %p)\n", m_material);
   if (device->BindMaterial(m_material, pass))
   {
     device->SetModelMatrix(m_modelMatrix);
@@ -55,6 +57,8 @@ void GfxMesh::RenderUnlit(iDevice* device, eRenderPass pass)
 
 void GfxMesh::RenderForward(iDevice* device, eRenderPass pass, const GfxLight** lights, Size numberOfLights)
 {
+
+  //printf ("RenderForward(mat: %p)\n", m_material);
   if (device->BindMaterial(m_material, pass))
   {
     Size i;

@@ -28,6 +28,11 @@ void GL4TextureCube::Bind()
   glBindTexture(GL_TEXTURE_CUBE_MAP, m_name);
 }
 
+void GL4TextureCube::Unbind()
+{
+  glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+}
+
 bool GL4TextureCube::Initialize(uint16_t size, ePixelFormat format, bool generateMipMaps)
 {
   m_size = size;

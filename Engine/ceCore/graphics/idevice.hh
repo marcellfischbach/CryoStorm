@@ -90,6 +90,8 @@ struct CE_CORE_API iDevice : public CE_SUPER(iObject)
 
 
   virtual void ResetTextures() = 0;
+  virtual void MarkTexture() = 0;
+  virtual void ResetTexturesToMark () = 0;
   virtual eTextureUnit BindTexture(iTexture* texture) = 0;
   virtual bool BindMaterial(iMaterial* material, eRenderPass pass) = 0;
   virtual void Render(iRenderMesh* mesh, eRenderPass pass) = 0;

@@ -25,12 +25,14 @@ lighting_result_t calc_lighting (float n_dot_l, float n_dot_v)
     return res;
 }
 
+
 void main()
 {
     vec3 norm = normalize(world_normal);
     vec3 frag_light = calc_lights(world_position, norm, camera_space_position, viewer_world_position);
     vec4 texColor = texture(ce_Diffuse, texCoord * 3);
     ce_FragColor = vec4(frag_light, 1.0) * ce_Color * texColor;
-//    ce_FragColor = vec4(norm * 0.5 + 0.5, 1.0);
+//    ce_FragColor = vec4(frag_light, 1.0) * ce_Color;// * texColor;
+//    ce_FragColor = vec4(norm * 0.5 + 0.5, 1.0) * texColor;
 }
 

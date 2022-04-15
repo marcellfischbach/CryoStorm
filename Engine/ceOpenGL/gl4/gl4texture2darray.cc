@@ -30,6 +30,12 @@ void GL4Texture2DArray::Bind()
   glBindTexture(GL_TEXTURE_2D_ARRAY, m_name);
 }
 
+void GL4Texture2DArray::Unbind()
+{
+  glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
+}
+
+
 bool GL4Texture2DArray::Initialize(uint16_t width, uint16_t height, uint16_t layer, ePixelFormat format, bool generateMipMaps)
 {
   m_width = width;

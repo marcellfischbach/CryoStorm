@@ -246,6 +246,8 @@ GL4Shader* LoadShader(const std::string& typeText,
   replace(lines, "eVS_Colors", eVS_Colors);
   std::string source = merge(lines);
 
+  //printf ("source: %s\n%s\n", locator->Encoded().c_str(), source.c_str());
+
   try
   {
     GL4Shader* shader = new GL4Shader(shaderType);

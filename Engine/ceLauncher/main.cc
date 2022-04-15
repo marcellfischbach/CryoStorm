@@ -883,6 +883,7 @@ int main(int argc, char **argv)
     {
       res.Collider->GetUserData()->SetLocalMatrix(res.Matrix);
     }
+    break;
   }
 
   ce::iMouse *mouse = ce::Input::GetMouse();

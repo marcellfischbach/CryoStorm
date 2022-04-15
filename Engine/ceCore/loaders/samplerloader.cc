@@ -16,7 +16,7 @@ bool SamplerLoaderCEF::CanLoad(const Class* cls, const file::File* file, const R
 }
 
 
-#define IF(prefix, name, text) if (std::string(#name) == text) return prefix##name
+#define IF(prefix, name, text) if (std::string(#name) == (text)) return prefix##name
 
 eFilterMode FilterMode(const std::string& filterMode)
 {
@@ -111,13 +111,18 @@ iObject* SamplerLoaderCEF::Load(const Class* cls, const file::File* file, const 
   {
     sampler->SetFilterMode(filter);
     sampler->SetAnisotropy(anisotropy);
-    sampler->SetMinLOD(minLOD);
-    sampler->SetMaxLOD(maxLOD);
+    sampler->SetMinLOD((int16_t)minLOD);
+    sampler->SetMaxLOD((int16_t)maxLOD);
     sampler->SetAddressU(addressU);
     sampler->SetAddressV(addressV);
     sampler->SetAddressW(addressW);
     sampler->SetTextureCompareMode(compareMode);
     sampler->SetTextureCompareFunc(compareFunc);
+
+    printf ("Sampler %s [%p] %s %d %d\n",
+            locator->Encoded().c_str(),
+            sampler, samplerElement->GetAttribute("filter", "").c_str(), minLOD, maxLOD);
+
   }
   
 

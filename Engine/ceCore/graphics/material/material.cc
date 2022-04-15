@@ -137,6 +137,7 @@ bool Material::Bind(iDevice* device, eRenderPass pass)
   {
     BindAttribute(device, pass, i);
   }
+  device->MarkTexture();
   return true;
 }
 
@@ -222,6 +223,7 @@ bool Material::BindAttribute(iDevice *device, eRenderPass pass, size_t idx, cons
 bool Material::BindTexture(iDevice *device, iShaderAttribute *attribute, iTexture *texture)
 {
   eTextureUnit unit = device->BindTexture(texture);
+//  printf ("Bind texture: %p -> %d\n", texture, unit);
   if (unit == eTU_Invalid)
   {
     return false;
