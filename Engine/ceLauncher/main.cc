@@ -791,7 +791,7 @@ int main(int argc, char **argv)
       numTrianglesPerSec = 0;
       numShaderStateChanges = 0;
 #else
-      sprintf_s<1024>(buffer, "%s  %d FPS", title.c_str(), frames);
+      sprintf_s<1024>(buffer, "%s  %d FPS [%f]", title.c_str(), frames, roughness);
 #endif
       SDL_SetWindowTitle(wnd, buffer);
       printf("%s\n", buffer);

@@ -15,7 +15,7 @@ in vec3 viewer_world_position;
 
 #include <../common/lighting.glsl>
 
-lighting_result_t calc_lighting (float n_dot_l, float n_dot_v)
+lighting_result_t calc_lighting (float n_dot_l, float n_dot_v, float n_dot_h, float h_dot_l, float h_dot_v)
 {
     lighting_result_t res;
     res.ambient = 0.0;

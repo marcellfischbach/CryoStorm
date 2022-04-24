@@ -253,6 +253,14 @@ GL4Shader* LoadShader(const std::string& typeText,
     GL4Shader* shader = new GL4Shader(shaderType);
     shader->SetSource(source);
     shader->Compile();
+    /*
+    printf("Shader:\n");
+    std::vector<std::string> lines = split(source);
+    for (Size i = 0, in = lines.size(); i < in; ++i)
+    {
+      printf("(%04zu) %s\n", i + 1, lines[i].c_str());
+    }
+    */
     return shader;
   }
   catch (GL4ShaderCompileException& sce)

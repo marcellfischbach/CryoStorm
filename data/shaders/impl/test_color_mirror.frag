@@ -18,12 +18,12 @@ in vec4 glPosition;
 
 #include <../common/lighting.glsl>
 
-lighting_result_t calc_lighting (float n_dot_l, float n_dot_v)
+lighting_result_t calc_lighting (float n_dot_l, float n_dot_v, float n_dot_h, float h_dot_l, float h_dot_v)
 {
     lighting_result_t res;
     res.ambient = 0.0;
     res.diffuse = oren_nayar (n_dot_l, n_dot_v, ce_Roughness);
-    res.specular = 0.0;
+    res.specular = cook_torrance(0.8, n_dot_l, n_dot_v, n_dot_h, h_dot_v, roughness);
     return res;
 }
 

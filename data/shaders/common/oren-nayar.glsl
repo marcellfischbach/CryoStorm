@@ -16,7 +16,7 @@ float oren_nayar (float n_dot_l, float n_dot_v, float roughness)
 }
 
 
-
+/*
 
 vec3 calc_lighting (vec3 light_color, vec3 frag_to_light, vec3 frag_normal, vec3 frag_to_viewer, float roughness)
 {
@@ -26,3 +26,4 @@ vec3 calc_lighting (vec3 light_color, vec3 frag_to_light, vec3 frag_normal, vec3
 
     return light_color * oren_nayar(NdotL, NdotV, roughness);
 }
+*/
