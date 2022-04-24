@@ -513,21 +513,21 @@ void GL4Device::SetRenderTarget(iRenderTarget *renderTarget)
   {
     switch (renderTarget->GetType())
     {
-      case eTT_Texture2D:
+      case eTextureType::Texture2D:
       {
         GL4RenderTarget2D *rt2d = static_cast<GL4RenderTarget2D *>(renderTarget);
         rt2d->Bind();
         SetViewport(0, 0, rt2d->GetWidth(), rt2d->GetHeight());
         break;
       }
-      case eTT_Texture2DArray:
+      case eTextureType::Texture2DArray:
       {
         GL4RenderTarget2DArray *rt2dArray = static_cast<GL4RenderTarget2DArray *>(renderTarget);
         rt2dArray->Bind();
         SetViewport(0, 0, rt2dArray->GetWidth(), rt2dArray->GetHeight());
         break;
       }
-      case eTT_TextureCube:
+      case eTextureType::TextureCube:
       {
         GL4RenderTargetCube *rtcube = static_cast<GL4RenderTargetCube *>(renderTarget);
         rtcube->Bind();
@@ -745,19 +745,19 @@ void GL4Device::BindUnsafe(iTexture *texture)
   }
   switch (texture->GetType())
   {
-    case eTT_Texture1D:
+    case eTextureType::Texture1D:
       break;
-    case eTT_Texture1DArray:
+    case eTextureType::Texture1DArray:
       break;
-    case eTT_Texture2D:
+    case eTextureType::Texture2D:
       static_cast<GL4Texture2D *>(texture)->Bind();
       break;
-    case eTT_Texture2DArray:
+    case eTextureType::Texture2DArray:
       static_cast<GL4Texture2DArray *>(texture)->Bind();
       break;
-    case eTT_Texture3D:
+    case eTextureType::Texture3D:
       break;
-    case eTT_TextureCube:
+    case eTextureType::TextureCube:
       static_cast<GL4TextureCube *>(texture)->Bind();
       break;
   }
@@ -771,19 +771,19 @@ void GL4Device::UnbindUnsafe(iTexture *texture)
   }
   switch (texture->GetType())
   {
-    case eTT_Texture1D:
+    case eTextureType::Texture1D:
       break;
-    case eTT_Texture1DArray:
+    case eTextureType::Texture1DArray:
       break;
-    case eTT_Texture2D:
+    case eTextureType::Texture2D:
       static_cast<GL4Texture2D *>(texture)->Unbind();
       break;
-    case eTT_Texture2DArray:
+    case eTextureType::Texture2DArray:
       static_cast<GL4Texture2DArray *>(texture)->Unbind();
       break;
-    case eTT_Texture3D:
+    case eTextureType::Texture3D:
       break;
-    case eTT_TextureCube:
+    case eTextureType::TextureCube:
       static_cast<GL4TextureCube *>(texture)->Unbind();
       break;
   }

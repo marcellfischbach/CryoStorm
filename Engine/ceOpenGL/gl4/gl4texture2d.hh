@@ -23,7 +23,7 @@ public:
 
   CE_NODISCARD eTextureType GetType() const
   {
-    return eTT_Texture2D;
+    return eTextureType::Texture2D;
   }
 
   ePixelFormat GetFormat() const override;

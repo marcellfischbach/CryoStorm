@@ -120,7 +120,7 @@ void GL4RenderTargetCube::AddColorTexture(iTextureCube* colorTexture)
 
 eTextureType GL4RenderTargetCube::GetType() const
 {
-  return eTT_TextureCube;
+  return eTextureType::TextureCube;
 }
 
 bool GL4RenderTargetCube::Compile()

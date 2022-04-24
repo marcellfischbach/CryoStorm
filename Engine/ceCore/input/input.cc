@@ -58,22 +58,22 @@ Vector2f Input::GetWheel()
 }
 
 
-bool Input::IsButtonDown(MouseButton mouseButton)
+bool Input::IsButtonDown(eMouseButton mouseButton)
 {
   return Get()->GetMouse()->IsButtonDown(mouseButton);
 }
 
-bool Input::IsButtonUp(MouseButton mouseButton)
+bool Input::IsButtonUp(eMouseButton mouseButton)
 {
   return Get()->GetMouse()->IsButtonUp(mouseButton);
 }
 
-bool Input::IsButtonPressed(MouseButton mouseButton)
+bool Input::IsButtonPressed(eMouseButton mouseButton)
 {
   return Get()->GetMouse()->IsButtonPressed(mouseButton);
 }
 
-bool Input::IsButtonReleased(MouseButton mouseButton)
+bool Input::IsButtonReleased(eMouseButton mouseButton)
 {
   return Get()->GetMouse()->IsButtonReleased(mouseButton);
 }

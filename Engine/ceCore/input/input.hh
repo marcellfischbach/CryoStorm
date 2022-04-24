@@ -24,10 +24,10 @@ public:
   static Vector2f GetMousePosition();
   static Vector2f GetMouseDelta();
   static Vector2f GetWheel();
-  static bool IsButtonDown(MouseButton mouseButton);
-  static bool IsButtonUp(MouseButton mouseButton);
-  static bool IsButtonPressed(MouseButton mouseButton);
-  static bool IsButtonReleased(MouseButton mouseButton);
+  static bool IsButtonDown(eMouseButton mouseButton);
+  static bool IsButtonUp(eMouseButton mouseButton);
+  static bool IsButtonPressed(eMouseButton mouseButton);
+  static bool IsButtonReleased(eMouseButton mouseButton);
 
   static iMouse *GetMouse ();
   static iKeyboard *GetKeyboard ();

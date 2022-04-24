@@ -141,7 +141,7 @@ void GL4RenderTarget2D::AddColorTexture(iTexture2D *colorTexture)
 
 eTextureType GL4RenderTarget2D::GetType() const
 {
-  return eTT_Texture2D;
+  return eTextureType::Texture2D;
 }
 
 bool GL4RenderTarget2D::Compile()

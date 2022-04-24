@@ -752,7 +752,7 @@ int main(int argc, char **argv)
     meshSphere->AddMaterialSlot("Default", materialInstance);
     meshSphere->AddSubMesh(renderMeshSphere, 0);
     meshStateSphere->GetTransform()
-                   .SetTranslation(ce::Vector3f(0.0f, sphereRadius * 2.5f, 0.0f) * (i + 2))
+                   .SetTranslation(ce::Vector3f(0.0f, sphereRadius * 2.5f, 0.0f) * ((float)i + 2.0f))
                    .Finish();
     meshStateSphere->SetMesh(meshSphere);
     entitySphere->Attach(meshStateSphere);

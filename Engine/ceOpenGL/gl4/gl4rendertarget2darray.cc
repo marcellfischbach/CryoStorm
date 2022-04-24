@@ -120,7 +120,7 @@ void GL4RenderTarget2DArray::AddColorTexture(iTexture2DArray *colorTexture)
 
 eTextureType GL4RenderTarget2DArray::GetType() const
 {
-  return eTT_Texture2DArray;
+  return eTextureType::Texture2DArray;
 }
 
 bool GL4RenderTarget2DArray::Compile()

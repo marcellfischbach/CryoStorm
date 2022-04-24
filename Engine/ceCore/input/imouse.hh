@@ -29,10 +29,10 @@ struct iMouse
   CE_NODISCARD virtual int32_t GetWheel() const = 0;
   CE_NODISCARD virtual int32_t GetWheelHorizontal() const = 0;
 
-  CE_NODISCARD virtual bool IsButtonDown(MouseButton mouseButton) const = 0;
-  CE_NODISCARD virtual bool IsButtonUp(MouseButton mouseButton) const = 0;
-  CE_NODISCARD virtual bool IsButtonPressed(MouseButton mouseButton) const = 0;
-  CE_NODISCARD virtual bool IsButtonReleased(MouseButton mouseButton) const = 0;
+  CE_NODISCARD virtual bool IsButtonDown(eMouseButton mouseButton) const = 0;
+  CE_NODISCARD virtual bool IsButtonUp(eMouseButton mouseButton) const = 0;
+  CE_NODISCARD virtual bool IsButtonPressed(eMouseButton mouseButton) const = 0;
+  CE_NODISCARD virtual bool IsButtonReleased(eMouseButton mouseButton) const = 0;
 };
 
 }

@@ -37,10 +37,10 @@ public:
   CE_NODISCARD int32_t GetWheelHorizontal() const override;
 
 
-  CE_NODISCARD bool IsButtonDown(MouseButton mouseButton) const override;
-  CE_NODISCARD bool IsButtonUp(MouseButton mouseButton) const override;
-  CE_NODISCARD bool IsButtonPressed(MouseButton mouseButton) const override;
-  CE_NODISCARD bool IsButtonReleased(MouseButton mouseButton) const override;
+  CE_NODISCARD bool IsButtonDown(eMouseButton mouseButton) const override;
+  CE_NODISCARD bool IsButtonUp(eMouseButton mouseButton) const override;
+  CE_NODISCARD bool IsButtonPressed(eMouseButton mouseButton) const override;
+  CE_NODISCARD bool IsButtonReleased(eMouseButton mouseButton) const override;
 private:
 
   int32_t m_x;
@@ -49,8 +49,8 @@ private:
   int32_t m_relY;
   int32_t m_wheel;
   int32_t m_wheelHorizontal;
-  bool m_current[eMB_COUNT];
-  bool m_last[eMB_COUNT];
+  bool m_current[(size_t)eMouseButton::COUNT];
+  bool m_last[(size_t)eMouseButton::COUNT];
 
   bool m_cursorVisible;
   eCursorMode m_cursorMode;

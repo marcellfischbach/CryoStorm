@@ -4,14 +4,14 @@
 namespace ce
 {
 
-enum eTextureType
+enum class eTextureType
 {
-  eTT_Texture1D,
-  eTT_Texture2D,
-  eTT_Texture3D,
-  eTT_Texture1DArray,
-  eTT_Texture2DArray,
-  eTT_TextureCube,
+  Texture1D,
+  Texture2D,
+  Texture3D,
+  Texture1DArray,
+  Texture2DArray,
+  TextureCube,
 };
 
 

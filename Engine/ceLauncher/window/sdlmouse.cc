@@ -16,7 +16,7 @@ SDLMouse::SDLMouse()
   , m_cursorMode(eCursorMode::Free)
   , m_window(nullptr)
 {
-  for (int i = 0; i < eMB_COUNT; i++)
+  for (int i = 0; i < (size_t)eMouseButton::COUNT; i++)
   {
     m_current[i] = m_last[i] = false;
   }
@@ -95,24 +95,24 @@ int32_t SDLMouse::GetWheelHorizontal() const
 }
 
 
-bool SDLMouse::IsButtonDown(MouseButton mouseButton) const 
+bool SDLMouse::IsButtonDown(eMouseButton mouseButton) const 
 {
-  return m_current[mouseButton];
+  return m_current[(size_t)mouseButton];
 }
 
-bool SDLMouse::IsButtonUp(MouseButton mouseButton) const 
+bool SDLMouse::IsButtonUp(eMouseButton mouseButton) const 
 {
-  return !m_current[mouseButton];
+  return !m_current[(size_t)mouseButton];
 }
 
-bool SDLMouse::IsButtonPressed(MouseButton mouseButton) const 
+bool SDLMouse::IsButtonPressed(eMouseButton mouseButton) const 
 {
-  return !m_last[mouseButton] && m_current[mouseButton];
+  return !m_last[(size_t)mouseButton] && m_current[(size_t)mouseButton];
 }
 
-bool SDLMouse::IsButtonReleased(MouseButton mouseButton) const 
+bool SDLMouse::IsButtonReleased(eMouseButton mouseButton) const 
 {
-  return m_last[mouseButton] && !m_current[mouseButton];
+  return m_last[(size_t)mouseButton] && !m_current[(size_t)mouseButton];
 }
 
 
@@ -122,18 +122,15 @@ void SDLMouse::Update()
   m_wheelHorizontal = 0;
   m_relX = 0;
   m_relY = 0;
-  memcpy(m_last, m_current, sizeof(bool) * eMB_COUNT);
+  memcpy(m_last, m_current, sizeof(bool) * (size_t)eMouseButton::COUNT);
 
-  int width, height;
-//  SDL_GetWindowSize(m_window, &width, &height);
-//  SDL_WarpMouseInWindow(m_window, width / 2, height / 2);
 }
 
 void SDLMouse::Update(uint8_t button, bool down)
 {
-  if (button < eMB_COUNT)
+  if (button < (size_t)eMouseButton::COUNT)
   {
-    m_current[Map(button)] = down;
+    m_current[(size_t)Map(button)] = down;
   }
 }
 

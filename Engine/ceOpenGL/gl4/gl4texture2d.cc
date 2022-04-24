@@ -106,7 +106,7 @@ bool GL4Texture2D::Initialize(uint16_t width,
   else
   {
     glTexStorage2D(GL_TEXTURE_2D,
-                   m_level.size(),
+                   (GLsizei)m_level.size(),
                    GL4PixelFormatSizedInternal[format],
                    width, height
     );
