@@ -11,6 +11,7 @@ namespace ce
 class Camera;
 class Projector;
 struct iRenderTarget2D;
+class PostProcessing;
 
 CE_CLASS()
 class CE_CORE_API GfxCamera : public CE_SUPER(iObject)
@@ -42,6 +43,10 @@ public:
   void SetRenderShadows (bool renderShadows);
   bool IsRenderShadows () const;
 
+  void SetPostProcessing(PostProcessing * postProcessing);
+  PostProcessing* GetPostProcessing();
+  const PostProcessing* GetPostProcessing() const;
+
   void UpdateData (float near, float far, float angle, float angleWidthHeight);
 
   void UpdateClear (eClearMode mode, const Color4f &color, float depth);
@@ -67,6 +72,7 @@ private:
   int           m_order;
   bool  m_renderShadows;
 
+  PostProcessing* m_postProcessing;
 };
 
 

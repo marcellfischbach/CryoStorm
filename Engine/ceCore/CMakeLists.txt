@@ -82,6 +82,8 @@ set(SOURCES
         graphics/ivertexbuffer.hh
         graphics/mesh.cc
         graphics/mesh.hh
+        graphics/postprocessing.cc
+        graphics/postprocessing.hh
         graphics/projector.cc
         graphics/projector.hh
         graphics/samplers.cc
