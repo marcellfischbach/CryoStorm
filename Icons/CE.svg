@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="64"
+   height="64"
+   viewBox="0 0 16.933333 16.933334"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   sodipodi:docname="CE.svg"
+   inkscape:export-filename="D:\DEV\CrimsonEdge\data\icons\ce16.png"
+   inkscape:export-xdpi="24"
+   inkscape:export-ydpi="24"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="true"
+     units="px"
+     inkscape:zoom="8.3856039"
+     inkscape:cx="59.804876"
+     inkscape:cy="18.305181"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid846"
+       empspacing="4" />
+  </sodipodi:namedview>
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#dc143c;fill-opacity:1;stroke:none;stroke-width:0.105833;stroke-linecap:round;stroke-linejoin:bevel"
+       id="rect848"
+       width="16.933332"
+       height="16.933332"
+       x="0"
+       y="0"
+       ry="2.9104166"
+       inkscape:export-filename="D:\DEV\CrimsonEdge\data\icons\rect848.png"
+       inkscape:export-xdpi="24"
+       inkscape:export-ydpi="24" />
+    <path
+       id="rect916"
+       style="fill:#ffffff;stroke-width:0.105833;stroke-linecap:round;stroke-linejoin:bevel"
+       d="m 15.491428,7.3402814 c 0.418065,0.047997 0.209032,0.8407436 -0.264584,0.79375 C 11.514995,8.532042 6.668365,9.6047842 2.6021146,14.649011 l -0.79375,-1.852083 C 5.7517962,8.147348 11.633876,7.137791 15.491428,7.3402814 Z"
+       sodipodi:nodetypes="ccccc" />
+    <circle
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.105833;stroke-linecap:round;stroke-linejoin:bevel"
+       id="path2642"
+       cx="5.0483346"
+       cy="5.1587667"
+       r="2.1166666" />
+  </g>
+</svg>

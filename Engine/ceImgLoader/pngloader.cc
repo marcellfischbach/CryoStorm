@@ -107,7 +107,7 @@ iObject* PngLoader::Load(const Class* cls, const ResourceLocator& locator) const
   // convert row by row and delete the buffer
   for (uint32_t y = 0; y < height; y++)
   {
-    Size rowId = height - y - 1;
+    Size rowId = y; // height - y - 1;
     png_bytep ptr = row_pointers[rowId];
     switch (color_type)
     {

@@ -237,6 +237,24 @@ bool initialize_modules(int argc, char **argv)
   return true;
 }
 
+void set_window_icon()
+{
+  ce::Image* image = ce::AssetManager::Get()->Load<ce::Image>("file:///icons/ce24.png");
+  if (!image)
+  {
+    return;
+  }
+
+  SDL_Surface* surf = SDL_CreateRGBSurface(0, image->GetWidth(), image->GetHeight(), 32, 0xff000000, 0x00ff0000, 0x0000ff00, 0x000000ff);
+  SDL_LockSurface(surf);
+  SDL_memcpy(surf->pixels, image->GetData(), image->GetWidth() * image->GetHeight() * 4);
+  SDL_UnlockSurface(surf);
+  SDL_SetSurfaceBlendMode(surf, SDL_BLENDMODE_BLEND);
+
+  SDL_SetWindowIcon(wnd, surf);
+
+}
+
 ce::iRenderMesh *create_plane_mesh(float size, float nx, float ny)
 {
   //
@@ -508,6 +526,8 @@ int main(int argc, char **argv)
   {
     return -1;
   }
+
+  set_window_icon();
 
   ce::iDevice *device = ce::ObjectRegistry::Get<ce::iDevice>();
 
