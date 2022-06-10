@@ -7,6 +7,7 @@
 #include <ceCore/resource/assetmanager.hh>
 #include <ceOpenGL/gl4/gl4device.hh>
 #include <ceOpenGL/gl4/gl4rendermesh.hh>
+#include <ceOpenGL/gl4/gl4terrainmesh.hh>
 #include <ceOpenGL/gl4/loading/gl4programloader.hh>
 #include <ceOpenGL/gl4/loading/gl4shaderloader.hh>
 #include <ceOpenGL/gl4/pipeline/forward/gl4forwardpipeline.hh>
@@ -25,6 +26,7 @@ bool OpenGLModule::Register(int argc, char** argv)
   ObjectRegistry::Register<iRenderPipeline>(new GL4ForwardPipeline());
   ObjectRegistry::Register<iRenderMeshGeneratorFactory>(new GL4RenderMeshGeneratorFactory());
   ObjectRegistry::Register<iRenderMeshBatchGeneratorFactory>(new GL4RenderMeshBatchGeneratorFactory());
+  ObjectRegistry::Register<iTerrainMeshGeneratorFactory>(new GL4TerrainMeshGeneratorFactory());
   return true;
 }
 

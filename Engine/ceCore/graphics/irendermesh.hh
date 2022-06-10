@@ -19,7 +19,7 @@ struct iDevice;
 class VertexDeclaration;
 
 CE_CLASS()
-struct CE_CORE_API iRenderMesh : CE_SUPER(iObject)
+struct CE_CORE_API iRenderMesh : public CE_SUPER(iObject)
 {
   CE_CLASS_GEN;
   ~iRenderMesh() override = default;

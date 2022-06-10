@@ -74,6 +74,7 @@ set(SOURCES
         graphics/irendertarget2d.hh
         graphics/irendertarget2darray.hh
         graphics/irendertargetcube.hh
+        graphics/iterrainmesh.hh
         graphics/itexture.hh
         graphics/itexture2d.hh
         graphics/itexture2darray.hh

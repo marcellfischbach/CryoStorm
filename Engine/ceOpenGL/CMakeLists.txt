@@ -35,6 +35,8 @@ set(SOURCES
         gl4/gl4texture2darray.hh
 		gl4/gl4texturecube.cc
 		gl4/gl4texturecube.hh
+		gl4/gl4terrainmesh.cc
+		gl4/gl4terrainmesh.hh
         gl4/gl4vertexbuffer.cc
         gl4/gl4vertexbuffer.hh
 
