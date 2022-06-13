@@ -37,6 +37,10 @@ set(SOURCES
 		gl4/gl4texturecube.hh
 		gl4/gl4terrainmesh.cc
 		gl4/gl4terrainmesh.hh
+		gl4/gl4terrainmesh_cpu.cc
+		gl4/gl4terrainmesh_cpu.hh
+		gl4/gl4terrainmesh_gpu.cc
+		gl4/gl4terrainmesh_gpu.hh
         gl4/gl4vertexbuffer.cc
         gl4/gl4vertexbuffer.hh
 

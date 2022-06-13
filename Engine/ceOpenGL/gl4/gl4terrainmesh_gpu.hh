@@ -1,0 +1,8 @@
+//
+// Created by MCEL on 13.06.2022.
+//
+
+#ifndef GL4TERRAINMESH_GPU_HH
+#define GL4TERRAINMESH_GPU_HH
+
+#endif //GL4TERRAINMESH_GPU_HH
