@@ -32,7 +32,15 @@ Material::~Material()
   }
 }
 
+void Material::SetFillMode (eFillMode fillMode)
+{
+  m_fillMode = fillMode;
+}
 
+eFillMode Material::GetFillMode() const
+{
+  return m_fillMode;
+}
 
 void Material::SetRenderQueue(eRenderQueue queue)
 {
@@ -132,6 +140,7 @@ bool Material::Bind(iDevice* device, eRenderPass pass)
   }
   BindBlending (device);
   BindDepthMode(device);
+  BindFillMode(device);
   device->ResetTextures();
   for (Size i = 0, in = m_attributes.size(); i < in; ++i)
   {
@@ -166,6 +175,11 @@ void Material::BindDepthMode(iDevice *device) const
 {
   device->SetDepthWrite(m_depthWrite);
   device->SetDepthTest(m_depthTest);
+}
+
+void Material::BindFillMode(iDevice* device) const
+{
+  device->SetFillMode (m_fillMode);
 }
 
 bool Material::BindAttribute(iDevice* device, eRenderPass pass, size_t idx) const

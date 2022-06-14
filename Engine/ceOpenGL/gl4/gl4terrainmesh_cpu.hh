@@ -26,7 +26,7 @@ public:
     Vector3f min;
     Vector3f max;
     size_t   absStepSize;
-    size_t   useStepSize;
+    size_t   useStepSize = 0;
     bool UpdateStepSize (const Vector3f &refPoint);
   };
 
@@ -41,9 +41,11 @@ public:
     Line         lineBottom;
     Line         lineLeft;
     Line         lineRight;
-    uint32_t     *buffer = nullptr;
-    size_t       bufferSize;
+    uint32_t*buffer = nullptr;
+    size_t  bufferCount;
     bool UpdateIndices (const Vector3f &refPoint, eTerrainSize size);
+  private:
+    void RegenerateIndices (eTerrainSize size);
   };
 public:
   GL4TerrainMeshCPU(uint32_t vao,
@@ -62,9 +64,12 @@ public:
   void SetReferencePoint(const Vector3f& refPoint) override;
   void Render(iDevice * graphics, eRenderPass pass) override;
 
-  void Update();
 
 private:
+  void Update();
+  bool UpdatePatches();
+  void RebuildIndices ();
+
   uint32_t          m_vao;
   VertexDeclaration m_vd;
   iVertexBuffer* m_vb;

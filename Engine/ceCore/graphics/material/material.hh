@@ -41,6 +41,8 @@ public:
 
   bool Bind(iDevice * device, eRenderPass pass) override;
 
+  void SetFillMode (eFillMode fillMode);
+  CE_NODISCARD eFillMode GetFillMode () const override;
 
   void SetRenderQueue(eRenderQueue queue);
   CE_NODISCARD eRenderQueue GetRenderQueue() const override;
@@ -88,6 +90,7 @@ private:
   bool BindShader(iDevice * device, eRenderPass pass) const;
   void BindBlending(iDevice *device) const;
   void BindDepthMode(iDevice *device) const;
+  void BindFillMode (iDevice *device) const;
   bool BindAttribute(iDevice * device, eRenderPass pass, size_t idx) const;
   bool BindAttribute(iDevice * device, eRenderPass pass, size_t idx, const std::array<float, 16> &floats, const std::array<int, 4> &ints, iTexture * texture) const;
   static bool BindTexture (iDevice *device, iShaderAttribute *attribute, iTexture *texture);
@@ -107,6 +110,7 @@ private:
   std::array<iShader*, eRP_COUNT> m_shader;
   std::vector<Attribute> m_attributes;
 
+  eFillMode m_fillMode = eFillMode::Fill;
   eRenderQueue m_queue = eRenderQueue::Default;
 
   bool  m_blending = false;

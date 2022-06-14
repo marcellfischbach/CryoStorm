@@ -31,6 +31,7 @@ public:
 
   const iShader *GetShader(eRenderPass pass) const override;
 
+  eFillMode GetFillMode () const override;
   eRenderQueue GetRenderQueue() const override;
   eShadingMode GetShadingMode() const override;
 

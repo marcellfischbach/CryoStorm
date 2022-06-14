@@ -34,6 +34,7 @@ bool MaterialInstance::Bind(iDevice* device, eRenderPass pass)
 
   m_material->BindBlending(device);
   m_material->BindDepthMode(device);
+  m_material->BindFillMode(device);
 
   device->ResetTextures();
   for (Size i = 0, in = m_attributes.size(); i < in; i++)
@@ -228,6 +229,11 @@ void MaterialInstance::RebuildAttributes()
 const iShader *MaterialInstance::GetShader(eRenderPass pass) const
 {
   return m_material ? m_material->GetShader(pass) : nullptr;
+}
+
+eFillMode MaterialInstance::GetFillMode() const
+{
+  return m_material ? m_material->GetFillMode() : eFillMode::Fill;
 }
 
 eRenderQueue MaterialInstance::GetRenderQueue() const

@@ -97,6 +97,7 @@ bool GL4Device::Initialize()
   glDepthMask(true);
   glEnable(GL_DEPTH_TEST);
   glDisable(GL_BLEND);
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   glBlendFuncSeparate(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO);
 
 
@@ -199,6 +200,23 @@ void GL4Device::SetDepthTest(bool depthTest)
     else
     {
       glDisable(GL_DEPTH_TEST);
+    }
+  }
+}
+
+void GL4Device::SetFillMode(eFillMode fillMode)
+{
+  if (m_fillMode != fillMode)
+  {
+    m_fillMode = fillMode;
+    switch (fillMode)
+    {
+    case eFillMode::Wireframe:
+      glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+      break;
+    case eFillMode::Fill:
+      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+      break;
     }
   }
 }

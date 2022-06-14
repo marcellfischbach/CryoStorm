@@ -7,6 +7,7 @@
 #include <ceCore/math/matrix.hh>
 #include <ceCore/class.hh>
 #include <ceCore/graphics/eblendfactor.hh>
+#include <ceCore/graphics/efillmode.hh>
 #include <ceCore/graphics/erenderpass.hh>
 #include <ceCore/graphics/etextureunit.hh>
 #include <ceCore/graphics/idirectionallight.hh>
@@ -42,6 +43,7 @@ struct CE_CORE_API iDevice : public CE_SUPER(iObject)
   virtual void SetColorWrite(bool redMask, bool greenMask, bool blueMask, bool alphaMask) = 0;
   virtual void SetDepthWrite(bool depthMask) = 0;
   virtual void SetDepthTest(bool depthTest) = 0;
+  virtual void SetFillMode (eFillMode fillMode) = 0;
 
   virtual void SetBlending(bool blending) = 0;
   virtual void SetBlendFactor (eBlendFactor srcFactor, eBlendFactor dstFactor) = 0;

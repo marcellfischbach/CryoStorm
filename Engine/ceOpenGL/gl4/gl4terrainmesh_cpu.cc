@@ -45,9 +45,10 @@ void GL4TerrainMeshCPU::SetReferencePoint(const Vector3f& refPoint)
 void GL4TerrainMeshCPU::Render(iDevice* graphics, eRenderPass pass)
 {
   CE_GL_ERROR();
+  Update();
+  CE_GL_ERROR();
   glBindVertexArray(m_vao);
   CE_GL_ERROR();
-  glDrawElements(m_primType, (GLsizei)m_count, m_indexType, nullptr);
 
   CE_GL_ERROR();
   glBindVertexArray(0);
@@ -85,6 +86,12 @@ bool GL4TerrainMeshCPU::Patch::UpdateIndices(const Vector3f& refPoint, eTerrainS
     return false;
   }
 
+  RegenerateIndices(size);
+  return true;
+}
+
+void GL4TerrainMeshCPU::Patch::RegenerateIndices(eTerrainSize size)
+{
   auto pSize = static_cast<size_t>(patchSize);
   auto tSize = static_cast<size_t>(size);
   if (!buffer)
@@ -106,24 +113,48 @@ bool GL4TerrainMeshCPU::Patch::UpdateIndices(const Vector3f& refPoint, eTerrainS
       size_t iv10 = iv1 + j;
       size_t iv11 = iv10 + 1;
 
-      *iptr++ = iv00;
-      *iptr++ = iv01;
-      *iptr++ = iv11;
-      *iptr++ = iv00;
-      *iptr++ = iv11;
-      *iptr++ = iv10;
+      *iptr++ = (uint32_t)iv00;
+      *iptr++ = (uint32_t)iv01;
+      *iptr++ = (uint32_t)iv11;
+      *iptr++ = (uint32_t)iv00;
+      *iptr++ = (uint32_t)iv11;
+      *iptr++ = (uint32_t)iv10;
     }
   }
 
-  bufferSize = (pSize-1) * (pSize-1) * 6;
-
-  return true;
+  bufferCount = (pSize-1) * (pSize-1) * 6;
 }
 
 void GL4TerrainMeshCPU::Update()
 {
-
+  if (UpdatePatches())
+  {
+    RebuildIndices();
+  }
 }
+
+bool GL4TerrainMeshCPU::UpdatePatches()
+{
+  bool needUpdate = false;
+  for (auto patch : m_patches)
+  {
+    needUpdate |= patch.UpdateIndices(m_referencePoint, m_terrainSize);
+  }
+  return needUpdate;
+}
+
+void GL4TerrainMeshCPU::RebuildIndices()
+{
+  m_ib->Bind();
+  size_t offset = 0;
+  for (auto patch : m_patches)
+  {
+    size_t patchSize = sizeof(uint32_t) * patch.bufferCount;
+    m_ib->Copy(patch.buffer, patchSize, offset);
+    offset += patchSize;
+  }
+}
+
 
 GL4TerrainMeshGeneratorCPU::GL4TerrainMeshGeneratorCPU()
   : iTerrainMeshGenerator()
@@ -315,7 +346,7 @@ iTerrainMesh* GL4TerrainMeshGeneratorCPU::Generate()
 
   glBindVertexArray(0);
 
-  size_t vertexSize = sizeof(float) * 8;
+  uint16_t vertexSize = sizeof(float) * 8;
 
 
   // generate the vertex declaration
@@ -393,7 +424,9 @@ iTerrainMesh* GL4TerrainMeshGeneratorCPU::Generate()
     vb,
     ib,
     bbox,
-    patches);
+    patches,
+    m_size,
+    m_patchSize);
 }
 
 }

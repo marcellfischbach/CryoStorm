@@ -28,6 +28,7 @@ public:
   void SetColorWrite(bool redWrite, bool greenWrite, bool blueWrite, bool alphaWrite) override;
   void SetDepthWrite(bool depthWrite) override;
   void SetDepthTest(bool depthTest) override;
+  void SetFillMode(eFillMode fillMode) override;
   void SetBlending(bool blending) override;
   void SetBlendFactor(eBlendFactor srcFactor, eBlendFactor dstFactor) override;
   void SetBlendFactor(eBlendFactor srcFactorColor,
@@ -140,7 +141,7 @@ private:
   uint8_t m_colorWrite;
   bool m_depthWrite;
   bool m_depthTest;
-
+  eFillMode m_fillMode;
   bool m_blending;
   eBlendFactor m_srcFactorColor;
   eBlendFactor m_srcFactorAlpha;

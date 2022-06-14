@@ -8,6 +8,7 @@
 #include <ceCore/math/color4f.hh>
 #include <ceCore/math/vector.hh>
 #include <ceCore/math/matrix.hh>
+#include <ceCore/graphics/efillmode.hh>
 #include <ceCore/graphics/erenderqueue.hh>
 #include <ceCore/graphics/itexture.hh>
 #include <string>
@@ -28,6 +29,7 @@ struct CE_CORE_API iMaterial : public CE_SUPER(iObject)
 
   CE_NODISCARD virtual const iShader *GetShader (eRenderPass pass) const = 0;
 
+  CE_NODISCARD virtual eFillMode GetFillMode() const = 0;
   CE_NODISCARD virtual eRenderQueue GetRenderQueue() const = 0;
   CE_NODISCARD virtual eShadingMode GetShadingMode () const = 0;
 
