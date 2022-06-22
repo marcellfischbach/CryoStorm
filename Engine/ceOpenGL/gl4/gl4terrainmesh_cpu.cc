@@ -189,9 +189,12 @@ void GL4TerrainMeshGeneratorCPU::SetNormalizedHeightData(const std::vector<float
   }
 
   float d = max - min;
-  for (float& heightValue : m_heightData)
+  if (d != 0.0f)
   {
-    heightValue = (heightValue - min) / d;
+    for (float& heightValue : m_heightData)
+    {
+      heightValue = (heightValue - min) / d;
+    }
   }
 }
 
@@ -234,9 +237,9 @@ void GL4TerrainMeshGeneratorCPU::GenerateNormals(std::vector<Vector3f>& vertices
 
       const Vector3f& v  = vertices[idx];
       const Vector3f& vl = haveLeft ? vertices[idx - 1] : vertices[idx];
-      const Vector3f& vr = haveLeft ? vertices[idx + 1] : vertices[idx];
-      const Vector3f& vt = haveLeft ? vertices[idx - size] : vertices[idx];
-      const Vector3f& vb = haveLeft ? vertices[idx + size] : vertices[idx];
+      const Vector3f& vr = haveRight ? vertices[idx + 1] : vertices[idx];
+      const Vector3f& vt = haveTop ? vertices[idx - size] : vertices[idx];
+      const Vector3f& vb = haveBottom ? vertices[idx + size] : vertices[idx];
 
       const Vector3f dl = vl - v;
       const Vector3f dr = vr - v;

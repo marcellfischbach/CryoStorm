@@ -25,6 +25,7 @@
 #include <ceCore/graphics/irenderpipeline.hh>
 #include <ceCore/graphics/irendertarget2d.hh>
 #include <ceCore/graphics/isampler.hh>
+#include <ceCore/graphics/iterrainmesh.hh>
 #include <ceCore/graphics/samplers.hh>
 #include <ceCore/graphics/mesh.hh>
 #include <ceCore/graphics/projector.hh>
@@ -298,6 +299,26 @@ ce::iRenderMesh *create_plane_mesh(float size, float nx, float ny)
   return renderMesh;
 }
 
+ce::iTerrainMesh *create_terrain_mesh(float size)
+{
+  ce::iTerrainMeshGenerator *generator = ce::ObjectRegistry::Get<ce::iTerrainMeshGeneratorFactory>()->Create();
+
+  std::vector<float> heightData;
+  for (int i=0; i<1025*1025; i++)
+  {
+    heightData.push_back(0.0f);
+  }
+
+  generator->SetSize(ce::eTerrainSize::TS_1025);
+  generator->SetPatchSize(ce::eTerrainSize::TS_65);
+  generator->SetNormalizedHeightData(heightData);
+  generator->SetSize(ce::Vector3f(-size, 0.0f, -size), ce::Vector3f(size, 10.0f, size));
+
+  ce::iTerrainMesh* terrainMesh = generator->Generate();
+  generator->Release();
+  return terrainMesh;
+}
+
 ce::iRenderMesh *create_sphere_mesh(float radius, uint32_t detail, float uv_f)
 {
   ce::iRenderMeshGenerator *generator = ce::ObjectRegistry::Get<ce::iRenderMeshGeneratorFactory>()->Create();
@@ -560,6 +581,14 @@ int main(int argc, char **argv)
   ce::Mesh *mesh = new ce::Mesh();
   mesh->AddMaterialSlot("Default", materialInstance);
   mesh->AddSubMesh(renderMesh, 0);
+
+
+  ce::iTerrainMesh *terrainMesh = create_terrain_mesh(40.0f);
+  ce::Mesh *t_mesh = new ce::Mesh();
+  t_mesh->AddMaterialSlot("Default", materialInstance);
+  t_mesh->AddSubMesh(renderMesh, 0);
+
+
 
   ce::iRenderMesh *transPlaneMesh = create_plane_mesh(10.0f, 8, 8);
   ce::Mesh *transRedMesh = new ce::Mesh();
