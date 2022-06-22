@@ -50,6 +50,8 @@ void GL4TerrainMeshCPU::Render(iDevice* graphics, eRenderPass pass)
   glBindVertexArray(m_vao);
   CE_GL_ERROR();
 
+  glDrawElements(GL_TRIANGLES, (GLsizei) m_indexBufferSize, GL_UNSIGNED_INT, nullptr);
+
   CE_GL_ERROR();
   glBindVertexArray(0);
   CE_GL_ERROR();
@@ -94,11 +96,11 @@ void GL4TerrainMeshCPU::Patch::RegenerateIndices(eTerrainSize size)
 {
   auto pSize = static_cast<size_t>(patchSize);
   auto tSize = static_cast<size_t>(size);
+
   if (!buffer)
   {
     buffer = new uint32_t[(pSize - 1) * (pSize - 1) * 6];
   }
-
   uint32_t* iptr = buffer;
 
   for (size_t i = 0; i < pSize - 1; ++i)
@@ -136,7 +138,7 @@ void GL4TerrainMeshCPU::Update()
 bool GL4TerrainMeshCPU::UpdatePatches()
 {
   bool needUpdate = false;
-  for (auto patch : m_patches)
+  for (auto &patch : m_patches)
   {
     needUpdate |= patch.UpdateIndices(m_referencePoint, m_terrainSize);
   }
@@ -145,13 +147,18 @@ bool GL4TerrainMeshCPU::UpdatePatches()
 
 void GL4TerrainMeshCPU::RebuildIndices()
 {
+  glBindVertexArray(0);
+
   m_ib->Bind();
   size_t offset = 0;
-  for (auto patch : m_patches)
+  m_indexBufferSize = 0;
+  for (auto &patch : m_patches)
   {
     size_t patchSize = sizeof(uint32_t) * patch.bufferCount;
     m_ib->Copy(patch.buffer, patchSize, offset);
     offset += patchSize;
+    m_indexBufferSize += patch.bufferCount;
+    break;
   }
 }
 
@@ -203,20 +210,21 @@ void GL4TerrainMeshGeneratorCPU::GenerateVerticesUVs(std::vector<Vector3f>& vert
   auto     size = static_cast<size_t>(m_size);
   Vector3f d    = m_max - m_min;
 
-  for (size_t i = 0; i < size; i++)
+
+  for (size_t iz = 0, idx=0; iz < size; iz++)
   {
-    float       nz = (float)i / (float)size;
+    float       nz = (float)iz / (float)(size-1);
     float       z  = m_min.z + nz * d.z;
-    for (size_t j  = 0; j < size; j++)
+    for (size_t ix  = 0; ix < size; ix++, idx++)
     {
-      float nx = (float)j / (float)size;
+      float nx = (float)ix / (float)(size-1);
       float x  = m_min.x + nx * d.x;
 
-      float ny = m_heightData[i * size + j];
+      float ny = m_heightData[iz * size + ix];
       float y  = m_min.y + ny * d.y;
 
-      vertices.emplace_back(x, y, z);
-      uv.emplace_back(nx, nz);
+      vertices[idx] = Vector3f(x, y, z);
+      uv[idx] = Vector2f(nx, nz);
     }
   }
 }
@@ -226,14 +234,14 @@ void GL4TerrainMeshGeneratorCPU::GenerateNormals(std::vector<Vector3f>& vertices
 {
   auto size = static_cast<size_t>(m_size);
 
-  for (size_t i = 0, idx = 0; i < size; i++)
+  for (size_t iz = 0, idx = 0; iz < size; iz++)
   {
-    bool        haveTop    = i != 0;
-    bool        haveBottom = i != (size - 1);
-    for (size_t j          = 0; j < size; j++, idx++)
+    bool        haveTop    = iz != 0;
+    bool        haveBottom = iz != (size - 1);
+    for (size_t ix          = 0; ix < size; ix++, idx++)
     {
-      bool haveLeft  = j != 0;
-      bool haveRight = j != (size - 1);
+      bool haveLeft  = ix != 0;
+      bool haveRight = ix != (size - 1);
 
       const Vector3f& v  = vertices[idx];
       const Vector3f& vl = haveLeft ? vertices[idx - 1] : vertices[idx];
@@ -264,7 +272,7 @@ void GL4TerrainMeshGeneratorCPU::GenerateNormals(std::vector<Vector3f>& vertices
         n += db % dl;
       }
 
-      normals.push_back(n.Normalized());
+      normals[idx] = Vector3f (0.0f, 1.0f, 0.0f); //n.Normalized();
     }
   }
 }
@@ -298,31 +306,35 @@ void GL4TerrainMeshGeneratorCPU::EvalLine(std::vector<Vector3f>& vertices,
 void GL4TerrainMeshGeneratorCPU::GeneratePatches(std::vector<Vector3f>& vertices,
                                                  std::vector<GL4TerrainMeshCPU::Patch>& patches)
 {
-  auto   size       = static_cast<size_t>(m_patchSize);
+  auto   patchSize       = static_cast<size_t>(m_patchSize);
+  auto   terrainSize       = static_cast<size_t>(m_size);
   size_t numPatches = (static_cast<size_t>(m_size) - 1) / (static_cast<size_t>(m_patchSize) - 1);
 
   for (size_t i = 0, idx = 0; i < numPatches; ++i)
   {
-    size_t v0 = i * size;
-    size_t v1 = v0 + size;
+    size_t v0 = i * (patchSize - 1) * terrainSize;
+    size_t v1 = v0 + (patchSize - 1) * terrainSize;
 
     for (size_t j = 0; j < numPatches; ++j, ++idx)
     {
-      size_t v00 = v0 + j;
-      size_t v01 = v00 + 1;
-      size_t v10 = v1 + j;
-      size_t v11 = v10 + 1;
+      size_t v00 = v0 + j * patchSize;
+      size_t v01 = v00 + patchSize;
+      size_t v10 = v1 + j * patchSize;
+      size_t v11 = v10 + patchSize;
 
       GL4TerrainMeshCPU::Patch& patch = patches[idx];
       EvalLine(vertices, v00, v01, 1, patch.lineTop);
       EvalLine(vertices, v10, v11, 1, patch.lineBottom);
-      EvalLine(vertices, v00, v10, size, patch.lineLeft);
-      EvalLine(vertices, v01, v11, size, patch.lineRight);
+      EvalLine(vertices, v00, v10, patchSize, patch.lineLeft);
+      EvalLine(vertices, v01, v11, patchSize, patch.lineRight);
 
+      patch.first = i == 0 && j == 0;
+      patch.patchSize = m_patchSize;
       patch.v00 = v00;
       patch.v01 = v01;
       patch.v10 = v10;
       patch.v11 = v11;
+      patch.buffer = nullptr;
     }
   }
 }
@@ -369,13 +381,13 @@ iTerrainMesh* GL4TerrainMeshGeneratorCPU::Generate()
   bbox.Finish();
 
   // generate the vertices
-  auto * vBuffer = new float[8 * vertexCount];
-  float* vptr    = vBuffer;
-  for (size_t i = 0; i < vertexCount; ++i, ++vptr)
+  auto vBuffer = std::vector<float>(8 * vertexCount);
+  float* vptr    = vBuffer.data();
+  for (size_t i = 0; i < vertexCount; ++i)
   {
-    const Vector3f& vertex = vertices[i];
-    const Vector3f& normal = normals[i];
-    const Vector2f& uv     = uvs[i];
+    const Vector3f vertex = vertices[i];
+    const Vector3f normal = normals[i];
+    const Vector2f uv     = uvs[i];
     *vptr++ = vertex.x;
     *vptr++ = vertex.y;
     *vptr++ = vertex.z;
@@ -389,8 +401,7 @@ iTerrainMesh* GL4TerrainMeshGeneratorCPU::Generate()
   auto vb = new GL4VertexBuffer();
   vb->Bind();
   vb->CreateForRendering(vertexCount * sizeof(float) * 8, eBU_Static);
-  vb->Copy(vBuffer, vertexCount * vertexSize);
-  delete[] vBuffer;
+  vb->Copy(vBuffer.data(), vertexCount * vertexSize);
 
   // initialize an empty index buffer
   auto ib = new GL4IndexBuffer;

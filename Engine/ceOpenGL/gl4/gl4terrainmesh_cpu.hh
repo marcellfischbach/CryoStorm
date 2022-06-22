@@ -32,6 +32,7 @@ public:
 
   struct Patch
   {
+    bool  first;
     eTerrainSize patchSize;
     size_t       v00;
     size_t       v01;
@@ -41,9 +42,10 @@ public:
     Line         lineBottom;
     Line         lineLeft;
     Line         lineRight;
-    uint32_t*buffer = nullptr;
+    uint32_t*buffer;
     size_t  bufferCount;
     bool UpdateIndices (const Vector3f &refPoint, eTerrainSize size);
+
   private:
     void RegenerateIndices (eTerrainSize size);
   };
@@ -77,6 +79,7 @@ private:
   BoundingBox           m_bbox;
   std::vector<Patch>    m_patches;
   std::vector<uint32_t> m_indexBuffer;
+  size_t                m_indexBufferSize;
   eTerrainSize          m_terrainSize;
   eTerrainSize          m_patchSize;
   Vector3f              m_referencePoint;

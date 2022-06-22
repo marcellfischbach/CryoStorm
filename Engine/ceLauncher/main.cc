@@ -577,16 +577,16 @@ int main(int argc, char **argv)
 //      "/materials/test_material_mirror.cef"
 //  ));
 
-  ce::iRenderMesh *renderMesh = create_plane_mesh(40.0f, 8, 8);
-  ce::Mesh *mesh = new ce::Mesh();
-  mesh->AddMaterialSlot("Default", materialInstance);
-  mesh->AddSubMesh(renderMesh, 0);
+//  ce::iRenderMesh *renderMesh = create_plane_mesh(40.0f, 8, 8);
+//  ce::Mesh *mesh = new ce::Mesh();
+//  mesh->AddMaterialSlot("Default", materialInstance);
+//  mesh->AddSubMesh(renderMesh, 0);
 
 
   ce::iTerrainMesh *terrainMesh = create_terrain_mesh(40.0f);
-  ce::Mesh *t_mesh = new ce::Mesh();
-  t_mesh->AddMaterialSlot("Default", materialInstance);
-  t_mesh->AddSubMesh(renderMesh, 0);
+  ce::Mesh *mesh = new ce::Mesh();
+  mesh->AddMaterialSlot("Default", materialInstance);
+  mesh->AddSubMesh(terrainMesh, 0);
 
 
 
