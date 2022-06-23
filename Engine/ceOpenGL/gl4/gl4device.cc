@@ -879,6 +879,7 @@ void GL4Device::Render(iRenderMesh *mesh, eRenderPass pass)
 void GL4Device::RenderFullscreen(iTexture2D *texture)
 {
 #ifndef CE_DISABLE_RENDERING
+  SetFillMode(eFillMode::Fill);
   bool multiSampling = texture->IsMultiSampling();
   uint16_t samples = texture->GetSamples();
 
@@ -906,6 +907,7 @@ void GL4Device::RenderFullscreen(iTexture2D *texture)
 void GL4Device::RenderFullscreen(iTexture2DArray *texture, int layer)
 {
 #ifndef CE_DISABLE_RENDERING
+  SetFillMode(eFillMode::Fill);
   iRenderMesh *mesh = FullscreenBlitRenderMesh();
   GL4Program *prog = FullscreenBlitArrayProgram();
   SetShader(prog);
@@ -928,6 +930,7 @@ void GL4Device::RenderFullscreen(iTexture2DArray *texture, int layer)
 void GL4Device::RenderFullscreen(iTextureCube *texture, int layer)
 {
 #ifndef CE_DISABLE_RENDERING
+  SetFillMode(eFillMode::Fill);
   iRenderMesh *mesh = FullscreenBlitCubeRenderMesh(layer);
   GL4Program *prog = FullscreenBlitCubeProgram();
   SetShader(prog);

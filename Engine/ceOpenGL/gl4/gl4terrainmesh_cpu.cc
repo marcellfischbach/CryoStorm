@@ -116,11 +116,11 @@ void GL4TerrainMeshCPU::Patch::RegenerateIndices(eTerrainSize size)
       size_t iv11 = iv10 + 1;
 
       *iptr++ = (uint32_t)iv00;
+      *iptr++ = (uint32_t)iv11;
       *iptr++ = (uint32_t)iv01;
-      *iptr++ = (uint32_t)iv11;
       *iptr++ = (uint32_t)iv00;
-      *iptr++ = (uint32_t)iv11;
       *iptr++ = (uint32_t)iv10;
+      *iptr++ = (uint32_t)iv11;
     }
   }
 
@@ -152,13 +152,18 @@ void GL4TerrainMeshCPU::RebuildIndices()
   m_ib->Bind();
   size_t offset = 0;
   m_indexBufferSize = 0;
+  int c=0;
   for (auto &patch : m_patches)
   {
     size_t patchSize = sizeof(uint32_t) * patch.bufferCount;
     m_ib->Copy(patch.buffer, patchSize, offset);
     offset += patchSize;
     m_indexBufferSize += patch.bufferCount;
-    break;
+    c++;
+    if (c >= 3)
+    {
+      break;
+    }
   }
 }
 
@@ -317,7 +322,7 @@ void GL4TerrainMeshGeneratorCPU::GeneratePatches(std::vector<Vector3f>& vertices
 
     for (size_t j = 0; j < numPatches; ++j, ++idx)
     {
-      size_t v00 = v0 + j * patchSize;
+      size_t v00 = v0 + j * (patchSize-1);
       size_t v01 = v00 + patchSize;
       size_t v10 = v1 + j * patchSize;
       size_t v11 = v10 + patchSize;

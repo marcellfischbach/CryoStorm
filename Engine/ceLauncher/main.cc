@@ -309,8 +309,8 @@ ce::iTerrainMesh *create_terrain_mesh(float size)
     heightData.push_back(0.0f);
   }
 
-  generator->SetSize(ce::eTerrainSize::TS_1025);
-  generator->SetPatchSize(ce::eTerrainSize::TS_65);
+  generator->SetSize(ce::eTerrainSize::TS_129);
+  generator->SetPatchSize(ce::eTerrainSize::TS_33);
   generator->SetNormalizedHeightData(heightData);
   generator->SetSize(ce::Vector3f(-size, 0.0f, -size), ce::Vector3f(size, 10.0f, size));
 
@@ -585,7 +585,7 @@ int main(int argc, char **argv)
 
   ce::iTerrainMesh *terrainMesh = create_terrain_mesh(40.0f);
   ce::Mesh *mesh = new ce::Mesh();
-  mesh->AddMaterialSlot("Default", materialInstance);
+  mesh->AddMaterialSlot("Default", materialInstance2);
   mesh->AddSubMesh(terrainMesh, 0);
 
 
@@ -665,7 +665,7 @@ int main(int argc, char **argv)
 
 
   materialInstance2->GetMaterial()->SetFillMode(ce::eFillMode::Wireframe);
-  create_suzannes_plain(suzanneMesh, world, materialInstance2);
+  //create_suzannes_plain(suzanneMesh, world, materialInstance2);
 //  create_suzannes_batched(suzanneMesh, world);
 
   ce::Entity *lightEntity = new ce::Entity("Light_0");
