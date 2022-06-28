@@ -25,15 +25,18 @@ public:
     size_t   v1;
     Vector3f min;
     Vector3f max;
+    Vector3f center;
     size_t   absStepSize;
     size_t   useStepSize = 0;
-    bool UpdateStepSize (const Vector3f &refPoint);
+    size_t   patchSize;
+    bool UpdateStepSize (const Vector3f &refPoint, size_t override);
   };
 
   struct Patch
   {
     bool  first;
     eTerrainSize patchSize;
+    size_t       vcenter;
     size_t       v00;
     size_t       v01;
     size_t       v10;
@@ -48,6 +51,7 @@ public:
 
   private:
     void RegenerateIndices (eTerrainSize size);
+    size_t GenerateGeneric(int64_t majorUnitSize, int64_t minorUnitSize, size_t stepSize, size_t adjacentStepSize, bool flip, size_t bufferIdx);
   };
 public:
   GL4TerrainMeshCPU(uint32_t vao,
@@ -107,6 +111,7 @@ private:
                        size_t v0,
                        size_t v1,
                        size_t stepSize,
+                       size_t patchSize,
                        GL4TerrainMeshCPU::Line& line);
 
   eTerrainSize       m_size      = eTerrainSize::TS_1025;

@@ -211,12 +211,12 @@ void GL4Device::SetFillMode(eFillMode fillMode)
     m_fillMode = fillMode;
     switch (fillMode)
     {
-    case eFillMode::Wireframe:
-      glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-      break;
-    case eFillMode::Fill:
-      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-      break;
+      case eFillMode::Wireframe:
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        break;
+      case eFillMode::Fill:
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        break;
     }
   }
 }
@@ -388,14 +388,17 @@ Matrix4f &GL4Device::GetPerspectiveProjection(float l, float r, float b, float t
   m.m10 = 0.0f;
   m.m20 = -sx / dx;
   m.m30 = 0.0f;
+
   m.m01 = 0.0f;
   m.m11 = z2 / dy;
   m.m21 = -sy / dy;
   m.m31 = 0.0f;
+
   m.m02 = 0.0f;
   m.m12 = 0.0f;
   m.m22 = sz / dz;
   m.m32 = -2.0f * n * f / dz;
+
   m.m03 = 0.0f;
   m.m13 = 0.0f;
   m.m23 = 1.0f;
@@ -823,7 +826,7 @@ eTextureUnit GL4Device::BindTexture(iTexture *texture)
   eTextureUnit unit = ShiftTextureUnit();
   if (m_textures[unit] != texture)
   {
-    iTexture* oldTexture = m_textures[unit];
+    iTexture *oldTexture = m_textures[unit];
     m_textures[unit] = texture;
 
     glActiveTexture(GL_TEXTURE0 + unit);
