@@ -311,9 +311,17 @@ ce::iTerrainMesh *create_terrain_mesh(float size)
   ce::iTerrainMeshGenerator *generator = ce::ObjectRegistry::Get<ce::iTerrainMeshGeneratorFactory>()->Create();
 
   std::vector<float> heightData;
-  for (int i = 0; i < 1025 * 1025; i++)
+  for (int i = 0; i < 1025; i++)
   {
-    heightData.push_back(0.0f);
+    float fi = (float)i / 1024.0f;
+    for (int j = 0; j < 1025; j++)
+    {
+      float fj = (float)j / 1024.0f;
+
+      float a = sin(fi*10.0f) * cos(fj * 10.0f);
+
+      heightData.push_back(0.5f + 0.5f * a);
+    }
   }
 
   generator->SetSize(ce::eTerrainSize::TS_129);
@@ -672,7 +680,7 @@ int main(int argc, char **argv)
   entitySphere->Attach(meshStateSphere);
 
 
-  materialInstance2->GetMaterial()->SetFillMode(ce::eFillMode::Wireframe);
+//  materialInstance2->GetMaterial()->SetFillMode(ce::eFillMode::Wireframe);
   //create_suzannes_plain(suzanneMesh, world, materialInstance2);
 //  create_suzannes_batched(suzanneMesh, world);
 
@@ -711,7 +719,7 @@ int main(int argc, char **argv)
   sunLightState->SetColor(ce::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 1.0f);
   sunLightState->SetShadowMapBias(0.003f);
   sunLightState->SetStatic(true);
-  sunLightState->SetCastShadow(true);
+  sunLightState->SetCastShadow(false);
   sunLightState->SetTransform(sunLightState->GetTransform()
                                                //.SetRotation(ce::Quaternion::FromAxisAngle(ce::Vector3f(1.0f, 0.0f, 0.0f), ce::ceDeg2Rad(-45.0f)))
                                            .SetRotation(

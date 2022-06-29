@@ -143,9 +143,9 @@ void GL4TerrainMeshCPU::Patch::RegenerateIndices(eTerrainSize size)
   bufferCount += GenerateGeneric(-tSize, -1, lineBottom.useStepSize, lineLeft.useStepSize, false, bufferCount);
   bufferCount += GenerateGeneric(-tSize, 1, lineBottom.useStepSize, lineRight.useStepSize, true, bufferCount);
   bufferCount += GenerateGeneric( -1, tSize, lineLeft.useStepSize, lineTop.useStepSize, false, bufferCount);
-  bufferCount += GenerateGeneric( -1, -tSize, lineLeft.useStepSize, lineTop.useStepSize, true, bufferCount);
-  bufferCount += GenerateGeneric( 1, tSize, lineLeft.useStepSize, lineTop.useStepSize, true, bufferCount);
-  bufferCount += GenerateGeneric( 1, -tSize, lineLeft.useStepSize, lineTop.useStepSize, false, bufferCount);
+  bufferCount += GenerateGeneric( -1, -tSize, lineLeft.useStepSize, lineBottom.useStepSize, true, bufferCount);
+  bufferCount += GenerateGeneric( 1, tSize, lineRight.useStepSize, lineTop.useStepSize, true, bufferCount);
+  bufferCount += GenerateGeneric( 1, -tSize, lineRight.useStepSize, lineBottom.useStepSize, false, bufferCount);
 
 }
 
@@ -371,7 +371,8 @@ void GL4TerrainMeshGeneratorCPU::GenerateNormals(std::vector<Vector3f> &vertices
         n += db % dl;
       }
 
-      normals[idx] = Vector3f(0.0f, 1.0f, 0.0f); //n.Normalized();
+//      normals[idx] = Vector3f(0.0f, 1.0f, 0.0f); //n.Normalized();
+      normals[idx] = n.Normalized();
     }
   }
 }
@@ -420,9 +421,9 @@ void GL4TerrainMeshGeneratorCPU::GeneratePatches(std::vector<Vector3f> &vertices
     for (size_t j = 0; j < numPatches; ++j, ++idx)
     {
       size_t v00 = v0 + j * (patchSize - 1);
-      size_t v01 = v00 + patchSize;
-      size_t v10 = v1 + j * patchSize;
-      size_t v11 = v10 + patchSize;
+      size_t v01 = v00 + patchSize-1;
+      size_t v10 = v1 + j * (patchSize-1);
+      size_t v11 = v10 + (patchSize-1);
 
       size_t halfPatchSize = (patchSize - 1) / 2;
       size_t center = v00 + halfPatchSize * terrainSize + halfPatchSize;
