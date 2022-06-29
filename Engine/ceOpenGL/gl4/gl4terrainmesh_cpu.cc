@@ -304,6 +304,11 @@ void GL4TerrainMeshGeneratorCPU::SetNormalizedHeightData(const std::vector<float
   }
 }
 
+void GL4TerrainMeshGeneratorCPU::SetHeightData(const std::vector<float> &heightData)
+{
+  m_heightData = heightData;
+}
+
 void GL4TerrainMeshGeneratorCPU::GenerateVerticesUVs(std::vector<Vector3f> &vertices, std::vector<Vector2f> &uv)
 {
   auto size = static_cast<size_t>(m_size);

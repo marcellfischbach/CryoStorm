@@ -43,6 +43,7 @@ CE_CLASS_GEN;
   virtual void SetPatchSize (eTerrainSize size) = 0;
   virtual void SetSize (const Vector3f &min, const Vector3f& max) = 0;
   virtual void SetNormalizedHeightData (const std::vector<float> &heightData) = 0;
+  virtual void SetHeightData (const std::vector<float> &heightData) = 0;
 
 
   CE_NODISCARD virtual iTerrainMesh* Generate() = 0;

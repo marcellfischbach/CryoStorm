@@ -101,6 +101,7 @@ public:
   void SetPatchSize(eTerrainSize size) override;
   void SetSize(const Vector3f& min, const Vector3f& max) override;
   void SetNormalizedHeightData(const std::vector<float>& heightData) override;
+  void SetHeightData(const std::vector<float>& heightData) override;
 
   iTerrainMesh* Generate() override;
 private:
