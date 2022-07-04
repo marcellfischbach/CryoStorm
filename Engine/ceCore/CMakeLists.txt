@@ -35,6 +35,8 @@ set(SOURCES
         entity/spatialstate.hh
         entity/staticmeshstate.cc
         entity/staticmeshstate.hh
+        entity/terrainmeshstate.cc
+        entity/terrainmeshstate.hh
         entity/transform.cc
         entity/transform.hh
         entity/world.cc

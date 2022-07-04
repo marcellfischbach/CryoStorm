@@ -37,7 +37,7 @@
       return m_refCount; \
     } \
     private: \
-      int64_t m_refCount
+      int64_t m_refCount = 1
 
 #define CE_CLASS_GEN_CONSTR m_refCount = 1
 

@@ -17,7 +17,7 @@ struct iMaterial;
 CE_CLASS()
 class CE_CORE_API StaticMeshState : public CE_SUPER(SpatialState)
 {
-CE_CLASS_GEN;
+CE_CLASS_GEN_OBJECT;
 public:
   StaticMeshState(const std::string& name = std::string(""));
   virtual ~StaticMeshState();

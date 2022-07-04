@@ -9,6 +9,7 @@
 #include <ceCore/math/vector.hh>
 #include <ceCore/math/matrix.hh>
 #include <ceCore/graphics/efillmode.hh>
+#include <ceCore/graphics/erenderpass.hh>
 #include <ceCore/graphics/erenderqueue.hh>
 #include <ceCore/graphics/itexture.hh>
 #include <string>
@@ -18,6 +19,7 @@
 namespace ce
 {
 
+struct iDevice;
 struct iShader;
 
 CE_CLASS()

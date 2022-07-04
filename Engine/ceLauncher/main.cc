@@ -12,6 +12,7 @@
 #include <ceCore/entity/lightstate.hh>
 #include <ceCore/entity/spatialstate.hh>
 #include <ceCore/entity/staticmeshstate.hh>
+#include <ceCore/entity/terrainmeshstate.hh>
 #include <ceCore/entity/world.hh>
 #include <ceCore/input/input.hh>
 #include <ceCore/math/math.hh>
@@ -600,11 +601,6 @@ int main(int argc, char **argv)
 //  mesh->AddSubMesh(renderMesh, 0);
 
 
-  ce::iTerrainMesh *terrainMesh = create_terrain_mesh(40.0f);
-  ce::Mesh *mesh = new ce::Mesh();
-  mesh->AddMaterialSlot("Default", materialInstance2);
-  mesh->AddSubMesh(terrainMesh, 0);
-
 
   ce::iRenderMesh *transPlaneMesh = create_plane_mesh(10.0f, 8, 8);
   ce::Mesh *transRedMesh = new ce::Mesh();
@@ -634,17 +630,7 @@ int main(int argc, char **argv)
   suzanneMesh->SetDefaultMaterial(0, materialInstance);
   cube->SetDefaultMaterial(0, materialInstance);
 
-  ce::Entity *entity0 = new ce::Entity("Entity0");
-  ce::StaticMeshState *meshState0 = new ce::StaticMeshState("StaticMesh0");
 
-  meshState0->GetTransform()
-            .SetTranslation(ce::Vector3f(0, 0, 0))
-            .Finish();
-  meshState0->SetMesh(mesh);
-//  meshState0->SetMaterial(0, materialMirror);
-  meshState0->SetStatic(true);
-  entity0->Attach(meshState0);
-  world->Attach(entity0);
 
 
   ce::Entity *entityTransPlaneRed = new ce::Entity("Entity0");
@@ -680,7 +666,7 @@ int main(int argc, char **argv)
   entitySphere->Attach(meshStateSphere);
 
 
-//  materialInstance2->GetMaterial()->SetFillMode(ce::eFillMode::Wireframe);
+  materialInstance2->GetMaterial()->SetFillMode(ce::eFillMode::Wireframe);
   //create_suzannes_plain(suzanneMesh, world, materialInstance2);
 //  create_suzannes_batched(suzanneMesh, world);
 
@@ -759,6 +745,20 @@ int main(int argc, char **argv)
               .LookAt(ce::Vector3f(0, 0, 0))
               .Finish();
   world->Attach(cameraEntity);
+
+  ce::iTerrainMesh *terrainMesh = create_terrain_mesh(40.0f);
+  ce::Entity *entity0 = new ce::Entity("Entity0");
+  ce::StaticMeshState *meshState0 = new ce::StaticMeshState("StaticMesh0");
+  ce::TerrainMeshState *terrainState = new ce::TerrainMeshState();
+  terrainState->SetTerrainMesh(terrainMesh);
+  terrainState->SetMaterial(materialInstance2);
+  terrainState->GetTransform()
+              .SetTranslation(ce::Vector3f(0, 0, 0))
+              .Finish();
+  terrainState->SetStatic(true);
+  terrainState->SetReference(cameraState);
+  entity0->Attach(terrainState);
+  world->Attach(entity0);
 
 
   ce::Entity *mirrorCameraEntity = new ce::Entity("MirrorCamera");
@@ -965,7 +965,7 @@ int main(int argc, char **argv)
 //                 .Finish();
 
 
-      terrainMesh->SetReferencePoint(cameraState->GetTransform().GetTranslation());
+//      terrainMesh->SetReferencePoint(cameraState->GetTransform().GetTranslation());
       world->Update(tpf);
     }
 
