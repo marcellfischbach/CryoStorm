@@ -1,5 +1,6 @@
 
 #include <ceCore/entity/world.hh>
+#include <ceCore/entity/camerastate.hh>
 #include <ceCore/entity/entity.hh>
 #include <ceCore/entity/spatialstate.hh>
 #include <ceCore/graphics/scene/igfxscene.hh>
@@ -52,6 +53,21 @@ iPhysicsWorld *World::GetPhysicsWorld()
 const iPhysicsWorld *World::GetPhysicsWorld() const
 {
   return m_physicsWorld;
+}
+
+void World::SetMainCamera(CameraState* mainCamera)
+{
+  CE_SET(m_mainCamera, mainCamera);
+}
+
+CameraState *World::GetMainCamera()
+{
+  return m_mainCamera;
+}
+
+const CameraState *World::GetMainCamera() const
+{
+  return m_mainCamera;
 }
 
 bool World::Attach(Entity* entity)

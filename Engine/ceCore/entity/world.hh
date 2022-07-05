@@ -4,7 +4,6 @@
 #include <ceCore/coreexport.hh>
 #include <ceCore/class.hh>
 
-
 namespace ce
 {
 
@@ -13,6 +12,7 @@ struct iGfxScene;
 struct iPhysicsWorld;
 class EntityState;
 class SpatialState;
+class CameraState;
 
 CE_CLASS()
 class CE_CORE_API World : public CE_SUPER(iObject)
@@ -22,12 +22,16 @@ public:
   World();
   
   void SetScene(iGfxScene * scene);
-  iGfxScene* GetScene();
-  const iGfxScene* GetScene() const;
+  CE_NODISCARD iGfxScene* GetScene();
+  CE_NODISCARD const iGfxScene* GetScene() const;
 
   void SetPhysicsWorld(iPhysicsWorld *world);
-  iPhysicsWorld *GetPhysicsWorld();
-  const iPhysicsWorld *GetPhysicsWorld() const;
+  CE_NODISCARD iPhysicsWorld *GetPhysicsWorld();
+  CE_NODISCARD const iPhysicsWorld *GetPhysicsWorld() const;
+
+  void SetMainCamera(CameraState *mainCamera);
+  CE_NODISCARD CameraState *GetMainCamera ();
+  CE_NODISCARD const CameraState *GetMainCamera () const;
 
   bool Attach(Entity * entity);
   bool Detach(Entity * entity);
@@ -45,8 +49,9 @@ private:
   SpatialState *m_rootState;
   
   std::vector<Entity*> m_entities;
-
   std::vector<EntityState*> m_updateStates;
+
+  CameraState *m_mainCamera = nullptr;
 };
 
 }

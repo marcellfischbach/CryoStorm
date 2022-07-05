@@ -1,5 +1,6 @@
 
 #include <ceCore/entity/terrainmeshstate.hh>
+#include <ceCore/entity/camerastate.hh>
 #include <ceCore/entity//world.hh>
 #include <ceCore/graphics/material/imaterial.hh>
 #include <ceCore/graphics/iterrainmesh.hh>
@@ -127,9 +128,23 @@ void TerrainMeshState::OnDetachedFromWorld(World* world)
 
 void TerrainMeshState::Update(float tpf)
 {
-  if (m_terrainMesh && m_reference)
+  const SpatialState *reference = nullptr;
+  if (m_reference)
   {
-    m_terrainMesh->SetReferencePoint(m_reference->GetGlobalMatrix().GetTranslation());
+    reference = m_reference;
+  }
+  else
+  {
+    World* world = GetWorld();
+    if (world)
+    {
+      reference = world->GetMainCamera();
+    }
+  }
+
+  if (m_terrainMesh && reference)
+  {
+    m_terrainMesh->SetReferencePoint(reference->GetGlobalMatrix().GetTranslation());
   }
 }
 

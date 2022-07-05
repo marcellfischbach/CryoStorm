@@ -328,7 +328,7 @@ ce::iTerrainMesh *create_terrain_mesh(float size)
   generator->SetSize(ce::eTerrainSize::TS_129);
   generator->SetPatchSize(ce::eTerrainSize::TS_33);
   generator->SetSize(ce::eTerrainSize::TS_1025);
-  generator->SetPatchSize(ce::eTerrainSize::TS_65);
+  generator->SetPatchSize(ce::eTerrainSize::TS_129);
   generator->SetNormalizedHeightData(heightData);
   generator->SetSize(ce::Vector3f(-size, 0.0f, -size), ce::Vector3f(size, 10.0f, size));
 
@@ -624,6 +624,20 @@ int main(int argc, char **argv)
 
   float aspect = (float) wnd_height / (float) wnd_width;
 
+  {
+    ce::iTerrainMesh    * terrainMesh  = create_terrain_mesh(40.0f);
+    ce::Entity          * entity0      = new ce::Entity("Entity0");
+    ce::StaticMeshState * meshState0   = new ce::StaticMeshState("StaticMesh0");
+    ce::TerrainMeshState* terrainState = new ce::TerrainMeshState();
+    terrainState->SetTerrainMesh(terrainMesh);
+    terrainState->SetMaterial(materialInstance2);
+    terrainState->GetTransform()
+                .SetTranslation(ce::Vector3f(0, 0, 0))
+                .Finish();
+    terrainState->SetStatic(true);
+    entity0->Attach(terrainState);
+    world->Attach(entity0);
+  }
 
   ce::Mesh *suzanneMesh = ce::AssetManager::Get()->Load<ce::Mesh>(ce::ResourceLocator("file:///suzanne.fbx"));
   ce::Mesh *cube = ce::AssetManager::Get()->Load<ce::Mesh>(ce::ResourceLocator("cube.fbx"));
@@ -745,20 +759,8 @@ int main(int argc, char **argv)
               .LookAt(ce::Vector3f(0, 0, 0))
               .Finish();
   world->Attach(cameraEntity);
+  world->SetMainCamera(cameraState);
 
-  ce::iTerrainMesh *terrainMesh = create_terrain_mesh(40.0f);
-  ce::Entity *entity0 = new ce::Entity("Entity0");
-  ce::StaticMeshState *meshState0 = new ce::StaticMeshState("StaticMesh0");
-  ce::TerrainMeshState *terrainState = new ce::TerrainMeshState();
-  terrainState->SetTerrainMesh(terrainMesh);
-  terrainState->SetMaterial(materialInstance2);
-  terrainState->GetTransform()
-              .SetTranslation(ce::Vector3f(0, 0, 0))
-              .Finish();
-  terrainState->SetStatic(true);
-  terrainState->SetReference(cameraState);
-  entity0->Attach(terrainState);
-  world->Attach(entity0);
 
 
   ce::Entity *mirrorCameraEntity = new ce::Entity("MirrorCamera");
