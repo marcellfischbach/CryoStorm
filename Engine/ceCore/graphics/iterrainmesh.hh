@@ -4,9 +4,13 @@
 
 #include <ceCore/coreexport.hh>
 #include <ceCore/graphics/irendermesh.hh>
+#include <ceCore/types.hh>
 
 namespace ce
 {
+
+
+struct iTexture2D;
 
 enum class eTerrainSize
 {
@@ -20,13 +24,29 @@ enum class eTerrainSize
   TS_4097   = 4097,
 };
 
+
+struct TerrainLayerMask
+{
+  iTexture2D *LayerTexture = nullptr;
+  iTexture2D *MaskTexture = nullptr;
+};
+
+struct TerrainLayer
+{
+  uint8_t LayerIndex = 0;
+  iTexture2D *DiffuseRoughness = nullptr;
+  iTexture2D *Normal = nullptr;
+};
+
+
 CE_CLASS()
 struct CE_CORE_API iTerrainMesh : public CE_SUPER(iRenderMesh)
 {
 CE_CLASS_GEN;
   ~iTerrainMesh() override = default;
 
-
+  virtual void SetLayerMask (const TerrainLayerMask &mask) = 0;
+  virtual void AddLayer (const TerrainLayer &layer) = 0;
 
   virtual void SetReferencePoint (const Vector3f& pos) = 0;
 };

@@ -4,6 +4,8 @@
 #include <ceOpenGL/gl4/gl4indexbuffer.hh>
 #include <ceOpenGL/gl4/gl4vertexbuffer.hh>
 #include <ceOpenGL/glerror.hh>
+
+#include <ceOpenGL/gl4/gl4texture2d.hh>
 #include <gl/glew.h>
 
 
@@ -47,6 +49,29 @@ const VertexDeclaration &GL4TerrainMeshCPU::GetVertexDeclaration() const
 void GL4TerrainMeshCPU::SetReferencePoint(const Vector3f &refPoint)
 {
   m_referencePoint = refPoint;
+}
+
+void GL4TerrainMeshCPU::SetLayerMask(const TerrainLayerMask& layerMask)
+{
+  m_layerMask = layerMask;
+  CE_ADDREF(m_layerMask.LayerTexture);
+  CE_ADDREF(m_layerMask.MaskTexture);
+
+  UpdateMaterial();
+}
+
+void GL4TerrainMeshCPU::AddLayer(const TerrainLayer& layer)
+{
+  m_layers.push_back(layer);
+  CE_ADDREF(layer.DiffuseRoughness);
+  CE_ADDREF(layer.Normal);
+
+  UpdateMaterial ();
+}
+
+void GL4TerrainMeshCPU::UpdateMaterial()
+{
+
 }
 
 void GL4TerrainMeshCPU::Render(iDevice *graphics, eRenderPass pass)

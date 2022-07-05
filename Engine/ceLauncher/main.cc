@@ -680,7 +680,7 @@ int main(int argc, char **argv)
   entitySphere->Attach(meshStateSphere);
 
 
-  materialInstance2->GetMaterial()->SetFillMode(ce::eFillMode::Wireframe);
+  // materialInstance2->GetMaterial()->SetFillMode(ce::eFillMode::Wireframe);
   //create_suzannes_plain(suzanneMesh, world, materialInstance2);
 //  create_suzannes_batched(suzanneMesh, world);
 

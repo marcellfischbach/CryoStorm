@@ -29,12 +29,12 @@ public:
     size_t   absStepSize;
     size_t   useStepSize = 0;
     size_t   patchSize;
-    bool UpdateStepSize (const Vector3f &refPoint, size_t override);
+    bool UpdateStepSize(const Vector3f& refPoint, size_t override);
   };
 
   struct Patch
   {
-    bool  first;
+    bool         first;
     eTerrainSize patchSize;
     size_t       vcenter;
     size_t       v00;
@@ -45,13 +45,18 @@ public:
     Line         lineBottom;
     Line         lineLeft;
     Line         lineRight;
-    uint32_t*buffer;
-    size_t  bufferCount;
-    bool UpdateIndices (const Vector3f &refPoint, eTerrainSize size);
+    uint32_t     * buffer;
+    size_t       bufferCount;
+    bool UpdateIndices(const Vector3f& refPoint, eTerrainSize size);
 
   private:
-    void RegenerateIndices (eTerrainSize size);
-    size_t GenerateGeneric(int64_t majorUnitSize, int64_t minorUnitSize, size_t stepSize, size_t adjacentStepSize, bool flip, size_t bufferIdx);
+    void RegenerateIndices(eTerrainSize size);
+    size_t GenerateGeneric(int64_t majorUnitSize,
+                           int64_t minorUnitSize,
+                           size_t stepSize,
+                           size_t adjacentStepSize,
+                           bool flip,
+                           size_t bufferIdx);
   };
 public:
   GL4TerrainMeshCPU(uint32_t vao,
@@ -64,29 +69,34 @@ public:
                     eTerrainSize patchSize);
   ~GL4TerrainMeshCPU() override = default;
 
-
   CE_NODISCARD virtual const BoundingBox& GetBoundingBox() const override;
   CE_NODISCARD virtual const VertexDeclaration& GetVertexDeclaration() const override;
   void SetReferencePoint(const Vector3f& refPoint) override;
-  void Render(iDevice * graphics, eRenderPass pass) override;
+  void SetLayerMask (const TerrainLayerMask &layerMask) override;
+  void AddLayer (const TerrainLayer &layer) override;
+  void Render(iDevice* graphics, eRenderPass pass) override;
 
 
 private:
   void Update();
   bool UpdatePatches();
-  void RebuildIndices ();
+  void RebuildIndices();
+
+  void UpdateMaterial();
 
   uint32_t          m_vao;
   VertexDeclaration m_vd;
   iVertexBuffer* m_vb;
   iIndexBuffer * m_ib;
-  BoundingBox           m_bbox;
-  std::vector<Patch>    m_patches;
-  std::vector<uint32_t> m_indexBuffer;
-  size_t                m_indexBufferSize;
-  eTerrainSize          m_terrainSize;
-  eTerrainSize          m_patchSize;
-  Vector3f              m_referencePoint;
+  BoundingBox               m_bbox;
+  std::vector<Patch>        m_patches;
+  std::vector<uint32_t>     m_indexBuffer;
+  size_t                    m_indexBufferSize;
+  eTerrainSize              m_terrainSize;
+  eTerrainSize              m_patchSize;
+  Vector3f                  m_referencePoint;
+  TerrainLayerMask          m_layerMask;
+  std::vector<TerrainLayer> m_layers;
 };
 
 CE_CLASS()

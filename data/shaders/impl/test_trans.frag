@@ -15,7 +15,7 @@ in vec3 viewer_world_position;
 
 #include <../common/lighting.glsl>
 
-lighting_result_t calc_lighting (float n_dot_l, float n_dot_v, float n_dot_h, float h_dot_l, float h_dot_v)
+lighting_result_t calc_lighting (float n_dot_l, float n_dot_v, float n_dot_h, float h_dot_l, float h_dot_v, float roughness)
 {
     lighting_result_t res;
     res.ambient = 0.0;
@@ -27,7 +27,7 @@ lighting_result_t calc_lighting (float n_dot_l, float n_dot_v, float n_dot_h, fl
 void main()
 {
     vec3 norm = normalize(world_normal);
-    vec3 lightColor = calc_lights(world_position, norm, camera_space_position, viewer_world_position);
+    vec3 lightColor = calc_lights(world_position, norm, 0.5, camera_space_position, viewer_world_position);
     ce_FragColor = vec4(lightColor, 1.0) * ce_Color;
 }
 
