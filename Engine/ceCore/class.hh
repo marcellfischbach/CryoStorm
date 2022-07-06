@@ -479,13 +479,13 @@ public:
 
 
 CE_CLASS()
-class CE_CORE_API Object : public CE_SUPER(ce::iObject)
+class CE_CORE_API Object : public CE_SUPER(iObject)
 {
   CE_CLASS_GEN_OBJECT;
 
 public:
   Object();
-  virtual ~Object();
+  ~Object() override;
 
 
 

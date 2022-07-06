@@ -72,8 +72,7 @@ public:
   CE_NODISCARD virtual const BoundingBox& GetBoundingBox() const override;
   CE_NODISCARD virtual const VertexDeclaration& GetVertexDeclaration() const override;
   void SetReferencePoint(const Vector3f& refPoint) override;
-  void SetLayerMask (const TerrainLayerMask &layerMask) override;
-  void AddLayer (const TerrainLayer &layer) override;
+
   void Render(iDevice* graphics, eRenderPass pass) override;
 
 
@@ -82,7 +81,6 @@ private:
   bool UpdatePatches();
   void RebuildIndices();
 
-  void UpdateMaterial();
 
   uint32_t          m_vao;
   VertexDeclaration m_vd;

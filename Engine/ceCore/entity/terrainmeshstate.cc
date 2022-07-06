@@ -2,12 +2,100 @@
 #include <ceCore/entity/terrainmeshstate.hh>
 #include <ceCore/entity/camerastate.hh>
 #include <ceCore/entity//world.hh>
-#include <ceCore/graphics/material/imaterial.hh>
 #include <ceCore/graphics/iterrainmesh.hh>
+#include <ceCore/graphics/itexture2d.hh>
+#include <ceCore/graphics/material/imaterial.hh>
+#include <ceCore/graphics/material/material.hh>
+#include <ceCore/graphics/shading/ishader.hh>
 #include <ceCore/graphics/scene/gfxmesh.hh>
 #include <ceCore/graphics/scene/igfxscene.hh>
+#include <ceCore/resource/assetmanager.hh>
+
 namespace ce
 {
+
+
+
+TerrainLayerMask::~TerrainLayerMask()
+{
+  CE_RELEASE(m_layerTexture);
+  CE_RELEASE(m_maskTexture);
+}
+
+void TerrainLayerMask::SetLayerTexture(iTexture2D* layerTexture)
+{
+  CE_SET(m_layerTexture, layerTexture);
+}
+
+iTexture2D *TerrainLayerMask::GetLayerTexture()
+{
+  return m_layerTexture;
+}
+
+const iTexture2D *TerrainLayerMask::GetLayerTexture() const
+{
+  return m_layerTexture;
+}
+
+
+void TerrainLayerMask::SetMaskTexture(iTexture2D* maskTexture)
+{
+  CE_SET(m_maskTexture, maskTexture);
+}
+
+iTexture2D *TerrainLayerMask::GetMaskTexture()
+{
+  return m_maskTexture;
+}
+
+const iTexture2D *TerrainLayerMask::GetMaskTexture() const
+{
+  return m_maskTexture;
+}
+
+
+
+
+
+TerrainLayer::~TerrainLayer()
+{
+  CE_RELEASE(m_diffuseRoughness);
+  CE_RELEASE(m_normal);
+}
+
+void TerrainLayer::SetDiffuseRoughness(iTexture2D* diffuseRoughness)
+{
+  CE_SET(m_diffuseRoughness, diffuseRoughness);
+}
+
+iTexture2D *TerrainLayer::GetDiffuseRoughness()
+{
+  return m_diffuseRoughness;
+}
+
+const iTexture2D *TerrainLayer::GetDiffuseRoughness() const
+{
+  return m_diffuseRoughness;
+}
+
+
+void TerrainLayer::SetNormal(iTexture2D* normal)
+{
+  CE_SET(m_normal, normal);
+}
+
+iTexture2D *TerrainLayer::GetNormal()
+{
+  return m_normal;
+}
+
+const iTexture2D *TerrainLayer::GetNormal() const
+{
+  return m_normal;
+}
+
+
+
 
 TerrainMeshState::TerrainMeshState()
   : SpatialState()
@@ -48,23 +136,24 @@ const iTerrainMesh* TerrainMeshState::GetTerrainMesh() const
   return m_terrainMesh;
 }
 
-void TerrainMeshState::SetMaterial(iMaterial* material)
+void TerrainMeshState::SetLayerMask(TerrainLayerMask* mask)
 {
-  CE_SET(m_material, material);
-  if (m_gfxMesh)
+  CE_SET(m_layerMask, mask);
+  UpdateMaterial();
+}
+
+void TerrainMeshState::AddLayer(TerrainLayer* layer)
+{
+  auto it = std::find(m_layers.begin(), m_layers.end(), layer);
+  if (it != m_layers.end())
   {
-    m_gfxMesh->SetMaterial(m_material);
+    return;
   }
-}
 
-iMaterial* TerrainMeshState::GetMaterial()
-{
-  return m_material;
-}
+  CE_ADDREF(layer);
+  m_layers.emplace_back(layer);
 
-const iMaterial* TerrainMeshState::GetMaterial() const
-{
-  return m_material;
+  UpdateMaterial();
 }
 
 void TerrainMeshState::SetCastShadow(bool castShadow)
@@ -183,6 +272,37 @@ void TerrainMeshState::TransformationUpdatedPreChildren()
     Matrix4f mat = GetGlobalMatrix();
     m_gfxMesh->SetModelMatrix(mat);
   }
+}
+
+void TerrainMeshState::UpdateMaterial()
+{
+  if (!m_material)
+  {
+    m_material = AssetManager::Get()->Get<iMaterial>(ResourceLocator("/shaders/terrain/terrain4_material.cef"));
+    if (!m_material)
+    {
+      return;
+    }
+  }
+
+  for (size_t i=0; i<4; i++)
+  {
+    if (m_layers.size() > i)
+    {
+      std::string strDiffuseRoughness = std::string("DiffuseRoughness") + std::to_string(i);
+      std::string strNormal           = std::string("Normal") + std::to_string(i);
+      TerrainLayer*& layer = m_layers[i];
+      m_material->Set(m_material->IndexOf(strDiffuseRoughness), layer->GetDiffuseRoughness());
+      m_material->Set(m_material->IndexOf(strNormal), layer->GetNormal());
+
+    }
+  }
+
+  if (m_gfxMesh)
+  {
+    m_gfxMesh->SetMaterial(m_material);
+  }
+
 }
 
 } // ce
