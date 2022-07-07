@@ -285,6 +285,8 @@ void TerrainMeshState::UpdateMaterial()
     }
   }
 
+  m_material->Set(m_material->IndexOf("Layer"), m_layerMask->GetLayerTexture());
+
   for (size_t i=0; i<4; i++)
   {
     if (m_layers.size() > i)

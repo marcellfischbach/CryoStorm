@@ -13,27 +13,38 @@ namespace ce
 
 bool MaterialLoaderCEF::CanLoad(const Class* cls, const file::File* file, const ResourceLocator* locator) const
 {
-  return cls == Material::GetStaticClass() && file && file->Root()->HasChild("material")
-    || cls == MaterialInstance::GetStaticClass() && file && file->Root()->HasChild("materialinstance");
+  if (file->Root()->GetNumberOfChildren() == 0)
+  {
+    return false;
+  }
+  std::string root = file->Root()->GetChild(0)->GetTagName();
+  return
+    cls->IsAssignableFrom<Material>() && root == std::string("material")
+      || cls->IsAssignableFrom<MaterialInstance>() && root == std::string("materialinstance")
+      || cls->IsAssignableFrom<iMaterial>() && (
+        root == std::string("material")
+          || root == std::string("materialinstance")
+      );
+
 }
 
 iObject* MaterialLoaderCEF::Load(const Class* cls, const file::File* file, const ResourceLocator* locator) const
 {
-  if (cls == Material::GetStaticClass() && file && file->Root()->HasChild("material"))
+  if ((cls->IsAssignableFrom<Material>() || cls->IsAssignableFrom<iMaterial>()) && file->Root()->HasChild("material"))
   {
     return LoadMaterial(cls, file, locator);
   }
-  else if (cls == MaterialInstance::GetStaticClass() && file && file->Root()->HasChild("materialinstance"))
+  else if ((cls->IsAssignableFrom<MaterialInstance>() || cls->IsAssignableFrom<iMaterial>())
+    && file->Root()->HasChild("materialinstance"))
   {
     return LoadMaterialInstance(cls, file, locator);
   }
   return nullptr;
 }
 
-
 Material* MaterialLoaderCEF::LoadMaterial(const Class*, const file::File* file, const ResourceLocator* locator)
 {
-  const file::Element* root = file->Root();
+  const file::Element* root            = file->Root();
   const file::Element* materialElement = root->GetChild("material");
   if (!materialElement)
   {
@@ -42,18 +53,18 @@ Material* MaterialLoaderCEF::LoadMaterial(const Class*, const file::File* file, 
 
   auto material = new Material();
 
-  LoadShading(material, materialElement);
-  LoadQueue(material, materialElement);
-  LoadBlending(material, materialElement);
-  LoadDepth(material, materialElement);
+  LoadShading(material, materialElement, locator);
+  LoadQueue(material, materialElement, locator);
+  LoadBlending(material, materialElement, locator);
+  LoadDepth(material, materialElement, locator);
 
-  if (!LoadShaders(material, materialElement))
+  if (!LoadShaders(material, materialElement, locator))
   {
     CE_RELEASE(material);
     return nullptr;
   }
 
-  if (!LoadAttributes(material, materialElement))
+  if (!LoadAttributes(material, materialElement, locator))
   {
     CE_RELEASE(material);
     return nullptr;
@@ -63,10 +74,10 @@ Material* MaterialLoaderCEF::LoadMaterial(const Class*, const file::File* file, 
   return material;
 }
 
-iObject* MaterialLoaderCEF::LoadMaterialInstance(const Class* , const file::File* file, const ResourceLocator* )
+iObject* MaterialLoaderCEF::LoadMaterialInstance(const Class*, const file::File* file, const ResourceLocator* locator)
 {
 
-  const file::Element* root = file->Root();
+  const file::Element* root            = file->Root();
   const file::Element* materialElement = root->GetChild("materialinstance");
   if (!materialElement)
   {
@@ -75,13 +86,13 @@ iObject* MaterialLoaderCEF::LoadMaterialInstance(const Class* , const file::File
 
   auto materialInstance = new MaterialInstance();
 
-  if (!LoadReferenceMaterial(materialInstance, materialElement))
+  if (!LoadReferenceMaterial(materialInstance, materialElement, locator))
   {
     CE_RELEASE(materialInstance);
     return nullptr;
   }
 
-  if (!LoadAttributes(materialInstance, materialElement))
+  if (!LoadAttributes(materialInstance, materialElement, locator))
   {
     CE_RELEASE(materialInstance);
     return nullptr;
@@ -90,7 +101,9 @@ iObject* MaterialLoaderCEF::LoadMaterialInstance(const Class* , const file::File
 
   return materialInstance;
 }
-void MaterialLoaderCEF::LoadShading(Material* material, const file::Element* materialElement)
+void MaterialLoaderCEF::LoadShading(Material* material,
+                                    const file::Element* materialElement,
+                                    const ResourceLocator* locator)
 {
   const file::Element* shadingElement = materialElement->GetChild("shading");
   if (!shadingElement)
@@ -98,8 +111,8 @@ void MaterialLoaderCEF::LoadShading(Material* material, const file::Element* mat
     return;
   }
 
-  eShadingMode shading = eShadingMode::Shaded;
-  auto queueString = shadingElement->GetAttribute(0, "Shaded");
+  eShadingMode shading     = eShadingMode::Shaded;
+  auto         queueString = shadingElement->GetAttribute(0, "Shaded");
   if (queueString == std::string("Unshaded"))
   {
     shading = eShadingMode::Unshaded;
@@ -108,8 +121,9 @@ void MaterialLoaderCEF::LoadShading(Material* material, const file::Element* mat
   material->SetShadingMode(shading);
 }
 
-
-void MaterialLoaderCEF::LoadQueue(Material* material, const file::Element* materialElement)
+void MaterialLoaderCEF::LoadQueue(Material* material,
+                                  const file::Element* materialElement,
+                                  const ResourceLocator* locator)
 {
   const file::Element* queueElement = materialElement->GetChild("queue");
   if (!queueElement)
@@ -117,8 +131,8 @@ void MaterialLoaderCEF::LoadQueue(Material* material, const file::Element* mater
     return;
   }
 
-  eRenderQueue queue = eRenderQueue::Default;
-  auto queueString = queueElement->GetAttribute(0, "Default");
+  eRenderQueue queue       = eRenderQueue::Default;
+  auto         queueString = queueElement->GetAttribute(0, "Default");
   if (queueString == std::string("Transparency"))
   {
     queue = eRenderQueue::Transparency;
@@ -147,15 +161,16 @@ eBlendFactor BlendFactor(const std::string& blendFactor, eBlendFactor defaultFac
   return defaultFactor;
 }
 
-
-void MaterialLoaderCEF::LoadBlending(Material *material, const file::Element *materialElement)
+void MaterialLoaderCEF::LoadBlending(Material* material,
+                                     const file::Element* materialElement,
+                                     const ResourceLocator* locator)
 {
-  auto blendElement = materialElement->GetChild("blend");
-  bool  blending = false;
-  eBlendFactor srcColor = eBlendFactor::One;
-  eBlendFactor srcAlpha = eBlendFactor::One;
-  eBlendFactor dstColor = eBlendFactor::Zero;
-  eBlendFactor dstAlpha = eBlendFactor::Zero;
+  auto         blendElement = materialElement->GetChild("blend");
+  bool         blending     = false;
+  eBlendFactor srcColor     = eBlendFactor::One;
+  eBlendFactor srcAlpha     = eBlendFactor::One;
+  eBlendFactor dstColor     = eBlendFactor::Zero;
+  eBlendFactor dstAlpha     = eBlendFactor::Zero;
 
   if (blendElement)
   {
@@ -181,16 +196,18 @@ void MaterialLoaderCEF::LoadBlending(Material *material, const file::Element *ma
   material->SetBlendFactor(srcColor, srcAlpha, dstColor, dstAlpha);
 }
 
-void MaterialLoaderCEF::LoadDepth(Material *material, const file::Element *materialElement)
+void MaterialLoaderCEF::LoadDepth(Material* material,
+                                  const file::Element* materialElement,
+                                  const ResourceLocator* locator)
 {
-  auto *depthElement = materialElement->GetChild("depth");
+  auto* depthElement = materialElement->GetChild("depth");
   if (!depthElement)
   {
     return;
   }
-  bool depthTest = false;
-  bool depthWrite = false;
-  for (int i = 0; i < depthElement->GetNumberOfAttributes(); ++i)
+  bool     depthTest  = false;
+  bool     depthWrite = false;
+  for (int i          = 0; i < depthElement->GetNumberOfAttributes(); ++i)
   {
     std::string depthValue = depthElement->GetAttribute(i, std::string());
     if (std::string("Test") == depthValue)
@@ -206,7 +223,9 @@ void MaterialLoaderCEF::LoadDepth(Material *material, const file::Element *mater
   material->SetDepthWrite(depthWrite);
 }
 
-bool MaterialLoaderCEF::LoadShaders(Material* material, const file::Element* materialElement)
+bool MaterialLoaderCEF::LoadShaders(Material* material,
+                                    const file::Element* materialElement,
+                                    const ResourceLocator* locator)
 {
   const file::Element* shadersElement = materialElement->GetChild("shaders");
   if (!shadersElement)
@@ -219,7 +238,7 @@ bool MaterialLoaderCEF::LoadShaders(Material* material, const file::Element* mat
     const file::Element* shaderElement = shadersElement->GetChild(i);
     if (shaderElement && shaderElement->GetTagName() == std::string("shader"))
     {
-      if (!LoadShader(material, shaderElement))
+      if (!LoadShader(material, shaderElement, locator))
       {
         return false;
       }
@@ -227,9 +246,6 @@ bool MaterialLoaderCEF::LoadShaders(Material* material, const file::Element* mat
   }
   return true;
 }
-
-
-
 
 eRenderPass RenderPass(const std::string& renderPass)
 {
@@ -246,15 +262,16 @@ eRenderPass RenderPass(const std::string& renderPass)
   return eRP_COUNT;
 }
 
-
-bool MaterialLoaderCEF::LoadShader(Material* material, const file::Element* shaderElement)
+bool MaterialLoaderCEF::LoadShader(Material* material,
+                                   const file::Element* shaderElement,
+                                   const ResourceLocator* locator)
 {
   if (shaderElement->GetNumberOfAttributes() != 2)
   {
     return false;
   }
 
-  std::string rp = shaderElement->GetAttribute(0, std::string(""));
+  std::string rp        = shaderElement->GetAttribute(0, std::string(""));
   std::string shaderLoc = shaderElement->GetAttribute(1, std::string(""));
 
   if (rp.empty() || shaderLoc.empty())
@@ -268,8 +285,8 @@ bool MaterialLoaderCEF::LoadShader(Material* material, const file::Element* shad
     return false;
   }
 
-  ResourceLocator shaderLocator(shaderLoc);
-  auto shader = AssetManager::Get()->Get<iShader>(shaderLocator);
+  ResourceLocator shaderLocator(locator, shaderLoc);
+  auto            shader = AssetManager::Get()->Get<iShader>(shaderLocator);
   if (!shader)
   {
     return false;
@@ -281,7 +298,9 @@ bool MaterialLoaderCEF::LoadShader(Material* material, const file::Element* shad
   return true;
 }
 
-bool MaterialLoaderCEF::LoadAttributes(Material* material, const file::Element* materialElement)
+bool MaterialLoaderCEF::LoadAttributes(Material* material,
+                                       const file::Element* materialElement,
+                                       const ResourceLocator* locator)
 {
   const file::Element* attributesElement = materialElement->GetChild("attributes");
   if (!attributesElement)
@@ -294,7 +313,7 @@ bool MaterialLoaderCEF::LoadAttributes(Material* material, const file::Element* 
     const file::Element* attributeElement = attributesElement->GetChild(i);
     if (attributeElement && attributeElement->GetTagName() == std::string("attribute"))
     {
-      if (!LoadAttribute(material, attributeElement))
+      if (!LoadAttribute(material, attributeElement, locator))
       {
         return false;
       }
@@ -303,8 +322,9 @@ bool MaterialLoaderCEF::LoadAttributes(Material* material, const file::Element* 
   return true;
 }
 
-
-bool MaterialLoaderCEF::LoadAttribute(Material* material, const file::Element* attributeElement)
+bool MaterialLoaderCEF::LoadAttribute(Material* material,
+                                      const file::Element* attributeElement,
+                                      const ResourceLocator* locator)
 {
   if (attributeElement->GetNumberOfAttributes() < 2)
   {
@@ -324,11 +344,10 @@ bool MaterialLoaderCEF::LoadAttribute(Material* material, const file::Element* a
   }
 
 
-
   material->RegisterAttribute(name, attributeType);
   size_t idx = material->IndexOf(name);
 
-  if (!LoadAttributeDefault(material, idx, attributeType, attributeElement))
+  if (!LoadAttributeDefault(material, idx, attributeType, attributeElement, locator))
   {
     return false;
   }
@@ -337,12 +356,11 @@ bool MaterialLoaderCEF::LoadAttribute(Material* material, const file::Element* a
   return true;
 }
 
-
-
-
-bool MaterialLoaderCEF::LoadReferenceMaterial(MaterialInstance *materialInstance, const file::Element *materialInstanceElement)
+bool MaterialLoaderCEF::LoadReferenceMaterial(MaterialInstance* materialInstance,
+                                              const file::Element* materialInstanceElement,
+                                              const ResourceLocator* locator)
 {
-  const file::Element *materialElement = materialInstanceElement->GetChild("material");
+  const file::Element* materialElement = materialInstanceElement->GetChild("material");
   if (!materialElement)
   {
     return false;
@@ -353,8 +371,8 @@ bool MaterialLoaderCEF::LoadReferenceMaterial(MaterialInstance *materialInstance
     return false;
   }
 
-  ResourceLocator locator (materialElement->GetAttribute(0, ""));
-  auto material = AssetManager::Get()->Get<Material>(locator);
+  ResourceLocator materialLocator(locator, materialElement->GetAttribute(0, ""));
+  auto            material = AssetManager::Get()->Get<Material>(materialLocator);
   if (!material)
   {
     return false;
@@ -364,8 +382,9 @@ bool MaterialLoaderCEF::LoadReferenceMaterial(MaterialInstance *materialInstance
   return true;
 }
 
-
-bool MaterialLoaderCEF::LoadAttributes(MaterialInstance* materialInstance, const file::Element* materialInstanceElement)
+bool MaterialLoaderCEF::LoadAttributes(MaterialInstance* materialInstance,
+                                       const file::Element* materialInstanceElement,
+                                       const ResourceLocator* locator)
 {
   const file::Element* attributesElement = materialInstanceElement->GetChild("attributes");
   if (!attributesElement)
@@ -378,7 +397,7 @@ bool MaterialLoaderCEF::LoadAttributes(MaterialInstance* materialInstance, const
     const file::Element* attributeElement = attributesElement->GetChild(i);
     if (attributeElement && attributeElement->GetTagName() == std::string("attribute"))
     {
-      if (!LoadAttribute(materialInstance, attributeElement))
+      if (!LoadAttribute(materialInstance, attributeElement, locator))
       {
         return false;
       }
@@ -387,7 +406,9 @@ bool MaterialLoaderCEF::LoadAttributes(MaterialInstance* materialInstance, const
   return true;
 }
 
-bool MaterialLoaderCEF::LoadAttribute(MaterialInstance* materialInstance, const file::Element* attributeElement)
+bool MaterialLoaderCEF::LoadAttribute(MaterialInstance* materialInstance,
+                                      const file::Element* attributeElement,
+                                      const ResourceLocator* locator)
 {
   if (attributeElement->GetNumberOfAttributes() < 2)
   {
@@ -407,14 +428,13 @@ bool MaterialLoaderCEF::LoadAttribute(MaterialInstance* materialInstance, const 
   }
 
 
-
   size_t idx = materialInstance->IndexOf(name);
   if (idx == Material::UndefinedIndex)
   {
     return false;
   }
 
-  if (!LoadAttributeDefault(materialInstance, idx, attributeType, attributeElement))
+  if (!LoadAttributeDefault(materialInstance, idx, attributeType, attributeElement, locator))
   {
     return false;
   }
@@ -423,8 +443,7 @@ bool MaterialLoaderCEF::LoadAttribute(MaterialInstance* materialInstance, const 
   return true;
 }
 
-
-eMaterialAttributeType MaterialLoaderCEF::GetAttributeType(const file::Element *attributeElement)
+eMaterialAttributeType MaterialLoaderCEF::GetAttributeType(const file::Element* attributeElement)
 {
   std::string type = attributeElement->GetAttribute(0, "");
   if (type == "Float")
@@ -466,38 +485,42 @@ eMaterialAttributeType MaterialLoaderCEF::GetAttributeType(const file::Element *
   return eMAT_Undefined;
 }
 
-bool MaterialLoaderCEF::LoadAttributeDefault(iMaterial* material, size_t attributeIdx, eMaterialAttributeType attributeType, const file::Element* attributeElement)
+bool MaterialLoaderCEF::LoadAttributeDefault(iMaterial* material,
+                                             size_t attributeIdx,
+                                             eMaterialAttributeType attributeType,
+                                             const file::Element* attributeElement,
+                                             const ResourceLocator* locator)
 {
   switch (attributeType)
   {
-    case eMAT_Float:
-      return LoadAttributeFloat(material, attributeIdx, attributeElement);
-    case eMAT_Vec2:
-      return LoadAttributeVec2(material, attributeIdx, attributeElement);
-    case eMAT_Vec3:
-      return LoadAttributeVec3(material, attributeIdx, attributeElement);
-    case eMAT_Vec4:
-      return LoadAttributeVec4(material, attributeIdx, attributeElement);
-    case eMAT_Int:
-      return LoadAttributeInt(material, attributeIdx, attributeElement);
+  case eMAT_Float:
+    return LoadAttributeFloat(material, attributeIdx, attributeElement);
+  case eMAT_Vec2:
+    return LoadAttributeVec2(material, attributeIdx, attributeElement);
+  case eMAT_Vec3:
+    return LoadAttributeVec3(material, attributeIdx, attributeElement);
+  case eMAT_Vec4:
+    return LoadAttributeVec4(material, attributeIdx, attributeElement);
+  case eMAT_Int:
+    return LoadAttributeInt(material, attributeIdx, attributeElement);
 
-    case eMAT_Matrix3:
-      return LoadAttributeMatrix3(material, attributeIdx, attributeElement);
-    case eMAT_Matrix4:
-      return LoadAttributeMatrix4(material, attributeIdx, attributeElement);
+  case eMAT_Matrix3:
+    return LoadAttributeMatrix3(material, attributeIdx, attributeElement);
+  case eMAT_Matrix4:
+    return LoadAttributeMatrix4(material, attributeIdx, attributeElement);
 
-    case eMAT_Texture:
-      return LoadAttributeTexture(material, attributeIdx, attributeElement);
-    default:
-      break;
+  case eMAT_Texture:
+    return LoadAttributeTexture(material, attributeIdx, attributeElement, locator);
+  default:
+    break;
   }
   return false;
 }
 
-
-
-bool MaterialLoaderCEF::LoadAttributeFloat(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement) 
-{ 
+bool MaterialLoaderCEF::LoadAttributeFloat(iMaterial* material,
+                                           size_t attributeIdx,
+                                           const file::Element* attributeElement)
+{
   if (attributeElement->GetNumberOfAttributes() < 3)
   {
     return false;
@@ -508,7 +531,9 @@ bool MaterialLoaderCEF::LoadAttributeFloat(iMaterial* material, size_t attribute
   return true;
 }
 
-bool MaterialLoaderCEF::LoadAttributeVec2(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement) 
+bool MaterialLoaderCEF::LoadAttributeVec2(iMaterial* material,
+                                          size_t attributeIdx,
+                                          const file::Element* attributeElement)
 {
   if (attributeElement->GetNumberOfAttributes() < 4)
   {
@@ -521,7 +546,9 @@ bool MaterialLoaderCEF::LoadAttributeVec2(iMaterial* material, size_t attributeI
   return true;
 }
 
-bool MaterialLoaderCEF::LoadAttributeVec3(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement) 
+bool MaterialLoaderCEF::LoadAttributeVec3(iMaterial* material,
+                                          size_t attributeIdx,
+                                          const file::Element* attributeElement)
 {
   if (attributeElement->GetNumberOfAttributes() < 5)
   {
@@ -535,8 +562,9 @@ bool MaterialLoaderCEF::LoadAttributeVec3(iMaterial* material, size_t attributeI
   return true;
 }
 
-
-bool MaterialLoaderCEF::LoadAttributeVec4(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement) 
+bool MaterialLoaderCEF::LoadAttributeVec4(iMaterial* material,
+                                          size_t attributeIdx,
+                                          const file::Element* attributeElement)
 {
   if (attributeElement->GetNumberOfAttributes() < 6)
   {
@@ -551,7 +579,9 @@ bool MaterialLoaderCEF::LoadAttributeVec4(iMaterial* material, size_t attributeI
   return true;
 }
 
-bool MaterialLoaderCEF::LoadAttributeInt(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement) 
+bool MaterialLoaderCEF::LoadAttributeInt(iMaterial* material,
+                                         size_t attributeIdx,
+                                         const file::Element* attributeElement)
 {
   if (attributeElement->GetNumberOfAttributes() < 3)
   {
@@ -563,9 +593,11 @@ bool MaterialLoaderCEF::LoadAttributeInt(iMaterial* material, size_t attributeId
   return true;
 }
 
-bool MaterialLoaderCEF::LoadAttributeMatrix3(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement) 
+bool MaterialLoaderCEF::LoadAttributeMatrix3(iMaterial* material,
+                                             size_t attributeIdx,
+                                             const file::Element* attributeElement)
 {
-  if ( !attributeElement->HasAttribute("m00")
+  if (!attributeElement->HasAttribute("m00")
     || !attributeElement->HasAttribute("m01")
     || !attributeElement->HasAttribute("m02")
     || !attributeElement->HasAttribute("m10")
@@ -574,7 +606,7 @@ bool MaterialLoaderCEF::LoadAttributeMatrix3(iMaterial* material, size_t attribu
     || !attributeElement->HasAttribute("m20")
     || !attributeElement->HasAttribute("m21")
     || !attributeElement->HasAttribute("m22")
-    ) 
+    )
   {
     return false;
   }
@@ -596,8 +628,10 @@ bool MaterialLoaderCEF::LoadAttributeMatrix3(iMaterial* material, size_t attribu
   return true;
 }
 
-bool MaterialLoaderCEF::LoadAttributeMatrix4(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement) 
-{ 
+bool MaterialLoaderCEF::LoadAttributeMatrix4(iMaterial* material,
+                                             size_t attributeIdx,
+                                             const file::Element* attributeElement)
+{
   if (!attributeElement->HasAttribute("m00")
     || !attributeElement->HasAttribute("m01")
     || !attributeElement->HasAttribute("m02")
@@ -644,7 +678,10 @@ bool MaterialLoaderCEF::LoadAttributeMatrix4(iMaterial* material, size_t attribu
   return true;
 }
 
-bool MaterialLoaderCEF::LoadAttributeTexture(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement) 
+bool MaterialLoaderCEF::LoadAttributeTexture(iMaterial* material,
+                                             size_t attributeIdx,
+                                             const file::Element* attributeElement,
+                                             const ResourceLocator* locator)
 {
   if (attributeElement->GetNumberOfAttributes() < 3)
   {
@@ -659,7 +696,7 @@ bool MaterialLoaderCEF::LoadAttributeTexture(iMaterial* material, size_t attribu
     return true;
   }
 
-  auto texture = AssetManager::Get()->Get<iTexture>(ResourceLocator(textureLoc));
+  auto texture = AssetManager::Get()->Get<iTexture>(ResourceLocator(locator, textureLoc));
   if (!texture)
   {
     return false;
@@ -668,6 +705,5 @@ bool MaterialLoaderCEF::LoadAttributeTexture(iMaterial* material, size_t attribu
   material->Set(attributeIdx, texture);
   return true;
 }
-
 
 }

@@ -93,8 +93,6 @@ private:
   eTerrainSize              m_terrainSize;
   eTerrainSize              m_patchSize;
   Vector3f                  m_referencePoint;
-  TerrainLayerMask          m_layerMask;
-  std::vector<TerrainLayer> m_layers;
 };
 
 CE_CLASS()

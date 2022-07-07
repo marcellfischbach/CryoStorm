@@ -6,13 +6,16 @@ material {
         shader Shadow "/shaders/test_shadow_program.cef"
     },
     attributes {
+        attribute Texture "Layer",
+        attribute Texture "Mask",
         attribute Texture "DiffuseRoughness0",
         attribute Texture "DiffuseRoughness1",
         attribute Texture "DiffuseRoughness2",
         attribute Texture "DiffuseRoughness3",
-        attribute Texture "Normal0"
-        attribute Texture "Normal1"
-        attribute Texture "Normal2"
-        attribute Texture "Normal3"
+        attribute Texture "Normal0",
+        attribute Texture "Normal1",
+        attribute Texture "Normal2",
+        attribute Texture "Normal3",
+
     }
 }

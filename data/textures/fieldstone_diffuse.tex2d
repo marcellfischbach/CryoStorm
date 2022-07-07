@@ -1,0 +1,6 @@
+texture2d {
+
+    image "fieldstone_diffuse.png",
+    sampler "Default",
+    mipmaps
+}

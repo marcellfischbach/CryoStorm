@@ -59,16 +59,16 @@ void main()
         diffuse += diffuseRoughness.rgb * layer.z;
         roughness += diffuseRoughness.a * layer.z;
     }
-    if (layer.w > 0.0)
-    {
-        vec4 diffuseRoughness = texture (ce_DiffuseRoughness3, texCoord * 3);
-        diffuse += diffuseRoughness.rgb * layer.w;
-        roughness += diffuseRoughness.a * layer.w;
-    }
+//    if (layer.w > 0.0)
+//    {
+//        vec4 diffuseRoughness = texture (ce_DiffuseRoughness3, texCoord * 3);
+//        diffuse += diffuseRoughness.rgb * layer.w;
+//        roughness += diffuseRoughness.a * layer.w;
+//    }
 
 
     vec3 frag_light = calc_lights(world_position, norm, roughness, camera_space_position, viewer_world_position);
-    ce_FragColor = vec4(frag_light * diffuse, 1.0);
+    ce_FragColor =  vec4(frag_light * diffuse, 1.0);
     //    ce_FragColor = vec4(frag_light, 1.0) * ce_Color;// * texColor;
     //    ce_FragColor = vec4(norm * 0.5 + 0.5, 1.0) * texColor;
 }

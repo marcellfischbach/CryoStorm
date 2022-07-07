@@ -33,6 +33,7 @@ struct CE_CORE_API iAssetLoader : public iObject
 };
 
 
+
 CE_CLASS()
 struct CE_CORE_API iAssetLoaderCEF : public iObject
 {

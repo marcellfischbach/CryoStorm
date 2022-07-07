@@ -138,6 +138,8 @@ set(SOURCES
         loaders/materialloader.hh
         loaders/samplerloader.cc
         loaders/samplerloader.hh
+        loaders/terrainlayerloader.cc
+        loaders/terrainlayerloader.hh
         loaders/textureloader.cc
         loaders/textureloader.hh
 
@@ -181,6 +183,8 @@ set(SOURCES
 
         resource/assetmanager.cc
         resource/assetmanager.hh
+        resource/basecefassetloader.cc
+        resource/basecefassetloader.hh
         resource/binarydata.cc
         resource/binarydata.hh
         resource/eaccessmode.hh

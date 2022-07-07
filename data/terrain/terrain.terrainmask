@@ -1,0 +1,7 @@
+terrainLayerMask {
+
+
+    layers "terrain_layers.tex2d",
+
+
+}

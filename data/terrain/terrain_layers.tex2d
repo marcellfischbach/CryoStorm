@@ -1,0 +1,7 @@
+texture2d {
+
+    image "terrain_layers.png",
+    sampler "Default",
+    mipmaps
+
+}

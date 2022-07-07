@@ -4,8 +4,8 @@ program {
     shader "terrain4.frag",
   }
   attributes {
-    attribute "Layer"
-    attribute "Mask"
+    attribute "Layer",
+    attribute "Mask",
     attribute "DiffuseRoughness0",
     attribute "DiffuseRoughness1",
     attribute "DiffuseRoughness2",
@@ -14,5 +14,6 @@ program {
     attribute "Normal1",
     attribute "Normal2",
     attribute "Normal3",
+
   }
 }

@@ -72,7 +72,7 @@ public:
   CE_NODISCARD const iTerrainMesh *GetTerrainMesh () const;
 
   virtual void SetLayerMask (TerrainLayerMask *mask);
-  virtual void AddLayer (TerrainLayer *layer) = 0;
+  virtual void AddLayer (TerrainLayer *layer);
 
 
   void SetReceiveShadow (bool receiveShadow);

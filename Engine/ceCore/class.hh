@@ -162,7 +162,7 @@ class AutoRelease
 private:
   iObject* obj;
 public:
-  AutoRelease(iObject* obj) : obj(obj) { }
+  explicit AutoRelease(iObject* obj) : obj(obj) { }
   ~AutoRelease() { CE_RELEASE(obj); }
 
 };

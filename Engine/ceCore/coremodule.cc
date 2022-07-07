@@ -5,6 +5,7 @@
 #include <ceCore/resource/assetmanager.hh>
 #include <ceCore/loaders/materialloader.hh>
 #include <ceCore/loaders/samplerloader.hh>
+#include <ceCore/loaders/terrainlayerloader.hh>
 #include <ceCore/loaders/textureloader.hh>
 
 
@@ -19,9 +20,13 @@ bool CoreModule::Register(int argc, char** argv)
 
   ObjectRegistry::Register<iFrameRenderer>(new DefaultFrameRenderer);
   AssetManager::Set(new AssetManager());
-  AssetManager::Get()->RegisterLoader(new SamplerLoaderCEF());
-  AssetManager::Get()->RegisterLoader(new MaterialLoaderCEF());
-  AssetManager::Get()->RegisterLoader(new TextureLoaderCEF());
+  AssetManager* assetMan = AssetManager::Get();
+  assetMan->RegisterLoader(new SamplerLoaderCEF());
+  assetMan->RegisterLoader(new MaterialLoaderCEF());
+  assetMan->RegisterLoader(new TerrainLayerLoader());
+  assetMan->RegisterLoader(new TerrainLayerMaskLoader());
+  assetMan->RegisterLoader(new TextureLoaderCEF());
+  assetMan->RegisterLoader(new TextureLoader());
 
   return true;
 }
