@@ -2,6 +2,7 @@
 #pragma once
 
 #include <ceCore/coreexport.hh>
+#include <ceCore/defs.hh>
 #include <string>
 #include <vector>
 
@@ -25,12 +26,12 @@ public:
   Attribute(const std::string& value, AttributeType type);
   Attribute(const std::string& name, const std::string& value, AttributeType type);
 
-  const std::string& GetName() const;
-  const std::string& GetValue() const;
-  int GetIntValue() const;
-  float GetFloatValue() const;
-  double GetDoubleValue() const;
-  AttributeType GetType() const;
+  CE_NODISCARD const std::string& GetName() const;
+  CE_NODISCARD const std::string& GetValue() const;
+  CE_NODISCARD int GetIntValue() const;
+  CE_NODISCARD float GetFloatValue() const;
+  CE_NODISCARD double GetDoubleValue() const;
+  CE_NODISCARD AttributeType GetType() const;
 
 private:
 
@@ -46,38 +47,38 @@ public:
   ~Element();
 
   void SetTagName(const std::string& tagName);
-  const std::string& GetTagName() const;
+  CE_NODISCARD const std::string& GetTagName() const;
 
   void AddChild(Element* child);
-  Element* GetParent();
-  const Element* GetParent() const;
+  CE_NODISCARD Element* GetParent();
+  CE_NODISCARD const Element* GetParent() const;
 
-  size_t GetNumberOfChildren() const;
-  Element* GetChild(size_t idx);
-  const Element* GetChild(size_t idx) const;
-  bool HasChild(const std::string& childName) const;
-  Element* GetChild(const std::string& childName);
-  const Element* GetChild(const std::string& childName) const;
+  CE_NODISCARD size_t GetNumberOfChildren() const;
+  CE_NODISCARD Element* GetChild(size_t idx);
+  CE_NODISCARD const Element* GetChild(size_t idx) const;
+  CE_NODISCARD bool HasChild(const std::string& childName) const;
+  CE_NODISCARD Element* GetChild(const std::string& childName);
+  CE_NODISCARD const Element* GetChild(const std::string& childName) const;
 
   void AddAttribute(const Attribute &attribute);
 
-  size_t GetNumberOfAttributes() const;
-  bool HasAttribute(const std::string& attributeName) const;
-  const Attribute* GetAttribute(size_t idx) const;
-  const Attribute* GetAttribute(const std::string &attributeName) const;
+  CE_NODISCARD size_t GetNumberOfAttributes() const;
+  CE_NODISCARD bool HasAttribute(const std::string& attributeName) const;
+  CE_NODISCARD const Attribute* GetAttribute(size_t idx) const;
+  CE_NODISCARD const Attribute* GetAttribute(const std::string &attributeName) const;
 
-  const std::string GetAttribute(size_t idx, const std::string &defaultValue) const;
-  const std::string GetAttribute(const std::string& attributeName, const std::string &defaultValue) const;
+  CE_NODISCARD const std::string GetAttribute(size_t idx, const std::string &defaultValue) const;
+  CE_NODISCARD const std::string GetAttribute(const std::string& attributeName, const std::string &defaultValue) const;
 
-  int GetAttribute(size_t idx, int defaultValue) const;
-  int GetAttribute(const std::string& attributeName, int defaultValue) const;
+  CE_NODISCARD int GetAttribute(size_t idx, int defaultValue) const;
+  CE_NODISCARD int GetAttribute(const std::string& attributeName, int defaultValue) const;
 
-  float GetAttribute(size_t idx, float defaultValue) const;
-  float GetAttribute(const std::string& attributeName, float defaultValue) const;
+  CE_NODISCARD float GetAttribute(size_t idx, float defaultValue) const;
+  CE_NODISCARD float GetAttribute(const std::string& attributeName, float defaultValue) const;
 
 
-  double GetAttribute(size_t idx, double defaultValue) const;
-  double GetAttribute(const std::string& attributeName, double defaultValue) const;
+  CE_NODISCARD double GetAttribute(size_t idx, double defaultValue) const;
+  CE_NODISCARD double GetAttribute(const std::string& attributeName, double defaultValue) const;
 
 
 
@@ -89,6 +90,7 @@ private:
   Element* m_parent;
 
   std::vector<Attribute> m_attributes;
+
 
 };
 
@@ -102,24 +104,22 @@ public:
   ~File();
 
 
-  bool Parse(const std::string& filename);
-  bool Parse(iFile* file);
-  bool Parse(const char* buffer, size_t bufferSize);
+  CE_NODISCARD bool Parse(const std::string& filename);
+  CE_NODISCARD bool Parse(iFile* file);
+  CE_NODISCARD bool Parse(const char* buffer, size_t bufferSize);
 
   std::string Print(bool format, int indent);
-  void Print(const std::string& filename, bool format, int indent);
-  void Print(char** buffer, size_t &bufferSize, bool format, int indent);
 
-  Element* Root();
-  const Element* Root() const;
+  CE_NODISCARD Element* Root();
+  CE_NODISCARD const Element* Root() const;
 
-  const char* GetData() const;
-  size_t GetDataSize() const;
+  CE_NODISCARD const char* GetData() const;
+  CE_NODISCARD size_t GetDataSize() const;
 
   void Debug() const;
 
 private:
-  bool Parse(iBuffer* buffer);
+  CE_NODISCARD bool Parse(iBuffer* buffer);
   Element m_root;
 
   char *m_data;

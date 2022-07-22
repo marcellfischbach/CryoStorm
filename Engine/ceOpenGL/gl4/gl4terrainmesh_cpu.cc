@@ -5,7 +5,9 @@
 #include <ceOpenGL/gl4/gl4vertexbuffer.hh>
 #include <ceOpenGL/glerror.hh>
 
+#include <ceOpenGL/gl4/gl4device.hh>
 #include <ceOpenGL/gl4/gl4texture2d.hh>
+
 #include <gl/glew.h>
 
 
@@ -67,14 +69,19 @@ void GL4TerrainMeshCPU::Render(iDevice *graphics, eRenderPass pass)
   CE_GL_ERROR();
 
 #if _DEBUG
-  /*
   auto gl4Device = graphics->Query<GL4Device>();
   gl4Device->IncDrawCalls();
   gl4Device->IncTriangles(GetNumberOfTriangles());
-   */
 #endif
 
 }
+
+#if _DEBUG
+Size GL4TerrainMeshCPU::GetNumberOfTriangles() const
+{
+  return m_indexBufferSize / 3;
+}
+#endif
 
 bool GL4TerrainMeshCPU::Line::UpdateStepSize(const Vector3f &refPoint, size_t override)
 {
@@ -90,11 +97,11 @@ bool GL4TerrainMeshCPU::Line::UpdateStepSize(const Vector3f &refPoint, size_t ov
   size_t stepSize = override;
   size_t patchSize2 = (patchSize - 1) / 2;
 
-  float dfact = 1.0 + distFact * (patchSize2-1);
+  float dfact = 1.0f + distFact * static_cast<float>(patchSize2-1);
   float log = log2(dfact);
   int logi = (int)log;
 
-  stepSize = 1 << logi;
+  stepSize = static_cast<size_t>(1 << logi);
   /*
   if (stepSize < 1)
   {
@@ -186,15 +193,15 @@ size_t GL4TerrainMeshCPU::Patch::GenerateGeneric(int64_t majorUnitSize,
           size_t vas1 = vas0 + adjacentStep * (majorUnitSize + minorUnitSize);
           if (flip)
           {
-            *iptr++ = v10;
-            *iptr++ = vas0;
-            *iptr++ = vas1;
+            *iptr++ = static_cast<uint32_t>(v10);
+            *iptr++ = static_cast<uint32_t>(vas0);
+            *iptr++ = static_cast<uint32_t>(vas1);
           }
           else
           {
-            *iptr++ = v10;
-            *iptr++ = vas1;
-            *iptr++ = vas0;
+            *iptr++ = static_cast<uint32_t>(v10);
+            *iptr++ = static_cast<uint32_t>(vas1);
+            *iptr++ = static_cast<uint32_t>(vas0);
           }
           count += 3;
         }
@@ -203,23 +210,23 @@ size_t GL4TerrainMeshCPU::Patch::GenerateGeneric(int64_t majorUnitSize,
       {
         if (flip)
         {
-          *iptr++ = v00;
-          *iptr++ = v11;
-          *iptr++ = v10;
+          *iptr++ = static_cast<uint32_t>(v00);
+          *iptr++ = static_cast<uint32_t>(v11);
+          *iptr++ = static_cast<uint32_t>(v10);
 
-          *iptr++ = v00;
-          *iptr++ = v01;
-          *iptr++ = v11;
+          *iptr++ = static_cast<uint32_t>(v00);
+          *iptr++ = static_cast<uint32_t>(v01);
+          *iptr++ = static_cast<uint32_t>(v11);
         }
         else
         {
-          *iptr++ = v00;
-          *iptr++ = v10;
-          *iptr++ = v11;
+          *iptr++ = static_cast<uint32_t>(v00);
+          *iptr++ = static_cast<uint32_t>(v10);
+          *iptr++ = static_cast<uint32_t>(v11);
 
-          *iptr++ = v00;
-          *iptr++ = v11;
-          *iptr++ = v01;
+          *iptr++ = static_cast<uint32_t>(v00);
+          *iptr++ = static_cast<uint32_t>(v11);
+          *iptr++ = static_cast<uint32_t>(v01);
         }
 
         count += 6;

@@ -75,6 +75,9 @@ public:
 
   void Render(iDevice* graphics, eRenderPass pass) override;
 
+#if _DEBUG
+  CE_NODISCARD  Size GetNumberOfTriangles() const override;
+#endif
 
 private:
   void Update();

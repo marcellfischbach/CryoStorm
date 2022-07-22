@@ -15,6 +15,8 @@
 
 #define CE_NODISCARD [[nodiscard]]
 
+#define CE_MAYBE_UNUSED [[maybe_unused]]
+
 #define CE_FORCEINLINE __forceinline
 
 #define CE_ZERO(e) memset(&e, 0, sizeof(e))

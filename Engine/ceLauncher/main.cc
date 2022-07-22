@@ -163,7 +163,7 @@ SDL_GLContext context;
 bool initialize_modules(int argc, char** argv)
 {
   ce::VFS::Get()->SetBasePath("D:\\DEV\\CrimsonEdge\\data");
-  ce::Settings settings("file:///config/display.cef");
+  ce::Settings settings("file:///${config_path}/display.cef");
 
   SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE);
 

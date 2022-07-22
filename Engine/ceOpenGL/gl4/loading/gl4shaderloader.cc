@@ -7,12 +7,10 @@
 #include <ceCore/graphics/evertexstream.hh>
 #include <ceCore/math/math.hh>
 #include <ceCore/resource/file.hh>
-#include <tinyxml2/tinyxml2.h>
 #include <regex>
 #include <iostream>
 #include <set>
 
-using namespace tinyxml2;
 
 namespace ce::opengl
 {

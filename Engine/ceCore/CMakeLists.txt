@@ -201,6 +201,8 @@ set(SOURCES
         resource/resourcelocator.hh
         resource/vfs.cc
         resource/vfs.hh
+        resource/vfsconfigreader.cc
+        resource/vfsconfigreader.hh
 
         #window/wnddesc.hh
         window/iwindow.hh

@@ -385,8 +385,8 @@ bool File::Parse(const std::string &filename)
   fclose(file);
 
 
-  BufferBuffer bbuf(buffer, size);
-  bool         success = Parse(&bbuf);
+  BufferBuffer bBuf(buffer, size);
+  bool         success = Parse(&bBuf);
   delete[] buffer;
   return success;
 }
@@ -406,16 +406,16 @@ bool File::Parse(iFile *file)
   file->Read(1, size, buffer);
   buffer[size]         = '\0';
 
-  BufferBuffer bbuf(buffer, size);
-  bool         success = Parse(&bbuf);
+  BufferBuffer bBuf(buffer, size);
+  bool         success = Parse(&bBuf);
   delete[] buffer;
   return success;
 }
 
 bool File::Parse(const char *buffer, size_t bufferSize)
 {
-  BufferBuffer bbuf(buffer, bufferSize);
-  return Parse(&bbuf);
+  BufferBuffer bBuf(buffer, bufferSize);
+  return Parse(&bBuf);
 
 }
 
@@ -830,27 +830,27 @@ std::string File::Print(bool format, int indent)
   {
     indentStr += " ";
   }
-  std::string prnt;
+  std::string print;
 
   for (size_t i = 0, in = m_root.GetNumberOfChildren(); i < in; i++)
   {
     bool ewc = false;
-    prnt += ce::file::Print(m_root.GetChild(i), format, 0, indentStr, ewc);
+    print += ce::file::Print(m_root.GetChild(i), format, 0, indentStr, ewc);
     if (!ewc && i + 1 < in)
     {
-      prnt += ",";
+      print += ",";
     }
     if (format)
     {
-      prnt += "\n";
+      print += "\n";
     }
   }
   if (m_data && m_dataSize)
   {
-    prnt += "@" + std::string(m_data, m_dataSize);
+    print += "@" + std::string(m_data, m_dataSize);
   }
 
-  return prnt;
+  return print;
 
 }
 
