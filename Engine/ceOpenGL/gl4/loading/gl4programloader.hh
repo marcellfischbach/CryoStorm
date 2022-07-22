@@ -13,9 +13,9 @@ class CE_OGL_API GL4ProgramLoader : public CE_SUPER(iAssetLoaderCEF)
 public:
   GL4ProgramLoader();
 
-  bool CanLoad(const Class* cls, const file::File* file, const ResourceLocator* locator) const override;
+  bool CanLoad(const Class* cls, const CrimsonFile* file, const ResourceLocator* locator) const override;
 
-  iObject* Load(const Class* cls, const file::File* file, const ResourceLocator* locator) const override;
+  iObject* Load(const Class* cls, const CrimsonFile* file, const ResourceLocator* locator) const override;
 
 
 };

@@ -16,9 +16,9 @@ public:
   virtual ~GL4ShaderLoaderCEF() = default;
 
 
-  bool CanLoad(const Class* cls, const file::File* file, const ResourceLocator* locator) const override;
+  bool CanLoad(const Class* cls, const CrimsonFile* file, const ResourceLocator* locator) const override;
 
-  iObject* Load(const Class* cls, const file::File* file, const ResourceLocator* locator) const override;
+  iObject* Load(const Class* cls, const CrimsonFile* file, const ResourceLocator* locator) const override;
 
 };
 

@@ -16,13 +16,13 @@ bool TerrainLayerLoader::CanLoad(const Class* cls, const ResourceLocator& locato
   return cls ->IsAssignableFrom<TerrainLayer>() && locator.GetExtension() == std::string("TERRAINLAYER");
 }
 
-iObject* TerrainLayerLoader::Load(const file::File* file,
+iObject* TerrainLayerLoader::Load(const CrimsonFile* file,
                                   const Class* cls,
                                   const ResourceLocator& locator) const
 {
-  const file::Element* rootElement = file->Root();
+  const CrimsonFileElement* rootElement = file->Root();
 
-  const file::Element* terrainLayerElement = rootElement->GetChild("terrainLayer");
+  const CrimsonFileElement* terrainLayerElement = rootElement->GetChild("terrainLayer");
   if (!terrainLayerElement)
   {
     return nullptr;
@@ -32,8 +32,8 @@ iObject* TerrainLayerLoader::Load(const file::File* file,
 
   TerrainLayer* layer = new TerrainLayer();
 
-  const file::Element  * diffuseRoughnessElement   = terrainLayerElement->GetChild("diffuseRoughness");
-  const file::Attribute* diffuseRoughnessAttribute = diffuseRoughnessElement
+  const CrimsonFileElement  * diffuseRoughnessElement   = terrainLayerElement->GetChild("diffuseRoughness");
+  const CrimsonFileAttribute* diffuseRoughnessAttribute = diffuseRoughnessElement
                                                      ? diffuseRoughnessElement->GetAttribute(0)
                                                      : nullptr;
   if (diffuseRoughnessAttribute)
@@ -41,8 +41,8 @@ iObject* TerrainLayerLoader::Load(const file::File* file,
     layer->SetDiffuseRoughness(assetMan->Get<iTexture2D>(ResourceLocator(locator, diffuseRoughnessAttribute->GetValue())));
   }
 
-  const file::Element  * normalElement   = terrainLayerElement->GetChild("normal");
-  const file::Attribute* normalAttribute = normalElement
+  const CrimsonFileElement  * normalElement   = terrainLayerElement->GetChild("normal");
+  const CrimsonFileAttribute* normalAttribute = normalElement
                                            ? normalElement->GetAttribute(0)
                                            : nullptr;
   if (normalAttribute)
@@ -64,13 +64,13 @@ bool TerrainLayerMaskLoader::CanLoad(const Class* cls, const ResourceLocator& lo
 
 }
 
-iObject* TerrainLayerMaskLoader::Load(const file::File* file,
+iObject* TerrainLayerMaskLoader::Load(const CrimsonFile* file,
                                       const Class* cls,
                                       const ResourceLocator& locator) const
 {
-  const file::Element* rootElement = file->Root();
+  const CrimsonFileElement* rootElement = file->Root();
 
-  const file::Element* terrainLayerMaskElement = rootElement->GetChild("terrainLayerMask");
+  const CrimsonFileElement* terrainLayerMaskElement = rootElement->GetChild("terrainLayerMask");
   if (!terrainLayerMaskElement)
   {
     return nullptr;
@@ -80,8 +80,8 @@ iObject* TerrainLayerMaskLoader::Load(const file::File* file,
 
   auto layer = new TerrainLayerMask();
 
-  const file::Element  * layersElement   = terrainLayerMaskElement->GetChild("layers");
-  const file::Attribute* layersAttribute = layersElement
+  const CrimsonFileElement  * layersElement   = terrainLayerMaskElement->GetChild("layers");
+  const CrimsonFileAttribute* layersAttribute = layersElement
                                            ? layersElement->GetAttribute(0)
                                            : nullptr;
   if (layersAttribute)
@@ -89,8 +89,8 @@ iObject* TerrainLayerMaskLoader::Load(const file::File* file,
     layer->SetLayerTexture(assetMan->Get<iTexture2D>(ResourceLocator(locator, layersAttribute->GetValue())));
   }
 
-  const file::Element  * maskElement   = terrainLayerMaskElement->GetChild("mask");
-  const file::Attribute* maskAttribute = maskElement
+  const CrimsonFileElement  * maskElement   = terrainLayerMaskElement->GetChild("mask");
+  const CrimsonFileAttribute* maskAttribute = maskElement
                                            ? maskElement->GetAttribute(0)
                                            : nullptr;
   if (maskAttribute)

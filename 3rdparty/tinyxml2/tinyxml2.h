@@ -461,7 +461,7 @@ private:
 /**
 	Implements the interface to the "Visitor pattern" (see the Accept() method.)
 	If you call the Accept() method, it requires being passed a XMLVisitor
-	class to handle callbacks. For nodes that contain other nodes (Document, Element)
+	class to handle callbacks. For nodes that contain other nodes (Document, CrimsonFileElement)
 	you will get called with a VisitEnter/VisitExit pair. Nodes that are always leafs
 	are simply called with Visit().
 
@@ -657,12 +657,12 @@ private:
 	will also be deleted.
 
 	@verbatim
-	A Document can contain:	Element	(container or leaf)
+	A Document can contain:	CrimsonFileElement	(container or leaf)
 							Comment (leaf)
 							Unknown (leaf)
 							Declaration( leaf )
 
-	An Element can contain:	Element (container or leaf)
+	An CrimsonFileElement can contain:	CrimsonFileElement (container or leaf)
 							Text	(leaf)
 							Attributes (not on tree)
 							Comment (leaf)
@@ -687,7 +687,7 @@ public:
         return _document;
     }
 
-    /// Safely cast to an Element, or null.
+    /// Safely cast to an CrimsonFileElement, or null.
     virtual XMLElement*		ToElement()		{
         return 0;
     }
@@ -734,7 +734,7 @@ public:
     /** The meaning of 'value' changes for the specific type.
     	@verbatim
     	Document:	empty (NULL is returned, not an empty string)
-    	Element:	name of the element
+    	CrimsonFileElement:	name of the element
     	Comment:	the comment text
     	Unknown:	the tag contents
     	Text:		the text string
@@ -1281,12 +1281,12 @@ public:
     }
     virtual bool Accept( XMLVisitor* visitor ) const;
 
-    /** Given an attribute name, Attribute() returns the value
+    /** Given an attribute name, CrimsonFileAttribute() returns the value
     	for the attribute of that name, or null if none
     	exists. For example:
 
     	@verbatim
-    	const char* value = ele->Attribute( "foo" );
+    	const char* value = ele->CrimsonFileAttribute( "foo" );
     	@endverbatim
 
     	The 'value' parameter is normally null. However, if specified,
@@ -1294,13 +1294,13 @@ public:
     	match. This allow you to write code:
 
     	@verbatim
-    	if ( ele->Attribute( "foo", "bar" ) ) callFooIsBar();
+    	if ( ele->CrimsonFileAttribute( "foo", "bar" ) ) callFooIsBar();
     	@endverbatim
 
     	rather than:
     	@verbatim
-    	if ( ele->Attribute( "foo" ) ) {
-    		if ( strcmp( ele->Attribute( "foo" ), "bar" ) == 0 ) callFooIsBar();
+    	if ( ele->CrimsonFileAttribute( "foo" ) ) {
+    		if ( strcmp( ele->CrimsonFileAttribute( "foo" ), "bar" ) == 0 ) callFooIsBar();
     	}
     	@endverbatim
     */
@@ -1831,8 +1831,8 @@ public:
     virtual bool Accept( XMLVisitor* visitor ) const;
 
     /**
-    	Create a new Element associated with
-    	this Document. The memory for the Element
+    	Create a new CrimsonFileElement associated with
+    	this Document. The memory for the CrimsonFileElement
     	is managed by the Document.
     */
     XMLElement* NewElement( const char* name );
@@ -2002,10 +2002,10 @@ inline NodeType* XMLDocument::CreateUnlinkedNode( MemPoolT<PoolElementSize>& poo
 	Take an example:
 	@verbatim
 	<Document>
-		<Element attributeA = "valueA">
+		<CrimsonFileElement attributeA = "valueA">
 			<Child attributeB = "value1" />
 			<Child attributeB = "value2" />
-		</Element>
+		</CrimsonFileElement>
 	</Document>
 	@endverbatim
 
@@ -2016,7 +2016,7 @@ inline NodeType* XMLDocument::CreateUnlinkedNode( MemPoolT<PoolElementSize>& poo
 	XMLElement* root = document.FirstChildElement( "Document" );
 	if ( root )
 	{
-		XMLElement* element = root->FirstChildElement( "Element" );
+		XMLElement* element = root->FirstChildElement( "CrimsonFileElement" );
 		if ( element )
 		{
 			XMLElement* child = element->FirstChildElement( "Child" );
@@ -2034,7 +2034,7 @@ inline NodeType* XMLDocument::CreateUnlinkedNode( MemPoolT<PoolElementSize>& poo
 
 	@verbatim
 	XMLHandle docHandle( &document );
-	XMLElement* child2 = docHandle.FirstChildElement( "Document" ).FirstChildElement( "Element" ).FirstChildElement().NextSiblingElement();
+	XMLElement* child2 = docHandle.FirstChildElement( "Document" ).FirstChildElement( "CrimsonFileElement" ).FirstChildElement().NextSiblingElement();
 	if ( child2 )
 	{
 		// do something useful
@@ -2209,7 +2209,7 @@ private:
 	SomeFunction( printer.CStr() );
 	@endverbatim
 
-	Print to a File
+	Print to a CrimsonFile
 
 	You provide the file pointer.
 	@verbatim
@@ -2260,7 +2260,7 @@ public:
 	void PushAttribute( const char* name, uint64_t value );
 	void PushAttribute( const char* name, bool value );
     void PushAttribute( const char* name, double value );
-    /// If streaming, close the Element.
+    /// If streaming, close the CrimsonFileElement.
     virtual void CloseElement( bool compactMode=false );
 
     /// Add a text node.

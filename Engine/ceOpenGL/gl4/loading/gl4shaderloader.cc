@@ -114,14 +114,14 @@ std::vector<std::string> loadExternalLinesRaw(const ResourceLocator& locator, iF
 
 std::vector<std::string> loadExternalLinesSpc(const ResourceLocator& locator, iFile* file, std::set<ResourceLocator>& included)
 {
-  ce::file::File fFile;
-  bool res = fFile.Parse(file);
+  ce::CrimsonFile fFile;
+  bool                  res = fFile.Parse(file);
   if (!res)
   {
     return std::vector<std::string>();
   }
 
-  file::Element* fragment = fFile.Root()->GetChild("fragment");
+  CrimsonFileElement* fragment = fFile.Root()->GetChild("fragment");
   if (!fragment || fragment->GetNumberOfAttributes() == 0)
   {
     return std::vector<std::string>();
@@ -281,15 +281,15 @@ GL4ShaderLoaderCEF::GL4ShaderLoaderCEF()
 }
 
 
-bool GL4ShaderLoaderCEF::CanLoad(const Class* cls, const file::File* file, const ResourceLocator* locator) const
+bool GL4ShaderLoaderCEF::CanLoad(const Class* cls, const CrimsonFile* file, const ResourceLocator* locator) const
 {
   return cls->IsAssignableFrom<GL4Shader>() && file->Root()->HasChild("shader");
 }
 
 
-iObject* GL4ShaderLoaderCEF::Load(const Class* cls, const file::File* file, const ResourceLocator* locator) const
+iObject* GL4ShaderLoaderCEF::Load(const Class* cls, const CrimsonFile* file, const ResourceLocator* locator) const
 {
-  const file::Element* shaderElement = file->Root()->GetChild("shader");
+  const CrimsonFileElement* shaderElement = file->Root()->GetChild("shader");
   if (!shaderElement)
   {
     return nullptr;

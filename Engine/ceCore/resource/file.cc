@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 
-namespace ce::file
+namespace ce
 {
 
 enum class TokenType
@@ -78,56 +78,56 @@ private:
 
 Token GetNextToken(iBuffer *buffer);
 
-Attribute::Attribute(const std::string &value, AttributeType type)
+CrimsonFileAttribute::CrimsonFileAttribute(const std::string &value, AttributeType type)
     : m_name(""), m_value(value), m_type(type)
 {
 }
 
-Attribute::Attribute(const std::string &name, const std::string &value, AttributeType type)
+CrimsonFileAttribute::CrimsonFileAttribute(const std::string &name, const std::string &value, AttributeType type)
     : m_name(name), m_value(value), m_type(type)
 {
 }
 
-const std::string &Attribute::GetName() const
+const std::string &CrimsonFileAttribute::GetName() const
 {
   return m_name;
 }
 
-const std::string &Attribute::GetValue() const
+const std::string &CrimsonFileAttribute::GetValue() const
 {
   return m_value;
 }
 
-int Attribute::GetIntValue() const
+int CrimsonFileAttribute::GetIntValue() const
 {
   return atoi(m_value.c_str());
 }
 
-float Attribute::GetFloatValue() const
+float CrimsonFileAttribute::GetFloatValue() const
 {
   return (float) atof(m_value.c_str());
 }
 
 
-double Attribute::GetDoubleValue() const
+double CrimsonFileAttribute::GetDoubleValue() const
 {
   return atof(m_value.c_str());
 }
 
-Attribute::AttributeType Attribute::GetType() const
+CrimsonFileAttribute::AttributeType CrimsonFileAttribute::GetType() const
 {
   return m_type;
 }
 
-Element::Element()
+CrimsonFileElement::CrimsonFileElement()
     : m_parent(nullptr)
 {
 
 }
 
-Element::~Element()
+CrimsonFileElement::~CrimsonFileElement()
 {
-  for (Element *element: m_children)
+  for (CrimsonFileElement*element: m_children)
   {
     delete element;
   }
@@ -135,43 +135,43 @@ Element::~Element()
   m_parent = nullptr;
 }
 
-void Element::SetTagName(const std::string &tagName)
+void CrimsonFileElement::SetTagName(const std::string &tagName)
 {
   m_tagName = tagName;
 }
 
-const std::string &Element::GetTagName() const
+const std::string &CrimsonFileElement::GetTagName() const
 {
   return m_tagName;
 }
 
-void Element::AddChild(Element *element)
+void CrimsonFileElement::AddChild(CrimsonFileElement *element)
 {
   element->m_parent = this;
   m_children.push_back(element);
 }
 
-Element *Element::GetParent()
+CrimsonFileElement *CrimsonFileElement::GetParent()
 {
   return m_parent;
 }
 
-const Element *Element::GetParent() const
+const CrimsonFileElement *CrimsonFileElement::GetParent() const
 {
   return m_parent;
 }
 
-size_t Element::GetNumberOfChildren() const
+size_t CrimsonFileElement::GetNumberOfChildren() const
 {
   return m_children.size();
 }
 
-Element *Element::GetChild(size_t idx)
+CrimsonFileElement *CrimsonFileElement::GetChild(size_t idx)
 {
-  return const_cast<Element *>(static_cast<const Element *>(this)->GetChild(idx));
+  return const_cast<CrimsonFileElement *>(static_cast<const CrimsonFileElement *>(this)->GetChild(idx));
 }
 
-const Element *Element::GetChild(size_t idx) const
+const CrimsonFileElement *CrimsonFileElement::GetChild(size_t idx) const
 {
   if (idx >= m_children.size())
   {
@@ -180,12 +180,12 @@ const Element *Element::GetChild(size_t idx) const
   return m_children[idx];
 }
 
-Element *Element::GetChild(const std::string &childName)
+CrimsonFileElement *CrimsonFileElement::GetChild(const std::string &childName)
 {
-  return const_cast<Element *>(static_cast<const Element *>(this)->GetChild(childName));
+  return const_cast<CrimsonFileElement *>(static_cast<const CrimsonFileElement *>(this)->GetChild(childName));
 }
 
-const Element *Element::GetChild(const std::string &childName) const
+const CrimsonFileElement *CrimsonFileElement::GetChild(const std::string &childName) const
 {
   std::string path = childName;
   while (true)
@@ -200,8 +200,8 @@ const Element *Element::GetChild(const std::string &childName) const
         }
         else
         {
-          std::string   tail     = childName.substr(path.length() + 1);
-          const Element *element = child->GetChild(tail);
+          std::string             tail     = childName.substr(path.length() + 1);
+          const CrimsonFileElement*element = child->GetChild(tail);
           if (element)
           {
             return element;
@@ -221,24 +221,24 @@ const Element *Element::GetChild(const std::string &childName) const
 }
 
 
-bool Element::HasChild(const std::string &childName) const
+bool CrimsonFileElement::HasChild(const std::string &childName) const
 {
   return GetChild(childName) != nullptr;
 }
 
-void Element::AddAttribute(const Attribute &attribute)
+void CrimsonFileElement::AddAttribute(const CrimsonFileAttribute &attribute)
 {
   m_attributes.push_back(attribute);
 }
 
-size_t Element::GetNumberOfAttributes() const
+size_t CrimsonFileElement::GetNumberOfAttributes() const
 {
   return m_attributes.size();
 }
 
-bool Element::HasAttribute(const std::string &attributeName) const
+bool CrimsonFileElement::HasAttribute(const std::string &attributeName) const
 {
-  for (const Attribute &attr: m_attributes)
+  for (const CrimsonFileAttribute&attr: m_attributes)
   {
     if (attr.GetName() == attributeName)
     {
@@ -248,7 +248,7 @@ bool Element::HasAttribute(const std::string &attributeName) const
   return false;
 }
 
-const Attribute *Element::GetAttribute(size_t idx) const
+const CrimsonFileAttribute *CrimsonFileElement::GetAttribute(size_t idx) const
 {
   if (idx >= m_attributes.size())
   {
@@ -257,9 +257,9 @@ const Attribute *Element::GetAttribute(size_t idx) const
   return &m_attributes[idx];
 }
 
-const Attribute *Element::GetAttribute(const std::string &attributeName) const
+const CrimsonFileAttribute *CrimsonFileElement::GetAttribute(const std::string &attributeName) const
 {
-  for (const Attribute &attr: m_attributes)
+  for (const CrimsonFileAttribute&attr: m_attributes)
   {
     if (attr.GetName() == attributeName)
     {
@@ -269,68 +269,68 @@ const Attribute *Element::GetAttribute(const std::string &attributeName) const
   return nullptr;
 }
 
-const std::string Element::GetAttribute(size_t idx, const std::string &defaultValue) const
+const std::string CrimsonFileElement::GetAttribute(size_t idx, const std::string &defaultValue) const
 {
-  const Attribute *attr = GetAttribute(idx);
+  const CrimsonFileAttribute*attr = GetAttribute(idx);
   return attr ? attr->GetValue() : defaultValue;
 }
 
 
-const std::string Element::GetAttribute(const std::string &attributeName, const std::string &defaultValue) const
+const std::string CrimsonFileElement::GetAttribute(const std::string &attributeName, const std::string &defaultValue) const
 {
-  const Attribute *attr = GetAttribute(attributeName);
+  const CrimsonFileAttribute*attr = GetAttribute(attributeName);
   return attr ? attr->GetValue() : defaultValue;
 }
 
 
-int Element::GetAttribute(size_t idx, int defaultValue) const
+int CrimsonFileElement::GetAttribute(size_t idx, int defaultValue) const
 {
-  const Attribute *attr = GetAttribute(idx);
+  const CrimsonFileAttribute*attr = GetAttribute(idx);
   return attr ? attr->GetIntValue() : defaultValue;
 }
 
 
-int Element::GetAttribute(const std::string &attributeName, int defaultValue) const
+int CrimsonFileElement::GetAttribute(const std::string &attributeName, int defaultValue) const
 {
-  const Attribute *attr = GetAttribute(attributeName);
+  const CrimsonFileAttribute*attr = GetAttribute(attributeName);
   return attr ? attr->GetIntValue() : defaultValue;
 }
 
-float Element::GetAttribute(size_t idx, float defaultValue) const
+float CrimsonFileElement::GetAttribute(size_t idx, float defaultValue) const
 {
-  const Attribute *attr = GetAttribute(idx);
+  const CrimsonFileAttribute*attr = GetAttribute(idx);
   return attr ? attr->GetFloatValue() : defaultValue;
 }
 
 
-float Element::GetAttribute(const std::string &attributeName, float defaultValue) const
+float CrimsonFileElement::GetAttribute(const std::string &attributeName, float defaultValue) const
 {
-  const Attribute *attr = GetAttribute(attributeName);
+  const CrimsonFileAttribute*attr = GetAttribute(attributeName);
   return attr ? attr->GetFloatValue() : defaultValue;
 }
 
 
-double Element::GetAttribute(size_t idx, double defaultValue) const
+double CrimsonFileElement::GetAttribute(size_t idx, double defaultValue) const
 {
-  const Attribute *attr = GetAttribute(idx);
+  const CrimsonFileAttribute*attr = GetAttribute(idx);
   return attr ? attr->GetDoubleValue() : defaultValue;
 }
 
 
-double Element::GetAttribute(const std::string &attributeName, double defaultValue) const
+double CrimsonFileElement::GetAttribute(const std::string &attributeName, double defaultValue) const
 {
-  const Attribute *attr = GetAttribute(attributeName);
+  const CrimsonFileAttribute*attr = GetAttribute(attributeName);
   return attr ? attr->GetDoubleValue() : defaultValue;
 }
 
 
-File::File()
+CrimsonFile::CrimsonFile()
     : m_data(nullptr), m_dataSize(0)
 {
 
 }
 
-File::~File()
+CrimsonFile::~CrimsonFile()
 {
   if (m_data)
   {
@@ -340,27 +340,27 @@ File::~File()
   m_dataSize = 0;
 }
 
-Element *File::Root()
+CrimsonFileElement *CrimsonFile::Root()
 {
   return &m_root;
 }
 
-const Element *File::Root() const
+const CrimsonFileElement *CrimsonFile::Root() const
 {
   return &m_root;
 }
 
-const char *File::GetData() const
+const char *CrimsonFile::GetData() const
 {
   return m_data;
 }
 
-size_t File::GetDataSize() const
+size_t CrimsonFile::GetDataSize() const
 {
   return m_dataSize;
 }
 
-bool File::Parse(const std::string &filename)
+bool CrimsonFile::Parse(const std::string &filename)
 {
 #ifdef CE_WIN32
   FILE *file = nullptr;
@@ -391,7 +391,7 @@ bool File::Parse(const std::string &filename)
   return success;
 }
 
-bool File::Parse(iFile *file)
+bool CrimsonFile::Parse(iFile *file)
 {
   if (!file)
   {
@@ -412,7 +412,7 @@ bool File::Parse(iFile *file)
   return success;
 }
 
-bool File::Parse(const char *buffer, size_t bufferSize)
+bool CrimsonFile::Parse(const char *buffer, size_t bufferSize)
 {
   BufferBuffer bBuf(buffer, bufferSize);
   return Parse(&bBuf);
@@ -420,15 +420,15 @@ bool File::Parse(const char *buffer, size_t bufferSize)
 }
 
 
-bool File::Parse(iBuffer *buffer)
+bool CrimsonFile::Parse(iBuffer *buffer)
 {
   if (!buffer)
   {
     return false;
   }
 
-  Element *parent         = &m_root;
-  Element *currentElement = nullptr;
+  CrimsonFileElement*parent         = &m_root;
+  CrimsonFileElement*currentElement = nullptr;
   while (true)
   {
     Token token = GetNextToken(buffer);
@@ -468,7 +468,7 @@ bool File::Parse(iBuffer *buffer)
       case TokenType::Identifier:
         if (!currentElement)
         {
-          currentElement = new Element();
+          currentElement = new CrimsonFileElement();
           currentElement->SetTagName(token.value);
           parent->AddChild(currentElement);
         }
@@ -478,7 +478,7 @@ bool File::Parse(iBuffer *buffer)
           token = GetNextToken(buffer);
           if (token.type != TokenType::Colon)
           {
-            currentElement->AddAttribute(Attribute(attributeName, Attribute::AttributeType::String));
+            currentElement->AddAttribute(CrimsonFileAttribute(attributeName, CrimsonFileAttribute::AttributeType::String));
             revoke = true;
           }
           else
@@ -486,11 +486,11 @@ bool File::Parse(iBuffer *buffer)
             token = GetNextToken(buffer);
             if (token.type == TokenType::String)
             {
-              currentElement->AddAttribute(Attribute(attributeName, token.value, Attribute::AttributeType::String));
+              currentElement->AddAttribute(CrimsonFileAttribute(attributeName, token.value, CrimsonFileAttribute::AttributeType::String));
             }
             else if (token.type == TokenType::Number)
             {
-              currentElement->AddAttribute(Attribute(attributeName, token.value, Attribute::AttributeType::Number));
+              currentElement->AddAttribute(CrimsonFileAttribute(attributeName, token.value, CrimsonFileAttribute::AttributeType::Number));
             }
             else
             {
@@ -507,7 +507,7 @@ bool File::Parse(iBuffer *buffer)
           printf("No current element for string '%s'\n", token.value.c_str());
           return false;
         }
-        currentElement->AddAttribute(Attribute(token.value, Attribute::AttributeType::String));
+        currentElement->AddAttribute(CrimsonFileAttribute(token.value, CrimsonFileAttribute::AttributeType::String));
         break;
       case TokenType::Number:
         if (!currentElement)
@@ -515,7 +515,7 @@ bool File::Parse(iBuffer *buffer)
           printf("No current element for number '%s'\n", token.value.c_str());
           return false;
         }
-        currentElement->AddAttribute(Attribute(token.value, Attribute::AttributeType::Number));
+        currentElement->AddAttribute(CrimsonFileAttribute(token.value, CrimsonFileAttribute::AttributeType::Number));
         break;
       }
       if (!revoke)
@@ -707,7 +707,7 @@ Token GetNextToken(iBuffer *buffer)
   return Token(TokenType::Invalid);
 }
 
-void Debug(const Element *element, int indent)
+void Debug(const CrimsonFileElement *element, int indent)
 {
   for (int i = 0; i < indent; i++)
   {
@@ -720,7 +720,7 @@ void Debug(const Element *element, int indent)
   }
   for (size_t i = 0; i < element->GetNumberOfAttributes(); i++)
   {
-    const Attribute *attr = element->GetAttribute(i);
+    const CrimsonFileAttribute*attr = element->GetAttribute(i);
     if (attr->GetName().length() > 0)
     {
       printf("<%s:%s> ", attr->GetName().c_str(), attr->GetValue().c_str());
@@ -750,12 +750,12 @@ void Debug(const Element *element, int indent)
   }
 }
 
-void File::Debug() const
+void CrimsonFile::Debug() const
 {
-  ce::file::Debug(&m_root, 0);
+  ce::Debug(&m_root, 0);
 }
 
-std::string Print(const Element *element, bool format, int ind, const std::string &indent, bool &endWithCurly)
+std::string Print(const CrimsonFileElement *element, bool format, int ind, const std::string &indent, bool &endWithCurly)
 {
   endWithCurly = false;
   std::string line;
@@ -770,13 +770,13 @@ std::string Print(const Element *element, bool format, int ind, const std::strin
   line += element->GetTagName();
   for (size_t i = 0; i < element->GetNumberOfAttributes(); i++)
   {
-    const Attribute *attr = element->GetAttribute(i);
+    const CrimsonFileAttribute*attr = element->GetAttribute(i);
     line += " ";
     if (attr->GetName().length() > 0)
     {
       line += attr->GetName() + ":";
     }
-    if (attr->GetType() == Attribute::AttributeType::String)
+    if (attr->GetType() == CrimsonFileAttribute::AttributeType::String)
     {
       line += "\"" + attr->GetValue() + "\"";
     }
@@ -823,7 +823,7 @@ std::string Print(const Element *element, bool format, int ind, const std::strin
   return line;
 }
 
-std::string File::Print(bool format, int indent)
+std::string CrimsonFile::Print(bool format, int indent)
 {
   std::string indentStr;
   for (int    i = 0; i < indent; i++)
@@ -835,7 +835,7 @@ std::string File::Print(bool format, int indent)
   for (size_t i = 0, in = m_root.GetNumberOfChildren(); i < in; i++)
   {
     bool ewc = false;
-    print += ce::file::Print(m_root.GetChild(i), format, 0, indentStr, ewc);
+    print += ce::Print(m_root.GetChild(i), format, 0, indentStr, ewc);
     if (!ewc && i + 1 < in)
     {
       print += ",";

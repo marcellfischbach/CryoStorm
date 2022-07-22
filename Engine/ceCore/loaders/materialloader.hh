@@ -20,50 +20,50 @@ public:
   {
   }
 
-  bool CanLoad(const Class* cls, const file::File* file, const ResourceLocator* locator) const override;
+  bool CanLoad(const Class* cls, const CrimsonFile* file, const ResourceLocator* locator) const override;
 
-  iObject* Load(const Class* cls, const file::File* file, const ResourceLocator* locator) const override;
+  iObject* Load(const Class* cls, const CrimsonFile* file, const ResourceLocator* locator) const override;
 
 private:
-  static Material* LoadMaterial(const Class* cls, const file::File* file, const ResourceLocator* locator);
-  static iObject* LoadMaterialInstance(const Class* cls, const file::File* file, const ResourceLocator* locator);
+  static Material* LoadMaterial(const Class* cls, const CrimsonFile* file, const ResourceLocator* locator);
+  static iObject* LoadMaterialInstance(const Class* cls, const CrimsonFile* file, const ResourceLocator* locator);
 
-  static void LoadShading(Material* material, const file::Element* materialElement, const ResourceLocator* locator);
-  static void LoadQueue(Material* material, const file::Element* materialElement, const ResourceLocator* locator);
-  static void LoadBlending(Material* material, const file::Element* materialElement, const ResourceLocator* locator);
-  static void LoadDepth(Material* material, const file::Element* materialElement, const ResourceLocator* locator);
+  static void LoadShading(Material* material, const CrimsonFileElement* materialElement, const ResourceLocator* locator);
+  static void LoadQueue(Material* material, const CrimsonFileElement* materialElement, const ResourceLocator* locator);
+  static void LoadBlending(Material* material, const CrimsonFileElement* materialElement, const ResourceLocator* locator);
+  static void LoadDepth(Material* material, const CrimsonFileElement* materialElement, const ResourceLocator* locator);
 
-  static bool LoadShaders(Material* material, const file::Element* materialElement, const ResourceLocator* locator);
-  static bool LoadShader(Material* material, const file::Element* shaderElement, const ResourceLocator* locator);
-  static bool LoadAttributes(Material* material, const file::Element* materialElement, const ResourceLocator* locator);
-  static bool LoadAttribute(Material* material, const file::Element* attributeElement, const ResourceLocator* locator);
+  static bool LoadShaders(Material* material, const CrimsonFileElement* materialElement, const ResourceLocator* locator);
+  static bool LoadShader(Material* material, const CrimsonFileElement* shaderElement, const ResourceLocator* locator);
+  static bool LoadAttributes(Material* material, const CrimsonFileElement* materialElement, const ResourceLocator* locator);
+  static bool LoadAttribute(Material* material, const CrimsonFileElement* attributeElement, const ResourceLocator* locator);
 
   static bool LoadReferenceMaterial(MaterialInstance* materialInstance,
-                                    const file::Element* materialInstanceElement,
+                                    const CrimsonFileElement* materialInstanceElement,
                                     const ResourceLocator* locator);
   static bool LoadAttributes(MaterialInstance* materialInstance,
-                             const file::Element* materialInstanceElement,
+                             const CrimsonFileElement* materialInstanceElement,
                              const ResourceLocator* locator);
   static bool LoadAttribute(MaterialInstance* materialInstance,
-                            const file::Element* attributeElement,
+                            const CrimsonFileElement* attributeElement,
                             const ResourceLocator* locator);
 
-  static eMaterialAttributeType GetAttributeType(const file::Element* attributeElement);
+  static eMaterialAttributeType GetAttributeType(const CrimsonFileElement* attributeElement);
   static bool LoadAttributeDefault(iMaterial* material,
                                    size_t attributeIdx,
                                    eMaterialAttributeType attributeType,
-                                   const file::Element* attributeElement,
+                                   const CrimsonFileElement* attributeElement,
                                    const ResourceLocator* locator);
-  static bool LoadAttributeFloat(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement);
-  static bool LoadAttributeVec2(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement);
-  static bool LoadAttributeVec3(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement);
-  static bool LoadAttributeVec4(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement);
-  static bool LoadAttributeInt(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement);
-  static bool LoadAttributeMatrix3(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement);
-  static bool LoadAttributeMatrix4(iMaterial* material, size_t attributeIdx, const file::Element* attributeElement);
+  static bool LoadAttributeFloat(iMaterial* material, size_t attributeIdx, const CrimsonFileElement* attributeElement);
+  static bool LoadAttributeVec2(iMaterial* material, size_t attributeIdx, const CrimsonFileElement* attributeElement);
+  static bool LoadAttributeVec3(iMaterial* material, size_t attributeIdx, const CrimsonFileElement* attributeElement);
+  static bool LoadAttributeVec4(iMaterial* material, size_t attributeIdx, const CrimsonFileElement* attributeElement);
+  static bool LoadAttributeInt(iMaterial* material, size_t attributeIdx, const CrimsonFileElement* attributeElement);
+  static bool LoadAttributeMatrix3(iMaterial* material, size_t attributeIdx, const CrimsonFileElement* attributeElement);
+  static bool LoadAttributeMatrix4(iMaterial* material, size_t attributeIdx, const CrimsonFileElement* attributeElement);
   static bool LoadAttributeTexture(iMaterial* material,
                                    size_t attributeIdx,
-                                   const file::Element* attributeElement,
+                                   const CrimsonFileElement* attributeElement,
                                    const ResourceLocator* locator);
 };
 

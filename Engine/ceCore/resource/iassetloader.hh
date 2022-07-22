@@ -48,9 +48,9 @@ struct CE_CORE_API iAssetLoaderCEF : public iObject
     return DefaultPriority;
   }
 
-  virtual bool CanLoad(const Class* cls, const file::File* file, const ResourceLocator* locator) const = 0;
+  virtual bool CanLoad(const Class* cls, const CrimsonFile* file, const ResourceLocator* locator) const = 0;
 
-  virtual iObject* Load(const Class* cls, const file::File* file, const ResourceLocator* locator) const = 0;
+  virtual iObject* Load(const Class* cls, const CrimsonFile* file, const ResourceLocator* locator) const = 0;
 
 };
 

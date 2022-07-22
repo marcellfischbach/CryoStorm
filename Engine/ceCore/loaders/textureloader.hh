@@ -25,18 +25,18 @@ public:
   ~TextureLoaderCEF() override = default;
 
 
-  bool CanLoad(const Class * cls, const file::File * file, const ResourceLocator * locator) const override;
+  bool CanLoad(const Class * cls, const CrimsonFile * file, const ResourceLocator * locator) const override;
 
-  iObject* Load(const Class * cls, const file::File * file, const ResourceLocator * locator) const override;
+  iObject* Load(const Class * cls, const CrimsonFile * file, const ResourceLocator * locator) const override;
 
 private:
 
-  static iTexture2D *LoadTexture2D(const file::Element *textureElement, const ResourceLocator * locator);
-  static iTexture2DArray *LoadTexture2DArray(const file::Element *textureElement, const ResourceLocator * locator);
-  static iTextureCube *LoadTextureCube(const file::Element *textureElement, const ResourceLocator * locator);
+  static iTexture2D *LoadTexture2D(const CrimsonFileElement *textureElement, const ResourceLocator * locator);
+  static iTexture2DArray *LoadTexture2DArray(const CrimsonFileElement *textureElement, const ResourceLocator * locator);
+  static iTextureCube *LoadTextureCube(const CrimsonFileElement *textureElement, const ResourceLocator * locator);
 
-  static Image *LoadImage (const file::Element *imageElement, const ResourceLocator * locator);
-  static iSampler *LoadSampler(const file::Element *samplerElement, const ResourceLocator * locator);
+  static Image *LoadImage (const CrimsonFileElement *imageElement, const ResourceLocator * locator);
+  static iSampler *LoadSampler(const CrimsonFileElement *samplerElement, const ResourceLocator * locator);
 
   static ePixelFormat GetPixelFormatFrom(const Image *image);
 };
@@ -52,16 +52,16 @@ public:
 
   bool CanLoad(const Class * cls,  const ResourceLocator & locator) const override;
 
-  iObject* Load( const file::File * file, const Class * cls, const ResourceLocator & locator) const override;
+  iObject* Load(const CrimsonFile * file, const Class * cls, const ResourceLocator & locator) const override;
 
 private:
 
-  static iTexture2D *LoadTexture2D(const file::Element *textureElement, const ResourceLocator & locator);
-  static iTexture2DArray *LoadTexture2DArray(const file::Element *textureElement, const ResourceLocator & locator);
-  static iTextureCube *LoadTextureCube(const file::Element *textureElement, const ResourceLocator & locator);
+  static iTexture2D *LoadTexture2D(const CrimsonFileElement *textureElement, const ResourceLocator & locator);
+  static iTexture2DArray *LoadTexture2DArray(const CrimsonFileElement *textureElement, const ResourceLocator & locator);
+  static iTextureCube *LoadTextureCube(const CrimsonFileElement *textureElement, const ResourceLocator & locator);
 
-  static Image *LoadImage (const file::Element *imageElement, const ResourceLocator & locator);
-  static iSampler *LoadSampler(const file::Element *samplerElement, const ResourceLocator & locator);
+  static Image *LoadImage (const CrimsonFileElement *imageElement, const ResourceLocator & locator);
+  static iSampler *LoadSampler(const CrimsonFileElement *samplerElement, const ResourceLocator & locator);
 
   static ePixelFormat GetPixelFormatFrom(const Image *image);
 };

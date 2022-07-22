@@ -20,23 +20,23 @@ GL4ProgramLoader::GL4ProgramLoader()
   CE_CLASS_GEN_CONSTR;
 }
 
-bool GL4ProgramLoader::CanLoad(const Class* cls, const file::File* file, const ResourceLocator* locator) const
+bool GL4ProgramLoader::CanLoad(const Class* cls, const CrimsonFile* file, const ResourceLocator* locator) const
 {
   return GL4Program::GetStaticClass()->IsInstanceOf(cls)
          && file->Root()->HasChild("program");
 
 }
 
-iObject* GL4ProgramLoader::Load(const Class* cls, const file::File* file, const ResourceLocator* locator) const
+iObject* GL4ProgramLoader::Load(const Class* cls, const CrimsonFile* file, const ResourceLocator* locator) const
 {
 
-  const file::Element* programElement = file->Root()->GetChild("program");
+  const CrimsonFileElement* programElement = file->Root()->GetChild("program");
   if (!programElement)
   {
     return nullptr;
   }
 
-  const file::Element* shadersElement = programElement->GetChild("shaders");
+  const CrimsonFileElement* shadersElement = programElement->GetChild("shaders");
   if (!shadersElement)
   {
     return nullptr;
@@ -45,7 +45,7 @@ iObject* GL4ProgramLoader::Load(const Class* cls, const file::File* file, const 
   GL4Program* program = new GL4Program();
   for (Size i=0, in=shadersElement->GetNumberOfChildren(); i<in; i++)
   {
-    const file::Element* shaderElement = shadersElement->GetChild(i);
+    const CrimsonFileElement* shaderElement = shadersElement->GetChild(i);
     if (shaderElement && shaderElement->GetTagName() == "shader")
     {
       GL4Shader *shader = locator 
@@ -65,12 +65,12 @@ iObject* GL4ProgramLoader::Load(const Class* cls, const file::File* file, const 
     return nullptr;
   }
 
-  const file::Element* attributesElement = programElement->GetChild("attributes");
+  const CrimsonFileElement* attributesElement = programElement->GetChild("attributes");
   if (attributesElement)
   {
     for (Size i=0, in=attributesElement->GetNumberOfChildren(); i<in; i++)
     {
-      const file::Element* attributeElement = attributesElement->GetChild(i);
+      const CrimsonFileElement* attributeElement = attributesElement->GetChild(i);
       if (attributeElement && attributeElement->GetTagName() == std::string ("attribute") && attributeElement->GetNumberOfAttributes () >= 1)
       {
         program->RegisterAttribute(attributeElement->GetAttribute(0)->GetValue());

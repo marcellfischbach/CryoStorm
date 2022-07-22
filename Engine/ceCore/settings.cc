@@ -24,7 +24,7 @@ void Settings::Initialize(const ResourceLocator& locator)
   iFile* file = VFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (file)
   {
-    m_file = new file::File();
+    m_file = new CrimsonFile();
     if (!m_file->Parse(file))
     {
       delete m_file;
@@ -47,7 +47,7 @@ bool Settings::IsValid() const
 
 std::string Settings::GetText(const std::string& path, const std::string& defaultValue) const
 {
-  file::Element* element = GetElement(path);
+  CrimsonFileElement* element = GetElement(path);
   if (element)
   {
     return element->GetAttribute(0, "");
@@ -57,7 +57,7 @@ std::string Settings::GetText(const std::string& path, const std::string& defaul
 
 float Settings::GetFloat(const std::string& path, float defaultValue) const
 {
-  file::Element* element = GetElement(path);
+  CrimsonFileElement* element = GetElement(path);
   if (element)
   {
     return (float) atof(element->GetAttribute(0, "").c_str());
@@ -67,7 +67,7 @@ float Settings::GetFloat(const std::string& path, float defaultValue) const
 
 int Settings::GetInt(const std::string& path, int defaultValue) const
 {
-  file::Element* element = GetElement(path);
+  CrimsonFileElement* element = GetElement(path);
   if (element)
   {
     return atoi(element->GetAttribute(0, "").c_str());
@@ -87,7 +87,7 @@ bool Settings::GetBool(const std::string& path, bool defaultValue) const
 
 Vector2f Settings::GetVector2f(const std::string& path, const Vector2f& defaultValue) const
 {
-  file::Element* element = GetElement(path);
+  CrimsonFileElement* element = GetElement(path);
   if (element && element->GetNumberOfAttributes() >= 2)
   {
     return Vector2f(
@@ -100,7 +100,7 @@ Vector2f Settings::GetVector2f(const std::string& path, const Vector2f& defaultV
 
 Vector3f Settings::GetVector3f(const std::string& path, const Vector3f& defaultValue) const
 {
-  file::Element* element = GetElement(path);
+  CrimsonFileElement* element = GetElement(path);
   if (element)
   {
     if (element->GetNumberOfAttributes() >= 3)
@@ -134,7 +134,7 @@ Vector3f Settings::GetVector3f(const std::string& path, const Vector3f& defaultV
 
 Vector4f Settings::GetVector4f(const std::string& path, const Vector4f& defaultValue) const
 {
-  file::Element* element = GetElement(path);
+  CrimsonFileElement* element = GetElement(path);
   if (element && element->GetNumberOfAttributes() >= 4)
   {
     return Vector4f(
@@ -150,7 +150,7 @@ Vector4f Settings::GetVector4f(const std::string& path, const Vector4f& defaultV
 
 Vector2i Settings::GetVector2i(const std::string& path, const Vector2i& defaultValue) const
 {
-  file::Element* element = GetElement(path);
+  CrimsonFileElement* element = GetElement(path);
   if (element && element->GetNumberOfAttributes() >= 2)
   {
     return Vector2i(
@@ -160,7 +160,7 @@ Vector2i Settings::GetVector2i(const std::string& path, const Vector2i& defaultV
   }
   return defaultValue;
 }
-file::Element* Settings::GetElement(const std::string& path) const
+CrimsonFileElement* Settings::GetElement(const std::string& path) const
 {
   return m_file ? m_file->Root()->GetChild(path) : nullptr;
 }

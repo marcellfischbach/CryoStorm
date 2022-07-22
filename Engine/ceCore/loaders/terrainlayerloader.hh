@@ -22,7 +22,7 @@ public:
   bool CanLoad(const Class* cls, const ResourceLocator& locator) const override;
 
 protected:
-  iObject* Load(const file::File* file, const Class* cls, const ResourceLocator& locator) const override;
+  iObject* Load(const CrimsonFile* file, const Class* cls, const ResourceLocator& locator) const override;
 
 };
 
@@ -41,7 +41,7 @@ public:
   bool CanLoad(const Class* cls, const ResourceLocator& locator) const override;
 
 protected:
-  iObject* Load(const file::File* file, const Class* cls, const ResourceLocator& locator) const override;
+  iObject* Load(const CrimsonFile* file, const Class* cls, const ResourceLocator& locator) const override;
 
 };
 

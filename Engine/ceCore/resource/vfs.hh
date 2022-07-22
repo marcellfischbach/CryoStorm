@@ -12,10 +12,6 @@
 namespace ce
 {
 
-namespace file
-{
-class File;
-}
 
 class ResourceLocator;
 class CE_CORE_API VFS

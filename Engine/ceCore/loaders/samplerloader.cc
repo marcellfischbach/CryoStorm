@@ -10,7 +10,7 @@ namespace ce
 {
 
 
-bool SamplerLoaderCEF::CanLoad(const Class* cls, const file::File* file, const ResourceLocator* locator) const
+bool SamplerLoaderCEF::CanLoad(const Class* cls, const CrimsonFile* file, const ResourceLocator* locator) const
 {
   return cls == iSampler::GetStaticClass() && file && file->Root()->HasChild("sampler");
 }
@@ -86,9 +86,9 @@ eCompareFunc CompareFunc(const std::string& compareFunc)
 }
 
 
-iObject* SamplerLoaderCEF::Load(const Class* cls, const file::File* file, const ResourceLocator* locator) const
+iObject* SamplerLoaderCEF::Load(const Class* cls, const CrimsonFile* file, const ResourceLocator* locator) const
 {
-  const file::Element* samplerElement = file->Root()->GetChild("sampler");
+  const CrimsonFileElement* samplerElement = file->Root()->GetChild("sampler");
   if (!samplerElement)
   {
     return nullptr;

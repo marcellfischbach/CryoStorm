@@ -2499,7 +2499,7 @@ void XMLDocument::PushDepth()
 {
 	_parsingDepth++;
 	if (_parsingDepth == TINYXML2_MAX_ELEMENT_DEPTH) {
-		SetError(XML_ELEMENT_DEPTH_EXCEEDED, _parseCurLineNum, "Element nesting is too deep." );
+		SetError(XML_ELEMENT_DEPTH_EXCEEDED, _parseCurLineNum, "CrimsonFileElement nesting is too deep." );
 	}
 }
 

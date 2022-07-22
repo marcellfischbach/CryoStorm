@@ -21,34 +21,34 @@ void VFSConfigReader::Read()
   ReadConfig(config);
 }
 
-void VFSConfigReader::ReadConfig(const file::File* file)
+void VFSConfigReader::ReadConfig(const CrimsonFile* file)
 {
   CE_NOT_NULL(file);
 
-  const file::Element* vfsElement = file->Root()->GetChild("vfs");
+  const CrimsonFileElement* vfsElement = file->Root()->GetChild("vfs");
   ReadVFS(vfsElement);
 }
 
-void VFSConfigReader::ReadVFS(const file::Element* vfsElement)
+void VFSConfigReader::ReadVFS(const CrimsonFileElement* vfsElement)
 {
   CE_NOT_NULL(vfsElement);
 
-  const file::Element* aliasesElement = vfsElement->GetChild("aliases");
+  const CrimsonFileElement* aliasesElement = vfsElement->GetChild("aliases");
   ReadAliases(aliasesElement);
 }
 
-void VFSConfigReader::ReadAliases(const file::Element* aliasesElement)
+void VFSConfigReader::ReadAliases(const CrimsonFileElement* aliasesElement)
 {
   CE_NOT_NULL(aliasesElement);
 
   for (size_t i=0, in=aliasesElement->GetNumberOfChildren(); i<in; i++)
   {
-    const file::Element* child = aliasesElement->GetChild(i);
+    const CrimsonFileElement* child = aliasesElement->GetChild(i);
     ReadAlias(child);
   }
 }
 
-void VFSConfigReader::ReadAlias(const file::Element* aliasElement)
+void VFSConfigReader::ReadAlias(const CrimsonFileElement* aliasElement)
 {
   CE_NOT_NULL(aliasElement);
 
@@ -60,7 +60,7 @@ void VFSConfigReader::ReadAlias(const file::Element* aliasElement)
   }
 }
 
-file::File* VFSConfigReader::OpenConfigFile()
+CrimsonFile* VFSConfigReader::OpenConfigFile()
 {
   AutoDelete fsFile = VFS::Get()->Open(ResourceLocator("/vfs.config"), eAM_Read, eOM_Text);
   if (!fsFile)
@@ -68,7 +68,7 @@ file::File* VFSConfigReader::OpenConfigFile()
     return nullptr;
   }
 
-  file::File* file = new file::File();
+  CrimsonFile* file = new CrimsonFile();
   if (!file->Parse(fsFile))
   {
     delete file;

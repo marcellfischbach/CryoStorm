@@ -16,7 +16,7 @@ namespace ce
 {
 
 
-bool TextureLoaderCEF::CanLoad(const Class *cls, const file::File *file, const ResourceLocator *locator) const
+bool TextureLoaderCEF::CanLoad(const Class *cls, const CrimsonFile *file, const ResourceLocator *locator) const
 {
   if (file->Root()->GetNumberOfChildren() == 0)
   {
@@ -34,7 +34,7 @@ bool TextureLoaderCEF::CanLoad(const Class *cls, const file::File *file, const R
       );
 }
 
-iObject *TextureLoaderCEF::Load(const Class *cls, const file::File *file, const ResourceLocator *locator) const
+iObject *TextureLoaderCEF::Load(const Class *cls, const CrimsonFile *file, const ResourceLocator *locator) const
 {
   auto textureElement = file->Root()->GetChild(0);
   auto tag = textureElement->GetTagName();
@@ -54,7 +54,7 @@ iObject *TextureLoaderCEF::Load(const Class *cls, const file::File *file, const 
   return nullptr;
 }
 
-iTexture2D *TextureLoaderCEF::LoadTexture2D(const file::Element *textureElement, const ResourceLocator * locator)
+iTexture2D *TextureLoaderCEF::LoadTexture2D(const CrimsonFileElement *textureElement, const ResourceLocator * locator)
 {
 
   auto image = LoadImage (textureElement->GetChild("image"), locator);
@@ -88,18 +88,18 @@ iTexture2D *TextureLoaderCEF::LoadTexture2D(const file::Element *textureElement,
   return texture;
 }
 
-iTexture2DArray *TextureLoaderCEF::LoadTexture2DArray(const file::Element *textureElement, const ResourceLocator * locator)
+iTexture2DArray *TextureLoaderCEF::LoadTexture2DArray(const CrimsonFileElement *textureElement, const ResourceLocator * locator)
 {
   return nullptr;
 }
 
-iTextureCube *TextureLoaderCEF::LoadTextureCube(const file::Element *textureElement, const ResourceLocator * locator)
+iTextureCube *TextureLoaderCEF::LoadTextureCube(const CrimsonFileElement *textureElement, const ResourceLocator * locator)
 {
   return nullptr;
 }
 
 
-Image* TextureLoaderCEF::LoadImage(const file::Element *imageElement, const ResourceLocator * locator)
+Image* TextureLoaderCEF::LoadImage(const CrimsonFileElement *imageElement, const ResourceLocator * locator)
 {
   if (!imageElement || imageElement->GetNumberOfAttributes() != 1)
   {
@@ -111,7 +111,7 @@ Image* TextureLoaderCEF::LoadImage(const file::Element *imageElement, const Reso
   return AssetManager::Get()->Get<Image>(ResourceLocator(locator, imageName));
 }
 
-iSampler *TextureLoaderCEF::LoadSampler(const file::Element *samplerElement, const ResourceLocator * locator)
+iSampler *TextureLoaderCEF::LoadSampler(const CrimsonFileElement *samplerElement, const ResourceLocator * locator)
 {
   if (!samplerElement || samplerElement->GetNumberOfAttributes() != 1)
   {
@@ -182,7 +182,7 @@ bool TextureLoader::CanLoad(const Class *cls, const ResourceLocator &locator) co
       );
 }
 
-iObject *TextureLoader::Load( const file::File * file, const Class *cls, const ResourceLocator &locator) const
+iObject *TextureLoader::Load(const CrimsonFile * file, const Class *cls, const ResourceLocator &locator) const
 {
   auto textureElement = file->Root()->GetChild(0);
   auto tag = textureElement->GetTagName();
@@ -202,7 +202,7 @@ iObject *TextureLoader::Load( const file::File * file, const Class *cls, const R
   return nullptr;
 }
 
-iTexture2D *TextureLoader::LoadTexture2D(const file::Element *textureElement, const ResourceLocator & locator)
+iTexture2D *TextureLoader::LoadTexture2D(const CrimsonFileElement *textureElement, const ResourceLocator & locator)
 {
 
   auto image = LoadImage (textureElement->GetChild("image"), locator);
@@ -236,18 +236,18 @@ iTexture2D *TextureLoader::LoadTexture2D(const file::Element *textureElement, co
   return texture;
 }
 
-iTexture2DArray *TextureLoader::LoadTexture2DArray(const file::Element *textureElement, const ResourceLocator & locator)
+iTexture2DArray *TextureLoader::LoadTexture2DArray(const CrimsonFileElement *textureElement, const ResourceLocator & locator)
 {
   return nullptr;
 }
 
-iTextureCube *TextureLoader::LoadTextureCube(const file::Element *textureElement, const ResourceLocator & locator)
+iTextureCube *TextureLoader::LoadTextureCube(const CrimsonFileElement *textureElement, const ResourceLocator & locator)
 {
   return nullptr;
 }
 
 
-Image* TextureLoader::LoadImage(const file::Element *imageElement, const ResourceLocator & locator)
+Image* TextureLoader::LoadImage(const CrimsonFileElement *imageElement, const ResourceLocator & locator)
 {
   if (!imageElement || imageElement->GetNumberOfAttributes() != 1)
   {
@@ -259,7 +259,7 @@ Image* TextureLoader::LoadImage(const file::Element *imageElement, const Resourc
   return AssetManager::Get()->Get<Image>(ResourceLocator(locator, imageName));
 }
 
-iSampler *TextureLoader::LoadSampler(const file::Element *samplerElement, const ResourceLocator & locator)
+iSampler *TextureLoader::LoadSampler(const CrimsonFileElement *samplerElement, const ResourceLocator & locator)
 {
   if (!samplerElement || samplerElement->GetNumberOfAttributes() != 1)
   {

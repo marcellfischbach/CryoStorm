@@ -7,12 +7,8 @@
 
 namespace ce
 {
-
-namespace file
-{
-class File;
-class Element;
-}
+class CrimsonFile;
+class CrimsonFileElement;
 
 class VFSConfigReader
 {
@@ -23,11 +19,11 @@ public:
   static void Read ();
 
 private:
-  static void ReadConfig (const file::File *file);
-  static void ReadVFS(const file::Element *vfsElement);
-  static void ReadAliases(const file::Element *aliasesElement);
-  static void ReadAlias(const file::Element *aliasElement);
-  static file::File *OpenConfigFile() ;
+  static void ReadConfig (const CrimsonFile *file);
+  static void ReadVFS(const CrimsonFileElement *vfsElement);
+  static void ReadAliases(const CrimsonFileElement *aliasesElement);
+  static void ReadAlias(const CrimsonFileElement *aliasElement);
+  static CrimsonFile *OpenConfigFile() ;
 };
 
 } // ce

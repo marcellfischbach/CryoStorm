@@ -11,11 +11,8 @@
 namespace ce
 {
 
-namespace file
-{
-class File;
-class Element;
-}
+class CrimsonFile;
+class CrimsonFileElement;
 
 class CE_CORE_API Settings
 {
@@ -38,9 +35,9 @@ public:
 
 private:
   void Initialize(const ResourceLocator &locator);
-  CE_NODISCARD file::Element* GetElement(const std::string &path) const;
+  CE_NODISCARD CrimsonFileElement* GetElement(const std::string &path) const;
 
-  file::File* m_file;
+  CrimsonFile* m_file;
 };
 
 

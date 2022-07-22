@@ -21,7 +21,7 @@ class CE_CORE_API BaseCEFAssetLoader : public CE_SUPER(iAssetLoader)
 protected:
   BaseCEFAssetLoader() = default;
 
-  virtual iObject* Load(const file::File *file, const Class* cls, const ResourceLocator& locator) const = 0;
+  virtual iObject* Load(const CrimsonFile *file, const Class* cls, const ResourceLocator& locator) const = 0;
 
 public:
   ~BaseCEFAssetLoader() override = default;
@@ -29,7 +29,7 @@ public:
   CE_NODISCARD iObject* Load(const Class* cls, const ResourceLocator& locator) const override;
 
 private:
-  CE_NODISCARD static bool Open (const ResourceLocator &locator, file::File &file);
+  CE_NODISCARD static bool Open (const ResourceLocator &locator, CrimsonFile &file);
 
 
 };

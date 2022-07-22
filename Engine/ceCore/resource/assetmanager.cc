@@ -101,7 +101,7 @@ iObject* AssetManager::LoadCEF(const Class* cls, const ResourceLocator& locator)
   iFile* fd = ce::VFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   AutoRelease arFD(fd);
 
-  file::File file;
+  CrimsonFile file;
   if (!file.Parse(fd))
   {
     return nullptr;
