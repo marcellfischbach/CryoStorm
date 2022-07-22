@@ -1,5 +1,5 @@
 materialinstance {
-    material "/materials/test_material.mat",
+    material "/materials/test.mat",
     attributes {
 
     }

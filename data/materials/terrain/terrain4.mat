@@ -1,9 +1,9 @@
 material {
     shaders {
         shader Forward "/${shaders}/terrain/terrain4.shader",
-        shader ShadowCube "/${shaders}/test_shadow_point_program.shader",
-        shader ShadowPSSM "/${shaders}/test_shadow_pssm_program.shader",
-        shader Shadow "/${shaders}/test_shadow_program.shader"
+        shader ShadowCube "/${shaders}/test_shadow_point.shader",
+        shader ShadowPSSM "/${shaders}/test_shadow_pssm.shader",
+        shader Shadow "/${shaders}/test_shadow.shader"
     },
     attributes {
         attribute Texture "Layer",

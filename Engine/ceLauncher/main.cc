@@ -571,22 +571,19 @@ int main(int argc, char** argv)
 
   ce::AssetManager    * assetMan          = ce::AssetManager::Get();
   ce::Material        * transMaterial     = assetMan->Get<ce::Material>(ce::ResourceLocator(
-    "/materials/test_trans_material.mat"
+    "/materials/test_trans.mat"
   ));
   ce::MaterialInstance* transRedMaterial  = assetMan->Get<ce::MaterialInstance>(ce::ResourceLocator(
-    "/materials/red_transparent_material_instance.matinstance"
+    "/materials/red_transparent.matinstance"
   ));
   ce::MaterialInstance* transBlueMaterial = assetMan->Get<ce::MaterialInstance>(ce::ResourceLocator(
-    "/materials/blue_transparent_material_instance.matinstance"
+    "/materials/blue_transparent.matinstance"
   ));
 
   ce::MaterialInstance* materialInstance = assetMan->Get<ce::MaterialInstance>(ce::ResourceLocator(
-    "/materials/test_material_instance.matinstance"
+    "/materials/test.matinstance"
   ));
 
-  ce::MaterialInstance* materialInstance2 = assetMan->Get<ce::MaterialInstance>(ce::ResourceLocator(
-    "/materials/test_material2_instance.matinstance"
-  ));
 
   ce::TerrainLayer* greenGrassLayer = assetMan->Get<ce::TerrainLayer>(ce::ResourceLocator("/terrain/green_grass.terrainlayer"));
   ce::TerrainLayer* dirtLayer = assetMan->Get<ce::TerrainLayer>(ce::ResourceLocator("/terrain/dirt.terrainlayer"));
@@ -595,7 +592,7 @@ int main(int argc, char** argv)
 
 
 //  ce::Material *materialMirror = ce::AssetManager::Get()->Get<ce::Material>(ce::ResourceLocator(
-//      "/materials/test_material_mirror.mat"
+//      "/materials/test_mirror.mat"
 //  ));
 
 //  ce::iRenderMesh *renderMesh = create_plane_mesh(40.0f, 8, 8);
@@ -639,7 +636,6 @@ int main(int argc, char** argv)
     terrainState->AddLayer(greenGrassLayer);
     terrainState->AddLayer(dirtLayer);
     terrainState->AddLayer(fieldstoneLayer);
-//    terrainState->SetMaterial(materialInstance2);
     terrainState->GetTransform()
                 .SetTranslation(ce::Vector3f(0, 0, 0))
                 .Finish();
@@ -686,10 +682,6 @@ int main(int argc, char** argv)
   meshStateSphere->SetMesh(meshSphere);
   entitySphere->Attach(meshStateSphere);
 
-
-  // materialInstance2->GetMaterial()->SetFillMode(ce::eFillMode::Wireframe);
-  //create_suzannes_plain(suzanneMesh, world, materialInstance2);
-//  create_suzannes_batched(suzanneMesh, world);
 
   ce::Entity    * lightEntity = new ce::Entity("Light_0");
   ce::LightState* lightState  = new ce::LightState("LightState");
