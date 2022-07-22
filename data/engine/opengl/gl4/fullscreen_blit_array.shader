@@ -1,7 +1,7 @@
 program {
   shaders {
-    shader "fullscreen_blit_array_vert.cef",
-    shader "fullscreen_blit_array_frag.cef",
+    shader "fullscreen_blit_array.vert",
+    shader "fullscreen_blit_array.frag",
   }
   attributes {
     attribute "Diffuse",

@@ -9,10 +9,10 @@
 namespace ce
 {
 
-
-bool SamplerLoaderCEF::CanLoad(const Class* cls, const CrimsonFile* file, const ResourceLocator* locator) const
+SamplerLoader::SamplerLoader()
+: BaseCEFAssetLoader()
 {
-  return cls == iSampler::GetStaticClass() && file && file->Root()->HasChild("sampler");
+  AddValidFile(iSampler::GetStaticClass(), "SAMPLER");
 }
 
 
@@ -85,8 +85,7 @@ eCompareFunc CompareFunc(const std::string& compareFunc)
   return eCF_Always;
 }
 
-
-iObject* SamplerLoaderCEF::Load(const Class* cls, const CrimsonFile* file, const ResourceLocator* locator) const
+iObject* SamplerLoader::Load(const CrimsonFile *file, const Class* cls, const ResourceLocator& locator) const
 {
   const CrimsonFileElement* samplerElement = file->Root()->GetChild("sampler");
   if (!samplerElement)
@@ -120,7 +119,7 @@ iObject* SamplerLoaderCEF::Load(const Class* cls, const CrimsonFile* file, const
     sampler->SetTextureCompareFunc(compareFunc);
 
     printf ("Sampler %s [%p] %s %d %d\n",
-            locator->Encoded().c_str(),
+            locator.Encoded().c_str(),
             sampler, samplerElement->GetAttribute("filter", "").c_str(), minLOD, maxLOD);
 
   }

@@ -11,38 +11,27 @@ namespace ce
 #define IF(prefix, name, text) if (std::string(#name) == (text)) return prefix##name
 #define IF_CLASS(prefix, name, text) if (std::string(#name) == (text)) return prefix::name
 
-bool MaterialLoaderCEF::CanLoad(const Class* cls, const CrimsonFile* file, const ResourceLocator* locator) const
+MaterialLoader::MaterialLoader()
+: BaseCEFAssetLoader()
 {
-  if (file->Root()->GetNumberOfChildren() == 0)
-  {
-    return false;
-  }
-  std::string root = file->Root()->GetChild(0)->GetTagName();
-  return
-    cls->IsAssignableFrom<Material>() && root == std::string("material")
-      || cls->IsAssignableFrom<MaterialInstance>() && root == std::string("materialinstance")
-      || cls->IsAssignableFrom<iMaterial>() && (
-        root == std::string("material")
-          || root == std::string("materialinstance")
-      );
-
+  AddValidFile(Material::GetStaticClass(), "MAT");
+  AddValidFile(MaterialInstance::GetStaticClass(), "MATINSTANCE");
 }
 
-iObject* MaterialLoaderCEF::Load(const Class* cls, const CrimsonFile* file, const ResourceLocator* locator) const
+iObject* MaterialLoader::Load(const CrimsonFile* file, const Class* cls, const ResourceLocator& locator) const
 {
-  if ((cls->IsAssignableFrom<Material>() || cls->IsAssignableFrom<iMaterial>()) && file->Root()->HasChild("material"))
+  if (cls->IsAssignableFrom<Material>() && file->Root()->HasChild("material"))
   {
     return LoadMaterial(cls, file, locator);
   }
-  else if ((cls->IsAssignableFrom<MaterialInstance>() || cls->IsAssignableFrom<iMaterial>())
-    && file->Root()->HasChild("materialinstance"))
+  else if (cls->IsAssignableFrom<MaterialInstance>() && file->Root()->HasChild("materialinstance"))
   {
     return LoadMaterialInstance(cls, file, locator);
   }
   return nullptr;
 }
 
-Material* MaterialLoaderCEF::LoadMaterial(const Class*, const CrimsonFile* file, const ResourceLocator* locator)
+Material* MaterialLoader::LoadMaterial(const Class*, const CrimsonFile* file, const ResourceLocator& locator)
 {
   const CrimsonFileElement* root            = file->Root();
   const CrimsonFileElement* materialElement = root->GetChild("material");
@@ -74,7 +63,7 @@ Material* MaterialLoaderCEF::LoadMaterial(const Class*, const CrimsonFile* file,
   return material;
 }
 
-iObject* MaterialLoaderCEF::LoadMaterialInstance(const Class*, const CrimsonFile* file, const ResourceLocator* locator)
+iObject* MaterialLoader::LoadMaterialInstance(const Class*, const CrimsonFile* file, const ResourceLocator& locator)
 {
 
   const CrimsonFileElement* root            = file->Root();
@@ -101,9 +90,9 @@ iObject* MaterialLoaderCEF::LoadMaterialInstance(const Class*, const CrimsonFile
 
   return materialInstance;
 }
-void MaterialLoaderCEF::LoadShading(Material* material,
-                                    const CrimsonFileElement* materialElement,
-                                    const ResourceLocator* locator)
+void MaterialLoader::LoadShading(Material* material,
+                                 const CrimsonFileElement* materialElement,
+                                 const ResourceLocator& locator)
 {
   const CrimsonFileElement* shadingElement = materialElement->GetChild("shading");
   if (!shadingElement)
@@ -121,9 +110,9 @@ void MaterialLoaderCEF::LoadShading(Material* material,
   material->SetShadingMode(shading);
 }
 
-void MaterialLoaderCEF::LoadQueue(Material* material,
-                                  const CrimsonFileElement* materialElement,
-                                  const ResourceLocator* locator)
+void MaterialLoader::LoadQueue(Material* material,
+                               const CrimsonFileElement* materialElement,
+                               const ResourceLocator& locator)
 {
   const CrimsonFileElement* queueElement = materialElement->GetChild("queue");
   if (!queueElement)
@@ -161,9 +150,9 @@ eBlendFactor BlendFactor(const std::string& blendFactor, eBlendFactor defaultFac
   return defaultFactor;
 }
 
-void MaterialLoaderCEF::LoadBlending(Material* material,
-                                     const CrimsonFileElement* materialElement,
-                                     const ResourceLocator* locator)
+void MaterialLoader::LoadBlending(Material* material,
+                                  const CrimsonFileElement* materialElement,
+                                  const ResourceLocator& locator)
 {
   auto         blendElement = materialElement->GetChild("blend");
   bool         blending     = false;
@@ -196,9 +185,9 @@ void MaterialLoaderCEF::LoadBlending(Material* material,
   material->SetBlendFactor(srcColor, srcAlpha, dstColor, dstAlpha);
 }
 
-void MaterialLoaderCEF::LoadDepth(Material* material,
-                                  const CrimsonFileElement* materialElement,
-                                  const ResourceLocator* locator)
+void MaterialLoader::LoadDepth(Material* material,
+                               const CrimsonFileElement* materialElement,
+                               const ResourceLocator& locator)
 {
   auto* depthElement = materialElement->GetChild("depth");
   if (!depthElement)
@@ -223,9 +212,9 @@ void MaterialLoaderCEF::LoadDepth(Material* material,
   material->SetDepthWrite(depthWrite);
 }
 
-bool MaterialLoaderCEF::LoadShaders(Material* material,
-                                    const CrimsonFileElement* materialElement,
-                                    const ResourceLocator* locator)
+bool MaterialLoader::LoadShaders(Material* material,
+                                 const CrimsonFileElement* materialElement,
+                                 const ResourceLocator& locator)
 {
   const CrimsonFileElement* shadersElement = materialElement->GetChild("shaders");
   if (!shadersElement)
@@ -262,9 +251,9 @@ eRenderPass RenderPass(const std::string& renderPass)
   return eRP_COUNT;
 }
 
-bool MaterialLoaderCEF::LoadShader(Material* material,
-                                   const CrimsonFileElement* shaderElement,
-                                   const ResourceLocator* locator)
+bool MaterialLoader::LoadShader(Material* material,
+                                const CrimsonFileElement* shaderElement,
+                                const ResourceLocator& locator)
 {
   if (shaderElement->GetNumberOfAttributes() != 2)
   {
@@ -298,9 +287,9 @@ bool MaterialLoaderCEF::LoadShader(Material* material,
   return true;
 }
 
-bool MaterialLoaderCEF::LoadAttributes(Material* material,
-                                       const CrimsonFileElement* materialElement,
-                                       const ResourceLocator* locator)
+bool MaterialLoader::LoadAttributes(Material* material,
+                                    const CrimsonFileElement* materialElement,
+                                    const ResourceLocator& locator)
 {
   const CrimsonFileElement* attributesElement = materialElement->GetChild("attributes");
   if (!attributesElement)
@@ -322,9 +311,9 @@ bool MaterialLoaderCEF::LoadAttributes(Material* material,
   return true;
 }
 
-bool MaterialLoaderCEF::LoadAttribute(Material* material,
-                                      const CrimsonFileElement* attributeElement,
-                                      const ResourceLocator* locator)
+bool MaterialLoader::LoadAttribute(Material* material,
+                                   const CrimsonFileElement* attributeElement,
+                                   const ResourceLocator& locator)
 {
   if (attributeElement->GetNumberOfAttributes() < 2)
   {
@@ -356,9 +345,9 @@ bool MaterialLoaderCEF::LoadAttribute(Material* material,
   return true;
 }
 
-bool MaterialLoaderCEF::LoadReferenceMaterial(MaterialInstance* materialInstance,
-                                              const CrimsonFileElement* materialInstanceElement,
-                                              const ResourceLocator* locator)
+bool MaterialLoader::LoadReferenceMaterial(MaterialInstance* materialInstance,
+                                           const CrimsonFileElement* materialInstanceElement,
+                                           const ResourceLocator& locator)
 {
   const CrimsonFileElement* materialElement = materialInstanceElement->GetChild("material");
   if (!materialElement)
@@ -382,9 +371,9 @@ bool MaterialLoaderCEF::LoadReferenceMaterial(MaterialInstance* materialInstance
   return true;
 }
 
-bool MaterialLoaderCEF::LoadAttributes(MaterialInstance* materialInstance,
-                                       const CrimsonFileElement* materialInstanceElement,
-                                       const ResourceLocator* locator)
+bool MaterialLoader::LoadAttributes(MaterialInstance* materialInstance,
+                                    const CrimsonFileElement* materialInstanceElement,
+                                    const ResourceLocator& locator)
 {
   const CrimsonFileElement* attributesElement = materialInstanceElement->GetChild("attributes");
   if (!attributesElement)
@@ -406,9 +395,9 @@ bool MaterialLoaderCEF::LoadAttributes(MaterialInstance* materialInstance,
   return true;
 }
 
-bool MaterialLoaderCEF::LoadAttribute(MaterialInstance* materialInstance,
-                                      const CrimsonFileElement* attributeElement,
-                                      const ResourceLocator* locator)
+bool MaterialLoader::LoadAttribute(MaterialInstance* materialInstance,
+                                   const CrimsonFileElement* attributeElement,
+                                   const ResourceLocator& locator)
 {
   if (attributeElement->GetNumberOfAttributes() < 2)
   {
@@ -443,7 +432,7 @@ bool MaterialLoaderCEF::LoadAttribute(MaterialInstance* materialInstance,
   return true;
 }
 
-eMaterialAttributeType MaterialLoaderCEF::GetAttributeType(const CrimsonFileElement* attributeElement)
+eMaterialAttributeType MaterialLoader::GetAttributeType(const CrimsonFileElement* attributeElement)
 {
   std::string type = attributeElement->GetAttribute(0, "");
   if (type == "Float")
@@ -485,11 +474,11 @@ eMaterialAttributeType MaterialLoaderCEF::GetAttributeType(const CrimsonFileElem
   return eMAT_Undefined;
 }
 
-bool MaterialLoaderCEF::LoadAttributeDefault(iMaterial* material,
-                                             size_t attributeIdx,
-                                             eMaterialAttributeType attributeType,
-                                             const CrimsonFileElement* attributeElement,
-                                             const ResourceLocator* locator)
+bool MaterialLoader::LoadAttributeDefault(iMaterial* material,
+                                          size_t attributeIdx,
+                                          eMaterialAttributeType attributeType,
+                                          const CrimsonFileElement* attributeElement,
+                                          const ResourceLocator& locator)
 {
   switch (attributeType)
   {
@@ -517,9 +506,9 @@ bool MaterialLoaderCEF::LoadAttributeDefault(iMaterial* material,
   return false;
 }
 
-bool MaterialLoaderCEF::LoadAttributeFloat(iMaterial* material,
-                                           size_t attributeIdx,
-                                           const CrimsonFileElement* attributeElement)
+bool MaterialLoader::LoadAttributeFloat(iMaterial* material,
+                                        size_t attributeIdx,
+                                        const CrimsonFileElement* attributeElement)
 {
   if (attributeElement->GetNumberOfAttributes() < 3)
   {
@@ -531,9 +520,9 @@ bool MaterialLoaderCEF::LoadAttributeFloat(iMaterial* material,
   return true;
 }
 
-bool MaterialLoaderCEF::LoadAttributeVec2(iMaterial* material,
-                                          size_t attributeIdx,
-                                          const CrimsonFileElement* attributeElement)
+bool MaterialLoader::LoadAttributeVec2(iMaterial* material,
+                                       size_t attributeIdx,
+                                       const CrimsonFileElement* attributeElement)
 {
   if (attributeElement->GetNumberOfAttributes() < 4)
   {
@@ -546,9 +535,9 @@ bool MaterialLoaderCEF::LoadAttributeVec2(iMaterial* material,
   return true;
 }
 
-bool MaterialLoaderCEF::LoadAttributeVec3(iMaterial* material,
-                                          size_t attributeIdx,
-                                          const CrimsonFileElement* attributeElement)
+bool MaterialLoader::LoadAttributeVec3(iMaterial* material,
+                                       size_t attributeIdx,
+                                       const CrimsonFileElement* attributeElement)
 {
   if (attributeElement->GetNumberOfAttributes() < 5)
   {
@@ -562,9 +551,9 @@ bool MaterialLoaderCEF::LoadAttributeVec3(iMaterial* material,
   return true;
 }
 
-bool MaterialLoaderCEF::LoadAttributeVec4(iMaterial* material,
-                                          size_t attributeIdx,
-                                          const CrimsonFileElement* attributeElement)
+bool MaterialLoader::LoadAttributeVec4(iMaterial* material,
+                                       size_t attributeIdx,
+                                       const CrimsonFileElement* attributeElement)
 {
   if (attributeElement->GetNumberOfAttributes() < 6)
   {
@@ -579,9 +568,9 @@ bool MaterialLoaderCEF::LoadAttributeVec4(iMaterial* material,
   return true;
 }
 
-bool MaterialLoaderCEF::LoadAttributeInt(iMaterial* material,
-                                         size_t attributeIdx,
-                                         const CrimsonFileElement* attributeElement)
+bool MaterialLoader::LoadAttributeInt(iMaterial* material,
+                                      size_t attributeIdx,
+                                      const CrimsonFileElement* attributeElement)
 {
   if (attributeElement->GetNumberOfAttributes() < 3)
   {
@@ -593,9 +582,9 @@ bool MaterialLoaderCEF::LoadAttributeInt(iMaterial* material,
   return true;
 }
 
-bool MaterialLoaderCEF::LoadAttributeMatrix3(iMaterial* material,
-                                             size_t attributeIdx,
-                                             const CrimsonFileElement* attributeElement)
+bool MaterialLoader::LoadAttributeMatrix3(iMaterial* material,
+                                          size_t attributeIdx,
+                                          const CrimsonFileElement* attributeElement)
 {
   if (!attributeElement->HasAttribute("m00")
     || !attributeElement->HasAttribute("m01")
@@ -628,9 +617,9 @@ bool MaterialLoaderCEF::LoadAttributeMatrix3(iMaterial* material,
   return true;
 }
 
-bool MaterialLoaderCEF::LoadAttributeMatrix4(iMaterial* material,
-                                             size_t attributeIdx,
-                                             const CrimsonFileElement* attributeElement)
+bool MaterialLoader::LoadAttributeMatrix4(iMaterial* material,
+                                          size_t attributeIdx,
+                                          const CrimsonFileElement* attributeElement)
 {
   if (!attributeElement->HasAttribute("m00")
     || !attributeElement->HasAttribute("m01")
@@ -678,10 +667,10 @@ bool MaterialLoaderCEF::LoadAttributeMatrix4(iMaterial* material,
   return true;
 }
 
-bool MaterialLoaderCEF::LoadAttributeTexture(iMaterial* material,
-                                             size_t attributeIdx,
-                                             const CrimsonFileElement* attributeElement,
-                                             const ResourceLocator* locator)
+bool MaterialLoader::LoadAttributeTexture(iMaterial* material,
+                                          size_t attributeIdx,
+                                          const CrimsonFileElement* attributeElement,
+                                          const ResourceLocator& locator)
 {
   if (attributeElement->GetNumberOfAttributes() < 3)
   {

@@ -21,11 +21,10 @@ bool CoreModule::Register(int argc, char** argv)
   ObjectRegistry::Register<iFrameRenderer>(new DefaultFrameRenderer);
   AssetManager::Set(new AssetManager());
   AssetManager* assetMan = AssetManager::Get();
-  assetMan->RegisterLoader(new SamplerLoaderCEF());
-  assetMan->RegisterLoader(new MaterialLoaderCEF());
+  assetMan->RegisterLoader(new SamplerLoader());
+  assetMan->RegisterLoader(new MaterialLoader());
   assetMan->RegisterLoader(new TerrainLayerLoader());
   assetMan->RegisterLoader(new TerrainLayerMaskLoader());
-  assetMan->RegisterLoader(new TextureLoaderCEF());
   assetMan->RegisterLoader(new TextureLoader());
 
   return true;

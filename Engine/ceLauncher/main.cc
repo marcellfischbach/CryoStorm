@@ -163,7 +163,7 @@ SDL_GLContext context;
 bool initialize_modules(int argc, char** argv)
 {
   ce::VFS::Get()->SetBasePath("D:\\DEV\\CrimsonEdge\\data");
-  ce::Settings settings("file:///${config}/display.cef");
+  ce::Settings settings("file:///${config}/display.config");
 
   SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE);
 
@@ -571,21 +571,21 @@ int main(int argc, char** argv)
 
   ce::AssetManager    * assetMan          = ce::AssetManager::Get();
   ce::Material        * transMaterial     = assetMan->Get<ce::Material>(ce::ResourceLocator(
-    "/materials/test_trans_material.cef"
+    "/materials/test_trans_material.mat"
   ));
   ce::MaterialInstance* transRedMaterial  = assetMan->Get<ce::MaterialInstance>(ce::ResourceLocator(
-    "/materials/red_transparent_material_instance.cef"
+    "/materials/red_transparent_material_instance.matinstance"
   ));
   ce::MaterialInstance* transBlueMaterial = assetMan->Get<ce::MaterialInstance>(ce::ResourceLocator(
-    "/materials/blue_transparent_material_instance.cef"
+    "/materials/blue_transparent_material_instance.matinstance"
   ));
 
   ce::MaterialInstance* materialInstance = assetMan->Get<ce::MaterialInstance>(ce::ResourceLocator(
-    "/materials/test_material_instance.cef"
+    "/materials/test_material_instance.matinstance"
   ));
 
   ce::MaterialInstance* materialInstance2 = assetMan->Get<ce::MaterialInstance>(ce::ResourceLocator(
-    "/materials/test_material2_instance.cef"
+    "/materials/test_material2_instance.matinstance"
   ));
 
   ce::TerrainLayer* greenGrassLayer = assetMan->Get<ce::TerrainLayer>(ce::ResourceLocator("/terrain/green_grass.terrainlayer"));
@@ -595,7 +595,7 @@ int main(int argc, char** argv)
 
 
 //  ce::Material *materialMirror = ce::AssetManager::Get()->Get<ce::Material>(ce::ResourceLocator(
-//      "/materials/test_material_mirror.cef"
+//      "/materials/test_material_mirror.mat"
 //  ));
 
 //  ce::iRenderMesh *renderMesh = create_plane_mesh(40.0f, 8, 8);
@@ -621,7 +621,7 @@ int main(int argc, char** argv)
   int wnd_width, wnd_height;
   SDL_GetWindowSize(wnd, &wnd_width, &wnd_height);
 
-  ce::Settings settings("file:///config/display.cef");
+  ce::Settings settings("file:///config/display.config");
   ce::Vector2i resolution   = settings.GetVector2i("resolution", ce::Vector2i(wnd_width, wnd_height));
   int          width        = resolution.x;
   int          height       = resolution.y;
@@ -789,7 +789,7 @@ int main(int argc, char** argv)
 
   ce::iFrameRenderer* frameRenderer = ce::ObjectRegistry::Get<ce::iFrameRenderer>();
 
-  std::string title  = ce::Settings("display.cef").GetText("title");
+  std::string title  = ce::Settings("display.config").GetText("title");
   float       rot    = 0.0f;
   float       entRot = 0.0f;
 

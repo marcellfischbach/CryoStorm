@@ -278,7 +278,7 @@ void TerrainMeshState::UpdateMaterial()
 {
   if (!m_material)
   {
-    m_material = AssetManager::Get()->Get<iMaterial>(ResourceLocator("/shaders/terrain/terrain4_material.cef"));
+    m_material = AssetManager::Get()->Get<iMaterial>(ResourceLocator("/materials/terrain/terrain4.mat"));
     if (!m_material)
     {
       return;

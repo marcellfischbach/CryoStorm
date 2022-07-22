@@ -7,20 +7,6 @@
 namespace ce::opengl
 {
 
-CE_CLASS()
-class GL4ShaderLoaderCEF : public CE_SUPER(iAssetLoaderCEF)
-{
-  CE_CLASS_GEN_OBJECT;
-public:
-  GL4ShaderLoaderCEF();
-  virtual ~GL4ShaderLoaderCEF() = default;
-
-
-  bool CanLoad(const Class* cls, const CrimsonFile* file, const ResourceLocator* locator) const override;
-
-  iObject* Load(const Class* cls, const CrimsonFile* file, const ResourceLocator* locator) const override;
-
-};
 
 CE_CLASS()
 class GL4ShaderLoader : public CE_SUPER(iAssetLoader)

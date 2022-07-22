@@ -21,7 +21,6 @@ public:
   static AssetManager* Get();
 
   void RegisterLoader(iAssetLoader* loader);
-  void RegisterLoader(iAssetLoaderCEF* loader);
 
 
   template<typename T>
@@ -54,11 +53,8 @@ public:
 protected:
   AssetManager();
 
-  iObject* LoadExt(const Class* cls, const ResourceLocator& locator);
-  iObject* LoadCEF(const Class* cls, const ResourceLocator& locator);
 
   std::vector<iAssetLoader*> m_loaders;
-  std::vector<iAssetLoaderCEF*> m_loadersSpc;
 
 
 private:

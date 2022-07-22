@@ -1470,7 +1470,7 @@ GL4Program *GL4Device::FullscreenBlitProgram()
 {
   if (!m_fullscreenBlitProgram)
   {
-    m_fullscreenBlitProgram = AssetManager::Get()->Load<GL4Program>("file:///engine/opengl/gl4/fullscreen_blit.cef");
+    m_fullscreenBlitProgram = AssetManager::Get()->Load<GL4Program>("file:///engine/opengl/gl4/fullscreen_blit.shader");
   }
   return m_fullscreenBlitProgram;
 }
@@ -1480,7 +1480,7 @@ GL4Program *GL4Device::FullscreenBlitMSProgram()
   if (!m_fullscreenBlitMSProgram)
   {
     m_fullscreenBlitMSProgram =
-        AssetManager::Get()->Load<GL4Program>("file:///engine/opengl/gl4/fullscreen_blit_ms.cef");
+        AssetManager::Get()->Load<GL4Program>("file:///engine/opengl/gl4/fullscreen_blit_ms.shader");
   }
   return m_fullscreenBlitMSProgram;
 }
@@ -1490,7 +1490,7 @@ GL4Program *GL4Device::FullscreenBlitArrayProgram()
   if (!m_fullscreenBlitArrayProgram)
   {
     m_fullscreenBlitArrayProgram = AssetManager::Get()->Load<GL4Program>(
-        "file:///engine/opengl/gl4/fullscreen_blit_array.cef"
+        "file:///engine/opengl/gl4/fullscreen_blit_array.shader"
     );
   }
   return m_fullscreenBlitArrayProgram;
@@ -1534,7 +1534,7 @@ GL4Program *GL4Device::FullscreenBlitCubeProgram()
   if (!m_fullscreenBlitCubeProgram)
   {
     m_fullscreenBlitCubeProgram = AssetManager::Get()->Load<GL4Program>(
-        "file:///engine/opengl/gl4/fullscreen_blit_cube.cef"
+        "file:///engine/opengl/gl4/fullscreen_blit_cube.shader"
     );
   }
   return m_fullscreenBlitCubeProgram;

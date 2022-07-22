@@ -1,11 +1,10 @@
-shader "vertex" "
 #version 330
 
 layout(location = eVS_Vertices) in vec3 ce_Position;
-layout(location = eVS_UV) in vec3 ce_TexCoord;
+layout(location = eVS_UV) in vec2 ce_TexCoord;
 
 
-out vec3 texCoord;
+out vec2 texCoord;
 
 void main ()
 {
@@ -13,4 +12,3 @@ void main ()
 	texCoord = ce_TexCoord;
 }
 
-"

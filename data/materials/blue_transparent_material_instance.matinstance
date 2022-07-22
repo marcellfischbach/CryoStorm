@@ -1,5 +1,5 @@
 materialinstance {
-    material "/materials/test_trans_material.cef",
+    material "/materials/test_trans_material.mat",
     attributes {
         attribute Color4 "Color" 0 0 1 0.5
     }

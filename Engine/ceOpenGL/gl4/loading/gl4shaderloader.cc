@@ -275,35 +275,6 @@ GL4Shader* LoadShader(const std::string& typeText,
   return nullptr;
 }
 
-GL4ShaderLoaderCEF::GL4ShaderLoaderCEF()
-{
-  CE_CLASS_GEN_CONSTR;
-}
-
-
-bool GL4ShaderLoaderCEF::CanLoad(const Class* cls, const CrimsonFile* file, const ResourceLocator* locator) const
-{
-  return cls->IsAssignableFrom<GL4Shader>() && file->Root()->HasChild("shader");
-}
-
-
-iObject* GL4ShaderLoaderCEF::Load(const Class* cls, const CrimsonFile* file, const ResourceLocator* locator) const
-{
-  const CrimsonFileElement* shaderElement = file->Root()->GetChild("shader");
-  if (!shaderElement)
-  {
-    return nullptr;
-  }
-
-
-  return LoadShader(shaderElement->GetAttribute(0)->GetValue(),
-                    shaderElement->GetAttribute(1)->GetValue(),
-                    locator);
-
-}
-
-
-
 GL4ShaderLoader::GL4ShaderLoader()
 {
   CE_CLASS_GEN_CONSTR;

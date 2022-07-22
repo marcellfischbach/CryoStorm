@@ -2,7 +2,7 @@
 
 #include <ceCore/coreexport.hh>
 #include <ceCore/graphics/material/ematerialattributetype.hh>
-#include <ceCore/resource/iassetloader.hh>
+#include <ceCore/resource/basecefassetloader.hh>
 
 namespace ce
 {
@@ -12,48 +12,48 @@ class Material;
 class MaterialInstance;
 
 CE_CLASS()
-class CE_CORE_API MaterialLoaderCEF : public CE_SUPER(iAssetLoaderCEF)
+class CE_CORE_API MaterialLoader : public CE_SUPER(BaseCEFAssetLoader)
 {
 CE_CLASS_GEN_OBJECT;
 public:
-  virtual ~MaterialLoaderCEF()
+  MaterialLoader ();
+  virtual ~MaterialLoader()
   {
   }
 
-  bool CanLoad(const Class* cls, const CrimsonFile* file, const ResourceLocator* locator) const override;
 
-  iObject* Load(const Class* cls, const CrimsonFile* file, const ResourceLocator* locator) const override;
+  iObject* Load(const CrimsonFile* file, const Class* cls, const ResourceLocator& locator) const override;
 
 private:
-  static Material* LoadMaterial(const Class* cls, const CrimsonFile* file, const ResourceLocator* locator);
-  static iObject* LoadMaterialInstance(const Class* cls, const CrimsonFile* file, const ResourceLocator* locator);
+  static Material* LoadMaterial(const Class* cls, const CrimsonFile* file, const ResourceLocator& locator);
+  static iObject* LoadMaterialInstance(const Class* cls, const CrimsonFile* file, const ResourceLocator& locator);
 
-  static void LoadShading(Material* material, const CrimsonFileElement* materialElement, const ResourceLocator* locator);
-  static void LoadQueue(Material* material, const CrimsonFileElement* materialElement, const ResourceLocator* locator);
-  static void LoadBlending(Material* material, const CrimsonFileElement* materialElement, const ResourceLocator* locator);
-  static void LoadDepth(Material* material, const CrimsonFileElement* materialElement, const ResourceLocator* locator);
+  static void LoadShading(Material* material, const CrimsonFileElement* materialElement, const ResourceLocator& locator);
+  static void LoadQueue(Material* material, const CrimsonFileElement* materialElement, const ResourceLocator& locator);
+  static void LoadBlending(Material* material, const CrimsonFileElement* materialElement, const ResourceLocator& locator);
+  static void LoadDepth(Material* material, const CrimsonFileElement* materialElement, const ResourceLocator& locator);
 
-  static bool LoadShaders(Material* material, const CrimsonFileElement* materialElement, const ResourceLocator* locator);
-  static bool LoadShader(Material* material, const CrimsonFileElement* shaderElement, const ResourceLocator* locator);
-  static bool LoadAttributes(Material* material, const CrimsonFileElement* materialElement, const ResourceLocator* locator);
-  static bool LoadAttribute(Material* material, const CrimsonFileElement* attributeElement, const ResourceLocator* locator);
+  static bool LoadShaders(Material* material, const CrimsonFileElement* materialElement, const ResourceLocator& locator);
+  static bool LoadShader(Material* material, const CrimsonFileElement* shaderElement, const ResourceLocator& locator);
+  static bool LoadAttributes(Material* material, const CrimsonFileElement* materialElement, const ResourceLocator& locator);
+  static bool LoadAttribute(Material* material, const CrimsonFileElement* attributeElement, const ResourceLocator& locator);
 
   static bool LoadReferenceMaterial(MaterialInstance* materialInstance,
                                     const CrimsonFileElement* materialInstanceElement,
-                                    const ResourceLocator* locator);
+                                    const ResourceLocator& locator);
   static bool LoadAttributes(MaterialInstance* materialInstance,
                              const CrimsonFileElement* materialInstanceElement,
-                             const ResourceLocator* locator);
+                             const ResourceLocator& locator);
   static bool LoadAttribute(MaterialInstance* materialInstance,
                             const CrimsonFileElement* attributeElement,
-                            const ResourceLocator* locator);
+                            const ResourceLocator& locator);
 
   static eMaterialAttributeType GetAttributeType(const CrimsonFileElement* attributeElement);
   static bool LoadAttributeDefault(iMaterial* material,
                                    size_t attributeIdx,
                                    eMaterialAttributeType attributeType,
                                    const CrimsonFileElement* attributeElement,
-                                   const ResourceLocator* locator);
+                                   const ResourceLocator& locator);
   static bool LoadAttributeFloat(iMaterial* material, size_t attributeIdx, const CrimsonFileElement* attributeElement);
   static bool LoadAttributeVec2(iMaterial* material, size_t attributeIdx, const CrimsonFileElement* attributeElement);
   static bool LoadAttributeVec3(iMaterial* material, size_t attributeIdx, const CrimsonFileElement* attributeElement);
@@ -64,7 +64,7 @@ private:
   static bool LoadAttributeTexture(iMaterial* material,
                                    size_t attributeIdx,
                                    const CrimsonFileElement* attributeElement,
-                                   const ResourceLocator* locator);
+                                   const ResourceLocator& locator);
 };
 
 }

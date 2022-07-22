@@ -15,19 +15,12 @@ using namespace tinyxml2;
 namespace ce::opengl
 {
 GL4ProgramLoader::GL4ProgramLoader()
-: iAssetLoaderCEF()
+  : BaseCEFAssetLoader()
 {
-  CE_CLASS_GEN_CONSTR;
+  AddValidFile(GL4Program::GetStaticClass(), "SHADER");
 }
 
-bool GL4ProgramLoader::CanLoad(const Class* cls, const CrimsonFile* file, const ResourceLocator* locator) const
-{
-  return GL4Program::GetStaticClass()->IsInstanceOf(cls)
-         && file->Root()->HasChild("program");
-
-}
-
-iObject* GL4ProgramLoader::Load(const Class* cls, const CrimsonFile* file, const ResourceLocator* locator) const
+iObject* GL4ProgramLoader::Load(const CrimsonFile* file, const Class* cls, const ResourceLocator& locator) const
 {
 
   const CrimsonFileElement* programElement = file->Root()->GetChild("program");
@@ -43,14 +36,14 @@ iObject* GL4ProgramLoader::Load(const Class* cls, const CrimsonFile* file, const
   }
 
   GL4Program* program = new GL4Program();
-  for (Size i=0, in=shadersElement->GetNumberOfChildren(); i<in; i++)
+  for (Size i = 0, in = shadersElement->GetNumberOfChildren(); i < in; i++)
   {
     const CrimsonFileElement* shaderElement = shadersElement->GetChild(i);
     if (shaderElement && shaderElement->GetTagName() == "shader")
     {
-      GL4Shader *shader = locator 
-        ? AssetManager::Get()->Load<GL4Shader>(ResourceLocator(*locator, shaderElement->GetAttribute(0)->GetValue()))
-        : AssetManager::Get()->Load<GL4Shader>(ResourceLocator(shaderElement->GetAttribute(0)->GetValue()));
+      ResourceLocator shaderResourceLocator = ResourceLocator(locator, shaderElement->GetAttribute(0)->GetValue());
+
+      GL4Shader* shader = AssetManager::Get()->Load<GL4Shader>(shaderResourceLocator);
       program->AttachShader(shader);
     }
   }
@@ -68,10 +61,11 @@ iObject* GL4ProgramLoader::Load(const Class* cls, const CrimsonFile* file, const
   const CrimsonFileElement* attributesElement = programElement->GetChild("attributes");
   if (attributesElement)
   {
-    for (Size i=0, in=attributesElement->GetNumberOfChildren(); i<in; i++)
+    for (Size i = 0, in = attributesElement->GetNumberOfChildren(); i < in; i++)
     {
       const CrimsonFileElement* attributeElement = attributesElement->GetChild(i);
-      if (attributeElement && attributeElement->GetTagName() == std::string ("attribute") && attributeElement->GetNumberOfAttributes () >= 1)
+      if (attributeElement && attributeElement->GetTagName() == std::string("attribute")
+        && attributeElement->GetNumberOfAttributes() >= 1)
       {
         program->RegisterAttribute(attributeElement->GetAttribute(0)->GetValue());
       }
@@ -81,4 +75,5 @@ iObject* GL4ProgramLoader::Load(const Class* cls, const CrimsonFile* file, const
   return program;
 
 }
+
 }

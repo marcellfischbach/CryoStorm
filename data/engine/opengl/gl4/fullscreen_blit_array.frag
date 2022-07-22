@@ -1,4 +1,3 @@
-shader "fragment" "
 #version 330
 layout(location = 0) out vec4 ce_FragColor;
 
@@ -13,4 +12,3 @@ void main ()
 	ce_FragColor = texture(ce_Diffuse, vec3(texCoord, 1.0));
 }
 
-"

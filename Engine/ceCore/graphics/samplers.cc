@@ -67,10 +67,10 @@ void Samplers::Load()
 
   // mock the default stuff
 
-  m_default = AssetManager::Get()->Load<iSampler>(ResourceLocator("/samplers/default.cef"));
-  m_test = AssetManager::Get()->Load<iSampler>(ResourceLocator("/samplers/test.cef"));
-  m_normalMap = AssetManager::Get()->Load<iSampler>(ResourceLocator("/samplers/normal_map.cef"));
-  m_uiSprite = AssetManager::Get()->Load<iSampler>(ResourceLocator("/samplers/ui_sprite.cef"));
+  m_default = AssetManager::Get()->Load<iSampler>(ResourceLocator("/samplers/default.sampler"));
+  m_test = AssetManager::Get()->Load<iSampler>(ResourceLocator("/samplers/test.sampler"));
+  m_normalMap = AssetManager::Get()->Load<iSampler>(ResourceLocator("/samplers/normal_map.sampler"));
+  m_uiSprite = AssetManager::Get()->Load<iSampler>(ResourceLocator("/samplers/ui_sprite.sampler"));
 
 }
 

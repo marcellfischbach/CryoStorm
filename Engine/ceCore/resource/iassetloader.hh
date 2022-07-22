@@ -33,25 +33,4 @@ struct CE_CORE_API iAssetLoader : public iObject
 };
 
 
-
-CE_CLASS()
-struct CE_CORE_API iAssetLoaderCEF : public iObject
-{
-  CE_CLASS_GEN;
-  virtual ~iAssetLoaderCEF()
-  {
-
-  }
-
-  virtual int16_t Priority() const
-  {
-    return DefaultPriority;
-  }
-
-  virtual bool CanLoad(const Class* cls, const CrimsonFile* file, const ResourceLocator* locator) const = 0;
-
-  virtual iObject* Load(const Class* cls, const CrimsonFile* file, const ResourceLocator* locator) const = 0;
-
-};
-
 }

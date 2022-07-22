@@ -1,0 +1,14 @@
+material {
+    shaders {
+        shader Forward "/${shaders}/test_mirror_program.shader",
+        shader ShadowCube "/${shaders}/test_shadow_point_program.shader",
+        shader ShadowPSSM "/${shaders}/test_shadow_pssm_program.shader",
+        shader Shadow "/${shaders}/test_shadow_program.shader"
+    },
+    attributes {
+        attribute Texture "Diffuse" "/textures/grass.tex2d",
+        attribute Color4 "Color" 1 1 1 1,
+        attribute Float "Roughness" 1.0,
+        attribute Texture "Mirror"
+    }
+}

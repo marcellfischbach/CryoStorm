@@ -1,15 +1,14 @@
-shader "fragment" "
 #version 330
 layout(location = 0) out vec4 ce_FragColor;
 
-uniform sampler2D ce_Diffuse;
+uniform samplerCube ce_Diffuse;
 
 
-in vec2 texCoord;
+in vec3 texCoord;
 
 void main ()
 {
+	vec3 tex = normalize(texCoord);
 	ce_FragColor = texture(ce_Diffuse, texCoord);
 }
 
-"
