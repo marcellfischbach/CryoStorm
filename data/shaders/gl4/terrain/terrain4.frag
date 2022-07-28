@@ -23,12 +23,14 @@ in vec3 viewer_world_position;
 
 #include <../common/lighting.glsl>
 
-lighting_result_t calc_lighting (float n_dot_l, float n_dot_v, float n_dot_h, float h_dot_l, float h_dot_v, float roughness)
+float loc_roughness = 0.0;
+
+lighting_result_t calc_lighting (float n_dot_l, float n_dot_v, float n_dot_h, float h_dot_l, float h_dot_v)
 {
     lighting_result_t res;
     res.ambient = 0.0;
-    res.diffuse = oren_nayar (n_dot_l, n_dot_v, roughness);
-    res.specular = cook_torrance(0.8, n_dot_l, n_dot_v, n_dot_h, h_dot_v, roughness);
+    res.diffuse = oren_nayar (n_dot_l, n_dot_v, loc_roughness);
+    res.specular = cook_torrance(0.8, n_dot_l, n_dot_v, n_dot_h, h_dot_v, loc_roughness);
     return res;
 }
 
@@ -40,24 +42,24 @@ void main()
     vec4 layer = texture(ce_Layer, texCoord);
 
     vec3 diffuse = vec3(0.0, 0.0, 0.0);
-    float roughness = 0.0;
+    loc_roughness = 0.0;
     if (layer.x > 0.0)
     {
         vec4 diffuseRoughness = texture (ce_DiffuseRoughness0, texCoord * 3);
         diffuse += diffuseRoughness.rgb * layer.x;
-        roughness += diffuseRoughness.a * layer.x;
+        loc_roughness += diffuseRoughness.a * layer.x;
     }
     if (layer.y > 0.0)
     {
         vec4 diffuseRoughness = texture (ce_DiffuseRoughness1, texCoord * 3);
         diffuse += diffuseRoughness.rgb * layer.y;
-        roughness += diffuseRoughness.a * layer.y;
+        loc_roughness += diffuseRoughness.a * layer.y;
     }
     if (layer.z > 0.0)
     {
         vec4 diffuseRoughness = texture (ce_DiffuseRoughness2, texCoord * 3);
         diffuse += diffuseRoughness.rgb * layer.z;
-        roughness += diffuseRoughness.a * layer.z;
+        loc_roughness += diffuseRoughness.a * layer.z;
     }
 //    if (layer.w > 0.0)
 //    {
@@ -67,8 +69,12 @@ void main()
 //    }
 
 
-    vec3 frag_light = calc_lights(world_position, norm, roughness, camera_space_position, viewer_world_position);
-    ce_FragColor =  vec4(frag_light * diffuse, 1.0);
+    light_result_t light = calc_lights(world_position, norm, camera_space_position, viewer_world_position);
+    vec3 dielectric = light.diffuse  * diffuse.rgb + light.specular;
+    ce_FragColor = vec4(dielectric, color.a);
+
+
+//    ce_FragColor =  vec4(frag_light * diffuse, 1.0);
     //    ce_FragColor = vec4(frag_light, 1.0) * ce_Color;// * texColor;
     //    ce_FragColor = vec4(norm * 0.5 + 0.5, 1.0) * texColor;
 }

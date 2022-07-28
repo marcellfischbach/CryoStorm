@@ -1,7 +1,0 @@
-materialinstance {
-    material "/materials/test.mat",
-    attributes {
-        attribute Color4 "Color" 1 1 1 1
-    }
-
-}

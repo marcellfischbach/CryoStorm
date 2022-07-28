@@ -53,7 +53,7 @@ iObject* GL4ProgramLoader::Load(const CrimsonFile* file, const Class* cls, const
   }
   catch (GL4ProgramLinkException& ple)
   {
-    printf("Unable to link program:\n%s\n", ple.what());
+    printf("Unable to link program [%s]:\n%s\n", locator.Encoded().c_str(), ple.what());
     program->Release();
     return nullptr;
   }

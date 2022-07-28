@@ -322,7 +322,8 @@ ce::iTerrainMesh* create_terrain_mesh(float size)
 
       float a = sin(fi * 10.0f) * cos(fj * 10.0f);
 
-      heightData.push_back(0.5f + 0.5f * a);
+//      heightData.push_back(0.5f + 0.5f * a);
+      heightData.push_back(0.0f);
     }
   }
 
@@ -570,19 +571,14 @@ int main(int argc, char** argv)
   ce::iDevice* device = ce::ObjectRegistry::Get<ce::iDevice>();
 
   ce::AssetManager    * assetMan          = ce::AssetManager::Get();
-  ce::Material        * transMaterial     = assetMan->Get<ce::Material>(ce::ResourceLocator(
-    "/materials/test_trans.mat"
-  ));
-  ce::MaterialInstance* transRedMaterial  = assetMan->Get<ce::MaterialInstance>(ce::ResourceLocator(
-    "/materials/red_transparent.matinstance"
-  ));
-  ce::MaterialInstance* transBlueMaterial = assetMan->Get<ce::MaterialInstance>(ce::ResourceLocator(
-    "/materials/blue_transparent.matinstance"
+
+
+  ce::iMaterial* defaultMaterialInstance = assetMan->Get<ce::iMaterial>(ce::ResourceLocator(
+    "/materials/Default.mat"
   ));
 
-  ce::MaterialInstance* materialInstance = assetMan->Get<ce::MaterialInstance>(ce::ResourceLocator(
-    "/materials/test.matinstance"
-  ));
+  size_t roughnessIdx = defaultMaterialInstance->IndexOf("Roughness");
+  size_t metallicIdx = defaultMaterialInstance->IndexOf("Metallic");
 
 
   ce::TerrainLayer* greenGrassLayer = assetMan->Get<ce::TerrainLayer>(ce::ResourceLocator("/terrain/green_grass.terrainlayer"));
@@ -591,34 +587,13 @@ int main(int argc, char** argv)
   ce::TerrainLayerMask* terrainLayers = assetMan->Get<ce::TerrainLayerMask>(ce::ResourceLocator("/terrain/terrain.terrainmask"));
 
 
-//  ce::Material *materialMirror = ce::AssetManager::Get()->Get<ce::Material>(ce::ResourceLocator(
-//      "/materials/test_mirror.mat"
-//  ));
-
-//  ce::iRenderMesh *renderMesh = create_plane_mesh(40.0f, 8, 8);
-//  ce::Mesh *mesh = new ce::Mesh();
-//  mesh->AddMaterialSlot("Default", materialInstance);
-//  mesh->AddSubMesh(renderMesh, 0);
-
-
-  printf ("GreenGrassLayer: %p\n", greenGrassLayer);
-  printf ("TerrainLayers: %p\n", terrainLayers);
-
-  ce::iRenderMesh* transPlaneMesh = create_plane_mesh(10.0f, 8, 8);
-  ce::Mesh       * transRedMesh   = new ce::Mesh();
-  transRedMesh->AddMaterialSlot("Default", transRedMaterial);
-  transRedMesh->AddSubMesh(transPlaneMesh, 0);
-  ce::Mesh* transBlueMesh = new ce::Mesh();
-  transBlueMesh->AddMaterialSlot("Default", transBlueMaterial);
-  transBlueMesh->AddSubMesh(transPlaneMesh, 0);
-
 
   ce::World* world = new ce::World();
 
   int wnd_width, wnd_height;
   SDL_GetWindowSize(wnd, &wnd_width, &wnd_height);
 
-  ce::Settings settings("file:///config/display.config");
+  ce::Settings settings("file:///${config}/display.config");
   ce::Vector2i resolution   = settings.GetVector2i("resolution", ce::Vector2i(wnd_width, wnd_height));
   int          width        = resolution.x;
   int          height       = resolution.y;
@@ -646,35 +621,18 @@ int main(int argc, char** argv)
 
   ce::Mesh* suzanneMesh = assetMan->Load<ce::Mesh>(ce::ResourceLocator("file:///suzanne.fbx"));
   ce::Mesh* cube        = assetMan->Load<ce::Mesh>(ce::ResourceLocator("cube.fbx"));
-  suzanneMesh->SetDefaultMaterial(0, materialInstance);
-  cube->SetDefaultMaterial(0, materialInstance);
+  suzanneMesh->SetDefaultMaterial(0, defaultMaterialInstance);
+  cube->SetDefaultMaterial(0, defaultMaterialInstance);
 
+  create_suzannes_plain(suzanneMesh, world, defaultMaterialInstance);
 
-  ce::Entity         * entityTransPlaneRed    = new ce::Entity("Entity0");
-  ce::StaticMeshState* meshStateTransPlaneRed = new ce::StaticMeshState("StaticMeshTransPlane");
-
-  meshStateTransPlaneRed->GetTransform()
-                        .SetTranslation(ce::Vector3f(0, 2.0f, 0))
-                        .Finish();
-  meshStateTransPlaneRed->SetMesh(transRedMesh);
-  meshStateTransPlaneRed->SetStatic(true);
-  entityTransPlaneRed->Attach(meshStateTransPlaneRed);
-
-  ce::Entity         * entityTransPlaneBlue    = new ce::Entity("Entity0");
-  ce::StaticMeshState* meshStateTransPlaneBlue = new ce::StaticMeshState("StaticMeshTransPlane");
-  meshStateTransPlaneBlue->GetTransform()
-                         .SetTranslation(ce::Vector3f(0, 0.10f, 0))
-                         .Finish();
-  meshStateTransPlaneBlue->SetMesh(transBlueMesh);
-  meshStateTransPlaneBlue->SetStatic(true);
-  entityTransPlaneBlue->Attach(meshStateTransPlaneBlue);
 
   float sphereRadius = 4.0f;
   ce::iRenderMesh    * renderMeshSphere = create_sphere_mesh(sphereRadius, 32, 4.0f);
   ce::Mesh           * meshSphere       = new ce::Mesh();
   ce::Entity         * entitySphere     = new ce::Entity("Sphere");
   ce::StaticMeshState* meshStateSphere  = new ce::StaticMeshState("Mesh.Sphere");
-  meshSphere->AddMaterialSlot("Default", materialInstance);
+  meshSphere->AddMaterialSlot("Default", defaultMaterialInstance);
   meshSphere->AddSubMesh(renderMeshSphere, 0);
   meshStateSphere->GetTransform()
                  .SetTranslation(ce::Vector3f(0.0f, sphereRadius * 1.5f, 0.0f))
@@ -718,7 +676,7 @@ int main(int argc, char** argv)
   sunLightState->SetColor(ce::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 1.0f);
   sunLightState->SetShadowMapBias(0.003f);
   sunLightState->SetStatic(true);
-  sunLightState->SetCastShadow(false);
+  sunLightState->SetCastShadow(true);
   sunLightState->SetTransform(sunLightState->GetTransform()
                                              //.SetRotation(ce::Quaternion::FromAxisAngle(ce::Vector3f(1.0f, 0.0f, 0.0f), ce::ceDeg2Rad(-45.0f)))
                                            .SetRotation(
@@ -736,7 +694,7 @@ int main(int argc, char** argv)
   sunLightState->SetColor(ce::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 0.2f);
   sunLightState->SetShadowMapBias(0.003f);
   sunLightState->SetStatic(true);
-  sunLightState->SetCastShadow(false);
+  sunLightState->SetCastShadow(true);
   sunLightState->SetTransform(sunLightState->GetTransform()
                                              //.SetRotation(ce::Quaternion::FromAxisAngle(ce::Vector3f(1.0f, 0.0f, 0.0f), ce::ceDeg2Rad(-45.0f)))
                                            .SetRotation(
@@ -792,7 +750,8 @@ int main(int argc, char** argv)
   bool  useCs     = true;
   bool  anim      = true;
   float roughness = 1.0f;
-  materialInstance->Set(2, roughness);
+  float metallic = 0.0f;
+  defaultMaterialInstance->Set(2, roughness);
 
 
   ce::iPhysicsSystem* physics   = ce::ObjectRegistry::Get<ce::iPhysicsSystem>();
@@ -815,7 +774,7 @@ int main(int argc, char** argv)
       ce::Mesh           * meshSphere      = new ce::Mesh();
       ce::Entity         * entitySphere    = new ce::Entity("Sphere");
       ce::StaticMeshState* meshStateSphere = new ce::StaticMeshState("Mesh.Sphere");
-      meshSphere->AddMaterialSlot("Default", materialInstance);
+      meshSphere->AddMaterialSlot("Default", defaultMaterialInstance);
       meshSphere->AddSubMesh(renderMeshSphere, 0);
       meshStateSphere->GetTransform()
                      .SetTranslation(ce::Vector3f(0.0f, sphereRadius * 2.5f, 0.0f) * ((float)i + 2.0f))
@@ -836,7 +795,7 @@ int main(int argc, char** argv)
       ce::Mesh           * meshSphere      = new ce::Mesh();
       ce::Entity         * entitySphere    = new ce::Entity("Sphere");
       ce::StaticMeshState* meshStateSphere = new ce::StaticMeshState("Mesh.Sphere");
-      meshSphere->AddMaterialSlot("Default", materialInstance);
+      meshSphere->AddMaterialSlot("Default", defaultMaterialInstance);
       meshSphere->AddSubMesh(renderMeshSphere, 0);
       meshStateSphere->GetTransform()
                      .SetTranslation(ce::Vector3f(i * sphereRadius, 0.0f, 0.0f))
@@ -849,7 +808,7 @@ int main(int argc, char** argv)
       ce::Mesh           * meshSphere      = new ce::Mesh();
       ce::Entity         * entitySphere    = new ce::Entity("Sphere");
       ce::StaticMeshState* meshStateSphere = new ce::StaticMeshState("Mesh.Sphere");
-      meshSphere->AddMaterialSlot("Default", materialInstance);
+      meshSphere->AddMaterialSlot("Default", defaultMaterialInstance);
       meshSphere->AddSubMesh(renderMeshSphere, 0);
       meshStateSphere->GetTransform()
                      .SetTranslation(ce::Vector3f(0.0f, i * sphereRadius, 0.0f))
@@ -862,7 +821,7 @@ int main(int argc, char** argv)
       ce::Mesh           * meshSphere      = new ce::Mesh();
       ce::Entity         * entitySphere    = new ce::Entity("Sphere");
       ce::StaticMeshState* meshStateSphere = new ce::StaticMeshState("Mesh.Sphere");
-      meshSphere->AddMaterialSlot("Default", materialInstance);
+      meshSphere->AddMaterialSlot("Default", defaultMaterialInstance);
       meshSphere->AddSubMesh(renderMeshSphere, 0);
       meshStateSphere->GetTransform()
                      .SetTranslation(ce::Vector3f(0.0f, 0.0f, i * 2.0f * sphereRadius))
@@ -899,7 +858,7 @@ int main(int argc, char** argv)
       numTrianglesPerSec = 0;
       numShaderStateChanges = 0;
 #else
-      sprintf_s<1024>(buffer, "%s  %d FPS [%f]", title.c_str(), frames, roughness);
+      sprintf_s<1024>(buffer, "%s  %d FPS [Roughness: %f] [Metallic: %f]", title.c_str(), frames, roughness, metallic);
 #endif
       SDL_SetWindowTitle(wnd, buffer);
       printf("%s\n", buffer);
@@ -942,14 +901,27 @@ int main(int argc, char** argv)
       if (ce::Input::IsKeyDown(ce::Key::eK_Up))
       {
         roughness += 0.5f * tpf;
-        roughness = roughness <= 10.0f ? roughness : 10.0f;
-        materialInstance->Set(2, roughness);
+        roughness = roughness <= 1.0f ? roughness : 1.0f;
+        defaultMaterialInstance->Set(roughnessIdx, roughness);
       }
       if (ce::Input::IsKeyDown(ce::Key::eK_Down))
       {
         roughness -= 0.5f * tpf;
         roughness = roughness >= 0.0f ? roughness : 0.0f;
-        materialInstance->Set(2, roughness);
+        defaultMaterialInstance->Set(roughnessIdx, roughness);
+      }
+
+      if (ce::Input::IsKeyDown(ce::Key::eK_Right))
+      {
+        metallic += 0.5f * tpf;
+        metallic = metallic <= 1.0f ? metallic : 1.0f;
+        defaultMaterialInstance->Set(metallicIdx, metallic);
+      }
+      if (ce::Input::IsKeyDown(ce::Key::eK_Left))
+      {
+        metallic -= 0.5f * tpf;
+        metallic = metallic >= 0.0f ? metallic : 0.0f;
+        defaultMaterialInstance->Set(metallicIdx, metallic);
       }
 
       sphereRadius = 0.0f;
