@@ -9,11 +9,11 @@
 namespace ce
 {
 
-struct iCollider;
 struct iCollisionShape;
 struct iPhysicsSystem;
+struct iStaticCollider;
 
-CE_CLASS()
+CE_CLASS(Virtual)
 class CE_CORE_API CollisionState : public CE_SUPER(SpatialState)
 {
   CE_CLASS_GEN_OBJECT;
@@ -28,9 +28,11 @@ protected:
   void OnAttachedToWorld(World * world) override;
   void OnDetachedFromWorld(World * world) override;
 
-private:
-  iCollider* m_collider;
+  void TransformationUpdatedPreChildren() override;
 
+private:
+  iStaticCollider* m_collider;
+  iCollisionShape* m_shape;
 
 };
 
@@ -53,5 +55,23 @@ private:
   float m_radius;
 };
 
+CE_CLASS()
+class CE_CORE_API BoxColliderState : public CE_SUPER(CollisionState)
+{
+  CE_CLASS_GEN;
+public:
+  BoxColliderState();
+  ~BoxColliderState() override;
+
+  void SetHalfExtends(const Vector3f &halfExtends);
+  const Vector3f &GetHalfExtends() const;
+
+protected:
+
+  iCollisionShape* CreateShape(iPhysicsSystem * physSystem) const override;
+
+private:
+  Vector3f m_halfExtends;
+};
 
 }

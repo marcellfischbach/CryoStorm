@@ -7,6 +7,7 @@
 #include <ceCore/coremodule.hh>
 #include <ceCore/settings.hh>
 #include <ceCore/entity/camerastate.hh>
+#include <ceCore/entity/collisionstate.hh>
 #include <ceCore/entity/entity.hh>
 #include <ceCore/entity/entitystate.hh>
 #include <ceCore/entity/lightstate.hh>
@@ -781,16 +782,27 @@ int main(int argc, char** argv)
 
 
   ce::iPhysicsSystem* physics   = ce::ObjectRegistry::Get<ce::iPhysicsSystem>();
-  ce::iPhysicsWorld * physWorld = physics->CreateWorld();
+  ce::iPhysicsWorld* physWorld = world->GetPhysicsWorld();
 
 
   // add the ground plane
+  /*
   ce::BoxShapeDesc floorDesc{ ce::Vector3f(100.0f, 1.0f, 100.0f) };
   ce::iCollisionShape* floorShape    = physics->CreateShape(floorDesc);
   ce::iStaticCollider* floorCollider = physics->CreateStaticCollider();
   floorCollider->Attach(floorShape);
   floorCollider->SetTransform(ce::Matrix4f::Translation(0.0f, -1.0f, 0.0f));
   physWorld->AddCollider(floorCollider);
+  */
+
+  ce::Entity* floorEntity = new ce::Entity("Floor");
+  ce::BoxColliderState* floorColliderState = new ce::BoxColliderState();
+  floorColliderState->SetHalfExtends(ce::Vector3f(100.0f, 1.0f, 100.0f));
+  floorEntity->Attach(floorColliderState);
+  floorEntity->GetRoot()->GetTransform().SetTranslation(ce::Vector3f(0.0f, -1.0f, 0.0f)).Finish();
+  world->Attach(floorEntity);
+
+
 
   sphereRadius     = 0.5f;
   renderMeshSphere = create_sphere_mesh(sphereRadius, 32, 4.0f);

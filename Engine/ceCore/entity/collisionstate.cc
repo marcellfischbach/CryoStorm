@@ -1,13 +1,18 @@
 #include <ceCore/entity/collisionstate.hh>
+#include <ceCore/entity/world.hh>
 #include <ceCore/physics/iphysicssystem.hh>
 #include <ceCore/physics/icollider.hh>
 #include <ceCore/physics/icollisionshape.hh>
+#include <ceCore/physics/iphysicsworld.hh>
+#include <ceCore/objectregistry.hh>
 
 namespace ce
 {
 
 
 CollisionState::CollisionState()
+  : m_shape(nullptr)
+  , m_collider(nullptr)
 {
   CE_CLASS_GEN_CONSTR;
 }
@@ -21,17 +26,60 @@ CollisionState::~CollisionState()
 void CollisionState::OnAttachedToWorld(World* world)
 {
   // TODO: Get RigidBodyState -> if present don't attach a static body
+  auto physSystem = ObjectRegistry::Get<iPhysicsSystem>();
+  if (!physSystem)
+  {
+    return;
+  }
 
+  if (!m_shape)
+  {
+    auto shape = CreateShape(physSystem);
+    if (!shape)
+    {
+      return;
+    }
+    CE_SET(m_shape, shape);
+  }
 
+  if (!m_collider)
+  {
+    auto collider = physSystem->CreateStaticCollider();
+    if (!collider)
+    {
+      return;
+    }
+    CE_SET(m_collider, collider);
+
+    m_collider->Attach(m_shape);
+  }
+
+  m_collider->SetTransform(GetGlobalMatrix());
+  auto physWorld = world->GetPhysicsWorld();
+  physWorld->AddCollider(m_collider);
 }
+
+
 
 void CollisionState::OnDetachedFromWorld(World* world)
 {
   // TODO: Get RigidBodyState -> if present don't dettach a static body
-
+  if (m_collider)
+  {
+    world->GetPhysicsWorld()->RemoveCollider(m_collider);
+  }
 }
 
 
+void CollisionState::TransformationUpdatedPreChildren()
+{
+  if (m_collider)
+  {
+    m_collider->SetTransform(GetGlobalMatrix());
+  }
+
+
+}
 
 
 
@@ -70,5 +118,49 @@ float SphereColliderState::GetRadius() const
 {
   return m_radius;
 }
+
+
+
+
+
+
+
+
+
+BoxColliderState::BoxColliderState()
+  : CollisionState()
+  , m_halfExtends(1.0f, 1.0f, 1.0f)
+{
+
+}
+
+BoxColliderState::~BoxColliderState()
+{
+
+}
+
+
+
+
+
+iCollisionShape* BoxColliderState::CreateShape(iPhysicsSystem* physSystem) const
+{
+  BoxShapeDesc desc = {};
+  desc.HalfExtents = m_halfExtends;
+
+  return physSystem->CreateShape(desc);
+}
+
+
+void BoxColliderState::SetHalfExtends(const Vector3f &halfExtends)
+{
+  m_halfExtends = halfExtends;
+}
+
+const Vector3f &BoxColliderState::GetHalfExtends() const
+{
+  return m_halfExtends;
+}
+
 
 }
