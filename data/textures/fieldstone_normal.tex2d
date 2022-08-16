@@ -1,0 +1,6 @@
+texture2d {
+
+    image "fieldstone_normal.jpg",
+    sampler "NormalMap",
+    mipmaps
+}

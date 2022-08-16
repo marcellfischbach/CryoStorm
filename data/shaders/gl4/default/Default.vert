@@ -2,6 +2,7 @@
 
 layout(location = eVS_Vertices) in vec4 ce_Position;
 layout(location = eVS_Normals) in vec3 ce_Normal;
+layout(location = eVS_Tangents) in vec3 ce_Tangent;
 layout(location = eVS_Colors) in vec4 ce_Color;
 layout(location = eVS_UV) in vec2 ce_UV;
 
@@ -15,6 +16,7 @@ out vec4 color;
 out vec2 texCoord;
 out vec3 world_position;
 out vec3 world_normal;
+out vec3 world_tangent;
 out vec3 camera_space_position;
 out vec3 viewer_world_position;
 
@@ -23,6 +25,7 @@ void main()
   vec4 position = ce_ModelMatrix * ce_Position;
   world_position = position.xyz;
   world_normal = (ce_ModelMatrix * vec4(ce_Normal, 0.0)).xyz;
+  world_tangent = (ce_ModelMatrix * vec4(ce_Tangent, 0.0)).xyz;
 
   viewer_world_position = (ce_ViewMatrixInv * vec4(0, 0, 0, 1)).xyz;
   camera_space_position = (ce_ViewMatrix * position).xyz;

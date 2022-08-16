@@ -5,8 +5,10 @@ program {
     }
     attributes {
         attribute "Diffuse",
-        attribute "Color",
+        attribute "Normal",
+        attribute "RoughnessMap",
         attribute "Roughness",
         attribute "Metallic",
+        attribute "Color",
     }
 }

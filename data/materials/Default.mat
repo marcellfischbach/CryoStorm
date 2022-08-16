@@ -7,6 +7,8 @@ material {
     },
     attributes {
         attribute Texture "Diffuse" "/textures/CheckerBoard.tex2d",
+        attribute Texture "Normal" "/textures/DefaultNormal.tex2d",
+        attribute Texture "RoughnessMap" "/textures/DefaultRoughness.tex2d",
         attribute Color4 "Color" 1 1 1 1,
         attribute Float "Roughness" 0.5,
         attribute Float "Metallic" 0.0,

@@ -344,6 +344,7 @@ ce::iRenderMesh* create_sphere_mesh(float radius, uint32_t detail, float uv_f)
   ce::iRenderMeshGenerator* generator = ce::ObjectRegistry::Get<ce::iRenderMeshGeneratorFactory>()->Create();
   std::vector<ce::Vector3f> positions;
   std::vector<ce::Vector3f> normals;
+  std::vector<ce::Vector3f> tangents;
   std::vector<ce::Vector2f> uv;
   std::vector<ce::Color4f>  colors;
   std::vector<uint32_t>     indices;
@@ -363,8 +364,14 @@ ce::iRenderMesh* create_sphere_mesh(float radius, uint32_t detail, float uv_f)
         sinf(angleV),
         cosf(angleV) * sinf(angleH)
       );
+      ce::Vector3f tangent (
+        cosf(angleH + M_PI / 2.0),
+        0.0f,
+        sinf(angleH + M_PI / 2.0)
+        );
       positions.push_back(normal * radius);
       normals.emplace_back(normal);
+      tangents.emplace_back(tangent);
       uv.emplace_back(ce::Vector2f(factH * 2.0f * uv_f, factV * uv_f));
       colors.emplace_back(ce::Color4f(1.0f, 1.0f, 1.0f, 1.0f));
     }
@@ -392,6 +399,7 @@ ce::iRenderMesh* create_sphere_mesh(float radius, uint32_t detail, float uv_f)
   }
   generator->SetVertices(positions);
   generator->SetNormals(normals);
+  generator->SetTangents(tangents);
   generator->SetColors(colors);
   generator->SetUV0(uv);
   generator->SetIndices(indices);
@@ -435,6 +443,7 @@ void create_suzannes_plain(ce::Mesh* suzanneMesh, ce::World* world, ce::iMateria
       ce::StaticMeshState* meshState1    = new ce::StaticMeshState("StaticMesh1");
       meshState1->GetTransform()
                 .SetTranslation(ce::Vector3f(x, 0, y))
+//                .SetRotation(ce::Quaternion::FromAxisAngle(1.0f, 0.0f, 0.0f, ce::ceDeg2Rad(180.0f)))
                 .Finish();
       meshState1->SetMesh(suzanneMesh);
       meshState1->SetStatic(true);
@@ -577,8 +586,11 @@ int main(int argc, char** argv)
     "/materials/Default.mat"
   ));
 
-  size_t roughnessIdx = defaultMaterialInstance->IndexOf("Roughness");
-  size_t metallicIdx = defaultMaterialInstance->IndexOf("Metallic");
+  ce::iMaterial* suzanneMaterial = assetMan->Get<ce::iMaterial>(ce::ResourceLocator(
+    "/materials/Suzanne.matinstance"
+  ));
+
+
 
 
   ce::TerrainLayer* greenGrassLayer = assetMan->Get<ce::TerrainLayer>(ce::ResourceLocator("/terrain/green_grass.terrainlayer"));
@@ -621,10 +633,10 @@ int main(int argc, char** argv)
 
   ce::Mesh* suzanneMesh = assetMan->Load<ce::Mesh>(ce::ResourceLocator("file:///suzanne.fbx"));
   ce::Mesh* cube        = assetMan->Load<ce::Mesh>(ce::ResourceLocator("cube.fbx"));
-  suzanneMesh->SetDefaultMaterial(0, defaultMaterialInstance);
+  suzanneMesh->SetDefaultMaterial(0, suzanneMaterial);
   cube->SetDefaultMaterial(0, defaultMaterialInstance);
 
-  create_suzannes_plain(suzanneMesh, world, defaultMaterialInstance);
+  create_suzannes_plain(suzanneMesh, world, suzanneMaterial);
 
 
   float sphereRadius = 4.0f;
@@ -673,7 +685,7 @@ int main(int argc, char** argv)
   ce::LightState* sunLightState = new ce::LightState("SunLight");
   sunEntity->Attach(sunLightState);
   sunLightState->SetType(ce::eLT_Directional);
-  sunLightState->SetColor(ce::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 1.0f);
+  sunLightState->SetColor(ce::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 0.0f);
   sunLightState->SetShadowMapBias(0.003f);
   sunLightState->SetStatic(true);
   sunLightState->SetCastShadow(true);
@@ -691,7 +703,7 @@ int main(int argc, char** argv)
   sunLightState = new ce::LightState("SunLight");
   sunEntity->Attach(sunLightState);
   sunLightState->SetType(ce::eLT_Directional);
-  sunLightState->SetColor(ce::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 0.2f);
+  sunLightState->SetColor(ce::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 1.0f);
   sunLightState->SetShadowMapBias(0.003f);
   sunLightState->SetStatic(true);
   sunLightState->SetCastShadow(true);
@@ -798,7 +810,7 @@ int main(int argc, char** argv)
       meshSphere->AddMaterialSlot("Default", defaultMaterialInstance);
       meshSphere->AddSubMesh(renderMeshSphere, 0);
       meshStateSphere->GetTransform()
-                     .SetTranslation(ce::Vector3f(i * sphereRadius, 0.0f, 0.0f))
+                     .SetTranslation(ce::Vector3f(i * sphereRadius*0.5, 0.0f, 0.0f))
                      .Finish();
       meshStateSphere->SetMesh(meshSphere);
       entitySphere->Attach(meshStateSphere);
@@ -837,11 +849,17 @@ int main(int argc, char** argv)
   device->GetPerspectiveProjection(-1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 1024.0f, proj);
   proj.Debug("ProjectionMatrix");
 
+  ce::iMaterial* updateMaterial = suzanneMaterial;
+  size_t roughnessIdx = updateMaterial->IndexOf("Roughness");
+  size_t metallicIdx = updateMaterial->IndexOf("Metallic");
 #if _DEBUG
   ce::Size numDrawCallsPerSec = 0;
   ce::Size numTrianglesPerSec = 0;
   ce::Size numShaderStateChanges = 0;
 #endif
+
+  float sunRotation = 0.0f;
+
   while (true)
   {
 #if _DEBUG
@@ -881,13 +899,9 @@ int main(int argc, char** argv)
       break;
     }
 
-    if (ce::Input::IsKeyPressed(ce::Key::eK_A))
-    {
-      anim = !anim;
-    }
     if (ce::Input::IsKeyPressed(ce::Key::eK_Space))
     {
-      useCs = !useCs;
+      anim = !anim;
     }
     if (deltaTime != 0)
     {
@@ -896,35 +910,41 @@ int main(int argc, char** argv)
       if (anim)
       {
         entRot += tpf * 1.0f;
+        sunRotation += M_PI * 0.5f * tpf;
       }
 
       if (ce::Input::IsKeyDown(ce::Key::eK_Up))
       {
         roughness += 0.5f * tpf;
         roughness = roughness <= 1.0f ? roughness : 1.0f;
-        defaultMaterialInstance->Set(roughnessIdx, roughness);
+        updateMaterial->Set(roughnessIdx, roughness);
       }
       if (ce::Input::IsKeyDown(ce::Key::eK_Down))
       {
         roughness -= 0.5f * tpf;
         roughness = roughness >= 0.0f ? roughness : 0.0f;
-        defaultMaterialInstance->Set(roughnessIdx, roughness);
+        updateMaterial->Set(roughnessIdx, roughness);
       }
 
       if (ce::Input::IsKeyDown(ce::Key::eK_Right))
       {
         metallic += 0.5f * tpf;
         metallic = metallic <= 1.0f ? metallic : 1.0f;
-        defaultMaterialInstance->Set(metallicIdx, metallic);
+        updateMaterial->Set(metallicIdx, metallic);
       }
       if (ce::Input::IsKeyDown(ce::Key::eK_Left))
       {
         metallic -= 0.5f * tpf;
         metallic = metallic >= 0.0f ? metallic : 0.0f;
-        defaultMaterialInstance->Set(metallicIdx, metallic);
+        updateMaterial->Set(metallicIdx, metallic);
       }
 
-      sphereRadius = 0.0f;
+      sunLightState->SetTransform(sunLightState->GetTransform()
+              .SetTranslation(ce::Vector3f(sin(sunRotation) * 20.0f, 20.0f, cos(sunRotation) * 20.0f))
+              .LookAt(ce::Vector3f(0.0f, 0.0f, 0.0f), ce::Vector3f(0.0f, 1.0f, 0.0f))
+      );
+
+     sphereRadius = 0.0f;
       float dist = 10.0f;
 //      ce::SpatialState *cameraState = cameraEntity->GetRoot();
 //      cameraState->GetTransform()

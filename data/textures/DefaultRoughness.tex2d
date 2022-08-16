@@ -1,6 +1,6 @@
 texture2d {
 
-    image "fieldstone_diffuse.jpg",
+    image "DefaultRoughness.jpg",
     sampler "Default",
     mipmaps
 }
