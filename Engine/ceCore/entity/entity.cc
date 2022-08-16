@@ -164,6 +164,23 @@ Entity *Entity::GetChild(Size idx)
   return const_cast<Entity *>(static_cast<const Entity *>(this)->GetChild(idx));
 }
 
+const EntityState* Entity::GetState(const Class* cls) const
+{
+  for (auto state : m_states)
+  {
+    if (cls->IsAssignableFrom(state->GetClass()))
+    {
+      return state;
+    }
+  }
+  return nullptr;
+}
+
+EntityState* Entity::GetState(const Class* cls)
+{
+  return const_cast<EntityState*>(static_cast<const Entity*>(this)->GetState(cls));
+}
+
 
 bool Entity::Attach(EntityState *entityState)
 {

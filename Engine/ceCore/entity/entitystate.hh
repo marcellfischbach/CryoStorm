@@ -27,6 +27,19 @@ public:
   Entity* GetEntity();
   const Entity* GetEntity() const;
 
+  template <typename ES>
+  ES* GetState()
+  {
+    return static_cast<ES*>(GetState(ES::StaticClass()));
+  }
+  template <typename ES>
+  const ES* GetState() const
+  {
+    return static_cast<const ES*>(GetState(ES::StaticClass()));
+  }
+
+  EntityState* GetState(const Class * cls);
+  const EntityState* GetState(const Class * cls) const;
 
   SpatialState* GetRoot();
   const SpatialState* GetRoot() const;

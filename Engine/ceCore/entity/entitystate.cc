@@ -50,6 +50,16 @@ Entity* EntityState::GetEntity()
 }
 
 
+EntityState* EntityState::GetState(const Class* cls)
+{
+  return m_entity ? m_entity->GetState(cls) : nullptr;
+}
+
+const EntityState* EntityState::GetState(const Class* cls) const
+{
+  return m_entity ? m_entity->GetState(cls) : nullptr;
+}
+
 const Entity* EntityState::GetEntity() const
 {
   return m_entity;
