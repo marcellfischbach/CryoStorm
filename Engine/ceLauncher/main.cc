@@ -591,6 +591,10 @@ int main(int argc, char** argv)
   ));
 
 
+  ce::iMaterial* broken = assetMan->Get<ce::iMaterial>(ce::ResourceLocator(
+    "/materials/Broken.matinstance"
+  ));
+
 
 
   ce::TerrainLayer* greenGrassLayer = assetMan->Get<ce::TerrainLayer>(ce::ResourceLocator("/terrain/green_grass.terrainlayer"));
@@ -639,6 +643,7 @@ int main(int argc, char** argv)
 //  create_suzannes_plain(suzanneMesh, world, suzanneMaterial);
   auto brickWallMesh = assetMan->Load<ce::Mesh>(ce::ResourceLocator("file:///brickwall.fbx"));
   brickWallMesh->SetDefaultMaterial(0, suzanneMaterial);
+  brickWallMesh->SetDefaultMaterial(1, broken);
   auto brickWallMeshState = new ce::StaticMeshState("BrickWall.Mesh");
   auto brickWallEntity = new ce::Entity("BrickWall");
   brickWallMeshState->SetMesh(brickWallMesh);

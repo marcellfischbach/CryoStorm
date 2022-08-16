@@ -102,14 +102,7 @@ Mesh::SubMesh::SubMesh()
 {
 
 }
-/*
-Mesh::SubMesh::SubMesh(iRenderMesh* mesh, Size materialSlotIdx)
-: m_mesh(nullptr)
-, m_materialSlotIdx(materialSlotIdx)
-{
-  CE_SET(m_mesh, mesh);
-}
-*/
+
 
 
 Mesh::SubMesh::SubMesh(const SubMesh& mesh)
@@ -119,14 +112,7 @@ Mesh::SubMesh::SubMesh(const SubMesh& mesh)
   CE_SET(m_mesh, mesh.m_mesh);
 }
 
-/*
-Mesh::SubMesh::SubMesh(SubMesh&& mesh) noexcept
-: m_mesh(mesh.m_mesh)
-, m_materialSlotIdx(mesh.m_materialSlotIdx)
-{
-  mesh.m_mesh = nullptr;
-}
-*/
+
 Mesh::SubMesh::~SubMesh()
 {
   CE_RELEASE(m_mesh);
@@ -141,15 +127,6 @@ Mesh::SubMesh &Mesh::SubMesh::operator=(const SubMesh & mesh)
 }
 
 
-/*
-Mesh::SubMesh &Mesh::SubMesh::operator=(SubMesh && mesh) noexcept
-{
-  m_mesh = mesh.m_mesh;
-  mesh.m_mesh = nullptr;
-  m_materialSlotIdx = mesh.m_materialSlotIdx;
-  return *this;
-}
-*/
 
 
 void Mesh::SubMesh::SetMesh(iRenderMesh* mesh)
@@ -188,13 +165,25 @@ Mesh::MaterialSlot::MaterialSlot(const std::string& name, iMaterial* defaultMate
   CE_SET(m_defaultMaterial, defaultMaterial);
 }
 
+Mesh::MaterialSlot::MaterialSlot(const MaterialSlot& slot)
+: m_defaultMaterial(nullptr)
+{
+  CE_SET(m_defaultMaterial, slot.m_defaultMaterial);
+  m_name = slot.m_name;
+}
+
 Mesh::MaterialSlot::~MaterialSlot()
 {
   CE_RELEASE(m_defaultMaterial);
   m_defaultMaterial = nullptr;
 }
 
-
+Mesh::MaterialSlot& Mesh::MaterialSlot::operator=(const MaterialSlot& slot)
+{
+  CE_SET(m_defaultMaterial, slot.m_defaultMaterial);
+  m_name = slot.m_name;
+  return *this;
+}
 
 iMaterial* Mesh::MaterialSlot::GetDefaultMaterial() const
 {

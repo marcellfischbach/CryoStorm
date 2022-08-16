@@ -35,9 +35,7 @@ public:
   private:
   public:
     SubMesh();
-//    SubMesh(iRenderMesh* mesh, Size materialSlotIdx);
     SubMesh(const SubMesh & mesh);
-    // SubMesh(SubMesh && mesh) noexcept;
     ~SubMesh();
 
     void SetMesh(iRenderMesh* mesh);
@@ -47,7 +45,6 @@ public:
     Size GetMaterialSlotIdx() const;
 
     SubMesh &operator=(const SubMesh &mesh);
-//    SubMesh &operator=(SubMesh &&mesh) noexcept;
 
   private:
     iRenderMesh* m_mesh;
@@ -63,9 +60,12 @@ public:
   private:
     MaterialSlot(const std::string &name, iMaterial *defaultMaterial);
   public:
+    MaterialSlot(const MaterialSlot &slot);
     ~MaterialSlot();
+
     iMaterial* GetDefaultMaterial() const;
 
+    MaterialSlot &operator=(const MaterialSlot &slot);
 
     const std::string& GetName() const;
 
