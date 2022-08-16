@@ -33,16 +33,21 @@ public:
   {
     friend class Mesh;
   private:
-    SubMesh();
-
   public:
+    SubMesh();
+//    SubMesh(iRenderMesh* mesh, Size materialSlotIdx);
+    SubMesh(const SubMesh & mesh);
+    // SubMesh(SubMesh && mesh) noexcept;
     ~SubMesh();
+
     void SetMesh(iRenderMesh* mesh);
     iRenderMesh* GetMesh() const;
 
     void SetMaterialSlotIdx(Size materialSlotIdx);
     Size GetMaterialSlotIdx() const;
 
+    SubMesh &operator=(const SubMesh &mesh);
+//    SubMesh &operator=(SubMesh &&mesh) noexcept;
 
   private:
     iRenderMesh* m_mesh;

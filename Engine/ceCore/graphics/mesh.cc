@@ -102,12 +102,55 @@ Mesh::SubMesh::SubMesh()
 {
 
 }
+/*
+Mesh::SubMesh::SubMesh(iRenderMesh* mesh, Size materialSlotIdx)
+: m_mesh(nullptr)
+, m_materialSlotIdx(materialSlotIdx)
+{
+  CE_SET(m_mesh, mesh);
+}
+*/
 
+
+Mesh::SubMesh::SubMesh(const SubMesh& mesh)
+  : m_mesh(nullptr)
+  , m_materialSlotIdx(mesh.m_materialSlotIdx)
+{
+  CE_SET(m_mesh, mesh.m_mesh);
+}
+
+/*
+Mesh::SubMesh::SubMesh(SubMesh&& mesh) noexcept
+: m_mesh(mesh.m_mesh)
+, m_materialSlotIdx(mesh.m_materialSlotIdx)
+{
+  mesh.m_mesh = nullptr;
+}
+*/
 Mesh::SubMesh::~SubMesh()
 {
   CE_RELEASE(m_mesh);
   m_mesh = nullptr;
 }
+
+Mesh::SubMesh &Mesh::SubMesh::operator=(const SubMesh & mesh)
+{
+  CE_SET(m_mesh, mesh.m_mesh);
+  m_materialSlotIdx = mesh.m_materialSlotIdx;
+  return *this;
+}
+
+
+/*
+Mesh::SubMesh &Mesh::SubMesh::operator=(SubMesh && mesh) noexcept
+{
+  m_mesh = mesh.m_mesh;
+  mesh.m_mesh = nullptr;
+  m_materialSlotIdx = mesh.m_materialSlotIdx;
+  return *this;
+}
+*/
+
 
 void Mesh::SubMesh::SetMesh(iRenderMesh* mesh)
 {

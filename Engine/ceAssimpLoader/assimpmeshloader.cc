@@ -127,12 +127,21 @@ void AssimpMeshLoader::ReadNode(aiNode *node, const Matrix4f &parentMatrix, Load
 
 Matrix4f ConvertMatrix4x4(aiMatrix4x4 &aiMat)
 {
+#if 0
   return Matrix4f(
       aiMat.a1, aiMat.a2, aiMat.a3, aiMat.a4,
       aiMat.b1, aiMat.b2, aiMat.b3, aiMat.b4,
       aiMat.c1, aiMat.c2, aiMat.c3, aiMat.c4,
       aiMat.d1, aiMat.d2, aiMat.d3, aiMat.d4
   );
+#else
+  return Matrix4f(
+    aiMat.a1, aiMat.b1, aiMat.c1, aiMat.d1,
+    aiMat.a2, aiMat.b2, aiMat.c2, aiMat.d2,
+    aiMat.a3, aiMat.b3, aiMat.c3, aiMat.d3,
+    aiMat.a4, aiMat.b4, aiMat.c4, aiMat.d4
+  );
+#endif
 }
 
 Color4f ConvertRGBA(aiColor4D &v)

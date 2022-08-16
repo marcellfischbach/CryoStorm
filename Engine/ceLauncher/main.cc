@@ -636,7 +636,16 @@ int main(int argc, char** argv)
   suzanneMesh->SetDefaultMaterial(0, suzanneMaterial);
   cube->SetDefaultMaterial(0, defaultMaterialInstance);
 
-  create_suzannes_plain(suzanneMesh, world, suzanneMaterial);
+//  create_suzannes_plain(suzanneMesh, world, suzanneMaterial);
+  auto brickWallMesh = assetMan->Load<ce::Mesh>(ce::ResourceLocator("file:///brickwall.fbx"));
+  brickWallMesh->SetDefaultMaterial(0, suzanneMaterial);
+  auto brickWallMeshState = new ce::StaticMeshState("BrickWall.Mesh");
+  auto brickWallEntity = new ce::Entity("BrickWall");
+  brickWallMeshState->SetMesh(brickWallMesh);
+  brickWallEntity->Attach(brickWallMeshState);
+  brickWallEntity->GetRoot()->GetTransform().Finish();
+  world->Attach(brickWallEntity);
+
 
 
   float sphereRadius = 4.0f;
@@ -685,10 +694,10 @@ int main(int argc, char** argv)
   ce::LightState* sunLightState = new ce::LightState("SunLight");
   sunEntity->Attach(sunLightState);
   sunLightState->SetType(ce::eLT_Directional);
-  sunLightState->SetColor(ce::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 0.0f);
+  sunLightState->SetColor(ce::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 0.3f);
   sunLightState->SetShadowMapBias(0.003f);
   sunLightState->SetStatic(true);
-  sunLightState->SetCastShadow(true);
+  sunLightState->SetCastShadow(false);
   sunLightState->SetTransform(sunLightState->GetTransform()
                                              //.SetRotation(ce::Quaternion::FromAxisAngle(ce::Vector3f(1.0f, 0.0f, 0.0f), ce::ceDeg2Rad(-45.0f)))
                                            .SetRotation(
