@@ -147,6 +147,13 @@ void World::Update(float tpf)
     m_physicsUpdateCounter-= (1.0f / 60.0f);
     m_physicsWorld->Step(1.0f / 60.0f);
   }
+
+
+  const std::vector<ce::iPhysicsWorld::DynamicResult>& result = m_physicsWorld->SwapResult();
+  for (auto                                          & res : result)
+  {
+    res.Collider->GetUserData()->SetLocalMatrix(res.Matrix);
+  }
 }
 
 }

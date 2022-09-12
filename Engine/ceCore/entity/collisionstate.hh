@@ -16,14 +16,18 @@ struct iStaticCollider;
 CE_CLASS(Virtual)
 class CE_CORE_API CollisionState : public CE_SUPER(SpatialState)
 {
-  CE_CLASS_GEN_OBJECT;
+  friend class RigidBodyState;
+  CE_CLASS_GEN;
 public:
-  CollisionState();
+  CollisionState(const std::string &name = std::string(""));
   ~CollisionState() override;
 
+  iCollisionShape *GetShape ();
 
 protected:
   virtual iCollisionShape* CreateShape(iPhysicsSystem *physSystem) const = 0;
+
+  void DetachFromWorld (World *world);
 
   void OnAttachedToWorld(World * world) override;
   void OnDetachedFromWorld(World * world) override;

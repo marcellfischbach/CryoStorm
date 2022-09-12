@@ -13,7 +13,7 @@
 #define CE_PROPERTY(...)
 #define CE_FUNCTION(...)
 #define CE_CLASS_GEN public: \
-    const ce::Class *GetClass () const override;\
+    const ce::Class *GetClass () const override; \
     static const ce::Class *GetStaticClass (); \
     void *QueryClass(const ce::Class *clazz) override; \
     const void *QueryClass(const ce::Class *clazz) const override

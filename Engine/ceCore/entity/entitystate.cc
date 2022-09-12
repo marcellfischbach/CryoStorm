@@ -57,8 +57,20 @@ EntityState* EntityState::GetState(const Class* cls)
 
 const EntityState* EntityState::GetState(const Class* cls) const
 {
-  return m_entity ? m_entity->GetState(cls) : nullptr;
+  return m_entity ? static_cast<const Entity*>(m_entity)->GetState(cls) : nullptr;
 }
+
+
+std::vector<EntityState*> EntityState::GetStates(const Class* cls)
+{
+  return m_entity ? m_entity->GetStates(cls) : std::vector<EntityState*>();
+}
+
+std::vector<const EntityState*> EntityState::GetStates(const Class* cls) const
+{
+  return m_entity ? static_cast<const Entity*>(m_entity)->GetStates(cls) : std::vector<const EntityState*>();
+}
+
 
 const Entity* EntityState::GetEntity() const
 {

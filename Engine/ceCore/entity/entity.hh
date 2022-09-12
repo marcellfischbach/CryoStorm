@@ -42,17 +42,32 @@ public:
   template <typename ES>
   ES* GetState()
   {
-    return static_cast<ES*>(GetState(ES::StaticClass()));
+    return static_cast<ES*>(GetState(ES::GetStaticClass()));
   }
   template <typename ES>
   const ES* GetState() const
   {
-    return static_cast<const ES*>(GetState(ES::StaticClass()));
+    return static_cast<const ES*>(GetState(ES::GetStaticClass()));
   }
 
   EntityState* GetState(const Class * cls);
   const EntityState* GetState(const Class * cls) const;
 
+
+  template<typename ES>
+  std::vector<ES*> GetStates()
+  {
+    return *reinterpret_cast<std::vector<ES*>*>(&GetStates(ES::GetStaticClass()));
+  }
+
+  template<typename ES>
+  std::vector<const ES*> GetStates() const
+  {
+    return *reinterpret_cast<std::vector<const ES*>*>(&GetStates(ES::GetStaticClass()));
+  }
+
+  std::vector<EntityState*> GetStates(const Class * cls);
+  std::vector<const EntityState*> GetStates(const Class * cls) const;
 
   bool Attach(EntityState* entityState);
   bool Detach(EntityState* entityState);

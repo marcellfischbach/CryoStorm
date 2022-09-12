@@ -170,7 +170,7 @@ const EntityState* Entity::GetState(const Class* cls) const
   {
     if (cls->IsAssignableFrom(state->GetClass()))
     {
-      return state;
+      return static_cast<const EntityState*>(state->QueryClass(cls));
     }
   }
   return nullptr;
@@ -181,6 +181,33 @@ EntityState* Entity::GetState(const Class* cls)
   return const_cast<EntityState*>(static_cast<const Entity*>(this)->GetState(cls));
 }
 
+
+
+std::vector<const EntityState*> Entity::GetStates(const Class* cls) const
+{
+  std::vector<const EntityState*> result;
+  for (auto state : m_states)
+  {
+    if (cls->IsAssignableFrom(state->GetClass()))
+    {
+      result.emplace_back(static_cast<const EntityState*>(state->QueryClass(cls)));
+    }
+  }
+  return result;
+}
+
+std::vector<EntityState*> Entity::GetStates(const Class* cls)
+{
+  std::vector<EntityState*> result;
+  for (auto state : m_states)
+  {
+    if (cls->IsAssignableFrom(state->GetClass()))
+    {
+      result.emplace_back(static_cast<EntityState*>(state->QueryClass(cls)));
+    }
+  }
+  return result;
+}
 
 bool Entity::Attach(EntityState *entityState)
 {

@@ -1,4 +1,5 @@
 #include <ceCore/entity/collisionstate.hh>
+#include <ceCore/entity/rigidbodystate.hh>
 #include <ceCore/entity/world.hh>
 #include <ceCore/physics/iphysicssystem.hh>
 #include <ceCore/physics/icollider.hh>
@@ -10,11 +11,11 @@ namespace ce
 {
 
 
-CollisionState::CollisionState()
-  : m_shape(nullptr)
+CollisionState::CollisionState(const std::string &name)
+  : SpatialState(name)
+  , m_shape(nullptr)
   , m_collider(nullptr)
 {
-  CE_CLASS_GEN_CONSTR;
 }
 
 CollisionState::~CollisionState()
@@ -23,8 +24,29 @@ CollisionState::~CollisionState()
 }
 
 
+iCollisionShape* CollisionState::GetShape()
+{
+  if (!m_shape)
+  {
+    auto physSystem = ObjectRegistry::Get<iPhysicsSystem>();
+    if (physSystem)
+    {
+      m_shape = CreateShape(physSystem);
+    }
+  }
+  return m_shape;
+}
+
 void CollisionState::OnAttachedToWorld(World* world)
 {
+  RigidBodyState* rigidBodyState = GetState<RigidBodyState>();
+  if (rigidBodyState)
+  {
+    // this collider instance is managed via a rigid body... no need add anything
+    return;
+  }
+
+
   // TODO: Get RigidBodyState -> if present don't attach a static body
   auto physSystem = ObjectRegistry::Get<iPhysicsSystem>();
   if (!physSystem)
@@ -63,7 +85,11 @@ void CollisionState::OnAttachedToWorld(World* world)
 
 void CollisionState::OnDetachedFromWorld(World* world)
 {
-  // TODO: Get RigidBodyState -> if present don't dettach a static body
+  DetachFromWorld(world);
+}
+
+void CollisionState::DetachFromWorld(World* world)
+{
   if (m_collider)
   {
     world->GetPhysicsWorld()->RemoveCollider(m_collider);

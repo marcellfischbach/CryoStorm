@@ -11,6 +11,7 @@
 #include <ceCore/entity/entity.hh>
 #include <ceCore/entity/entitystate.hh>
 #include <ceCore/entity/lightstate.hh>
+#include <ceCore/entity/rigidbodystate.hh>
 #include <ceCore/entity/spatialstate.hh>
 #include <ceCore/entity/staticmeshstate.hh>
 #include <ceCore/entity/terrainmeshstate.hh>
@@ -365,11 +366,11 @@ ce::iRenderMesh* create_sphere_mesh(float radius, uint32_t detail, float uv_f)
         sinf(angleV),
         cosf(angleV) * sinf(angleH)
       );
-      ce::Vector3f tangent (
+      ce::Vector3f tangent(
         cosf(angleH + M_PI / 2.0),
         0.0f,
         sinf(angleH + M_PI / 2.0)
-        );
+      );
       positions.push_back(normal * radius);
       normals.emplace_back(normal);
       tangents.emplace_back(tangent);
@@ -580,8 +581,7 @@ int main(int argc, char** argv)
 
   ce::iDevice* device = ce::ObjectRegistry::Get<ce::iDevice>();
 
-  ce::AssetManager    * assetMan          = ce::AssetManager::Get();
-
+  ce::AssetManager* assetMan = ce::AssetManager::Get();
 
   ce::iMaterial* defaultMaterialInstance = assetMan->Get<ce::iMaterial>(ce::ResourceLocator(
     "/materials/Default.mat"
@@ -591,19 +591,19 @@ int main(int argc, char** argv)
     "/materials/Suzanne.matinstance"
   ));
 
-
   ce::iMaterial* broken = assetMan->Get<ce::iMaterial>(ce::ResourceLocator(
     "/materials/Broken.matinstance"
   ));
 
-
-
-  ce::TerrainLayer* greenGrassLayer = assetMan->Get<ce::TerrainLayer>(ce::ResourceLocator("/terrain/green_grass.terrainlayer"));
-  ce::TerrainLayer* dirtLayer = assetMan->Get<ce::TerrainLayer>(ce::ResourceLocator("/terrain/dirt.terrainlayer"));
-  ce::TerrainLayer* fieldstoneLayer = assetMan->Get<ce::TerrainLayer>(ce::ResourceLocator("/terrain/fieldstone.terrainlayer"));
-  ce::TerrainLayerMask* terrainLayers = assetMan->Get<ce::TerrainLayerMask>(ce::ResourceLocator("/terrain/terrain.terrainmask"));
-
-
+  ce::TerrainLayer
+                      * greenGrassLayer =
+    assetMan->Get<ce::TerrainLayer>(ce::ResourceLocator("/terrain/green_grass.terrainlayer"));
+  ce::TerrainLayer    * dirtLayer       =
+                        assetMan->Get<ce::TerrainLayer>(ce::ResourceLocator("/terrain/dirt.terrainlayer"));
+  ce::TerrainLayer    * fieldstoneLayer =
+                        assetMan->Get<ce::TerrainLayer>(ce::ResourceLocator("/terrain/fieldstone.terrainlayer"));
+  ce::TerrainLayerMask* terrainLayers   =
+                        assetMan->Get<ce::TerrainLayerMask>(ce::ResourceLocator("/terrain/terrain.terrainmask"));
 
   ce::World* world = new ce::World();
 
@@ -646,12 +646,11 @@ int main(int argc, char** argv)
   brickWallMesh->SetDefaultMaterial(0, suzanneMaterial);
   brickWallMesh->SetDefaultMaterial(1, broken);
   auto brickWallMeshState = new ce::StaticMeshState("BrickWall.Mesh");
-  auto brickWallEntity = new ce::Entity("BrickWall");
+  auto brickWallEntity    = new ce::Entity("BrickWall");
   brickWallMeshState->SetMesh(brickWallMesh);
   brickWallEntity->Attach(brickWallMeshState);
   brickWallEntity->GetRoot()->GetTransform().Finish();
   world->Attach(brickWallEntity);
-
 
 
   float sphereRadius = 4.0f;
@@ -777,12 +776,12 @@ int main(int argc, char** argv)
   bool  useCs     = true;
   bool  anim      = true;
   float roughness = 1.0f;
-  float metallic = 0.0f;
+  float metallic  = 0.0f;
   defaultMaterialInstance->Set(2, roughness);
 
 
-  ce::iPhysicsSystem* physics   = ce::ObjectRegistry::Get<ce::iPhysicsSystem>();
-  ce::iPhysicsWorld* physWorld = world->GetPhysicsWorld();
+  ce::iPhysicsSystem* physics = ce::ObjectRegistry::Get<ce::iPhysicsSystem>();
+//  ce::iPhysicsWorld* physWorld = world->GetPhysicsWorld();
 
 
   // add the ground plane
@@ -795,13 +794,12 @@ int main(int argc, char** argv)
   physWorld->AddCollider(floorCollider);
   */
 
-  ce::Entity* floorEntity = new ce::Entity("Floor");
+  ce::Entity          * floorEntity        = new ce::Entity("Floor");
   ce::BoxColliderState* floorColliderState = new ce::BoxColliderState();
   floorColliderState->SetHalfExtends(ce::Vector3f(100.0f, 1.0f, 100.0f));
   floorEntity->Attach(floorColliderState);
   floorEntity->GetRoot()->GetTransform().SetTranslation(ce::Vector3f(0.0f, -1.0f, 0.0f)).Finish();
   world->Attach(floorEntity);
-
 
 
   sphereRadius     = 0.5f;
@@ -812,22 +810,30 @@ int main(int argc, char** argv)
       ce::Mesh           * meshSphere      = new ce::Mesh();
       ce::Entity         * entitySphere    = new ce::Entity("Sphere");
       ce::StaticMeshState* meshStateSphere = new ce::StaticMeshState("Mesh.Sphere");
+      ce::RigidBodyState * rigidBodyState  = new ce::RigidBodyState("RigidBody.Sphere");
+
+
       meshSphere->AddMaterialSlot("Default", defaultMaterialInstance);
       meshSphere->AddSubMesh(renderMeshSphere, 0);
-      meshStateSphere->GetTransform()
+
+      entitySphere->Attach(rigidBodyState);
+      rigidBodyState->Attach(meshStateSphere);
+
+      rigidBodyState->GetTransform()
                      .SetTranslation(ce::Vector3f(0.0f, sphereRadius * 2.5f, 0.0f) * ((float)i + 2.0f))
                      .Finish();
       meshStateSphere->SetMesh(meshSphere);
-      entitySphere->Attach(meshStateSphere);
       world->Attach(entitySphere);
 
+      /*
       ce::SphereShapeDesc sphereDesc{ sphereRadius };
       ce::iCollisionShape * sphereShape    = physics->CreateShape(sphereDesc);
       ce::iDynamicCollider* sphereCollider = physics->CreateDynamicCollider();
       sphereCollider->Attach(sphereShape);
       sphereCollider->SetTransform(entitySphere->GetRoot()->GetGlobalMatrix());
       sphereCollider->SetUserData(meshStateSphere);
-      physWorld->AddCollider(sphereCollider);
+      //physWorld->AddCollider(sphereCollider);
+       */
     }
     {
       ce::Mesh           * meshSphere      = new ce::Mesh();
@@ -836,7 +842,7 @@ int main(int argc, char** argv)
       meshSphere->AddMaterialSlot("Default", defaultMaterialInstance);
       meshSphere->AddSubMesh(renderMeshSphere, 0);
       meshStateSphere->GetTransform()
-                     .SetTranslation(ce::Vector3f(i * sphereRadius*0.5, 0.0f, 0.0f))
+                     .SetTranslation(ce::Vector3f(i * sphereRadius * 0.5, 0.0f, 0.0f))
                      .Finish();
       meshStateSphere->SetMesh(meshSphere);
       entitySphere->Attach(meshStateSphere);
@@ -877,7 +883,7 @@ int main(int argc, char** argv)
 
   ce::iMaterial* updateMaterial = suzanneMaterial;
   size_t roughnessIdx = updateMaterial->IndexOf("Roughness");
-  size_t metallicIdx = updateMaterial->IndexOf("Metallic");
+  size_t metallicIdx  = updateMaterial->IndexOf("Metallic");
 #if _DEBUG
   ce::Size numDrawCallsPerSec = 0;
   ce::Size numTrianglesPerSec = 0;
@@ -966,11 +972,13 @@ int main(int argc, char** argv)
       }
 
       sunLightState->SetTransform(sunLightState->GetTransform()
-              .SetTranslation(ce::Vector3f(sin(sunRotation) * 20.0f, 20.0f, cos(sunRotation) * 20.0f))
-              .LookAt(ce::Vector3f(0.0f, 0.0f, 0.0f), ce::Vector3f(0.0f, 1.0f, 0.0f))
+                                               .SetTranslation(ce::Vector3f(sin(sunRotation) * 20.0f,
+                                                                            20.0f,
+                                                                            cos(sunRotation) * 20.0f))
+                                               .LookAt(ce::Vector3f(0.0f, 0.0f, 0.0f), ce::Vector3f(0.0f, 1.0f, 0.0f))
       );
 
-     sphereRadius = 0.0f;
+      sphereRadius = 0.0f;
       float dist = 10.0f;
 //      ce::SpatialState *cameraState = cameraEntity->GetRoot();
 //      cameraState->GetTransform()
@@ -1004,12 +1012,7 @@ int main(int argc, char** argv)
 
     SDL_GL_SwapWindow(wnd);
 
-    physWorld->Step(1.0f / 60.0f);
-    const std::vector<ce::iPhysicsWorld::DynamicResult>& result = physWorld->SwapResult();
-    for (auto                                          & res : result)
-    {
-      res.Collider->GetUserData()->SetLocalMatrix(res.Matrix);
-    }
+
 //    break;
   }
 

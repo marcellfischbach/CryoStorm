@@ -31,6 +31,8 @@ set(SOURCES
         entity/entitystate.hh
         entity/lightstate.cc
         entity/lightstate.hh
+        entity/rigidbodystate.cc
+        entity/rigidbodystate.hh
         entity/spatialstate.cc
         entity/spatialstate.hh
         entity/staticmeshstate.cc
