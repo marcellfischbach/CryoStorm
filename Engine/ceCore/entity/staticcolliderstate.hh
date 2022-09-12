@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include <ceCore/coreexport.hh>
@@ -6,33 +5,34 @@
 
 namespace ce
 {
+
 struct iCollisionShape;
-struct iDynamicCollider;
 struct iPhysicsSystem;
-struct iPhysicsWorld;
+struct iStaticCollider;
+
 
 CE_CLASS()
-class CE_CORE_API RigidBodyState : public CE_SUPER(SpatialState)
+class CE_CORE_API StaticColliderState : public CE_SUPER(SpatialState)
 {
   CE_CLASS_GEN;
 
 public:
-  RigidBodyState(const std::string &name = std::string(""));
-  ~RigidBodyState() override;
+  StaticColliderState(const std::string &name = std::string (""));
+  ~StaticColliderState() override;
 
 protected:
+
   void OnAttachedToWorld(World * world) override;
   void OnDetachedFromWorld(World * world) override;
 
   void TransformationUpdatedPreChildren() override;
 
-
 private:
-  void AcquireEmptyDynamicCollider(iPhysicsSystem *physSystem);
+  void AcquireEmptyStaticCollider(iPhysicsSystem* physicsSystem);
   void DetachCurrentShapes();
 
-  iDynamicCollider *m_dynamicCollider;
+  iStaticCollider* m_collider;
   std::vector<iCollisionShape*> m_shapes;
 };
 
-}
+} // ce

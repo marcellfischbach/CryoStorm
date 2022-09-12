@@ -147,7 +147,7 @@ void EntityState::DetachFromWorld(World *world)
   {
     world->DetachUpdateState(this);
   }
-  OnAttachedToWorld(world);
+  OnDetachedFromWorld(world);
 }
 
 

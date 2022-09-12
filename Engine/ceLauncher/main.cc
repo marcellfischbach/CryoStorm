@@ -13,6 +13,7 @@
 #include <ceCore/entity/lightstate.hh>
 #include <ceCore/entity/rigidbodystate.hh>
 #include <ceCore/entity/spatialstate.hh>
+#include <ceCore/entity/staticcolliderstate.hh>
 #include <ceCore/entity/staticmeshstate.hh>
 #include <ceCore/entity/terrainmeshstate.hh>
 #include <ceCore/entity/world.hh>
@@ -795,9 +796,11 @@ int main(int argc, char** argv)
   */
 
   ce::Entity          * floorEntity        = new ce::Entity("Floor");
-  ce::BoxColliderState* floorColliderState = new ce::BoxColliderState();
-  floorColliderState->SetHalfExtends(ce::Vector3f(100.0f, 1.0f, 100.0f));
-  floorEntity->Attach(floorColliderState);
+  ce::BoxColliderState* floorBoxCollider = new ce::BoxColliderState();
+  ce::StaticColliderState * floorStaticCollider = new ce::StaticColliderState();
+  floorBoxCollider->SetHalfExtends(ce::Vector3f(100.0f, 1.0f, 100.0f));
+  floorEntity->Attach(floorBoxCollider);
+  floorEntity->Attach(floorStaticCollider);
   floorEntity->GetRoot()->GetTransform().SetTranslation(ce::Vector3f(0.0f, -1.0f, 0.0f)).Finish();
   world->Attach(floorEntity);
 
@@ -810,12 +813,15 @@ int main(int argc, char** argv)
       ce::Mesh           * meshSphere      = new ce::Mesh();
       ce::Entity         * entitySphere    = new ce::Entity("Sphere");
       ce::StaticMeshState* meshStateSphere = new ce::StaticMeshState("Mesh.Sphere");
+      ce::SphereColliderState *sphereColliderState = new ce::SphereColliderState();
       ce::RigidBodyState * rigidBodyState  = new ce::RigidBodyState("RigidBody.Sphere");
 
 
       meshSphere->AddMaterialSlot("Default", defaultMaterialInstance);
       meshSphere->AddSubMesh(renderMeshSphere, 0);
+      sphereColliderState->SetRadius(sphereRadius);
 
+      entitySphere->Attach(sphereColliderState);
       entitySphere->Attach(rigidBodyState);
       rigidBodyState->Attach(meshStateSphere);
 
@@ -825,9 +831,9 @@ int main(int argc, char** argv)
       meshStateSphere->SetMesh(meshSphere);
       world->Attach(entitySphere);
 
+
+
       /*
-      ce::SphereShapeDesc sphereDesc{ sphereRadius };
-      ce::iCollisionShape * sphereShape    = physics->CreateShape(sphereDesc);
       ce::iDynamicCollider* sphereCollider = physics->CreateDynamicCollider();
       sphereCollider->Attach(sphereShape);
       sphereCollider->SetTransform(entitySphere->GetRoot()->GetGlobalMatrix());
