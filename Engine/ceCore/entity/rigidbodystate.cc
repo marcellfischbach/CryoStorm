@@ -20,58 +20,71 @@ RigidBodyState::RigidBodyState(const std::string& name)
 
 RigidBodyState::~RigidBodyState()
 {
+  // TODO: Detach ridid
 }
 
 
 void RigidBodyState::OnAttachedToWorld(World* world)
 {
   auto physSystem = ObjectRegistry::Get<iPhysicsSystem>();
-  iPhysicsWorld* physWorld = world->GetPhysicsWorld();
-  if (!physSystem || !physWorld)
+  if (!physSystem)
   {
     return;
   }
 
-
-  std::vector<CollisionState*> collisionStates = GetStates<CollisionState>();
+  auto collisionStates = GetStates<CollisionState>();
   if (collisionStates.empty())
   {
     return;
   }
 
-  DetachCollider (physWorld);
 
-  m_dynamicCollider = physSystem->CreateDynamicCollider();
+  AcquireEmptyDynamicCollider(physSystem);
+
   for (auto collisionState : collisionStates)
   {
-    // if the collision states where added to the world before the rigid body was, then we must detach the static
-    // colliders first
-    collisionState->DetachFromWorld(world);
-    m_dynamicCollider->Attach(collisionState->GetShape());
+    auto shape = collisionState->GetShape();
+    m_shapes.emplace_back(shape);
+    m_dynamicCollider->Attach(shape);
   }
 
-  AttachCollider (physWorld);
+
+  m_dynamicCollider->SetTransform(GetGlobalMatrix());
+  auto physWorld = world->GetPhysicsWorld();
+  physWorld->AddCollider(m_dynamicCollider);
 }
+
+void RigidBodyState::AcquireEmptyDynamicCollider(iPhysicsSystem *physSystem)
+{
+  if (m_dynamicCollider)
+  {
+    DetachCurrentShapes();
+  }
+  else
+  {
+    m_dynamicCollider = physSystem->CreateDynamicCollider();
+    m_dynamicCollider->SetUserData(this);
+  }
+}
+
+
+void RigidBodyState::DetachCurrentShapes()
+{
+  for (auto shape : m_shapes)
+  {
+    m_dynamicCollider->Detach(shape);
+  }
+  m_shapes.clear();
+}
+
 
 void RigidBodyState::OnDetachedFromWorld(World* world)
 {
-  iPhysicsWorld* physWorld = world->GetPhysicsWorld();
-  DetachCollider(physWorld);
-}
-
-
-void RigidBodyState::AttachCollider(iPhysicsWorld* physWorld)
-{
   if (m_dynamicCollider)
   {
-    physWorld->AddCollider(m_dynamicCollider);
-  }
-}
-
-void RigidBodyState::DetachCollider(iPhysicsWorld* physWorld)
-{
-  if (m_dynamicCollider)
-  {
+    iPhysicsWorld* physWorld = world->GetPhysicsWorld();
+    DetachCurrentShapes();
+    m_dynamicCollider->SetUserData(nullptr);
     physWorld->RemoveCollider(m_dynamicCollider);
     CE_RELEASE(m_dynamicCollider);
     m_dynamicCollider = nullptr;

@@ -35,6 +35,8 @@ set(SOURCES
         entity/rigidbodystate.hh
         entity/spatialstate.cc
         entity/spatialstate.hh
+        entity/staticcolliderstate.cc
+        entity/staticcolliderstate.hh
         entity/staticmeshstate.cc
         entity/staticmeshstate.hh
         entity/terrainmeshstate.cc
