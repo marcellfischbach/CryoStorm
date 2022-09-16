@@ -6,8 +6,6 @@ uniform float ce_LightRange[4];
 uniform int ce_LightCastShadow[4];
 
 
-#include <directionallight_shadow.glsl>
-#include <pointlight_shadow.glsl>
 #include <oren-nayar.glsl>
 #include <lambert.glsl>
 #include <cook-torrance.glsl>
@@ -55,7 +53,7 @@ light_result_t calc_light(int idx, vec3 light_ambient, vec3 light_color, vec4 li
         diffuse = lighting_result.diffuse;
         specular = lighting_result.specular;
 
-        shadow = calc_point_shadow(idx, light_vector.xyz, light_range, frag_position);
+        // shadow = calc_point_shadow(idx, light_vector.xyz, light_range, frag_position);
         attenuation = max(1.0 - distance / light_range, 0.0);
 
     }
@@ -71,7 +69,7 @@ light_result_t calc_light(int idx, vec3 light_ambient, vec3 light_color, vec4 li
         ambient = lighting_result.ambient;
         diffuse = lighting_result.diffuse;
         specular = lighting_result.specular;
-        shadow = calc_directional_shadow(idx, light_vector.xyz, frag_position, camera_space_position);
+        //shadow = calc_directional_shadow(idx, light_vector.xyz, frag_position, camera_space_position);
         attenuation = 1.0;
     }
 

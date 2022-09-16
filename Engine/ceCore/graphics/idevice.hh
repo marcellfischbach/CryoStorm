@@ -81,7 +81,6 @@ struct CE_CORE_API iDevice : public CE_SUPER(iObject)
   virtual void SetPointLightShadowMap(iLight* light, iTextureCube* colorMap, iTextureCube* depthMap, float near, float far, float bias) = 0;
   virtual void SetDirectionalLightShadowMap(iLight* light, const Vector3f& layers, iTexture2DArray* colorMap, iTexture2DArray* depthMap, Matrix4f matrices[3], float bias) = 0;
 
-
   virtual iSampler* CreateSampler() = 0;
   virtual iTexture2D* CreateTexture(const iTexture2D::Descriptor& descriptor) = 0;
   virtual iTexture2DArray* CreateTexture(const iTexture2DArray::Descriptor& descriptor) = 0;

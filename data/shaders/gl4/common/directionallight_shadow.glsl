@@ -1,8 +1,8 @@
 
 
-uniform vec4 ce_DirectionalLightShadowMapLayersBias[4];
-uniform mat4 ce_DirectionalLightShadowMapMatrices[12];
-uniform sampler2DArrayShadow ce_DirectionalLightShadowMapDepth[4];
+uniform vec4 ce_DirectionalLightShadowMapLayersBias;
+uniform mat4 ce_DirectionalLightShadowMapMatrices[3];
+uniform sampler2DArrayShadow ce_DirectionalLightShadowMapDepth;
 
 
 

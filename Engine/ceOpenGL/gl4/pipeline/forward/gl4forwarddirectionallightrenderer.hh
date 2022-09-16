@@ -13,6 +13,7 @@ namespace ce
 
 struct iDevice;
 struct iSampler;
+struct iShader;
 struct iTexture2DArray;
 class Camera;
 class GfxMesh;
@@ -86,6 +87,8 @@ private:
   ShadowMapFilter m_shadowMapFilter;
   iSampler* m_shadowMapColorSampler;
   iSampler* m_shadowMapDepthSampler;
+
+  iShader* m_shadowMappingShader;
 
   std::vector<GfxMesh*> m_meshesCache;
 };

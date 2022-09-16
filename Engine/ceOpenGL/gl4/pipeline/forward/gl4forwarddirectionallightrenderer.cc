@@ -12,11 +12,13 @@
 #include <ceCore/graphics/projector.hh>
 #include <ceCore/graphics/scene/gfxmesh.hh>
 #include <ceCore/graphics/scene/igfxscene.hh>
+#include <ceCore/graphics/shading/ishader.hh>
 #include <ceCore/input/input.hh>
 #include <ceCore/math/math.hh>
 #include <ceCore/math/clipper/cameraclipper.hh>
 #include <ceCore/math/clipper/multiplaneclipper.hh>
 #include <ceCore/math/clipper/sphereclipper.hh>
+#include <ceCore/resource/assetmanager.hh>
 
 #include <algorithm>
 #include <GL/glew.h>
@@ -65,6 +67,9 @@ void GL4ForwardDirectionalLightRenderer::Initialize(Settings& settings)
   {
     m_shadowMapFilter = ShadowMapFilter::VSM;
   }
+
+
+  m_shadowMappingShader = AssetManager::Get()->Get<iShader>(ResourceLocator("file://${engine}/opengl/gl4/forward/directional_light_shadow_map.shader"));
 }
 
 void GL4ForwardDirectionalLightRenderer::SetDevice(iDevice* device)

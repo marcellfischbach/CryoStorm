@@ -72,9 +72,10 @@ void GL4ForwardPipeline::Render(iRenderTarget2D* target,
 
   CollectLightsAndShadows(&clppr);
   RenderShadowMaps();
-  BindCamera();
 
+  BindCamera();
   RenderForwardToTarget();
+
   Cleanup();
 
 

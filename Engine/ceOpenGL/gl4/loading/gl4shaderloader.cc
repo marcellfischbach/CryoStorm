@@ -261,7 +261,7 @@ GL4Shader* LoadShader(const std::string& typeText,
     */
     return shader;
   }
-  catch (GL4ShaderCompileException& sce)
+  catch (const GL4ShaderCompileException& sce)
   {
     printf("Shader:\n");
     std::vector<std::string> lines = split(source);
