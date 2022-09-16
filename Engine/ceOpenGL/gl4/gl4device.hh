@@ -62,6 +62,9 @@ public:
   void SetRenderTarget(iRenderTarget * target) override;
 
   void ClearShadowMaps() override;
+  bool MoreShadowMapsPossible() const override;
+  void AddShadowMap(iTexture2D* shadowMap) override;
+  iTexture2D* GetShadowMap(unsigned idx) override;
   void SetPointLightShadowMap(iLight * light, iTextureCube * colorMap, iTextureCube * depthMap, float near, float far, float bias) override;
   void SetDirectionalLightShadowMap(iLight * light, const Vector3f &layers, iTexture2DArray * colorMap, iTexture2DArray * depthMap, Matrix4f matrices[3], float bias) override;
 
@@ -191,6 +194,7 @@ private:
     iTextureCube* Depth;
     Vector3f Mapping;
   };
+
   std::map<const iLight*, PointLightShadowData> m_pointLightShadowData;
 
   struct DirectionalLightShadowData
@@ -203,6 +207,7 @@ private:
   };
   std::map<const iLight*, DirectionalLightShadowData> m_directionalLightShadowData;
 
+  std::vector<iTexture2D*> m_shadowMapTextures;
 
   /** 
    * \name Fullscreen Rendering

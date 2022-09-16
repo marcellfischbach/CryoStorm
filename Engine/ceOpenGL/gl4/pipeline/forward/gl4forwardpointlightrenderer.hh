@@ -38,7 +38,7 @@ public:
   void Clear();
   void Add(GL4PointLight* pointLight);
 
-  Size RenderShadowMaps(Size maxShadowLights);
+  void RenderShadowMaps(Size maxShadowLights);
 
 private:
   void SortLights();

@@ -75,8 +75,9 @@ void GL4ForwardPointLightRenderer::Add(GL4PointLight* pointLight)
   }
 }
 
-Size GL4ForwardPointLightRenderer::RenderShadowMaps(Size maxShadowLights)
+void GL4ForwardPointLightRenderer::RenderShadowMaps(Size maxShadowLights)
 {
+  /*
   SortLights();
   Size i = 0;
   for (auto pointLight : m_shadowPointLights)
@@ -104,6 +105,7 @@ Size GL4ForwardPointLightRenderer::RenderShadowMaps(Size maxShadowLights)
     i++;
   }
   return i;
+   */
 }
 
 

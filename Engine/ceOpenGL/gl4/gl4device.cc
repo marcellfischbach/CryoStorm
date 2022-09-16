@@ -96,6 +96,7 @@ bool GL4Device::Initialize()
   glColorMask(true, true, true, true);
   glDepthMask(true);
   glEnable(GL_DEPTH_TEST);
+  glDepthFunc(GL_LEQUAL);
   glDisable(GL_BLEND);
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   glBlendFuncSeparate(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO);
@@ -580,8 +581,28 @@ void GL4Device::SetRenderTarget(iRenderTarget *renderTarget)
 
 void GL4Device::ClearShadowMaps()
 {
+  m_shadowMapTextures.clear();
   m_pointLightShadowData.clear();
   m_directionalLightShadowData.clear();
+}
+
+bool GL4Device::MoreShadowMapsPossible() const
+{
+  return m_shadowMapTextures.size() < 4;
+}
+
+void GL4Device::AddShadowMap(iTexture2D* shadowMap)
+{
+  m_shadowMapTextures.push_back(shadowMap);
+}
+
+iTexture2D *GL4Device::GetShadowMap(unsigned int idx)
+{
+  if (idx >= m_shadowMapTextures.size())
+  {
+    return nullptr;
+  }
+  return m_shadowMapTextures[idx];
 }
 
 void GL4Device::SetPointLightShadowMap(iLight *light,

@@ -19,6 +19,7 @@ namespace ce
 class GfxLight;
 class GfxMesh;
 
+struct iClipper;
 struct iSampler;
 
 namespace opengl
@@ -42,9 +43,18 @@ public:
   void Render(iRenderTarget2D * taget, const GfxCamera * camera, iDevice * device, iGfxScene * scene) override;
 
 private:
+  void SetupVariables(iRenderTarget2D *target,  const GfxCamera *camera,iDevice *device,iGfxScene *scene);
+  void CollectLightsAndShadows (iClipper *clipper);
+  void ScanVisibleMeshes(iClipper* clipper);
+  void BindCamera();
+  void RenderDepthToTarget ();
+  void RenderForwardToTarget ();
+  void Cleanup ();
+
 
   void LightScanned(GfxLight * light);
-  void RenderUnlitMesh(GfxMesh * mesh);
+  void RenderUnlitDepthMesh(GfxMesh * mesh);
+  void RenderUnlitForwardMesh(GfxMesh * mesh);
   void RenderMesh(GfxMesh * mesh, std::array<const GfxLight*, MaxLights> &lights, Size offset);
 
   void CollectShadowLights(GfxLight * light);
@@ -65,10 +75,13 @@ private:
 
   uint64_t m_frame;
   iDevice* m_device;
+  const GfxCamera *m_gfxCamera;
   const Camera *m_camera;
   const Projector *m_projector;
   iGfxScene  * m_scene;
   iRenderTarget2D * m_target;
+  std::array<const GfxLight *, MaxLights> m_renderLights = {};
+  size_t m_numberOfFixedLights;
 
 
 
