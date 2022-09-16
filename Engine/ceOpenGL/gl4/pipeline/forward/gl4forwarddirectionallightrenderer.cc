@@ -169,10 +169,11 @@ void GL4ForwardDirectionalLightRenderer::RenderShadowBuffer(GL4DirectionalLight*
   Vector3f xAxis = mat.GetXAxis().Normalize();
   Vector3f yAxis = mat.GetYAxis().Normalize();
 
-  float modV0      = sizeSplit0 * 2.0f / m_directionalLightShadowBufferSize;
-  float modV1      = sizeSplit1 * 2.0f / m_directionalLightShadowBufferSize;
-  float modV2      = sizeSplit2 * 2.0f / m_directionalLightShadowBufferSize;
-  float modVTot    = sizeSplitTot * 2.0f / m_directionalLightShadowBufferSize;
+  float shadowBufferSize = static_cast<float>(m_directionalLightShadowBufferSize);
+  float modV0      = sizeSplit0 * 2.0f / shadowBufferSize;
+  float modV1      = sizeSplit1 * 2.0f / shadowBufferSize;
+  float modV2      = sizeSplit2 * 2.0f / shadowBufferSize;
+  float modVTot    = sizeSplitTot * 2.0f / shadowBufferSize;
   float onAxisX0   = xAxis.Dot(pos0);
   float onAxisY0   = yAxis.Dot(pos0);
   float onAxisX1   = xAxis.Dot(pos1);

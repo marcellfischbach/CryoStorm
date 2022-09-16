@@ -180,10 +180,10 @@ void GL4ForwardPipeline::RenderDepthToTarget()
 
 
   m_device->SetColorWrite(false, false, false, false);
-  std::vector<GfxMesh*>& defaultMeshes = m_collector.GetMeshes(eRenderQueue::Default);
+  const std::vector<GfxMesh*>& defaultMeshes = m_collector.GetMeshes(eRenderQueue::Default);
   for (auto            & mesh : defaultMeshes)
   {
-    RenderUnlitForwardMesh(mesh);
+      RenderUnlitDepthMesh(mesh);
   }
   m_device->SetColorWrite(true, true, true, true);
 }
