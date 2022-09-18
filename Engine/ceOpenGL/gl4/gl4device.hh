@@ -87,6 +87,7 @@ public:
   eTextureUnit BindTexture(iTexture * texture) override;
   bool BindMaterial(iMaterial * material, eRenderPass pass) override;
   void Render(iRenderMesh * mesh, eRenderPass pass) override;
+  void RenderFullscreen();
   void RenderFullscreen(iTexture2D * texture) override;
   void RenderFullscreen(iTexture2DArray * texture, int layer) override;
   void RenderFullscreen(iTextureCube * texture, int layer) override;

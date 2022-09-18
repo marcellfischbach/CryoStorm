@@ -1,5 +1,5 @@
 #include <ceOpenGL/gl4/shading/gl4shaderattribute.hh>
-
+#include <ceOpenGL/glerror.hh>
 
 namespace ce::opengl
 {

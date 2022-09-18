@@ -118,9 +118,6 @@ iObject* SamplerLoader::Load(const CrimsonFile *file, const Class* cls, const Re
     sampler->SetTextureCompareMode(compareMode);
     sampler->SetTextureCompareFunc(compareFunc);
 
-    printf ("Sampler %s [%p] %s %d %d\n",
-            locator.Encoded().c_str(),
-            sampler, samplerElement->GetAttribute("filter", "").c_str(), minLOD, maxLOD);
 
   }
   

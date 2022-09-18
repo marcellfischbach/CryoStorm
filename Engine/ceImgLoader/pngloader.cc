@@ -40,7 +40,6 @@ void read_data_from_i_file(png_structp png_ptr, png_bytep buffer, png_size_t siz
 
 iObject* PngLoader::Load(const Class* cls, const ResourceLocator& locator) const
 {
-  std::cout << "Load png: " << locator.GetFilename() << std::endl;
   iFile* fp = VFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (!fp)
   {

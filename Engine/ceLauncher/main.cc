@@ -746,7 +746,6 @@ int main(int argc, char **argv)
   bool anim = true;
   float roughness = 1.0f;
   float metallic = 0.0f;
-  defaultMaterialInstance->Set(2, roughness);
 
 
   ce::iPhysicsSystem *physics = ce::ObjectRegistry::Get<ce::iPhysicsSystem>();
@@ -850,9 +849,7 @@ int main(int argc, char **argv)
   }
 
   ce::Matrix4f proj;
-
   device->GetPerspectiveProjection(-1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 1024.0f, proj);
-  proj.Debug("ProjectionMatrix");
 
   ce::iMaterial *updateMaterial = suzanneMaterial;
   size_t roughnessIdx = updateMaterial->IndexOf("Roughness");

@@ -224,6 +224,8 @@ void GL4Device::SetFillMode(eFillMode fillMode)
 
 void GL4Device::SetBlending(bool blending)
 {
+  CE_GL_ERROR()
+
   if (m_blending != blending)
   {
     m_blending = blending;
@@ -236,11 +238,14 @@ void GL4Device::SetBlending(bool blending)
       glDisable(GL_BLEND);
     }
   }
+  CE_GL_ERROR()
 }
 
 void GL4Device::SetBlendFactor(eBlendFactor srcFactor, eBlendFactor dstFactor)
 {
+  CE_GL_ERROR()
   SetBlendFactor(srcFactor, srcFactor, dstFactor, dstFactor);
+  CE_GL_ERROR()
 }
 
 void GL4Device::SetBlendFactor(eBlendFactor srcFactorColor,
@@ -765,6 +770,7 @@ eTextureUnit GL4Device::ShiftTextureUnit()
 
 void GL4Device::SetSampler(eTextureUnit unit, iSampler *sampler)
 {
+  CE_GL_ERROR()
   if (m_samplers[unit] != sampler)
   {
     m_samplers[unit] = sampler;
@@ -777,10 +783,12 @@ void GL4Device::SetSampler(eTextureUnit unit, iSampler *sampler)
       glBindSampler(unit, 0);
     }
   }
+  CE_GL_ERROR()
 }
 
 void GL4Device::BindUnsafe(iTexture *texture)
 {
+  CE_GL_ERROR()
   if (!texture)
   {
     return;
@@ -803,10 +811,12 @@ void GL4Device::BindUnsafe(iTexture *texture)
       static_cast<GL4TextureCube *>(texture)->Bind();
       break;
   }
+  CE_GL_ERROR()
 }
 
 void GL4Device::UnbindUnsafe(iTexture *texture)
 {
+  CE_GL_ERROR()
   if (!texture)
   {
     return;
@@ -829,12 +839,15 @@ void GL4Device::UnbindUnsafe(iTexture *texture)
       static_cast<GL4TextureCube *>(texture)->Unbind();
       break;
   }
+  CE_GL_ERROR()
 }
 
 
 eTextureUnit GL4Device::BindTexture(iTexture *texture)
 {
 #ifndef CE_DISABLE_RENDERING
+  CE_GL_ERROR()
+
   if (!texture || m_nextTextureUnit == eTU_Invalid)
   {
     return eTU_Invalid;
@@ -850,12 +863,15 @@ eTextureUnit GL4Device::BindTexture(iTexture *texture)
     iTexture *oldTexture = m_textures[unit];
     m_textures[unit] = texture;
 
+    CE_GL_ERROR()
     glActiveTexture(GL_TEXTURE0 + unit);
     UnbindUnsafe(oldTexture);
     BindUnsafe(texture);
+    CE_GL_ERROR()
 
 
     SetSampler(unit, texture->GetSampler());
+    CE_GL_ERROR()
   }
   else
   {
@@ -872,6 +888,7 @@ eTextureUnit GL4Device::BindTexture(iTexture *texture)
 bool GL4Device::BindMaterial(iMaterial *material, eRenderPass pass)
 {
 #ifndef CE_DISABLE_RENDERING
+  CE_GL_ERROR()
   if (m_material == material && m_materialPass == pass)
   {
     ResetTexturesToMark();
@@ -879,7 +896,9 @@ bool GL4Device::BindMaterial(iMaterial *material, eRenderPass pass)
   }
   m_material = material;
   m_materialPass = pass;
-  return material && material->Bind(this, pass);
+  bool res = material && material->Bind(this, pass);
+  CE_GL_ERROR()
+  return res;
 #else
   return true;
 #endif
@@ -900,6 +919,14 @@ void GL4Device::Render(iRenderMesh *mesh, eRenderPass pass)
 #endif
 }
 
+void GL4Device::RenderFullscreen()
+{
+#ifndef CE_DISABLE_RENDERING
+  iRenderMesh *mesh = FullscreenBlitRenderMesh();
+  mesh->Render(this, eRP_Forward);
+#endif
+}
+
 void GL4Device::RenderFullscreen(iTexture2D *texture)
 {
 #ifndef CE_DISABLE_RENDERING
@@ -907,7 +934,6 @@ void GL4Device::RenderFullscreen(iTexture2D *texture)
   bool multiSampling = texture->IsMultiSampling();
   uint16_t samples = texture->GetSamples();
 
-  iRenderMesh *mesh = FullscreenBlitRenderMesh();
   GL4Program *prog = multiSampling ? FullscreenBlitMSProgram() : FullscreenBlitProgram();
   SetShader(prog);
   ResetTextures();
@@ -924,7 +950,7 @@ void GL4Device::RenderFullscreen(iTexture2D *texture)
     attrib->Bind(samples);
   }
 
-  mesh->Render(this, eRP_Forward);
+  return RenderFullscreen();
 #endif
 }
 
@@ -932,7 +958,6 @@ void GL4Device::RenderFullscreen(iTexture2DArray *texture, int layer)
 {
 #ifndef CE_DISABLE_RENDERING
   SetFillMode(eFillMode::Fill);
-  iRenderMesh *mesh = FullscreenBlitRenderMesh();
   GL4Program *prog = FullscreenBlitArrayProgram();
   SetShader(prog);
   ResetTextures();
@@ -947,7 +972,7 @@ void GL4Device::RenderFullscreen(iTexture2DArray *texture, int layer)
   {
     attrib->Bind((float) layer);
   }
-  mesh->Render(this, eRP_Forward);
+  RenderFullscreen();
 #endif
 }
 
@@ -992,18 +1017,18 @@ void GL4Device::BindForwardLight(const iLight *light, Size idx)
   CE_GL_ERROR();
 
 
-  iShaderAttribute *directionalLightShadowMapLayersBias = m_shader->GetShaderAttribute(
-      eSA_DirectionalLightShadowMapLayersBias
-  );
-  iShaderAttribute *directionalLightShadowMapMatrices = m_shader->GetShaderAttribute(
-      eSA_DirectionalLightShadowMapMatrices
-  );
-  iShaderAttribute *directionalLightShadowMapColor = m_shader->GetShaderAttribute(
-      eSA_DirectionalLightShadowMapColor
-  );
-  iShaderAttribute *directionalLightShadowMapDepth = m_shader->GetShaderAttribute(
-      eSA_DirectionalLightShadowMapDepth
-  );
+//  iShaderAttribute *directionalLightShadowMapLayersBias = m_shader->GetShaderAttribute(
+//      eSA_DirectionalLightShadowMapLayersBias
+//  );
+//  iShaderAttribute *directionalLightShadowMapMatrices = m_shader->GetShaderAttribute(
+//      eSA_DirectionalLightShadowMapMatrices
+//  );
+//  iShaderAttribute *directionalLightShadowMapColor = m_shader->GetShaderAttribute(
+//      eSA_DirectionalLightShadowMapColor
+//  );
+//  iShaderAttribute *directionalLightShadowMapDepth = m_shader->GetShaderAttribute(
+//      eSA_DirectionalLightShadowMapDepth
+//  );
 
   CE_GL_ERROR();
 
@@ -1036,22 +1061,22 @@ void GL4Device::BindForwardLight(const iLight *light, Size idx)
     pointLightShadowMapDepth->SetArrayIndex(idx);
   }
 
-  if (directionalLightShadowMapLayersBias)
-  {
-    directionalLightShadowMapLayersBias->SetArrayIndex(idx);
-  }
-  if (directionalLightShadowMapMatrices)
-  {
-    directionalLightShadowMapMatrices->SetArrayIndex(idx * 3);
-  }
-  if (directionalLightShadowMapColor)
-  {
-    directionalLightShadowMapColor->SetArrayIndex(idx);
-  }
-  if (directionalLightShadowMapDepth)
-  {
-    directionalLightShadowMapDepth->SetArrayIndex(idx);
-  }
+//  if (directionalLightShadowMapLayersBias)
+//  {
+//    directionalLightShadowMapLayersBias->SetArrayIndex(idx);
+//  }
+//  if (directionalLightShadowMapMatrices)
+//  {
+//    directionalLightShadowMapMatrices->SetArrayIndex(idx * 3);
+//  }
+//  if (directionalLightShadowMapColor)
+//  {
+//    directionalLightShadowMapColor->SetArrayIndex(idx);
+//  }
+//  if (directionalLightShadowMapDepth)
+//  {
+//    directionalLightShadowMapDepth->SetArrayIndex(idx);
+//  }
   CE_GL_ERROR();
 
 
@@ -1077,14 +1102,14 @@ void GL4Device::BindForwardLight(const iLight *light, Size idx)
         {
           lightRange->Bind(pointLight->GetRange());
         }
-        if (directionalLightShadowMapDepth)
-        {
-          directionalLightShadowMapDepth->Bind(0);
-        }
-        if (directionalLightShadowMapColor)
-        {
-          directionalLightShadowMapColor->Bind(0);
-        }
+//        if (directionalLightShadowMapDepth)
+//        {
+//          directionalLightShadowMapDepth->Bind(0);
+//        }
+//        if (directionalLightShadowMapColor)
+//        {
+//          directionalLightShadowMapColor->Bind(0);
+//        }
         //
         // Bind the shadow mapping.
         auto it = m_pointLightShadowData.find(pointLight);
@@ -1167,44 +1192,44 @@ void GL4Device::BindForwardLight(const iLight *light, Size idx)
             lightCastShadow->Bind(1);
           }
 
-          if (directionalLightShadowMapLayersBias)
-          {
-            directionalLightShadowMapLayersBias->Bind(data.LayersBias);
-          }
-          if (directionalLightShadowMapMatrices)
-          {
-            directionalLightShadowMapMatrices->Bind(data.Matrices, 3);
-          }
-          if (directionalLightShadowMapColor && data.Color)
-          {
-            if (data.Color)
-            {
-              eTextureUnit unit = BindTexture(data.Color);
-              if (unit != eTU_Invalid)
-              {
-                directionalLightShadowMapColor->Bind(unit);
-              }
-            }
-            else
-            {
-              directionalLightShadowMapColor->Bind(0);
-            }
-          }
-          if (directionalLightShadowMapDepth && data.Depth)
-          {
-            if (data.Depth)
-            {
-              eTextureUnit unit = BindTexture(data.Depth);
-              if (unit != eTU_Invalid)
-              {
-                directionalLightShadowMapDepth->Bind(unit);
-              }
-            }
-            else
-            {
-              directionalLightShadowMapDepth->Bind(0);
-            }
-          }
+//          if (directionalLightShadowMapLayersBias)
+//          {
+//            directionalLightShadowMapLayersBias->Bind(data.LayersBias);
+//          }
+//          if (directionalLightShadowMapMatrices)
+//          {
+//            directionalLightShadowMapMatrices->Bind(data.Matrices, 3);
+//          }
+//          if (directionalLightShadowMapColor && data.Color)
+//          {
+//            if (data.Color)
+//            {
+//              eTextureUnit unit = BindTexture(data.Color);
+//              if (unit != eTU_Invalid)
+//              {
+//                directionalLightShadowMapColor->Bind(unit);
+//              }
+//            }
+//            else
+//            {
+//              directionalLightShadowMapColor->Bind(0);
+//            }
+//          }
+//          if (directionalLightShadowMapDepth && data.Depth)
+//          {
+//            if (data.Depth)
+//            {
+//              eTextureUnit unit = BindTexture(data.Depth);
+//              if (unit != eTU_Invalid)
+//              {
+//                directionalLightShadowMapDepth->Bind(unit);
+//              }
+//            }
+//            else
+//            {
+//              directionalLightShadowMapDepth->Bind(0);
+//            }
+//          }
         }
         else
         {
@@ -1212,10 +1237,10 @@ void GL4Device::BindForwardLight(const iLight *light, Size idx)
           {
             lightCastShadow->Bind(0);
           }
-          if (directionalLightShadowMapDepth)
-          {
-            directionalLightShadowMapDepth->Bind(0);
-          }
+//          if (directionalLightShadowMapDepth)
+//          {
+//            directionalLightShadowMapDepth->Bind(0);
+//          }
         }
       }
         break;
@@ -1239,10 +1264,10 @@ void GL4Device::BindForwardLight(const iLight *light, Size idx)
     {
       pointLightShadowMapDepth->Bind(0);
     }
-    if (directionalLightShadowMapDepth)
-    {
-      directionalLightShadowMapDepth->Bind(0);
-    }
+//    if (directionalLightShadowMapDepth)
+//    {
+//      directionalLightShadowMapDepth->Bind(0);
+//    }
   }
   CE_GL_ERROR();
 #endif

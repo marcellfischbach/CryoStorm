@@ -2,6 +2,7 @@
 #include <ceOpenGL/gl4/shading/gl4shader.hh>
 #include <ceOpenGL/gl4/gl4exceptions.hh>
 #include <GL/glew.h>
+#include <stdexcept>
 
 namespace ce::opengl
 {
@@ -71,7 +72,8 @@ void GL4Shader::Compile()
     GLsizei length;
     glGetShaderInfoLog(m_name, 4096, &length, buffer);
     buffer[length] = '\0';
-    throw GL4ShaderCompileException(std::string(buffer), m_source);
+    std::string msg (buffer);
+    throw GL4ShaderCompileException(msg, m_source);
   }
 }
 

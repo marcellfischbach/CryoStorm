@@ -68,6 +68,7 @@ void GL4ForwardPipeline::Render(iRenderTarget2D* target,
 
   BindCamera();
   RenderDepthToTarget();
+  ApplyDepthBufferToLightRenderers ();
 
 
   CollectLightsAndShadows(&clppr);
@@ -189,6 +190,7 @@ void GL4ForwardPipeline::RenderDepthToTarget()
   m_device->SetColorWrite(true, true, true, true);
 }
 
+
 void GL4ForwardPipeline::RenderForwardToTarget()
 {
   // don't clear the depth here because we have already written the depth buffer in a previous path
@@ -233,6 +235,11 @@ void GL4ForwardPipeline::RenderForwardToTarget()
       RenderUnlitForwardMesh(mesh);
     }
   }
+}
+
+void GL4ForwardPipeline::ApplyDepthBufferToLightRenderers()
+{
+  m_directionalLightRenderer.SetDepthBuffer(m_target->GetDepthTexture());
 }
 
 void GL4ForwardPipeline::Cleanup()

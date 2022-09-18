@@ -5,7 +5,7 @@
 #include <ceCore/class.hh>
 #include <ceCore/types.hh>
 #include <string>
-
+#include <stdexcept>
 
 namespace ce::opengl
 {
@@ -22,7 +22,7 @@ public:
 
 	void SetSource(const std::string &source);
 
-	void Compile();
+	void Compile() noexcept (false);
 
 
 private:

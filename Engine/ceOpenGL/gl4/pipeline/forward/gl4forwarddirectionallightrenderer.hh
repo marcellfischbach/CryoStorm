@@ -14,6 +14,8 @@ namespace ce
 struct iDevice;
 struct iSampler;
 struct iShader;
+struct iShaderAttribute;
+struct iTexture2D;
 struct iTexture2DArray;
 class Camera;
 class GfxMesh;
@@ -26,7 +28,9 @@ class Settings;
 namespace ce::opengl
 {
 
+class GL4Device;
 class GL4DirectionalLight;
+class GL4RenderTarget2D;
 class GL4RenderTarget2DArray;
 
 class GL4ForwardDirectionalLightRenderer
@@ -35,42 +39,54 @@ public:
   GL4ForwardDirectionalLightRenderer();
   ~GL4ForwardDirectionalLightRenderer();
 
-  void Initialize(Settings& settings);
+  void Initialize(Settings &settings);
 
-  void SetDevice(iDevice* device);
-  void SetScene(iGfxScene* scene);
+  void SetDevice(iDevice *device);
+  void SetScene(iGfxScene *scene);
+  void SetDepthBuffer (iTexture2D* depthBuffer);
+  void SetShadowMapSize (size_t width, size_t height);
 
   void Clear();
-  void Add(GL4DirectionalLight* directionalLight);
+  void Add(GL4DirectionalLight *directionalLight);
 
-  void RenderShadowMaps(const Camera& camera, const Projector& projector);
+  void RenderShadowMaps(const Camera &camera, const Projector &projector);
 
-  iTexture2DArray* GetColorTexture();
-  iTexture2DArray* GetDepthTexture();
+  iTexture2DArray *GetColorTexture();
+  iTexture2DArray *GetDepthTexture();
 
 private:
   void SortLights();
-  GL4RenderTarget2DArray* GetDirectionalLightShadowBuffer();
-  iSampler* GetShadowMapColorSampler();
-  iSampler* GetShadowMapDepthSampler();
-  float GetSplitSize(const Vector3f* near, const Vector3f* far);
+  GL4RenderTarget2D *GetDirectionalLightShadowMap();
+  GL4RenderTarget2DArray *GetDirectionalLightShadowBuffer();
+  iSampler *GetShadowMapColorSampler();
+  iSampler *GetShadowMapDepthSampler();
+  float GetSplitSize(const Vector3f *near, const Vector3f *far);
 
-  void RenderShadow(GL4DirectionalLight* directionalLight, const Camera& camera, const Projector& projector);
-  void RenderShadowBuffer(GL4DirectionalLight* directionalLight, const Camera& camera, const Projector& projector);
-  void RenderDirectionalShadowMaps(GL4DirectionalLight* directionalLight,
-                                   GL4RenderTarget2DArray* shadowMap,
-                                   const Camera& camera,
-                                   const Projector& projector);
+  void RenderShadow(GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector);
+  void RenderShadowBuffer(GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector);
+  void RenderShadowMap(GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector);
+  void RenderDirectionalShadowMaps(GL4DirectionalLight *directionalLight,
+                                   GL4RenderTarget2DArray *shadowMap,
+                                   const Camera &camera,
+                                   const Projector &projector);
 
 
 private:
-  iDevice  * m_device;
-  iGfxScene* m_scene;
+  GL4Device *m_device;
+  iGfxScene *m_scene;
 
-  std::vector<GL4DirectionalLight*> m_shadowDirectionalLights;
 
-  GL4RenderTarget2DArray* m_directionalLightShadowBuffer;
-  Size m_directionalLightShadowBufferSize;
+  std::vector<GL4DirectionalLight *> m_shadowDirectionalLights;
+
+  iTexture2D* m_depthBuffer;
+
+  GL4RenderTarget2DArray *m_directionalLightShadowBuffer;
+  size_t m_directionalLightShadowBufferSize;
+
+
+  GL4RenderTarget2D *m_directionalLightShadowMap;
+  size_t m_directionalLightShadowMapWidth;
+  size_t m_directionalLightShadowMapHeight;
 
   enum class ShadowMapFilter
   {
@@ -83,14 +99,18 @@ private:
   float m_shadowFar;
   float m_splits[3];
 
-  Matrix4f        m_shadowMatrices[3];
+  Matrix4f m_shadowMatrices[3];
   ShadowMapFilter m_shadowMapFilter;
-  iSampler* m_shadowMapColorSampler;
-  iSampler* m_shadowMapDepthSampler;
+  iSampler *m_shadowMapColorSampler;
+  iSampler *m_shadowMapDepthSampler;
 
-  iShader* m_shadowMappingShader;
+  iShader *m_shadowMappingShader;
+  iShaderAttribute *m_attrLayersBias;
+  iShaderAttribute *m_attrMappingMatrices;
+  iShaderAttribute *m_attrShadowBuffer;
+  iShaderAttribute *m_attrDepthBuffer;
 
-  std::vector<GfxMesh*> m_meshesCache;
+  std::vector<GfxMesh *> m_meshesCache;
 };
 
 }

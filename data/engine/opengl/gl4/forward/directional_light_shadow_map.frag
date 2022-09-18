@@ -1,10 +1,12 @@
 #version 330
 layout(location = 0) out vec4 ce_FragColor;
 
-uniform vec4 ce_DirectionalLightShadowMapLayersBias;
-uniform mat4 ce_DirectionalLightShadowMapMatrices[3];
-uniform sampler2DArrayShadow ce_DirectionalLightShadowMapDepth;
+uniform vec4 ce_LayersBias;
+uniform mat4 ce_MappingMatrices[3];
+uniform sampler2DArrayShadow ce_ShadowBuffer;
 uniform sampler2D ce_DepthBuffer;
+
+
 uniform mat4 ce_ViewMatrix;
 uniform mat4 ce_ViewProjectionMatrixInv;
 
@@ -15,7 +17,7 @@ in vec2 texCoord;
 
 float calc_directional_shadow(vec3 world_position, float distance_to_camera)
 {
-    vec4 layerBias = ce_DirectionalLightShadowMapLayersBias;
+    vec4 layerBias = ce_LayersBias;
 
     float fadeOut = 0.0f;
     float layer = 0.0;
@@ -44,12 +46,12 @@ float calc_directional_shadow(vec3 world_position, float distance_to_camera)
 
 
 
-    vec4 camSpace = ce_DirectionalLightShadowMapMatrices[matIndex] * vec4(world_position, 1.0);
+    vec4 camSpace = ce_MappingMatrices[matIndex] * vec4(world_position, 1.0);
     camSpace /= camSpace.w;
     camSpace = camSpace * 0.5 + 0.5;
     camSpace.z -= layerBias.w;
 
-    float shadow_value = texture(ce_DirectionalLightShadowMapDepth, vec4(camSpace.xy, layer, camSpace.z));
+    float shadow_value = texture(ce_ShadowBuffer, vec4(camSpace.xy, layer, camSpace.z));
     return mix(shadow_value, 1.0, fadeOut);
 }
 
@@ -64,7 +66,7 @@ void main ()
 
     vec4 camera_space = ce_ViewMatrix * world_position;
 
-    float shadow = calc_directional_shadow(world_position, camera_space.z);
+    float shadow = calc_directional_shadow(world_position.xyz, camera_space.z);
     ce_FragColor = vec4(shadow, shadow, shadow, 1.0);
 
 
