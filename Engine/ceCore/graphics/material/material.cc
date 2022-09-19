@@ -173,8 +173,8 @@ void Material::BindBlending(iDevice *device) const
 
 void Material::BindDepthMode(iDevice *device) const
 {
-  device->SetDepthWrite(m_depthWrite);
-  device->SetDepthTest(m_depthTest);
+//  device->SetDepthWrite(m_depthWrite);
+//  device->SetDepthTest(m_depthTest);
 }
 
 void Material::BindFillMode(iDevice* device) const

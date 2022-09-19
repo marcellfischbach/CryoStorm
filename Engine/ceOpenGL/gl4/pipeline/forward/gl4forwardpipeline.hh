@@ -49,6 +49,7 @@ private:
   void BindCamera();
   void RenderDepthToTarget ();
   void RenderForwardToTarget ();
+  void RenderDebugToTarget ();
   void ApplyDepthBufferToLightRenderers();
   void Cleanup ();
 

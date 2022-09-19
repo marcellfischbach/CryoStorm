@@ -182,7 +182,7 @@ void GL4Device::SetColorWrite(bool redWrite, bool greenWrite, bool blueWrite, bo
 
 void GL4Device::SetDepthWrite(bool depthWrite)
 {
-  if (m_depthTest != depthWrite)
+  if (m_depthWrite != depthWrite)
   {
     m_depthWrite = depthWrite;
     glDepthMask(depthWrite);

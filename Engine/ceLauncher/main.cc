@@ -497,6 +497,8 @@ ce::iRenderTarget2D *create_render_target(ce::iDevice *device, uint32_t width, u
 
   ce::iSampler *depthSampler = device->CreateSampler();
   depthSampler->SetFilterMode(ce::eFM_MinMagNearest);
+//  depthSampler->SetTextureCompareFunc(ce::eCF_LessOrEqual);
+//  depthSampler->SetTextureCompareMode(ce::eTCM_None);
 
   ce::iTexture2D::Descriptor rt_col_desc = {};
   rt_col_desc.Width = width;
@@ -510,11 +512,12 @@ ce::iRenderTarget2D *create_render_target(ce::iDevice *device, uint32_t width, u
   ce::iTexture2D::Descriptor rt_dpth_desc = {};
   rt_dpth_desc.Width = width;
   rt_dpth_desc.Height = height;
-  rt_dpth_desc.Format = ce::ePF_Depth;
+  rt_dpth_desc.Format = ce::ePF_DepthStencil;
   rt_dpth_desc.MipMaps = false;
   rt_dpth_desc.MultiSamples = multiSamples;
   ce::iTexture2D *depth_texture = device->CreateTexture(rt_dpth_desc);
   depth_texture->SetSampler(depthSampler);
+  printf ("CreateDepthTexture: %p\n", depth_texture);
 
 
   ce::iRenderTarget2D::Descriptor rt_desc = {};
@@ -703,6 +706,7 @@ int main(int argc, char **argv)
 
   ce::Entity *cameraEntity = new ce::Entity("Camera");
   ce::CameraState *cameraState = new ce::CameraState();
+
   CameraHandler *cameraHandler = new CameraHandler();
   cameraEntity->Attach(cameraState);
   cameraEntity->Attach(cameraHandler);
@@ -723,8 +727,8 @@ int main(int argc, char **argv)
   mirrorHandler->SetCameraState(cameraState);
 //  world->Attach(mirrorCameraEntity);
 
-  auto mirrorRenderTarget = create_render_target(device, width / 2, height / 2, 1);
-  mirrorCameraState->SetRenderTarget(mirrorRenderTarget);
+//  auto mirrorRenderTarget = create_render_target(device, width / 2, height / 2, 1);
+//  mirrorCameraState->SetRenderTarget(mirrorRenderTarget);
 //  materialMirror->Set(materialMirror->IndexOf("Mirror"), mirrorRenderTarget->GetColorTexture(0));
 
 

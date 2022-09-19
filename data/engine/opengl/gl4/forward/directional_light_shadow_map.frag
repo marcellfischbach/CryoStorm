@@ -59,6 +59,14 @@ float calc_directional_shadow(vec3 world_position, float distance_to_camera)
 void main ()
 {
     float depth = texture(ce_DepthBuffer, texCoord).r;
+    ce_FragColor = vec4(depth, depth, depth, 1.0);
+    /*
+    if (depth == 1.0)
+    {
+        ce_FragColor = vec4(1, 0, 1, 1);
+        return;
+    }
+
     vec4 proj_space = vec4(texCoord.xy, depth, 1.0);
     proj_space = proj_space * 2.0 - 1.0;
     vec4 world_position = ce_ViewProjectionMatrixInv * proj_space;
@@ -68,7 +76,6 @@ void main ()
 
     float shadow = calc_directional_shadow(world_position.xyz, camera_space.z);
     ce_FragColor = vec4(shadow, shadow, shadow, 1.0);
-
-
+    */
 }
 

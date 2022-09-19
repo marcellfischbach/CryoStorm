@@ -77,6 +77,7 @@ void GL4ForwardPipeline::Render(iRenderTarget2D* target,
   BindCamera();
   RenderForwardToTarget();
 
+  RenderDebugToTarget ();
   Cleanup();
 
 
@@ -172,6 +173,7 @@ void GL4ForwardPipeline::RenderDepthToTarget()
   m_device->SetRenderTarget(m_target);
   eClearMode mode = m_gfxCamera->GetClearMode();
   m_device->SetColorWrite(true, true, true, true);
+  m_device->SetDepthWrite(true);
   m_device->Clear(mode == eClearMode::Color || mode == eClearMode::DepthColor,
                   m_gfxCamera->GetClearColor(),
                   mode == eClearMode::Depth || mode == eClearMode::DepthColor,
@@ -180,14 +182,15 @@ void GL4ForwardPipeline::RenderDepthToTarget()
                   0
   );
 
-
   m_device->SetColorWrite(false, false, false, false);
+  m_device->SetDepthTest(true);
+  m_device->SetDepthWrite(true);
   const std::vector<GfxMesh*>& defaultMeshes = m_collector.GetMeshes(eRenderQueue::Default);
   for (auto            & mesh : defaultMeshes)
   {
       RenderUnlitDepthMesh(mesh);
   }
-  m_device->SetColorWrite(true, true, true, true);
+  m_device->SetRenderTarget(nullptr);
 }
 
 
@@ -196,17 +199,11 @@ void GL4ForwardPipeline::RenderForwardToTarget()
   // don't clear the depth here because we have already written the depth buffer in a previous path
 
   m_device->SetRenderTarget(m_target);
-  eClearMode mode = m_gfxCamera->GetClearMode();
-  m_device->Clear(
-    false,
-    m_gfxCamera->GetClearColor(),
-    false,
-    m_gfxCamera->GetClearDepth(),
-    false,
-    0
-  );
 
 
+  m_device->SetColorWrite(true, true, true, true);
+  m_device->SetDepthTest(true);
+  m_device->SetDepthWrite(false);
   std::vector<GfxMesh*>& defaultMeshes = m_collector.GetMeshes(eRenderQueue::Default);
   for (auto            & mesh : defaultMeshes)
   {
@@ -235,6 +232,16 @@ void GL4ForwardPipeline::RenderForwardToTarget()
       RenderUnlitForwardMesh(mesh);
     }
   }
+  m_device->SetRenderTarget(nullptr);
+}
+
+void GL4ForwardPipeline::RenderDebugToTarget()
+{
+  m_device->SetRenderTarget(m_target);
+  m_device->SetDepthWrite(false);
+  m_device->SetDepthTest(false);
+  m_device->SetColorWrite(true, true, true, true);
+  m_device->RenderFullscreen(m_directionalLightRenderer.GetColorTexture());
 }
 
 void GL4ForwardPipeline::ApplyDepthBufferToLightRenderers()

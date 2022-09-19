@@ -122,6 +122,7 @@ uint16_t GL4Texture2D::GetSamples() const
   return m_samples;
 }
 
+
 void GL4Texture2D::Data(const Image* image)
 {
 

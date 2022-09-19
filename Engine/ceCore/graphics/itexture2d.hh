@@ -34,6 +34,8 @@ struct CE_CORE_API iTexture2D : public CE_SUPER(iTexture)
   }
 
   virtual uint16_t GetSamples() const = 0;
+  virtual uint32_t GetWidth() const = 0;
+  virtual uint32_t GetHeight() const = 0;
 
   virtual void Data(const Image* image) = 0;
   virtual void Data(uint16_t level, const Image* image) = 0;

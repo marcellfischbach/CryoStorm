@@ -1,4 +1,5 @@
 #version 330
+layout (location = 0) out vec4 ce_FragColor;
 
 uniform sampler2D ce_Diffuse;
 
@@ -13,6 +14,7 @@ void main()
         discard;
     }
 
+    ce_FragColor = vec4(1, 1, 1, 1);
 }
 
 

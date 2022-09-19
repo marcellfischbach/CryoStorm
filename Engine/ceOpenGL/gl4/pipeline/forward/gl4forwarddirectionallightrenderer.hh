@@ -51,20 +51,22 @@ public:
 
   void RenderShadowMaps(const Camera &camera, const Projector &projector);
 
-  iTexture2DArray *GetColorTexture();
-  iTexture2DArray *GetDepthTexture();
+  iTexture2D *GetColorTexture();
+  iTexture2D *GetDepthTexture();
+
+
 
 private:
   void SortLights();
-  GL4RenderTarget2D *GetDirectionalLightShadowMap();
+  GL4RenderTarget2D *GetDirectionalLightShadowMap(size_t lightIdx);
   GL4RenderTarget2DArray *GetDirectionalLightShadowBuffer();
   iSampler *GetShadowMapColorSampler();
   iSampler *GetShadowMapDepthSampler();
   float GetSplitSize(const Vector3f *near, const Vector3f *far);
 
-  void RenderShadow(GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector);
+  void RenderShadow(GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector, size_t lightIdx);
   void RenderShadowBuffer(GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector);
-  void RenderShadowMap(GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector);
+  void RenderShadowMap(GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector, size_t lightIdx);
   void RenderDirectionalShadowMaps(GL4DirectionalLight *directionalLight,
                                    GL4RenderTarget2DArray *shadowMap,
                                    const Camera &camera,
@@ -84,7 +86,7 @@ private:
   size_t m_directionalLightShadowBufferSize;
 
 
-  GL4RenderTarget2D *m_directionalLightShadowMap;
+  std::vector<GL4RenderTarget2D *> m_directionalLightShadowMap;
   size_t m_directionalLightShadowMapWidth;
   size_t m_directionalLightShadowMapHeight;
 
