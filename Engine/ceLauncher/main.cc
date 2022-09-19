@@ -684,7 +684,7 @@ int main(int argc, char **argv)
   );
 
   world->Attach(sunEntity);
-
+  /*
   sunEntity = new ce::Entity("Sun");
   sunLightState = new ce::LightState("SunLight");
   sunEntity->Attach(sunLightState);
@@ -702,7 +702,7 @@ int main(int argc, char **argv)
   );
 
   world->Attach(sunEntity);
-
+  */
 
   ce::Entity *cameraEntity = new ce::Entity("Camera");
   ce::CameraState *cameraState = new ce::CameraState();

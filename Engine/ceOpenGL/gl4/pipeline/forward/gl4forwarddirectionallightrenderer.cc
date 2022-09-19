@@ -341,9 +341,10 @@ void GL4ForwardDirectionalLightRenderer::RenderShadowMap(GL4DirectionalLight* di
   m_device->SetColorWrite(true, true, true, true);
   m_device->Clear(true, Color4f(0.0, 0.0f, 0.0f, 0.0f), true, 1.0f, true, 0);
 
-
   m_device->SetShader(m_shadowMappingShader);
-  /*
+  camera.Bind(m_device);
+  projector.Bind(m_device);
+
   if (m_attrLayersBias)
   {
     m_attrLayersBias->Bind(Vector4f(m_splits[0], m_splits[1], m_splits[2], directionalLight->GetShadowMapBias()));
@@ -352,14 +353,11 @@ void GL4ForwardDirectionalLightRenderer::RenderShadowMap(GL4DirectionalLight* di
   {
     m_attrMappingMatrices->Bind(m_shadowMatrices, 3);
   }
-
-
   if (m_attrShadowBuffer)
   {
     eTextureUnit unit = m_device->BindTexture(GetDirectionalLightShadowBuffer()->GetDepthTexture());
     m_attrShadowBuffer->Bind(unit);
   }
-  */
   if (m_attrDepthBuffer)
   {
     eTextureUnit unit = m_device->BindTexture(m_depthBuffer);
