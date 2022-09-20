@@ -58,7 +58,9 @@ public:
 
 private:
   void SortLights();
+  GL4RenderTarget2D *GetDirectionalLightShadowMapTemp();
   GL4RenderTarget2D *GetDirectionalLightShadowMap(size_t lightIdx);
+  GL4RenderTarget2D *CreateDirectionalLightShadowMap();
   GL4RenderTarget2DArray *GetDirectionalLightShadowBuffer();
   iSampler *GetShadowMapColorSampler();
   iSampler *GetShadowMapDepthSampler();
@@ -66,7 +68,8 @@ private:
 
   void RenderShadow(GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector, size_t lightIdx);
   void RenderShadowBuffer(GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector);
-  void RenderShadowMap(GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector, size_t lightIdx);
+  void RenderShadowMap(GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector);
+  void FilterShadowMap(size_t lightIdx);
   void ApplyShadowMapToDevice(GL4DirectionalLight* directionalLight, size_t lightIdx);
 
 
@@ -83,6 +86,7 @@ private:
   size_t m_directionalLightShadowBufferSize;
 
 
+  GL4RenderTarget2D * m_directionalLightShadowMapTemp;
   std::vector<GL4RenderTarget2D *> m_directionalLightShadowMap;
   size_t m_directionalLightShadowMapWidth;
   size_t m_directionalLightShadowMapHeight;
@@ -108,6 +112,19 @@ private:
   iShaderAttribute *m_attrMappingMatrices;
   iShaderAttribute *m_attrShadowBuffer;
   iShaderAttribute *m_attrDepthBuffer;
+
+  iShader* m_shadowMapFilterShader;
+  iShaderAttribute* m_attrFilterDepthBuffer;
+  iShaderAttribute* m_attrFilterShadowMap;
+  iShaderAttribute* m_attrFilterRadius;
+  iShaderAttribute* m_attrFilterDistance;
+  iShaderAttribute* m_attrFilterSamples;
+
+
+
+  Vector2f m_settingsDistance;
+  float m_settingsRadius;
+  float m_settingsSamples;
 
   std::vector<GfxMesh *> m_meshesCache;
 };

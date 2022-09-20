@@ -13,7 +13,20 @@ uniform mat4 ce_ViewProjectionMatrixInv;
 
 in vec2 texCoord;
 
+bool is_valid (vec3 v)
+{
+    return v.x >= 0.0 && v.x <= 1.0
+     && v.y >= 0.0 && v.y <= 1.0;
+}
 
+vec3 to_cam_space (vec3 world_position, int idx)
+{
+    vec4 camSpace = ce_MappingMatrices[idx] * vec4(world_position, 1.0);
+    camSpace /= camSpace.w;
+    camSpace = camSpace * 0.5 + 0.5;
+    camSpace.z -= ce_LayersBias.w;
+    return camSpace.xyz;
+}
 
 vec3 calc_directional_shadow(vec3 world_position, float distance_to_camera)
 {
@@ -22,11 +35,8 @@ vec3 calc_directional_shadow(vec3 world_position, float distance_to_camera)
     float fadeOut = 0.0f;
     float layer = 0.0;
     int matIndex = 0;
-    if (distance_to_camera < 0.0)
-    {
-        return vec3(1, 0, 1);
-    }
-    else if (distance_to_camera <= layerBias.x)
+
+    if (distance_to_camera <= layerBias.x)
     {
         matIndex = 0;
         layer = 0.0;
@@ -47,8 +57,6 @@ vec3 calc_directional_shadow(vec3 world_position, float distance_to_camera)
     {
         return vec3(1.0);
     }
-
-
 
     vec4 camSpace = ce_MappingMatrices[matIndex] * vec4(world_position, 1.0);
     camSpace /= camSpace.w;
