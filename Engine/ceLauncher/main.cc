@@ -443,7 +443,7 @@ void debug(ce::SpatialState* state, int indent)
 
 void create_suzannes_plain(ce::Mesh* suzanneMesh, ce::World* world, ce::iMaterial* alternativeMaterial)
 {
-  size_t      num = 20;
+  size_t      num = 40;
   for (size_t i   = 0; i < num; i++)
   {
     float       x = -40.0f + (float)i / (float)num * 80.0f;
@@ -471,23 +471,18 @@ void create_suzannes_plain(ce::Mesh* suzanneMesh, ce::World* world, ce::iMateria
 }
 
 void create_suzanne_batch(ce::Mesh* suzanneMesh,
-                          int a,
-                          int b,
-                          size_t numI,
-                          size_t numJ,
-                          size_t maxI,
-                          size_t maxJ,
-                          ce::World* world
+                                    ce::World* world
 )
 {
   auto generator = ce::ObjectRegistry::Get<ce::iRenderMeshBatchGeneratorFactory>()->Create();
 
-  for (size_t ni = 0, i = a * numI; ni < numI; ni++, i++)
+  size_t      num = 40;
+  for (size_t i   = 0; i < num; i++)
   {
-    float       x  = -40.0f + (float)i / (float)maxI * 80.0f;
-    for (size_t nj = 0, j = b * numJ; nj < numJ; nj++, j++)
+    float       x = -40.0f + (float)i / (float)num * 80.0f;
+    for (size_t j = 0; j < num; j++)
     {
-      float        y = -40.0f + (float)j / (float)maxJ * 80.0f;
+      float y = -40.0f + (float)j / (float)num * 80.0f;
       ce::Matrix4f mat;
       mat.SetTranslation(ce::Vector3f(x, 0, y));
       generator->Add(suzanneMesh->GetSubMesh(0).GetMesh(), mat);
@@ -517,16 +512,7 @@ void create_suzanne_batch(ce::Mesh* suzanneMesh,
   generator->Release();
 }
 
-void create_suzannes_batched(ce::Mesh* suzanneMesh, ce::World* world)
-{
-  for (int a = 0; a < 10; a++)
-  {
-    for (int b = 0; b < 10; b++)
-    {
-      create_suzanne_batch(suzanneMesh, a, b, 2, 2, 20, 20, world);
-    }
-  }
-}
+
 
 ce::iRenderTarget2D* create_render_target(ce::iDevice* device, uint32_t width, uint32_t height, uint16_t multiSamples)
 {
@@ -655,6 +641,7 @@ int main(int argc, char** argv)
   cube->SetDefaultMaterial(0, defaultMaterialInstance);
 
 //  create_suzannes_plain(suzanneMesh, world, suzanneMaterial);
+//  create_suzanne_batch(suzanneMesh, world);
   auto brickWallMesh = assetMan->Load<ce::Mesh>(ce::ResourceLocator("file:///brickwall.fbx"));
   brickWallMesh->SetDefaultMaterial(0, suzanneMaterial);
   brickWallMesh->SetDefaultMaterial(1, broken);
@@ -715,7 +702,7 @@ int main(int argc, char** argv)
   sunLightState->SetColor(ce::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 0.5f);
   sunLightState->SetShadowMapBias(0.003f);
   sunLightState->SetStatic(true);
-  sunLightState->SetCastShadow(true);
+  sunLightState->SetCastShadow(false);
   sunLightState->SetTransform(sunLightState->GetTransform()
                                              //.SetRotation(ce::Quaternion::FromAxisAngle(ce::Vector3f(1.0f, 0.0f, 0.0f), ce::ceDeg2Rad(-45.0f)))
                                            .SetRotation(
@@ -732,7 +719,7 @@ int main(int argc, char** argv)
   sunLightState->SetColor(ce::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 0.5f);
   sunLightState->SetShadowMapBias(0.003f);
   sunLightState->SetStatic(true);
-  sunLightState->SetCastShadow(false);
+  sunLightState->SetCastShadow(true);
   sunLightState->SetTransform(sunLightState->GetTransform()
           //.SetRotation(ce::Quaternion::FromAxisAngle(ce::Vector3f(1.0f, 0.0f, 0.0f), ce::ceDeg2Rad(-45.0f)))
                                   .SetRotation(

@@ -77,7 +77,7 @@ void GL4ForwardPipeline::Render(iRenderTarget2D* target,
   BindCamera();
   RenderForwardToTarget();
 
-  RenderDebugToTarget ();
+//  RenderDebugToTarget ();
   Cleanup();
 
 

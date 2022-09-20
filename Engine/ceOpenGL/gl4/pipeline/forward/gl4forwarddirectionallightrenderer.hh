@@ -3,6 +3,7 @@
 #pragma once
 
 #include <ceOpenGL/openglexport.hh>
+#include <ceOpenGL/gl4/pipeline/forward/gl4forwardshadowmapfilter.hh>
 #include <ceCore/types.hh>
 #include <ceCore/math/matrix4f.hh>
 #include <map>
@@ -63,7 +64,8 @@ private:
   GL4RenderTarget2D *CreateDirectionalLightShadowMap();
   GL4RenderTarget2DArray *GetDirectionalLightShadowBuffer();
   iSampler *GetShadowMapColorSampler();
-  iSampler *GetShadowMapDepthSampler();
+  iSampler *GetShadowBufferColorSampler();
+  iSampler *GetShadowBufferDepthSampler();
   float GetSplitSize(const Vector3f *near, const Vector3f *far);
 
   void RenderShadow(GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector, size_t lightIdx);
@@ -74,24 +76,24 @@ private:
 
 
 private:
-  GL4Device *m_device;
-  iGfxScene *m_scene;
+  GL4Device *m_device = nullptr;
+  iGfxScene *m_scene = nullptr;
 
 
   std::vector<GL4DirectionalLight *> m_shadowDirectionalLights;
 
-  iTexture2D* m_depthBuffer;
+  iTexture2D* m_depthBuffer = nullptr;
 
-  GL4RenderTarget2DArray *m_directionalLightShadowBuffer;
+  GL4RenderTarget2DArray *m_directionalLightShadowBuffer = nullptr;
   size_t m_directionalLightShadowBufferSize;
 
 
-  GL4RenderTarget2D * m_directionalLightShadowMapTemp;
+  GL4RenderTarget2D * m_directionalLightShadowMapTemp = nullptr;
   std::vector<GL4RenderTarget2D *> m_directionalLightShadowMap;
   size_t m_directionalLightShadowMapWidth;
   size_t m_directionalLightShadowMapHeight;
 
-  enum class ShadowMapFilter
+  enum class ShadowSamplingMode
   {
     Plain,
     PCF,
@@ -103,28 +105,19 @@ private:
   float m_splits[3];
 
   Matrix4f m_shadowMatrices[3];
-  ShadowMapFilter m_shadowMapFilter;
-  iSampler *m_shadowMapColorSampler;
-  iSampler *m_shadowMapDepthSampler;
+  ShadowSamplingMode m_shadowSamplingMode;
+  iSampler *m_shadowMapColorSampler = nullptr;
+  iSampler *m_shadowBufferColorSampler = nullptr;
+  iSampler *m_shadowMapDepthSampler = nullptr;
 
-  iShader *m_shadowMappingShader;
-  iShaderAttribute *m_attrLayersBias;
-  iShaderAttribute *m_attrMappingMatrices;
-  iShaderAttribute *m_attrShadowBuffer;
-  iShaderAttribute *m_attrDepthBuffer;
-
-  iShader* m_shadowMapFilterShader;
-  iShaderAttribute* m_attrFilterDepthBuffer;
-  iShaderAttribute* m_attrFilterShadowMap;
-  iShaderAttribute* m_attrFilterRadius;
-  iShaderAttribute* m_attrFilterDistance;
-  iShaderAttribute* m_attrFilterSamples;
+  iShader *m_shadowMappingShader = nullptr;
+  iShaderAttribute *m_attrLayersBias = nullptr;
+  iShaderAttribute *m_attrMappingMatrices = nullptr;
+  iShaderAttribute *m_attrShadowBuffer = nullptr;
+  iShaderAttribute *m_attrDepthBuffer = nullptr;
 
 
-
-  Vector2f m_settingsDistance;
-  float m_settingsRadius;
-  float m_settingsSamples;
+  GL4ForwardShadowMapFilter m_shadowMapFilter;
 
   std::vector<GfxMesh *> m_meshesCache;
 };

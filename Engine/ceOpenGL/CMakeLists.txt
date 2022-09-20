@@ -58,6 +58,8 @@ set(SOURCES
 		gl4/pipeline/forward/gl4forwardpipeline.hh
 		gl4/pipeline/forward/gl4forwardpointlightrenderer.cc
 		gl4/pipeline/forward/gl4forwardpointlightrenderer.hh
+		gl4/pipeline/forward/gl4forwardshadowmapfilter.cc
+		gl4/pipeline/forward/gl4forwardshadowmapfilter.hh
 
 		gl4/shading/gl4program.cc
 		gl4/shading/gl4program.hh

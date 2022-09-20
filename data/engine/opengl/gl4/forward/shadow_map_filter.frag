@@ -8,6 +8,7 @@ uniform mat4 ce_ProjectionMatrixInv;
 uniform float ce_FilterRadius;
 uniform float ce_FilterSamples;
 uniform vec2 ce_FilterDistance;
+uniform float ce_ScreenAspect;
 
 in vec2 texCoord;
 
@@ -30,22 +31,24 @@ void main ()
 
 
 	// get num and size based on distance_to_camera
-	float frac = clamp(distance_to_camera - ce_FilterDistance.x / ce_FilterDistance.y, 0.0, 1.0);
-	int num = int(mix(ce_FilterSamples, 1, frac));
-	float size = mix(ce_FilterRadius, 1.0, frac);
+	float frac = clamp((distance_to_camera - ce_FilterDistance.x) / ce_FilterDistance.y, 0.0, 1.0);
+	float num = mix(ce_FilterSamples, 1, frac);
+	float size = mix(ce_FilterRadius, 0.0, frac);
+
+//	float frac = clamp(distance_to_camera - 1.0 / 24.0, 0.0, 1.0);
+//	int num = int(clamp(mix(20, 1, frac), 1, 20));
+//	float size = mix(25.0, 1.0, frac);
 
 
 
 
-
-
-	float radius_x = size / 1280.0;
-	float radius_y = size / 720.0;
+	float radius_x = size;
+	float radius_y = size * ce_ScreenAspect;
 
 	vec4 color = vec4(0, 0, 0, 0);
-	for (int i=0; i<num; i++)
+	for (float i=0; i<num; i++)
 	{
-		float r = i * 3.14 / 2.0;
+		float r = i * 3.14 * 234.45;
 		float s = i / num;
 
 		vec2 add = vec2(cos(r) * s * radius_x, sin(r) * s * radius_y);
