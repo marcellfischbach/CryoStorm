@@ -67,10 +67,7 @@ private:
   void RenderShadow(GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector, size_t lightIdx);
   void RenderShadowBuffer(GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector);
   void RenderShadowMap(GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector, size_t lightIdx);
-  void RenderDirectionalShadowMaps(GL4DirectionalLight *directionalLight,
-                                   GL4RenderTarget2DArray *shadowMap,
-                                   const Camera &camera,
-                                   const Projector &projector);
+  void ApplyShadowMapToDevice(GL4DirectionalLight* directionalLight, size_t lightIdx);
 
 
 private:

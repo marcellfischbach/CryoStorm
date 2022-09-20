@@ -4,6 +4,7 @@
 
 #include <ceCore/coreexport.hh>
 #include <ceCore/class.hh>
+#include <ceCore/math/matrix4f.hh>
 #include <ceCore/math/vector3f.hh>
 
 namespace ce
@@ -30,6 +31,8 @@ public:
 
 
   void Bind(iDevice * device) const;
+  Matrix4f GetViewMatrix () const;
+  Matrix4f GetViewMatrixInv () const;
 
 private:
 

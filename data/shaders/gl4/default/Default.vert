@@ -11,6 +11,7 @@ uniform mat4 ce_ModelMatrix;
 uniform mat4 ce_ViewMatrix;
 uniform mat4 ce_ViewMatrixInv;
 uniform mat4 ce_ViewProjectionMatrix;
+uniform mat4 ce_ModelViewProjectionMatrix;
 
 out vec4 color;
 out vec2 texCoord;
@@ -19,6 +20,7 @@ out vec3 world_normal;
 out vec3 world_tangent;
 out vec3 camera_space_position;
 out vec3 viewer_world_position;
+out vec2 screen_coord;
 
 void main()
 {
@@ -30,8 +32,9 @@ void main()
   viewer_world_position = (ce_ViewMatrixInv * vec4(0, 0, 0, 1)).xyz;
   camera_space_position = (ce_ViewMatrix * position).xyz;
 
-  gl_Position = ce_ViewProjectionMatrix * position;
+  gl_Position = ce_ModelViewProjectionMatrix * ce_Position;
   color = ce_Color;
   texCoord = ce_UV;
+  screen_coord = (gl_Position.xy / gl_Position.w) * 0.5 + 0.5;
 }
 

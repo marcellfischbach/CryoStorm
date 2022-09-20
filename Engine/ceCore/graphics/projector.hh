@@ -5,6 +5,7 @@
 #include <ceCore/coreexport.hh>
 #include <ceCore/class.hh>
 #include <ceCore/graphics/eprojectionmode.hh>
+#include <ceCore/math/matrix4f.hh>
 #include <ceCore/math/vector3f.hh>
 
 namespace ce
@@ -29,6 +30,8 @@ public:
   CE_NODISCARD float GetFar() const;
 
   void Bind(iDevice* device) const;
+  Matrix4f GetProjectionMatrix(iDevice *device) const;
+  Matrix4f GetProjectionMatrixInv(iDevice *device) const;
 
 private:
 

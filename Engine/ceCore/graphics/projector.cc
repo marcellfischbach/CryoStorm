@@ -6,17 +6,10 @@ namespace ce
 {
 
 Projector::Projector()
-  : m_mode(ePM_Perspective)
-  , m_left(-1.0f)
-  , m_right(1.0f)
-  , m_bottom(-1.0f)
-  , m_top(1.0f)
-  , m_near(1.0f)
-  , m_far(1024.0)
+  : m_mode(ePM_Perspective), m_left(-1.0f), m_right(1.0f), m_bottom(-1.0f), m_top(1.0f), m_near(1.0f), m_far(1024.0)
 {
   CE_CLASS_GEN_CONSTR;
 }
-
 
 void Projector::UpdatePerspective(float angleRad, float aspect, float near, float far)
 {
@@ -24,36 +17,36 @@ void Projector::UpdatePerspective(float angleRad, float aspect, float near, floa
 
   float halfAngle = angleRad / 2.0f;
   m_right = near * ceTan(halfAngle);
-  m_left = -m_right;
+  m_left  = -m_right;
 
-  m_top = m_right * aspect;
+  m_top    = m_right * aspect;
   m_bottom = -m_top;
 
   m_near = near;
-  m_far = far;
+  m_far  = far;
 
 }
 
 void Projector::UpdatePerspective(float left, float right, float bottom, float top, float near, float far)
 {
-  m_mode = ePM_Perspective;
-  m_left = left;
-  m_right = right;
+  m_mode   = ePM_Perspective;
+  m_left   = left;
+  m_right  = right;
   m_bottom = bottom;
-  m_top = top;
-  m_near = near;
-  m_far = far;
+  m_top    = top;
+  m_near   = near;
+  m_far    = far;
 }
 
 void Projector::UpdateOrtho(float left, float right, float bottom, float top, float near, float far)
 {
-  m_mode = ePM_Orthographic;
-  m_left = left;
-  m_right = right;
+  m_mode   = ePM_Orthographic;
+  m_left   = left;
+  m_right  = right;
   m_bottom = bottom;
-  m_top = top;
-  m_near = near;
-  m_far = far;
+  m_top    = top;
+  m_near   = near;
+  m_far    = far;
 }
 
 void Projector::Bind(iDevice* device) const
@@ -74,6 +67,41 @@ void Projector::Bind(iDevice* device) const
 
   device->SetProjectionMatrix(projection, projectionInv);
 
+}
+
+Matrix4f Projector::GetProjectionMatrix(iDevice* device) const
+{
+
+  Matrix4f matrix;
+  switch (m_mode)
+  {
+  case ePM_Perspective:
+    device->GetPerspectiveProjection(m_left, m_right, m_bottom, m_top, m_near, m_far, matrix);
+    break;
+  case ePM_Orthographic:
+    device->GetOrthographicProjection(m_left, m_right, m_bottom, m_top, m_near, m_far, matrix);
+    break;
+  }
+
+  return matrix;
+}
+
+
+Matrix4f Projector::GetProjectionMatrixInv(iDevice* device) const
+{
+
+  Matrix4f matrix;
+  switch (m_mode)
+  {
+  case ePM_Perspective:
+    device->GetPerspectiveProjectionInv(m_left, m_right, m_bottom, m_top, m_near, m_far, matrix);
+    break;
+  case ePM_Orthographic:
+    device->GetOrthographicProjectionInv(m_left, m_right, m_bottom, m_top, m_near, m_far, matrix);
+    break;
+  }
+
+  return matrix;
 }
 
 
@@ -100,14 +128,12 @@ void Projector::GetPoints(float depth, Vector3f* out) const
   out[2] = Vector3f(r, b, depth);
   out[3] = Vector3f(r, t, depth);
 
-
 }
 
 float Projector::GetNear() const
 {
   return m_near;
 }
-
 
 float Projector::GetFar() const
 {

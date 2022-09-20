@@ -7,7 +7,7 @@
 namespace ce::opengl
 {
 
-GLint GL4CompareFunc[] = {
+static GLint GL4CompareFunc[] = {
 
   GL_LESS,      // eCF_Less,
   GL_LEQUAL,    // eCF_LessOrEqual,

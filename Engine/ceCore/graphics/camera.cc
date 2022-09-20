@@ -64,5 +64,20 @@ void Camera::Bind(iDevice* device) const
   device->SetViewMatrix(viewMatrix, viewMatrixInv);
 }
 
+Matrix4f Camera::GetViewMatrix() const
+{
+  Matrix4f matrix;
+  matrix.SetLookAt(m_eye, m_spot, m_up);
+  return matrix;
+}
+
+
+
+Matrix4f Camera::GetViewMatrixInv() const
+{
+  Matrix4f matrix;
+  matrix.SetLookAtInv(m_eye, m_spot, m_up);
+  return matrix;
+}
 
 }

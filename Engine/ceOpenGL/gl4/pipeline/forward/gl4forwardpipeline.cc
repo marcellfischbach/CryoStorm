@@ -77,7 +77,7 @@ void GL4ForwardPipeline::Render(iRenderTarget2D* target,
   BindCamera();
   RenderForwardToTarget();
 
-  RenderDebugToTarget ();
+//  RenderDebugToTarget ();
   Cleanup();
 
 
@@ -185,6 +185,7 @@ void GL4ForwardPipeline::RenderDepthToTarget()
   m_device->SetColorWrite(false, false, false, false);
   m_device->SetDepthTest(true);
   m_device->SetDepthWrite(true);
+  m_device->SetDepthFunc(eCF_LessOrEqual);
   const std::vector<GfxMesh*>& defaultMeshes = m_collector.GetMeshes(eRenderQueue::Default);
   for (auto            & mesh : defaultMeshes)
   {
@@ -196,14 +197,15 @@ void GL4ForwardPipeline::RenderDepthToTarget()
 
 void GL4ForwardPipeline::RenderForwardToTarget()
 {
-  // don't clear the depth here because we have already written the depth buffer in a previous path
-
   m_device->SetRenderTarget(m_target);
+
 
 
   m_device->SetColorWrite(true, true, true, true);
   m_device->SetDepthTest(true);
   m_device->SetDepthWrite(false);
+  m_device->SetDepthFunc(eCF_LessOrEqual);
+
   std::vector<GfxMesh*>& defaultMeshes = m_collector.GetMeshes(eRenderQueue::Default);
   for (auto            & mesh : defaultMeshes)
   {
@@ -218,6 +220,9 @@ void GL4ForwardPipeline::RenderForwardToTarget()
     }
   }
 
+
+  m_device->SetDepthWrite(false);
+  m_device->SetDepthFunc(eCF_LessOrEqual);
 
   std::vector<GfxMesh*>& transparentMeshes = m_collector.GetMeshes(eRenderQueue::Transparency);
   for (auto            & mesh : m_transparentMeshes)

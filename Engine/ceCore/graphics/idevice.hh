@@ -7,6 +7,7 @@
 #include <ceCore/math/matrix.hh>
 #include <ceCore/class.hh>
 #include <ceCore/graphics/eblendfactor.hh>
+#include <ceCore/graphics/ecomparefunc.hh>
 #include <ceCore/graphics/efillmode.hh>
 #include <ceCore/graphics/erenderpass.hh>
 #include <ceCore/graphics/etextureunit.hh>
@@ -44,6 +45,7 @@ struct CE_CORE_API iDevice : public CE_SUPER(iObject)
   virtual void SetDepthWrite(bool depthMask) = 0;
   virtual void SetDepthTest(bool depthTest) = 0;
   virtual void SetFillMode (eFillMode fillMode) = 0;
+  virtual void SetDepthFunc (eCompareFunc func) = 0;
 
   virtual void SetBlending(bool blending) = 0;
   virtual void SetBlendFactor (eBlendFactor srcFactor, eBlendFactor dstFactor) = 0;
@@ -79,7 +81,7 @@ struct CE_CORE_API iDevice : public CE_SUPER(iObject)
   virtual void AddShadowMap(iTexture2D* shadowMap) = 0;
   virtual iTexture2D* GetShadowMap(unsigned idx) = 0;
   virtual void SetPointLightShadowMap(iLight* light, iTextureCube* colorMap, iTextureCube* depthMap, float near, float far, float bias) = 0;
-  virtual void SetDirectionalLightShadowMap(iLight* light, const Vector3f& layers, iTexture2DArray* colorMap, iTexture2DArray* depthMap, Matrix4f matrices[3], float bias) = 0;
+  virtual void SetLightShadowMap(iLight* light, iTexture2D* shadowMap) = 0;
 
   virtual iSampler* CreateSampler() = 0;
   virtual iTexture2D* CreateTexture(const iTexture2D::Descriptor& descriptor) = 0;

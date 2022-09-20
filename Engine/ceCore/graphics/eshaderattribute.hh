@@ -31,6 +31,7 @@ enum eShaderAttribute
   eSA_LightRange,
   eSA_LightCount,
   eSA_LightCastShadow,
+  eSA_LightShadowMap,
 
   /* ShadowMapping */
   eSA_PointLightShadowMapMappingBias,

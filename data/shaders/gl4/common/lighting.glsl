@@ -4,6 +4,7 @@ uniform vec4 ce_LightColor[4];
 uniform vec4 ce_LightVector[4];
 uniform float ce_LightRange[4];
 uniform int ce_LightCastShadow[4];
+uniform sampler2D ce_LightShadowMap[4];
 
 
 #include <oren-nayar.glsl>
@@ -71,6 +72,11 @@ light_result_t calc_light(int idx, vec3 light_ambient, vec3 light_color, vec4 li
         specular = lighting_result.specular;
         //shadow = calc_directional_shadow(idx, light_vector.xyz, frag_position, camera_space_position);
         attenuation = 1.0;
+    }
+
+    if (ce_LightCastShadow[idx] > 0)
+    {
+        shadow = texture (ce_LightShadowMap[idx], screen_coord).r;
     }
 
     diffuse = clamp(diffuse, 0.0, 1.0);

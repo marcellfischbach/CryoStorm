@@ -20,6 +20,7 @@ in vec3 world_position;
 in vec3 world_normal;
 in vec3 camera_space_position;
 in vec3 viewer_world_position;
+in vec2 screen_coord;
 
 #include <../common/lighting.glsl>
 

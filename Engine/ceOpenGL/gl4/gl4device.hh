@@ -29,6 +29,7 @@ public:
   void SetDepthWrite(bool depthWrite) override;
   void SetDepthTest(bool depthTest) override;
   void SetFillMode(eFillMode fillMode) override;
+  void SetDepthFunc (eCompareFunc func) override;
   void SetBlending(bool blending) override;
   void SetBlendFactor(eBlendFactor srcFactor, eBlendFactor dstFactor) override;
   void SetBlendFactor(eBlendFactor srcFactorColor,
@@ -66,8 +67,7 @@ public:
   void AddShadowMap(iTexture2D* shadowMap) override;
   iTexture2D* GetShadowMap(unsigned idx) override;
   void SetPointLightShadowMap(iLight * light, iTextureCube * colorMap, iTextureCube * depthMap, float near, float far, float bias) override;
-  void SetDirectionalLightShadowMap(iLight * light, const Vector3f &layers, iTexture2DArray * colorMap, iTexture2DArray * depthMap, Matrix4f matrices[3], float bias) override;
-
+  void SetLightShadowMap(iLight * light, iTexture2D * shadowMap);
 
   iSampler *CreateSampler() override;
   iTexture2D* CreateTexture(const iTexture2D::Descriptor & descriptor) override;
@@ -146,6 +146,7 @@ private:
   bool m_depthWrite;
   bool m_depthTest;
   eFillMode m_fillMode;
+  eCompareFunc m_depthFunc;
   bool m_blending;
   eBlendFactor m_srcFactorColor;
   eBlendFactor m_srcFactorAlpha;
@@ -198,15 +199,7 @@ private:
 
   std::map<const iLight*, PointLightShadowData> m_pointLightShadowData;
 
-  struct DirectionalLightShadowData
-  {
-    iLight* Light;
-    iTexture2DArray* Color;
-    iTexture2DArray* Depth;
-    Vector4f LayersBias;
-    Matrix4f Matrices[3];
-  };
-  std::map<const iLight*, DirectionalLightShadowData> m_directionalLightShadowData;
+  std::map<const iLight*, iTexture2D*> m_lightShadowMaps;
 
   std::vector<iTexture2D*> m_shadowMapTextures;
 
