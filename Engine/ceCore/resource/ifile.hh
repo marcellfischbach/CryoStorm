@@ -18,6 +18,7 @@ struct CE_CORE_API iFile : public CE_SUPER(iObject)
   CE_CLASS_GEN;
   virtual ~iFile() {}
 
+  virtual const std::string &GetName() const = 0;
   virtual bool Open(eAccessMode accessMode, eOpenMode openMode = eOM_Binary ) = 0;
   virtual bool IsOpen() const = 0;
   virtual bool IsEOF() const = 0;

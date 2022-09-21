@@ -31,9 +31,13 @@ namespace ce::opengl
 {
 
 GL4ForwardDirectionalLightRenderer::GL4ForwardDirectionalLightRenderer()
-    :  m_directionalLightShadowMapWidth(0),
+    : m_directionalLightShadowMapWidth(0),
       m_directionalLightShadowMapHeight(0)
 {
+  for (unsigned i = 0; i < MaxLights; i++)
+  {
+    m_directionalLightShadowMap[i] = nullptr;
+  }
 }
 
 GL4ForwardDirectionalLightRenderer::~GL4ForwardDirectionalLightRenderer()
@@ -81,53 +85,11 @@ void GL4ForwardDirectionalLightRenderer::Initialize(Settings &settings)
   if (m_shadowMappingShader)
   {
     m_attrLayersBias = m_shadowMappingShader->GetShaderAttribute("LayersBias");
-    m_attrMappingMatrices = m_shadowMappingShader->GetShaderAttribute("MappingMatrices");
     m_attrShadowBuffer = m_shadowMappingShader->GetShaderAttribute("ShadowBuffer");
     m_attrDepthBuffer = m_shadowMappingShader->GetShaderAttribute("DepthBuffer");
   }
 
 
-}
-
-void GL4ForwardDirectionalLightRenderer::SetDevice(iDevice *device)
-{
-  m_device = QueryClass<GL4Device>(device);
-}
-
-void GL4ForwardDirectionalLightRenderer::SetScene(iGfxScene *scene)
-{
-  m_scene = scene;
-}
-
-void GL4ForwardDirectionalLightRenderer::SetDepthBuffer(iTexture2D *depthBuffer)
-{
-  m_depthBuffer = depthBuffer;
-  m_directionalLightShadowMapWidth = m_depthBuffer->GetWidth();
-  m_directionalLightShadowMapHeight = m_depthBuffer->GetHeight();
-}
-
-void GL4ForwardDirectionalLightRenderer::SetShadowMapSize(size_t width, size_t height)
-{
-  m_directionalLightShadowMapWidth = width;
-  m_directionalLightShadowMapHeight = height;
-}
-
-iTexture2D *GL4ForwardDirectionalLightRenderer::GetColorTexture()
-{
-  if (!m_directionalLightShadowMap.empty())
-  {
-    return m_directionalLightShadowMap[0]->GetColorTexture(0);
-  }
-  return nullptr;
-}
-
-iTexture2D *GL4ForwardDirectionalLightRenderer::GetDepthTexture()
-{
-  if (!m_directionalLightShadowMap.empty())
-  {
-    return m_directionalLightShadowMap[0]->GetDepthTexture();
-  }
-  return nullptr;
 }
 
 void GL4ForwardDirectionalLightRenderer::Clear()
@@ -185,8 +147,7 @@ void GL4ForwardDirectionalLightRenderer::RenderShadowBuffer(GL4DirectionalLight 
                                                             const Camera &camera,
                                                             const Projector &projector)
 {
-  m_device->SetRenderTarget(GetDirectionalLightShadowBuffer());
-  m_device->Clear(false, Color4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, false, 0);
+
 
 
   Vector3f nearPoints[4];
@@ -314,23 +275,24 @@ void GL4ForwardDirectionalLightRenderer::RenderShadowBuffer(GL4DirectionalLight 
   };
 
 
-  m_shadowMatrices[0] = projections[0] * views[0];
-  m_shadowMatrices[1] = projections[1] * views[1];
-  m_shadowMatrices[2] = projections[2] * views[2];
 
+  m_device->SetRenderTarget(GetDirectionalLightShadowBuffer());
+  m_device->SetDepthWrite(true);
+  m_device->SetDepthTest(true);
+  m_device->SetColorWrite(true, true, true, true);
+  m_device->Clear(true, Color4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, true, 0);
 
   m_device->SetShadowMapProjectionMatrices(projections, 3);
   m_device->SetShadowMapViewMatrices(views, 3);
 
-  m_device->SetColorWrite(false, false, false, false);
   std::sort(m_meshesCache.begin(), m_meshesCache.end(), material_shader_compare_less_forward);
 
   for (auto mesh: m_meshesCache)
   {
     mesh->RenderUnlit(m_device, eRP_ShadowPSSM);
   }
-  m_device->BindMaterial(nullptr, eRP_COUNT);
-  m_device->SetColorWrite(true, true, true, true);
+//  m_device->BindMaterial(nullptr, eRP_COUNT);
+//  m_device->SetColorWrite(true, true, true, true);
 
 }
 
@@ -354,10 +316,7 @@ void GL4ForwardDirectionalLightRenderer::RenderShadowMap(GL4DirectionalLight *di
   {
     m_attrLayersBias->Bind(Vector4f(m_splits[0], m_splits[1], m_splits[2], directionalLight->GetShadowMapBias()));
   }
-  if (m_attrMappingMatrices)
-  {
-    m_attrMappingMatrices->Bind(m_shadowMatrices, 3);
-  }
+
   if (m_attrShadowBuffer)
   {
     eTextureUnit unit = m_device->BindTexture(GetDirectionalLightShadowBuffer()->GetDepthTexture());
@@ -392,7 +351,7 @@ void GL4ForwardDirectionalLightRenderer::FilterShadowMap(size_t lightIdx)
 
 void GL4ForwardDirectionalLightRenderer::ApplyShadowMapToDevice(GL4DirectionalLight *directionalLight, size_t lightIdx)
 {
-  if (m_directionalLightShadowMap.size() <= lightIdx)
+  if (lightIdx >= MaxLights)
   {
     return;
   }
@@ -408,9 +367,9 @@ void GL4ForwardDirectionalLightRenderer::ApplyShadowMapToDevice(GL4DirectionalLi
 
 GL4RenderTarget2D *GL4ForwardDirectionalLightRenderer::GetDirectionalLightShadowMap(size_t lightIdx)
 {
-  if (m_directionalLightShadowMap.size() <= lightIdx)
+  if (lightIdx >= MaxLights)
   {
-    m_directionalLightShadowMap.resize(lightIdx + 1);
+    return nullptr;
   }
 
   GL4RenderTarget2D *target = m_directionalLightShadowMap[lightIdx];
@@ -524,6 +483,8 @@ GL4RenderTarget2DArray *GL4ForwardDirectionalLightRenderer::GetDirectionalLightS
   }
   return m_directionalLightShadowBuffer;
 }
+
+
 iSampler *GL4ForwardDirectionalLightRenderer::GetShadowMapColorSampler()
 {
   if (!m_shadowMapColorSampler)
@@ -600,5 +561,48 @@ float GL4ForwardDirectionalLightRenderer::GetSplitSize(const Vector3f *near, con
   // add a 10% extra
   return ceSqrt(maxDist) * 1.1f;
 }
+
+
+void GL4ForwardDirectionalLightRenderer::SetDevice(iDevice *device)
+{
+  m_device = QueryClass<GL4Device>(device);
+}
+
+void GL4ForwardDirectionalLightRenderer::SetScene(iGfxScene *scene)
+{
+  m_scene = scene;
+}
+
+void GL4ForwardDirectionalLightRenderer::SetDepthBuffer(iTexture2D *depthBuffer)
+{
+  m_depthBuffer = depthBuffer;
+  m_directionalLightShadowMapWidth = m_depthBuffer->GetWidth();
+  m_directionalLightShadowMapHeight = m_depthBuffer->GetHeight();
+}
+
+void GL4ForwardDirectionalLightRenderer::SetShadowMapSize(size_t width, size_t height)
+{
+  m_directionalLightShadowMapWidth = width;
+  m_directionalLightShadowMapHeight = height;
+}
+
+iTexture2D *GL4ForwardDirectionalLightRenderer::GetColorTexture()
+{
+  if (!m_directionalLightShadowMap.empty())
+  {
+    return m_directionalLightShadowMap[0]->GetColorTexture(0);
+  }
+  return nullptr;
+}
+
+iTexture2D *GL4ForwardDirectionalLightRenderer::GetDepthTexture()
+{
+  if (!m_directionalLightShadowMap.empty())
+  {
+    return m_directionalLightShadowMap[0]->GetDepthTexture();
+  }
+  return nullptr;
+}
+
 
 }

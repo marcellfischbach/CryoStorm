@@ -86,7 +86,7 @@ light_result_t calc_light(int idx, vec3 light_ambient, vec3 light_color, vec4 li
 
     float attShadow = shadow * attenuation;
     light_result_t res;
-    res.diffuse = light_color * diffuse * attShadow;
+    res.diffuse = light_color * diffuse * attShadow + ambient * ce_LightAmbient[idx].rgb;
     res.specular = light_color * specular * attShadow;
 
     return res;

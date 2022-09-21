@@ -15,6 +15,7 @@ class CE_CORE_API FileSystemFile : public CE_SUPER(iFile)
 public:
   FileSystemFile(const std::string & path);
 
+  const std::string &GetName() const override;
   bool Open(eAccessMode accessMode, eOpenMode openMode = eOM_Binary) override;
   bool IsOpen() const override;
   bool IsEOF() const override;

@@ -3,10 +3,12 @@
 #pragma once
 
 #include <ceOpenGL/openglexport.hh>
+#include <ceOpenGL/openglconstants.hh>
 #include <ceOpenGL/gl4/pipeline/forward/gl4forwardshadowmapfilter.hh>
 #include <ceCore/types.hh>
 #include <ceCore/math/matrix4f.hh>
 #include <map>
+#include <array>
 #include <vector>
 
 namespace ce
@@ -89,7 +91,7 @@ private:
 
 
   GL4RenderTarget2D * m_directionalLightShadowMapTemp = nullptr;
-  std::vector<GL4RenderTarget2D *> m_directionalLightShadowMap;
+  std::array<GL4RenderTarget2D *, MaxLights> m_directionalLightShadowMap;
   size_t m_directionalLightShadowMapWidth;
   size_t m_directionalLightShadowMapHeight;
 
@@ -104,7 +106,6 @@ private:
   float m_shadowFar;
   float m_splits[3];
 
-  Matrix4f m_shadowMatrices[3];
   ShadowSamplingMode m_shadowSamplingMode;
   iSampler *m_shadowMapColorSampler = nullptr;
   iSampler *m_shadowBufferColorSampler = nullptr;
@@ -112,7 +113,6 @@ private:
 
   iShader *m_shadowMappingShader = nullptr;
   iShaderAttribute *m_attrLayersBias = nullptr;
-  iShaderAttribute *m_attrMappingMatrices = nullptr;
   iShaderAttribute *m_attrShadowBuffer = nullptr;
   iShaderAttribute *m_attrDepthBuffer = nullptr;
 

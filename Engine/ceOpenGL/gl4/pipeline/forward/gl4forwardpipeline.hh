@@ -2,6 +2,7 @@
 #pragma once
 
 #include <ceOpenGL/openglexport.hh>
+#include <ceOpenGL/openglconstants.hh>
 #include <ceOpenGL/gl4/pipeline/forward/gl4forwardpointlightrenderer.hh>
 #include <ceOpenGL/gl4/pipeline/forward/gl4forwarddirectionallightrenderer.hh>
 #include <ceCore/graphics/camera.hh>
@@ -24,7 +25,6 @@ struct iSampler;
 
 namespace opengl
 {
-const int   MaxLights         = 4;
 
 class GL4DirectionalLight;
 class GL4PointLight;

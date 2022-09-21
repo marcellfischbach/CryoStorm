@@ -3,6 +3,7 @@ layout(location = 0) out vec4 ce_FragColor;
 
 uniform vec4 ce_LayersBias;
 uniform mat4 ce_MappingMatrices[3];
+uniform mat4 ce_ShadowMapViewProjectionMatrix[3];
 uniform sampler2DArrayShadow ce_ShadowBuffer;
 uniform sampler2D ce_DepthBuffer;
 
@@ -21,7 +22,7 @@ bool is_valid (vec3 v)
 
 vec3 to_cam_space (vec3 world_position, int idx)
 {
-    vec4 camSpace = ce_MappingMatrices[idx] * vec4(world_position, 1.0);
+    vec4 camSpace = ce_ShadowMapViewProjectionMatrix[idx] * vec4(world_position, 1.0);
     camSpace /= camSpace.w;
     camSpace = camSpace * 0.5 + 0.5;
     camSpace.z -= ce_LayersBias.w;
@@ -58,7 +59,7 @@ vec3 calc_directional_shadow(vec3 world_position, float distance_to_camera)
         return vec3(1.0);
     }
 
-    vec4 camSpace = ce_MappingMatrices[matIndex] * vec4(world_position, 1.0);
+    vec4 camSpace = ce_ShadowMapViewProjectionMatrix[matIndex] * vec4(world_position, 1.0);
     camSpace /= camSpace.w;
     camSpace = camSpace * 0.5 + 0.5;
     camSpace.z -= layerBias.w;

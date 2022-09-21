@@ -13,6 +13,11 @@ FileSystemFile::FileSystemFile(const std::string& path)
   CE_CLASS_GEN_CONSTR;
 }
 
+const std::string &FileSystemFile::GetName() const
+{
+  return m_path;
+}
+
 bool FileSystemFile::Open(eAccessMode accessMode, eOpenMode openMode)
 {
   std::string mode;

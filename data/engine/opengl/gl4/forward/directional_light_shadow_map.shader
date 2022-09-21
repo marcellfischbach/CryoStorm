@@ -5,7 +5,6 @@ program {
     },
     attributes {
         attribute LayersBias,
-        attribute MappingMatrices,
         attribute ShadowBuffer,
         attribute DepthBuffer,
     }

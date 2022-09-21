@@ -387,6 +387,11 @@ bool CrimsonFile::Parse(const std::string &filename)
 
   BufferBuffer bBuf(buffer, size);
   bool         success = Parse(&bBuf);
+  if (!success)
+  {
+    printf ("Parse failed %s\n", filename.c_str());
+    printf ("%s\n", buffer);
+  }
   delete[] buffer;
   return success;
 }
@@ -408,6 +413,11 @@ bool CrimsonFile::Parse(iFile *file)
 
   BufferBuffer bBuf(buffer, size);
   bool         success = Parse(&bBuf);
+  if (!success)
+  {
+    printf ("Parse failed: %s\n", file->GetName().c_str());
+    printf ("%s\n", buffer);
+  }
   delete[] buffer;
   return success;
 }
@@ -415,8 +425,13 @@ bool CrimsonFile::Parse(iFile *file)
 bool CrimsonFile::Parse(const char *buffer, size_t bufferSize)
 {
   BufferBuffer bBuf(buffer, bufferSize);
-  return Parse(&bBuf);
+  bool  success = Parse(&bBuf);
+  if (!success)
+  {
+    printf ("Parse failed:\n%s\n", buffer);
+  }
 
+  return success;
 }
 
 
