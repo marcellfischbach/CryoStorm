@@ -92,6 +92,7 @@ void GL4ForwardShadowMapFilter::Render(GL4Device *device,
   }
 
   device->BindMatrices();
+  device->BindStandardValues();
 
   device->RenderFullscreen();
 }

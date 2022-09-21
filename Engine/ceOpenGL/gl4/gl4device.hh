@@ -96,6 +96,7 @@ public:
   void FinishForwardLights(Size numLights);
 
   void BindMatrices();
+  void BindStandardValues();
 
 #if _DEBUG
 

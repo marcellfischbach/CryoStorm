@@ -21,6 +21,8 @@ enum eShaderAttribute
   eSA_ViewProjectionMatrixInv,
   eSA_ModelViewProjectionMatrixInv,
 
+  eSA_Random,
+
   eSA_ShadowMapViewMatrix,
   eSA_ShadowMapProjectionMatrix,
   eSA_ShadowMapViewProjectionMatrix,

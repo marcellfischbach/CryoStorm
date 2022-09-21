@@ -887,6 +887,7 @@ void GL4Device::Render(iRenderMesh* mesh, eRenderPass pass)
   {
     CE_GL_ERROR();
     BindMatrices();
+    BindStandardValues();
     CE_GL_ERROR();
     mesh->Render(this, pass);
     CE_GL_ERROR();
@@ -1248,6 +1249,16 @@ void GL4Device::BindMatrices()
     }
   }
 #endif
+}
+
+void GL4Device::BindStandardValues()
+{
+  iShaderAttribute* attr = m_shader->GetShaderAttribute(eSA_Random);
+  if (attr)
+  {
+    int rnd = rand();
+    attr->Bind((float)rnd / (float)RAND_MAX);
+  }
 }
 
 void GL4Device::UpdateModelViewMatrix()

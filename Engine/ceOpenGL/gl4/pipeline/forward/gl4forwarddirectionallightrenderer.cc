@@ -370,6 +370,7 @@ void GL4ForwardDirectionalLightRenderer::RenderShadowMap(GL4DirectionalLight *di
   }
 
   m_device->BindMatrices();
+  m_device->BindStandardValues();
 
   m_device->RenderFullscreen();
 }

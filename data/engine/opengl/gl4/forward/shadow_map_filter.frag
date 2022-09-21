@@ -9,6 +9,7 @@ uniform float ce_FilterRadius;
 uniform float ce_FilterSamples;
 uniform vec2 ce_FilterDistance;
 uniform float ce_ScreenAspect;
+uniform float ce_Random;
 
 in vec2 texCoord;
 
@@ -41,14 +42,17 @@ void main ()
 
 
 
+	
 
 	float radius_x = size;
 	float radius_y = size * ce_ScreenAspect;
 
+	float rnd = (texCoord.x + texCoord.y) * ce_Random * 0.5;
+
 	vec4 color = vec4(0, 0, 0, 0);
 	for (float i=0; i<num; i++)
 	{
-		float r = i * 3.14 * 234.45;
+		float r = rnd + i * 3.14 * 234.45;
 		float s = i / num;
 
 		vec2 add = vec2(cos(r) * s * radius_x, sin(r) * s * radius_y);

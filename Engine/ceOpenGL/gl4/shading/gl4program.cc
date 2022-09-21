@@ -105,6 +105,8 @@ void GL4Program::RegisterRenderAttributes()
   RegisterAttribute("ViewProjectionMatrixInv");
   RegisterAttribute("ModelViewProjectionMatrixInv");
 
+  RegisterAttribute("Random");
+
   RegisterAttribute("ShadowMapViewMatrix");
   RegisterAttribute("ShadowMapProjectionMatrix");
   RegisterAttribute("ShadowMapViewProjectionMatrix");
