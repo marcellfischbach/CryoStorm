@@ -9,6 +9,7 @@ program{
         attribute FilterRadius,
         attribute FilterSamples,
         attribute FilterDistance,
+        attribute FilterMaxSampleDistance,
         attribute ScreenAspect,
     }
 }

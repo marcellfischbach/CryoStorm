@@ -62,6 +62,8 @@ ce::SDLKeyboard keyboard;
 
 ce::SDLMouse mouse;
 
+
+
 void UpdateEvents()
 {
   keyboard.Update();
@@ -572,6 +574,9 @@ int main(int argc, char** argv)
     return -1;
   }
 
+  ce::DebugCache* debugCache = new ce::DebugCache();
+  ce::ObjectRegistry::Register<ce::DebugCache>(debugCache);
+
   if (!initialize_modules(argc, argv))
   {
     return -1;
@@ -707,7 +712,7 @@ int main(int argc, char** argv)
   sunLightState->SetTransform(sunLightState->GetTransform()
                                              //.SetRotation(ce::Quaternion::FromAxisAngle(ce::Vector3f(1.0f, 0.0f, 0.0f), ce::ceDeg2Rad(-45.0f)))
                                            .SetRotation(
-                                             ce::Quaternion::FromAxisAngle(ce::Vector3f(1.0f, 0.0f, 0.0f)
+                                             ce::Quaternion::FromAxisAngle(ce::Vector3f(1.0f, 0.2f, 0.0f)
                                                                              .Normalize(),
                                                                            ce::ceDeg2Rad(-45.0f)))
   );
@@ -971,6 +976,11 @@ int main(int argc, char** argv)
         metallic -= 0.5f * tpf;
         metallic = metallic >= 0.0f ? metallic : 0.0f;
         updateMaterial->Set(metallicIdx, metallic);
+      }
+
+      if (ce::Input::IsKeyPressed(ce::Key::eK_E))
+      {
+        debugCache->SetDebug(!debugCache->IsDebug());
       }
 
       sunLightState->SetTransform(sunLightState->GetTransform()

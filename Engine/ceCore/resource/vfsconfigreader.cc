@@ -62,7 +62,7 @@ void VFSConfigReader::ReadAlias(const CrimsonFileElement* aliasElement)
 
 CrimsonFile* VFSConfigReader::OpenConfigFile()
 {
-  AutoDelete<iFile> fsFile = VFS::Get()->Open(ResourceLocator("/vfs.config"), eAM_Read, eOM_Text);
+  AutoDelete<iFile> fsFile = VFS::Get()->Open(ResourceLocator("/vfs.config"), eAM_Read, eOM_Binary);
   if (!fsFile)
   {
     return nullptr;

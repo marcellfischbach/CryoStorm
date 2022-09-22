@@ -8,6 +8,28 @@
 namespace ce
 {
 
+CE_CLASS()
+class CE_CORE_API DebugCache : public CE_SUPER(iObject)
+{
+  CE_CLASS_GEN_OBJECT;
+public:
+  DebugCache();
+  ~DebugCache() override = default;
+
+  void SetDebug(bool debug)
+  {
+    m_debug = debug;
+  }
+
+  bool IsDebug()
+  {
+    return m_debug;
+  }
+
+private:
+  bool m_debug;
+};
+
 
 class CE_CORE_API ObjectRegistry
 {

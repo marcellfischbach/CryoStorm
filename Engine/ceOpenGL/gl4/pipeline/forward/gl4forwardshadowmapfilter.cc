@@ -22,11 +22,12 @@ GL4ForwardShadowMapFilter::~GL4ForwardShadowMapFilter()
 
 }
 
-bool GL4ForwardShadowMapFilter::Initialize(const Vector2f &distance, float radius, float samples)
+bool GL4ForwardShadowMapFilter::Initialize(const Vector2f &distance, float radius, float samples, float maxSampleDistance)
 {
   m_distance = distance;
   m_radius = radius;
   m_samples = samples;
+  m_maxSampleDistance = maxSampleDistance;
 
 
   m_shadowMapFilterShader = AssetManager::Get()->Get<iShader>(
@@ -43,6 +44,7 @@ bool GL4ForwardShadowMapFilter::Initialize(const Vector2f &distance, float radiu
   m_attrFilterDistance = m_shadowMapFilterShader->GetShaderAttribute("FilterDistance");
   m_attrFilterRadius = m_shadowMapFilterShader->GetShaderAttribute("FilterRadius");
   m_attrFilterSamples = m_shadowMapFilterShader->GetShaderAttribute("FilterSamples");
+  m_attrFilterMaxSampleDistance = m_shadowMapFilterShader->GetShaderAttribute("FilterMaxSampleDistance");
   m_attrScreenAspect = m_shadowMapFilterShader->GetShaderAttribute("ScreenAspect");
 
   return true;
@@ -84,6 +86,10 @@ void GL4ForwardShadowMapFilter::Render(GL4Device *device,
   if (m_attrFilterSamples)
   {
     m_attrFilterSamples->Bind(m_samples);
+  }
+  if (m_attrFilterMaxSampleDistance)
+  {
+    m_attrFilterMaxSampleDistance->Bind(m_maxSampleDistance);
   }
 
   if (m_attrScreenAspect)

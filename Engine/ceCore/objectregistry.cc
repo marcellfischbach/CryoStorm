@@ -4,6 +4,11 @@
 namespace ce
 {
 
+DebugCache::DebugCache()
+{
+  CE_CLASS_GEN_CONSTR;
+}
+
 ObjectRegistry::ObjectRegistry()
 {
 

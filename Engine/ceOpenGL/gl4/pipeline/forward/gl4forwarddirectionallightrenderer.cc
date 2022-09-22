@@ -76,8 +76,9 @@ void GL4ForwardDirectionalLightRenderer::Initialize(Settings &settings)
   Vector2f distance = settings.GetVector2f("directional_light.shadow_map.filter.distance", Vector2f(1, 25));
   float radius = settings.GetFloat("directional_light.shadow_map.filter.radius", 10.0f);
   float samples = settings.GetFloat("directional_light.shadow_map.filter.samples", 25.0f);
+  float sampleDistance = settings.GetFloat("directional_light.shadow_map.filter.sampleDistance", 0.1f);
 
-  m_shadowMapFilter.Initialize(Vector2f(distance.x, distance.y - distance.x), radius, samples);
+  m_shadowMapFilter.Initialize(Vector2f(distance.x, distance.y - distance.x), radius, samples, sampleDistance);
 
 
   m_shadowMappingShader = AssetManager::Get()->Get<iShader>(

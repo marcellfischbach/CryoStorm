@@ -18,9 +18,13 @@
 #include <ceCore/math/clipper/multiplaneclipper.hh>
 #include <ceCore/math/clipper/sphereclipper.hh>
 #include <ceCore/settings.hh>
+#include <ceCore/objectregistry.hh>
 #include <algorithm>
 #include <array>
 #include <GL/glew.h>
+
+
+
 namespace ce::opengl
 {
 
@@ -77,7 +81,13 @@ void GL4ForwardPipeline::Render(iRenderTarget2D* target,
   BindCamera();
   RenderForwardToTarget();
 
-//  RenderDebugToTarget ();
+#ifdef _DEBUG
+  if (ObjectRegistry::Get<DebugCache>()->IsDebug())
+  {
+    RenderDebugToTarget();
+  }
+#endif
+
   Cleanup();
 
 

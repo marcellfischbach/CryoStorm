@@ -26,7 +26,7 @@ public:
   GL4ForwardShadowMapFilter();
   ~GL4ForwardShadowMapFilter();
 
-  bool Initialize (const Vector2f &distance, float radius, float samples);
+  bool Initialize (const Vector2f &distance, float radius, float samples, float maxSampleDistance);
 
   void Render (GL4Device* device, iTexture2D* depthBuffer, iTexture2D *shadowMap, GL4RenderTarget2D *target);
 
@@ -35,6 +35,7 @@ private:
   Vector2f m_distance;
   float m_radius;
   float m_samples;
+  float m_maxSampleDistance;
 
   iShader *m_shadowMapFilterShader = nullptr;
   iShaderAttribute *m_attrFilterDepthBuffer = nullptr;
@@ -42,6 +43,7 @@ private:
   iShaderAttribute *m_attrFilterRadius = nullptr;
   iShaderAttribute *m_attrFilterDistance = nullptr;
   iShaderAttribute *m_attrFilterSamples = nullptr;
+  iShaderAttribute *m_attrFilterMaxSampleDistance = nullptr;
   iShaderAttribute *m_attrScreenAspect = nullptr;
 };
 
