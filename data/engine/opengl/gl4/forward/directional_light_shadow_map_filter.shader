@@ -1,7 +1,7 @@
 program{
     shaders {
-        shader "shadow_map_filter.frag",
-        shader "shadow_map_filter.vert",
+        shader "directional_light_shadow_map_filter.frag",
+        shader "directional_light_shadow_map_filter.vert",
     },
     attributes {
         attribute ShadowMap,

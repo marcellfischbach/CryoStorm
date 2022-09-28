@@ -4,7 +4,7 @@
 
 #include <ceOpenGL/openglexport.hh>
 #include <ceOpenGL/openglconstants.hh>
-#include <ceOpenGL/gl4/pipeline/forward/gl4forwardshadowmapfilter.hh>
+#include <ceOpenGL/gl4/pipeline/forward/gl4forwarddirectionallightshadowmapfilter.hh>
 #include <ceCore/types.hh>
 #include <ceCore/math/matrix4f.hh>
 #include <map>
@@ -117,7 +117,7 @@ private:
   iShaderAttribute *m_attrDepthBuffer = nullptr;
 
 
-  GL4ForwardShadowMapFilter m_shadowMapFilter;
+  GL4ForwardDirectionalLightShadowMapFilter m_shadowMapFilter;
 
   std::vector<GfxMesh *> m_meshesCache;
 };

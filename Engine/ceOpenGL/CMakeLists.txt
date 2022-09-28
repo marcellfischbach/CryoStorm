@@ -52,14 +52,14 @@ set(SOURCES
 
 		gl4/pipeline/forward/gl4forwarddirectionallightrenderer.cc
 		gl4/pipeline/forward/gl4forwarddirectionallightrenderer.hh
-		gl4/pipeline/forward/gl4forwardmeshsorter.cc
+		gl4/pipeline/forward/gl4forwarddirectionallightshadowmapfilter.cc
+		gl4/pipeline/forward/gl4forwarddirectionallightshadowmapfilter.hh
+			gl4/pipeline/forward/gl4forwardmeshsorter.cc
 		gl4/pipeline/forward/gl4forwardmeshsorter.hh
 		gl4/pipeline/forward/gl4forwardpipeline.cc
 		gl4/pipeline/forward/gl4forwardpipeline.hh
 		gl4/pipeline/forward/gl4forwardpointlightrenderer.cc
 		gl4/pipeline/forward/gl4forwardpointlightrenderer.hh
-		gl4/pipeline/forward/gl4forwardshadowmapfilter.cc
-		gl4/pipeline/forward/gl4forwardshadowmapfilter.hh
 
 		gl4/shading/gl4program.cc
 		gl4/shading/gl4program.hh
