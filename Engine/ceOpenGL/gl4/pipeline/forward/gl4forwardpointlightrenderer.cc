@@ -1,8 +1,10 @@
 
 
 #include <ceOpenGL/gl4/pipeline/forward/gl4forwardpointlightrenderer.hh>
+#include <ceOpenGL/gl4/gl4device.hh>
 #include <ceOpenGL/gl4/gl4pointlight.hh>
 #include <ceOpenGL/gl4/gl4rendertargetcube.hh>
+#include <ceOpenGL/gl4/gl4rendertarget2d.hh>
 #include <ceOpenGL/gl4/gl4texturecube.hh>
 
 #include <ceCore/settings.hh>
@@ -28,20 +30,16 @@ namespace ce::opengl
 {
 
 GL4ForwardPointLightRenderer::GL4ForwardPointLightRenderer()
-  : m_device(nullptr)
-  , m_shadowMapColorSampler(nullptr)
-  , m_shadowMapDepthSampler(nullptr)
 {
   for (unsigned i = 0; i < MaxLights; i++)
   {
-    m_directionalLightShadowMap[i] = nullptr;
+    m_pointLightShadowMap[i] = nullptr;
   }
 }
 
 GL4ForwardPointLightRenderer::~GL4ForwardPointLightRenderer()
 {
   CE_RELEASE(m_shadowMapColorSampler);
-  CE_RELEASE(m_shadowMapDepthSampler);
 }
 
 void GL4ForwardPointLightRenderer::Initialize(Settings &settings)
@@ -73,6 +71,15 @@ void GL4ForwardPointLightRenderer::Initialize(Settings &settings)
   }
 
 }
+
+void GL4ForwardPointLightRenderer::SetDepthBuffer(iTexture2D *depthBuffer)
+{
+  m_depthBuffer = depthBuffer;
+  m_shadowMapWidth = m_depthBuffer->GetWidth();
+  m_shadowMapHeight = m_depthBuffer->GetHeight();
+}
+
+
 
 
 void GL4ForwardPointLightRenderer::Clear()
@@ -197,9 +204,9 @@ void GL4ForwardPointLightRenderer::RenderShadowBuffer(GL4PointLight *pointLight,
                              depthTexture->GetName(),
                              0);
     }
-    m_device->SetColorWrite(false, false, false, false)
+    m_device->SetColorWrite(false, false, false, false);
 
-    m_device->SetViewport(0, 0, m_pointLightShadowBufferSize, m_pointLightShadowBufferSize);
+    m_device->SetViewport(0, 0, (uint16_t)m_pointLightShadowBufferSize, (uint16_t)m_pointLightShadowBufferSize);
     m_device->Clear(false, Color4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, false, 0);
 
     m_device->SetViewMatrix(views[i]);
@@ -223,7 +230,38 @@ void GL4ForwardPointLightRenderer::RenderShadowMap(GL4PointLight *pointLight,
                                                    const Camera &camera,
                                                    const Projector &projector)
 {
+  m_device->ResetTextures();
+  GL4RenderTarget2D *target = GetPointLightShadowMapTemp();
+  m_device->SetRenderTarget(target);
+  m_device->SetDepthWrite(true);
+  m_device->SetDepthTest(false);
+  m_device->SetColorWrite(true, true, true, true);
+  m_device->Clear(true, Color4f(0.0, 0.0f, 0.0f, 0.0f), true, 1.0f, true, 0);
 
+  m_device->SetShader(m_shadowMappingShader);
+  camera.Bind(m_device);
+  projector.Bind(m_device);
+
+  if (m_attrMappingBias)
+  {
+    m_attrMappingBias->Bind(Vector3f(pointLight->GetRange() * 0.001f, pointLight->GetRange(), pointLight->GetShadowMapBias()));
+  }
+
+  if (m_attrShadowBuffer)
+  {
+    eTextureUnit unit = m_device->BindTexture(GetPointLightShadowBufferDepth());
+    m_attrShadowBuffer->Bind(unit);
+  }
+  if (m_attrDepthBuffer)
+  {
+    eTextureUnit unit = m_device->BindTexture(m_depthBuffer);
+    m_attrDepthBuffer->Bind(unit);
+  }
+
+  m_device->BindMatrices();
+  m_device->BindStandardValues();
+
+  m_device->RenderFullscreen();
 }
 
 void GL4ForwardPointLightRenderer::FilterShadowMap(size_t lightIdx)
@@ -237,18 +275,154 @@ void GL4ForwardPointLightRenderer::ApplyShadowMapToDevice(GL4PointLight *pointLi
 }
 
 
+GL4TextureCube *GL4ForwardPointLightRenderer::GetPointLightShadowBufferColor()
+{
+  if (!m_shadowBufferColor)
+  {
+    iTextureCube::Descriptor desc = {};
+    desc.Format = ePF_RGB;
+    desc.MipMaps = false;
+    desc.Size = (uint16_t)m_pointLightShadowBufferSize;
+    iTextureCube *color = m_device->CreateTexture(desc);
+    color->SetSampler(GetShadowBufferColorSampler());
+    m_shadowBufferColor = QueryClass<GL4TextureCube>(color);
+  }
+  return m_shadowBufferColor;
+}
+
+GL4TextureCube *GL4ForwardPointLightRenderer::GetPointLightShadowBufferDepth()
+{
+    if (!m_shadowBufferDepth)
+    {
+      iTextureCube::Descriptor desc = {};
+      desc.Format = ePF_Depth;
+      desc.MipMaps = false;
+      desc.Size = (uint16_t)m_pointLightShadowBufferSize;
+      iTextureCube *depth = m_device->CreateTexture(desc);
+      depth->SetSampler(GetShadowBufferDepthSampler());
+      m_shadowBufferDepth = QueryClass<GL4TextureCube>(depth);
+    }
+    return m_shadowBufferDepth;
+}
+
+
+iSampler *GL4ForwardPointLightRenderer::GetShadowBufferColorSampler()
+{
+  if (!m_shadowBufferColorSampler)
+  {
+    m_shadowBufferColorSampler = m_device->CreateSampler();
+    m_shadowBufferColorSampler->SetAddressU(eTAM_Clamp);
+    m_shadowBufferColorSampler->SetAddressV(eTAM_Clamp);
+    m_shadowBufferColorSampler->SetAddressW(eTAM_Clamp);
+    m_shadowBufferColorSampler->SetFilterMode(eFM_MinMagLinear);
+    m_shadowBufferColorSampler->SetAnisotropy(1);
+  }
+  return m_shadowBufferColorSampler;
+}
+
+iSampler *GL4ForwardPointLightRenderer::GetShadowBufferDepthSampler()
+{
+  if (!m_shadowBufferDepthSampler)
+  {
+    m_shadowBufferDepthSampler = m_device->CreateSampler();
+    m_shadowBufferDepthSampler->SetAddressU(eTAM_Clamp);
+    m_shadowBufferDepthSampler->SetAddressV(eTAM_Clamp);
+    m_shadowBufferDepthSampler->SetAddressW(eTAM_Clamp);
+    m_shadowBufferDepthSampler->SetFilterMode(eFM_MinMagLinear);
+    m_shadowBufferDepthSampler->SetAnisotropy(1);
+  }
+  return m_shadowBufferDepthSampler;
+}
+
+
+GL4RenderTarget2D* GL4ForwardPointLightRenderer::CreatePointLightShadowMap()
+{
+  iRenderTarget2D::Descriptor desc{};
+  desc.Width = (uint16_t) m_shadowMapWidth;
+  desc.Height = (uint16_t) m_shadowMapHeight;
+  auto target = QueryClass<GL4RenderTarget2D>(m_device->CreateRenderTarget(desc));
+
+  iTexture2D::Descriptor colorDesc{};
+  colorDesc.Width = (uint16_t) m_shadowMapWidth;
+  colorDesc.Height = (uint16_t) m_shadowMapHeight;
+  colorDesc.Format = ePF_RGB;
+  colorDesc.MipMaps = false;
+  iTexture2D *colorTexture = m_device->CreateTexture(colorDesc);
+  colorTexture->SetSampler(GetShadowMapColorSampler());
+  target->AddColorTexture(colorTexture);
+  target->SetDepthBuffer(ePF_Depth);
+
+  if (!target->Compile())
+  {
+    target->Release();
+    target = nullptr;
+  }
+
+  return target;
+}
+
+GL4RenderTarget2D* GL4ForwardPointLightRenderer::GetPointLightShadowMapTemp()
+{
+  GL4RenderTarget2D *target = m_pointLightShadowMapTemp;
+  if (target)
+  {
+    if (m_shadowMapWidth == target->GetWidth()
+        && m_shadowMapHeight == target->GetHeight())
+    {
+      return target;
+    }
+    target->Release();
+  }
+
+  target = CreatePointLightShadowMap();
+  m_pointLightShadowMapTemp = target;
+  return target;
+
+}
+
+GL4RenderTarget2D* GL4ForwardPointLightRenderer::GetPointLightShadowMap(Size lightIdx)
+{
+  if (lightIdx >= MaxLights)
+  {
+    return nullptr;
+  }
+
+  GL4RenderTarget2D *target = m_pointLightShadowMap[lightIdx];
+  if (target)
+  {
+    if (m_shadowMapWidth == target->GetWidth()
+        && m_shadowMapHeight == target->GetHeight())
+    {
+      return target;
+    }
+    target->Release();
+  }
+
+  target = CreatePointLightShadowMap();
+  m_pointLightShadowMap[lightIdx] = target;
+  return target;
+}
+
+iSampler* GL4ForwardPointLightRenderer::GetShadowMapColorSampler()
+{
+  if (!m_shadowMapColorSampler)
+  {
+    m_shadowMapColorSampler = m_device->CreateSampler();
+    m_shadowMapColorSampler->SetAddressU(eTAM_Clamp);
+    m_shadowMapColorSampler->SetAddressV(eTAM_Clamp);
+    m_shadowMapColorSampler->SetAddressW(eTAM_Clamp);
+    m_shadowMapColorSampler->SetFilterMode(eFM_MinMagLinear);
+    m_shadowMapColorSampler->SetAnisotropy(1);
+  }
+  return m_shadowMapColorSampler;
+}
 
 
 
 
 
 
-
-
-
-
-
-
+#if 0
 
 GL4RenderTargetCube* GL4ForwardPointLightRenderer::GetPointLightShadowMap(Size idx)
 {
@@ -481,18 +655,19 @@ void GL4ForwardPointLightRenderer::RenderPointShadowMapsStraight(GL4PointLight *
   m_device->SetRenderTarget(nullptr);
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
-
+#endif
 
 
 void GL4ForwardPointLightRenderer::SetDevice(iDevice* device)
 {
-  m_device = device;
+  m_device = QueryClass<GL4Device>(device);
 }
 
 void GL4ForwardPointLightRenderer::SetScene(iGfxScene* scene)
 {
   m_scene = scene;
 }
+
 
 
 }

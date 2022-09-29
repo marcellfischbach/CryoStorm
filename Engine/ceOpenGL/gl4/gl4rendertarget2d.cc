@@ -7,12 +7,7 @@ namespace ce::opengl
 {
 
 GL4RenderTarget2D::GL4RenderTarget2D()
-    : iRenderTarget2D()
-      , m_name(0)
-      , m_width(0)
-      , m_height(0)
-      , m_depthBuffer(0)
-      , m_depthTexture(nullptr)
+    : iRenderTarget2D(), m_name(0), m_width(0), m_height(0), m_depthBuffer(0), m_depthTexture(nullptr)
 {
   CE_CLASS_GEN_CONSTR;
   glGenFramebuffers(1, &m_name);
@@ -24,11 +19,13 @@ GL4RenderTarget2D::~GL4RenderTarget2D()
   m_name = 0;
 
   CE_RELEASE(m_depthTexture);
-  if (m_depthBuffer) {
+  if (m_depthBuffer)
+  {
     glDeleteRenderbuffers(1, &m_depthBuffer);
     m_depthBuffer = 0;
   }
-  for (auto color : m_colorTextures) {
+  for (auto color: m_colorTextures)
+  {
     color->Release();
   }
   m_colorTextures.clear();
@@ -61,7 +58,8 @@ bool GL4RenderTarget2D::Initialize(uint16_t width, uint16_t height)
 
 void GL4RenderTarget2D::SetDepthTexture(iTexture2D *depthTexture)
 {
-  if (!depthTexture) {
+  if (!depthTexture)
+  {
     return;
   }
 
@@ -69,8 +67,9 @@ void GL4RenderTarget2D::SetDepthTexture(iTexture2D *depthTexture)
   GL4Texture2D *txt = depthTexture->Query<GL4Texture2D>();
 
 
-  GLenum attachment = 0;
-  switch (depthTexture->GetFormat()) {
+  GLenum attachment;
+  switch (depthTexture->GetFormat())
+  {
     case ePF_Depth:
       attachment = GL_DEPTH_ATTACHMENT;
       break;
@@ -96,7 +95,8 @@ void GL4RenderTarget2D::SetDepthBuffer(ePixelFormat format)
 
   GLenum attachment = 0;
   GLenum internalFormat = 0;
-  switch (format) {
+  switch (format)
+  {
     case ePF_Depth:
       internalFormat = GL_DEPTH_COMPONENT;
       attachment = GL_DEPTH_ATTACHMENT;
@@ -116,7 +116,8 @@ void GL4RenderTarget2D::SetDepthBuffer(ePixelFormat format)
 
 void GL4RenderTarget2D::AddColorTexture(iTexture2D *colorTexture)
 {
-  if (!colorTexture) {
+  if (!colorTexture)
+  {
     return;
   }
 
@@ -126,7 +127,8 @@ void GL4RenderTarget2D::AddColorTexture(iTexture2D *colorTexture)
 
 
   GLenum attachment = GL_DEPTH_ATTACHMENT;
-  if (colorTexture->GetFormat() == ePF_DepthStencil) {
+  if (colorTexture->GetFormat() == ePF_DepthStencil)
+  {
     return;
   }
 
@@ -148,7 +150,8 @@ bool GL4RenderTarget2D::Compile()
 {
   GLenum res = glCheckFramebufferStatus(GL_FRAMEBUFFER);
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
-  switch (res) {
+  switch (res)
+  {
     case GL_FRAMEBUFFER_COMPLETE:
       m_log = "Complete";
       return true;
@@ -203,7 +206,8 @@ Size GL4RenderTarget2D::GetNumberOfColorTextures() const
 
 iTexture2D *GL4RenderTarget2D::GetColorTexture(Size idx)
 {
-  if (idx >= m_colorTextures.size()) {
+  if (idx >= m_colorTextures.size())
+  {
     return nullptr;
   }
   return m_colorTextures[idx];
@@ -212,7 +216,8 @@ iTexture2D *GL4RenderTarget2D::GetColorTexture(Size idx)
 
 const iTexture2D *GL4RenderTarget2D::GetColorTexture(Size idx) const
 {
-  if (idx >= m_colorTextures.size()) {
+  if (idx >= m_colorTextures.size())
+  {
     return nullptr;
   }
   return m_colorTextures[idx];

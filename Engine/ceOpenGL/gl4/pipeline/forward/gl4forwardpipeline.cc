@@ -385,7 +385,7 @@ void GL4ForwardPipeline::RenderShadowMaps()
     m_device->ClearShadowMaps();
 
     m_directionalLightRenderer.RenderShadowMaps(*m_camera, *m_projector);
-    m_pointLightRenderer.RenderShadowMaps(0);
+    m_pointLightRenderer.RenderShadowMaps(*m_camera, *m_projector);
   }
 }
 
