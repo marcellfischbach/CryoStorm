@@ -14,22 +14,8 @@ uniform mat4 ce_ViewProjectionMatrixInv;
 
 in vec2 texCoord;
 
-bool is_valid (vec3 v)
-{
-    return v.x >= 0.0 && v.x <= 1.0
-     && v.y >= 0.0 && v.y <= 1.0;
-}
 
-vec3 to_cam_space (vec3 world_position, int idx)
-{
-    vec4 camSpace = ce_ShadowMapViewProjectionMatrix[idx] * vec4(world_position, 1.0);
-    camSpace /= camSpace.w;
-    camSpace = camSpace * 0.5 + 0.5;
-    camSpace.z -= ce_LayersBias.w;
-    return camSpace.xyz;
-}
-
-vec3 calc_directional_shadow(vec3 world_position, float distance_to_camera)
+float calc_directional_shadow(vec3 world_position, float distance_to_camera)
 {
     vec4 layerBias = ce_LayersBias;
 
@@ -56,7 +42,7 @@ vec3 calc_directional_shadow(vec3 world_position, float distance_to_camera)
     }
     else
     {
-        return vec3(1.0);
+        return 1.0;
     }
 
     vec4 camSpace = ce_ShadowMapViewProjectionMatrix[matIndex] * vec4(world_position, 1.0);
@@ -65,7 +51,7 @@ vec3 calc_directional_shadow(vec3 world_position, float distance_to_camera)
     camSpace.z -= layerBias.w;
 
     float shadow_value = texture(ce_ShadowBuffer, vec4(camSpace.xy, layer, camSpace.z));
-    return vec3(mix(shadow_value, 1.0, fadeOut));
+    return mix(shadow_value, 1.0, fadeOut);
 }
 
 
@@ -85,7 +71,7 @@ void main ()
 
     vec4 camera_space = ce_ViewMatrix * world_position;
 
-    vec3 shadow = calc_directional_shadow(world_position.xyz, camera_space.z);
-    ce_FragColor = vec4(shadow, 1.0);
+    float shadow = calc_directional_shadow(world_position.xyz, camera_space.z);
+    ce_FragColor = vec4(shadow, shadow, shadow, 1.0);
 }
 

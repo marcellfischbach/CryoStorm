@@ -47,7 +47,6 @@ public:
   void SetDevice(iDevice *device);
   void SetScene(iGfxScene *scene);
   void SetDepthBuffer (iTexture2D* depthBuffer);
-  void SetShadowMapSize (size_t width, size_t height);
 
   void Clear();
   void Add(GL4DirectionalLight *directionalLight);

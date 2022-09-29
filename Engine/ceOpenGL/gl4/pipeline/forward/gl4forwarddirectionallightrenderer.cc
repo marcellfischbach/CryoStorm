@@ -16,16 +16,11 @@
 #include <ceCore/graphics/scene/igfxscene.hh>
 #include <ceCore/graphics/shading/ishader.hh>
 #include <ceCore/graphics/shading/ishaderattribute.hh>
-#include <ceCore/input/input.hh>
 #include <ceCore/math/math.hh>
 #include <ceCore/math/clipper/cameraclipper.hh>
-#include <ceCore/math/clipper/multiplaneclipper.hh>
-#include <ceCore/math/clipper/sphereclipper.hh>
 #include <ceCore/resource/assetmanager.hh>
 
 #include <algorithm>
-#include <GL/glew.h>
-#include <float.h>
 
 namespace ce::opengl
 {
@@ -61,7 +56,7 @@ void GL4ForwardDirectionalLightRenderer::Initialize(Settings &settings)
 
 
   m_directionalLightShadowBufferSize = settings.GetInt("directional_light.shadow_map.size", 1024);
-  std::string filter = settings.GetText("directional_light.shadow_map.filter.mode", "PCF");
+  std::string filter = settings.GetText("directional_light.shadow_map.filter.mode", "Plain");
   if (filter == std::string("Plain"))
   {
     m_shadowSamplingMode = ShadowSamplingMode::Plain;
@@ -177,7 +172,7 @@ void GL4ForwardDirectionalLightRenderer::RenderShadowBuffer(GL4DirectionalLight 
   Vector3f xAxis = mat.GetXAxis().Normalize();
   Vector3f yAxis = mat.GetYAxis().Normalize();
 
-  float shadowBufferSize = static_cast<float>(m_directionalLightShadowBufferSize);
+  auto shadowBufferSize = static_cast<float>(m_directionalLightShadowBufferSize);
   float modV0 = sizeSplit0 * 2.0f / shadowBufferSize;
   float modV1 = sizeSplit1 * 2.0f / shadowBufferSize;
   float modV2 = sizeSplit2 * 2.0f / shadowBufferSize;
@@ -218,12 +213,12 @@ void GL4ForwardDirectionalLightRenderer::RenderShadowBuffer(GL4DirectionalLight 
                                          projectionTot);
 
 
-  CameraClipper clpr(viewTot, projectionTot, false, false);
+  CameraClipper clipper(viewTot, projectionTot, false, false);
 
   float near[] = {FLT_MAX, FLT_MAX, FLT_MAX};
   float far[] = {-FLT_MAX, -FLT_MAX, -FLT_MAX};
   m_meshesCache.clear();
-  m_scene->ScanMeshes(&clpr, iGfxScene::eSM_Dynamic | iGfxScene::eSM_Static,
+  m_scene->ScanMeshes(&clipper, iGfxScene::eSM_Dynamic | iGfxScene::eSM_Static,
                       [this, &views, &near, &far](GfxMesh *mesh) {
                         if (mesh->IsCastShadow())
                         {
@@ -382,7 +377,6 @@ GL4RenderTarget2D *GL4ForwardDirectionalLightRenderer::GetDirectionalLightShadow
       return target;
     }
     target->Release();
-    target = nullptr;
   }
 
   target = CreateDirectionalLightShadowMap();
@@ -401,7 +395,6 @@ GL4RenderTarget2D *GL4ForwardDirectionalLightRenderer::GetDirectionalLightShadow
       return target;
     }
     target->Release();
-    target = nullptr;
   }
 
   target = CreateDirectionalLightShadowMap();
@@ -415,7 +408,7 @@ GL4RenderTarget2D *GL4ForwardDirectionalLightRenderer::CreateDirectionalLightSha
   iRenderTarget2D::Descriptor desc{};
   desc.Width = (uint16_t) m_directionalLightShadowMapWidth;
   desc.Height = (uint16_t) m_directionalLightShadowMapHeight;
-  GL4RenderTarget2D *target = QueryClass<GL4RenderTarget2D>(m_device->CreateRenderTarget(desc));
+  auto target = QueryClass<GL4RenderTarget2D>(m_device->CreateRenderTarget(desc));
 
   iTexture2D::Descriptor colorDesc{};
   colorDesc.Width = (uint16_t) m_directionalLightShadowMapWidth;
@@ -581,11 +574,6 @@ void GL4ForwardDirectionalLightRenderer::SetDepthBuffer(iTexture2D *depthBuffer)
   m_directionalLightShadowMapHeight = m_depthBuffer->GetHeight();
 }
 
-void GL4ForwardDirectionalLightRenderer::SetShadowMapSize(size_t width, size_t height)
-{
-  m_directionalLightShadowMapWidth = width;
-  m_directionalLightShadowMapHeight = height;
-}
 
 iTexture2D *GL4ForwardDirectionalLightRenderer::GetColorTexture()
 {
