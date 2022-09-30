@@ -20,27 +20,25 @@ in vec2 texCoord;
 float get_major(vec3 d)
 {
     vec3 ad = abs(d);
-    if (ad.x > ad.y && ad.x > ad.z)
-    {
-        return ad.x;
-    }
-    else if (ad.y > ad.x && ad.y > ad.z)
-    {
-        return ad.y;
-    }
-    return ad.z;
+    return max(ad.x, max(ad.y, ad.z));
 }
 
 
 float calc_point_shadow(vec3 frag_position)
 {
     vec3 delta = frag_position - ce_LightPosition;
+    if (dot(delta, delta) > ce_MappingBias.y * ce_MappingBias.y )
+    {
+        return 0.0;
+    }
+
     delta.z = -delta.z;
+    float z = get_major(delta);
+
 
     float n = ce_MappingBias.x;
     float f = ce_MappingBias.y;
 
-    float z = get_major(delta);
     float fz = (z * (f+n) - 2.0*n*f)/(f-n);
     float fw = z;
     fz = fz / fw;
