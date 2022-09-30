@@ -6,7 +6,7 @@
 #include <ceCore/resource/filesystemfile.hh>
 extern "C" {
 #ifdef CE_WIN32
-#include <Windows.h>
+//#include <Windows.h>
 #endif
 
 #include <jpeglib.h>

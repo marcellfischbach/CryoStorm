@@ -275,8 +275,8 @@ void GL4ForwardDirectionalLightRenderer::RenderShadowBuffer(GL4DirectionalLight 
   m_device->SetRenderTarget(GetDirectionalLightShadowBuffer());
   m_device->SetDepthWrite(true);
   m_device->SetDepthTest(true);
-  m_device->SetColorWrite(true, true, true, true);
-  m_device->Clear(true, Color4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, true, 0);
+  m_device->SetColorWrite(false, false, false, false);
+  m_device->Clear(false, Color4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, true, 0);
 
   m_device->SetShadowMapProjectionMatrices(projections, 3);
   m_device->SetShadowMapViewMatrices(views, 3);

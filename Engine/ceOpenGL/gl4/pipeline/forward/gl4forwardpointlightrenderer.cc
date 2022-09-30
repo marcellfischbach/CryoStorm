@@ -45,7 +45,7 @@ GL4ForwardPointLightRenderer::~GL4ForwardPointLightRenderer()
 void GL4ForwardPointLightRenderer::Initialize(Settings &settings)
 {
   m_pointLightShadowBufferSize = settings.GetInt("point_light.shadow_map.size", 1024);
-  std::string filter = settings.GetText("point_light.shadow_map.filter", "Plain");
+  std::string filter = settings.GetText("point_light.shadow_map.filter.mode", "Plain");
   if (filter == std::string("Plain"))
   {
     m_shadowSamplingFilter = ShadowSamplingMode::Plain;
@@ -211,9 +211,12 @@ void GL4ForwardPointLightRenderer::RenderShadowBuffer(GL4PointLight *pointLight,
                              depthTexture->GetName(),
                              0);
     }
-    m_device->SetColorWrite(false, false, false, false);
 
     m_device->SetViewport(0, 0, (uint16_t)m_pointLightShadowBufferSize, (uint16_t)m_pointLightShadowBufferSize);
+    m_device->SetDepthWrite(true);
+    m_device->SetDepthTest(true);
+    m_device->SetColorWrite(false, false, false, false);
+
     m_device->Clear(false, Color4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, false, 0);
 
     m_device->SetViewMatrix(views[i]);
