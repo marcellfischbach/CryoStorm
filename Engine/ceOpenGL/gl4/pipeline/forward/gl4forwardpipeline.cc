@@ -81,12 +81,10 @@ void GL4ForwardPipeline::Render(iRenderTarget2D* target,
   BindCamera();
   RenderForwardToTarget();
 
-#ifdef _DEBUG
   if (ObjectRegistry::Get<DebugCache>()->IsDebug())
   {
-    RenderDebugToTarget();
+      RenderDebugToTarget();
   }
-#endif
 
   Cleanup();
 
@@ -256,12 +254,13 @@ void GL4ForwardPipeline::RenderDebugToTarget()
   m_device->SetDepthWrite(false);
   m_device->SetDepthTest(false);
   m_device->SetColorWrite(true, true, true, true);
-  m_device->RenderFullscreen(m_directionalLightRenderer.GetColorTexture());
+  m_device->RenderFullscreen(m_pointLightRenderer.GetColorTexture());
 }
 
 void GL4ForwardPipeline::ApplyDepthBufferToLightRenderers()
 {
   m_directionalLightRenderer.SetDepthBuffer(m_target->GetDepthTexture());
+  m_pointLightRenderer.SetDepthBuffer(m_target->GetDepthTexture());
 }
 
 void GL4ForwardPipeline::Cleanup()

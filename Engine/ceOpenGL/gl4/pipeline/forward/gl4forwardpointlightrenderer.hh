@@ -4,6 +4,7 @@
 
 #include <ceOpenGL/openglexport.hh>
 #include <ceOpenGL/openglconstants.hh>
+#include <ceOpenGL/gl4/pipeline/forward/gl4forwardpointlightshadowmapfilter.hh>
 #include <ceCore/types.hh>
 #include <map>
 #include <vector>
@@ -53,6 +54,8 @@ public:
   void RenderShadowMaps(const Camera &camera,
                         const Projector &projector);
 
+  iTexture2D* GetColorTexture();
+  iTexture2D* GetDepthTexture();
 private:
   void SortLights();
 
@@ -105,22 +108,23 @@ private:
 
   iSampler *m_shadowMapColorSampler = nullptr;
 
-  GL4RenderTarget2D *m_pointLightShadowMapTemp;
+  GL4RenderTarget2D* m_pointLightShadowMapTemp = nullptr;
   std::array<GL4RenderTarget2D *, MaxLights> m_pointLightShadowMap;
 
   size_t m_shadowMapWidth;
   size_t m_shadowMapHeight;
 
 
-  enum class ShadowMapFilter
+  enum class ShadowSamplingMode
   {
     Plain,
     PCF,
     VSM
   };
-  ShadowMapFilter m_shadowMapFilter;
+  ShadowSamplingMode m_shadowSamplingFilter;
 
   unsigned m_shadowFBO = 0;
+  GL4ForwardPointLightShadowMapFilter m_shadowMapFilter;
 
 };
 

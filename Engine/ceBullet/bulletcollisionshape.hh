@@ -3,7 +3,8 @@
 
 #include <ceBullet/bulletexport.hh>
 #include <ceCore/physics/icollisionshape.hh>
-#include <btBulletCollisionCommon.h>
+
+class btCollisionShape;
 
 namespace ce::bullet
 {

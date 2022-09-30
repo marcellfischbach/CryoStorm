@@ -17,6 +17,8 @@ add_library(ceImgLoader SHARED
         ${SOURCES}
         )
 
+message("JPEG libraries: ${JPEG_LIBRARIES}")
+
 target_link_libraries(ceImgLoader
         ceCore
         ${PNG_LIBRARIES}

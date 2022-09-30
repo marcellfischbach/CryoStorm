@@ -905,6 +905,7 @@ void GL4Device::RenderFullscreen()
 
 void GL4Device::RenderFullscreen(iTexture2D* texture)
 {
+    if (!texture) return;
 #ifndef CE_DISABLE_RENDERING
   SetFillMode(eFillMode::Fill);
   bool     multiSampling = texture->IsMultiSampling();

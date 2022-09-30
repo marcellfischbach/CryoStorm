@@ -677,14 +677,17 @@ int main(int argc, char** argv)
   ce::LightState* lightState  = new ce::LightState("LightState");
   lightEntity->Attach(lightState);
   lightState->SetType(ce::eLT_Point);
+  lightState->SetShadowMapBias(0.003f);
   lightState->SetColor(ce::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 1.0f);
-  lightState->SetRange(50);
+  lightState->SetRange(100);
   lightState->SetStatic(true);
-  lightState->SetCastShadow(false);
+  lightState->SetCastShadow(true);
   lightState->GetTransform()
             .SetTranslation(ce::Vector3f(5.0f, 5.0f, 5.0f))
             .Finish();
-//  world->Attach(lightEntity);
+  world->Attach(lightEntity);
+
+  ce::SpatialState* spatialState = lightState;
 
   /*
   lightEntity = new ce::Entity("Light_0");
@@ -705,10 +708,10 @@ int main(int argc, char** argv)
   ce::LightState* sunLightState = new ce::LightState("SunLight");
   sunEntity->Attach(sunLightState);
   sunLightState->SetType(ce::eLT_Directional);
-  sunLightState->SetColor(ce::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 0.5f);
+  sunLightState->SetColor(ce::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 0.1f);
   sunLightState->SetShadowMapBias(0.003f);
   sunLightState->SetStatic(true);
-  sunLightState->SetCastShadow(true);
+  sunLightState->SetCastShadow(false);
   sunLightState->SetTransform(sunLightState->GetTransform()
                                              //.SetRotation(ce::Quaternion::FromAxisAngle(ce::Vector3f(1.0f, 0.0f, 0.0f), ce::ceDeg2Rad(-45.0f)))
                                            .SetRotation(
@@ -722,10 +725,10 @@ int main(int argc, char** argv)
   sunLightState = new ce::LightState("SunLight");
   sunEntity->Attach(sunLightState);
   sunLightState->SetType(ce::eLT_Directional);
-  sunLightState->SetColor(ce::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 0.5f);
+  sunLightState->SetColor(ce::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 0.1f);
   sunLightState->SetShadowMapBias(0.003f);
   sunLightState->SetStatic(true);
-  sunLightState->SetCastShadow(true);
+  sunLightState->SetCastShadow(false);
   sunLightState->SetTransform(sunLightState->GetTransform()
           //.SetRotation(ce::Quaternion::FromAxisAngle(ce::Vector3f(1.0f, 0.0f, 0.0f), ce::ceDeg2Rad(-45.0f)))
                                   .SetRotation(
@@ -897,6 +900,7 @@ int main(int argc, char** argv)
 #endif
 
   float sunRotation = 0.0f;
+  float lightnRotation = 0.0f;
 
   while (true)
   {
@@ -950,6 +954,7 @@ int main(int argc, char** argv)
       {
         entRot += tpf * 1.0f;
         sunRotation += M_PI * 0.5f * tpf;
+        lightnRotation += M_PI * 0.25f * tpf;
       }
 
       if (ce::Input::IsKeyDown(ce::Key::eK_Up))
@@ -989,6 +994,9 @@ int main(int argc, char** argv)
                                                                             cos(sunRotation) * 20.0f))
                                                .LookAt(ce::Vector3f(0.0f, 0.0f, 0.0f), ce::Vector3f(0.0f, 1.0f, 0.0f))
       );
+
+      spatialState->SetTransform(spatialState->GetTransform()
+          .SetTranslation(ce::Vector3f(sin(lightnRotation) * 20.0f, 5.0f, cos(lightnRotation) * 20.0f)));
 
       sphereRadius = 0.0f;
       float dist = 10.0f;

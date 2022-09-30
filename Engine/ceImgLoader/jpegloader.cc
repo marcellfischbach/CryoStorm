@@ -5,6 +5,10 @@
 #include <ceCore/graphics/image.hh>
 #include <ceCore/resource/filesystemfile.hh>
 extern "C" {
+#ifdef CE_WIN32
+#include <Windows.h>
+#endif
+
 #include <jpeglib.h>
 }
 

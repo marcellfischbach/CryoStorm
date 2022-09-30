@@ -1,5 +1,6 @@
 
 #include <ceBullet/bulletcollisionshape.hh>
+#include <btBulletCollisionCommon.h>
 
 
 namespace ce::bullet

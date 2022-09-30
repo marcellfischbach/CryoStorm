@@ -9,6 +9,7 @@ FIND_LIBRARY(
 	NAMES assimp
 )
 
+
 IF (assimp_INCLUDE_DIRS AND assimp_LIBRARIES)
     SET(assimp_FOUND TRUE)
 ENDIF (assimp_INCLUDE_DIRS AND assimp_LIBRARIES)

@@ -34,7 +34,7 @@ float get_major(vec3 d)
 
 float calc_point_shadow(vec3 frag_position)
 {
-    vec3 delta = frag_position - light_position;
+    vec3 delta = frag_position - ce_LightPosition;
     delta.z = -delta.z;
 
     float n = ce_MappingBias.x;
@@ -45,12 +45,54 @@ float calc_point_shadow(vec3 frag_position)
     float fw = z;
     fz = fz / fw;
     fz = fz * 0.5 + 0.5;
-    fz -= ce_MappingBias.z;
-
+    fz -= 0.0001;//ce_MappingBias.z;
 
     return texture(ce_ShadowBuffer, vec4(delta, fz));
 }
 
+vec3 calc_direction (vec3 frag_position)
+{
+    vec3 d = frag_position - ce_LightPosition;
+    d.z = -d.z;
+    vec3 a = abs(d);
+    if (a.x >= a.y && a.x >= a.z)
+    {
+        if (d.x < 0.0)
+        {
+            return vec3(0.0, 0.5, 0.5);
+        }
+        else
+        {
+            return vec3(1.0, 0.5, 0.5);
+        }
+    }
+        
+    if (a.y >= a.x && a.y >= a.z)
+    {
+        if (d.y < 0.0)
+        {
+            return vec3(0.5, 0.0, 0.5);
+        }
+        else
+        {
+            return vec3(0.0, 1.0, 0.5);
+        }
+    }
+
+    if (a.z >= a.x && a.z >= a.y)
+    {
+        if (d.z < 0.0)
+        {
+            return vec3(0.5, 0.5, 0.0);
+        }
+        else
+        {
+            return vec3(0.5, 0.5, 1.0);
+        }
+    }
+
+    return vec3(1, 0, 1);
+}
 
 void main ()
 {
@@ -67,7 +109,11 @@ void main ()
     world_position /= world_position.w;
 
 
+
     float shadow = calc_point_shadow(world_position.xyz);
     ce_FragColor = vec4(shadow, shadow, shadow, 1.0);
+
+    //vec3 dir = calc_direction(world_position.xyz);
+    //ce_FragColor = vec4(dir, 1.0);
 }
 

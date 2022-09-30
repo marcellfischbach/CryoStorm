@@ -48,20 +48,20 @@ void GL4ForwardPointLightRenderer::Initialize(Settings &settings)
   std::string filter = settings.GetText("point_light.shadow_map.filter", "Plain");
   if (filter == std::string("Plain"))
   {
-    m_shadowMapFilter = ShadowMapFilter::Plain;
+    m_shadowSamplingFilter = ShadowSamplingMode::Plain;
   }
   else if (filter == std::string("PCF"))
   {
-    m_shadowMapFilter = ShadowMapFilter::PCF;
+    m_shadowSamplingFilter = ShadowSamplingMode::PCF;
   }
   else if (filter == std::string("VSM"))
   {
-    m_shadowMapFilter = ShadowMapFilter::VSM;
+    m_shadowSamplingFilter = ShadowSamplingMode::VSM;
   }
 
 
   m_shadowMappingShader = AssetManager::Get()->Get<iShader>(
-      ResourceLocator("file://${engine}/opengl/gl4/forward/directional_light_shadow_map.shader"));
+      ResourceLocator("file://${engine}/opengl/gl4/forward/point_light_shadow_map.shader"));
   if (m_shadowMappingShader)
   {
     m_attrLightPosition = m_shadowMappingShader->GetShaderAttribute("LightPosition");
@@ -69,6 +69,13 @@ void GL4ForwardPointLightRenderer::Initialize(Settings &settings)
     m_attrShadowBuffer = m_shadowMappingShader->GetShaderAttribute("ShadowBuffer");
     m_attrDepthBuffer = m_shadowMappingShader->GetShaderAttribute("DepthBuffer");
   }
+
+
+  Vector2f distance = settings.GetVector2f("point_light.shadow_map.filter.distance", Vector2f(1, 25));
+  float radius = settings.GetFloat("point_light.shadow_map.filter.radius", 10.0f);
+  float samples = settings.GetFloat("point_light.shadow_map.filter.samples", 25.0f);
+  float sampleDistance = settings.GetFloat("point_light.shadow_map.filter.sampleDistance", 0.1f);
+  m_shadowMapFilter.Initialize(Vector2f(distance.x, distance.y - distance.x), radius, samples, sampleDistance);
 
 }
 
@@ -153,7 +160,7 @@ void GL4ForwardPointLightRenderer::RenderShadowBuffer(GL4PointLight *pointLight,
 
 
 
-  float near = 0.1f;
+  float near = pointLight->GetRange() * 0.001f;
   float far = pointLight->GetRange();
   Matrix4f projection;
   Matrix4f projectionInv;
@@ -242,6 +249,10 @@ void GL4ForwardPointLightRenderer::RenderShadowMap(GL4PointLight *pointLight,
   camera.Bind(m_device);
   projector.Bind(m_device);
 
+  if (m_attrLightPosition)
+  {
+      m_attrLightPosition->Bind(pointLight->GetPosition());
+  }
   if (m_attrMappingBias)
   {
     m_attrMappingBias->Bind(Vector3f(pointLight->GetRange() * 0.001f, pointLight->GetRange(), pointLight->GetShadowMapBias()));
@@ -266,12 +277,31 @@ void GL4ForwardPointLightRenderer::RenderShadowMap(GL4PointLight *pointLight,
 
 void GL4ForwardPointLightRenderer::FilterShadowMap(size_t lightIdx)
 {
+    m_device->ResetTextures();
+    GL4RenderTarget2D* target = GetPointLightShadowMap(lightIdx);
+
+    m_shadowMapFilter.Render(m_device,
+        m_depthBuffer,
+        GetPointLightShadowMapTemp()->GetColorTexture(0),
+        target
+    );
 
 }
 
 void GL4ForwardPointLightRenderer::ApplyShadowMapToDevice(GL4PointLight *pointLight, size_t lightIdx)
 {
+    if (lightIdx >= MaxLights)
+    {
+        return;
+    }
 
+    GL4RenderTarget2D* target = m_pointLightShadowMap[lightIdx];
+    if (!target)
+    {
+        return;
+    }
+
+    m_device->SetLightShadowMap(pointLight, target->GetColorTexture(0));
 }
 
 
@@ -322,16 +352,25 @@ iSampler *GL4ForwardPointLightRenderer::GetShadowBufferColorSampler()
 
 iSampler *GL4ForwardPointLightRenderer::GetShadowBufferDepthSampler()
 {
-  if (!m_shadowBufferDepthSampler)
-  {
-    m_shadowBufferDepthSampler = m_device->CreateSampler();
-    m_shadowBufferDepthSampler->SetAddressU(eTAM_Clamp);
-    m_shadowBufferDepthSampler->SetAddressV(eTAM_Clamp);
-    m_shadowBufferDepthSampler->SetAddressW(eTAM_Clamp);
-    m_shadowBufferDepthSampler->SetFilterMode(eFM_MinMagLinear);
-    m_shadowBufferDepthSampler->SetAnisotropy(1);
-  }
-  return m_shadowBufferDepthSampler;
+    if (!m_shadowBufferDepthSampler)
+    {
+        m_shadowBufferDepthSampler = m_device->CreateSampler();
+        if (m_shadowSamplingFilter== ShadowSamplingMode::PCF)
+        {
+            m_shadowBufferDepthSampler->SetFilterMode(eFM_MinMagLinear);
+        }
+        else
+        {
+            m_shadowBufferDepthSampler->SetFilterMode(eFM_MinMagNearest);
+        }
+        m_shadowBufferDepthSampler->SetAnisotropy(1);
+        m_shadowBufferDepthSampler->SetAddressU(eTAM_Clamp);
+        m_shadowBufferDepthSampler->SetAddressV(eTAM_Clamp);
+        m_shadowBufferDepthSampler->SetAddressW(eTAM_Clamp);
+        m_shadowBufferDepthSampler->SetTextureCompareMode(eTCM_CompareToR);
+        m_shadowBufferDepthSampler->SetTextureCompareFunc(eCF_LessOrEqual);
+    }
+    return m_shadowBufferDepthSampler;
 }
 
 
@@ -435,7 +474,7 @@ GL4RenderTargetCube* GL4ForwardPointLightRenderer::GetPointLightShadowMap(Size i
     GL4RenderTargetCube* cubeMap = static_cast<GL4RenderTargetCube*>(m_device->CreateRenderTarget(desc));
 
 
-    if (m_shadowMapFilter == ShadowMapFilter::VSM)
+    if (m_shadowSamplingFilter == ShadowMapFilter::VSM)
     {
       iTextureCube::Descriptor colorDesc{};
       colorDesc.Size = desc.Size;
@@ -490,7 +529,7 @@ iSampler* GL4ForwardPointLightRenderer::GetShadowMapDepthSampler()
   if (!m_shadowMapDepthSampler)
   {
     m_shadowMapDepthSampler = m_device->CreateSampler();
-    if (m_shadowMapFilter == ShadowMapFilter::PCF)
+    if (m_shadowSamplingFilter == ShadowMapFilter::PCF)
     {
       m_shadowMapDepthSampler->SetFilterMode(eFM_MinMagLinear);
     }
@@ -666,6 +705,25 @@ void GL4ForwardPointLightRenderer::SetDevice(iDevice* device)
 void GL4ForwardPointLightRenderer::SetScene(iGfxScene* scene)
 {
   m_scene = scene;
+}
+
+
+iTexture2D* GL4ForwardPointLightRenderer::GetColorTexture()
+{
+    if (m_pointLightShadowMap[0])
+    {
+        return m_pointLightShadowMap[0]->GetColorTexture(0);
+    }
+    return nullptr;
+}
+
+iTexture2D* GL4ForwardPointLightRenderer::GetDepthTexture()
+{
+    if (m_pointLightShadowMap[0])
+    {
+        return m_pointLightShadowMap[0]->GetDepthTexture();
+    }
+    return nullptr;
 }
 
 
