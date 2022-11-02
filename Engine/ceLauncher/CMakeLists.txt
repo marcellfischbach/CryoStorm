@@ -10,6 +10,8 @@ set(SOURCES
         main.cc
         mirrorhandler.cc
         mirrorhandler.hh
+        testhandler.cc
+        testhandler.hh
 
 
         window/sdlinputsystem.cc

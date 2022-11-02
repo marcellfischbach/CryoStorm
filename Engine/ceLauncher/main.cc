@@ -52,6 +52,7 @@
 
 #include <ceLauncher/camerahandler.hh>
 #include <ceLauncher/mirrorhandler.hh>
+#include <ceLauncher/testhandler.hh>
 
 #include <iostream>
 #include <SDL.h>
@@ -563,6 +564,64 @@ ce::iRenderTarget2D* create_render_target(ce::iDevice* device, uint32_t width, u
   return renderTarget;
 }
 
+void generate_test_grid (ce::World* world, ce::iMaterial *material)
+{
+  ce::iRenderMesh *sphere = create_sphere_mesh(0.25, 16, 4.0f);
+  ce::Mesh *mesh = new ce::Mesh();
+  mesh->AddMaterialSlot("Default", material);
+  mesh->AddSubMesh(sphere, 0);
+
+  for (int a=0, i=0; i<100; i++)
+  {
+    for (int j=0; j<100; j++, a++)
+    {
+      ce::Entity *entity = new ce::Entity(std::string("Sphere: ") + std::to_string(i+1) + ":" + std::to_string(j+1));
+
+      ce::StaticMeshState *meshStateSphere = new ce::StaticMeshState("Mesh");
+      meshStateSphere->GetTransform()
+          .SetTranslation(ce::Vector3f(i-50, 0.25f, j-50))
+          .Finish();
+      meshStateSphere->SetMesh(mesh);
+      entity->Attach(meshStateSphere);
+
+      float rnd = (float)rand() / (float)RAND_MAX;
+      int ma = a % 4;
+      switch (ma)
+      {
+        case 0:
+        {
+
+          TestHandler01 *testHandler01 = new TestHandler01(ce::Vector3f(i - 50, 0.25f, j - 50), 0.25f, 0.5f + rnd);
+          entity->Attach(testHandler01);
+        }
+          break;
+        case 1:
+        {
+          TestHandler02 *testHandler02 = new TestHandler02(ce::Vector3f(i - 50, 0.25f, j - 50), 0.25f, 0.5f + rnd);
+          entity->Attach(testHandler02);
+        }
+          break;
+        case 2:
+        {
+          TestHandler03 *testHandler03 = new TestHandler03(ce::Vector3f(i - 50, 0.25f, j - 50), 0.25f, 0.5f + rnd);
+          entity->Attach(testHandler03);
+        }
+          break;
+        case 3:
+        {
+          TestHandler04 *testHandler04 = new TestHandler04(ce::Vector3f(i - 50, 0.25f, j - 50), 0.25f, 0.5f + rnd);
+          entity->Attach(testHandler04);
+        }
+          break;
+      }
+
+
+      world->Attach(entity);
+    }
+  }
+
+}
+
 #include <regex>
 #include <sstream>
 
@@ -648,15 +707,15 @@ int main(int argc, char** argv)
 
 //  create_suzannes_plain(suzanneMesh, world, suzanneMaterial);
 //  create_suzanne_batch(suzanneMesh, world);
-  auto brickWallMesh = assetMan->Load<ce::Mesh>(ce::ResourceLocator("file:///brickwall.fbx"));
-  brickWallMesh->SetDefaultMaterial(0, suzanneMaterial);
-  brickWallMesh->SetDefaultMaterial(1, broken);
-  auto brickWallMeshState = new ce::StaticMeshState("BrickWall.Mesh");
-  auto brickWallEntity    = new ce::Entity("BrickWall");
-  brickWallMeshState->SetMesh(brickWallMesh);
-  brickWallEntity->Attach(brickWallMeshState);
-  brickWallEntity->GetRoot()->GetTransform().Finish();
-  world->Attach(brickWallEntity);
+//  auto brickWallMesh = assetMan->Load<ce::Mesh>(ce::ResourceLocator("file:///brickwall.fbx"));
+//  brickWallMesh->SetDefaultMaterial(0, suzanneMaterial);
+//  brickWallMesh->SetDefaultMaterial(1, broken);
+//  auto brickWallMeshState = new ce::StaticMeshState("BrickWall.Mesh");
+//  auto brickWallEntity    = new ce::Entity("BrickWall");
+//  brickWallMeshState->SetMesh(brickWallMesh);
+//  brickWallEntity->Attach(brickWallMeshState);
+//  brickWallEntity->GetRoot()->GetTransform().Finish();
+//  world->Attach(brickWallEntity);
 
 
 //  float              sphereRadius       = 4.0f;
@@ -673,29 +732,29 @@ int main(int argc, char** argv)
 //  entitySphere->Attach(meshStateSphere);
 
 
-  ce::Entity    * lightEntity = new ce::Entity("Light_0");
-  ce::LightState* lightState  = new ce::LightState("LightState");
-  lightEntity->Attach(lightState);
-  lightState->SetType(ce::eLT_Point);
-  lightState->SetShadowMapBias(0.001f);
-  lightState->SetColor(ce::Color4f(1.0f, 0.8f, 0.5f, 1.0f) * 0.5f);
-  lightState->SetRange(25);
-  lightState->SetStatic(true);
-  lightState->SetCastShadow(true);
-  lightState->GetTransform()
-            .SetTranslation(ce::Vector3f(5.0f, 1.0f, 5.0f))
-            .Finish();
-  world->Attach(lightEntity);
+//  ce::Entity    * lightEntity = new ce::Entity("Light_0");
+//  ce::LightState* lightState  = new ce::LightState("LightState");
+//  lightEntity->Attach(lightState);
+//  lightState->SetType(ce::eLT_Point);
+//  lightState->SetShadowMapBias(0.001f);
+//  lightState->SetColor(ce::Color4f(1.0f, 0.8f, 0.5f, 1.0f) * 0.5f);
+//  lightState->SetRange(25);
+//  lightState->SetStatic(true);
+//  lightState->SetCastShadow(true);
+//  lightState->GetTransform()
+//            .SetTranslation(ce::Vector3f(5.0f, 1.0f, 5.0f))
+//            .Finish();
+//  world->Attach(lightEntity);
 
 
 
-  ce::SpatialState* spatialState = lightState;
+//  ce::SpatialState* spatialState = lightState;
 
   ce::Entity    * sunEntity     = new ce::Entity("Sun");
   ce::LightState* sunLightState = new ce::LightState("SunLight");
   sunEntity->Attach(sunLightState);
   sunLightState->SetType(ce::eLT_Directional);
-  sunLightState->SetColor(ce::Color4f(0.7f, 0.7f, 1.0f, 1.0f) * 0.125f);
+  sunLightState->SetColor(ce::Color4f(0.7f, 0.7f, 1.0f, 1.0f) * 1.0);
   sunLightState->SetShadowMapBias(0.003f);
   sunLightState->SetStatic(true);
   sunLightState->SetCastShadow(true);
@@ -726,7 +785,7 @@ int main(int argc, char** argv)
                                                                     ce::ceDeg2Rad(-135.0f)))
   );
 
-  world->Attach(sunEntity);
+//  world->Attach(sunEntity);
 
   ce::Entity     * cameraEntity = new ce::Entity("Camera");
   ce::CameraState* cameraState  = new ce::CameraState();
@@ -798,84 +857,87 @@ int main(int argc, char** argv)
   floorEntity->GetRoot()->GetTransform().SetTranslation(ce::Vector3f(0.0f, -1.0f, 0.0f)).Finish();
   world->Attach(floorEntity);
 
-
-  float sphereRadius     = 0.5f;
-  ce::iRenderMesh *renderMeshSphere = create_sphere_mesh(sphereRadius, 16, 4.0f);
-  for (int i = 0; i < 10; i++)
+  float sphereRadius = 0.5f;
+  if (false)
   {
+    ce::iRenderMesh *renderMeshSphere = create_sphere_mesh(sphereRadius, 16, 4.0f);
+    for (int i = 0; i < 10; i++)
     {
-      ce::Mesh               * meshSphere          = new ce::Mesh();
-      ce::Entity             * entitySphere        = new ce::Entity("Sphere");
-      ce::StaticMeshState    * meshStateSphere     = new ce::StaticMeshState("Mesh.Sphere");
-      ce::SphereColliderState* sphereColliderState = new ce::SphereColliderState();
-      ce::RigidBodyState     * rigidBodyState      = new ce::RigidBodyState("RigidBody.Sphere");
+      {
+        ce::Mesh *meshSphere = new ce::Mesh();
+        ce::Entity *entitySphere = new ce::Entity("Sphere");
+        ce::StaticMeshState *meshStateSphere = new ce::StaticMeshState("Mesh.Sphere");
+        ce::SphereColliderState *sphereColliderState = new ce::SphereColliderState();
+        ce::RigidBodyState *rigidBodyState = new ce::RigidBodyState("RigidBody.Sphere");
 
 
-      meshSphere->AddMaterialSlot("Default", defaultMaterialInstance);
-      meshSphere->AddSubMesh(renderMeshSphere, 0);
-      sphereColliderState->SetRadius(sphereRadius);
+        meshSphere->AddMaterialSlot("Default", defaultMaterialInstance);
+        meshSphere->AddSubMesh(renderMeshSphere, 0);
+        sphereColliderState->SetRadius(sphereRadius);
 
-      entitySphere->Attach(sphereColliderState);
-      entitySphere->Attach(rigidBodyState);
-      rigidBodyState->Attach(meshStateSphere);
+        entitySphere->Attach(sphereColliderState);
+        entitySphere->Attach(rigidBodyState);
+        rigidBodyState->Attach(meshStateSphere);
 
-      rigidBodyState->GetTransform()
-                    .SetTranslation(ce::Vector3f(0.0f, sphereRadius * 2.5f, 0.0f) * ((float)i + 2.0f))
-                    .Finish();
-      meshStateSphere->SetMesh(meshSphere);
-      world->Attach(entitySphere);
+        rigidBodyState->GetTransform()
+            .SetTranslation(ce::Vector3f(0.0f, sphereRadius * 2.5f, 0.0f) * ((float) i + 2.0f))
+            .Finish();
+        meshStateSphere->SetMesh(meshSphere);
+        world->Attach(entitySphere);
 
 
 
-      /*
-      ce::iDynamicCollider* sphereCollider = physics->CreateDynamicCollider();
-      sphereCollider->Attach(sphereShape);
-      sphereCollider->SetTransform(entitySphere->GetRoot()->GetGlobalMatrix());
-      sphereCollider->SetUserData(meshStateSphere);
-      //physWorld->AddCollider(sphereCollider);
-       */
-    }
-    {
-      ce::Mesh           * meshSphere      = new ce::Mesh();
-      ce::Entity         * entitySphere    = new ce::Entity("Sphere");
-      ce::StaticMeshState* meshStateSphere = new ce::StaticMeshState("Mesh.Sphere");
-      meshSphere->AddMaterialSlot("Default", defaultMaterialInstance);
-      meshSphere->AddSubMesh(renderMeshSphere, 0);
-      meshStateSphere->GetTransform()
-                     .SetTranslation(ce::Vector3f(i * sphereRadius * 0.5, 0.0f, 0.0f))
-                     .Finish();
-      meshStateSphere->SetMesh(meshSphere);
-      entitySphere->Attach(meshStateSphere);
-      world->Attach(entitySphere);
-    }
-    {
-      ce::Mesh           * meshSphere      = new ce::Mesh();
-      ce::Entity         * entitySphere    = new ce::Entity("Sphere");
-      ce::StaticMeshState* meshStateSphere = new ce::StaticMeshState("Mesh.Sphere");
-      meshSphere->AddMaterialSlot("Default", defaultMaterialInstance);
-      meshSphere->AddSubMesh(renderMeshSphere, 0);
-      meshStateSphere->GetTransform()
-                     .SetTranslation(ce::Vector3f(0.0f, i * sphereRadius, 0.0f))
-                     .Finish();
-      meshStateSphere->SetMesh(meshSphere);
-      entitySphere->Attach(meshStateSphere);
-      world->Attach(entitySphere);
-    }
-    {
-      ce::Mesh           * meshSphere      = new ce::Mesh();
-      ce::Entity         * entitySphere    = new ce::Entity("Sphere");
-      ce::StaticMeshState* meshStateSphere = new ce::StaticMeshState("Mesh.Sphere");
-      meshSphere->AddMaterialSlot("Default", defaultMaterialInstance);
-      meshSphere->AddSubMesh(renderMeshSphere, 0);
-      meshStateSphere->GetTransform()
-                     .SetTranslation(ce::Vector3f(0.0f, 0.0f, i * 2.0f * sphereRadius))
-                     .Finish();
-      meshStateSphere->SetMesh(meshSphere);
-      entitySphere->Attach(meshStateSphere);
-      world->Attach(entitySphere);
+        /*
+        ce::iDynamicCollider* sphereCollider = physics->CreateDynamicCollider();
+        sphereCollider->Attach(sphereShape);
+        sphereCollider->SetTransform(entitySphere->GetRoot()->GetGlobalMatrix());
+        sphereCollider->SetUserData(meshStateSphere);
+        //physWorld->AddCollider(sphereCollider);
+         */
+      }
+      {
+        ce::Mesh *meshSphere = new ce::Mesh();
+        ce::Entity *entitySphere = new ce::Entity("Sphere");
+        ce::StaticMeshState *meshStateSphere = new ce::StaticMeshState("Mesh.Sphere");
+        meshSphere->AddMaterialSlot("Default", defaultMaterialInstance);
+        meshSphere->AddSubMesh(renderMeshSphere, 0);
+        meshStateSphere->GetTransform()
+            .SetTranslation(ce::Vector3f(i * sphereRadius * 0.5, 0.0f, 0.0f))
+            .Finish();
+        meshStateSphere->SetMesh(meshSphere);
+        entitySphere->Attach(meshStateSphere);
+        world->Attach(entitySphere);
+      }
+      {
+        ce::Mesh *meshSphere = new ce::Mesh();
+        ce::Entity *entitySphere = new ce::Entity("Sphere");
+        ce::StaticMeshState *meshStateSphere = new ce::StaticMeshState("Mesh.Sphere");
+        meshSphere->AddMaterialSlot("Default", defaultMaterialInstance);
+        meshSphere->AddSubMesh(renderMeshSphere, 0);
+        meshStateSphere->GetTransform()
+            .SetTranslation(ce::Vector3f(0.0f, i * sphereRadius, 0.0f))
+            .Finish();
+        meshStateSphere->SetMesh(meshSphere);
+        entitySphere->Attach(meshStateSphere);
+        world->Attach(entitySphere);
+      }
+      {
+        ce::Mesh *meshSphere = new ce::Mesh();
+        ce::Entity *entitySphere = new ce::Entity("Sphere");
+        ce::StaticMeshState *meshStateSphere = new ce::StaticMeshState("Mesh.Sphere");
+        meshSphere->AddMaterialSlot("Default", defaultMaterialInstance);
+        meshSphere->AddSubMesh(renderMeshSphere, 0);
+        meshStateSphere->GetTransform()
+            .SetTranslation(ce::Vector3f(0.0f, 0.0f, i * 2.0f * sphereRadius))
+            .Finish();
+        meshStateSphere->SetMesh(meshSphere);
+        entitySphere->Attach(meshStateSphere);
+        world->Attach(entitySphere);
+      }
     }
   }
 
+  generate_test_grid (world, defaultMaterialInstance);
   ce::Matrix4f proj;
   device->GetPerspectiveProjection(-1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 1024.0f, proj);
 
@@ -921,7 +983,6 @@ int main(int argc, char** argv)
       frames++;
     }
     uint32_t deltaTime = time - lastTime;
-    lastTime = time;
 
 //    SDL_GL_MakeCurrent(wnd, context);
     UpdateEvents();
@@ -937,6 +998,7 @@ int main(int argc, char** argv)
     }
     if (deltaTime != 0)
     {
+      lastTime = time;
       float tpf = (float)deltaTime / 1000.0f;
 
       if (anim)
@@ -984,8 +1046,8 @@ int main(int argc, char** argv)
                                                .LookAt(ce::Vector3f(0.0f, 0.0f, 0.0f), ce::Vector3f(0.0f, 1.0f, 0.0f))
       );
 
-      spatialState->SetTransform(spatialState->GetTransform()
-          .SetTranslation(ce::Vector3f(5.0f, 1.1f, 5.0f) + ce::Vector3f(sin(lightnRotation) * 1.5, 0.0f, cos(lightnRotation) * 0.5f)));
+//      spatialState->SetTransform(spatialState->GetTransform()
+//          .SetTranslation(ce::Vector3f(5.0f, 1.1f, 5.0f) + ce::Vector3f(sin(lightnRotation) * 1.5, 0.0f, cos(lightnRotation) * 0.5f)));
 
       sphereRadius = 0.0f;
       float dist = 10.0f;
