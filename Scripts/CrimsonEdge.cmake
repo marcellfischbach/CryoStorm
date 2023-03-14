@@ -22,8 +22,9 @@ function(CE_MOC trgt)
 	add_custom_target(${TARGET_NAME}
                             COMMAND ${EXEC_PATH}ceMOC  --path ${MOC_DIRECTORY} --sourcepath ${CMAKE_CURRENT_SOURCE_DIR}
 			WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+			BYPRODUCTS "${MOC_DIRECTORY}/.ceCache"
 	)
-	if (CrimsonEdge_BINARY_DIR) 
+	if (CrimsonEdge_BINARY_DIR)
 		# this is an in-engine build
 		add_dependencies(${TARGET_NAME} ceMOC)
 	endif()
