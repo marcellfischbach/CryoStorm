@@ -42,6 +42,7 @@ private:
   void SkipEnum(Tokenizer& tokenizer, size_t& idx);
   void SkipBlock(Tokenizer& tokenizer, size_t& idx);
   void SkipArrayInitializer(Tokenizer& tokenizer, size_t& idx);
+  void SkipTemplate(Tokenizer &tokenizer, size_t &idx);
 
 
   std::string ReverseName(Tokenizer& tokenizer, size_t& idx);

@@ -5,7 +5,7 @@
 #include <deque>
 #include <list>
 
-#define CHECK_IDX(tokens, idx) if ((idx) >= tokens.size()) throw ce::moc::ParseException(__FILE__, __LINE__, "Index out of boundx " + std::to_string(idx) + " >= " + std::to_string(tokens.size()))
+#define CHECK_IDX(tokens, idx) if ((idx) >= tokens.size()) throw ce::moc::ParseException(__FILE__, __LINE__, "Index out of bounds " + std::to_string(idx) + " >= " + std::to_string(tokens.size()), 0, 0)
 
 namespace ce::moc
 {
@@ -27,10 +27,19 @@ BlockNode* Parser::ParseBlock(Tokenizer& tokenizer, size_t& idx, ASTNode* parent
 {
   BlockNode* blockNode = new BlockNode();
   auto tokens = tokenizer.GetTokens();
+  uint32_t line = 0;
+  uint32_t column = 0;
+  bool  first = true;
   for (size_t in = tokens.size(); idx < in;)
   {
     CHECK_IDX(tokens, idx);
     Token& token = tokens[idx];
+    if (first)
+    {
+      line = token.getLine();
+      column = token.getColumn();
+      first = false;
+    }
     if (token.GetType() == eTT_CurlyBraceClose)
     {
       ++idx;
@@ -49,7 +58,7 @@ BlockNode* Parser::ParseBlock(Tokenizer& tokenizer, size_t& idx, ASTNode* parent
     }
     if (IDX == idx)
     {
-      throw ParseException(__FILE__, __LINE__);
+      throw ParseException(__FILE__, __LINE__, "Unable to find end of block", line, column);
     }
   }
   return blockNode;
@@ -69,6 +78,9 @@ ASTNode* Parser::ParseNode(Tokenizer& tokenizer, Token& token, size_t& idx, ASTN
   case eTT_Class:
   case eTT_Struct:
     return ParseClass(tokenizer, idx, parent);
+  case eTT_Template:
+     SkipTemplate(tokenizer, idx);
+     return nullptr;
 
   case eTT_CS_CLASS:
   case eTT_CS_PROPERTY:
@@ -212,15 +224,26 @@ ClassSuperDefinition Parser::ParseSuperDefinition(Tokenizer & tokenizer, size_t 
 {
   auto tokens = tokenizer.GetTokens();
 
+
   TypeDef type;
   std::string visibility = "";
   bool virtuality = false;
   bool csSuper = false;
 
+  uint32_t line = 0;
+  uint32_t column = 0;
+  bool  first = true;
+
   for (; idx < tokens.size(); )
   {
     CHECK_IDX(tokens, idx);
     Token& token = tokens[idx];
+    if (first)
+    {
+      line = token.getLine();
+      column = token.getColumn();
+      first = false;
+    }
     switch (token.GetType())
     {
     case eTT_Public:
@@ -253,25 +276,27 @@ ClassSuperDefinition Parser::ParseSuperDefinition(Tokenizer & tokenizer, size_t 
     case eTT_ParenClose:
       if (!csSuper)
       {
-        throw ParseException(__FILE__, __LINE__, "Unexpected token '('");
+        throw ParseException(__FILE__, __LINE__, "Unexpected token ')'", token.getLine(), token.getColumn());
       }
       idx++;
       break;
     default:
-      throw ParseException(__FILE__, __LINE__);
+      printf ("Unexpected token [\"%s\"][%d]\n", token.Get().c_str(), token.GetType(), token.getLine(), token.getColumn());
+      throw ParseException(__FILE__, __LINE__, "Unexpected token [" + token.Get() + "]", token.getLine(), token.getColumn());
     }
   }
 
-  throw ParseException(__FILE__, __LINE__, "Cannot ready super type.");
+  throw ParseException(__FILE__, __LINE__, "Cannot read super type.", line, column);
 }
 
 
 
 VisibilityNode* Parser::ParseVisibility(Tokenizer & tokenizer, size_t & idx, ASTNode * parent)
 {
-  if (tokenizer.GetTokens()[idx + 1].GetType() != eTT_Colon)
+  const Token &token = tokenizer.GetTokens()[idx + 1];
+  if (token.GetType() != eTT_Colon)
   {
-    throw ParseException(__FILE__, __LINE__);
+    throw ParseException(__FILE__, __LINE__, "Unable to parse visibility", token.getLine(), token.getColumn());
   }
   idx += 2;
   return new VisibilityNode(tokenizer.GetTokens()[idx - 2].Get());
@@ -522,11 +547,19 @@ MemberNode* Parser::ParseMember(Tokenizer & tokenizer, size_t & idx, ASTNode * p
 void Parser::SkipArrayInitializer(Tokenizer & tokenizer, size_t & idx)
 {
   auto tokens = tokenizer.GetTokens();
+  uint32_t line = 0;
+  uint32_t column = 0;
+  if (idx < tokens.size())
+  {
+    const Token &token = tokens[idx];
+    line = token.getLine();
+    column = token.getColumn();
+  }
   for (; idx >= 0;)
   {
     if (idx == 0)
     {
-      throw ParseException(__FILE__, __LINE__);
+      throw ParseException(__FILE__, __LINE__, "Unable to skip array initializer", line, column);
     }
     CHECK_IDX(tokens, idx - 1);
     Token & token = tokens[--idx];
@@ -538,12 +571,44 @@ void Parser::SkipArrayInitializer(Tokenizer & tokenizer, size_t & idx)
   }
 }
 
+void Parser::SkipTemplate(Tokenizer &tokenizer, size_t &idx)
+{
+  const std::vector<Token> &tokens = tokenizer.GetTokens();
+  int numAngular = 0;
+  while (idx < tokens.size())
+  {
+    CHECK_IDX(tokens, idx);
+    const Token &token = tokens[idx++];
+    if (token.GetType() == eTT_AngleBracketOpen)
+    {
+      numAngular++;
+    }
+    else if (token.GetType() == eTT_AngleBracketClose)
+    {
+      numAngular--;
+      if (numAngular == 0)
+      {
+        break;
+      }
+    }
+  }
+}
+
 void Parser::SkipEnum(Tokenizer & tokenizer, size_t & idx)
 {
   auto tokens = tokenizer.GetTokens();
+  uint32_t line = 0;
+  uint32_t column = 0;
+  bool first = true;
   for (size_t i = idx, in = tokens.size(); i < in; ++i)
   {
     Token& token = tokens[i];
+    if (first)
+    {
+      line = token.getLine();
+      column = token.getColumn();
+      first = false;
+    }
     if (token.GetType() == eTT_SemiColon)
     {
       idx = i + 1;
@@ -556,7 +621,7 @@ void Parser::SkipEnum(Tokenizer & tokenizer, size_t & idx)
       return;
     }
   }
-  throw ParseException(__FILE__, __LINE__, "Unable to skip enum. Neither ';' nor '{' was found.");
+  throw ParseException(__FILE__, __LINE__, "Unable to skip enum. Neither ';' nor '{' was found.", line, column);
 }
 
 void Parser::SkipBlock(Tokenizer & tokenizer, size_t & idx)
@@ -909,17 +974,19 @@ CSMetaNode* Parser::ParseCSMeta(Tokenizer & tokenizer, size_t & idx, ASTNode * p
   auto tokens = tokenizer.GetTokens();
   CHECK_IDX(tokens, idx);
   Token& token = tokens[idx];
+  uint32_t line = token.getLine();
+  uint32_t column = token.getColumn();
   CSMetaNode* metaNode = nullptr;
 
   if (idx + 2 >= tokens.size())
   {
-    throw ParseException(__FILE__, __LINE__);
+    throw ParseException(__FILE__, __LINE__, "Malformed CE_FUNCTION", line, column);
   }
 
   CHECK_IDX(tokens, idx + 1);
   if (tokens[idx + 1].GetType() != eTT_ParenOpen)
   {
-    throw ParseException(__FILE__, __LINE__);
+    throw ParseException(__FILE__, __LINE__, "Malformed CE_FUNCTION", line, column);
   }
   idx++;
 
@@ -987,7 +1054,7 @@ CSMetaNode* Parser::ParseCSMeta(Tokenizer & tokenizer, size_t & idx, ASTNode * p
       break;
     }
   }
-  throw ParseException(__FILE__, __LINE__);
+  throw ParseException(__FILE__, __LINE__, "Malformed CE_FUNCTION", line, column);
 
 }
 

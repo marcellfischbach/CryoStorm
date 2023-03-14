@@ -35,7 +35,7 @@ void print_usage(char* name)
   printf("    --sourcepath <path>    the base path where the source code is located\n");
   printf("    --header <header>      the hh file when a single file is processed\n");
   printf("    --path   <path>        base path that contains the moc file and where to put the files\n");
-  printf("    --prefix <prefix>      the inclue prefix where include files are located\n");
+  printf("    --prefix <prefix>      the include prefix where include files are located\n");
 }
 
 class StdOutOutput : public ce::moc::iOutput
@@ -133,7 +133,8 @@ void generate(
   }
   catch (ce::moc::ParseException& e)
   {
-    std::cout << "Parse Exception: [" << e.GetFile() << "@" << e.GetLine() << "] '" << e.GetMessage() << "' in " << input << std::endl;
+    std::cout << "Parse Exception: [" << e.GetFile() << "@" << e.GetLine() << "] '" << e.GetMessage()
+              << "' in " << input << "@" << e.getSourceLine() << ":" << e.getSourceColumn() << std::endl;
   }
   catch (std::exception& ex)
   {

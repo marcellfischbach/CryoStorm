@@ -26,6 +26,7 @@ void SourceFile::Read(const std::string& fileName)
   std::string fullLine = "";
   while (std::getline(stream, line))
   {
+    l++;
     if (!line.empty())
     {
       if (line[line.length() - 1] == '\\')
@@ -38,7 +39,7 @@ void SourceFile::Read(const std::string& fileName)
         fullLine += line;
       }
     }
-    state = PutLine(state, l++, fullLine);
+    state = PutLine(state, l-1, fullLine);
     fullLine = "";
   }
 
@@ -108,7 +109,10 @@ SourceFile::State SourceFile::PutLine(State state, int lineNo, const std::string
 
   if (!result.empty())
   {
-    m_lines.push_back(result);
+    SourceLine line;
+    line.line = result;
+    line.no = lineNo;
+    m_lines.push_back(line);
   }
   
 
@@ -116,7 +120,7 @@ SourceFile::State SourceFile::PutLine(State state, int lineNo, const std::string
 }
 
 
-const std::vector<std::string>& SourceFile::GetLines() const
+const std::vector<SourceLine>& SourceFile::GetLines() const
 {
   return m_lines;
 }
@@ -135,7 +139,8 @@ SourceFileIterator::SourceFileIterator(const SourceFile& sourceFile)
 {
   if (sourceFile.GetLines().empty())
   {
-    m_line = "";
+    m_line.line = "";
+    m_line.no = 0;
   }
   else
   {
@@ -146,15 +151,15 @@ SourceFileIterator::SourceFileIterator(const SourceFile& sourceFile)
 
 bool SourceFileIterator::HasMore() const
 {
-  if (m_idx  < m_line.size())
+  if (m_idx  < m_line.line.size())
   {
     return true;
   }
 
-  const std::vector<std::string>& lines = m_sourceFile.GetLines();
+  const std::vector<SourceLine>& lines = m_sourceFile.GetLines();
   for (size_t i = m_lineNo+1, in = lines.size(); i < in; ++i)
   {
-    if (!lines[i].empty())
+    if (!lines[i].line.empty())
     {
       return true;
     }
@@ -164,14 +169,14 @@ bool SourceFileIterator::HasMore() const
 
 char SourceFileIterator::Next() 
 {
-  if (m_idx >= m_line.size())
+  if (m_idx >= m_line.line.size())
   {
     m_idx = 0;
-    m_line = "";
-    const std::vector<std::string>& lines = m_sourceFile.GetLines();
+    m_line.line = "";
+    const std::vector<SourceLine>& lines = m_sourceFile.GetLines();
     for (size_t i = m_lineNo + 1, in = lines.size(); i < in; ++i)
     {
-      if (!lines[i].empty())
+      if (!lines[i].line.empty())
       {
         m_lineNo = i;
         m_line = lines[i];
@@ -180,12 +185,21 @@ char SourceFileIterator::Next()
     }
   }
 
-  if (m_idx < m_line.size())
+  if (m_idx < m_line.line.size())
   {
-    return m_line[m_idx++];
+    return m_line.line[m_idx++];
   }
   return ' ';
 }
 
+uint32_t  SourceFileIterator::GetColumNo() const
+{
+  return m_idx > 0 ? m_idx-1 : 0;
+}
+
+uint32_t SourceFileIterator::GetLineNo() const
+{
+  return m_line.no;
+}
 
 }

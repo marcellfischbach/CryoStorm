@@ -3,12 +3,53 @@
 #include <parser/sourcefile.hh>
 #include <parser/parseexception.hh>
 
-#define PUSH(tkn) if (!tkn.empty()) { m_tokens.push_back(Token(tkn)); } tkn = ""
+#define PUSH(tkn) if (!tkn.empty()) { m_tokens.push_back(Token(tkn, startLineOfToken, startColumnOfToken)); } tkn = ""; startLineOfToken = currentLine; startColumnOfToken = currentIdx
 #define PUSH_CH(tkn, ch) PUSH(tkn); tkn += ch; PUSH(tkn)
 
 
 namespace ce::moc
 {
+
+static std::string TokenTypeNames[] = {
+  "eTT_Identifier",
+  "eTT_Class",
+  "eTT_Struct",
+  "eTT_Namespace",
+  "eTT_Private",
+  "eTT_Protected",
+  "eTT_Public",
+  "eTT_Virtual",
+  "eTT_Const",
+  "eTT_CurlyBraceOpen",
+  "eTT_CurlyBraceClose",
+  "eTT_ParenOpen",
+  "eTT_ParenClose",
+  "eTT_AngleBracketOpen",
+  "eTT_AngleBracketClose",
+  "eTT_BracketOpen",
+  "eTT_BracketClose",
+  "eTT_Colon",
+  "eTT_DoubleColon",
+  "eTT_SemiColon",
+  "eTT_Comma",
+  "eTT_Dot",
+  "eTT_DotDotDot",
+  "eTT_Ampersand",
+  "eTT_Asterisk",
+  "eTT_DoubleAsterisk",
+  "eTT_Equal",
+  "eTT_Tilde",
+  "eTT_Enum",
+  "eTT_Template",
+  "eTT_Friend",
+  "eTT_CS_CLASS",
+  "eTT_CS_PROPERTY",
+  "eTT_CS_FUNCTION",
+  "eTT_OtherCode",
+};
+
+
+
 Tokenizer::Tokenizer(const SourceFile& sourceFile)
 {
   SourceFileIterator it = sourceFile.GetIterator();
@@ -17,10 +58,15 @@ Tokenizer::Tokenizer(const SourceFile& sourceFile)
 
   bool singleChar = false;
   bool string = false;
-
+  uint32_t startColumnOfToken = 0;
+  uint32_t startLineOfToken = 0;
+  uint32_t currentLine = 0;
+  uint32_t currentIdx = 0;
   while (it.HasMore())
   {
     ch = it.Next();
+    currentLine = it.GetLineNo();
+    currentIdx = it.GetColumNo();
 
     if (string)
     {
@@ -191,6 +237,7 @@ const std::vector<Token> &Tokenizer::GetTokens() const
 
 size_t Tokenizer::Find(TokenType type, size_t offset) const
 {
+  const Token& firstToken = m_tokens[offset];
   for (size_t i = offset, in = m_tokens.size(); i < in; ++i)
   {
     if (m_tokens[i].GetType() == type)
@@ -199,12 +246,14 @@ size_t Tokenizer::Find(TokenType type, size_t offset) const
     }
   }
 
-  throw ParseException(__FILE__, __LINE__);
+  throw ParseException(__FILE__, __LINE__, "Unable to find [" + TokenTypeNames[type] + "]", firstToken.getLine(), firstToken.getColumn());
 }
 
 
 size_t Tokenizer::FindBack(TokenType type, size_t offset) const
 {
+  const Token& firstToken = m_tokens[offset];
+
   for (size_t i = offset; i >= 0; --i)
   {
     if (m_tokens[i].GetType() == type)
@@ -213,11 +262,11 @@ size_t Tokenizer::FindBack(TokenType type, size_t offset) const
     }
     if (i == 0)
     {
-      throw ParseException(__FILE__, __LINE__);
+      throw ParseException(__FILE__, __LINE__, "Unable to find [" + TokenTypeNames[type] + "]", firstToken.getLine(), firstToken.getColumn());
     }
   }
 
-  throw ParseException(__FILE__, __LINE__);
+  throw ParseException(__FILE__, __LINE__, "Unable to find [" + TokenTypeNames[type] + "]", firstToken.getLine(), firstToken.getColumn());
 }
 
 

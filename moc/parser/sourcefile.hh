@@ -8,6 +8,11 @@
 namespace ce::moc
 {
 
+struct SourceLine {
+  std::string line;
+  uint32_t no;
+};
+
 class SourceFile;
 class SourceFileIterator
 {
@@ -18,11 +23,13 @@ public:
   bool HasMore() const;
   char Next();
 
+  uint32_t GetLineNo () const;
+  uint32_t GetColumNo () const;
 private:
   const SourceFile& m_sourceFile;
 
   size_t m_lineNo;
-  std::string m_line;
+  SourceLine m_line;
   size_t m_idx;
 };
 
@@ -31,6 +38,7 @@ private:
 class SourceFile
 {
 public:
+
   SourceFile();
 
   SourceFileIterator GetIterator()const;
@@ -38,7 +46,7 @@ public:
 
   void Read(const std::string& fileName);
 
-  const std::vector<std::string>& GetLines() const;
+  const std::vector<SourceLine>& GetLines() const;
 
 private:
   enum State
@@ -51,7 +59,8 @@ private:
 
 
 
-  std::vector<std::string> m_lines;
+
+  std::vector<SourceLine> m_lines;
 };
 
 

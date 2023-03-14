@@ -48,7 +48,7 @@ enum TokenType
 class Token
 {
 public:
-  Token(const std::string& token = "");
+  Token(const std::string& token = "", uint32_t line = 0, uint32_t column = 0);
 
   const std::string& Get() const
   {
@@ -60,12 +60,24 @@ public:
     return m_type;
   }
 
+  uint32_t getLine() const
+  {
+    return m_line;
+  }
+  uint32_t getColumn() const
+  {
+    return m_column;
+  }
 
 private:
   bool IsIdentifier();
   
   TokenType m_type;
   std::string m_token;
+
+  uint32_t m_line;
+  uint32_t m_column;
+
 };
 
 

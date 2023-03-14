@@ -9,8 +9,10 @@ namespace ce::moc
 #define CHECK_TKN(tkn, tknEnum) if (m_token == tkn)  m_type = tknEnum
 #define E_CHECK_TKN(tkn, tknEnum) else if (m_token == tkn)  m_type = tknEnum
 
-Token::Token(const std::string & token)
+Token::Token(const std::string & token, uint32_t line, uint32_t column)
   : m_token(token)
+  , m_line(line)
+  , m_column(column)
 {
   CHECK_TKN("class", eTT_Class);
   E_CHECK_TKN("struct", eTT_Struct);
