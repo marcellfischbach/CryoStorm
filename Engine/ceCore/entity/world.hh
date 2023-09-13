@@ -3,6 +3,8 @@
 
 #include <ceCore/coreexport.hh>
 #include <ceCore/class.hh>
+#include <array>
+#include <thread>
 
 namespace ce
 {
@@ -52,6 +54,8 @@ private:
   std::vector<EntityState*> m_updateStates;
 
   CameraState *m_mainCamera = nullptr;
+
+  std::array<std::thread, 8> m_threads;
 };
 
 }
