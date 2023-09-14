@@ -55,7 +55,7 @@ private:
 
   CameraState *m_mainCamera = nullptr;
 
-  std::array<std::thread, 8> m_threads;
+  std::array<std::thread, 4> m_threads;
 };
 
 }

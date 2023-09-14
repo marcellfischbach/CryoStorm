@@ -103,7 +103,7 @@ private:
 
   float m_shadowNear;
   float m_shadowFar;
-  float m_splits[3];
+  float m_splits[4];
 
   ShadowSamplingMode m_shadowSamplingMode;
   iSampler *m_shadowMapColorSampler = nullptr;
@@ -111,6 +111,7 @@ private:
   iSampler *m_shadowMapDepthSampler = nullptr;
 
   iShader *m_shadowMappingShader = nullptr;
+  iShaderAttribute *m_attrLayersDepth = nullptr;
   iShaderAttribute *m_attrLayersBias = nullptr;
   iShaderAttribute *m_attrShadowBuffer = nullptr;
   iShaderAttribute *m_attrDepthBuffer = nullptr;

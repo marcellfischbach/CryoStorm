@@ -4,6 +4,7 @@ program {
         shader "directional_light_shadow_map.vert",
     },
     attributes {
+        attribute LayersDepth,
         attribute LayersBias,
         attribute ShadowBuffer,
         attribute DepthBuffer,

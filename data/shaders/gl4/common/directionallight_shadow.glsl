@@ -1,6 +1,7 @@
 
 
-uniform vec4 ce_DirectionalLightShadowMapLayersBias;
+uniform float ce_DirectionalLightShadowMapLayersDepth;
+uniform float ce_DirectionalLightShadowMapLayersBias;
 uniform mat4 ce_DirectionalLightShadowMapMatrices[3];
 uniform sampler2DArrayShadow ce_DirectionalLightShadowMapDepth;
 
@@ -14,27 +15,27 @@ float calc_directional_shadow(int idx, vec3 light_direction, vec3 frag_position,
     }
 
 
-	vec4 layerBias = ce_DirectionalLightShadowMapLayersBias[idx];
+	vec4 layerDepth = ce_DirectionalLightShadowMapLayersDepth[idx];
 
 	float fadeOut = 0.0f;
 	float layer = 0.0;
 	int matIndex = 0;
-	if (camera_space_position.z <= layerBias.x)
+	if (camera_space_position.z <= layerDepth.x)
 	{
 		matIndex = idx * 3;
 		layer = 0.0;
 	}
-	else if (camera_space_position.z <= layerBias.y)
+	else if (camera_space_position.z <= layerDepth.y)
 	{
 		matIndex = idx * 3 + 1;
 		layer = 1.0;
 	}
-	else if (camera_space_position.z <= layerBias.z)
+	else if (camera_space_position.z <= layerDepth.z)
 	{
 		matIndex = idx * 3 + 2;
 		layer = 2.0;
 
-		fadeOut = smoothstep(layerBias.z - (layerBias.z - layerBias.y) * 0.1, layerBias.z, camera_space_position.z);
+		fadeOut = smoothstep(layerDepth.z - (layerDepth.z - layerDepth.y) * 0.1, layerDepth.z, camera_space_position.z);
 	}
 	else
 	{
@@ -44,7 +45,7 @@ float calc_directional_shadow(int idx, vec3 light_direction, vec3 frag_position,
 	vec4 camSpace = ce_DirectionalLightShadowMapMatrices[matIndex] * vec4(frag_position, 1.0);
 	camSpace /= camSpace.w;
 	camSpace = camSpace * 0.5 + 0.5;
-	camSpace.z -= layerBias.w;
+	camSpace.z -= ce_DirectionalLightShadowMapLayersBias;
 
 //	if (camSpace.x < 0.0 || camSpace.x > 1.0
 //	|| camSpace.y < 0.0 || camSpace.y > 1.0)

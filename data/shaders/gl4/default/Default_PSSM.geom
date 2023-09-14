@@ -1,8 +1,8 @@
 #version 330
 layout(triangles) in;
-layout(triangle_strip, max_vertices = 9) out;
+layout(triangle_strip, max_vertices = 12) out;
 
-uniform mat4 ce_ShadowMapViewProjectionMatrix[3];
+uniform mat4 ce_ShadowMapViewProjectionMatrix[4];
 
 
 void main()
@@ -34,6 +34,16 @@ void main()
 		gl_Position = ce_ShadowMapViewProjectionMatrix[2] * gl_in[1].gl_Position;
 		EmitVertex();
 		gl_Position = ce_ShadowMapViewProjectionMatrix[2] * gl_in[2].gl_Position;
+		EmitVertex();
+		EndPrimitive();
+	}
+	{
+		gl_Layer = 3;
+		gl_Position = ce_ShadowMapViewProjectionMatrix[3] * gl_in[0].gl_Position;
+		EmitVertex();
+		gl_Position = ce_ShadowMapViewProjectionMatrix[3] * gl_in[1].gl_Position;
+		EmitVertex();
+		gl_Position = ce_ShadowMapViewProjectionMatrix[3] * gl_in[2].gl_Position;
 		EmitVertex();
 		EndPrimitive();
 	}

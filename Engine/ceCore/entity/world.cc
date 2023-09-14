@@ -174,7 +174,7 @@ static bool s_threadsSpawned = false;
 
 void World::Update(float tpf)
 {
-  if (true)
+  if (false)
   {
     if (!s_threadsSpawned)
     {

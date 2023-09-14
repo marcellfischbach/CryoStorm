@@ -30,6 +30,11 @@ vec3 get_position_in_camera_space(vec2 uv)
 
 }
 
+float random(vec2 st)
+{
+    return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123);
+}
+
 void main ()
 {
 	vec3 position_in_camera_space = get_position_in_camera_space(texCoord);
@@ -43,20 +48,21 @@ void main ()
 
 	// get num and size based on distance_to_camera
 	float frac = clamp((distance_to_camera - ce_FilterDistance.x) / ce_FilterDistance.y, 0.0, 1.0);
-	float num = mix(ce_FilterSamples, 1, frac);
+	float num = mix(ce_FilterSamples, 0, frac);
 	float size = mix(ce_FilterRadius, 0.0, frac);
 
 	float radius_x = size;
 	float radius_y = size * ce_ScreenAspect;
 
-	float rnd = (texCoord.x + texCoord.y) * ce_Random * 0.5;
+	float rnd = random(texCoord);
 
-	vec4 color = vec4(0, 0, 0, 0);
-	float total_strength = 0.0;
+	vec4 color = texture(ce_ShadowMap, texCoord);
+	float total_strength = 1.0;
+
 	for (float i=0; i<num; i++)
 	{
-		float r = i * 3.14 * 234.45;
-		float s = i / num;
+		float r = mod(2.0 * 3.14 * rnd * (1+i), 3.1415 * 2.0) ;
+		float s = mod(rnd * (1+i), 1.0) ;
 
 		vec2 sampleCoordinate = texCoord + vec2(cos(r) * s * radius_x, sin(r) * s * radius_y);
 
@@ -65,14 +71,13 @@ void main ()
 		float dist = length (sample_position_in_camera_space - position_in_camera_space);
 
 		float sample_strength = clamp(1.0 - (dist / ce_FilterMaxSampleDistance), 0.0, 1.0);
-
-		color += texture(ce_ShadowMap, sampleCoordinate) * sample_strength;
+		if (sample_strength > 0.0) 
+		{
+			color += texture(ce_ShadowMap, sampleCoordinate) * sample_strength;
+		}
 		total_strength += sample_strength;
 	}
 
-	if (total_strength != 0.0)
-	{
-		ce_FragColor = color / total_strength;
-	}
+	ce_FragColor = color / total_strength;
 
 }

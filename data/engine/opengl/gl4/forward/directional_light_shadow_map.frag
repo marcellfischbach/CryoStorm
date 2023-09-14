@@ -1,9 +1,10 @@
 #version 330
 layout(location = 0) out vec4 ce_FragColor;
 
-uniform vec4 ce_LayersBias;
-uniform mat4 ce_MappingMatrices[3];
-uniform mat4 ce_ShadowMapViewProjectionMatrix[3];
+uniform vec4 ce_LayersDepth;
+uniform float ce_LayersBias;
+uniform mat4 ce_MappingMatrices[4];
+uniform mat4 ce_ShadowMapViewProjectionMatrix[4];
 uniform sampler2DArrayShadow ce_ShadowBuffer;
 uniform sampler2D ce_DepthBuffer;
 
@@ -17,28 +18,33 @@ in vec2 texCoord;
 
 float calc_directional_shadow(vec3 world_position, float distance_to_camera)
 {
-    vec4 layerBias = ce_LayersBias;
+    vec4 layerDepth = ce_LayersDepth;
 
     float fadeOut = 0.0f;
     float layer = 0.0;
     int matIndex = 0;
 
-    if (distance_to_camera <= layerBias.x)
+    if (distance_to_camera <= layerDepth.x)
     {
         matIndex = 0;
         layer = 0.0;
     }
-    else if (distance_to_camera <= layerBias.y)
+    else if (distance_to_camera <= layerDepth.y)
     {
         matIndex = 1;
         layer = 1.0;
     }
-    else if (distance_to_camera <= layerBias.z)
+    else if (distance_to_camera <= layerDepth.z)
     {
         matIndex = 2;
         layer = 2.0;
+    }
+    else if (distance_to_camera <= layerDepth.w)
+    {
+        matIndex = 3;
+        layer = 3.0;
 
-        fadeOut = smoothstep(layerBias.z - (layerBias.z - layerBias.y) * 0.1, layerBias.z, distance_to_camera);
+        fadeOut = smoothstep(layerDepth.w - (layerDepth.w - layerDepth.z) * 0.1, layerDepth.w, distance_to_camera);
     }
     else
     {
@@ -48,7 +54,7 @@ float calc_directional_shadow(vec3 world_position, float distance_to_camera)
     vec4 camSpace = ce_ShadowMapViewProjectionMatrix[matIndex] * vec4(world_position, 1.0);
     camSpace /= camSpace.w;
     camSpace = camSpace * 0.5 + 0.5;
-    camSpace.z -= layerBias.w;
+    camSpace.z -= ce_LayersBias;
 
     float shadow_value = texture(ce_ShadowBuffer, vec4(camSpace.xy, layer, camSpace.z));
     return mix(shadow_value, 1.0, fadeOut);
