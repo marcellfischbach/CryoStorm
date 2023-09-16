@@ -50,6 +50,9 @@ set(SOURCES
 		gl4/loading/gl4shaderloader.cc
 		gl4/loading/gl4shaderloader.hh
 
+		gl4/pipeline/deferred/gl4deferredpipeline.cc
+		gl4/pipeline/deferred/gl4deferredpipeline.hh
+
 		gl4/pipeline/forward/gl4forwarddirectionallightrenderer.cc
 		gl4/pipeline/forward/gl4forwarddirectionallightrenderer.hh
 		gl4/pipeline/forward/gl4forwarddirectionallightshadowmapfilter.cc

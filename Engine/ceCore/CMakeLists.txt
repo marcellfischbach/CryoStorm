@@ -65,6 +65,8 @@ set(SOURCES
         graphics/etexturetype.hh
         graphics/etextureunit.hh
         graphics/evertexstream.hh
+        graphics/gbuffer.cc
+        graphics/gbuffer.hh
         graphics/graphicsexceptions.hh
         graphics/idevice.hh
         graphics/idirectionallight.hh

@@ -586,6 +586,7 @@ void generate_test_grid (ce::World* world, ce::iMaterial *material)
 
       float rnd = (float)rand() / (float)RAND_MAX;
       int ma = a % 4;
+      ma =  4;
       switch (ma)
       {
         case 0:
@@ -613,6 +614,8 @@ void generate_test_grid (ce::World* world, ce::iMaterial *material)
           entity->Attach(testHandler04);
         }
           break;
+          default:
+              break;
       }
 
 
