@@ -61,6 +61,8 @@ public:
 
   void SetShader(iShader * shader) override;
   void SetRenderTarget(iRenderTarget * target) override;
+  void SetRenderBuffer(uint32_t buffer) override;
+  void SetRenderBuffer(const std::vector<uint32_t> &buffer) override;
 
   void ClearShadowMaps() override;
   bool MoreShadowMapsPossible() const override;

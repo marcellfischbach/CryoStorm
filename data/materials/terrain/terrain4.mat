@@ -1,6 +1,7 @@
 material {
     shaders {
         shader Forward "/${shaders}/terrain/terrain4.shader",
+        shader GBuffer "/${shaders}/terrain/terrain4_GBuffer.shader",
         shader Depth "/${shaders}/default/Default_Depth.shader",
         shader ShadowCube "/${shaders}/default/Default_PointShadow.shader",
         shader ShadowPSSM "/${shaders}/default/Default_PSSM.shader",

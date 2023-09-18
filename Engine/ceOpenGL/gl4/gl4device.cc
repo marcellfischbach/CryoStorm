@@ -573,6 +573,20 @@ void GL4Device::SetRenderTarget(iRenderTarget* renderTarget)
   */
 }
 
+void GL4Device::SetRenderBuffer(uint32_t buffer)
+{
+  glDrawBuffer(GL_COLOR_ATTACHMENT0 + buffer);
+}
+void GL4Device::SetRenderBuffer(const std::vector<uint32_t> &buffer)
+{
+  GLenum glBuffer[16];
+  for (int i = 0; i < buffer.size(); ++i)
+  {
+    glBuffer[i] = GL_COLOR_ATTACHMENT0 + buffer[i];
+  }
+  glDrawBuffers(buffer.size(), glBuffer);
+}
+
 void GL4Device::ClearShadowMaps()
 {
   m_shadowMapTextures.clear();
@@ -1508,6 +1522,7 @@ iRenderMesh* GL4Device::FullscreenBlitCubeRenderMesh(int layer)
   }
   return nullptr;
 }
+
 
 
 #if _DEBUG

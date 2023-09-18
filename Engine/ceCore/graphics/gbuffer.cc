@@ -40,10 +40,13 @@ bool GBuffer::Update(ce::iDevice *device, uint16_t width, uint16_t height)
 
   UpdateSamplers(device);
 
+  m_bufferIds.clear();
+  uint32_t bufferId = 0;
   {
     iTexture2D::Descriptor desc{ePixelFormat::ePF_RGBA, width, height, false, 1};
     m_diffuseRoughness = device->CreateTexture(desc);
     m_diffuseRoughness->SetSampler(m_diffuseRoughnessSampler);
+    m_bufferIds.push_back(bufferId++);
   }
   {
     iTexture2D::Descriptor desc{ePixelFormat::ePF_Depth, width, height, false, 1};
@@ -54,11 +57,13 @@ bool GBuffer::Update(ce::iDevice *device, uint16_t width, uint16_t height)
     iTexture2D::Descriptor desc{ePixelFormat::ePF_RGBA, width, height, false, 1};
     m_normal = device->CreateTexture(desc);
     m_normal->SetSampler(m_normalSampler);
+    m_bufferIds.push_back(bufferId++);
   }
   {
     iTexture2D::Descriptor desc{ePixelFormat::ePF_RGBA, width, height, false, 1};
     m_emissionMetallic = device->CreateTexture(desc);
     m_emissionMetallic->SetSampler(m_emissionMetallicSampler);
+    m_bufferIds.push_back(bufferId++);
   }
 
   {
@@ -96,6 +101,36 @@ void GBuffer::UpdateSamplers(ce::iDevice *device)
   m_normalSampler = device->CreateSampler();
 
   m_emissionMetallicSampler = device->CreateSampler();
+}
+
+iTexture2D *GBuffer::getDiffuseRoughness() const
+{
+  return m_diffuseRoughness;
+}
+
+iTexture2D *GBuffer::getDepth() const
+{
+  return m_depth;
+}
+
+iTexture2D *GBuffer::getNormal() const
+{
+  return m_normal;
+}
+
+iTexture2D *GBuffer::getEmissionMetallic() const
+{
+  return m_emissionMetallic;
+}
+
+iRenderTarget2D *GBuffer::getGBuffer() const
+{
+  return m_gBuffer;
+}
+
+const std::vector<uint32_t> & GBuffer::GetBufferIDs() const
+{
+  return m_bufferIds;
 }
 
 

@@ -75,6 +75,8 @@ struct CE_CORE_API iDevice : public CE_SUPER(iObject)
 
   virtual void SetShader(iShader* shader) = 0;
   virtual void SetRenderTarget(iRenderTarget* target) = 0;
+  virtual void SetRenderBuffer (uint32_t buffer) = 0;
+  virtual void SetRenderBuffer (const std::vector<uint32_t> &buffer) = 0;
 
   virtual void ClearShadowMaps() = 0;
   virtual bool MoreShadowMapsPossible() const = 0;

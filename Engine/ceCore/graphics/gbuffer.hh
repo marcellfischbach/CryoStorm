@@ -2,7 +2,7 @@
 
 #include <ceCore/coreexport.hh>
 #include <ceCore/types.hh>
-
+#include <vector>
 
 namespace ce
 {
@@ -18,7 +18,13 @@ public:
   GBuffer ();
 
   bool Update (iDevice* device, uint16_t width, uint16_t height);
+  iRenderTarget2D *getGBuffer() const;
+  iTexture2D *getDiffuseRoughness() const;
+  iTexture2D *getDepth() const;
+  iTexture2D *getNormal() const;
+  iTexture2D *getEmissionMetallic() const;
 
+  const std::vector<uint32_t> &GetBufferIDs () const;
 
 private:
   void UpdateSamplers (iDevice *device);
@@ -28,7 +34,9 @@ private:
   iSampler *m_normalSampler;
   iSampler *m_emissionMetallicSampler;
 
-  iRenderTarget2D *m_gBuffer;;
+
+  std::vector<uint32_t> m_bufferIds;
+  iRenderTarget2D *m_gBuffer;
   iTexture2D *m_diffuseRoughness;
   iTexture2D *m_depth;
   iTexture2D *m_normal;

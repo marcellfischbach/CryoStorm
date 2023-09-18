@@ -243,6 +243,7 @@ void GL4ForwardPointLightRenderer::RenderShadowMap(GL4PointLight *pointLight,
   m_device->ResetTextures();
   GL4RenderTarget2D *target = GetPointLightShadowMapTemp();
   m_device->SetRenderTarget(target);
+  m_device->SetRenderBuffer(0);
   m_device->SetDepthWrite(true);
   m_device->SetDepthTest(false);
   m_device->SetColorWrite(true, true, true, true);

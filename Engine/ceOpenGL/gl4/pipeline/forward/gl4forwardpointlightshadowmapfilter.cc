@@ -57,6 +57,7 @@ void GL4ForwardPointLightShadowMapFilter::Render(GL4Device *device,
                                                        GL4RenderTarget2D *target)
 {
   device->SetRenderTarget(target);
+  device->SetRenderBuffer(0);
   device->SetDepthWrite(false);
   device->SetDepthTest(false);
   device->SetColorWrite(true, true, true, true);

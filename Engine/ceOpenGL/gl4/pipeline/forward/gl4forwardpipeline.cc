@@ -50,7 +50,7 @@ GL4ForwardPipeline::~GL4ForwardPipeline() noexcept
 
 }
 
-bool transparent_mesh_compare_less(const GfxMesh* mesh0, const GfxMesh* mesh1)
+static bool transparent_mesh_compare_less(const GfxMesh* mesh0, const GfxMesh* mesh1)
 {
   return false;
 }
@@ -179,6 +179,7 @@ void GL4ForwardPipeline::BindCamera()
 void GL4ForwardPipeline::RenderDepthToTarget()
 {
   m_device->SetRenderTarget(m_target);
+  m_device->SetRenderBuffer(0);
   eClearMode mode = m_gfxCamera->GetClearMode();
   m_device->SetColorWrite(true, true, true, true);
   m_device->SetDepthWrite(true);
@@ -206,9 +207,7 @@ void GL4ForwardPipeline::RenderDepthToTarget()
 void GL4ForwardPipeline::RenderForwardToTarget()
 {
   m_device->SetRenderTarget(m_target);
-
-
-
+  m_device->SetRenderBuffer(0);
   m_device->SetColorWrite(true, true, true, true);
   m_device->SetDepthTest(true);
   m_device->SetDepthWrite(false);
@@ -251,6 +250,7 @@ void GL4ForwardPipeline::RenderForwardToTarget()
 void GL4ForwardPipeline::RenderDebugToTarget()
 {
   m_device->SetRenderTarget(m_target);
+  m_device->SetRenderBuffer(0);
   m_device->SetDepthWrite(false);
   m_device->SetDepthTest(false);
   m_device->SetColorWrite(true, true, true, true);
