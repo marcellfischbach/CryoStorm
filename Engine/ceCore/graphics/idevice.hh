@@ -103,6 +103,7 @@ struct CE_CORE_API iDevice : public CE_SUPER(iObject)
   virtual eTextureUnit BindTexture(iTexture* texture) = 0;
   virtual bool BindMaterial(iMaterial* material, eRenderPass pass) = 0;
   virtual void Render(iRenderMesh* mesh, eRenderPass pass) = 0;
+  virtual void RenderFullscreen() = 0;
   virtual void RenderFullscreen(iTexture2D* texture) = 0;
   virtual void RenderFullscreen(iTexture2DArray* texture, int layer) = 0;
   virtual void RenderFullscreen(iTextureCube* texture, int layer) = 0;

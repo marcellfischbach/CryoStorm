@@ -13,10 +13,12 @@ class Camera;
 class Projector;
 class GBuffer;
 struct iClipper;
+class GfxLight;
 
 namespace opengl
 {
 
+class GL4DeferredDirectionalLightRenderer;
 
 CE_CLASS()
 class CE_OGL_API GL4DeferredPipeline : public CE_SUPER(iRenderPipeline)
@@ -29,13 +31,13 @@ public:
 
   void Initialize() override;
 
-  void Render(iRenderTarget2D *target, const GfxCamera *camera, iDevice *device, iGfxScene *scene) override;
+  void Render(iRenderTarget2D *target,  const GfxCamera *camera, iDevice *device, iGfxScene *scene) override;
 
 
 private:
 
-  void RenderGBuffer(iDevice *device, const GfxCamera *camera, iGfxScene *scene, uint16_t width, uint16_t height);
-
+  void RenderGBuffer(iClipper *clipper);
+  void RenderLight (GfxLight *gfxLight);
 
   void SetupVariables(iRenderTarget2D *target, const GfxCamera *camera, iDevice *device, iGfxScene *scene);
   void ScanVisibleMeshes(iClipper *clipper);
@@ -54,6 +56,8 @@ private:
   std::vector<GfxMesh *> m_shadedMeshes;
   std::vector<GfxMesh *> m_transparentMeshes;
   std::vector<GfxMesh *> m_unshadedMeshes;
+
+  GL4DeferredDirectionalLightRenderer *m_directionalLightRenderer;
 };
 
 

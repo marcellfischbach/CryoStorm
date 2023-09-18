@@ -95,35 +95,35 @@ void GBuffer::UpdateSamplers(ce::iDevice *device)
   m_diffuseRoughnessSampler = device->CreateSampler();
 
   m_depthSampler = device->CreateSampler();
-  m_depthSampler->SetTextureCompareMode(eTextureCompareMode::eTCM_CompareToR);
-  m_depthSampler->SetTextureCompareFunc(eCompareFunc::eCF_LessOrEqual);
+  m_depthSampler->SetTextureCompareMode(eTextureCompareMode::eTCM_None);
+  m_depthSampler->SetTextureCompareFunc(eCompareFunc::eCF_Always);
 
   m_normalSampler = device->CreateSampler();
 
   m_emissionMetallicSampler = device->CreateSampler();
 }
 
-iTexture2D *GBuffer::getDiffuseRoughness() const
+iTexture2D *GBuffer::GetDiffuseRoughness() const
 {
   return m_diffuseRoughness;
 }
 
-iTexture2D *GBuffer::getDepth() const
+iTexture2D *GBuffer::GetDepth() const
 {
   return m_depth;
 }
 
-iTexture2D *GBuffer::getNormal() const
+iTexture2D *GBuffer::GetNormal() const
 {
   return m_normal;
 }
 
-iTexture2D *GBuffer::getEmissionMetallic() const
+iTexture2D *GBuffer::GetEmissionMetallic() const
 {
   return m_emissionMetallic;
 }
 
-iRenderTarget2D *GBuffer::getGBuffer() const
+iRenderTarget2D *GBuffer::GetGBuffer() const
 {
   return m_gBuffer;
 }

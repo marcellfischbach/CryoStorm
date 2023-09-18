@@ -18,11 +18,11 @@ public:
   GBuffer ();
 
   bool Update (iDevice* device, uint16_t width, uint16_t height);
-  iRenderTarget2D *getGBuffer() const;
-  iTexture2D *getDiffuseRoughness() const;
-  iTexture2D *getDepth() const;
-  iTexture2D *getNormal() const;
-  iTexture2D *getEmissionMetallic() const;
+  iRenderTarget2D *GetGBuffer() const;
+  iTexture2D *GetDiffuseRoughness() const;
+  iTexture2D *GetDepth() const;
+  iTexture2D *GetNormal() const;
+  iTexture2D *GetEmissionMetallic() const;
 
   const std::vector<uint32_t> &GetBufferIDs () const;
 
