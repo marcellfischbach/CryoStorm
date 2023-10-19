@@ -48,7 +48,7 @@ void GL4DeferredPipeline::Render(iRenderTarget2D *target, const GfxCamera *camer
   device->SetDepthWrite(false);
   device->SetColorWrite(true, true, true, true);
 //  device->Clear(true, Color4f(0.5f, 0.0f, 0.0f, 0.0f), false, 1.0f, true, 0);
-  device->RenderFullscreen(m_gBuffer->getNormal());
+  device->RenderFullscreen(m_gBuffer->GetNormal());
 }
 
 void GL4DeferredPipeline::RenderGBuffer(uint16_t width,
@@ -59,7 +59,7 @@ void GL4DeferredPipeline::RenderGBuffer(uint16_t width,
   ScanVisibleMeshes(&clppr);
   BindCamera();
 
-  m_device->SetRenderTarget(m_gBuffer->getGBuffer());
+  m_device->SetRenderTarget(m_gBuffer->GetGBuffer());
   m_device->SetRenderBuffer(m_gBuffer->GetBufferIDs());
   m_device->SetDepthTest(true);
   m_device->SetDepthWrite(true);
