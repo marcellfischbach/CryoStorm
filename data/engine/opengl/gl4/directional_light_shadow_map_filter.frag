@@ -54,9 +54,9 @@ void main ()
 	float radius_x = size;
 	float radius_y = size * ce_ScreenAspect;
 
-	float rnd = random(texCoord);
+	float rnd = random(texCoord + ce_Random);
 
-	vec4 color = texture(ce_ShadowMap, texCoord);
+	vec4 color = 1.0 - texture(ce_ShadowMap, texCoord);
 	float total_strength = 1.0;
 
 	for (float i=0; i<num; i++)
@@ -73,11 +73,11 @@ void main ()
 		float sample_strength = clamp(1.0 - (dist / ce_FilterMaxSampleDistance), 0.0, 1.0);
 		if (sample_strength > 0.0) 
 		{
-			color += texture(ce_ShadowMap, sampleCoordinate) * sample_strength;
+			color += (1.0 - texture(ce_ShadowMap, sampleCoordinate)) * sample_strength;
 		}
 		total_strength += sample_strength;
 	}
 
-	ce_FragColor = color / total_strength;
+	ce_FragColor = clamp(1.0 - color, 0.8, 1.0); // (num+1));
 
 }

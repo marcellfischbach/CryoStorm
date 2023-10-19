@@ -1,6 +1,6 @@
 
 
-#include <ceOpenGL/gl4/pipeline/forward/gl4forwarddirectionallightshadowmapfilter.hh>
+#include <ceOpenGL/gl4/pipeline/gl4directionallightshadowmapfilter.hh>
 #include <ceOpenGL/gl4/gl4device.hh>
 #include <ceOpenGL/gl4/shading/gl4program.hh>
 #include <ceOpenGL/gl4/shading/gl4shaderattribute.hh>
@@ -11,18 +11,18 @@ namespace ce::opengl
 {
 
 
-GL4ForwardDirectionalLightShadowMapFilter::GL4ForwardDirectionalLightShadowMapFilter()
+GL4DirectionalLightShadowMapFilter::GL4DirectionalLightShadowMapFilter()
 {
 
 }
 
 
-GL4ForwardDirectionalLightShadowMapFilter::~GL4ForwardDirectionalLightShadowMapFilter()
+GL4DirectionalLightShadowMapFilter::~GL4DirectionalLightShadowMapFilter()
 {
 
 }
 
-bool GL4ForwardDirectionalLightShadowMapFilter::Initialize(const Vector2f &distance, float radius, float samples, float maxSampleDistance)
+bool GL4DirectionalLightShadowMapFilter::Initialize(const Vector2f &distance, float radius, float samples, float maxSampleDistance)
 {
   m_distance = distance;
   m_radius = radius;
@@ -31,7 +31,7 @@ bool GL4ForwardDirectionalLightShadowMapFilter::Initialize(const Vector2f &dista
 
 
   m_shadowMapFilterShader = AssetManager::Get()->Get<iShader>(
-      ResourceLocator("file://${engine}/opengl/gl4/forward/directional_light_shadow_map_filter.shader")
+      ResourceLocator("file://${engine}/opengl/gl4/directional_light_shadow_map_filter.shader")
   );
   if (!m_shadowMapFilterShader)
   {
@@ -51,10 +51,10 @@ bool GL4ForwardDirectionalLightShadowMapFilter::Initialize(const Vector2f &dista
 }
 
 
-void GL4ForwardDirectionalLightShadowMapFilter::Render(GL4Device *device,
-                                                       iTexture2D *depthBuffer,
-                                                       iTexture2D *shadowMap,
-                                                       GL4RenderTarget2D *target)
+void GL4DirectionalLightShadowMapFilter::Render(GL4Device *device,
+                                                iTexture2D *depthBuffer,
+                                                iTexture2D *shadowMap,
+                                                GL4RenderTarget2D *target)
 {
   device->SetRenderTarget(target);
   device->SetRenderBuffer(0);

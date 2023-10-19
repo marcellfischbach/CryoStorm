@@ -2,7 +2,6 @@
 #pragma once
 
 #include <ceOpenGL/openglexport.hh>
-
 #include <ceCore/graphics/irenderpipeline.hh>
 #include <ceCore/graphics/scene/gfxscenecollector.hh>
 
@@ -13,6 +12,7 @@ class Camera;
 class Projector;
 class GBuffer;
 struct iClipper;
+struct iDirectionalLight;
 
 namespace opengl
 {
@@ -34,7 +34,9 @@ public:
 
 private:
 
-  void RenderGBuffer(iDevice *device, const GfxCamera *camera, iGfxScene *scene, uint16_t width, uint16_t height);
+  void RenderGBuffer(uint16_t width, uint16_t height);
+  void RenderLights ();
+  void RenderDirectionalLight (const iDirectionalLight* directionalLight);
 
 
   void SetupVariables(iRenderTarget2D *target, const GfxCamera *camera, iDevice *device, iGfxScene *scene);

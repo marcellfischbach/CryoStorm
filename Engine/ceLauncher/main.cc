@@ -586,7 +586,7 @@ void generate_test_grid (ce::World* world, ce::iMaterial *material)
 
       float rnd = (float)rand() / (float)RAND_MAX;
       int ma = a % 4;
-      ma =  4;
+//      ma =  4;
       switch (ma)
       {
         case 0:
@@ -760,7 +760,7 @@ int main(int argc, char** argv)
   sunLightState->SetColor(ce::Color4f(0.7f, 0.7f, 1.0f, 1.0f) * 1.0);
   sunLightState->SetShadowMapBias(0.003f);
   sunLightState->SetStatic(true);
-  sunLightState->SetCastShadow(false);
+  sunLightState->SetCastShadow(true);
   sunLightState->SetTransform(sunLightState->GetTransform()
                                              //.SetRotation(ce::Quaternion::FromAxisAngle(ce::Vector3f(1.0f, 0.0f, 0.0f), ce::ceDeg2Rad(-45.0f)))
                                            .SetRotation(
@@ -776,16 +776,16 @@ int main(int argc, char** argv)
   sunLightState = new ce::LightState("SunLight");
   sunEntity->Attach(sunLightState);
   sunLightState->SetType(ce::eLT_Directional);
-  sunLightState->SetColor(ce::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 0.0);
+  sunLightState->SetColor(ce::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 0.2);
   sunLightState->SetShadowMapBias(0.003f);
   sunLightState->SetStatic(true);
-  sunLightState->SetCastShadow(true);
+  sunLightState->SetCastShadow(false);
   sunLightState->SetTransform(sunLightState->GetTransform()
           //.SetRotation(ce::Quaternion::FromAxisAngle(ce::Vector3f(1.0f, 0.0f, 0.0f), ce::ceDeg2Rad(-45.0f)))
                                   .SetRotation(
-                                      ce::Quaternion::FromAxisAngle(ce::Vector3f(1.0f, 0.0f, 0.0f)
+                                      ce::Quaternion::FromAxisAngle(ce::Vector3f(1.0f, 0.2f, 0.0f)
                                                                         .Normalize(),
-                                                                    ce::ceDeg2Rad(-135.0f)))
+                                                                    ce::ceDeg2Rad(-45.0f)))
   );
 
 //  world->Attach(sunEntity);
@@ -833,7 +833,7 @@ int main(int argc, char** argv)
   uint32_t lastTime = SDL_GetTicks();
 
   bool  useCs     = true;
-  bool  anim      = true;
+  bool  anim      = false;
   float roughness = 1.0f;
   float metallic  = 0.0f;
 

@@ -38,8 +38,9 @@ void GL4DeferredPipeline::Initialize()
 void GL4DeferredPipeline::Render(iRenderTarget2D *target, const GfxCamera *camera, iDevice *device, iGfxScene *scene)
 {
   SetupVariables(target, camera, device, scene);
-  RenderGBuffer(device, camera, scene, target->GetWidth(), target->GetHeight());
+  RenderGBuffer(target->GetWidth(), target->GetHeight());
 
+  RenderLights();
 
   device->SetRenderTarget(target);
   device->SetRenderBuffer(0);
@@ -50,28 +51,46 @@ void GL4DeferredPipeline::Render(iRenderTarget2D *target, const GfxCamera *camer
   device->RenderFullscreen(m_gBuffer->getNormal());
 }
 
-void GL4DeferredPipeline::RenderGBuffer(iDevice *device,
-                                        const GfxCamera *camera,
-                                        iGfxScene *scene,
-                                        uint16_t width,
+void GL4DeferredPipeline::RenderGBuffer(uint16_t width,
                                         uint16_t height)
 {
-  m_gBuffer->Update(device, width, height);
+  m_gBuffer->Update(m_device, width, height);
   CameraClipper clppr(*m_camera, *m_projector);
   ScanVisibleMeshes(&clppr);
   BindCamera();
 
-  device->SetRenderTarget(m_gBuffer->getGBuffer());
-  device->SetRenderBuffer(m_gBuffer->GetBufferIDs());
-  device->SetDepthTest(true);
-  device->SetDepthWrite(true);
-  device->SetColorWrite(true, true, true, true);
-  device->Clear(true, Color4f(0.0f, 0.0f, 0.0f, 0.0f), true, 1.0f, true, 0);
+  m_device->SetRenderTarget(m_gBuffer->getGBuffer());
+  m_device->SetRenderBuffer(m_gBuffer->GetBufferIDs());
+  m_device->SetDepthTest(true);
+  m_device->SetDepthWrite(true);
+  m_device->SetColorWrite(true, true, true, true);
+  m_device->Clear(true, Color4f(0.0f, 0.0f, 0.0f, 0.0f), true, 1.0f, true, 0);
   std::vector<GfxMesh *> &meshes = m_collector.GetMeshes(eRenderQueue::Default);
-  for (const auto mesh: meshes)
+  for (const auto        mesh: meshes)
   {
-    mesh->Render(device, eRP_GBuffer);
+    mesh->Render(m_device, eRP_GBuffer);
   }
+
+}
+
+
+void GL4DeferredPipeline::RenderLights()
+{
+  CameraClipper clppr(*m_camera, *m_projector);
+  m_scene->ScanLights(&clppr, ~0x00, [this](GfxLight *light) {
+    switch (light->GetLight()->GetType())
+    {
+      case eLT_Directional:
+        RenderDirectionalLight((const iDirectionalLight *) light->GetLight());
+        break;
+      default:break;
+    }
+    return true;
+  });
+}
+
+void GL4DeferredPipeline::RenderDirectionalLight(const ce::iDirectionalLight *directionalLight)
+{
 
 }
 
@@ -84,7 +103,7 @@ void GL4DeferredPipeline::SetupVariables(iRenderTarget2D *target,
   m_gfxCamera = camera;
   m_camera    = camera->GetCamera();
   m_projector = camera->GetProjector();
-  m_scene = scene;
+  m_scene     = scene;
 //  m_target    = target;
 
 //  m_pointLightRenderer.SetDevice(device);

@@ -1,7 +1,7 @@
 
 #pragma  once
 
-#include <ceCore/math/vector.hh>
+#include "ceCore/math/vector.hh"
 
 namespace ce
 {
@@ -16,15 +16,15 @@ namespace opengl
 class GL4Device;
 class GL4RenderTarget2D;
 
-class GL4ForwardDirectionalLightShadowMapFilter
+class GL4DirectionalLightShadowMapFilter
 {
 public:
 
 
 
 
-  GL4ForwardDirectionalLightShadowMapFilter();
-  ~GL4ForwardDirectionalLightShadowMapFilter();
+  GL4DirectionalLightShadowMapFilter();
+  ~GL4DirectionalLightShadowMapFilter();
 
   bool Initialize (const Vector2f &distance, float radius, float samples, float maxSampleDistance);
 
