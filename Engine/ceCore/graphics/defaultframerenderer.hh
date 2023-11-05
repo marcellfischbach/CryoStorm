@@ -17,7 +17,7 @@ public:
   DefaultFrameRenderer();
   ~DefaultFrameRenderer() override = default;
 
-
+  void SetRenderPipeline(iRenderPipeline *renderPipeline) override;
   void Render(iRenderTarget2D *target, iDevice *device, iGfxScene *scene) override;
   void Render(iRenderTarget2D *target, GfxCamera *camera, iDevice *device, iGfxScene *scene) override;
 

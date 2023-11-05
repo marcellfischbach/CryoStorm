@@ -23,7 +23,7 @@ bool OpenGLModule::Register(int argc, char** argv)
   AssetManager::Get()->RegisterLoader(new GL4ProgramLoader());
   AssetManager::Get()->RegisterLoader(new GL4ShaderLoader());
   ObjectRegistry::Register<iDevice>(new GL4Device());
-  ObjectRegistry::Register<iRenderPipeline>(new GL4ForwardPipeline());
+//  ObjectRegistry::Register<iRenderPipeline>(new GL4ForwardPipeline());
 //  ObjectRegistry::Register<iRenderPipeline>(new GL4DeferredPipeline());
   ObjectRegistry::Register<iRenderMeshGeneratorFactory>(new GL4RenderMeshGeneratorFactory());
   ObjectRegistry::Register<iRenderMeshBatchGeneratorFactory>(new GL4RenderMeshBatchGeneratorFactory());

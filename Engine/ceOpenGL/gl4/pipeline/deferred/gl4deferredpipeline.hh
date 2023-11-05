@@ -17,6 +17,7 @@ struct iDirectionalLight;
 namespace opengl
 {
 
+class GL4DeferredDirectionalLightRenderer;
 
 CE_CLASS()
 class CE_OGL_API GL4DeferredPipeline : public CE_SUPER(iRenderPipeline)
@@ -40,6 +41,7 @@ private:
 
 
   void SetupVariables(iRenderTarget2D *target, const GfxCamera *camera, iDevice *device, iGfxScene *scene);
+  void UpdateIntermediate();
   void ScanVisibleMeshes(iClipper *clipper);
   void BindCamera();
 
@@ -50,12 +52,15 @@ private:
   const Camera    *m_camera;
   const Projector *m_projector;
   iGfxScene       *m_scene;
+  iRenderTarget2D *m_intermediate;
   iRenderTarget2D *m_target;
 
   GfxSceneCollector      m_collector;
   std::vector<GfxMesh *> m_shadedMeshes;
   std::vector<GfxMesh *> m_transparentMeshes;
   std::vector<GfxMesh *> m_unshadedMeshes;
+
+  GL4DeferredDirectionalLightRenderer* m_directionalLightRenderer;
 };
 
 

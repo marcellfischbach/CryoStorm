@@ -1,4 +1,5 @@
 #include <ceOpenGL/gl4/pipeline/deferred/gl4deferredpipeline.hh>
+#include <ceOpenGL/gl4/pipeline/deferred/gl4deferreddirectionallightrenderer.hh>
 #include <ceCore/math/iclipper.hh>
 #include <ceCore/math/clipper/cameraclipper.hh>
 #include <ceCore/graphics/camera.hh>
@@ -19,6 +20,8 @@ namespace ce::opengl
 GL4DeferredPipeline::GL4DeferredPipeline()
     : iRenderPipeline()
     , m_gBuffer(new GBuffer())
+    , m_intermediate(nullptr)
+    , m_directionalLightRenderer(new GL4DeferredDirectionalLightRenderer())
 {
   CE_CLASS_GEN_CONSTR;
 }
@@ -31,7 +34,7 @@ GL4DeferredPipeline::~GL4DeferredPipeline()
 
 void GL4DeferredPipeline::Initialize()
 {
-
+  m_directionalLightRenderer->Initialize();
 }
 
 
@@ -40,15 +43,17 @@ void GL4DeferredPipeline::Render(iRenderTarget2D *target, const GfxCamera *camer
   SetupVariables(target, camera, device, scene);
   RenderGBuffer(target->GetWidth(), target->GetHeight());
 
-  RenderLights();
 
   device->SetRenderTarget(target);
   device->SetRenderBuffer(0);
   device->SetDepthTest(false);
   device->SetDepthWrite(false);
   device->SetColorWrite(true, true, true, true);
-//  device->Clear(true, Color4f(0.5f, 0.0f, 0.0f, 0.0f), false, 1.0f, true, 0);
-  device->RenderFullscreen(m_gBuffer->GetNormal());
+  device->SetBlending(false);
+  device->Clear(true, Color4f(0.0f, 0.0f, 0.0f, 0.0f), false, 1.0f, true, 0);
+  RenderLights();
+
+//  device->RenderFullscreen(m_gBuffer->GetNormal());
 }
 
 void GL4DeferredPipeline::RenderGBuffer(uint16_t width,
@@ -80,8 +85,7 @@ void GL4DeferredPipeline::RenderLights()
   m_scene->ScanLights(&clppr, ~0x00, [this](GfxLight *light) {
     switch (light->GetLight()->GetType())
     {
-      case eLT_Directional:
-        RenderDirectionalLight((const iDirectionalLight *) light->GetLight());
+      case eLT_Directional:RenderDirectionalLight((const iDirectionalLight *) light->GetLight());
         break;
       default:break;
     }
@@ -91,7 +95,7 @@ void GL4DeferredPipeline::RenderLights()
 
 void GL4DeferredPipeline::RenderDirectionalLight(const ce::iDirectionalLight *directionalLight)
 {
-
+  m_directionalLightRenderer->Render(m_device, m_camera, m_projector, m_gBuffer, directionalLight, m_target);
 }
 
 void GL4DeferredPipeline::SetupVariables(iRenderTarget2D *target,
@@ -104,7 +108,9 @@ void GL4DeferredPipeline::SetupVariables(iRenderTarget2D *target,
   m_camera    = camera->GetCamera();
   m_projector = camera->GetProjector();
   m_scene     = scene;
-//  m_target    = target;
+  m_target    = target;
+
+  UpdateIntermediate();
 
 //  m_pointLightRenderer.SetDevice(device);
 //  m_pointLightRenderer.SetScene(scene);
@@ -113,6 +119,43 @@ void GL4DeferredPipeline::SetupVariables(iRenderTarget2D *target,
 //  m_directionalLightRenderer.SetScene(scene);
 //  m_directionalLightRenderer.Clear();
 
+}
+
+void GL4DeferredPipeline::UpdateIntermediate()
+{
+  if (!m_intermediate
+      || m_intermediate->GetWidth() != m_target->GetWidth()
+      || m_intermediate->GetHeight() != m_target->GetHeight())
+  {
+    CE_RELEASE(m_intermediate);
+
+    iTexture2D::Descriptor colorDesc {};
+    colorDesc.Width        = m_target->GetWidth();
+    colorDesc.Height       = m_target->GetHeight();
+    colorDesc.Format       = ePF_RGBA;
+    colorDesc.MipMaps      = false;
+    colorDesc.MultiSamples = 1;
+    iTexture2D *colorTexture = m_device->CreateTexture(colorDesc);
+
+    iTexture2D::Descriptor depthDesc {};
+    depthDesc.Width        = m_target->GetWidth();
+    depthDesc.Height       = m_target->GetHeight();
+    depthDesc.Format       = ePF_DepthStencil;
+    depthDesc.MipMaps      = false;
+    depthDesc.MultiSamples = 1;
+    iTexture2D *depthTexture = m_device->CreateTexture(depthDesc);
+
+    iRenderTarget2D::Descriptor interDesc {};
+    interDesc.Width  = m_target->GetWidth();
+    interDesc.Height = m_target->GetHeight();
+    m_intermediate = m_device->CreateRenderTarget(interDesc);
+
+    m_intermediate->AddColorTexture(colorTexture);
+    m_intermediate->SetDepthTexture(depthTexture);
+
+    colorTexture->Release();
+    depthTexture->Release();
+  }
 }
 
 

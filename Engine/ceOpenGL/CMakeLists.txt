@@ -53,6 +53,8 @@ set(SOURCES
 		gl4/pipeline/gl4directionalshadowrenderer.cc
 		gl4/pipeline/gl4directionalshadowrenderer.hh
 
+		gl4/pipeline/deferred/gl4deferreddirectionallightrenderer.cc
+		gl4/pipeline/deferred/gl4deferreddirectionallightrenderer.hh
 		gl4/pipeline/deferred/gl4deferredpipeline.cc
 		gl4/pipeline/deferred/gl4deferredpipeline.hh
 

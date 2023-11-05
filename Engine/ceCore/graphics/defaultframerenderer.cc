@@ -83,5 +83,10 @@ iRenderPipeline *DefaultFrameRenderer::GetRenderPipeline()
   return m_renderPipeline;
 }
 
+void DefaultFrameRenderer::SetRenderPipeline(iRenderPipeline *renderPipeline)
+{
+  CE_SET(m_renderPipeline, renderPipeline);
+}
+
 
 }
