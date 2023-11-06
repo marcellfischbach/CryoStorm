@@ -1,11 +1,11 @@
 
 
-#include <ceOpenGL/gl4/pipeline/gl4directionallightshadowmapfilter.hh>
-#include <ceOpenGL/gl4/gl4device.hh>
-#include <ceOpenGL/gl4/shading/gl4program.hh>
-#include <ceOpenGL/gl4/shading/gl4shaderattribute.hh>
-#include <ceOpenGL/gl4/gl4rendertarget2d.hh>
-#include <ceCore/resource/assetmanager.hh>
+#include "gl4directionallightshadowmapfilter.hh"
+#include "ceOpenGL/gl4/gl4device.hh"
+#include "ceOpenGL/gl4/shading/gl4program.hh"
+#include "ceOpenGL/gl4/shading/gl4shaderattribute.hh"
+#include "ceOpenGL/gl4/gl4rendertarget2d.hh"
+#include "ceCore/resource/assetmanager.hh"
 
 namespace ce::opengl
 {
