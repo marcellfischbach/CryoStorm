@@ -1,6 +1,6 @@
 program {
     shaders {
-        shader "directional_light_deferred.frag",
+        shader "directional_light_deferred_shadow.frag",
         shader "directional_light_deferred.vert",
     },
     attributes {

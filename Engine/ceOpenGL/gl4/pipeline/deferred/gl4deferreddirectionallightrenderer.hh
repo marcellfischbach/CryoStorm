@@ -35,6 +35,7 @@ private:
   iShaderAttribute *m_attrNormal                 = nullptr;
   iShaderAttribute *m_attrDepth                  = nullptr;
   iShaderAttribute *m_attrLightColor             = nullptr;
+  iShaderAttribute *m_attrLightAmbientColor      = nullptr;
   iShaderAttribute *m_attrLightNegLightDirection = nullptr;
   iShaderAttribute *m_attrCameraPosition         = nullptr;
 };

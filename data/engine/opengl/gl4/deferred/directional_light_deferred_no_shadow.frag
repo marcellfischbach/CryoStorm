@@ -10,6 +10,7 @@ uniform mat4 ce_ViewProjectionMatrixInv;
 
 uniform vec3 ce_CameraPosition;
 uniform vec4 ce_LightColor;
+uniform vec4 ce_LightAmbientColor;
 uniform vec3 ce_NegLightDirection;
 
 in vec2 texCoord;
@@ -53,14 +54,18 @@ void main ()
     float n_dot_v = dot (normal, to_viewer);
     float n_dot_h = dot(normal, H);
     float h_dot_l = dot(H, ce_NegLightDirection);
-    float lambert = clamp (n_dot_l, 0.0, 1.0);
     float specular = cook_torrance(0.8, n_dot_l, n_dot_v, n_dot_h, h_dot_l, diffuseRoughness.a);
     float diffuse = oren_nayar(n_dot_l, n_dot_v, diffuseRoughness.a);
 
 
-    vec3 color = diffuseRoughness.xyz;
+    vec3 color = diffuseRoughness.rgb;
 
 
-    ce_FragColor = vec4(color * diffuse * ce_LightColor.rgb + specular, 1.0);
+    ce_FragColor = vec4(
+        color * diffuse * ce_LightColor.rgb +
+        specular * ce_LightColor.rgb +
+        ce_LightAmbientColor.rgb,
+    1.0);
 
 }
+

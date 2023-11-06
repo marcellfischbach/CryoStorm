@@ -563,9 +563,9 @@ void generate_test_grid(ce::World *world, ce::iMaterial *material)
   mesh->AddMaterialSlot("Default", material);
   mesh->AddSubMesh(sphere, 0);
 
-  for (int a = 0, i = 0; i < 100; i++)
+  for (int a = 0, i = 0; i < 1; i++)
   {
-    for (int j = 0; j < 100; j++, a++)
+    for (int j = 0; j < 1; j++, a++)
     {
       ce::Entity
           *entity = new ce::Entity(std::string("Sphere: ") + std::to_string(i + 1) + ":" + std::to_string(j + 1));
@@ -754,7 +754,7 @@ int main(int argc, char **argv)
   sunLightState->SetColor(ce::Color4f(0.7f, 0.7f, 1.0f, 1.0f) * 1.0);
   sunLightState->SetShadowMapBias(0.003f);
   sunLightState->SetStatic(true);
-  sunLightState->SetCastShadow(true);
+  sunLightState->SetCastShadow(false);
   sunLightState->SetTransform(sunLightState->GetTransform()
                                                //.SetRotation(ce::Quaternion::FromAxisAngle(ce::Vector3f(1.0f, 0.0f, 0.0f), ce::ceDeg2Rad(-45.0f)))
                                            .SetRotation(
@@ -1041,20 +1041,7 @@ int main(int argc, char **argv)
       {
         debugCache->SetDebug(!debugCache->IsDebug());
       }
-      if (ce::Input::IsKeyPressed(ce::Key::eK_P))
-      {
-        if (pipeline == forwardPipeline)
-        {
-          printf ("Switch to: DeferredPipeline\n");
-          pipeline = deferredPipeline;
-        }
-        else
-        {
-          printf ("Switch to: FowardPipeline\n");
-          pipeline = forwardPipeline;
-        }
-        frameRenderer->SetRenderPipeline(pipeline);
-      }
+
 
       sunLightState->SetTransform(sunLightState->GetTransform()
                                                .SetTranslation(ce::Vector3f(sin(sunRotation) * 20.0f,
@@ -1081,7 +1068,20 @@ int main(int argc, char **argv)
 //      terrainMesh->SetReferencePoint(cameraState->GetTransform().GetTranslation());
       world->Update(tpf);
     }
-
+    if (ce::Input::IsKeyPressed(ce::Key::eK_P))
+    {
+      if (pipeline == forwardPipeline)
+      {
+        printf ("Switch to: DeferredPipeline\n");
+        pipeline = deferredPipeline;
+      }
+      else
+      {
+        printf ("Switch to: FowardPipeline\n");
+        pipeline = forwardPipeline;
+      }
+      frameRenderer->SetRenderPipeline(pipeline);
+    }
 
     frameRenderer->Render(renderTarget, device, world->GetScene());
 

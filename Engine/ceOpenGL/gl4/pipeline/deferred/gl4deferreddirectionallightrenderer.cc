@@ -20,7 +20,7 @@ GL4DeferredDirectionalLightRenderer::GL4DeferredDirectionalLightRenderer()
 bool GL4DeferredDirectionalLightRenderer::Initialize()
 {
   m_shader = AssetManager::Get()->Get<iShader>(
-      ResourceLocator("file://${engine}/opengl/gl4/deferred/directional_light_deferred.shader"));
+      ResourceLocator("file://${engine}/opengl/gl4/deferred/directional_light_deferred_no_shadow.shader"));
   if (!m_shader)
   {
     return false;
@@ -30,6 +30,7 @@ bool GL4DeferredDirectionalLightRenderer::Initialize()
   m_attrDepth                  = m_shader->GetShaderAttribute("Depth");
   m_attrNormal                 = m_shader->GetShaderAttribute("Normal");
   m_attrLightColor             = m_shader->GetShaderAttribute("LightColor");
+  m_attrLightAmbientColor      = m_shader->GetShaderAttribute("LightAmbientColor");
   m_attrLightNegLightDirection = m_shader->GetShaderAttribute("NegLightDirection");
   m_attrCameraPosition         = m_shader->GetShaderAttribute("CameraPosition");
 
@@ -80,6 +81,10 @@ void GL4DeferredDirectionalLightRenderer::Render(ce::iDevice *device,
   if (m_attrLightColor)
   {
     m_attrLightColor->Bind(light->GetColor());
+  }
+  if (m_attrLightAmbientColor)
+  {
+    m_attrLightAmbientColor->Bind(Color4f());
   }
   if (m_attrCameraPosition)
   {

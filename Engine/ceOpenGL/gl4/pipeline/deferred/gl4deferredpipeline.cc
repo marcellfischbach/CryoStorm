@@ -53,7 +53,7 @@ void GL4DeferredPipeline::Render(iRenderTarget2D *target, const GfxCamera *camer
   device->Clear(true, Color4f(0.0f, 0.0f, 0.0f, 0.0f), false, 1.0f, true, 0);
   RenderLights();
 
-//  device->RenderFullscreen(m_gBuffer->GetNormal());
+//  device->RenderFullscreen(m_gBuffer->GetDiffuseRoughness());
 }
 
 void GL4DeferredPipeline::RenderGBuffer(uint16_t width,
@@ -70,6 +70,7 @@ void GL4DeferredPipeline::RenderGBuffer(uint16_t width,
   m_device->SetDepthWrite(true);
   m_device->SetColorWrite(true, true, true, true);
   m_device->Clear(true, Color4f(0.0f, 0.0f, 0.0f, 0.0f), true, 1.0f, true, 0);
+  m_device->BindMaterial(nullptr, eRP_GBuffer);
   std::vector<GfxMesh *> &meshes = m_collector.GetMeshes(eRenderQueue::Default);
   for (const auto        mesh: meshes)
   {

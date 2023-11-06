@@ -73,7 +73,8 @@ void main()
     light_result_t light = calc_lights(world_position, norm, camera_space_position, viewer_world_position);
     vec3 dielectric = light.diffuse  * diffuse.rgb + light.specular;
     ce_FragColor = vec4(dielectric, color.a);
-
+//    ce_FragColor = vec4(loc_roughness, loc_roughness, loc_roughness, 1.0);
+//    ce_FragColor = vec4(diffuse.rgb, 1.0);
 
 //    ce_FragColor =  vec4(frag_light * diffuse, 1.0);
     //    ce_FragColor = vec4(frag_light, 1.0) * ce_Color;// * texColor;

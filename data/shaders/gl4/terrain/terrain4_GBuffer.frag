@@ -56,7 +56,7 @@ void main()
 
 
     ce_FragDiffuseRoughness = vec4(diffuse, loc_roughness);
-
+//    ce_FragDiffuseRoughness = vec4(loc_roughness, loc_roughness, loc_roughness, 1.0);
     ce_FragEmission = vec4(0.0, 0.0, 0.0, 0.0);
 }
 

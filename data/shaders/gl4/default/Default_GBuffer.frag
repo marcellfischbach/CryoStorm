@@ -20,9 +20,7 @@ void main()
 {
     //
     // Generate diffuse roughness
-    float roughness = texture(ce_RoughnessMap, texCoord * 3).r;
-    roughness = roughness * ce_Roughness;
-
+    float roughness = texture(ce_RoughnessMap, texCoord * 3).r * ce_Roughness;
     vec4 color = texture(ce_Diffuse, texCoord * 3) * ce_Color;
     ce_FragDiffuseRoughness = vec4(color.rgb, roughness);
 
@@ -43,7 +41,6 @@ void main()
     //
     // Generate emission
     ce_FragEmission = vec4(0, 0, 0, 0);
-
 
 
 }
