@@ -27,5 +27,5 @@ float cook_torrance(float F0, float n_dot_l, float n_dot_v, float n_dot_h, float
 		Rs = (F * D * G) / (3.14159265 * n_dot_l * n_dot_v);
 	}
 	float k = 0.0;
-	return n_dot_l * (k + Rs * (1.0 - k));
+	return clamp(n_dot_l * (k + Rs * (1.0 - k)), 0.0, 1.0);
 }

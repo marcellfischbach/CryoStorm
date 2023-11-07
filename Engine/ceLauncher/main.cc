@@ -583,7 +583,7 @@ void generate_test_grid(ce::World *world, ce::iMaterial *material)
 
       float rnd = (float) rand() / (float) RAND_MAX;
       int   ma  = a % 4;
-//      ma =  4;
+      ma =  5;
       switch (ma)
       {
         case 0:
@@ -773,7 +773,7 @@ int main(int argc, char **argv)
   sunLightState = new ce::LightState("SunLight");
   sunEntity->Attach(sunLightState);
   sunLightState->SetType(ce::eLT_Directional);
-  sunLightState->SetColor(ce::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 0.2);
+  sunLightState->SetColor(ce::Color4f(1.0f, 0.0f, 1.0f, 1.0f) * 0.25);
   sunLightState->SetShadowMapBias(0.003f);
   sunLightState->SetStatic(true);
   sunLightState->SetCastShadow(false);
@@ -782,10 +782,9 @@ int main(int argc, char **argv)
                                            .SetRotation(
                                                ce::Quaternion::FromAxisAngle(ce::Vector3f(1.0f, 0.2f, 0.0f)
                                                                                  .Normalize(),
-                                                                             ce::ceDeg2Rad(-45.0f)))
+                                                                             ce::ceDeg2Rad(45.0f)))
   );
-
-//  world->Attach(sunEntity);
+  world->Attach(sunEntity);
 
   ce::Entity      *cameraEntity = new ce::Entity("Camera");
   ce::CameraState *cameraState  = new ce::CameraState();
@@ -1047,12 +1046,12 @@ int main(int argc, char **argv)
       }
 
 
-      sunLightState->SetTransform(sunLightState->GetTransform()
-                                               .SetTranslation(ce::Vector3f(sin(sunRotation) * 20.0f,
-                                                                            20.0f,
-                                                                            cos(sunRotation) * 20.0f))
-                                               .LookAt(ce::Vector3f(0.0f, 0.0f, 0.0f), ce::Vector3f(0.0f, 1.0f, 0.0f))
-      );
+//      sunLightState->SetTransform(sunLightState->GetTransform()
+//                                               .SetTranslation(ce::Vector3f(sin(sunRotation) * 20.0f,
+//                                                                            20.0f,
+//                                                                            cos(sunRotation) * 20.0f))
+//                                               .LookAt(ce::Vector3f(0.0f, 0.0f, 0.0f), ce::Vector3f(0.0f, 1.0f, 0.0f))
+//      );
 
 //      spatialState->SetTransform(spatialState->GetTransform()
 //          .SetTranslation(ce::Vector3f(5.0f, 1.1f, 5.0f) + ce::Vector3f(sin(lightnRotation) * 1.5, 0.0f, cos(lightnRotation) * 0.5f)));
@@ -1085,6 +1084,21 @@ int main(int argc, char **argv)
         pipeline = forwardPipeline;
       }
       frameRenderer->SetRenderPipeline(pipeline);
+    }
+
+    if (ce::Input::IsKeyPressed(ce::Key::eK_M))
+    {
+      if (pipeline == deferredPipeline)
+      {
+        if (ce::Input::IsKeyDown(ce::Key::eK_LeftShift))
+        {
+          deferredPipeline->DecRenderMode();
+        }
+        else
+        {
+          deferredPipeline->IncRenderMode();
+        }
+      }
     }
 
     frameRenderer->Render(renderTarget, device, world->GetScene());

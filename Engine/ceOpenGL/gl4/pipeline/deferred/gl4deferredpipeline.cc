@@ -22,6 +22,7 @@ GL4DeferredPipeline::GL4DeferredPipeline()
     , m_gBuffer(new GBuffer())
     , m_intermediate(nullptr)
     , m_directionalLightRenderer(new GL4DeferredDirectionalLightRenderer())
+    , m_renderMode(0)
 {
   CE_CLASS_GEN_CONSTR;
 }
@@ -51,9 +52,22 @@ void GL4DeferredPipeline::Render(iRenderTarget2D *target, const GfxCamera *camer
   device->SetColorWrite(true, true, true, true);
   device->SetBlending(false);
   device->Clear(true, Color4f(0.0f, 0.0f, 0.0f, 0.0f), false, 1.0f, true, 0);
-  RenderLights();
 
-//  device->RenderFullscreen(m_gBuffer->GetDiffuseRoughness());
+  switch (m_renderMode) {
+    case 0:
+      RenderLights();
+      break;
+    case 2:
+      device->RenderFullscreen(m_gBuffer->GetDiffuseRoughness());
+      break;
+    case 1:
+      device->RenderFullscreen(m_gBuffer->GetNormal());
+      break;
+    case 3:
+      device->RenderFullscreen(m_gBuffer->GetDepth());
+      break;
+
+  }
 }
 
 void GL4DeferredPipeline::RenderGBuffer(uint16_t width,

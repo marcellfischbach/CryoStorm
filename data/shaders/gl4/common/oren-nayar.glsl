@@ -12,7 +12,7 @@ float oren_nayar (float n_dot_l, float n_dot_v, float roughness)
     float A = 1.0 - 0.5 * roughness2 / (roughness2 + 0.33);
     float B = 0.45 *      roughness2 / (roughness2 + 0.09);
     float C = sin(alpha) * tan(beta);
-    return n_dot_l * (A + (B * max(0.0, gamma) * C));
+    return clamp(n_dot_l * (A + (B * max(0.0, gamma) * C)), 0.0, 1.0);
 }
 
 

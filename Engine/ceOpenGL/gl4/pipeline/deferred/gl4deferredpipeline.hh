@@ -32,12 +32,21 @@ public:
 
   void Render(iRenderTarget2D *target, const GfxCamera *camera, iDevice *device, iGfxScene *scene) override;
 
+  void SetRenderMode(int mode)
+  { m_renderMode = mode; }
+  int GetRenderMode() const
+  { return m_renderMode; }
+
+  void IncRenderMode()
+  { m_renderMode = m_renderMode == 3 ? 0 : m_renderMode + 1; }
+  void DecRenderMode()
+  { m_renderMode = m_renderMode == 0 ? 3 : m_renderMode - 1; }
 
 private:
 
   void RenderGBuffer(uint16_t width, uint16_t height);
-  void RenderLights ();
-  void RenderDirectionalLight (const iDirectionalLight* directionalLight);
+  void RenderLights();
+  void RenderDirectionalLight(const iDirectionalLight *directionalLight);
 
 
   void SetupVariables(iRenderTarget2D *target, const GfxCamera *camera, iDevice *device, iGfxScene *scene);
@@ -60,7 +69,8 @@ private:
   std::vector<GfxMesh *> m_transparentMeshes;
   std::vector<GfxMesh *> m_unshadedMeshes;
 
-  GL4DeferredDirectionalLightRenderer* m_directionalLightRenderer;
+  GL4DeferredDirectionalLightRenderer *m_directionalLightRenderer;
+  int m_renderMode;
 };
 
 
