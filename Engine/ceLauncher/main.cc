@@ -195,13 +195,17 @@ bool initialize_modules(int argc, char **argv)
   ce::Vector2i res      = settings.GetVector2i("resolution");
   ce::Vector2i pos      = settings.GetVector2i("pos");
   std::string  viewMode = settings.GetText("viewmode", "windowed");
-  if (viewMode == "viewMode")
+  if (viewMode == "fullscreen")
   {
     flags |= SDL_WINDOW_FULLSCREEN;
   }
   else if (viewMode == "desktop")
   {
     flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+  }
+  else if (viewMode == "windowed")
+  {
+    flags |= SDL_WINDOW_BORDERLESS;
   }
   else if (viewMode != "windowed")
   {
@@ -563,9 +567,9 @@ void generate_test_grid(ce::World *world, ce::iMaterial *material)
   mesh->AddMaterialSlot("Default", material);
   mesh->AddSubMesh(sphere, 0);
 
-  for (int a = 0, i = 0; i < 1; i++)
+  for (int a = 0, i = 0; i < 100; i++)
   {
-    for (int j = 0; j < 1; j++, a++)
+    for (int j = 0; j < 100; j++, a++)
     {
       ce::Entity
           *entity = new ce::Entity(std::string("Sphere: ") + std::to_string(i + 1) + ":" + std::to_string(j + 1));

@@ -33,6 +33,7 @@ private:
   static iTexture2D *LoadTexture2D(const CrimsonFileElement *textureElement, const ResourceLocator & locator);
   static iTexture2DArray *LoadTexture2DArray(const CrimsonFileElement *textureElement, const ResourceLocator & locator);
   static iTextureCube *LoadTextureCube(const CrimsonFileElement *textureElement, const ResourceLocator & locator);
+  static void ColorCorrection(const CrimsonFileElement *textureElement, Image* image);
 
   static Image *LoadImage (const CrimsonFileElement *imageElement, const ResourceLocator & locator);
   static iSampler *LoadSampler(const CrimsonFileElement *samplerElement, const ResourceLocator & locator);

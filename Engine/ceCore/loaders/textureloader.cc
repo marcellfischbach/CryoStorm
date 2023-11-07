@@ -52,7 +52,11 @@ iTexture2D *TextureLoader::LoadTexture2D(const CrimsonFileElement *textureElemen
     return nullptr;
   }
 
+  ColorCorrection(textureElement, image);
+
   iSampler *sampler = LoadSampler(textureElement->GetChild("sampler"), locator);
+
+
 
   iTexture2D::Descriptor desc = {};
   desc.Format = GetPixelFormatFrom(image);
@@ -99,6 +103,33 @@ Image* TextureLoader::LoadImage(const CrimsonFileElement *imageElement, const Re
 
   return AssetManager::Get()->Get<Image>(ResourceLocator(locator, imageName));
 }
+
+void TextureLoader::ColorCorrection(const CrimsonFileElement * textureElement, Image *image)
+{
+  const CrimsonFileElement *element = textureElement->GetChild("colorCorrection");
+  if (!element)
+  {
+    return;
+  }
+
+  Image::eColorCorrection correction = Image::eColorCorrection::eCC_Plain;
+  const std::string &correctionString = element->GetAttribute(0, "Plain");
+  if (correctionString == "Normalize")
+  {
+    correction = Image::eColorCorrection::eCC_Normalize;
+  }
+  else if (correctionString == "Clamp3")
+  {
+    correction = Image::eColorCorrection::eCC_Clamp3;
+  }
+  else if (correctionString == "Clamp4")
+  {
+    correction = Image::eColorCorrection::eCC_Clamp4;
+  }
+
+  image->ColorCorrection(correction);
+}
+
 
 iSampler *TextureLoader::LoadSampler(const CrimsonFileElement *samplerElement, const ResourceLocator & locator)
 {

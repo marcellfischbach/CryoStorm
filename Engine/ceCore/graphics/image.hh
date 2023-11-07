@@ -24,7 +24,17 @@ public:
     eMMP_Linear4x4,
     eMMP_Normal
   };
+
+  enum class eColorCorrection
+  {
+    eCC_Plain,
+    eCC_Clamp3,
+    eCC_Clamp4,
+    eCC_Normalize
+  };
+
   void GenerateMipMaps(eMipMapProcedure procedure);
+  void ColorCorrection(eColorCorrection correctionMode);
 
   void Copy(uint16_t layer, const uint8_t* buffer);
   
@@ -37,6 +47,10 @@ public:
 
 
 private:
+  void ColorCorrectionNormalize();
+  void ColorCorrectionClamp3();
+  void ColorCorrectionClamp4();
+
   void GenerateLayers(uint16_t width, uint16_t height);
   void GenerateMipMapLayers();
   void GenerateLayer(uint16_t layer);

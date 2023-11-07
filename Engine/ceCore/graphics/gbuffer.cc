@@ -93,14 +93,18 @@ void GBuffer::UpdateSamplers(ce::iDevice *device)
   }
 
   m_diffuseRoughnessSampler = device->CreateSampler();
+  m_diffuseRoughnessSampler->SetFilterMode(eFilterMode::eFM_MinMagNearest);
 
   m_depthSampler = device->CreateSampler();
+  m_depthSampler->SetFilterMode(eFilterMode::eFM_MinMagNearest);
   m_depthSampler->SetTextureCompareMode(eTextureCompareMode::eTCM_None);
   m_depthSampler->SetTextureCompareFunc(eCompareFunc::eCF_Always);
 
   m_normalSampler = device->CreateSampler();
+  m_normalSampler->SetFilterMode(eFilterMode::eFM_MinMagNearest);
 
   m_emissionMetallicSampler = device->CreateSampler();
+  m_emissionMetallicSampler->SetFilterMode(eFilterMode::eFM_MinMagNearest);
 }
 
 iTexture2D *GBuffer::GetDiffuseRoughness() const
