@@ -1,5 +1,6 @@
 #include <ceOpenGL/gl4/pipeline/deferred/gl4deferredpipeline.hh>
-#include <ceOpenGL/gl4/pipeline/deferred/gl4deferreddirectionallightrenderer.hh>
+#include <ceOpenGL/gl4/gl4directionallight.hh>
+#include <ceCore/settings.hh>
 #include <ceCore/math/iclipper.hh>
 #include <ceCore/math/clipper/cameraclipper.hh>
 #include <ceCore/graphics/camera.hh>
@@ -21,7 +22,6 @@ GL4DeferredPipeline::GL4DeferredPipeline()
     : iRenderPipeline()
     , m_gBuffer(new GBuffer())
     , m_intermediate(nullptr)
-    , m_directionalLightRenderer(new GL4DeferredDirectionalLightRenderer())
     , m_renderMode(0)
 {
   CE_CLASS_GEN_CONSTR;
@@ -35,7 +35,9 @@ GL4DeferredPipeline::~GL4DeferredPipeline()
 
 void GL4DeferredPipeline::Initialize()
 {
-  m_directionalLightRenderer->Initialize();
+  Settings settings(ResourceLocator("file:///config/graphics.config"));
+
+  m_directionalLightRenderer.Initialize(settings);
 }
 
 
@@ -53,7 +55,8 @@ void GL4DeferredPipeline::Render(iRenderTarget2D *target, const GfxCamera *camer
   device->SetBlending(false);
   device->Clear(true, Color4f(0.0f, 0.0f, 0.0f, 0.0f), false, 1.0f, true, 0);
 
-  switch (m_renderMode) {
+  switch (m_renderMode)
+  {
     case 0:
       RenderLights();
       break;
@@ -100,17 +103,19 @@ void GL4DeferredPipeline::RenderLights()
   m_scene->ScanLights(&clppr, ~0x00, [this](GfxLight *light) {
     switch (light->GetLight()->GetType())
     {
-      case eLT_Directional:RenderDirectionalLight((const iDirectionalLight *) light->GetLight());
+      case eLT_Directional:
+        RenderDirectionalLight(ce::QueryClass <GL4DirectionalLight>(light->GetLight()));
         break;
-      default:break;
+      default:
+        break;
     }
     return true;
   });
 }
 
-void GL4DeferredPipeline::RenderDirectionalLight(const ce::iDirectionalLight *directionalLight)
+void GL4DeferredPipeline::RenderDirectionalLight(const GL4DirectionalLight *directionalLight)
 {
-  m_directionalLightRenderer->Render(m_device, m_camera, m_projector, m_gBuffer, directionalLight, m_target);
+  m_directionalLightRenderer.Render(m_camera, m_projector, m_gBuffer, directionalLight, m_target);
 }
 
 void GL4DeferredPipeline::SetupVariables(iRenderTarget2D *target,
@@ -130,8 +135,8 @@ void GL4DeferredPipeline::SetupVariables(iRenderTarget2D *target,
 //  m_pointLightRenderer.SetDevice(device);
 //  m_pointLightRenderer.SetScene(scene);
 //  m_pointLightRenderer.Clear();
-//  m_directionalLightRenderer.SetDevice(device);
-//  m_directionalLightRenderer.SetScene(scene);
+  m_directionalLightRenderer.SetDevice(device);
+  m_directionalLightRenderer.SetScene(scene);
 //  m_directionalLightRenderer.Clear();
 
 }

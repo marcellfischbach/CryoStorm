@@ -140,4 +140,24 @@ float Projector::GetFar() const
   return m_far;
 }
 
+float Projector::GetLeft() const
+{
+  return m_left;
+}
+
+float Projector::GetRight() const
+{
+  return m_right;
+}
+
+float Projector::GetBottom() const
+{
+  return m_bottom;
+}
+
+float Projector::GetTop() const
+{
+  return m_top;
+}
+
 }

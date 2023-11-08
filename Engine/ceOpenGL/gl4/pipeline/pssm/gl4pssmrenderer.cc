@@ -1,6 +1,3 @@
-//
-// Created by MCEL on 06.11.2023.
-//
 
 #include <ceOpenGL/gl4/pipeline/pssm/gl4pssmrenderer.hh>
 #include <ceOpenGL/gl4/pipeline/forward/gl4forwardmeshsorter.hh>
@@ -24,20 +21,6 @@
 
 namespace ce::opengl
 {
-
-GL4PSSMRenderer::GL4PSSMRenderer()
-    : m_device(nullptr)
-    , m_scene(nullptr)
-    , m_depthBuffer(nullptr)
-    , m_directionalLightShadowMap(nullptr)
-{
-
-}
-
-GL4PSSMRenderer::~GL4PSSMRenderer()
-{
-
-}
 
 
 void GL4PSSMRenderer::Initialize(ce::Settings &settings)
@@ -116,16 +99,21 @@ GL4RenderTarget2D *GL4PSSMRenderer::GetShadowMap()
 }
 
 
-void GL4PSSMRenderer::RenderShadow(GL4DirectionalLight *directionalLight,
+void GL4PSSMRenderer::RenderShadow(const GL4DirectionalLight *directionalLight,
                                    const ce::Camera &camera,
                                    const ce::Projector &projector)
 {
+  printf("RenderShadow: (%.2f %.2f %.2f)\n",
+         directionalLight->GetDirection().x,
+         directionalLight->GetDirection().y,
+         directionalLight->GetDirection().z
+  );
   RenderShadowBuffer(directionalLight, camera, projector);
   RenderShadowMap(directionalLight, camera, projector);
   FilterShadowMap();
 }
 
-void GL4PSSMRenderer::RenderShadowBuffer(GL4DirectionalLight *directionalLight,
+void GL4PSSMRenderer::RenderShadowBuffer(const GL4DirectionalLight *directionalLight,
                                          const ce::Camera &camera,
                                          const ce::Projector &projector)
 {
@@ -281,6 +269,7 @@ void GL4PSSMRenderer::RenderShadowBuffer(GL4DirectionalLight *directionalLight,
   m_device->SetRenderBuffer(0);
   m_device->SetDepthWrite(true);
   m_device->SetDepthTest(true);
+  m_device->SetBlending(false);
   m_device->SetColorWrite(false, false, false, false);
   m_device->Clear(false, Color4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, true, 0);
 
@@ -298,7 +287,7 @@ void GL4PSSMRenderer::RenderShadowBuffer(GL4DirectionalLight *directionalLight,
 
 }
 
-void GL4PSSMRenderer::RenderShadowMap(GL4DirectionalLight *directionalLight,
+void GL4PSSMRenderer::RenderShadowMap(const GL4DirectionalLight *directionalLight,
                                       const ce::Camera &camera,
                                       const ce::Projector &projector)
 {
@@ -308,6 +297,7 @@ void GL4PSSMRenderer::RenderShadowMap(GL4DirectionalLight *directionalLight,
   m_device->SetRenderBuffer(0);
   m_device->SetDepthWrite(true);
   m_device->SetDepthTest(false);
+  m_device->SetBlending(false);
   m_device->SetColorWrite(true, true, true, true);
   m_device->Clear(true, Color4f(0.0, 0.0f, 0.0f, 0.0f), true, 1.0f, true, 0);
 
@@ -358,17 +348,16 @@ GL4RenderTarget2DArray *GL4PSSMRenderer::GetDirectionalLightShadowBuffer()
 {
   if (!m_directionalLightShadowBuffer)
   {
-    iRenderTarget2DArray::Descriptor desc{};
+    iRenderTarget2DArray::Descriptor desc {};
     desc.Width  = (uint16_t) m_directionalLightShadowBufferSize;
     desc.Height = (uint16_t) m_directionalLightShadowBufferSize;
     desc.Layer  = 4;
-    GL4RenderTarget2DArray
-        *shadowRenderTarget = static_cast<GL4RenderTarget2DArray *>(m_device->CreateRenderTarget(desc));
+    auto shadowRenderTarget = QueryClass<GL4RenderTarget2DArray>(m_device->CreateRenderTarget(desc));
 
 
     if (m_shadowSamplingMode == ShadowSamplingMode::VSM)
     {
-      iTexture2DArray::Descriptor colorDesc{};
+      iTexture2DArray::Descriptor colorDesc {};
       colorDesc.Width   = desc.Width;
       colorDesc.Height  = desc.Height;
       colorDesc.Layers  = desc.Layer;
@@ -380,7 +369,7 @@ GL4RenderTarget2DArray *GL4PSSMRenderer::GetDirectionalLightShadowBuffer()
       colorTexture->Release();
     }
 
-    iTexture2DArray::Descriptor depthDesc{};
+    iTexture2DArray::Descriptor depthDesc {};
     depthDesc.Width   = desc.Width;
     depthDesc.Height  = desc.Height;
     depthDesc.Layers  = desc.Layer;
@@ -402,7 +391,7 @@ GL4RenderTarget2DArray *GL4PSSMRenderer::GetDirectionalLightShadowBuffer()
   return m_directionalLightShadowBuffer;
 }
 
-bool GL4PSSMRenderer::IsShadowMapValid(GL4RenderTarget2D *shadowMap)
+bool GL4PSSMRenderer::IsShadowMapValid(GL4RenderTarget2D *shadowMap) const
 {
   return shadowMap
          && shadowMap->GetWidth() == m_directionalLightShadowMapWidth
@@ -430,12 +419,12 @@ GL4RenderTarget2D *GL4PSSMRenderer::GetDirectionalLightShadowMapTemp()
 
 GL4RenderTarget2D *GL4PSSMRenderer::CreateDirectionalLightShadowMap()
 {
-  iRenderTarget2D::Descriptor desc{};
+  iRenderTarget2D::Descriptor desc {};
   desc.Width  = (uint16_t) m_directionalLightShadowMapWidth;
   desc.Height = (uint16_t) m_directionalLightShadowMapHeight;
   auto target = QueryClass<GL4RenderTarget2D>(m_device->CreateRenderTarget(desc));
 
-  iTexture2D::Descriptor colorDesc{};
+  iTexture2D::Descriptor colorDesc {};
   colorDesc.Width   = (uint16_t) m_directionalLightShadowMapWidth;
   colorDesc.Height  = (uint16_t) m_directionalLightShadowMapHeight;
   colorDesc.Format  = ePF_RGB;
@@ -466,11 +455,10 @@ float GL4PSSMRenderer::GetSplitSize(const Vector3f *near, const Vector3f *far)
   *      +-------+
   *     0         2
   */
-  Vector3f tmp;
-  float    dotFar03     = (far[0] - far[3]).Dot();
-  float    dotFar21     = (far[2] - far[1]).Dot();
-  float    dotNearFar03 = (near[0] - far[3]).Dot();
-  float    dotNearFar21 = (near[2] - far[1]).Dot();
+  float dotFar03     = (far[0] - far[3]).Dot();
+  float dotFar21     = (far[2] - far[1]).Dot();
+  float dotNearFar03 = (near[0] - far[3]).Dot();
+  float dotNearFar21 = (near[2] - far[1]).Dot();
 
   //  float dotFar03 = Vector3f::Sub(far[0], far[3], tmp).Dot();
   //  float dotFar21 = Vector3f::Sub(far[2], far[1], tmp).Dot();

@@ -31,8 +31,8 @@ class GL4RenderTarget2D;
 class GL4PSSMRenderer
 {
 public:
-  GL4PSSMRenderer();
-  ~GL4PSSMRenderer();
+  GL4PSSMRenderer() = default;
+  ~GL4PSSMRenderer() = default;
 
   void Initialize(Settings &settings);
 
@@ -43,18 +43,18 @@ public:
   void SetShadowMap (GL4RenderTarget2D *shadowMap);
   GL4RenderTarget2D *GetShadowMap ();
 
-  void RenderShadow(GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector);
+  void RenderShadow(const GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector);
 
-  bool IsShadowMapValid (GL4RenderTarget2D *shadowMap);
+  bool IsShadowMapValid (GL4RenderTarget2D *shadowMap) const;
 private:
-  void RenderShadowBuffer(GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector);
-  void RenderShadowMap(GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector);
+  void RenderShadowBuffer(const GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector);
+  void RenderShadowMap(const GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector);
   void FilterShadowMap();
 
 
   GL4RenderTarget2D *GetDirectionalLightShadowMapTemp();
   GL4RenderTarget2DArray *GetDirectionalLightShadowBuffer();
-  float GetSplitSize(const Vector3f *near, const Vector3f *far);
+  static float GetSplitSize(const Vector3f *near, const Vector3f *far);
   iSampler *GetShadowMapColorSampler();
   iSampler *GetShadowBufferColorSampler();
   iSampler *GetShadowBufferDepthSampler();
@@ -67,13 +67,13 @@ private:
   iTexture2D *m_depthBuffer = nullptr;
 
   GL4RenderTarget2DArray *m_directionalLightShadowBuffer = nullptr;
-  size_t                 m_directionalLightShadowBufferSize;
+  size_t                 m_directionalLightShadowBufferSize = 0;
 
 
   GL4RenderTarget2D *m_directionalLightShadowMapTemp = nullptr;
-  GL4RenderTarget2D *m_directionalLightShadowMap;
-  size_t            m_directionalLightShadowMapWidth;
-  size_t            m_directionalLightShadowMapHeight;
+  GL4RenderTarget2D *m_directionalLightShadowMap = nullptr;
+  size_t            m_directionalLightShadowMapWidth = 0;
+  size_t            m_directionalLightShadowMapHeight = 0;
 
   enum class ShadowSamplingMode
   {

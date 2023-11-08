@@ -12,8 +12,8 @@ uniform mat4 ce_ViewProjectionMatrixInv;
 
 uniform vec3 ce_CameraPosition;
 uniform vec4 ce_LightColor;
+uniform vec4 ce_LightAmbientColor;
 uniform vec3 ce_NegLightDirection;
-
 
 in vec2 texCoord;
 

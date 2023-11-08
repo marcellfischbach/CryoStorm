@@ -26,12 +26,17 @@ public:
   void UpdateOrtho(float left, float right, float bottom, float top, float near, float far);
 
   void GetPoints(float depth, Vector3f* out) const;
+  CE_NODISCARD float GetLeft () const;
+  CE_NODISCARD float GetRight () const;
+  CE_NODISCARD float GetBottom () const;
+  CE_NODISCARD float GetTop () const;
   CE_NODISCARD float GetNear() const;
   CE_NODISCARD float GetFar() const;
 
   void Bind(iDevice* device) const;
   Matrix4f GetProjectionMatrix(iDevice *device) const;
   Matrix4f GetProjectionMatrixInv(iDevice *device) const;
+
 
 private:
 

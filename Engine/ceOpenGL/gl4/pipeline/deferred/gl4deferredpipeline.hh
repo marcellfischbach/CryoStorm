@@ -2,6 +2,7 @@
 #pragma once
 
 #include <ceOpenGL/openglexport.hh>
+#include <ceOpenGL/gl4/pipeline/deferred/gl4deferreddirectionallightrenderer.hh>
 #include <ceCore/graphics/irenderpipeline.hh>
 #include <ceCore/graphics/scene/gfxscenecollector.hh>
 
@@ -46,7 +47,7 @@ private:
 
   void RenderGBuffer(uint16_t width, uint16_t height);
   void RenderLights();
-  void RenderDirectionalLight(const iDirectionalLight *directionalLight);
+  void RenderDirectionalLight(const GL4DirectionalLight *directionalLight);
 
 
   void SetupVariables(iRenderTarget2D *target, const GfxCamera *camera, iDevice *device, iGfxScene *scene);
@@ -69,7 +70,7 @@ private:
   std::vector<GfxMesh *> m_transparentMeshes;
   std::vector<GfxMesh *> m_unshadedMeshes;
 
-  GL4DeferredDirectionalLightRenderer *m_directionalLightRenderer;
+  GL4DeferredDirectionalLightRenderer m_directionalLightRenderer;
   int m_renderMode;
 };
 
