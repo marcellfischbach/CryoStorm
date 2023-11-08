@@ -30,14 +30,32 @@ public:
               iRenderTarget2D *target);
 
 private:
-  iShader          *m_shader                     = nullptr;
-  iShaderAttribute *m_attrDiffuseRoughness       = nullptr;
-  iShaderAttribute *m_attrNormal                 = nullptr;
-  iShaderAttribute *m_attrDepth                  = nullptr;
-  iShaderAttribute *m_attrLightColor             = nullptr;
-  iShaderAttribute *m_attrLightAmbientColor      = nullptr;
-  iShaderAttribute *m_attrLightNegLightDirection = nullptr;
-  iShaderAttribute *m_attrCameraPosition         = nullptr;
+  //
+  struct
+  {
+    iShader          *m_shader                     = nullptr;
+    iShaderAttribute *m_attrDiffuseRoughness       = nullptr;
+    iShaderAttribute *m_attrNormal                 = nullptr;
+    iShaderAttribute *m_attrDepth                  = nullptr;
+    iShaderAttribute *m_attrLightColor             = nullptr;
+    iShaderAttribute *m_attrLightAmbientColor      = nullptr;
+    iShaderAttribute *m_attrLightNegLightDirection = nullptr;
+    iShaderAttribute *m_attrCameraPosition         = nullptr;
+  } m_nonShadow;
+
+  struct
+  {
+    iShader          *m_shader                     = nullptr;
+    iShaderAttribute *m_attrDiffuseRoughness       = nullptr;
+    iShaderAttribute *m_attrNormal                 = nullptr;
+    iShaderAttribute *m_attrDepth                  = nullptr;
+    iShaderAttribute *m_attrShadowMap              = nullptr;
+    iShaderAttribute *m_attrLightColor             = nullptr;
+    iShaderAttribute *m_attrLightAmbientColor      = nullptr;
+    iShaderAttribute *m_attrLightNegLightDirection = nullptr;
+    iShaderAttribute *m_attrCameraPosition         = nullptr;
+  } m_shadow;
+
 };
 
 }

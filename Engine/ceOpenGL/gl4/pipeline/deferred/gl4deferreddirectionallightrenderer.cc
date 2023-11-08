@@ -19,20 +19,34 @@ GL4DeferredDirectionalLightRenderer::GL4DeferredDirectionalLightRenderer()
 
 bool GL4DeferredDirectionalLightRenderer::Initialize()
 {
-  m_shader = AssetManager::Get()->Get<iShader>(
+  m_nonShadow.m_shader = AssetManager::Get()->Get<iShader>(
       ResourceLocator("file://${engine}/opengl/gl4/deferred/directional_light_deferred_no_shadow.shader"));
-  if (!m_shader)
+  if (m_nonShadow.m_shader)
   {
-    return false;
+
+    m_nonShadow.m_attrDiffuseRoughness       = m_nonShadow.m_shader->GetShaderAttribute("DiffuseRoughness");
+    m_nonShadow.m_attrNormal                 = m_nonShadow.m_shader->GetShaderAttribute("Normal");
+    m_nonShadow.m_attrDepth                  = m_nonShadow.m_shader->GetShaderAttribute("Depth");
+    m_nonShadow.m_attrLightColor             = m_nonShadow.m_shader->GetShaderAttribute("LightColor");
+    m_nonShadow.m_attrLightAmbientColor      = m_nonShadow.m_shader->GetShaderAttribute("LightAmbientColor");
+    m_nonShadow.m_attrLightNegLightDirection = m_nonShadow.m_shader->GetShaderAttribute("NegLightDirection");
+    m_nonShadow.m_attrCameraPosition         = m_nonShadow.m_shader->GetShaderAttribute("CameraPosition");
   }
 
-  m_attrDiffuseRoughness       = m_shader->GetShaderAttribute("DiffuseRoughness");
-  m_attrDepth                  = m_shader->GetShaderAttribute("Depth");
-  m_attrNormal                 = m_shader->GetShaderAttribute("Normal");
-  m_attrLightColor             = m_shader->GetShaderAttribute("LightColor");
-  m_attrLightAmbientColor      = m_shader->GetShaderAttribute("LightAmbientColor");
-  m_attrLightNegLightDirection = m_shader->GetShaderAttribute("NegLightDirection");
-  m_attrCameraPosition         = m_shader->GetShaderAttribute("CameraPosition");
+  m_shadow.m_shader = AssetManager::Get()->Get<iShader>(
+      ResourceLocator("file://${engine}/opengl/gl4/deferred/directional_light_deferred_shadow.shader"));
+  if (m_shadow.m_shader)
+  {
+
+    m_shadow.m_attrDiffuseRoughness       = m_shadow.m_shader->GetShaderAttribute("DiffuseRoughness");
+    m_shadow.m_attrNormal                 = m_shadow.m_shader->GetShaderAttribute("Normal");
+    m_shadow.m_attrDepth                  = m_shadow.m_shader->GetShaderAttribute("Depth");
+    m_shadow.m_attrShadowMap              = m_shadow.m_shader->GetShaderAttribute("ShadowMap");
+    m_shadow.m_attrLightColor             = m_shadow.m_shader->GetShaderAttribute("LightColor");
+    m_shadow.m_attrLightAmbientColor      = m_shadow.m_shader->GetShaderAttribute("LightAmbientColor");
+    m_shadow.m_attrLightNegLightDirection = m_shadow.m_shader->GetShaderAttribute("NegLightDirection");
+    m_shadow.m_attrCameraPosition         = m_shadow.m_shader->GetShaderAttribute("CameraPosition");
+  }
 
   return true;
 }

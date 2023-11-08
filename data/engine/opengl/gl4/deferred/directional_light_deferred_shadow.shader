@@ -8,7 +8,8 @@ program {
         attribute LightColor,
         attribute NegLightDirection,
         attribute DiffuseRoughness,
-        attribute Depth,
         attribute Normal,
+        attribute Depth,
+        attribute ShadowMap,
     }
 }

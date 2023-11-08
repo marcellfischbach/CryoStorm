@@ -52,21 +52,25 @@ void main ()
 
     vec3 to_viewer = normalize(ce_CameraPosition - worldPosition.xyz);
 
+    vec3 light_dir = normalize(ce_NegLightDirection.xyz);
 
-    vec3 H = normalize(ce_NegLightDirection.xyz + to_viewer);
-    float n_dot_l = dot (normal, ce_NegLightDirection);
-    float n_dot_v = dot (normal, to_viewer);
-    float n_dot_h = dot(normal, H);
-    float h_dot_l = dot(H, ce_NegLightDirection);
-    float lambert = clamp (n_dot_l, 0.0, 1.0);
+    vec3 H = normalize(light_dir + to_viewer);
+    float n_dot_l = clamp(dot (normal, light_dir), 0, 1);
+    float n_dot_v = clamp(dot (normal, to_viewer), 0, 1);
+    float n_dot_h = clamp(dot(normal, H), 0, 1);
+    float h_dot_l = clamp(dot(H, light_dir), 0, 1);
     float specular = cook_torrance(0.8, n_dot_l, n_dot_v, n_dot_h, h_dot_l, diffuseRoughness.a);
     float diffuse = oren_nayar(n_dot_l, n_dot_v, diffuseRoughness.a);
-
-
-    vec3 color = diffuseRoughness.xyz;
+    vec3 color = diffuseRoughness.rgb;
     float shadow = texture(ce_ShadowMap, texCoord).r;
 
 
-    ce_FragColor = vec4(color * diffuse * ce_LightColor.rgb * shadow + specular, 1.0);
+
+    ce_FragColor = vec4(
+        color * diffuse * shadow * ce_LightColor.rgb +
+        specular * shadow * ce_LightColor.rgb +
+        ce_LightAmbientColor.rgb,
+        1.0);
+
 
 }

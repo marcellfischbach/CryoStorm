@@ -10,7 +10,6 @@ program {
         attribute NegLightDirection,
         attribute DiffuseRoughness,
         attribute Depth,
-        attribute Normal,
-        attribute ShadowMap,
+        attribute Normal
     }
 }
