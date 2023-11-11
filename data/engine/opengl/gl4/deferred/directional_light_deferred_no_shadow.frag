@@ -17,8 +17,9 @@ in vec2 texCoord;
 
 in vec2 ndc;
 
-#include<../../../../shaders/gl4/common/cook-torrance.glsl>
-#include<../../../../shaders/gl4/common/oren-nayar.glsl>
+
+#include</${shaders}/common/cook-torrance.glsl>
+#include</${shaders}/common/oren-nayar.glsl>
 
 
 void main ()

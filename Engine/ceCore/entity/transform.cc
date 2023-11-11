@@ -7,13 +7,10 @@ namespace ce
 
 
 Transform::Transform(SpatialState *state, const Matrix4f &matrix, const Matrix4f &parentMatrix)
-    : m_state(state),
-      m_matrix(matrix),
-      m_translation(0.0f, 0.0f, 0.0f),
-      m_rotation(0.0f, 0.0f, 0.0f, 1.0f),
-      m_scale(1.0f, 1.0f, 1.0f),
-      m_dirty(true),
-      m_parentMatrix(parentMatrix)
+    : m_state(state), m_matrix(matrix), m_translation(0.0f, 0.0f, 0.0f), m_rotation(0.0f, 0.0f, 0.0f, 1.0f), m_scale(
+    1.0f,
+    1.0f,
+    1.0f), m_dirty(true), m_parentMatrix(parentMatrix)
 {
   ExtractTRS();
 }
@@ -36,6 +33,15 @@ Transform &Transform::SetTranslation(const Vector3f &translation)
 {
   m_translation = translation;
   m_dirty       = true;
+  return *this;
+}
+
+Transform &Transform::SetTranslation(float x, float y, float z)
+{
+  m_translation.x = x;
+  m_translation.y = y;
+  m_translation.z = z;
+  m_dirty = true;
   return *this;
 }
 

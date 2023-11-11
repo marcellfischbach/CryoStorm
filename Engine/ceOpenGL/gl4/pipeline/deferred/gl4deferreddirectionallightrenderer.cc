@@ -14,11 +14,6 @@
 namespace ce::opengl
 {
 
-GL4DeferredDirectionalLightRenderer::GL4DeferredDirectionalLightRenderer()
-    : m_shadowMap(nullptr)
-{
-
-}
 
 bool GL4DeferredDirectionalLightRenderer::Initialize(Settings &settings)
 {

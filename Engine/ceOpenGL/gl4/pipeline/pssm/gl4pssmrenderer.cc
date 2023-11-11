@@ -103,11 +103,7 @@ void GL4PSSMRenderer::RenderShadow(const GL4DirectionalLight *directionalLight,
                                    const ce::Camera &camera,
                                    const ce::Projector &projector)
 {
-  printf("RenderShadow: (%.2f %.2f %.2f)\n",
-         directionalLight->GetDirection().x,
-         directionalLight->GetDirection().y,
-         directionalLight->GetDirection().z
-  );
+
   RenderShadowBuffer(directionalLight, camera, projector);
   RenderShadowMap(directionalLight, camera, projector);
   FilterShadowMap();

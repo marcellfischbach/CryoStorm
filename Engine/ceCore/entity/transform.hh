@@ -19,6 +19,7 @@ public:
             );
 
   Transform &SetTranslation(const Vector3f &translation);
+  Transform &SetTranslation(float x, float y, float z);
   const Vector3f &GetTranslation() const;
 
   Transform& SetRotation(const Quaternion &rotation);

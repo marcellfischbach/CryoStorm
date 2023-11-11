@@ -39,11 +39,11 @@ light_result_t calc_light(int idx, vec3 light_ambient, vec3 light_color, vec4 li
     if (light_vector.w == 1.0)
     {
         vec3 frag_to_light = light_vector.xyz - frag_position;
-        vec3 H = normalize(frag_to_light + frag_to_viewer);
 
         float distance = length(frag_to_light);
         frag_to_light /= distance;
 
+        vec3 H = normalize(frag_to_light + frag_to_viewer);
         float n_dot_l = clamp(dot(frag_normal, frag_to_light), 0.0, 1.0);
         float n_dot_h = clamp(dot(frag_normal, H), 0.0, 1.0);
         float h_dot_l = clamp(dot(H, frag_to_light), 0.0, 1.0);
@@ -54,7 +54,7 @@ light_result_t calc_light(int idx, vec3 light_ambient, vec3 light_color, vec4 li
         diffuse = lighting_result.diffuse;
         specular = lighting_result.specular;
 
-        attenuation = max(1.0 - distance / light_range, 0.0);
+        attenuation = clamp(1.0 - distance / light_range, 0.0, 1.0);
 
     }
     else

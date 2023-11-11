@@ -19,6 +19,7 @@
 #include <ceCore/entity/world.hh>
 #include <ceCore/input/input.hh>
 #include <ceCore/math/math.hh>
+#include <ceCore/math/color4f.hh>
 #include <ceCore/objectregistry.hh>
 #include <ceCore/graphics/camera.hh>
 #include <ceCore/graphics/idevice.hh>
@@ -73,17 +74,23 @@ void UpdateEvents()
   {
     switch (evt.type)
     {
-      case SDL_KEYDOWN:keyboard.Update(evt.key.keysym.scancode, true);
+      case SDL_KEYDOWN:
+        keyboard.Update(evt.key.keysym.scancode, true);
         break;
-      case SDL_KEYUP:keyboard.Update(evt.key.keysym.scancode, false);
+      case SDL_KEYUP:
+        keyboard.Update(evt.key.keysym.scancode, false);
         break;
-      case SDL_MOUSEBUTTONDOWN:mouse.Update(evt.button.button, true);
+      case SDL_MOUSEBUTTONDOWN:
+        mouse.Update(evt.button.button, true);
         break;
-      case SDL_MOUSEBUTTONUP:mouse.Update(evt.button.button, false);
+      case SDL_MOUSEBUTTONUP:
+        mouse.Update(evt.button.button, false);
         break;
-      case SDL_MOUSEWHEEL:mouse.Update(evt.wheel.y, evt.wheel.x);
+      case SDL_MOUSEWHEEL:
+        mouse.Update(evt.wheel.y, evt.wheel.x);
         break;
-      case SDL_MOUSEMOTION:mouse.Update(evt.motion.x, evt.motion.y, evt.motion.xrel, evt.motion.yrel);
+      case SDL_MOUSEMOTION:
+        mouse.Update(evt.motion.x, evt.motion.y, evt.motion.xrel, evt.motion.yrel);
         break;
 
     }
@@ -110,7 +117,7 @@ std::vector<std::string> split(const std::string &string)
 
 std::string merge(const std::vector<std::string> &lines)
 {
-  std::string res;
+  std::string            res;
   for (const std::string &str: lines)
   {
     res += str + "\n";
@@ -282,7 +289,7 @@ ce::iRenderMesh *create_plane_mesh(float size, float nx, float ny)
 {
   //
   // create a render mesh
-  ce::iRenderMeshGenerator *generator = ce::ObjectRegistry::Get<ce::iRenderMeshGeneratorFactory>()->Create();
+  ce::iRenderMeshGenerator  *generator = ce::ObjectRegistry::Get<ce::iRenderMeshGeneratorFactory>()->Create();
   std::vector<ce::Vector3f> positions;
   positions.push_back(ce::Vector3f(-size, 0.0f, -size));
   positions.push_back(ce::Vector3f(-size, 0.0f, size));
@@ -354,7 +361,7 @@ ce::iTerrainMesh *create_terrain_mesh(float size)
 
 ce::iRenderMesh *create_sphere_mesh(float radius, uint32_t detail, float uv_f)
 {
-  ce::iRenderMeshGenerator *generator = ce::ObjectRegistry::Get<ce::iRenderMeshGeneratorFactory>()->Create();
+  ce::iRenderMeshGenerator  *generator = ce::ObjectRegistry::Get<ce::iRenderMeshGeneratorFactory>()->Create();
   std::vector<ce::Vector3f> positions;
   std::vector<ce::Vector3f> normals;
   std::vector<ce::Vector3f> tangents;
@@ -492,8 +499,8 @@ void create_suzanne_batch(ce::Mesh *suzanneMesh,
 
   ce::iRenderMesh *batchedRM = generator->Generate();
 
-  ce::Mesh *suzyMesh = new ce::Mesh();
-  for (size_t i = 0; i < suzanneMesh->GetNumberOfMaterialSlots(); i++)
+  ce::Mesh    *suzyMesh = new ce::Mesh();
+  for (size_t i         = 0; i < suzanneMesh->GetNumberOfMaterialSlots(); i++)
   {
     suzyMesh->AddMaterialSlot(suzanneMesh->GetMaterialSlot(i).GetName(),
                               suzanneMesh->GetMaterialSlot(i).GetDefaultMaterial());
@@ -566,24 +573,25 @@ void generate_test_grid(ce::World *world, ce::iMaterial *material)
   ce::Mesh        *mesh   = new ce::Mesh();
   mesh->AddMaterialSlot("Default", material);
   mesh->AddSubMesh(sphere, 0);
+  int gridSize = 100;
 
-  for (int a = 0, i = 0; i < 100; i++)
+  for (int a = 0, i = 0; i < gridSize; i++)
   {
-    for (int j = 0; j < 100; j++, a++)
+    for (int j = 0; j < gridSize; j++, a++)
     {
       ce::Entity
           *entity = new ce::Entity(std::string("Sphere: ") + std::to_string(i + 1) + ":" + std::to_string(j + 1));
 
       ce::StaticMeshState *meshStateSphere = new ce::StaticMeshState("Mesh");
       meshStateSphere->GetTransform()
-                     .SetTranslation(ce::Vector3f(i - 50, 0.25f, j - 50))
+                     .SetTranslation(i - 50, 0.25f, j - 50)
                      .Finish();
       meshStateSphere->SetMesh(mesh);
       entity->Attach(meshStateSphere);
 
       float rnd = (float) rand() / (float) RAND_MAX;
       int   ma  = a % 4;
-      ma =  5;
+      ma = 5;
       switch (ma)
       {
         case 0:
@@ -611,7 +619,8 @@ void generate_test_grid(ce::World *world, ce::iMaterial *material)
           entity->Attach(testHandler04);
         }
           break;
-        default:break;
+        default:
+          break;
       }
 
 
@@ -625,6 +634,23 @@ void generate_test_grid(ce::World *world, ce::iMaterial *material)
 #include <sstream>
 #include <ceOpenGL/gl4/pipeline/forward/gl4forwardpipeline.hh>
 #include <ceOpenGL/gl4/pipeline/deferred/gl4deferredpipeline.hh>
+
+
+void add_point_light(ce::World *world, const ce::Vector3f &position, float range, const ce::Color4f &color)
+{
+  ce::Entity     *pointEntity     = new ce::Entity("Point");
+  ce::LightState *pointLightState = new ce::LightState("PointLight");
+  pointEntity->Attach(pointLightState);
+  pointLightState->SetType(ce::eLT_Point);
+  pointLightState->SetColor(color * 0.5f);
+  pointLightState->SetRange(range);
+  pointLightState->SetShadowMapBias(0.003f);
+  pointLightState->SetStatic(true);
+  pointLightState->SetCastShadow(false);
+  pointLightState->GetTransform().SetTranslation(position).Finish();
+  world->Attach(pointEntity);
+}
+
 
 int main(int argc, char **argv)
 {
@@ -755,10 +781,10 @@ int main(int argc, char **argv)
   ce::LightState *sunLightState = new ce::LightState("SunLight");
   sunEntity->Attach(sunLightState);
   sunLightState->SetType(ce::eLT_Directional);
-  sunLightState->SetColor(ce::Color4f(0.7f, 0.7f, 1.0f, 1.0f) * 1.0);
+  sunLightState->SetColor(ce::Color4f(0.7f, 0.7f, 1.0f, 1.0f) * 0.25);
   sunLightState->SetShadowMapBias(0.003f);
   sunLightState->SetStatic(true);
-  sunLightState->SetCastShadow(true);
+  sunLightState->SetCastShadow(false);
   sunLightState->SetTransform(sunLightState->GetTransform()
                                                //.SetRotation(ce::Quaternion::FromAxisAngle(ce::Vector3f(1.0f, 0.0f, 0.0f), ce::ceDeg2Rad(-45.0f)))
                                            .SetRotation(
@@ -784,7 +810,20 @@ int main(int argc, char **argv)
                                                                                  .Normalize(),
                                                                              ce::ceDeg2Rad(45.0f)))
   );
-  world->Attach(sunEntity);
+//  world->Attach(sunEntity);
+
+
+
+
+  add_point_light(world, ce::Vector3f(0.0f, 10.0f, 0.0f), 25.0f, ce::Color4f(1.0, 1.0f, 1.0f));
+
+//  add_point_light(world, ce::Vector3f(10.0f, 10.0f, 10.0f), 25.0f, ce::Color4f(1.0, 0.0f, 1.0f));
+//  add_point_light(world, ce::Vector3f(0.0f, 10.0f, 10.0f), 25.0f, ce::Color4f(0.5, 0.0f, 1.0f));
+//  add_point_light(world, ce::Vector3f(-10.0f, 10.0f, 10.0f), 25.0f, ce::Color4f(0.0, 0.0f, 1.0f));
+//
+//  add_point_light(world, ce::Vector3f(10.0f, 10.0f, -10.0f), 25.0f, ce::Color4f(1.0, 1.0f, 0.0f));
+//  add_point_light(world, ce::Vector3f(0.0f, 10.0f, -10.0f), 25.0f, ce::Color4f(0.5, 1.0f, 0.0f));
+//  add_point_light(world, ce::Vector3f(-10.0f, 10.0f, -10.0f), 25.0f, ce::Color4f(0.0, 1.0f, 0.0f));
 
   ce::Entity      *cameraEntity = new ce::Entity("Camera");
   ce::CameraState *cameraState  = new ce::CameraState();
@@ -941,8 +980,8 @@ int main(int argc, char **argv)
   device->GetPerspectiveProjection(-1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 1024.0f, proj);
 
   ce::iMaterial *updateMaterial = suzanneMaterial;
-  size_t roughnessIdx = updateMaterial->IndexOf("Roughness");
-  size_t metallicIdx  = updateMaterial->IndexOf("Metallic");
+  size_t        roughnessIdx    = updateMaterial->IndexOf("Roughness");
+  size_t        metallicIdx     = updateMaterial->IndexOf("Metallic");
 #if _DEBUG
   ce::Size numDrawCallsPerSec = 0;
   ce::Size numTrianglesPerSec = 0;
@@ -952,11 +991,11 @@ int main(int argc, char **argv)
   float sunRotation    = 0.0f;
   float lightnRotation = 0.0f;
 
-  auto forwardPipeline  = new ce::opengl::GL4ForwardPipeline();
+  auto forwardPipeline = new ce::opengl::GL4ForwardPipeline();
   forwardPipeline->Initialize();
   auto deferredPipeline = new ce::opengl::GL4DeferredPipeline();
   deferredPipeline->Initialize();
-  ce::iRenderPipeline *pipeline         = forwardPipeline;
+  ce::iRenderPipeline *pipeline = deferredPipeline;
   frameRenderer->SetRenderPipeline(pipeline);
 
   while (true)
@@ -1075,12 +1114,12 @@ int main(int argc, char **argv)
     {
       if (pipeline == forwardPipeline)
       {
-        printf ("Switch to: DeferredPipeline\n");
+        printf("Switch to: DeferredPipeline\n");
         pipeline = deferredPipeline;
       }
       else
       {
-        printf ("Switch to: FowardPipeline\n");
+        printf("Switch to: FowardPipeline\n");
         pipeline = forwardPipeline;
       }
       frameRenderer->SetRenderPipeline(pipeline);

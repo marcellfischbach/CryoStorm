@@ -26,7 +26,8 @@ class GL4RenderTarget2D;
 class GL4DeferredDirectionalLightRenderer
 {
 public:
-  GL4DeferredDirectionalLightRenderer();
+  GL4DeferredDirectionalLightRenderer() = default;
+  ~GL4DeferredDirectionalLightRenderer() = default;
 
   bool Initialize(Settings &settings);
 
@@ -43,8 +44,8 @@ public:
 private:
   GL4RenderTarget2D *GetShadowMap();
 
-  GL4Device *m_device;
-  iGfxScene *m_scene;
+  GL4Device *m_device = nullptr;
+  iGfxScene *m_scene = nullptr;
 
   struct LightRenderShader
   {
@@ -64,7 +65,7 @@ private:
 
   GL4PSSMRenderer m_pssmRenderer;
 
-  GL4RenderTarget2D *m_shadowMap;
+  GL4RenderTarget2D *m_shadowMap = nullptr;
 
 };
 

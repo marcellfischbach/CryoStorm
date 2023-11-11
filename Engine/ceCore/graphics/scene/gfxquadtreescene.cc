@@ -19,37 +19,35 @@ namespace ce
 
 
 static const unsigned MAX_ENTRIES_PER_CELL = 4;
-static const unsigned MAX_CELL_DEPTH = 20;
+static const unsigned MAX_CELL_DEPTH       = 20;
 
 
 struct GfxQuadtreeScene::Cell
 {
 
-  Cell(Cell* parent, size_t depth, const Vector2f &min, const Vector2f &max);
+  Cell(Cell *parent, size_t depth, const Vector2f &min, const Vector2f &max);
 
-  std::vector<GfxMesh*> m_shaded;
-  std::vector<GfxMesh*> m_unshaded;
+  std::vector<GfxMesh *> m_shaded;
+  std::vector<GfxMesh *> m_unshaded;
 
 
-
-  void Add(GfxMesh* mesh);
-  bool Remove(GfxMesh* mesh);
+  void Add(GfxMesh *mesh);
+  bool Remove(GfxMesh *mesh);
   void Decimate();
   CE_NODISCARD size_t Idx(const Vector3f &v) const;
   void UpdateBoundingBox();
-  void RemoveLight (GfxLight*light) const;
+  void RemoveLight(GfxLight *light) const;
   void ScanMeshes(const iClipper *clipper, GfxSceneCollector &collector) const;
   void ScanMeshes(const iClipper *clipper,
-                                    uint32_t scanMask,
-                                    const std::function<void(GfxMesh *)> &callback
-                                   ) const;
-  Cell* m_parent;
-  size_t m_depth;
-  Vector2f m_min;
-  Vector2f m_center;
-  Vector2f m_max;
-  BoundingBox m_bbox;
-  std::array<Cell*, 4> m_cells;
+                  uint32_t scanMask,
+                  const std::function<void(GfxMesh *)> &callback) const;
+  Cell                   *m_parent;
+  size_t                 m_depth;
+  Vector2f               m_min;
+  Vector2f               m_center;
+  Vector2f               m_max;
+  BoundingBox            m_bbox;
+  std::array<Cell *, 4>  m_cells;
 };
 
 GfxQuadtreeScene::GfxQuadtreeScene()
@@ -235,7 +233,7 @@ void GfxQuadtreeScene::ScanMeshes(const iClipper *clipper,
       }
     }
   }
-  
+
   if (scanMask & (eSM_Static | eSM_Unshaded))
   {
     m_root->ScanMeshes(clipper, scanMask, callback);
@@ -262,7 +260,6 @@ void GfxQuadtreeScene::ScanMeshes(const iClipper *clipper, GfxSceneCollector &co
   }
   m_root->ScanMeshes(clipper, collector);
 }
-
 
 
 void GfxQuadtreeScene::ScanGlobalLights(const std::function<bool(GfxLight *)> &callback) const
@@ -314,8 +311,8 @@ void GfxQuadtreeScene::ScanDynamicLights(const iClipper *clipper, const std::fun
 }
 
 void GfxQuadtreeScene::ScanLights(const iClipper *clipper,
-                                uint32_t scanMask,
-                                const std::function<bool(GfxLight *)> &callback) const
+                                  uint32_t scanMask,
+                                  const std::function<bool(GfxLight *)> &callback) const
 {
   if (scanMask & eSM_Global)
   {
@@ -333,13 +330,13 @@ void GfxQuadtreeScene::ScanLights(const iClipper *clipper,
   }
 }
 
-GfxQuadtreeScene::Cell::Cell(Cell* parent, size_t depth, const Vector2f &min, const Vector2f &max)
-  : m_parent(parent)
-  , m_depth(depth)
-  , m_min(min)
-  , m_max(max)
-  , m_center((min + max) / 2.0f)
-  , m_cells(std::array<Cell*,4>{})
+GfxQuadtreeScene::Cell::Cell(Cell *parent, size_t depth, const Vector2f &min, const Vector2f &max)
+    : m_parent(parent)
+    , m_depth(depth)
+    , m_min(min)
+    , m_max(max)
+    , m_center((min + max) / 2.0f)
+    , m_cells(std::array<Cell *, 4> {})
 {
   m_bbox.Clear();
   m_bbox.Finish();
@@ -362,7 +359,7 @@ GfxQuadtreeScene::Cell::Cell(Cell* parent, size_t depth, const Vector2f &min, co
  *
  *
  */
-void GfxQuadtreeScene::Cell::Add(GfxMesh* mesh)
+void GfxQuadtreeScene::Cell::Add(GfxMesh *mesh)
 {
   if (!mesh->GetMaterial())
   {
@@ -371,19 +368,19 @@ void GfxQuadtreeScene::Cell::Add(GfxMesh* mesh)
 
   if (m_shaded.size() + m_unshaded.size() + 1 > MAX_ENTRIES_PER_CELL && m_depth < MAX_CELL_DEPTH)
   {
-    m_cells[0] = new Cell(this, m_depth+1, Vector2f(m_min.x, m_min.y),    Vector2f(m_center.x, m_center.y));
-    m_cells[1] = new Cell(this, m_depth+1, Vector2f(m_min.x, m_center.y), Vector2f(m_center.x, m_max.y));
-    m_cells[2] = new Cell(this, m_depth+1, Vector2f(m_center.x, m_min.y), Vector2f(m_max.x, m_center.y));
-    m_cells[3] = new Cell(this, m_depth+1, Vector2f(m_center.x, m_center.y), Vector2f(m_max.x, m_max.y));
+    m_cells[0] = new Cell(this, m_depth + 1, Vector2f(m_min.x, m_min.y), Vector2f(m_center.x, m_center.y));
+    m_cells[1] = new Cell(this, m_depth + 1, Vector2f(m_min.x, m_center.y), Vector2f(m_center.x, m_max.y));
+    m_cells[2] = new Cell(this, m_depth + 1, Vector2f(m_center.x, m_min.y), Vector2f(m_max.x, m_center.y));
+    m_cells[3] = new Cell(this, m_depth + 1, Vector2f(m_center.x, m_center.y), Vector2f(m_max.x, m_max.y));
 
-    for (const auto &item : m_shaded)
+    for (const auto &item: m_shaded)
     {
       size_t idx = Idx(item->GetModelMatrix().GetTranslation());
       m_cells[idx]->Add(item);
       item->Release();
     }
     m_shaded.clear();
-    for (const auto &item : m_unshaded)
+    for (const auto &item: m_unshaded)
     {
       size_t idx = Idx(item->GetModelMatrix().GetTranslation());
       m_cells[idx]->Add(item);
@@ -395,7 +392,7 @@ void GfxQuadtreeScene::Cell::Add(GfxMesh* mesh)
 
   if (m_cells[0])
   {
-    size_t  idx = Idx(mesh->GetModelMatrix().GetTranslation());
+    size_t idx = Idx(mesh->GetModelMatrix().GetTranslation());
     m_cells[idx]->Add(mesh);
   }
   else
@@ -425,7 +422,7 @@ void GfxQuadtreeScene::Cell::Add(GfxMesh* mesh)
 
 }
 
-bool GfxQuadtreeScene::Cell::Remove(GfxMesh* mesh)
+bool GfxQuadtreeScene::Cell::Remove(GfxMesh *mesh)
 {
   auto it = std::ranges::find(m_shaded, mesh);
   if (it != m_shaded.end())
@@ -451,7 +448,7 @@ bool GfxQuadtreeScene::Cell::Remove(GfxMesh* mesh)
       return true;
     }
 
-    for (size_t i = 0; i<4; i++)
+    for (size_t i = 0; i < 4; i++)
     {
       if (i != idx)
       {
@@ -484,7 +481,7 @@ void GfxQuadtreeScene::Cell::RemoveLight(GfxLight *light) const
 
   if (m_cells[0])
   {
-    for (auto m_cell : m_cells)
+    for (auto m_cell: m_cells)
     {
       m_cell->RemoveLight(light);
     }
@@ -510,16 +507,16 @@ void GfxQuadtreeScene::Cell::UpdateBoundingBox()
   m_bbox.Clear();
   if (m_cells[0])
   {
-    for (auto & m_cell : m_cells)
+    for (auto &m_cell: m_cells)
     {
       m_bbox.Add(m_cell->m_bbox);
     }
   }
-  for (const auto &item : m_shaded)
+  for (const auto &item: m_shaded)
   {
     m_bbox.Add(item->GetBoundingBox());
   }
-  for (const auto &item : m_unshaded)
+  for (const auto &item: m_unshaded)
   {
     m_bbox.Add(item->GetBoundingBox());
   }
@@ -533,18 +530,18 @@ void GfxQuadtreeScene::Cell::UpdateBoundingBox()
 
 void GfxQuadtreeScene::Cell::ScanMeshes(const iClipper *clipper, GfxSceneCollector &collector) const
 {
-  eClippingResult  res = clipper
-                         ? clipper->Test(m_bbox)
-                         : eClippingResult::eCR_Inside;
+  eClippingResult res = clipper
+                        ? clipper->Test(m_bbox)
+                        : eClippingResult::eCR_Inside;
   switch (res)
   {
-  case eClippingResult::eCR_Outside:
-    return;
-  case eClippingResult::eCR_Inside:
-    clipper = nullptr;
-    break;
-  default:
-    break;
+    case eClippingResult::eCR_Outside:
+      return;
+    case eClippingResult::eCR_Inside:
+      clipper = nullptr;
+      break;
+    default:
+      break;
   }
 
 
@@ -564,7 +561,7 @@ void GfxQuadtreeScene::Cell::ScanMeshes(const iClipper *clipper, GfxSceneCollect
   }
   if (m_cells[0])
   {
-    for (auto m_cell : m_cells)
+    for (auto m_cell: m_cells)
     {
       m_cell->ScanMeshes(clipper, collector);
     }
@@ -572,22 +569,22 @@ void GfxQuadtreeScene::Cell::ScanMeshes(const iClipper *clipper, GfxSceneCollect
 }
 
 void GfxQuadtreeScene::Cell::ScanMeshes(const iClipper *clipper,
-                                  uint32_t scanMask,
-                                  const std::function<void(GfxMesh *)> &callback
-                                 ) const
+                                        uint32_t scanMask,
+                                        const std::function<void(GfxMesh *)> &callback
+                                       ) const
 {
-  eClippingResult  res = clipper
-                         ? clipper->Test(m_bbox)
-                         : eClippingResult::eCR_Inside;
+  eClippingResult res = clipper
+                        ? clipper->Test(m_bbox)
+                        : eClippingResult::eCR_Inside;
   switch (res)
   {
-  case eClippingResult::eCR_Outside:
-    return;
-  case eClippingResult::eCR_Inside:
-    clipper = nullptr;
-    break;
-  default:
-    break;
+    case eClippingResult::eCR_Outside:
+      return;
+    case eClippingResult::eCR_Inside:
+      clipper = nullptr;
+      break;
+    default:
+      break;
   }
 
 
@@ -613,7 +610,7 @@ void GfxQuadtreeScene::Cell::ScanMeshes(const iClipper *clipper,
   }
   if (m_cells[0])
   {
-    for (auto m_cell : m_cells)
+    for (auto m_cell: m_cells)
     {
       m_cell->ScanMeshes(clipper, scanMask, callback);
     }

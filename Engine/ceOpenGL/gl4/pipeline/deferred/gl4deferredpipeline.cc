@@ -1,5 +1,6 @@
 #include <ceOpenGL/gl4/pipeline/deferred/gl4deferredpipeline.hh>
 #include <ceOpenGL/gl4/gl4directionallight.hh>
+#include <ceOpenGL/gl4/gl4pointlight.hh>
 #include <ceCore/settings.hh>
 #include <ceCore/math/iclipper.hh>
 #include <ceCore/math/clipper/cameraclipper.hh>
@@ -38,6 +39,7 @@ void GL4DeferredPipeline::Initialize()
   Settings settings(ResourceLocator("file:///config/graphics.config"));
 
   m_directionalLightRenderer.Initialize(settings);
+  m_pointLightRenderer.Initialize(settings);
 }
 
 
@@ -106,6 +108,9 @@ void GL4DeferredPipeline::RenderLights()
       case eLT_Directional:
         RenderDirectionalLight(ce::QueryClass <GL4DirectionalLight>(light->GetLight()));
         break;
+      case eLT_Point:
+        RenderPointLight(ce::QueryClass <GL4PointLight>(light->GetLight()));
+        break;
       default:
         break;
     }
@@ -116,6 +121,11 @@ void GL4DeferredPipeline::RenderLights()
 void GL4DeferredPipeline::RenderDirectionalLight(const GL4DirectionalLight *directionalLight)
 {
   m_directionalLightRenderer.Render(m_camera, m_projector, m_gBuffer, directionalLight, m_target);
+}
+
+void GL4DeferredPipeline::RenderPointLight(const GL4PointLight *pointLight)
+{
+  m_pointLightRenderer.Render(m_camera, m_projector, m_gBuffer, pointLight, m_target);
 }
 
 void GL4DeferredPipeline::SetupVariables(iRenderTarget2D *target,
@@ -132,12 +142,10 @@ void GL4DeferredPipeline::SetupVariables(iRenderTarget2D *target,
 
   UpdateIntermediate();
 
-//  m_pointLightRenderer.SetDevice(device);
-//  m_pointLightRenderer.SetScene(scene);
-//  m_pointLightRenderer.Clear();
+  m_pointLightRenderer.SetDevice(device);
+  m_pointLightRenderer.SetScene(scene);
   m_directionalLightRenderer.SetDevice(device);
   m_directionalLightRenderer.SetScene(scene);
-//  m_directionalLightRenderer.Clear();
 
 }
 

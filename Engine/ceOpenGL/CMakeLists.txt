@@ -57,6 +57,8 @@ set(SOURCES
 		gl4/pipeline/deferred/gl4deferreddirectionallightrenderer.hh
 		gl4/pipeline/deferred/gl4deferredpipeline.cc
 		gl4/pipeline/deferred/gl4deferredpipeline.hh
+		gl4/pipeline/deferred/gl4deferredpointlightrenderer.cc
+		gl4/pipeline/deferred/gl4deferredpointlightrenderer.hh
 
 		gl4/pipeline/forward/gl4forwarddirectionallightrenderer.cc
 		gl4/pipeline/forward/gl4forwarddirectionallightrenderer.hh
