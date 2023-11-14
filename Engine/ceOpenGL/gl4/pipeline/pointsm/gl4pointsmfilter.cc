@@ -1,28 +1,28 @@
 
 
-#include <ceOpenGL/gl4/pipeline/forward/gl4forwardpointlightshadowmapfilter.hh>
-#include <ceOpenGL/gl4/gl4device.hh>
-#include <ceOpenGL/gl4/shading/gl4program.hh>
-#include <ceOpenGL/gl4/shading/gl4shaderattribute.hh>
-#include <ceOpenGL/gl4/gl4rendertarget2d.hh>
-#include <ceCore/resource/assetmanager.hh>
+#include "gl4pointsmfilter.hh"
+#include "ceOpenGL/gl4/gl4device.hh"
+#include "ceOpenGL/gl4/shading/gl4program.hh"
+#include "ceOpenGL/gl4/shading/gl4shaderattribute.hh"
+#include "ceOpenGL/gl4/gl4rendertarget2d.hh"
+#include "ceCore/resource/assetmanager.hh"
 
 namespace ce::opengl
 {
 
 
-GL4ForwardPointLightShadowMapFilter::GL4ForwardPointLightShadowMapFilter()
+GL4PointSMFilter::GL4PointSMFilter()
 {
 
 }
 
 
-GL4ForwardPointLightShadowMapFilter::~GL4ForwardPointLightShadowMapFilter()
+GL4PointSMFilter::~GL4PointSMFilter()
 {
 
 }
 
-bool GL4ForwardPointLightShadowMapFilter::Initialize(const Vector2f &distance, float radius, float samples, float maxSampleDistance)
+bool GL4PointSMFilter::Initialize(const Vector2f &distance, float radius, float samples, float maxSampleDistance)
 {
   m_distance = distance;
   m_radius = radius;
@@ -51,10 +51,10 @@ bool GL4ForwardPointLightShadowMapFilter::Initialize(const Vector2f &distance, f
 }
 
 
-void GL4ForwardPointLightShadowMapFilter::Render(GL4Device *device,
-                                                       iTexture2D *depthBuffer,
-                                                       iTexture2D *shadowMap,
-                                                       GL4RenderTarget2D *target)
+void GL4PointSMFilter::Render(GL4Device *device,
+                              iTexture2D *depthBuffer,
+                              iTexture2D *shadowMap,
+                              GL4RenderTarget2D *target)
 {
   device->SetRenderTarget(target);
   device->SetRenderBuffer(0);

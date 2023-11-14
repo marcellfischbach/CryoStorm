@@ -4,21 +4,55 @@
 
 #pragma once
 
+#include <ceOpenGL/gl4/pipeline/pointsm/gl4pointsmfilter.hh>
+#include <vector>
+
 namespace ce
 {
 
+class Camera;
+class GfxMesh;
+class Projector;
+class Settings;
+
 struct iGfxScene;
+struct iSampler;
+struct iShader;
+struct iShaderAttribute;
 struct iTexture2D;
 
 namespace opengl
 {
 
 class GL4Device;
+class GL4PointLight;
 class GL4RenderTarget2D;
 class GL4RenderTargetCube;
 
 class GL4PointSMRenderer
 {
+
+public:
+  GL4PointSMRenderer() = default;
+  ~GL4PointSMRenderer() = default;
+
+  void Initialize(Settings &settings);
+
+  void SetDepthBuffer (iTexture2D *depthBuffer);
+  void SetDevice (GL4Device *device);
+  void SetScene (iGfxScene *scene);
+  GL4RenderTarget2D *CreateDirectionalLightShadowMap();
+  void SetShadowMap (GL4RenderTarget2D *shadowMap);
+  GL4RenderTarget2D *GetShadowMap ();
+  void RenderShadow(const GL4PointLight *pointLight, const Camera &camera, const Projector &projector);
+
+  bool IsShadowMapValid (GL4RenderTarget2D *shadowMap) const;
+
+private:
+  void RenderShadowBuffer(const GL4PointLight *pointLight, const Camera &camera, const Projector &projector);
+  void RenderShadowMap(const GL4PointLight *pointLight, const Camera &camera, const Projector &projector);
+  void FilterShadowMap();
+
 private:
   GL4Device *m_device = nullptr;
   iGfxScene *m_scene  = nullptr;
@@ -26,14 +60,14 @@ private:
 
   iTexture2D *m_depthBuffer = nullptr;
 
-  GL4RenderTargetCube *m_directionalLightShadowBuffer = nullptr;
-  size_t               m_directionalLightShadowBufferSize = 0;
+  GL4RenderTargetCube *m_pointLightShadowBuffer = nullptr;
+  size_t                 m_pointLightShadowBufferSize = 0;
 
 
-  GL4RenderTarget2D *m_directionalLightShadowMapTemp = nullptr;
-  GL4RenderTarget2D *m_directionalLightShadowMap = nullptr;
-  size_t            m_directionalLightShadowMapWidth = 0;
-  size_t            m_directionalLightShadowMapHeight = 0;
+  GL4RenderTarget2D *m_pointLightShadowMapTemp = nullptr;
+  GL4RenderTarget2D *m_pointLightShadowMap = nullptr;
+  size_t            m_pointLightShadowMapWidth = 0;
+  size_t            m_pointLightShadowMapHeight = 0;
 
   enum class ShadowSamplingMode
   {
@@ -42,23 +76,19 @@ private:
     VSM
   };
 
-  float m_shadowNear;
-  float m_shadowFar;
-  float m_splits[4];
-
   ShadowSamplingMode m_shadowSamplingMode;
   iSampler           *m_shadowMapColorSampler    = nullptr;
   iSampler           *m_shadowBufferColorSampler = nullptr;
   iSampler           *m_shadowMapDepthSampler    = nullptr;
 
   iShader          *m_shadowMappingShader = nullptr;
-  iShaderAttribute *m_attrLayersDepth     = nullptr;
-  iShaderAttribute *m_attrLayersBias      = nullptr;
+  iShaderAttribute *m_attrLightPosition     = nullptr;
+  iShaderAttribute *m_attrMappingBias      = nullptr;
   iShaderAttribute *m_attrShadowBuffer    = nullptr;
   iShaderAttribute *m_attrDepthBuffer     = nullptr;
 
 
-  GL4DirectionalLightShadowMapFilter m_shadowMapFilter;
+  GL4PointSMFilter m_shadowMapFilter;
 
   std::vector<GfxMesh *> m_meshesCache;
 };

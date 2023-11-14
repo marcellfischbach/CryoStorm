@@ -4,7 +4,7 @@
 
 #include <ceOpenGL/openglexport.hh>
 #include <ceOpenGL/openglconstants.hh>
-#include <ceOpenGL/gl4/pipeline/forward/gl4forwardpointlightshadowmapfilter.hh>
+#include <ceOpenGL/gl4/pipeline/pointsm/gl4pointsmfilter.hh>
 #include <ceCore/types.hh>
 #include <map>
 #include <vector>
@@ -123,8 +123,8 @@ private:
   };
   ShadowSamplingMode m_shadowSamplingFilter;
 
-  unsigned m_shadowFBO = 0;
-  GL4ForwardPointLightShadowMapFilter m_shadowMapFilter;
+  unsigned         m_shadowFBO = 0;
+  GL4PointSMFilter m_shadowMapFilter;
 
 };
 

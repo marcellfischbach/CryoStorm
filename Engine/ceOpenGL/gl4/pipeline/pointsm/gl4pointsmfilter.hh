@@ -16,15 +16,15 @@ namespace opengl
 class GL4Device;
 class GL4RenderTarget2D;
 
-class GL4ForwardPointLightShadowMapFilter
+class GL4PointSMFilter
 {
 public:
 
 
 
 
-  GL4ForwardPointLightShadowMapFilter();
-  ~GL4ForwardPointLightShadowMapFilter();
+  GL4PointSMFilter();
+  ~GL4PointSMFilter();
 
   bool Initialize (const Vector2f &distance, float radius, float samples, float maxSampleDistance);
 
@@ -45,6 +45,8 @@ private:
   iShaderAttribute *m_attrFilterSamples = nullptr;
   iShaderAttribute *m_attrFilterMaxSampleDistance = nullptr;
   iShaderAttribute *m_attrScreenAspect = nullptr;
+
+
 };
 
 }
