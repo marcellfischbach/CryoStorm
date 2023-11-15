@@ -646,7 +646,7 @@ void add_point_light(ce::World *world, const ce::Vector3f &position, float range
   pointLightState->SetRange(range);
   pointLightState->SetShadowMapBias(0.003f);
   pointLightState->SetStatic(true);
-  pointLightState->SetCastShadow(false);
+  pointLightState->SetCastShadow(true);
   pointLightState->GetTransform().SetTranslation(position).Finish();
   world->Attach(pointEntity);
 }

@@ -27,6 +27,8 @@ enum eShaderAttribute
   eSA_ShadowMapProjectionMatrix,
   eSA_ShadowMapViewProjectionMatrix,
 
+  eSA_RenderLayer,
+
   /* Lighting */
   eSA_LightColor,
   eSA_LightVector,

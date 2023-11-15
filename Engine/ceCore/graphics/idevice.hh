@@ -73,6 +73,9 @@ struct CE_CORE_API iDevice : public CE_SUPER(iObject)
   virtual Matrix4f& GetOrthographicProjection(float l, float r, float b, float t, float n, float f, Matrix4f& m) = 0;
   virtual Matrix4f& GetOrthographicProjectionInv(float l, float r, float b, float t, float n, float f, Matrix4f& m) = 0;
 
+  virtual void SetRenderLayer (int8_t renderLayer) = 0;
+  virtual int8_t GetRenderLayer () const = 0;
+
   virtual void SetShader(iShader* shader) = 0;
   virtual void SetRenderTarget(iRenderTarget* target) = 0;
   virtual void SetRenderBuffer (uint32_t buffer) = 0;

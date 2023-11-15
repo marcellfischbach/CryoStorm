@@ -38,6 +38,7 @@ GL4Device::GL4Device()
   m_fullscreenBlitCubePosXRenderMesh(nullptr), m_fullscreenBlitCubePosYRenderMesh(nullptr),
   m_fullscreenBlitCubePosZRenderMesh(nullptr), m_fullscreenBlitCubeNegXRenderMesh(nullptr),
   m_fullscreenBlitCubeNegYRenderMesh(nullptr), m_fullscreenBlitCubeNegZRenderMesh(nullptr)
+  , m_renderLayer(-1)
 {
   CE_CLASS_GEN_CONSTR;
 
@@ -489,6 +490,17 @@ Matrix4f& GL4Device::GetOrthographicProjectionInv(float l, float r, float b, flo
   m.m33 = 1.0;
 
   return m;
+}
+
+
+void GL4Device::SetRenderLayer(ce::int8_t renderLayer)
+{
+  m_renderLayer = renderLayer;
+}
+
+int8_t GL4Device::GetRenderLayer() const
+{
+  return m_renderLayer;
 }
 
 void GL4Device::SetShader(iShader* shader)
@@ -1273,6 +1285,12 @@ void GL4Device::BindStandardValues()
   {
     int rnd = rand();
     attr->Bind((float)rnd / (float)RAND_MAX);
+  }
+
+  attr = m_shader->GetShaderAttribute(eSA_RenderLayer);
+  if (attr)
+  {
+    attr->Bind(m_renderLayer);
   }
 }
 

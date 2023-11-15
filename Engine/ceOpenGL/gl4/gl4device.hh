@@ -59,6 +59,9 @@ public:
   Matrix4f& GetOrthographicProjectionInv(float l, float r, float b, float t, float n, float f, Matrix4f & m) override;
 
 
+  void SetRenderLayer (int8_t renderLayer) override;
+  int8_t GetRenderLayer () const override;
+
   void SetShader(iShader * shader) override;
   void SetRenderTarget(iRenderTarget * target) override;
   void SetRenderBuffer(uint32_t buffer) override;
@@ -144,7 +147,6 @@ private:
   void UpdateModelViewProjectionMatrixInv();
   void UpdateShadowMapViewProjectionMatrix();
 
-
   uint8_t m_colorWrite;
   bool m_depthWrite;
   bool m_depthTest;
@@ -192,6 +194,7 @@ private:
   bool m_shadowMapViewProjectionMatrixDirty;
 
 
+
   struct PointLightShadowData
   {
     iLight* Light;
@@ -205,6 +208,8 @@ private:
   std::map<const iLight*, iTexture2D*> m_lightShadowMaps;
 
   std::vector<iTexture2D*> m_shadowMapTextures;
+
+  int8_t m_renderLayer;
 
   /** 
    * \name Fullscreen Rendering

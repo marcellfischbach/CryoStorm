@@ -3,6 +3,7 @@
 #pragma once
 
 #include <ceOpenGL/openglexport.hh>
+#include <ceOpenGL/gl4/pipeline/pointsm/gl4pointsmrenderer.hh>
 
 namespace ce
 {
@@ -65,7 +66,8 @@ private:
   LightRenderShader m_shadow;
 
 
-  GL4RenderTarget2D *m_shadowMap;
+  GL4RenderTarget2D *m_shadowMap = nullptr;
+  GL4PointSMRenderer m_shadowRenderer;
 
 };
 

@@ -6,6 +6,7 @@ program {
     attributes {
         attribute CameraPosition,
         attribute LightColor,
+        attribute LightAmbientColor,
         attribute NegLightDirection,
         attribute DiffuseRoughness,
         attribute Normal,

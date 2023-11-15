@@ -10,7 +10,7 @@ program {
         attribute LightPosition,
         attribute LightRange,
         attribute DiffuseRoughness,
-        attribute Depth,
-        attribute Normal
+        attribute Normal,
+        attribute Depth
     }
 }

@@ -73,11 +73,11 @@ void GL4DeferredPointLightRenderer::Render(const Camera *camera,
   LightRenderShader &lrs = m_nonShadow;
   if (light->IsCastShadow())
   {
-//    m_pssmRenderer.SetDevice(m_device);
-//    m_pssmRenderer.SetScene(m_scene);
-//    m_pssmRenderer.SetDepthBuffer(gBuffer->GetDepth());
-//    m_pssmRenderer.SetShadowMap(GetShadowMap());
-//    m_pssmRenderer.RenderShadow(light, *camera, *projector);
+    m_shadowRenderer.SetDevice(m_device);
+    m_shadowRenderer.SetScene(m_scene);
+    m_shadowRenderer.SetDepthBuffer(gBuffer->GetDepth());
+    m_shadowRenderer.SetShadowMap(GetShadowMap());
+    m_shadowRenderer.RenderShadow(light, *camera, *projector);
     lrs = m_shadow;
   }
 
@@ -146,14 +146,13 @@ void GL4DeferredPointLightRenderer::Render(const Camera *camera,
 GL4RenderTarget2D *GL4DeferredPointLightRenderer::GetShadowMap()
 {
 
-  if (false) //m_pssmRenderer.IsShadowMapValid(m_shadowMap))
+  if (m_shadowRenderer.IsShadowMapValid(m_shadowMap))
   {
     return m_shadowMap;
   }
 
-//  GL4RenderTarget2D *target = m_pssmRenderer.CreateDirectionalLightShadowMap();
-//  CE_SET(m_shadowMap, target);
-//  return target;
+  GL4RenderTarget2D *target = m_shadowRenderer.CreateShadowMap();
+  CE_SET(m_shadowMap, target);
   return m_shadowMap;
 }
 
