@@ -4,14 +4,14 @@
 namespace ce
 {
 
-enum class eCubeFace
+enum eCubeFace
 {
-  eCL_PosX,
-  eCL_NegX,
-  eCL_PosY,
-  eCL_NegY,
-  eCL_PosZ,
-  eCL_NegZ,
+  eCF_PosX,
+  eCF_NegX,
+  eCF_PosY,
+  eCF_NegY,
+  eCF_PosZ,
+  eCF_NegZ,
 };
 
 }

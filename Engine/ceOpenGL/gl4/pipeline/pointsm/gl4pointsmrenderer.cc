@@ -21,6 +21,13 @@
 namespace ce::opengl
 {
 
+GL4PointSMRenderer::GL4PointSMRenderer()
+{
+  for (size_t i = 0; i < m_pointLightShadowBuffer.size(); ++i)
+  {
+    m_pointLightShadowBuffer[i] = nullptr;
+  }
+}
 
 void GL4PointSMRenderer::Initialize(ce::Settings &settings)
 {
@@ -125,12 +132,12 @@ void GL4PointSMRenderer::RenderShadowBuffer(const GL4PointLight *pointLight,
   viewsInv[5].SetLookAtInv(pos, pos + Vector3f(0, 0, 1), Vector3f(0, -1, 0));
 
 
-  m_device->SetRenderTarget(GetShadowBuffer());
   m_device->SetProjectionMatrix(projection);
 
-  for (uint32_t i = 0; i < 6; i++)
+  for (size_t i = 0; i < 6; i++)
   {
-    m_device->SetRenderBuffer(i);
+    m_device->SetRenderTarget(GetShadowBuffer((eCubeFace)i));
+    m_device->SetRenderBuffer(0);
     m_device->SetViewport(0, 0, (uint16_t) m_pointLightShadowBufferSize, (uint16_t) m_pointLightShadowBufferSize);
     m_device->SetDepthWrite(true);
     m_device->SetDepthTest(true);
@@ -144,7 +151,8 @@ void GL4PointSMRenderer::RenderShadowBuffer(const GL4PointLight *pointLight,
     CameraClipper clipper(viewsInv[i], projectionInv, false, true);
 
     m_scene->ScanMeshes(&clipper, iGfxScene::eSM_Dynamic | iGfxScene::eSM_Static,
-                        [this](GfxMesh *mesh) {
+                        [this](GfxMesh *mesh)
+                        {
                           mesh->RenderUnlit(m_device, eRP_Shadow);
                         }
     );
@@ -210,46 +218,65 @@ void GL4PointSMRenderer::FilterShadowMap()
 
 }
 
-GL4RenderTargetCube *GL4PointSMRenderer::GetShadowBuffer()
+GL4RenderTarget2D *GL4PointSMRenderer::GetShadowBuffer(eCubeFace face)
 {
-  if (!m_pointLightShadowBuffer)
+  if (!m_pointLightShadowBuffer[face])
   {
-    iRenderTargetCube::Descriptor desc {};
-    desc.Size = m_pointLightShadowBufferSize;
+    iRenderTarget2D::Descriptor desc {};
+    desc.Width  = m_pointLightShadowBufferSize;
+    desc.Height = m_pointLightShadowBufferSize;
 
-    m_pointLightShadowBuffer = QueryClass<GL4RenderTargetCube>(m_device->CreateRenderTarget(desc));
+    m_pointLightShadowBuffer[face] = QueryClass<GL4RenderTarget2D>(m_device->CreateRenderTarget(desc));
 
 
     if (m_shadowSamplingMode == ShadowSamplingMode::VSM)
     {
-      iTextureCube::Descriptor colorDesc {};
-      colorDesc.Size    = desc.Size;
-      colorDesc.Format  = ePF_RGBA;
-      colorDesc.MipMaps = false;
-      iTextureCube *colorTexture = m_device->CreateTexture(colorDesc);
-      colorTexture->SetSampler(GetShadowBufferColorSampler());
-      m_pointLightShadowBuffer->AddColorTexture(colorTexture);
-      colorTexture->Release();
+      m_pointLightShadowBuffer[face]->AddColorTexture(GetShadowBufferColor(), face);
     }
+    m_pointLightShadowBuffer[face]->SetDepthTexture(GetShadowBufferDepth(), face);
 
-    iTextureCube::Descriptor depthDesc {};
-    depthDesc.Size    = desc.Size;
-    depthDesc.Format  = ePF_Depth;
-    depthDesc.MipMaps = false;
-    iTextureCube *depthTexture = m_device->CreateTexture(depthDesc);
-    depthTexture->SetSampler(GetShadowBufferDepthSampler());
-    m_pointLightShadowBuffer->SetDepthTexture(depthTexture);
-    depthTexture->Release();
-
-    if (!m_pointLightShadowBuffer->Compile())
+    if (!m_pointLightShadowBuffer[face]->Compile())
     {
       printf("Unable to compile point light shadow buffer\n");
-      m_pointLightShadowBuffer->Release();
-      m_pointLightShadowBuffer = nullptr;
+      m_pointLightShadowBuffer[face]->Release();
+      m_pointLightShadowBuffer[face] = nullptr;
     }
 
   }
-  return m_pointLightShadowBuffer;
+  return m_pointLightShadowBuffer[face];
+}
+
+
+iTextureCube *GL4PointSMRenderer::GetShadowBufferColor()
+{
+  if (!m_pointLightShadowBufferColor)
+  {
+    iTextureCube::Descriptor colorDesc {};
+    colorDesc.Size    = m_pointLightShadowBufferSize;
+    colorDesc.Format  = ePF_RGBA;
+    colorDesc.MipMaps = false;
+
+    m_pointLightShadowBufferColor = m_device->CreateTexture(colorDesc);
+    m_pointLightShadowBufferColor->SetSampler(GetShadowBufferColorSampler());
+
+  }
+  return m_pointLightShadowBufferColor;
+}
+
+iTextureCube *GL4PointSMRenderer::GetShadowBufferDepth()
+{
+  if (!m_pointLightShadowBufferDepth)
+  {
+    iTextureCube::Descriptor colorDesc {};
+    colorDesc.Size    = m_pointLightShadowBufferSize;
+    colorDesc.Format  = ePF_Depth;
+    colorDesc.MipMaps = false;
+
+    m_pointLightShadowBufferDepth = m_device->CreateTexture(colorDesc);
+    m_pointLightShadowBufferDepth->SetSampler(GetShadowBufferColorSampler());
+
+  }
+  return m_pointLightShadowBufferDepth;
 }
 
 bool GL4PointSMRenderer::IsShadowMapValid(GL4RenderTarget2D *shadowMap) const
@@ -277,7 +304,6 @@ GL4RenderTarget2D *GL4PointSMRenderer::GetShadowMapTemp()
   m_pointLightShadowMapTemp = target;
   return target;
 }
-
 
 
 GL4RenderTarget2D *GL4PointSMRenderer::CreateShadowMap()

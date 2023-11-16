@@ -70,12 +70,12 @@ void main ()
     float shadow = texture(ce_ShadowMap, texCoord).r;
 
     float range_factor = clamp(1.0 - (distance_to_light / ce_LightRange), 0.0, 1.0);
-
     ce_FragColor = vec4(
         range_factor * color * diffuse * shadow * ce_LightColor.rgb +
         range_factor * specular * shadow * ce_LightColor.rgb +
         ce_LightAmbientColor.rgb,
         1.0);
+
 
 }
 

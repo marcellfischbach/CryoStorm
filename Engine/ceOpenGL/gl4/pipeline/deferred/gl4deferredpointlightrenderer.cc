@@ -18,6 +18,7 @@ namespace ce::opengl
 
 bool GL4DeferredPointLightRenderer::Initialize(Settings &settings)
 {
+  m_shadowRenderer.Initialize(settings);
 
   m_nonShadow.m_shader = AssetManager::Get()->Get<iShader>(
       ResourceLocator("file://${engine}/opengl/gl4/deferred/point_light_deferred_no_shadow.shader"));
@@ -45,8 +46,8 @@ bool GL4DeferredPointLightRenderer::Initialize(Settings &settings)
     m_shadow.m_attrShadowMap         = m_shadow.m_shader->GetShaderAttribute("ShadowMap");
     m_shadow.m_attrLightColor        = m_shadow.m_shader->GetShaderAttribute("LightColor");
     m_shadow.m_attrLightAmbientColor = m_shadow.m_shader->GetShaderAttribute("LightAmbientColor");
-    m_nonShadow.m_attrLightPosition  = m_nonShadow.m_shader->GetShaderAttribute("LightPosition");
-    m_nonShadow.m_attrLightRange     = m_nonShadow.m_shader->GetShaderAttribute("LightRange");
+    m_shadow.m_attrLightPosition  = m_nonShadow.m_shader->GetShaderAttribute("LightPosition");
+    m_shadow.m_attrLightRange     = m_nonShadow.m_shader->GetShaderAttribute("LightRange");
     m_shadow.m_attrCameraPosition    = m_shadow.m_shader->GetShaderAttribute("CameraPosition");
   }
 
@@ -77,7 +78,7 @@ void GL4DeferredPointLightRenderer::Render(const Camera *camera,
     m_shadowRenderer.SetScene(m_scene);
     m_shadowRenderer.SetDepthBuffer(gBuffer->GetDepth());
     m_shadowRenderer.SetShadowMap(GetShadowMap());
-    m_shadowRenderer.RenderShadow(light, *camera, *projector);
+//    m_shadowRenderer.RenderShadow(light, *camera, *projector);
     lrs = m_shadow;
   }
 
