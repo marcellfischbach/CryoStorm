@@ -636,7 +636,7 @@ void generate_test_grid(ce::World *world, ce::iMaterial *material)
 #include <ceOpenGL/gl4/pipeline/deferred/gl4deferredpipeline.hh>
 
 
-void add_point_light(ce::World *world, const ce::Vector3f &position, float range, const ce::Color4f &color)
+ce::LightState *add_point_light(ce::World *world, const ce::Vector3f &position, float range, const ce::Color4f &color)
 {
   ce::Entity     *pointEntity     = new ce::Entity("Point");
   ce::LightState *pointLightState = new ce::LightState("PointLight");
@@ -649,6 +649,7 @@ void add_point_light(ce::World *world, const ce::Vector3f &position, float range
   pointLightState->SetCastShadow(true);
   pointLightState->GetTransform().SetTranslation(position).Finish();
   world->Attach(pointEntity);
+  return pointLightState;
 }
 
 
@@ -815,7 +816,8 @@ int main(int argc, char **argv)
 
 
 
-  add_point_light(world, ce::Vector3f(0.0f, 10.0f, 0.0f), 25.0f, ce::Color4f(1.0, 1.0f, 1.0f));
+  ce::LightState
+      *pointLight = add_point_light(world, ce::Vector3f(), 25.0f, ce::Color4f(1.0, 1.0f, 1.0f));
 
 //  add_point_light(world, ce::Vector3f(10.0f, 10.0f, 10.0f), 25.0f, ce::Color4f(1.0, 0.0f, 1.0f));
 //  add_point_light(world, ce::Vector3f(0.0f, 10.0f, 10.0f), 25.0f, ce::Color4f(0.5, 0.0f, 1.0f));
@@ -1108,6 +1110,10 @@ int main(int argc, char **argv)
 
 
 //      terrainMesh->SetReferencePoint(cameraState->GetTransform().GetTranslation());
+
+      pointLight->GetTransform()
+                .SetTranslation(ce::Vector3f(0.0f, 10.0f, 0.0f) + ce::Vector3f(0.0f, sin(sunRotation) * 9.9, 0.0f))
+                .Finish();
       world->Update(tpf);
     }
     if (ce::Input::IsKeyPressed(ce::Key::eK_P))
@@ -1149,6 +1155,17 @@ int main(int argc, char **argv)
     device->RenderFullscreen(colorTexture);
     device->SetDepthTest(true);
 
+
+    if (pipeline == deferredPipeline && pointLight->IsCastShadow())
+    {
+      ce::iTextureCube *shadowTex = deferredPipeline->GetPointLightRenderer().GetShadowRenderer().GetShadowBufferDepth();
+      if (shadowTex)
+      {
+        // device->RenderFullscreen(shadowTex, ce::eCF_NegX, ce::Vector2f(0.5, 0.5f), ce::Vector2f(-0.5f, -0.5f));
+//        device->RenderFullscreen(shadowTex, ce::eCF_NegY); //, ce::Vector2f(0.5, 0.5f), ce::Vector2f(-0.5f, -0.5f));
+      }
+
+    }
 
 #if _DEBUG
     numDrawCallsPerSec += device->GetNumberOfDrawCalls();

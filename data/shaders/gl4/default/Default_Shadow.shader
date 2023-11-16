@@ -4,5 +4,6 @@ program {
         shader "Default_Shadow.frag",
     },
     attributes {
+        attribute "Diffuse",
     }
 }

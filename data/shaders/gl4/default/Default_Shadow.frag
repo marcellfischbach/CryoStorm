@@ -2,10 +2,12 @@
 
 layout(location = 0) out vec4 ce_FragColor;
 
+uniform sampler2D ce_Diffuse;
 
+in vec2 texCoord;
 
 void main()
 {
-	ce_FragColor = vec4(1, 1, 1, 1);
+	ce_FragColor = texture(ce_Diffuse, texCoord);
 }
 

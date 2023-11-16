@@ -5,5 +5,7 @@ program {
   }
   attributes {
     attribute "Diffuse",
+    attribute "Scale",
+    attribute "Translation"
   }
 }

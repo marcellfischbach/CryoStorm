@@ -131,33 +131,32 @@ void GL4PointSMRenderer::RenderShadowBuffer(const GL4PointLight *pointLight,
   viewsInv[4].SetLookAtInv(pos, pos + Vector3f(0, 0, -1), Vector3f(0, -1, 0));
   viewsInv[5].SetLookAtInv(pos, pos + Vector3f(0, 0, 1), Vector3f(0, -1, 0));
 
-
   m_device->SetProjectionMatrix(projection);
 
   for (size_t i = 0; i < 6; i++)
   {
     m_device->SetRenderTarget(GetShadowBuffer((eCubeFace)i));
     m_device->SetRenderBuffer(0);
-    m_device->SetViewport(0, 0, (uint16_t) m_pointLightShadowBufferSize, (uint16_t) m_pointLightShadowBufferSize);
     m_device->SetDepthWrite(true);
     m_device->SetDepthTest(true);
-    m_device->SetColorWrite(false, false, false, false);
-
-    m_device->Clear(false, Color4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, false, 0);
+    m_device->SetBlending(false);
+    m_device->SetColorWrite(true, true, true, true);
+    m_device->Clear(true, Color4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, true, 0);
 
     m_device->SetViewMatrix(views[i]);
 
 
     CameraClipper clipper(viewsInv[i], projectionInv, false, true);
 
+    size_t count = 0;
     m_scene->ScanMeshes(&clipper, iGfxScene::eSM_Dynamic | iGfxScene::eSM_Static,
-                        [this](GfxMesh *mesh)
+                        [this, &count](GfxMesh *mesh)
                         {
                           mesh->RenderUnlit(m_device, eRP_Shadow);
+                          count++;
                         }
     );
   }
-  m_device->SetColorWrite(true, true, true, true);
 }
 
 
@@ -191,7 +190,7 @@ void GL4PointSMRenderer::RenderShadowMap(const GL4PointLight *pointLight,
 
   if (m_attrShadowBuffer)
   {
-    eTextureUnit unit = m_device->BindTexture(GetShadowMap()->GetDepthTexture());
+    eTextureUnit unit = m_device->BindTexture(GetShadowBufferDepth());
     m_attrShadowBuffer->Bind(unit);
   }
   if (m_attrDepthBuffer)
@@ -229,7 +228,7 @@ GL4RenderTarget2D *GL4PointSMRenderer::GetShadowBuffer(eCubeFace face)
     m_pointLightShadowBuffer[face] = QueryClass<GL4RenderTarget2D>(m_device->CreateRenderTarget(desc));
 
 
-    if (m_shadowSamplingMode == ShadowSamplingMode::VSM)
+    if (m_shadowSamplingMode == ShadowSamplingMode::VSM || true)
     {
       m_pointLightShadowBuffer[face]->AddColorTexture(GetShadowBufferColor(), face);
     }
@@ -273,7 +272,7 @@ iTextureCube *GL4PointSMRenderer::GetShadowBufferDepth()
     colorDesc.MipMaps = false;
 
     m_pointLightShadowBufferDepth = m_device->CreateTexture(colorDesc);
-    m_pointLightShadowBufferDepth->SetSampler(GetShadowBufferColorSampler());
+    m_pointLightShadowBufferDepth->SetSampler(GetShadowBufferDepthSampler());
 
   }
   return m_pointLightShadowBufferDepth;
@@ -380,6 +379,7 @@ iSampler *GL4PointSMRenderer::GetShadowBufferDepthSampler()
     m_shadowMapDepthSampler->SetAddressW(eTAM_Clamp);
     m_shadowMapDepthSampler->SetTextureCompareMode(eTCM_CompareToR);
     m_shadowMapDepthSampler->SetTextureCompareFunc(eCF_LessOrEqual);
+    //m_shadowMapDepthSampler->SetTextureCompareMode(eTCM_None);
   }
   return m_shadowMapDepthSampler;
 }

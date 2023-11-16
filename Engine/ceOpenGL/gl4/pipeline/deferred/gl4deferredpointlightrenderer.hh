@@ -42,6 +42,12 @@ public:
               const GBuffer *gBuffer,
               const GL4PointLight *light,
               iRenderTarget2D *target);
+
+  GL4PointSMRenderer &GetShadowRenderer()
+  {
+    return m_shadowRenderer;
+  }
+
 private:
   GL4RenderTarget2D *GetShadowMap();
 

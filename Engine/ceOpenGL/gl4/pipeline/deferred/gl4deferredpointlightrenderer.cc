@@ -78,7 +78,7 @@ void GL4DeferredPointLightRenderer::Render(const Camera *camera,
     m_shadowRenderer.SetScene(m_scene);
     m_shadowRenderer.SetDepthBuffer(gBuffer->GetDepth());
     m_shadowRenderer.SetShadowMap(GetShadowMap());
-//    m_shadowRenderer.RenderShadow(light, *camera, *projector);
+    m_shadowRenderer.RenderShadow(light, *camera, *projector);
     lrs = m_shadow;
   }
 

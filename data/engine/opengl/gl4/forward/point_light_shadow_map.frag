@@ -44,7 +44,6 @@ float calc_point_shadow(vec3 frag_position)
     fz = fz / fw;
     fz = fz * 0.5 + 0.5;
     fz -= 0.0001;//ce_MappingBias.z;
-
     return texture(ce_ShadowBuffer, vec4(delta, fz));
 }
 

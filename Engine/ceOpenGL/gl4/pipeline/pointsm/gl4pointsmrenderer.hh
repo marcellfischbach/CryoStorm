@@ -3,6 +3,7 @@
 //
 
 #pragma once
+#include <ceOpenGL/openglexport.hh>
 
 #include <ceOpenGL/gl4/pipeline/pointsm/gl4pointsmfilter.hh>
 #include <ceCore/graphics/ecubeface.hh>
@@ -32,7 +33,7 @@ class GL4PointLight;
 class GL4RenderTarget2D;
 class GL4RenderTargetCube;
 
-class GL4PointSMRenderer
+class CE_OGL_API GL4PointSMRenderer
 {
 
 public:
@@ -50,15 +51,15 @@ public:
   void RenderShadow(const GL4PointLight *pointLight, const Camera &camera, const Projector &projector);
 
   bool IsShadowMapValid(GL4RenderTarget2D *shadowMap) const;
-
+  iTextureCube *GetShadowBufferColor();
+  iTextureCube *GetShadowBufferDepth();
 private:
   void RenderShadowBuffer(const GL4PointLight *pointLight, const Camera &camera, const Projector &projector);
   void RenderShadowMap(const GL4PointLight *pointLight, const Camera &camera, const Projector &projector);
   void FilterShadowMap();
 
   GL4RenderTarget2D *GetShadowBuffer(eCubeFace face);
-  iTextureCube *GetShadowBufferColor();
-  iTextureCube *GetShadowBufferDepth();
+
   GL4RenderTarget2D *GetShadowMapTemp();
 
   iSampler *GetShadowMapColorSampler();
@@ -71,11 +72,11 @@ private:
 
   iTexture2D *m_depthBuffer = nullptr;
 
-  iTextureCube* m_pointLightShadowBufferColor = nullptr;
-  iTextureCube* m_pointLightShadowBufferDepth = nullptr;
+  iTextureCube *m_pointLightShadowBufferColor = nullptr;
+  iTextureCube *m_pointLightShadowBufferDepth = nullptr;
 
   std::array<GL4RenderTarget2D *, 6> m_pointLightShadowBuffer;
-  size_t                               m_pointLightShadowBufferSize = 0;
+  size_t                             m_pointLightShadowBufferSize = 0;
 
 
   GL4RenderTarget2D *m_pointLightShadowMapTemp  = nullptr;

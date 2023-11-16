@@ -44,6 +44,16 @@ public:
   void DecRenderMode()
   { m_renderMode = m_renderMode == 0 ? 3 : m_renderMode - 1; }
 
+  GL4DeferredPointLightRenderer &GetPointLightRenderer()
+  {
+    return m_pointLightRenderer;
+  }
+
+  GL4DeferredDirectionalLightRenderer &GetDirectionalLightRenderer()
+  {
+    return m_directionalLightRenderer;
+  }
+
 private:
 
   void RenderGBuffer(uint16_t width, uint16_t height);
