@@ -74,7 +74,7 @@ light_result_t calc_light(int idx, vec3 light_ambient, vec3 light_color, vec4 li
 
     if (ce_LightCastShadow[idx] > 0)
     {
-//        shadow = texture (ce_LightShadowMap[idx], screen_coord).r;
+        shadow = texture (ce_LightShadowMap[idx], screen_coord).r;
     }
 
     diffuse = clamp(diffuse, 0.0, 1.0);
@@ -87,8 +87,6 @@ light_result_t calc_light(int idx, vec3 light_ambient, vec3 light_color, vec4 li
     res.diffuse = light_color * diffuse * attShadow + ambient * ce_LightAmbient[idx].rgb;
     res.specular = light_color * specular * attShadow;
 
-    res.diffuse = vec3(1.0);
-    res.specular = vec3(0.0);
     return res;
 }
 
@@ -109,8 +107,6 @@ light_result_t calc_lights(vec3 frag_position, vec3 frag_normal, vec3 camera_spa
         res.diffuse += lightRes.diffuse;
         res.specular += lightRes.specular;
     }
-    res.diffuse = vec3(1.0);
-    res.specular = vec3(0.0);
     return res;
 }
 

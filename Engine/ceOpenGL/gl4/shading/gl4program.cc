@@ -24,14 +24,14 @@ GL4Program::~GL4Program()
     m_name = 0;
   }
 
-  for (GL4Shader* shader : m_shaders)
+  for (GL4Shader *shader: m_shaders)
   {
     shader->Release();
   }
   m_shaders.clear();
 }
 
-void GL4Program::AttachShader(GL4Shader* shader)
+void GL4Program::AttachShader(GL4Shader *shader)
 {
   if (!shader)
   {
@@ -48,7 +48,7 @@ void GL4Program::AttachShader(GL4Shader* shader)
   glAttachShader(m_name, shader->GetName());
 }
 
-void GL4Program::DetachShader(GL4Shader* shader)
+void GL4Program::DetachShader(GL4Shader *shader)
 {
   if (!shader)
   {
@@ -73,7 +73,7 @@ void GL4Program::Link()
   glGetProgramiv(m_name, GL_LINK_STATUS, &state);
   if (state == GL_FALSE)
   {
-    GLchar buffer[4096];
+    GLchar  buffer[4096];
     GLsizei length;
     glGetProgramInfoLog(m_name, 4096, &length, buffer);
     buffer[length] = '\0';
@@ -111,6 +111,8 @@ void GL4Program::RegisterRenderAttributes()
   RegisterAttribute("ShadowMapProjectionMatrix");
   RegisterAttribute("ShadowMapViewProjectionMatrix");
 
+  RegisterAttribute("RenderLayer");
+
   RegisterAttribute("LightColor");
   RegisterAttribute("LightVector");
   RegisterAttribute("LightRange");
@@ -130,20 +132,20 @@ void GL4Program::RegisterRenderAttributes()
 
 }
 
-Size GL4Program::RegisterAttribute(const std::string& attributeName)
+Size GL4Program::RegisterAttribute(const std::string &attributeName)
 {
   for (uint32_t i = 0; i < m_attributes.size(); i++)
   {
-    iShaderAttribute* attribute = m_attributes[i];
+    iShaderAttribute *attribute = m_attributes[i];
     if (attribute && attribute->GetName() == attributeName)
     {
       return i;
     }
   }
 
-  std::string locationName = "ce_" + attributeName;
-  GLint location = glGetUniformLocation(m_name, locationName.c_str());
-  iShaderAttribute* attribute = nullptr;
+  std::string      locationName = "ce_" + attributeName;
+  GLint            location     = glGetUniformLocation(m_name, locationName.c_str());
+  iShaderAttribute *attribute   = nullptr;
   if (location != -1)
   {
     attribute = new GL4ShaderAttribute(location, attributeName);
@@ -152,13 +154,13 @@ Size GL4Program::RegisterAttribute(const std::string& attributeName)
   return m_attributes.size() - 1;
 }
 
-Size GL4Program::GetAttributeId(const std::string& attributeName)
+Size GL4Program::GetAttributeId(const std::string &attributeName)
 {
   for (uint32_t i = 0; i < m_attributes.size(); i++)
   {
-    iShaderAttribute* attribute = m_attributes[i];
+    iShaderAttribute *attribute = m_attributes[i];
 
-    if (attribute && attribute ->GetName() == attributeName)
+    if (attribute && attribute->GetName() == attributeName)
     {
       return i;
     }
@@ -168,7 +170,7 @@ Size GL4Program::GetAttributeId(const std::string& attributeName)
 }
 
 
-iShaderAttribute* GL4Program::GetShaderAttribute(uint32_t id)
+iShaderAttribute *GL4Program::GetShaderAttribute(uint32_t id)
 {
   if (id >= m_attributes.size())
   {
@@ -178,9 +180,9 @@ iShaderAttribute* GL4Program::GetShaderAttribute(uint32_t id)
 }
 
 
-iShaderAttribute* GL4Program::GetShaderAttribute(const std::string& attributeName)
+iShaderAttribute *GL4Program::GetShaderAttribute(const std::string &attributeName)
 {
-  for (auto attribute : m_attributes)
+  for (auto attribute: m_attributes)
   {
     if (attribute && attribute->GetName() == attributeName)
     {
@@ -191,7 +193,7 @@ iShaderAttribute* GL4Program::GetShaderAttribute(const std::string& attributeNam
 }
 
 
-iShaderAttribute* GL4Program::GetShaderAttribute(eShaderAttribute shaderAttribute)
+iShaderAttribute *GL4Program::GetShaderAttribute(eShaderAttribute shaderAttribute)
 {
   return m_attributes[shaderAttribute];
 }

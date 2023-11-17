@@ -911,7 +911,7 @@ bool GL4Device::BindMaterial(iMaterial *material, eRenderPass pass)
 {
 #ifndef CE_DISABLE_RENDERING
   CE_GL_ERROR()
-  if (m_material == material && m_materialPass == pass)
+  if (m_material == material && m_materialPass == pass && false)
   {
     ResetTexturesToMark();
     return true;

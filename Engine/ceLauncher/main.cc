@@ -646,7 +646,7 @@ ce::LightState *add_point_light(ce::World *world, const ce::Vector3f &position, 
   pointLightState->SetRange(range);
   pointLightState->SetShadowMapBias(0.003f);
   pointLightState->SetStatic(true);
-  pointLightState->SetCastShadow(false);
+  pointLightState->SetCastShadow(true);
   pointLightState->GetTransform().SetTranslation(position).Finish();
   world->Attach(pointEntity);
   return pointLightState;
@@ -785,7 +785,7 @@ int main(int argc, char **argv)
   sunLightState->SetColor(ce::Color4f(0.7f, 0.7f, 1.0f, 1.0f) * 0.25);
   sunLightState->SetShadowMapBias(0.003f);
   sunLightState->SetStatic(true);
-  sunLightState->SetCastShadow(false);
+  sunLightState->SetCastShadow(true);
   sunLightState->SetTransform(sunLightState->GetTransform()
                                                //.SetRotation(ce::Quaternion::FromAxisAngle(ce::Vector3f(1.0f, 0.0f, 0.0f), ce::ceDeg2Rad(-45.0f)))
                                            .SetRotation(

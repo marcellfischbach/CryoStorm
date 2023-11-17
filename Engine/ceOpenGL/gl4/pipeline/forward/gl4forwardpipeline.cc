@@ -215,7 +215,6 @@ void GL4ForwardPipeline::RenderForwardToTarget()
   m_device->SetDepthFunc(eCF_LessOrEqual);
   m_device->Clear(true, Color4f(0.0f, 0.0f, 0.0f, 0.0f), true, 1.0f, true, 0);
 
-  printf ("Render: ");
   std::vector<GfxMesh*>& defaultMeshes = m_collector.GetMeshes(eRenderQueue::Default);
   for (auto            & mesh : defaultMeshes)
   {
@@ -235,7 +234,7 @@ void GL4ForwardPipeline::RenderForwardToTarget()
   m_device->SetDepthFunc(eCF_LessOrEqual);
 
   std::vector<GfxMesh*>& transparentMeshes = m_collector.GetMeshes(eRenderQueue::Transparency);
-  for (auto            & mesh : m_transparentMeshes)
+  for (auto            & mesh : transparentMeshes)
   {
     auto material = mesh->GetMaterial();
     if (material->GetShadingMode() == eShadingMode::Shaded)
@@ -248,7 +247,6 @@ void GL4ForwardPipeline::RenderForwardToTarget()
     }
   }
   m_device->SetRenderTarget(nullptr);
-  printf ("\n");
 }
 
 void GL4ForwardPipeline::RenderDebugToTarget()
@@ -351,16 +349,7 @@ void GL4ForwardPipeline::RenderMesh(GfxMesh* mesh, std::array<const GfxLight*, M
     mesh->RenderForward(m_device, eRP_Forward, lights.data(), numLights);
     CE_GL_ERROR();
   }
-  Size idx = mesh->GetMaterial()->IndexOf("Metallic");
-  if (idx == ~0x00)
-  {
-    printf ("-1");
-  }
-  else
-  {
-    mesh->GetMaterial()->Debug(idx);
-    printf (" ");
-  }
+
 
   //printf("  RenderUnlitForwardMesh - done\n");
 }
