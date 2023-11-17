@@ -71,7 +71,7 @@ void GL4ForwardPipeline::Render(iRenderTarget2D* target,
   ScanVisibleMeshes(&clppr);
 
   BindCamera();
-  RenderDepthToTarget();
+  //RenderDepthToTarget();
   ApplyDepthBufferToLightRenderers ();
 
 
@@ -200,7 +200,7 @@ void GL4ForwardPipeline::RenderDepthToTarget()
   {
       RenderUnlitDepthMesh(mesh);
   }
-  m_device->SetRenderTarget(nullptr);
+
 }
 
 
@@ -210,9 +210,12 @@ void GL4ForwardPipeline::RenderForwardToTarget()
   m_device->SetRenderBuffer(0);
   m_device->SetColorWrite(true, true, true, true);
   m_device->SetDepthTest(true);
-  m_device->SetDepthWrite(false);
+  m_device->SetDepthWrite(true);
+  m_device->SetBlending(false);
   m_device->SetDepthFunc(eCF_LessOrEqual);
+  m_device->Clear(true, Color4f(0.0f, 0.0f, 0.0f, 0.0f), true, 1.0f, true, 0);
 
+  printf ("Render: ");
   std::vector<GfxMesh*>& defaultMeshes = m_collector.GetMeshes(eRenderQueue::Default);
   for (auto            & mesh : defaultMeshes)
   {
@@ -245,6 +248,7 @@ void GL4ForwardPipeline::RenderForwardToTarget()
     }
   }
   m_device->SetRenderTarget(nullptr);
+  printf ("\n");
 }
 
 void GL4ForwardPipeline::RenderDebugToTarget()
@@ -346,6 +350,16 @@ void GL4ForwardPipeline::RenderMesh(GfxMesh* mesh, std::array<const GfxLight*, M
     CE_GL_ERROR();
     mesh->RenderForward(m_device, eRP_Forward, lights.data(), numLights);
     CE_GL_ERROR();
+  }
+  Size idx = mesh->GetMaterial()->IndexOf("Metallic");
+  if (idx == ~0x00)
+  {
+    printf ("-1");
+  }
+  else
+  {
+    mesh->GetMaterial()->Debug(idx);
+    printf (" ");
   }
 
   //printf("  RenderUnlitForwardMesh - done\n");

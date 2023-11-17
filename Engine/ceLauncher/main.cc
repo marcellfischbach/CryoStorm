@@ -646,7 +646,7 @@ ce::LightState *add_point_light(ce::World *world, const ce::Vector3f &position, 
   pointLightState->SetRange(range);
   pointLightState->SetShadowMapBias(0.003f);
   pointLightState->SetStatic(true);
-  pointLightState->SetCastShadow(true);
+  pointLightState->SetCastShadow(false);
   pointLightState->GetTransform().SetTranslation(position).Finish();
   world->Attach(pointEntity);
   return pointLightState;
@@ -981,7 +981,7 @@ int main(int argc, char **argv)
   ce::Matrix4f proj;
   device->GetPerspectiveProjection(-1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 1024.0f, proj);
 
-  ce::iMaterial *updateMaterial = suzanneMaterial;
+  ce::iMaterial *updateMaterial = defaultMaterialInstance;
   size_t        roughnessIdx    = updateMaterial->IndexOf("Roughness");
   size_t        metallicIdx     = updateMaterial->IndexOf("Metallic");
 #if _DEBUG
@@ -1156,16 +1156,7 @@ int main(int argc, char **argv)
     device->SetDepthTest(true);
 
 
-    if (pipeline == deferredPipeline && pointLight->IsCastShadow())
-    {
-      ce::iTextureCube *shadowTex = deferredPipeline->GetPointLightRenderer().GetShadowRenderer().GetShadowBufferDepth();
-      if (shadowTex)
-      {
-        // device->RenderFullscreen(shadowTex, ce::eCF_NegX, ce::Vector2f(0.5, 0.5f), ce::Vector2f(-0.5f, -0.5f));
-//        device->RenderFullscreen(shadowTex, ce::eCF_NegY); //, ce::Vector2f(0.5, 0.5f), ce::Vector2f(-0.5f, -0.5f));
-      }
 
-    }
 
 #if _DEBUG
     numDrawCallsPerSec += device->GetNumberOfDrawCalls();

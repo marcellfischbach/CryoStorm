@@ -424,6 +424,19 @@ void Material::Set(Size idx, iTexture* texture)
   CE_SET(attr.Texture, texture);
 
 }
+void Material::Debug(Size idx)
+{
+  if (idx >= m_attributes.size())
+  {
+    return;
+  }
+
+  Attribute & attr = m_attributes[idx];
+  if (attr.Type == eMAT_Float)
+  {
+    printf ("%.2f", attr.Floats[0]);
+  }
+}
 
 
 }

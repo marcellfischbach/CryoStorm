@@ -74,6 +74,7 @@ public:
   CE_NODISCARD std::vector<std::string> GetAttributeNames() const;
 
   Size IndexOf(const std::string & attributeName) override;
+  void Debug(Size idx) override;
 
   void Set(Size idx, float value) override;
   void Set(Size idx, const Vector2f & v) override;

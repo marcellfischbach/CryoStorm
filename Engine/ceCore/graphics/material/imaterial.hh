@@ -38,6 +38,7 @@ struct CE_CORE_API iMaterial : public CE_SUPER(iObject)
   virtual bool Bind(iDevice * device, eRenderPass pass) = 0;
 
   virtual Size IndexOf(const std::string & attributeName) = 0;
+  virtual void Debug (Size idx) {}
 
   virtual void Set(Size idx, float value) = 0;
   virtual void Set(Size idx, const Vector2f & v) = 0;
