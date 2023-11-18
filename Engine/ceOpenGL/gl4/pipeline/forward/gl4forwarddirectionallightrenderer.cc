@@ -91,10 +91,13 @@ void GL4ForwardDirectionalLightRenderer::RenderShadow(GL4DirectionalLight *direc
                                                       size_t lightIdx)
 {
   GL4RenderTarget2D *target = GetDirectionalLightShadowMap(lightIdx);
-  m_pssmRenderer.SetShadowMap(target);
-  m_pssmRenderer.RenderShadow(directionalLight, camera, projector);
+  if (target)
+  {
+    m_pssmRenderer.SetShadowMap(target);
+    m_pssmRenderer.RenderShadow(directionalLight, camera, projector);
 
-  ApplyShadowMapToDevice(directionalLight, lightIdx);
+    ApplyShadowMapToDevice(directionalLight, lightIdx);
+  }
 }
 
 

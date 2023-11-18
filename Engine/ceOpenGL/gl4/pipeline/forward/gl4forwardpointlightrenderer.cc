@@ -92,10 +92,13 @@ void GL4ForwardPointLightRenderer::RenderShadow(GL4PointLight *pointLight,
                                                       size_t lightIdx)
 {
   GL4RenderTarget2D *target = GetPointLightShadowMap(lightIdx);
-  m_shadowRenderer.SetShadowMap(target);
-  m_shadowRenderer.RenderShadow(pointLight, camera, projector);
+  if (target)
+  {
+    m_shadowRenderer.SetShadowMap(target);
+    m_shadowRenderer.RenderShadow(pointLight, camera, projector);
 
-  ApplyShadowMapToDevice(pointLight, lightIdx);
+    ApplyShadowMapToDevice(pointLight, lightIdx);
+  }
 }
 
 

@@ -10,7 +10,7 @@ namespace ce
 Settings::Settings(const std::string& locator)
   : m_file(nullptr)
 {
-  Initialize(locator);
+  Initialize(ResourceLocator(locator));
 }
 
 Settings::Settings(const ResourceLocator& locator)

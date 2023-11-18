@@ -9,7 +9,7 @@ namespace ce
 class CE_CORE_API ResourceLocator
 {
 public:
-	ResourceLocator(const std::string &encoded);
+	explicit ResourceLocator(const std::string &encoded);
 	ResourceLocator(const ResourceLocator &parent, const std::string &encoded);
 	ResourceLocator(const ResourceLocator *parent, const std::string &encoded);
 

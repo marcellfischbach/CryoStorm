@@ -71,7 +71,7 @@ void GL4ForwardPipeline::Render(iRenderTarget2D* target,
   ScanVisibleMeshes(&clppr);
 
   BindCamera();
-  //RenderDepthToTarget();
+  RenderDepthToTarget();
   ApplyDepthBufferToLightRenderers ();
 
 
@@ -351,7 +351,6 @@ void GL4ForwardPipeline::RenderMesh(GfxMesh* mesh, std::array<const GfxLight*, M
   }
 
 
-  //printf("  RenderUnlitForwardMesh - done\n");
 }
 
 void GL4ForwardPipeline::CollectShadowLights(GfxLight* light)

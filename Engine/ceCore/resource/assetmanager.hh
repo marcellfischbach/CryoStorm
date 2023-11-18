@@ -17,35 +17,45 @@ class CE_CORE_API AssetManager
 {
   friend class CoreModule;
 public:
-  static void Set(AssetManager* manager);
-  static AssetManager* Get();
+  static void Set(AssetManager *manager);
+  static AssetManager *Get();
 
-  void RegisterLoader(iAssetLoader* loader);
+  void RegisterLoader(iAssetLoader *loader);
 
-
-  template<typename T>
-  T* Get(const ResourceLocator& locator)
-  {
-    iObject* obj = Get(T::GetStaticClass(), locator);
-    return obj ? obj->Query<T>() : nullptr;
-  }
-  iObject* Get(const Class* cls, const ResourceLocator& locator);
 
   template<typename T>
-  T* Load(const ResourceLocator& locator)
+  T *Get(const std::string &locator)
   {
-    iObject* obj = Load(T::GetStaticClass(), locator);
-    return obj ? obj->Query<T>() : nullptr;
+    return Get<T>(ResourceLocator(locator));
   }
-  iObject* Load(const Class* cls, const ResourceLocator& locator);
+  iObject *Get(const Class *cls, const std::string &locator)
+  {
+    return Get(cls, ResourceLocator(locator));
+  }
 
   template<typename T>
-  T* Load(const std::string& locator)
+  T *Get(const ResourceLocator &locator)
   {
-    iObject* obj = Load(T::GetStaticClass(), ResourceLocator(locator));
+    iObject *obj = Get(T::GetStaticClass(), locator);
     return obj ? obj->Query<T>() : nullptr;
   }
-  iObject* Load(const Class* cls, const std::string& locator)
+  iObject *Get(const Class *cls, const ResourceLocator &locator);
+
+  template<typename T>
+  T *Load(const ResourceLocator &locator)
+  {
+    iObject *obj = Load(T::GetStaticClass(), locator);
+    return obj ? obj->Query<T>() : nullptr;
+  }
+  iObject *Load(const Class *cls, const ResourceLocator &locator);
+
+  template<typename T>
+  T *Load(const std::string &locator)
+  {
+    iObject *obj = Load(T::GetStaticClass(), ResourceLocator(locator));
+    return obj ? obj->Query<T>() : nullptr;
+  }
+  iObject *Load(const Class *cls, const std::string &locator)
   {
     return Load(cls, ResourceLocator(locator));
   }
@@ -54,13 +64,12 @@ protected:
   AssetManager();
 
 
-  std::vector<iAssetLoader*> m_loaders;
+  std::vector<iAssetLoader *> m_loaders;
 
 
 private:
-  static AssetManager* s_assetManager;
+  static AssetManager *s_assetManager;
 };
-
 
 
 }
