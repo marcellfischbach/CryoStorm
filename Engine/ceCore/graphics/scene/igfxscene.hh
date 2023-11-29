@@ -50,6 +50,10 @@ CE_CLASS_GEN;
   virtual void ScanMeshes(const iClipper *clipper,
                           GfxSceneCollector &collector
                          ) const = 0;
+  virtual void ScanMeshes(const iClipper *clipper,
+                          uint32_t scanMask,
+                          GfxSceneCollector &collector
+                          ) const = 0;
 
   virtual void ScanMeshes(const iClipper *clipper,
                           uint32_t scanMask,

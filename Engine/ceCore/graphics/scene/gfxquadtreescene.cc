@@ -38,6 +38,7 @@ struct GfxQuadtreeScene::Cell
   void UpdateBoundingBox();
   void RemoveLight(GfxLight *light) const;
   void ScanMeshes(const iClipper *clipper, GfxSceneCollector &collector) const;
+  void ScanMeshes(const iClipper *clipper, uint32_t scanMask, GfxSceneCollector &collector) const;
   void ScanMeshes(const iClipper *clipper,
                   uint32_t scanMask,
                   const std::function<void(GfxMesh *)> &callback) const;
@@ -259,6 +260,35 @@ void GfxQuadtreeScene::ScanMeshes(const iClipper *clipper, GfxSceneCollector &co
     }
   }
   m_root->ScanMeshes(clipper, collector);
+}
+
+void GfxQuadtreeScene::ScanMeshes(const iClipper *clipper, uint32_t scanMask, GfxSceneCollector &collector) const
+{
+  if (scanMask & eSM_Dynamic)
+  {
+    for (auto mesh: m_shadedMeshes)
+    {
+      if (!clipper || clipper->Test(mesh->GetBoundingBox()) != eClippingResult::eCR_Outside)
+      {
+        collector.AddMesh(mesh);
+      }
+    }
+  }
+  if (scanMask & eSM_Unshaded)
+  {
+    for (auto mesh: m_unshadedMeshes)
+    {
+      if (!clipper || clipper->Test(mesh->GetBoundingBox()) != eClippingResult::eCR_Outside)
+      {
+        collector.AddMesh(mesh);
+      }
+    }
+  }
+
+  if (scanMask & (eSM_Static | eSM_Unshaded))
+  {
+    m_root->ScanMeshes(clipper, scanMask, collector);
+  }
 }
 
 
@@ -567,7 +597,54 @@ void GfxQuadtreeScene::Cell::ScanMeshes(const iClipper *clipper, GfxSceneCollect
     }
   }
 }
+void GfxQuadtreeScene::Cell::ScanMeshes(const iClipper *clipper,
+                                        uint32_t scanMask,
+                                        GfxSceneCollector &collector
+                                       ) const
+{
+  eClippingResult res = clipper
+                        ? clipper->Test(m_bbox)
+                        : eClippingResult::eCR_Inside;
+  switch (res)
+  {
+    case eClippingResult::eCR_Outside:
+      return;
+    case eClippingResult::eCR_Inside:
+      clipper = nullptr;
+      break;
+    default:
+      break;
+  }
 
+
+  if (scanMask & eSM_Unshaded)
+  {
+    for (auto mesh: m_unshaded)
+    {
+      if (!clipper || clipper->Test(mesh->GetBoundingBox()) != eClippingResult::eCR_Outside)
+      {
+        collector.AddMesh(mesh);
+      }
+    }
+  }
+  if (scanMask & eSM_Static)
+  {
+    for (auto mesh: m_shaded)
+    {
+      if (!clipper || clipper->Test(mesh->GetBoundingBox()) != eClippingResult::eCR_Outside)
+      {
+        collector.AddMesh(mesh);
+      }
+    }
+  }
+  if (m_cells[0])
+  {
+    for (auto m_cell: m_cells)
+    {
+      m_cell->ScanMeshes(clipper, scanMask, collector);
+    }
+  }
+}
 void GfxQuadtreeScene::Cell::ScanMeshes(const iClipper *clipper,
                                         uint32_t scanMask,
                                         const std::function<void(GfxMesh *)> &callback

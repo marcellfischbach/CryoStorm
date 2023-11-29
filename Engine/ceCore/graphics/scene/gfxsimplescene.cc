@@ -301,5 +301,10 @@ void GfxSimpleScene::ScanMeshes(const iClipper *clipper, GfxSceneCollector &coll
 
 }
 
+void GfxSimpleScene::ScanMeshes(const iClipper *clipper, uint32_t scanMask, GfxSceneCollector &collector) const
+{
+
+}
+
 
 }

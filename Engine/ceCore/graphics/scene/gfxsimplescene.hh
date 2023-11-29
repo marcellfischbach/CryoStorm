@@ -40,6 +40,7 @@ public:
 
 
   void ScanMeshes(const iClipper *clipper, GfxSceneCollector &collector) const override;
+  void ScanMeshes(const iClipper *clipper, uint32_t scanMask, GfxSceneCollector &collector) const override;
   void ScanMeshes(const iClipper* clipper, uint32_t scanMask, const std::function<void(GfxMesh*)> &callback) const override;
   void ScanLights(const iClipper* clipper, uint32_t scanMask, const std::function<bool(GfxLight*)> &callback) const override;
 

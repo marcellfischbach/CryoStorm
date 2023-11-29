@@ -28,12 +28,13 @@ class GL4Device;
 class GL4DirectionalLight;
 class GL4RenderTarget2DArray;
 class GL4RenderTarget2D;
+class GL4Texture2DArray;
 
-class GL4PSSMRenderer
+class GL4PSSMRendererAlt
 {
 public:
-  GL4PSSMRenderer() = default;
-  ~GL4PSSMRenderer() = default;
+  GL4PSSMRendererAlt() = default;
+  ~GL4PSSMRendererAlt() = default;
 
   void Initialize(Settings &settings);
 
@@ -68,7 +69,8 @@ private:
 
   iTexture2D *m_depthBuffer = nullptr;
 
-  GL4RenderTarget2DArray *m_directionalLightShadowBuffer = nullptr;
+  GL4RenderTarget2DArray *m_directionalLightShadowBuffer;
+  std::array<GL4RenderTarget2D*, 4> m_directionalLightShadowBufferTarget;
   size_t                 m_directionalLightShadowBufferSize = 0;
 
 

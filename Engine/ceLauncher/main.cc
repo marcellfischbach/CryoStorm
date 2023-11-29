@@ -441,7 +441,7 @@ void generate_camera(ce::World *world)
 
   auto cameraHandler = new CameraHandler();
   cameraEntity->Attach(cameraState);
-  cameraEntity->Attach(cameraHandler);
+//  cameraEntity->Attach(cameraHandler);
   cameraEntity->GetRoot()->GetTransform()
               .SetTranslation(ce::Vector3f(20, 20, 20))
               .LookAt(ce::Vector3f(0, 0, 0))
@@ -449,13 +449,13 @@ void generate_camera(ce::World *world)
   world->Attach(cameraEntity);
   world->SetMainCamera(cameraState);
 
-  auto mirrorCameraEntity = new ce::Entity("MirrorCamera");
-  auto mirrorCameraState  = new ce::CameraState();
-  auto mirrorHandler      = new MirrorHandler();
-  mirrorCameraEntity->Attach(mirrorCameraState);
-  mirrorCameraEntity->Attach(mirrorHandler);
-  mirrorCameraState->SetRenderShadows(true);
-  mirrorHandler->SetCameraState(cameraState);
+//  auto mirrorCameraEntity = new ce::Entity("MirrorCamera");
+//  auto mirrorCameraState  = new ce::CameraState();
+//  auto mirrorHandler      = new MirrorHandler();
+//  mirrorCameraEntity->Attach(mirrorCameraState);
+//  mirrorCameraEntity->Attach(mirrorHandler);
+//  mirrorCameraState->SetRenderShadows(true);
+//  mirrorHandler->SetCameraState(cameraState);
 //  world->Attach(mirrorCameraEntity);
 
 //  auto mirrorRenderTarget = create_render_target(device, width / 2, height / 2, 1);
@@ -495,7 +495,7 @@ void generate_test_grid(ce::World *world, ce::iMaterial *material)
   auto mesh   = new ce::Mesh();
   mesh->AddMaterialSlot("Default", material);
   mesh->AddSubMesh(sphere, 0);
-  int gridSize = 1;
+  int gridSize = 100;
 
   for (int a = 0, i = 0; i < gridSize; i++)
   {
@@ -511,7 +511,7 @@ void generate_test_grid(ce::World *world, ce::iMaterial *material)
                      .Finish();
       meshStateSphere->SetMesh(mesh);
       entity->Attach(meshStateSphere);
-#if 1
+#if 0
       auto rnd = (float) rand() / (float) RAND_MAX;
       int   ma  = a % 4;
       switch (ma)
@@ -698,9 +698,9 @@ ce::LightState *add_point_light(ce::World *world,
 
   auto entity     = new ce::Entity("Point");
   auto lightState = new ce::LightState("PointLight");
-  auto testState  = new TestHandler01(position, range * 0.25f, 0.5f * rnd);
+//  auto testState  = new TestHandler01(position, range * 0.25f, 0.5f * rnd);
   entity->Attach(lightState);
-  entity->Attach(testState);
+//  entity->Attach(testState);
   lightState->SetType(ce::eLT_Point);
   lightState->SetColor(color);
   lightState->SetRange(range);
@@ -724,7 +724,7 @@ void setup_world(ce::World *world)
   generate_physics(world, material);
   generate_test_grid(world, material);
 
-
+#if 1
   add_directional_light(world,
                         ce::Vector3f(1.0f, 0.2f, 0.0f),
                         ce::ceDeg2Rad(-45.0f),
@@ -738,11 +738,11 @@ void setup_world(ce::World *world)
                         ce::Color4f(1.0f, 1.0f, 1.0f, 1.0f),
                         true,
                         false);
+#endif
 
+//  add_point_light(world, ce::Vector3f(0.0f, 5.0f, 0.0f), 50.0f, ce::Color4f(1.0, 1.0f, 1.0f), true);
 
-  add_point_light(world, ce::Vector3f(), 25.0f, ce::Color4f(1.0, 1.0f, 1.0f), false);
-
-#if 1
+#if 0
   add_point_light(world, ce::Vector3f(10.0f, 10.0f, 10.0f), 25.0f, ce::Color4f(1.0, 0.0f, 1.0f), false);
   add_point_light(world, ce::Vector3f(0.0f, 10.0f, 10.0f), 25.0f, ce::Color4f(0.5, 0.0f, 1.0f), false);
   add_point_light(world, ce::Vector3f(-10.0f, 10.0f, 10.0f), 25.0f, ce::Color4f(0.0, 0.0f, 1.0f), false);

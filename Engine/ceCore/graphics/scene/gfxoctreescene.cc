@@ -66,4 +66,9 @@ void GfxOctreeScene::ScanMeshes(const iClipper *clipper, GfxSceneCollector &coll
 
 }
 
+void GfxOctreeScene::ScanMeshes(const iClipper *clipper, uint32_t scanMask, GfxSceneCollector &collector) const
+{
+
+}
+
 }

@@ -1,5 +1,5 @@
 
-#include <ceOpenGL/gl4/pipeline/pssm/gl4pssmrenderer.hh>
+#include <ceOpenGL/gl4/pipeline/pssm/GL4PSSMRendererAlt_alt.hh>
 #include <ceOpenGL/gl4/pipeline/forward/gl4forwardmeshsorter.hh>
 #include <ceOpenGL/gl4/gl4device.hh>
 #include <ceOpenGL/gl4/gl4directionallight.hh>
@@ -23,7 +23,7 @@ namespace ce::opengl
 {
 
 
-void GL4PSSMRenderer::Initialize(ce::Settings &settings)
+void GL4PSSMRendererAlt::Initialize(ce::Settings &settings)
 {
   m_shadowNear = settings.GetFloat("directional_light.shadow_map.near", 1.0f);
   m_shadowFar  = settings.GetFloat("directional_light.shadow_map.far", 1.0f);
@@ -71,35 +71,35 @@ void GL4PSSMRenderer::Initialize(ce::Settings &settings)
 }
 
 
-void GL4PSSMRenderer::SetDevice(GL4Device *device)
+void GL4PSSMRendererAlt::SetDevice(GL4Device *device)
 {
   CE_SET(m_device, device);
 }
 
-void GL4PSSMRenderer::SetDepthBuffer(iTexture2D *depthBuffer)
+void GL4PSSMRendererAlt::SetDepthBuffer(iTexture2D *depthBuffer)
 {
   CE_SET(m_depthBuffer, depthBuffer);
   m_directionalLightShadowMapWidth  = m_depthBuffer->GetWidth();
   m_directionalLightShadowMapHeight = m_depthBuffer->GetHeight();
 }
 
-void GL4PSSMRenderer::SetScene(iGfxScene *scene)
+void GL4PSSMRendererAlt::SetScene(iGfxScene *scene)
 {
   CE_SET(m_scene, scene);
 }
 
-void GL4PSSMRenderer::SetShadowMap(GL4RenderTarget2D *shadowMap)
+void GL4PSSMRendererAlt::SetShadowMap(GL4RenderTarget2D *shadowMap)
 {
   CE_SET(m_directionalLightShadowMap, shadowMap);
 }
 
-GL4RenderTarget2D *GL4PSSMRenderer::GetShadowMap()
+GL4RenderTarget2D *GL4PSSMRendererAlt::GetShadowMap()
 {
   return m_directionalLightShadowMap;
 }
 
 
-void GL4PSSMRenderer::RenderShadow(const GL4DirectionalLight *directionalLight,
+void GL4PSSMRendererAlt::RenderShadow(const GL4DirectionalLight *directionalLight,
                                    const ce::Camera &camera,
                                    const ce::Projector &projector)
 {
@@ -109,7 +109,7 @@ void GL4PSSMRenderer::RenderShadow(const GL4DirectionalLight *directionalLight,
 //  FilterShadowMap();
 }
 
-void GL4PSSMRenderer::RenderShadowBuffer(const GL4DirectionalLight *directionalLight,
+void GL4PSSMRendererAlt::RenderShadowBuffer(const GL4DirectionalLight *directionalLight,
                                          const ce::Camera &camera,
                                          const ce::Projector &projector)
 {
@@ -283,7 +283,7 @@ void GL4PSSMRenderer::RenderShadowBuffer(const GL4DirectionalLight *directionalL
 
 }
 
-void GL4PSSMRenderer::RenderShadowBufferAlt(const GL4DirectionalLight *directionalLight,
+void GL4PSSMRendererAlt::RenderShadowBufferAlt(const GL4DirectionalLight *directionalLight,
                                          const ce::Camera &camera,
                                          const ce::Projector &projector)
 {
@@ -456,7 +456,7 @@ void GL4PSSMRenderer::RenderShadowBufferAlt(const GL4DirectionalLight *direction
   //  m_device->SetColorWrite(true, true, true, true);
 
 }
-void GL4PSSMRenderer::RenderShadowMap(const GL4DirectionalLight *directionalLight,
+void GL4PSSMRendererAlt::RenderShadowMap(const GL4DirectionalLight *directionalLight,
                                       const ce::Camera &camera,
                                       const ce::Projector &projector)
 {
@@ -500,7 +500,7 @@ void GL4PSSMRenderer::RenderShadowMap(const GL4DirectionalLight *directionalLigh
   m_device->RenderFullscreen();
 }
 
-void GL4PSSMRenderer::FilterShadowMap()
+void GL4PSSMRendererAlt::FilterShadowMap()
 {
   m_device->ResetTextures();
 
@@ -513,7 +513,7 @@ void GL4PSSMRenderer::FilterShadowMap()
 }
 
 
-GL4RenderTarget2DArray *GL4PSSMRenderer::GetDirectionalLightShadowBuffer()
+GL4RenderTarget2DArray *GL4PSSMRendererAlt::GetDirectionalLightShadowBuffer()
 {
   if (!m_directionalLightShadowBuffer)
   {
@@ -560,14 +560,14 @@ GL4RenderTarget2DArray *GL4PSSMRenderer::GetDirectionalLightShadowBuffer()
   return m_directionalLightShadowBuffer;
 }
 
-bool GL4PSSMRenderer::IsShadowMapValid(GL4RenderTarget2D *shadowMap) const
+bool GL4PSSMRendererAlt::IsShadowMapValid(GL4RenderTarget2D *shadowMap) const
 {
   return shadowMap
          && shadowMap->GetWidth() == m_directionalLightShadowMapWidth
          && shadowMap->GetHeight() == m_directionalLightShadowMapHeight;
 }
 
-GL4RenderTarget2D *GL4PSSMRenderer::GetDirectionalLightShadowMapTemp()
+GL4RenderTarget2D *GL4PSSMRendererAlt::GetDirectionalLightShadowMapTemp()
 {
   GL4RenderTarget2D *target = m_directionalLightShadowMapTemp;
   if (target)
@@ -586,7 +586,7 @@ GL4RenderTarget2D *GL4PSSMRenderer::GetDirectionalLightShadowMapTemp()
 }
 
 
-GL4RenderTarget2D *GL4PSSMRenderer::CreateDirectionalLightShadowMap()
+GL4RenderTarget2D *GL4PSSMRendererAlt::CreateDirectionalLightShadowMap()
 {
   iRenderTarget2D::Descriptor desc {};
   desc.Width  = (uint16_t) m_directionalLightShadowMapWidth;
@@ -613,7 +613,7 @@ GL4RenderTarget2D *GL4PSSMRenderer::CreateDirectionalLightShadowMap()
 }
 
 
-float GL4PSSMRenderer::GetSplitSize(const Vector3f *near, const Vector3f *far)
+float GL4PSSMRendererAlt::GetSplitSize(const Vector3f *near, const Vector3f *far)
 {
   /*
   *     1         3
@@ -639,7 +639,7 @@ float GL4PSSMRenderer::GetSplitSize(const Vector3f *near, const Vector3f *far)
   return ceSqrt(maxDist) * 1.1f;
 }
 
-iSampler *GL4PSSMRenderer::GetShadowMapColorSampler()
+iSampler *GL4PSSMRendererAlt::GetShadowMapColorSampler()
 {
   if (!m_shadowMapColorSampler)
   {
@@ -653,7 +653,7 @@ iSampler *GL4PSSMRenderer::GetShadowMapColorSampler()
   return m_shadowMapColorSampler;
 }
 
-iSampler *GL4PSSMRenderer::GetShadowBufferColorSampler()
+iSampler *GL4PSSMRendererAlt::GetShadowBufferColorSampler()
 {
   if (!m_shadowBufferColorSampler)
   {
@@ -667,7 +667,7 @@ iSampler *GL4PSSMRenderer::GetShadowBufferColorSampler()
   return m_shadowBufferColorSampler;
 }
 
-iSampler *GL4PSSMRenderer::GetShadowBufferDepthSampler()
+iSampler *GL4PSSMRendererAlt::GetShadowBufferDepthSampler()
 {
   if (!m_shadowMapDepthSampler)
   {
