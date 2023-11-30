@@ -33,7 +33,7 @@ class GL4Texture2DArray;
 class GL4PSSMRendererAlt
 {
 public:
-  GL4PSSMRendererAlt() = default;
+  GL4PSSMRendererAlt();
   ~GL4PSSMRendererAlt() = default;
 
   void Initialize(Settings &settings);
@@ -50,13 +50,12 @@ public:
   bool IsShadowMapValid (GL4RenderTarget2D *shadowMap) const;
 private:
   void RenderShadowBuffer(const GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector);
-  void RenderShadowBufferAlt(const GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector);
   void RenderShadowMap(const GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector);
   void FilterShadowMap();
 
 
   GL4RenderTarget2D *GetDirectionalLightShadowMapTemp();
-  GL4RenderTarget2DArray *GetDirectionalLightShadowBuffer();
+  GL4RenderTarget2D *GetDirectionalLightShadowBuffer(size_t split);
   static float GetSplitSize(const Vector3f *near, const Vector3f *far);
   iSampler *GetShadowMapColorSampler();
   iSampler *GetShadowBufferColorSampler();
@@ -69,8 +68,7 @@ private:
 
   iTexture2D *m_depthBuffer = nullptr;
 
-  GL4RenderTarget2DArray *m_directionalLightShadowBuffer;
-  std::array<GL4RenderTarget2D*, 4> m_directionalLightShadowBufferTarget;
+  std::array<GL4RenderTarget2D*, 4> m_directionalLightShadowBuffers;
   size_t                 m_directionalLightShadowBufferSize = 0;
 
 
@@ -97,9 +95,9 @@ private:
 
   iShader          *m_shadowMappingShader = nullptr;
   iShaderAttribute *m_attrLayersDepth     = nullptr;
-  iShaderAttribute *m_attrLayersBias      = nullptr;
-  iShaderAttribute *m_attrShadowBuffer    = nullptr;
-  iShaderAttribute *m_attrDepthBuffer     = nullptr;
+  iShaderAttribute *m_attrLayersBias    = nullptr;
+  iShaderAttribute *m_attrShadowBuffers = nullptr;
+  iShaderAttribute *m_attrDepthBuffer   = nullptr;
 
 
   GL4DirectionalLightShadowMapFilter m_shadowMapFilter;

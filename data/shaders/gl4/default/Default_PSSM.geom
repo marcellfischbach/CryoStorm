@@ -7,16 +7,18 @@ uniform mat4 ce_ShadowMapViewProjectionMatrix[4];
 
 void main()
 {
+	for (int i=0; i<4; i++)
 	{
-		gl_Layer = 0;
-		gl_Position = ce_ShadowMapViewProjectionMatrix[0] * gl_in[0].gl_Position;
+		gl_Layer = i;
+		gl_Position = ce_ShadowMapViewProjectionMatrix[i] * gl_in[0].gl_Position;
 		EmitVertex();
-		gl_Position = ce_ShadowMapViewProjectionMatrix[0] * gl_in[1].gl_Position;
+		gl_Position = ce_ShadowMapViewProjectionMatrix[i] * gl_in[1].gl_Position;
 		EmitVertex();
-		gl_Position = ce_ShadowMapViewProjectionMatrix[0] * gl_in[2].gl_Position;
+		gl_Position = ce_ShadowMapViewProjectionMatrix[i] * gl_in[2].gl_Position;
 		EmitVertex();
 		EndPrimitive();
 	}
+	/*
 	{
 		gl_Layer = 1;
 		gl_Position = ce_ShadowMapViewProjectionMatrix[1] * gl_in[0].gl_Position;
@@ -47,6 +49,6 @@ void main()
 		EmitVertex();
 		EndPrimitive();
 	}
-
+	*/
 }
 

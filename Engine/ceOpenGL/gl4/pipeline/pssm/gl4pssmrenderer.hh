@@ -49,7 +49,6 @@ public:
   bool IsShadowMapValid (GL4RenderTarget2D *shadowMap) const;
 private:
   void RenderShadowBuffer(const GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector);
-  void RenderShadowBufferAlt(const GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector);
   void RenderShadowMap(const GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector);
   void FilterShadowMap();
 

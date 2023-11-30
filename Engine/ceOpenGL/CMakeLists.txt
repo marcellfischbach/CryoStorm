@@ -73,6 +73,8 @@ set(SOURCES
 
 		gl4/pipeline/pssm/gl4pssmrenderer.cc
 		gl4/pipeline/pssm/gl4pssmrenderer.hh
+		gl4/pipeline/pssm/gl4pssmrenderer_alt.cc
+		gl4/pipeline/pssm/gl4pssmrenderer_alt.hh
 		gl4/pipeline/pssm/gl4directionallightshadowmapfilter.cc
 		gl4/pipeline/pssm/gl4directionallightshadowmapfilter.hh
 
