@@ -188,43 +188,41 @@ void GL4PSSMRendererAlt::RenderShadowBuffer(const GL4DirectionalLight *direction
   views[3].SetLookAt(pos3, pos3 + directionalLight->GetDirection(), Vector3f(0, 1, 0));
 
 
-  Matrix4f projections[4];
-  m_device->GetOrthographicProjection(-sizeSplit0 - mod0X,
-                                      sizeSplit0 - mod0X,
-                                      -sizeSplit0 - mod0Y,
-                                      sizeSplit0 - mod0Y,
-                                      -1.0f,
-                                      1.0f,
-                                      projections[0]);
-  m_device->GetOrthographicProjection(-sizeSplit1 - mod1X,
-                                      sizeSplit1 - mod1X,
-                                      -sizeSplit1 - mod1Y,
-                                      sizeSplit1 - mod1Y,
-                                      -1.0f,
-                                      1.0f,
-                                      projections[1]);
-  m_device->GetOrthographicProjection(-sizeSplit2 - mod2X,
-                                      sizeSplit2 - mod2X,
-                                      -sizeSplit2 - mod2Y,
-                                      sizeSplit2 - mod2Y,
-                                      -1.0f,
-                                      1.0f,
-                                      projections[2]);
-  m_device->GetOrthographicProjection(-sizeSplit3 - mod3X,
-                                      sizeSplit3 - mod3X,
-                                      -sizeSplit3 - mod3Y,
-                                      sizeSplit3 - mod3Y,
-                                      -1.0f,
-                                      1.0f,
-                                      projections[3]);
-
-
 
 
 
 
   for (size_t i = 0; i < 4; i++)
   {
+    Matrix4f projections[4];
+    m_device->GetOrthographicProjectionInv(-sizeSplit0 - mod0X,
+                                        sizeSplit0 - mod0X,
+                                        -sizeSplit0 - mod0Y,
+                                        sizeSplit0 - mod0Y,
+                                        -1.0f,
+                                        1.0f,
+                                        projections[0]);
+    m_device->GetOrthographicProjectionInv(-sizeSplit1 - mod1X,
+                                        sizeSplit1 - mod1X,
+                                        -sizeSplit1 - mod1Y,
+                                        sizeSplit1 - mod1Y,
+                                        -1.0f,
+                                        1.0f,
+                                        projections[1]);
+    m_device->GetOrthographicProjectionInv(-sizeSplit2 - mod2X,
+                                        sizeSplit2 - mod2X,
+                                        -sizeSplit2 - mod2Y,
+                                        sizeSplit2 - mod2Y,
+                                        -1.0f,
+                                        1.0f,
+                                        projections[2]);
+    m_device->GetOrthographicProjectionInv(-sizeSplit3 - mod3X,
+                                        sizeSplit3 - mod3X,
+                                        -sizeSplit3 - mod3Y,
+                                        sizeSplit3 - mod3Y,
+                                        -1.0f,
+                                        1.0f,
+                                        projections[3]);
 
     CameraClipper clipper(views[i], projections[i], false, false);
 
@@ -300,7 +298,6 @@ void GL4PSSMRendererAlt::RenderShadowBuffer(const GL4DirectionalLight *direction
 
     std::sort(m_meshesCache.begin(), m_meshesCache.end(), material_shader_compare_less_forward);
 
-    printf ("%d ", m_meshesCache.size());
     for (auto mesh: m_meshesCache)
     {
       mesh->RenderUnlit(m_device, eRP_Depth);
@@ -308,7 +305,6 @@ void GL4PSSMRendererAlt::RenderShadowBuffer(const GL4DirectionalLight *direction
     //  m_device->BindMaterial(nullptr, eRP_COUNT);
     //  m_device->SetColorWrite(true, true, true, true);
   }
-  printf("\n");
 }
 
 
@@ -327,6 +323,7 @@ void GL4PSSMRendererAlt::RenderShadowMap(const GL4DirectionalLight *directionalL
   m_device->Clear(true, Color4f(0.0, 0.0f, 0.0f, 0.0f), true, 1.0f, true, 0);
 
   m_device->SetShader(m_shadowMappingShader);
+  m_device->ResetTextures();
   camera.Bind(m_device);
   projector.Bind(m_device);
 

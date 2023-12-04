@@ -186,13 +186,14 @@ void GL4PSSMRenderer::RenderShadowBuffer(const GL4DirectionalLight *directionalL
   m_device->GetOrthographicProjectionInv(-sizeSplitTot - modTotX,
                                          sizeSplitTot - modTotX,
                                          -sizeSplitTot - modTotY,
-                                         sizeSplitTot - mod2Y,
+                                         sizeSplitTot - modTotY,
                                          -1.0f,
                                          1.0f,
                                          projectionTot);
 
 
   CameraClipper clipper(viewTot, projectionTot, false, false);
+
 
   float near[] = {FLT_MAX, FLT_MAX, FLT_MAX, FLT_MAX};
   float far[]  = {-FLT_MAX, -FLT_MAX, -FLT_MAX, -FLT_MAX};
@@ -274,7 +275,6 @@ void GL4PSSMRenderer::RenderShadowBuffer(const GL4DirectionalLight *directionalL
 
   std::sort(m_meshesCache.begin(), m_meshesCache.end(), material_shader_compare_less_forward);
 
-  printf ("%d\n", m_meshesCache.size());
   for (auto mesh: m_meshesCache)
   {
     mesh->RenderUnlit(m_device, eRP_ShadowPSSM);
