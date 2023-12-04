@@ -59,7 +59,7 @@
 #include <SDL.h>
 #include <regex>
 #include <string>
-
+#include <ceCore/time.hh>
 ce::SDLKeyboard keyboard;
 
 ce::SDLMouse mouse;
@@ -831,6 +831,7 @@ int main(int argc, char **argv)
     device->ResetDebug();
 #endif
     uint32_t time = SDL_GetTicks();
+    uint64_t _time = ce::Time::GetTime();
     if (time > nextSec)
     {
       nextSec += 1000;
@@ -853,7 +854,13 @@ int main(int argc, char **argv)
     {
       frames++;
     }
+
     uint32_t deltaTime = time - lastTime;
+
+
+
+
+
 
 //    SDL_GL_MakeCurrent(wnd, context);
     UpdateEvents();
@@ -867,6 +874,7 @@ int main(int argc, char **argv)
     {
       anim = !anim;
     }
+
     if (deltaTime != 0)
     {
       lastTime = time;

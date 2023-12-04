@@ -17,7 +17,7 @@
 #include <ceCore/math/clipper/cameraclipper.hh>
 
 #include <algorithm>
-
+#include <ceCore/time.hh>
 
 namespace ce::opengl
 {
@@ -121,7 +121,7 @@ void GL4PSSMRendererAlt::RenderShadowBuffer(const GL4DirectionalLight *direction
                                             const ce::Projector &projector)
 {
 
-
+  uint64_t totalStart = Time::GetTime();
   Vector3f nearPoints[4];
   Vector3f split0Points[4];
   Vector3f split1Points[4];
@@ -191,7 +191,6 @@ void GL4PSSMRendererAlt::RenderShadowBuffer(const GL4DirectionalLight *direction
 
 
 
-
   for (size_t i = 0; i < 4; i++)
   {
     Matrix4f projections[4];
@@ -228,6 +227,8 @@ void GL4PSSMRendererAlt::RenderShadowBuffer(const GL4DirectionalLight *direction
 
     float near[] = {FLT_MAX, FLT_MAX, FLT_MAX, FLT_MAX};
     float far[]  = {-FLT_MAX, -FLT_MAX, -FLT_MAX, -FLT_MAX};
+
+    uint64_t startScan = Time::GetTime();
     m_meshesCache.clear();
     m_scene->ScanMeshes(&clipper, iGfxScene::eSM_Dynamic | iGfxScene::eSM_Static,
                         [this, &views, &near, &far](GfxMesh *mesh) {
@@ -255,6 +256,8 @@ void GL4PSSMRendererAlt::RenderShadowBuffer(const GL4DirectionalLight *direction
                           }
                         }
     );
+    uint64_t endScan = Time::GetTime();
+
     m_device->GetOrthographicProjection(-sizeSplit0 - mod0X,
                                         sizeSplit0 - mod0X,
                                         -sizeSplit0 - mod0Y,
@@ -298,13 +301,22 @@ void GL4PSSMRendererAlt::RenderShadowBuffer(const GL4DirectionalLight *direction
 
     std::sort(m_meshesCache.begin(), m_meshesCache.end(), material_shader_compare_less_forward);
 
+    uint64_t startTime = Time::GetTime();
     for (auto mesh: m_meshesCache)
     {
       mesh->RenderUnlit(m_device, eRP_Depth);
     }
+    uint64_t endTime = Time::GetTime();
+
+//    printf ("%llu (%llu)   ", endTime - startTime, endScan - startScan);
     //  m_device->BindMaterial(nullptr, eRP_COUNT);
     //  m_device->SetColorWrite(true, true, true, true);
   }
+
+  uint64_t totalEnd = Time::GetTime();
+
+//  printf (" => %llu\n", totalEnd - totalStart);
+
 }
 
 

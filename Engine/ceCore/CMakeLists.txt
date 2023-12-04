@@ -19,6 +19,8 @@ set(SOURCES
         settings.hh
         string.cc
         string.hh
+        time.cc
+        time.hh
         types.hh
 
         entity/camerastate.cc
