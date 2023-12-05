@@ -12,7 +12,7 @@
 #include <ceCore/graphics/shading/ishaderattribute.hh>
 
 #define PSSM_RENDERER m_pssmRendererAlt
-//#define PSSM_RENDERER m_pssmRenderer
+#define PSSM_RENDERER m_pssmRenderer
 
 namespace ce::opengl
 {

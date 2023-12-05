@@ -102,7 +102,6 @@ bool GL4TerrainMeshCPU::Line::UpdateStepSize(const Vector3f &refPoint, size_t ov
   int logi = (int)log;
 
   stepSize = static_cast<size_t>(1 << logi);
-  /*
   if (stepSize < 1)
   {
     stepSize = 1;
@@ -111,9 +110,9 @@ bool GL4TerrainMeshCPU::Line::UpdateStepSize(const Vector3f &refPoint, size_t ov
   {
     stepSize = patchSize2;
   }
-  */
+
   // revalidate the real step size here... for now just set to maximum
-  if (absStepSize != stepSize)
+  if (useStepSize != stepSize)
   {
     useStepSize = stepSize;
     return true;

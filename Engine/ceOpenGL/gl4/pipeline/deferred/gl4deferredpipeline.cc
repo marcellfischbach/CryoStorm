@@ -91,6 +91,8 @@ void GL4DeferredPipeline::RenderGBuffer(uint16_t width,
   m_device->Clear(true, Color4f(0.0f, 0.0f, 0.0f, 0.0f), true, 1.0f, true, 0);
   m_device->BindMaterial(nullptr, eRP_GBuffer);
   std::vector<GfxMesh *> &meshes = m_collector.GetMeshes(eRenderQueue::Default);
+
+
   for (const auto        mesh: meshes)
   {
     mesh->Render(m_device, eRP_GBuffer);

@@ -273,7 +273,7 @@ void GL4PSSMRenderer::RenderShadowBuffer(const GL4DirectionalLight *directionalL
   m_device->SetShadowMapProjectionMatrices(projections, 4);
   m_device->SetShadowMapViewMatrices(views, 4);
 
-  std::sort(m_meshesCache.begin(), m_meshesCache.end(), material_shader_compare_less_forward);
+//  std::sort(m_meshesCache.begin(), m_meshesCache.end(), material_shader_compare_less_forward);
 
   for (auto mesh: m_meshesCache)
   {

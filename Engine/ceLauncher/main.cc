@@ -64,6 +64,7 @@ ce::SDLKeyboard keyboard;
 
 ce::SDLMouse mouse;
 
+ce::LightState* shadowLightState = nullptr;
 
 void UpdateEvents()
 {
@@ -443,7 +444,7 @@ void generate_camera(ce::World *world)
   cameraEntity->Attach(cameraState);
 //  cameraEntity->Attach(cameraHandler);
   cameraEntity->GetRoot()->GetTransform()
-              .SetTranslation(ce::Vector3f(20, 20, 20))
+              .SetTranslation(ce::Vector3f(5, 5, 5))
               .LookAt(ce::Vector3f(0, 0, 0))
               .Finish();
   world->Attach(cameraEntity);
@@ -495,7 +496,9 @@ void generate_test_grid(ce::World *world, ce::iMaterial *material)
   auto mesh   = new ce::Mesh();
   mesh->AddMaterialSlot("Default", material);
   mesh->AddSubMesh(sphere, 0);
-  int gridSize = 100;
+  int gridSize = 5;
+
+  float start = static_cast<float>(gridSize) / 2.0f;
 
   for (int a = 0, i = 0; i < gridSize; i++)
   {
@@ -507,7 +510,7 @@ void generate_test_grid(ce::World *world, ce::iMaterial *material)
 
       auto meshStateSphere = new ce::StaticMeshState("Mesh");
       meshStateSphere->GetTransform()
-                     .SetTranslation(i - 50, 0.25f, j - 50)
+                     .SetTranslation(i - start, 0.25f, j - start)
                      .Finish();
       meshStateSphere->SetMesh(mesh);
       entity->Attach(meshStateSphere);
@@ -725,7 +728,7 @@ void setup_world(ce::World *world)
   generate_test_grid(world, material);
 
 #if 1
-  add_directional_light(world,
+  shadowLightState = add_directional_light(world,
                         ce::Vector3f(1.0f, 0.2f, 0.0f),
                         ce::ceDeg2Rad(-45.0f),
                         ce::Color4f(1.0f, 1.0f, 1.0f, 1.0f),
@@ -923,6 +926,11 @@ int main(int argc, char **argv)
           deferredPipeline->IncRenderMode();
         }
       }
+    }
+
+    if (ce::Input::IsKeyPressed(ce::Key::eK_L) && shadowLightState)
+    {
+      shadowLightState->SetCastShadow(!shadowLightState->IsCastShadow());
     }
 
     frameRenderer->Render(renderTarget, device, world->GetScene());

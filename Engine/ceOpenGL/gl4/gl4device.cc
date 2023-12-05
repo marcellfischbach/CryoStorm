@@ -48,6 +48,13 @@ GL4Device::GL4Device()
     , m_modelViewMatrixInvDirty(false)
     , m_viewProjectionMatrixInvDirty(false)
     , m_modelViewProjectionMatrixInvDirty(false)
+    , m_clearColorR(0.0f)
+    , m_clearColorG(0.0f)
+    , m_clearColorB(0.0f)
+    , m_clearColorA(0.0f)
+    , m_clearDepth(1.0f)
+    , m_clearStencil(0)
+    , m_activeTexture(0)
     , m_fullscreenBlitProgram(nullptr)
     , m_fullscreenBlitMSProgram(nullptr)
     , m_fullscreenBlitRenderMesh(nullptr)
@@ -149,17 +156,31 @@ void GL4Device::Clear(bool clearColor,
   if (clearColor)
   {
     flags |= GL_COLOR_BUFFER_BIT;
-    glClearColor(color.r, color.g, color.b, color.a);
+    if (color.r != m_clearColorR || color.g != m_clearColorG || color.b != m_clearColorB || color.a != m_clearColorA)
+    {
+      m_clearColorR = color.r;
+      m_clearColorG = color.g;
+      m_clearColorB = color.b;
+      m_clearColorA = color.a;
+      glClearColor(color.r, color.g, color.b, color.a);
+    }
   }
   if (clearDepth)
   {
     flags |= GL_DEPTH_BUFFER_BIT;
-    glClearDepth(depth);
+    if (depth != m_clearDepth)
+    {
+      m_clearDepth = depth;
+      glClearDepth(depth);
+    }
   }
   if (clearStencil)
   {
     flags |= GL_STENCIL_BUFFER_BIT;
-    glClearStencil(stencil);
+    if (clearStencil != m_clearStencil)
+    {
+      glClearStencil(stencil);
+    }
   }
   if (flags != 0)
   {
@@ -675,7 +696,7 @@ iSampler *GL4Device::CreateSampler()
 iTexture2D *GL4Device::CreateTexture(const iTexture2D::Descriptor &descriptor)
 {
   CE_GL_ERROR();
-  glActiveTexture(GL_TEXTURE0 + eTU_COUNT + 1);
+  SetActiveTexture(GL_TEXTURE0 + eTU_COUNT + 1);
   UnbindUnsafe(m_tempTexture);
   CE_GL_ERROR();
 
@@ -695,7 +716,7 @@ iTexture2D *GL4Device::CreateTexture(const iTexture2D::Descriptor &descriptor)
 iTexture2DArray *GL4Device::CreateTexture(const iTexture2DArray::Descriptor &descriptor)
 {
   CE_GL_ERROR();
-  glActiveTexture(GL_TEXTURE0 + eTU_COUNT + 1);
+  SetActiveTexture(GL_TEXTURE0 + eTU_COUNT + 1);
   UnbindUnsafe(m_tempTexture);
   CE_GL_ERROR();
 
@@ -715,7 +736,7 @@ iTexture2DArray *GL4Device::CreateTexture(const iTexture2DArray::Descriptor &des
 iTextureCube *GL4Device::CreateTexture(const iTextureCube::Descriptor &descriptor)
 {
   CE_GL_ERROR();
-  glActiveTexture(GL_TEXTURE0 + eTU_COUNT + 1);
+  SetActiveTexture(GL_TEXTURE0 + eTU_COUNT + 1);
   UnbindUnsafe(m_tempTexture);
   CE_GL_ERROR();
 
@@ -809,6 +830,8 @@ void GL4Device::SetSampler(eTextureUnit unit, iSampler *sampler)
   CE_GL_ERROR()
 }
 
+
+
 void GL4Device::BindUnsafe(iTexture *texture)
 {
   CE_GL_ERROR()
@@ -886,7 +909,7 @@ eTextureUnit GL4Device::BindTexture(iTexture *texture)
     m_textures[unit] = texture;
 
     CE_GL_ERROR()
-    glActiveTexture(GL_TEXTURE0 + unit);
+    SetActiveTexture(GL_TEXTURE0 + unit);
     UnbindUnsafe(oldTexture);
     BindUnsafe(texture);
     CE_GL_ERROR()
@@ -905,6 +928,15 @@ eTextureUnit GL4Device::BindTexture(iTexture *texture)
 #else
   return eTU_Invalid;
 #endif
+}
+
+void GL4Device::SetActiveTexture(ce::uint32_t activeTexture)
+{
+  if (m_activeTexture != activeTexture)
+  {
+    glActiveTexture(activeTexture);
+    m_activeTexture = activeTexture;
+  }
 }
 
 bool GL4Device::BindMaterial(iMaterial *material, eRenderPass pass)

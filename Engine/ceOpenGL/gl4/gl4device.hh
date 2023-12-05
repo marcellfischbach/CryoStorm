@@ -132,6 +132,7 @@ public:
 #endif
 
 private:
+  void SetActiveTexture (uint32_t activeTexture);
   static void BindUnsafe(iTexture *texture);
   static void UnbindUnsafe(iTexture *texture);
 
@@ -174,6 +175,7 @@ private:
   eBlendFactor m_dstFactorColor;
   eBlendFactor m_dstFactorAlpha;
 
+
   Matrix4f m_modelMatrix;
   Matrix4f m_viewMatrix;
   Matrix4f m_projectionMatrix;
@@ -210,6 +212,14 @@ private:
   bool     m_shadowMapViewProjectionMatrixDirty;
 
 
+  float    m_clearColorR;
+  float    m_clearColorG;
+  float    m_clearColorB;
+  float    m_clearColorA;
+  float    m_clearDepth;
+  int      m_clearStencil;
+  uint32_t m_activeTexture;
+
   struct PointLightShadowData
   {
     iLight       *Light;
@@ -224,7 +234,7 @@ private:
 
   std::vector<iTexture2D *> m_shadowMapTextures;
 
-  int8_t      m_renderLayer;
+  int8_t           m_renderLayer;
 
   /** 
    * \name Fullscreen Rendering
@@ -232,27 +242,27 @@ private:
    */
   GL4Program *FullscreenBlitProgram();
   GL4Program *FullscreenBlitMSProgram();
-  GL4Program  *m_fullscreenBlitProgram;
-  GL4Program  *m_fullscreenBlitMSProgram;
+  GL4Program       *m_fullscreenBlitProgram;
+  GL4Program       *m_fullscreenBlitMSProgram;
   iRenderMesh *FullscreenBlitRenderMesh();
-  iRenderMesh *m_fullscreenBlitRenderMesh;
+  iRenderMesh      *m_fullscreenBlitRenderMesh;
 
   GL4Program *FullscreenBlitArrayProgram();
-  GL4Program  *m_fullscreenBlitArrayProgram;
+  GL4Program       *m_fullscreenBlitArrayProgram;
 
 
   GL4Program *FullscreenBlitCubeProgram();
-  GL4Program  *m_fullscreenBlitCubeProgram;
+  GL4Program       *m_fullscreenBlitCubeProgram;
   iShaderAttribute *m_fullscreenBlitCubeDiffuse;
   iShaderAttribute *m_fullscreenBlitCubeScale;
   iShaderAttribute *m_fullscreenBlitCubeTranslation;
   iRenderMesh *FullscreenBlitCubeRenderMesh(int layer);
-  iRenderMesh *m_fullscreenBlitCubePosXRenderMesh;
-  iRenderMesh *m_fullscreenBlitCubePosYRenderMesh;
-  iRenderMesh *m_fullscreenBlitCubePosZRenderMesh;
-  iRenderMesh *m_fullscreenBlitCubeNegXRenderMesh;
-  iRenderMesh *m_fullscreenBlitCubeNegYRenderMesh;
-  iRenderMesh *m_fullscreenBlitCubeNegZRenderMesh;
+  iRenderMesh      *m_fullscreenBlitCubePosXRenderMesh;
+  iRenderMesh      *m_fullscreenBlitCubePosYRenderMesh;
+  iRenderMesh      *m_fullscreenBlitCubePosZRenderMesh;
+  iRenderMesh      *m_fullscreenBlitCubeNegXRenderMesh;
+  iRenderMesh      *m_fullscreenBlitCubeNegYRenderMesh;
+  iRenderMesh      *m_fullscreenBlitCubeNegZRenderMesh;
 
 #if _DEBUG
   Size m_numDrawCalls;

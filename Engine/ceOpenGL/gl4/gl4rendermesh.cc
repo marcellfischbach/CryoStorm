@@ -100,7 +100,7 @@ void GL4RenderMesh::Render(iDevice* graphics, eRenderPass pass)
   glDrawElements(m_primType, (GLsizei) m_count, m_indexType, nullptr);
 
   CE_GL_ERROR();
-  glBindVertexArray(0);
+//  glBindVertexArray(0);
   CE_GL_ERROR();
 
 #if _DEBUG
