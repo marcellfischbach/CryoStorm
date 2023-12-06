@@ -104,9 +104,250 @@ void GL4PSSMRenderer::RenderShadow(const GL4DirectionalLight *directionalLight,
                                    const ce::Projector &projector)
 {
 
-  RenderShadowBuffer(directionalLight, camera, projector);
+  RenderShadowBufferNew(directionalLight, camera, projector);
   RenderShadowMap(directionalLight, camera, projector);
 //  FilterShadowMap();
+}
+
+
+void calc_projection_matrix(GL4Device *device,
+                            Vector3f near[4],
+                            Vector3f far[4],
+                            float n,
+                            float f,
+                            const Matrix4f &cameraMatrix,
+                            Matrix4f &projectionMatrix)
+{
+
+  float       l = FLT_MAX;
+  float       r = -FLT_MAX;
+  float       b = FLT_MAX;
+  float       t = -FLT_MAX;
+  for (size_t i = 0; i < 4; i++)
+  {
+    Vector3f v = Matrix4f::Transform(cameraMatrix, near[i]);
+    l = ::fminf(v.x, l);
+    r = ::fmaxf(v.x, r);
+    b = ::fminf(v.y, b);
+    t = ::fmaxf(v.y, t);
+    v = Matrix4f::Transform(cameraMatrix, far[i]);
+    l = ::fminf(v.x, l);
+    r = ::fmaxf(v.x, r);
+    b = ::fminf(v.y, b);
+    t = ::fmaxf(v.y, t);
+  }
+
+  device->GetOrthographicProjection(l, r, b, t, n, f, projectionMatrix);
+}
+
+
+void calc_projection_matrix_inv(GL4Device *device,
+                                Vector3f near[4],
+                                Vector3f far[4],
+                                float n,
+                                float f,
+                                const Matrix4f &cameraMatrix,
+                                Matrix4f &projectionMatrix)
+{
+
+  float       l = FLT_MAX;
+  float       r = -FLT_MAX;
+  float       b = FLT_MAX;
+  float       t = -FLT_MAX;
+  for (size_t i = 0; i < 4; i++)
+  {
+    Vector3f v = Matrix4f::Transform(cameraMatrix, near[i]);
+    l = ::fminf(v.x, l);
+    r = ::fmaxf(v.x, r);
+    b = ::fminf(v.y, b);
+    t = ::fmaxf(v.y, t);
+    v = Matrix4f::Transform(cameraMatrix, far[i]);
+    l = ::fminf(v.x, l);
+    r = ::fmaxf(v.x, r);
+    b = ::fminf(v.y, b);
+    t = ::fmaxf(v.y, t);
+  }
+
+  device->GetOrthographicProjectionInv(l, r, b, t, n, f, projectionMatrix);
+}
+
+
+void calc_center_position (Vector3f near[4], Vector3f far[4], Vector3f &outPos)
+{
+  outPos = Vector3f(0.0f, 0.0f, 0.0f);
+  for (size_t i=0; i<4; i++)
+  {
+    outPos += near[i];
+    outPos += far[i];
+  }
+  outPos /= 8.0f;
+}
+
+
+void GL4PSSMRenderer::RenderShadowBufferNew(const GL4DirectionalLight *directionalLight,
+                                            const ce::Camera &camera,
+                                            const ce::Projector &projector)
+{
+
+
+  Vector3f nearPoints[4];
+  Vector3f split0Points[4];
+  Vector3f split1Points[4];
+  Vector3f split2Points[4];
+  Vector3f split3Points[4];
+
+  projector.GetPoints(m_shadowNear, nearPoints);
+  projector.GetPoints(m_splits[0], split0Points);
+  projector.GetPoints(m_splits[1], split1Points);
+  projector.GetPoints(m_splits[2], split2Points);
+  projector.GetPoints(m_splits[3], split3Points);
+
+  const Matrix4f &camMatInv = camera.GetViewMatrixInv();
+
+  for (size_t i = 0; i < 4; i++)
+  {
+    nearPoints[i]   = Matrix4f::Transform(camMatInv, nearPoints[i]);
+    split0Points[i] = Matrix4f::Transform(camMatInv, split0Points[i]);
+    split1Points[i] = Matrix4f::Transform(camMatInv, split1Points[i]);
+    split2Points[i] = Matrix4f::Transform(camMatInv, split2Points[i]);
+    split3Points[i] = Matrix4f::Transform(camMatInv, split3Points[i]);
+  }
+
+
+  Vector3f direction = (camera.GetSpot() - camera.GetEye()).Normalize();
+  Vector3f pos0      = camera.GetEye() + direction * (m_shadowNear + m_splits[0]) / 2.0f;
+  Vector3f pos1      = camera.GetEye() + direction * (m_splits[0] + m_splits[1]) / 2.0f;
+  Vector3f pos2      = camera.GetEye() + direction * (m_splits[1] + m_splits[2]) / 2.0f;
+  Vector3f pos3      = camera.GetEye() + direction * (m_splits[2] + m_splits[3]) / 2.0f;
+  Vector3f posTot    = camera.GetEye() + direction * (m_shadowNear + m_splits[3]) / 2.0f;
+  float sizeSplitTot = GetSplitSize(nearPoints, split3Points) / 2.0f;
+
+
+  calc_center_position(nearPoints, split3Points, posTot);
+  calc_center_position(nearPoints, split0Points, pos0);
+  calc_center_position(split0Points, split1Points, pos1);
+  calc_center_position(split1Points, split2Points, pos2);
+  calc_center_position(split2Points, split3Points, pos3);
+
+
+  Matrix4f views[4];
+  views[0].SetLookAt(pos0, pos0 + directionalLight->GetDirection(), Vector3f(0, 1, 0));
+  views[1].SetLookAt(pos1, pos1 + directionalLight->GetDirection(), Vector3f(0, 1, 0));
+  views[2].SetLookAt(pos2, pos2 + directionalLight->GetDirection(), Vector3f(0, 1, 0));
+  views[3].SetLookAt(pos3, pos3 + directionalLight->GetDirection(), Vector3f(0, 1, 0));
+
+  Matrix4f viewTotInv;
+  viewTotInv.SetLookAtInv(posTot, posTot + directionalLight->GetDirection(), Vector3f(0, 1, 0));
+  Matrix4f viewTot;
+  viewTot.SetLookAt(posTot, posTot + directionalLight->GetDirection(), Vector3f(0, 1, 0));
+
+  Matrix4f projectionTot;
+//  m_device->GetOrthographicProjectionInv(-sizeSplitTot,
+//                                         sizeSplitTot,
+//                                         -sizeSplitTot,
+//                                         sizeSplitTot,
+//                                         -1.0f,
+//                                         1.0f,
+//                                         projectionTot);
+//  projectionTot.Debug("Working");
+//  CameraClipper clipper1(viewTotInv, projectionTot, false, false);
+
+
+  calc_projection_matrix_inv(m_device, nearPoints, split3Points, -1.0f, 1.0f, viewTot, projectionTot);
+//  projectionTot.Debug("Not Working");
+  CameraClipper clipper(viewTotInv, projectionTot, false, false);
+
+
+  float near[] = {FLT_MAX, FLT_MAX, FLT_MAX, FLT_MAX};
+  float far[]  = {-FLT_MAX, -FLT_MAX, -FLT_MAX, -FLT_MAX};
+  m_meshesCache.clear();
+  m_scene->ScanMeshes(&clipper, iGfxScene::eSM_Dynamic | iGfxScene::eSM_Static,
+                      [this, &views, &near, &far](GfxMesh *mesh) {
+                        if (mesh->IsCastShadow())
+                        {
+                          const Vector3f *bboxPoints = mesh->GetBoundingBox().GetPoints();
+                          for (unsigned  i           = 0; i < 8; i++)
+                          {
+                            Vector3f point = bboxPoints[i];
+                            float    v0    = Matrix4f::TransformZ(views[0], point);
+                            float    v1    = Matrix4f::TransformZ(views[1], point);
+                            float    v2    = Matrix4f::TransformZ(views[2], point);
+                            float    v3    = Matrix4f::TransformZ(views[3], point);
+
+                            near[0] = ceMin(near[0], v0);
+                            near[1] = ceMin(near[1], v1);
+                            near[2] = ceMin(near[2], v2);
+                            near[3] = ceMin(near[3], v3);
+                            far[0]  = ceMax(far[0], v0);
+                            far[1]  = ceMax(far[1], v1);
+                            far[2]  = ceMax(far[2], v2);
+                            far[3]  = ceMax(far[3], v3);
+                          }
+                          m_meshesCache.emplace_back(mesh);
+                        }
+                      }
+  );
+
+  Matrix4f projection0, projection1, projection2, projection3;
+  calc_projection_matrix(m_device, nearPoints, split0Points, near[0], far[0], views[0], projection0);
+  calc_projection_matrix(m_device, split0Points, split1Points, near[1], far[1], views[1], projection1);
+  calc_projection_matrix(m_device, split1Points, split2Points, near[2], far[2], views[2], projection2);
+  calc_projection_matrix(m_device, split2Points, split3Points, near[3], far[3], views[3], projection3);
+//  m_device->GetOrthographicProjection(-sizeSplit0 - mod0X,
+//                                      sizeSplit0 - mod0X,
+//                                      -sizeSplit0 - mod0Y,
+//                                      sizeSplit0 - mod0Y,
+//                                      near[0],
+//                                      far[0],
+//                                      projection0);
+//  m_device->GetOrthographicProjection(-sizeSplit1 - mod1X,
+//                                      sizeSplit1 - mod1X,
+//                                      -sizeSplit1 - mod1Y,
+//                                      sizeSplit1 - mod1Y,
+//                                      near[1],
+//                                      far[1],
+//                                      projection1);
+//  m_device->GetOrthographicProjection(-sizeSplit2 - mod2X,
+//                                      sizeSplit2 - mod2X,
+//                                      -sizeSplit2 - mod2Y,
+//                                      sizeSplit2 - mod2Y,
+//                                      near[2],
+//                                      far[2],
+//                                      projection2);
+//  m_device->GetOrthographicProjection(-sizeSplit3 - mod3X,
+//                                      sizeSplit3 - mod3X,
+//                                      -sizeSplit3 - mod3Y,
+//                                      sizeSplit3 - mod3Y,
+//                                      near[3],
+//                                      far[3],
+//                                      projection3);
+  Matrix4f projections[] = {
+      projection0,
+      projection1,
+      projection2,
+      projection3
+  };
+
+
+  m_device->SetRenderTarget(GetDirectionalLightShadowBuffer());
+  m_device->SetRenderBuffer(0);
+  m_device->SetDepthWrite(true);
+  m_device->SetDepthTest(true);
+  m_device->SetBlending(false);
+  m_device->SetColorWrite(false, false, false, false);
+  m_device->Clear(false, Color4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, true, 0);
+
+  m_device->SetShadowMapProjectionMatrices(projections, 4);
+  m_device->SetShadowMapViewMatrices(views, 4);
+
+//  std::sort(m_meshesCache.begin(), m_meshesCache.end(), material_shader_compare_less_forward);
+  for (auto mesh: m_meshesCache)
+  {
+    mesh->RenderUnlit(m_device, eRP_ShadowPSSM);
+  }
+  //  m_device->BindMaterial(nullptr, eRP_COUNT);
+  //  m_device->SetColorWrite(true, true, true, true);
+
 }
 
 void GL4PSSMRenderer::RenderShadowBuffer(const GL4DirectionalLight *directionalLight,
