@@ -31,7 +31,7 @@ bool GL4DirectionalLightShadowMapFilter::Initialize(const Vector2f &distance, fl
 
 
   m_shadowMapFilterShader = AssetManager::Get()->Get<iShader>(
-      ResourceLocator("file://${engine}/opengl/gl4/directional_light_shadow_map_filter.shader")
+      ResourceLocator("file://${engine}/opengl/gl4/directional_light_shadow_map_gaus_filter.shader")
   );
   if (!m_shadowMapFilterShader)
   {

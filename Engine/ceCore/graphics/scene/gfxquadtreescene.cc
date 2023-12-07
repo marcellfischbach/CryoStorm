@@ -18,8 +18,8 @@ namespace ce
 {
 
 
-static const unsigned MAX_ENTRIES_PER_CELL = 4;
-static const unsigned MAX_CELL_DEPTH       = 20;
+static const unsigned MAX_ENTRIES_PER_CELL = 20;
+static const unsigned MAX_CELL_DEPTH       = 4;
 
 
 struct GfxQuadtreeScene::Cell

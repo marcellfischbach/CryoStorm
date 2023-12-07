@@ -442,7 +442,7 @@ void generate_camera(ce::World *world)
 
   auto cameraHandler = new CameraHandler();
   cameraEntity->Attach(cameraState);
-  cameraEntity->Attach(cameraHandler);
+//  cameraEntity->Attach(cameraHandler);
   cameraEntity->GetRoot()->GetTransform()
               .SetTranslation(ce::Vector3f(5, 5, 5))
               .LookAt(ce::Vector3f(0, 0, 0))
@@ -507,14 +507,14 @@ void generate_test_grid(ce::World *world, ce::iMaterial *material)
     {
       auto fj = (float)j;
       auto entity = new ce::Entity(std::string("Sphere: ") + std::to_string(i + 1) + ":" + std::to_string(j + 1));
-
       auto meshStateSphere = new ce::StaticMeshState("Mesh");
       meshStateSphere->GetTransform()
                      .SetTranslation(i - start, 0.25f, j - start)
                      .Finish();
+      meshStateSphere->SetStatic(true);
       meshStateSphere->SetMesh(mesh);
       entity->Attach(meshStateSphere);
-#if 0
+#if 1
       auto rnd = (float) rand() / (float) RAND_MAX;
       int   ma  = a % 4;
       switch (ma)
@@ -522,25 +522,25 @@ void generate_test_grid(ce::World *world, ce::iMaterial *material)
         case 0:
         {
 
-          auto testHandler01 = new TestHandler01(ce::Vector3f(fi - 50.0f, 0.25f, fj - 50.0f), 0.25f, 0.5f + rnd);
+          auto testHandler01 = new TestHandler01(ce::Vector3f(fi - start, 0.25f, fj - start), 0.25f, 0.5f + rnd);
           entity->Attach(testHandler01);
           break;
         }
         case 1:
         {
-          auto testHandler02 = new TestHandler02(ce::Vector3f(fi - 50.0f, 0.25f, fj - 50.0f), 0.25f, 0.5f + rnd);
+          auto testHandler02 = new TestHandler02(ce::Vector3f(fi - start, 0.25f, fj - start), 0.25f, 0.5f + rnd);
           entity->Attach(testHandler02);
           break;
         }
         case 2:
         {
-          auto testHandler03 = new TestHandler03(ce::Vector3f(fi - 50.0f, 0.25f, fj - 50.0f), 0.25f, 0.5f + rnd);
+          auto testHandler03 = new TestHandler03(ce::Vector3f(fi - start, 0.25f, fj - start), 0.25f, 0.5f + rnd);
           entity->Attach(testHandler03);
           break;
         }
         case 3:
         {
-          auto testHandler04 = new TestHandler04(ce::Vector3f(fi - 50.0f, 0.25f, fj - 50.0f), 0.25f, 0.5f + rnd);
+          auto testHandler04 = new TestHandler04(ce::Vector3f(fi - start, 0.25f, fj - start), 0.25f, 0.5f + rnd);
           entity->Attach(testHandler04);
           break;
         }
@@ -731,14 +731,14 @@ void setup_world(ce::World *world)
   shadowLightState = add_directional_light(world,
                         ce::Vector3f(1.0f, 0.2f, 0.0f),
                         ce::ceDeg2Rad(-45.0f),
-                        ce::Color4f(1.0f, 1.0f, 1.0f, 1.0f),
+                        ce::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 0.8f,
                         true,
                         true);
 
   add_directional_light(world,
                         ce::Vector3f(1.0f, 0.2f, 0.0f),
-                        ce::ceDeg2Rad(45.0f),
-                        ce::Color4f(1.0f, 1.0f, 1.0f, 1.0f),
+                        ce::ceDeg2Rad(-45.0f - 90.0f),
+                        ce::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 0.2f,
                         true,
                         false);
 #endif

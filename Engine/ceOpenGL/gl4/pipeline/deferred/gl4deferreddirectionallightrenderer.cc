@@ -12,7 +12,7 @@
 #include <ceCore/graphics/shading/ishaderattribute.hh>
 
 #define PSSM_RENDERER m_pssmRendererAlt
-#define PSSM_RENDERER m_pssmRenderer
+//#define PSSM_RENDERER m_pssmRenderer
 
 namespace ce::opengl
 {
@@ -71,7 +71,7 @@ void GL4DeferredDirectionalLightRenderer::Render(const Camera *camera,
                                                  const GL4DirectionalLight *light,
                                                  iRenderTarget2D *target)
 {
-  LightRenderShader &lrs = m_nonShadow;
+  LightRenderShader *lrs = &m_nonShadow;
   if (light->IsCastShadow())
   {
     PSSM_RENDERER.SetDevice(m_device);
@@ -79,10 +79,11 @@ void GL4DeferredDirectionalLightRenderer::Render(const Camera *camera,
     PSSM_RENDERER.SetDepthBuffer(gBuffer->GetDepth());
     PSSM_RENDERER.SetShadowMap(GetShadowMap());
     PSSM_RENDERER.RenderShadow(light, *camera, *projector);
-    lrs = m_shadow;
+    lrs = &m_shadow;
   }
 
 
+  m_device->ResetTextures();
   m_device->SetRenderTarget(target);
   m_device->SetRenderBuffer(0);
 
@@ -95,43 +96,43 @@ void GL4DeferredDirectionalLightRenderer::Render(const Camera *camera,
   m_device->SetViewMatrix(camera->GetViewMatrix(), camera->GetViewMatrixInv());
   m_device->SetProjectionMatrix(projector->GetProjectionMatrix(m_device), projector->GetProjectionMatrixInv(m_device));
 
-  m_device->SetShader(lrs.m_shader);
-  if (lrs.m_attrDiffuseRoughness)
+  m_device->SetShader(lrs->m_shader);
+  if (lrs->m_attrDiffuseRoughness)
   {
     eTextureUnit unit = m_device->BindTexture(gBuffer->GetDiffuseRoughness());
-    lrs.m_attrDiffuseRoughness->Bind(unit);
+    lrs->m_attrDiffuseRoughness->Bind(unit);
   }
-  if (lrs.m_attrDepth)
+  if (lrs->m_attrDepth)
   {
     eTextureUnit unit = m_device->BindTexture(gBuffer->GetDepth());
-    lrs.m_attrDepth->Bind(unit);
+    lrs->m_attrDepth->Bind(unit);
   }
-  if (lrs.m_attrShadowMap)
+  if (lrs->m_attrShadowMap)
   {
     eTextureUnit unit = m_device->BindTexture(GetShadowMap()->GetColorTexture(0));
-    lrs.m_attrShadowMap->Bind(unit);
+    lrs->m_attrShadowMap->Bind(unit);
   }
 
-  if (lrs.m_attrNormal)
+  if (lrs->m_attrNormal)
   {
     eTextureUnit unit = m_device->BindTexture(gBuffer->GetNormal());
-    lrs.m_attrNormal->Bind(unit);
+    lrs->m_attrNormal->Bind(unit);
   }
-  if (lrs.m_attrLightNegLightDirection)
+  if (lrs->m_attrLightNegLightDirection)
   {
-    lrs.m_attrLightNegLightDirection->Bind(-light->GetDirection());
+    lrs->m_attrLightNegLightDirection->Bind(-light->GetDirection());
   }
-  if (lrs.m_attrLightColor)
+  if (lrs->m_attrLightColor)
   {
-    lrs.m_attrLightColor->Bind(light->GetColor());
+    lrs->m_attrLightColor->Bind(light->GetColor());
   }
-  if (lrs.m_attrLightAmbientColor)
+  if (lrs->m_attrLightAmbientColor)
   {
-    lrs.m_attrLightAmbientColor->Bind(Color4f());
+    lrs->m_attrLightAmbientColor->Bind(Color4f());
   }
-  if (lrs.m_attrCameraPosition)
+  if (lrs->m_attrCameraPosition)
   {
-    lrs.m_attrCameraPosition->Bind(camera->GetEye());
+    lrs->m_attrCameraPosition->Bind(camera->GetEye());
   }
 
   m_device->BindMatrices();

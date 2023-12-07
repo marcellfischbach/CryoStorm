@@ -110,7 +110,7 @@ void GL4PSSMRenderer::RenderShadow(const GL4DirectionalLight *directionalLight,
 }
 
 
-void calc_projection_matrix(GL4Device *device,
+static void calc_projection_matrix(GL4Device *device,
                             Vector3f near[4],
                             Vector3f far[4],
                             float n,
@@ -141,7 +141,7 @@ void calc_projection_matrix(GL4Device *device,
 }
 
 
-void calc_projection_matrix_inv(GL4Device *device,
+static void calc_projection_matrix_inv(GL4Device *device,
                                 Vector3f near[4],
                                 Vector3f far[4],
                                 float n,
@@ -172,7 +172,7 @@ void calc_projection_matrix_inv(GL4Device *device,
 }
 
 
-void calc_center_position (Vector3f near[4], Vector3f far[4], Vector3f &outPos)
+static void calc_center_position (Vector3f near[4], Vector3f far[4], Vector3f &outPos)
 {
   outPos = Vector3f(0.0f, 0.0f, 0.0f);
   for (size_t i=0; i<4; i++)
