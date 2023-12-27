@@ -495,7 +495,7 @@ void generate_test_grid(ce::World *world, ce::iMaterial *material)
   auto mesh   = new ce::Mesh();
   mesh->AddMaterialSlot("Default", material);
   mesh->AddSubMesh(sphere, 0);
-  int gridSize = 1;
+  int gridSize = 100;
 
   for (int a = 0, i = 0; i < gridSize; i++)
   {
@@ -739,10 +739,11 @@ void setup_world(ce::World *world)
                         true,
                         false);
 
-
+#if 0
   add_point_light(world, ce::Vector3f(), 25.0f, ce::Color4f(1.0, 1.0f, 1.0f), false);
+#endif
 
-#if 1
+#if 0
   add_point_light(world, ce::Vector3f(10.0f, 10.0f, 10.0f), 25.0f, ce::Color4f(1.0, 0.0f, 1.0f), false);
   add_point_light(world, ce::Vector3f(0.0f, 10.0f, 10.0f), 25.0f, ce::Color4f(0.5, 0.0f, 1.0f), false);
   add_point_light(world, ce::Vector3f(-10.0f, 10.0f, 10.0f), 25.0f, ce::Color4f(0.0, 0.0f, 1.0f), false);
