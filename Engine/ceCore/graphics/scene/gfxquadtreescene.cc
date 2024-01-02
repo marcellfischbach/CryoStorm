@@ -19,7 +19,7 @@ namespace ce
 {
 
 static const unsigned MAX_ENTRIES_PER_CELL = 20;
-static const unsigned MAX_CELL_DEPTH       = 15;
+static const unsigned MAX_CELL_DEPTH       = 6;
 
 struct MaterialCompound
 {

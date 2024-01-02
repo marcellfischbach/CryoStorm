@@ -442,7 +442,7 @@ void generate_camera(ce::World *world)
 
   auto cameraHandler = new CameraHandler();
   cameraEntity->Attach(cameraState);
-//  cameraEntity->Attach(cameraHandler);
+  cameraEntity->Attach(cameraHandler);
   cameraEntity->GetRoot()->GetTransform()
               .SetTranslation(ce::Vector3f(5, 5, 5))
               .LookAt(ce::Vector3f(0, 0, 0))

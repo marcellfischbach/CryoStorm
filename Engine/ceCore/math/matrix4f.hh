@@ -625,6 +625,14 @@ public:
     return Vector3f(x, y, z);
   }
 
+  CE_NODISCARD CE_FORCEINLINE static Vector2f TransformXY(const Matrix4f &m, const Vector3f &v)
+  {
+    float x = m.m00 * v.x + m.m10 * v.y + m.m20 * v.z + m.m30;
+    float y = m.m01 * v.x + m.m11 * v.y + m.m21 * v.z + m.m31;
+    return Vector2f(x, y);
+  }
+
+
   CE_NODISCARD CE_FORCEINLINE static float TransformZ(const Matrix4f &m, const Vector3f &v)
   {
     return m.m02 * v.x + m.m12 * v.y + m.m22 * v.z + m.m32;
