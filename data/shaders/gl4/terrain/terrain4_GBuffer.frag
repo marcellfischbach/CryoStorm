@@ -31,19 +31,19 @@ void main()
     float loc_roughness = 0.0;
     if (layer.x > 0.0)
     {
-        vec4 diffuseRoughness = texture (ce_DiffuseRoughness0, texCoord * 3);
+        vec4 diffuseRoughness = texture (ce_DiffuseRoughness0, texCoord * 30);
         diffuse += diffuseRoughness.rgb * layer.x;
         loc_roughness += diffuseRoughness.a * layer.x;
     }
     if (layer.y > 0.0)
     {
-        vec4 diffuseRoughness = texture (ce_DiffuseRoughness1, texCoord * 3);
+        vec4 diffuseRoughness = texture (ce_DiffuseRoughness1, texCoord * 30);
         diffuse += diffuseRoughness.rgb * layer.y;
         loc_roughness += diffuseRoughness.a * layer.y;
     }
     if (layer.z > 0.0)
     {
-        vec4 diffuseRoughness = texture (ce_DiffuseRoughness2, texCoord * 3);
+        vec4 diffuseRoughness = texture (ce_DiffuseRoughness2, texCoord * 30);
         diffuse += diffuseRoughness.rgb * layer.z;
         loc_roughness += diffuseRoughness.a * layer.z;
     }
