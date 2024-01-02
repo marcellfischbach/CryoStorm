@@ -46,6 +46,7 @@ CE_CLASS_GEN;
 
   CE_NODISCARD virtual const std::vector<GfxCamera *> &GetCameras() const = 0;
 
+  virtual void Optimize () {}
 
   virtual void ScanMeshes(const iClipper *clipper,
                           GfxSceneCollector &collector

@@ -23,7 +23,7 @@ in vec2 screen_coord;
 
 lighting_result_t calc_lighting (float n_dot_l, float n_dot_v, float n_dot_h, float h_dot_l, float h_dot_v)
 {
-    float roughness = texture(ce_RoughnessMap, texCoord * 3).r;
+    float roughness = texture(ce_RoughnessMap, texCoord).r;
     roughness = roughness * ce_Roughness;
 
     lighting_result_t res;
@@ -42,14 +42,14 @@ void main()
     tang = cross(binormal, norm);
 
     mat3 normalMatrix = mat3(tang, binormal, norm);
-    vec3 normal = texture(ce_Normal, texCoord*3).rgb;
+    vec3 normal = texture(ce_Normal, texCoord).rgb;
     normal = normal * 2.0 - 1.0;
     normal = normalMatrix * normal;
 
 
 
     light_result_t light = calc_lights(world_position, normal, camera_space_position, viewer_world_position);
-    vec4 color = texture(ce_Diffuse, texCoord * 3) * ce_Color;
+    vec4 color = texture(ce_Diffuse, texCoord) * ce_Color;
 
 
     vec3 dielectric = light.diffuse  * color.rgb + light.specular;

@@ -158,6 +158,7 @@ void StaticMeshState::AddMeshToScene(World *world)
       }
 
       GfxMesh *sceneMesh = new GfxMesh();
+      sceneMesh->SetBatchable(true);
       sceneMesh->SetStatic(IsStatic());
       sceneMesh->SetReceiveShadow(m_receiveShadow);
       sceneMesh->SetCastShadow(m_castShadow);;

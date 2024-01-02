@@ -77,6 +77,16 @@ void GfxMesh::RenderForward(iDevice* device, eRenderPass pass, const GfxLight** 
 }
 
 
+void GfxMesh::SetBatchable(bool batchable)
+{
+  m_batchable = batchable;
+}
+
+bool GfxMesh::IsBatchable() const
+{
+  return m_batchable;
+}
+
 void GfxMesh::SetStatic(bool _static)
 {
   m_static = _static;

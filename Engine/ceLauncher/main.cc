@@ -442,7 +442,7 @@ void generate_camera(ce::World *world)
 
   auto cameraHandler = new CameraHandler();
   cameraEntity->Attach(cameraState);
-  cameraEntity->Attach(cameraHandler);
+//  cameraEntity->Attach(cameraHandler);
   cameraEntity->GetRoot()->GetTransform()
               .SetTranslation(ce::Vector3f(5, 5, 5))
               .LookAt(ce::Vector3f(0, 0, 0))
@@ -492,7 +492,7 @@ void generate_terrain(ce::World *world)
 
 void generate_test_grid(ce::World *world, ce::iMaterial *material)
 {
-  auto sphere = create_sphere_mesh(0.25, 16, 4.0f);
+  auto sphere = create_sphere_mesh(0.25, 16, 12.0f);
   auto mesh   = new ce::Mesh();
   mesh->AddMaterialSlot("Default", material);
   mesh->AddSubMesh(sphere, 0);
@@ -509,6 +509,7 @@ void generate_test_grid(ce::World *world, ce::iMaterial *material)
       auto entity = new ce::Entity(std::string("Sphere: ") + std::to_string(i + 1) + ":" + std::to_string(j + 1));
 
       auto meshStateSphere = new ce::StaticMeshState("Mesh");
+      meshStateSphere->SetStatic(true);
       meshStateSphere->GetTransform()
                      .SetTranslation(i - start, 0.25f, j - start)
                      .Finish();
@@ -735,12 +736,12 @@ void setup_world(ce::World *world)
                         true,
                         true);
 
-  add_directional_light(world,
-                        ce::Vector3f(1.0f, 0.2f, 0.0f),
-                        ce::ceDeg2Rad(45.0f),
-                        ce::Color4f(1.0f, 1.0f, 1.0f, 1.0f),
-                        true,
-                        false);
+//  add_directional_light(world,
+//                        ce::Vector3f(1.0f, 0.2f, 0.0f),
+//                        ce::ceDeg2Rad(45.0f),
+//                        ce::Color4f(1.0f, 1.0f, 1.0f, 1.0f),
+//                        true,
+//                        false);
 #endif
 
 //  add_point_light(world, ce::Vector3f(0.0f, 5.0f, 0.0f), 50.0f, ce::Color4f(1.0, 1.0f, 1.0f), true);
@@ -840,7 +841,7 @@ int main(int argc, char **argv)
       nextSec += 1000;
       char buffer[1024];
 #if _DEBUG
-      sprintf_s<1024>(buffer, "%s  %d FPS  #%llu calls (%llu triangles) %.2f shader changes", title.c_str(), frames, numDrawCallsPerSec, numTrianglesPerSec, (float)numShaderStateChanges / frames);
+      sprintf_s<1024>(buffer, "%s  %d FPS  #%llu calls (%.2f triangles) %.2f shader changes", title.c_str(), frames, numDrawCallsPerSec, (float)numTrianglesPerSec / (float)frames, (float)numShaderStateChanges / (float)frames);
       numDrawCallsPerSec = 0;
       numTrianglesPerSec = 0;
       numShaderStateChanges = 0;

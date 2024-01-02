@@ -20,8 +20,8 @@ void main()
 {
     //
     // Generate diffuse roughness
-    float roughness = texture(ce_RoughnessMap, texCoord * 3).r * ce_Roughness;
-    vec4 color = texture(ce_Diffuse, texCoord * 3) * ce_Color;
+    float roughness = texture(ce_RoughnessMap, texCoord).r * ce_Roughness;
+    vec4 color = texture(ce_Diffuse, texCoord) * ce_Color;
     ce_FragDiffuseRoughness = vec4(color.rgb, roughness);
 
     //
@@ -32,7 +32,7 @@ void main()
     tang = cross(binormal, norm);
 
     mat3 normalMatrix = mat3(tang, binormal, norm);
-    vec3 normal = texture(ce_Normal, texCoord*3).rgb;
+    vec3 normal = texture(ce_Normal, texCoord).rgb;
     normal = normal * 2.0 - 1.0;
     normal = normalMatrix * normal;
     ce_FragNormal = vec4(normal * 0.5 + 0.5, 1.0);

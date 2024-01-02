@@ -33,6 +33,9 @@ public:
   GfxMesh();
   ~GfxMesh() override;
 
+  void SetBatchable (bool batchable);
+  CE_NODISCARD bool IsBatchable () const;
+
   void SetStatic(bool _static);
   CE_NODISCARD bool IsStatic() const;
 
@@ -75,6 +78,7 @@ public:
 private:
   void UpdateBoundingBox();
 
+  bool m_batchable = false;
   bool m_static = false;
   bool m_receiveShadow = true;
   bool m_castShadow = true;

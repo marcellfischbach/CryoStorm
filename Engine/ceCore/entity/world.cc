@@ -204,6 +204,10 @@ void World::Update(float tpf)
       updateState->Update(tpf);
     }
   }
+  if (m_scene)
+  {
+    m_scene->Optimize();
+  }
 
   m_physicsUpdateCounter += tpf;
   while (m_physicsUpdateCounter >= (1.0f / 60.0f))

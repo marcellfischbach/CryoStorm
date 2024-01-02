@@ -29,6 +29,8 @@ public:
 
   CE_NODISCARD const std::vector<GfxCamera *> &GetCameras() const override;
 
+  void Optimize() override;
+
   void ScanMeshes(const iClipper *clipper, GfxSceneCollector &collector) const override;
   void ScanMeshes(const iClipper *clipper, uint32_t scanMask, GfxSceneCollector &collector) const override;
 

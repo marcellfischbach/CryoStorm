@@ -1,6 +1,7 @@
 
 #include <ceCore/graphics/scene/gfxquadtreescene.hh>
 #include <ceCore/graphics/scene/gfxcamera.hh>
+#include <ceCore/graphics/scene/gfxmeshcompound.hh>
 #include <ceCore/graphics/scene/gfxmesh.hh>
 #include <ceCore/graphics/scene/gfxlight.hh>
 #include <ceCore/graphics/scene/gfxscenecollector.hh>
@@ -17,23 +18,46 @@
 namespace ce
 {
 
+static const unsigned MAX_ENTRIES_PER_CELL = 20;
+static const unsigned MAX_CELL_DEPTH       = 15;
 
-static const unsigned MAX_ENTRIES_PER_CELL = 4;
-static const unsigned MAX_CELL_DEPTH       = 20;
-
+struct MaterialCompound
+{
+  iMaterial       *material;
+  GfxMeshCompound *mesh;
+};
 
 struct GfxQuadtreeScene::Cell
 {
 
   Cell(Cell *parent, size_t depth, const Vector2f &min, const Vector2f &max);
 
+  bool m_dirty;
+
   std::vector<GfxMesh *> m_shaded;
   std::vector<GfxMesh *> m_unshaded;
+
+  std::vector<GfxMesh *> m_pendingShaded;
+  std::vector<GfxMesh *> m_pendingUnshaded;
+
+  std::vector<MaterialCompound> m_shadedCompound;
+  std::vector<MaterialCompound> m_unshadedCompound;
 
 
   void Add(GfxMesh *mesh);
   bool Remove(GfxMesh *mesh);
   void Decimate();
+
+  void Optimize();
+  void FlagOptimizationDirty();
+  void AddShadedMesh(GfxMesh *mesh);
+  void AddUnshadedMesh(GfxMesh *mesh);
+  bool ContainsShaded(GfxMesh *mesh);
+  bool ContainsUnshaded(GfxMesh *mesh);
+
+  MaterialCompound& GetShadedCompound(iMaterial* material);
+
+
   CE_NODISCARD size_t Idx(const Vector3f &v) const;
   void UpdateBoundingBox();
   void RemoveLight(GfxLight *light) const;
@@ -42,19 +66,20 @@ struct GfxQuadtreeScene::Cell
   void ScanMeshes(const iClipper *clipper,
                   uint32_t scanMask,
                   const std::function<void(GfxMesh *)> &callback) const;
-  Cell                   *m_parent;
-  size_t                 m_depth;
-  Vector2f               m_min;
-  Vector2f               m_center;
-  Vector2f               m_max;
-  BoundingBox            m_bbox;
-  std::array<Cell *, 4>  m_cells;
+  Cell                          *m_parent;
+  size_t                        m_depth;
+  Vector2f                      m_min;
+  Vector2f                      m_center;
+  Vector2f                      m_max;
+  BoundingBox                   m_bbox;
+  std::array<Cell *, 4>         m_cells;
+  bool                          m_optimizationDirty = true;
 };
 
 GfxQuadtreeScene::GfxQuadtreeScene()
 {
   CE_CLASS_GEN_CONSTR;
-  m_root = new Cell(nullptr, 0, Vector2f(-1000.0f, -1000.0f), Vector2f(1000.0f, 1000.0f));
+  m_root = new Cell(nullptr, 0, Vector2f(-100.0f, -100.0f), Vector2f(100.0f, 100.0f));
 }
 
 void GfxQuadtreeScene::Add(GfxCamera *camera)
@@ -207,6 +232,11 @@ void GfxQuadtreeScene::Remove(GfxLight *light, std::vector<GfxLight *> &lights)
 const std::vector<GfxCamera *> &GfxQuadtreeScene::GetCameras() const
 {
   return m_cameras;
+}
+
+void GfxQuadtreeScene::Optimize()
+{
+  m_root->Optimize();
 }
 
 void GfxQuadtreeScene::ScanMeshes(const iClipper *clipper,
@@ -429,25 +459,13 @@ void GfxQuadtreeScene::Cell::Add(GfxMesh *mesh)
   {
     if (mesh->GetMaterial()->GetShadingMode() == eShadingMode::Unshaded)
     {
-      if (std::ranges::find(m_unshaded, mesh) != m_unshaded.end())
-      {
-        return;
-      }
-      m_unshaded.emplace_back(mesh);
+      AddUnshadedMesh(mesh);
     }
     else
     {
-      if (std::ranges::find(m_shaded, mesh) != m_shaded.end())
-      {
-        return;
-      }
-      m_shaded.emplace_back(mesh);
+      AddShadedMesh(mesh);
     }
-    mesh->AddRef();
-    mesh->ClearLights();
-    mesh->SetLightingDirty(true);
 
-    UpdateBoundingBox();
   }
 
 }
@@ -498,6 +516,158 @@ void GfxQuadtreeScene::Cell::Decimate()
   // reduce the cell hierarchy;
 }
 
+MaterialCompound &GfxQuadtreeScene::Cell::GetShadedCompound(ce::iMaterial *material)
+{
+  for (auto &materialCompound: m_shadedCompound)
+  {
+    if (materialCompound.material == material)
+    {
+      return materialCompound;
+    }
+  }
+  MaterialCompound &cmp = m_shadedCompound.emplace_back(MaterialCompound { material, new GfxMeshCompound() });
+  m_shaded.emplace_back(cmp.mesh);
+  return cmp;
+}
+
+void GfxQuadtreeScene::Cell::Optimize()
+{
+  if (!m_optimizationDirty)
+  {
+    return;
+  }
+
+  m_optimizationDirty = false;
+  if (m_depth != MAX_CELL_DEPTH)
+  {
+    if (m_cells[0])
+    {
+      for (auto &m_cell: m_cells)
+      {
+        m_cell->Optimize();
+      }
+      return;
+    }
+  }
+
+  std::set<GfxMeshCompound*> compounds;
+  for (auto pendingMesh: m_pendingShaded)
+  {
+    MaterialCompound &cmp = GetShadedCompound(pendingMesh->GetMaterial());
+    cmp.mesh->AddMesh(pendingMesh);
+    pendingMesh->Release();
+    compounds.insert(cmp.mesh);
+  }
+  m_pendingShaded.clear();
+
+  for (const auto &meshCompound: compounds)
+  {
+    meshCompound->RegenerateMesh();
+  }
+}
+
+void GfxQuadtreeScene::Cell::FlagOptimizationDirty()
+{
+  Cell *cell = this;
+  while (cell)
+  {
+    if (cell->m_optimizationDirty)
+    {
+      return;
+    }
+    cell->m_optimizationDirty = true;
+    cell = cell->m_parent;
+  }
+}
+
+void GfxQuadtreeScene::Cell::AddShadedMesh(ce::GfxMesh *mesh)
+{
+  if (ContainsShaded(mesh))
+  {
+    return;
+  }
+
+
+//  if (m_depth == MAX_CELL_DEPTH && mesh->IsBatchable())
+//  {
+//    iMaterial       *material = mesh->GetMaterial();
+//    for (const auto &compound: m_shadedCompound)
+//    {
+//      if (compound.material == material)
+//      {
+//        compound.mesh->AddMesh(mesh);
+//        UpdateBoundingBox();
+//        return;
+//      }
+//    }
+//
+//    MaterialCompound compound {
+//        mesh->GetMaterial(),
+//        new GfxMeshCompound()
+//    };
+//    compound.mesh->AddMesh(mesh);
+//    m_shadedCompound.emplace_back(compound);
+//
+//    mesh = compound.mesh;
+//  }
+  if (m_depth == MAX_CELL_DEPTH && mesh->IsBatchable())
+  {
+    m_pendingShaded.emplace_back(mesh);
+    FlagOptimizationDirty();
+  }
+  else
+  {
+    m_shaded.emplace_back(mesh);
+  }
+
+  mesh->AddRef();
+  mesh->ClearLights();
+  mesh->SetLightingDirty(true);
+  UpdateBoundingBox();
+
+}
+
+
+void GfxQuadtreeScene::Cell::AddUnshadedMesh(ce::GfxMesh *mesh)
+{
+  if (ContainsUnshaded(mesh))
+  {
+    return;
+  }
+
+  m_unshaded.emplace_back(mesh);
+
+  mesh->AddRef();
+  mesh->ClearLights();
+  mesh->SetLightingDirty(true);
+
+  UpdateBoundingBox();
+}
+
+bool GfxQuadtreeScene::Cell::ContainsShaded(ce::GfxMesh *mesh)
+{
+  for (const auto &compound: m_shadedCompound)
+  {
+    if (compound.mesh && compound.mesh->ContainsMesh(mesh))
+    {
+      return true;
+    }
+  }
+  return std::ranges::find(m_shaded, mesh) != m_shaded.end();
+}
+
+bool GfxQuadtreeScene::Cell::ContainsUnshaded(ce::GfxMesh *mesh)
+{
+  for (const auto &compound: m_unshadedCompound)
+  {
+    if (compound.mesh && compound.mesh->ContainsMesh(mesh))
+    {
+      return true;
+    }
+  }
+  return std::ranges::find(m_unshaded, mesh) != m_unshaded.end();
+}
+
 void GfxQuadtreeScene::Cell::RemoveLight(GfxLight *light) const
 {
   for (auto mesh: m_shaded)
@@ -546,7 +716,15 @@ void GfxQuadtreeScene::Cell::UpdateBoundingBox()
   {
     m_bbox.Add(item->GetBoundingBox());
   }
+  for (const auto &item: m_pendingShaded)
+  {
+    m_bbox.Add(item->GetBoundingBox());
+  }
   for (const auto &item: m_unshaded)
+  {
+    m_bbox.Add(item->GetBoundingBox());
+  }
+  for (const auto &item: m_pendingUnshaded)
   {
     m_bbox.Add(item->GetBoundingBox());
   }

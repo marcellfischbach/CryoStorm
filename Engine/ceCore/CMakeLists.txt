@@ -116,6 +116,8 @@ set(SOURCES
         graphics/scene/gfxlight.hh
         graphics/scene/gfxmesh.cc
         graphics/scene/gfxmesh.hh
+        graphics/scene/gfxmeshcompound.cc
+        graphics/scene/gfxmeshcompound.hh
         graphics/scene/gfxoctreescene.cc
         graphics/scene/gfxoctreescene.hh
         graphics/scene/gfxquadtreescene.cc
