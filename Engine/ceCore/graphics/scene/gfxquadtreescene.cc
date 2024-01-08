@@ -21,6 +21,8 @@ namespace ce
 static const unsigned MAX_ENTRIES_PER_CELL = 20;
 static const unsigned MAX_CELL_DEPTH       = 6;
 
+static const bool OPTIMIZE = false;
+
 struct MaterialCompound
 {
   iMaterial       *material;
@@ -546,8 +548,8 @@ void GfxQuadtreeScene::Cell::Optimize()
       {
         m_cell->Optimize();
       }
-      return;
     }
+    return;
   }
 
   std::set<GfxMeshCompound*> compounds;
@@ -610,7 +612,7 @@ void GfxQuadtreeScene::Cell::AddShadedMesh(ce::GfxMesh *mesh)
 //
 //    mesh = compound.mesh;
 //  }
-  if (m_depth == MAX_CELL_DEPTH && mesh->IsBatchable())
+  if (m_depth == MAX_CELL_DEPTH && mesh->IsBatchable() && OPTIMIZE)
   {
     m_pendingShaded.emplace_back(mesh);
     FlagOptimizationDirty();

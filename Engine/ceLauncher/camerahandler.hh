@@ -22,3 +22,18 @@ private:
 
 
 
+CE_CLASS()
+class CameraHandlerMotion : public CE_SUPER(ce::EntityState)
+{
+  CE_CLASS_GEN_OBJECT;
+public:
+  CameraHandlerMotion();
+  ~CameraHandlerMotion() override = default;
+
+  void Update(float tpf) override;
+private:
+  ce::Vector3f m_position;
+  ce::Vector3f m_target;
+  float m_distance;
+  float m_time;
+};

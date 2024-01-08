@@ -291,7 +291,7 @@ void GL4PSSMRendererAlt::RenderShadowBuffer(const GL4DirectionalLight *direction
     m_device->SetDepthTest(true);
     m_device->SetBlending(false);
     m_device->SetColorWrite(false, false, false, false);
-    m_device->Clear(false, Color4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, true, 0);
+    m_device->Clear(false, Color4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, false, 0);
 
     m_device->SetProjectionMatrix(proj);
     m_device->SetViewMatrix(view);
@@ -300,14 +300,20 @@ void GL4PSSMRendererAlt::RenderShadowBuffer(const GL4DirectionalLight *direction
 
     uint64_t        startTime = Time::GetTime();
 //    printf (" [%d @ (%.2f %.2f)]", m_meshesCache.size(), near, far);
+    size_t c = 0;
     for (const auto &mesh: meshes)
     {
       if (mesh->IsCastShadow())
       {
         mesh->RenderUnlit(m_device, eRP_Depth);
+        c++;
       }
     }
+//    printf ("%d ", c);
   }
+//  printf ("\n");
+  // 66 430 580 401
+  // 521 3599 4183 2539
 
   m_device->SetShadowMapProjectionMatrices(shadowMapProjection, 4);
   m_device->SetShadowMapViewMatrices(shadowMapView, 4);
@@ -321,6 +327,7 @@ void GL4PSSMRendererAlt::RenderShadowMap(const GL4DirectionalLight *directionalL
 {
   m_device->ResetTextures();
   GL4RenderTarget2D *target = GetDirectionalLightShadowMapTemp();// m_directionalLightShadowMap;
+//  GL4RenderTarget2D *target = m_directionalLightShadowMap;
   m_device->SetRenderTarget(target);
   m_device->SetRenderBuffer(0);
   m_device->SetDepthWrite(true);

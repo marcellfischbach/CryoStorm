@@ -368,6 +368,85 @@ ce::iRenderMesh *create_sphere_mesh(float radius, uint32_t detail, float uv_f)
 
 }
 
+
+ce::iRenderMesh* create_multi_sphere_mesh(float radius, uint32_t detail, float uv_f, size_t num_spheres, ce::Vector3f* sphere_positions)
+{
+  ce::iRenderMeshGenerator* generator = ce::ObjectRegistry::Get<ce::iRenderMeshGeneratorFactory>()->Create();
+  std::vector<ce::Vector3f> positions;
+  std::vector<ce::Vector3f> normals;
+  std::vector<ce::Vector3f> tangents;
+  std::vector<ce::Vector2f> uv;
+  std::vector<ce::Color4f>  colors;
+  std::vector<uint32_t>     indices;
+
+  size_t idxOrigin = 0;
+  for (size_t i = 0; i < num_spheres; i++)
+  {
+    ce::Vector3f origin = sphere_positions[i];
+    for (uint32_t v = 0; v < detail; v++)
+    {
+      float factV = (float)v / (float)(detail - 1);
+      float angleV = -(float)M_PI_2 + factV * (float)M_PI;
+
+      for (uint32_t h = 0; h < detail * 2; h++)
+      {
+        float factH = (float)h / (float)(detail * 2 - 1);
+        float angleH = factH * (float)M_PI * 2.0f;
+
+        ce::Vector3f normal(
+          cosf(angleV) * cosf(angleH),
+          sinf(angleV),
+          cosf(angleV) * sinf(angleH)
+        );
+        ce::Vector3f tangent(
+          cosf(angleH + (float)M_PI / 2.0f),
+          0.0f,
+          sinf(angleH + (float)M_PI / 2.0f)
+        );
+        positions.push_back(origin + normal * radius);
+        normals.emplace_back(normal);
+        tangents.emplace_back(tangent);
+        uv.emplace_back(factH * 2.0f * uv_f, factV * uv_f);
+        colors.emplace_back(1.0f, 1.0f, 1.0f, 1.0f);
+      }
+    }
+
+    for (uint32_t v = 0; v < detail - 1; v++)
+    {
+      uint32_t      i0 = v * detail * 2;
+      uint32_t      i1 = i0 + detail * 2;
+      for (uint32_t h = 0; h < detail * 2 - 1; h++)
+      {
+        uint32_t i00 = i0 + h;
+        uint32_t i01 = i00 + 1;
+        uint32_t i10 = i1 + h;
+        uint32_t i11 = i10 + 1;
+
+        indices.emplace_back(idxOrigin + i00);
+        indices.emplace_back(idxOrigin + i10);
+        indices.emplace_back(idxOrigin + i11);
+
+        indices.emplace_back(idxOrigin + i00);
+        indices.emplace_back(idxOrigin + i11);
+        indices.emplace_back(idxOrigin + i01);
+      }
+    }
+    idxOrigin += detail * detail * 2;
+  }
+
+  generator->SetVertices(positions);
+  generator->SetNormals(normals);
+  generator->SetTangents(tangents);
+  generator->SetColors(colors);
+  generator->SetUV0(uv);
+  generator->SetIndices(indices);
+  ce::iRenderMesh* renderMesh = generator->Generate();
+  generator->Release();
+  return renderMesh;
+
+}
+
+
 void debug(ce::SpatialState *state, int indent)
 {
   if (!state)
@@ -440,7 +519,7 @@ void generate_camera(ce::World *world)
   auto cameraEntity = new ce::Entity("Camera");
   auto cameraState  = new ce::CameraState();
 
-  auto cameraHandler = new CameraHandler();
+  auto cameraHandler = new CameraHandlerMotion();
   cameraEntity->Attach(cameraState);
   cameraEntity->Attach(cameraHandler);
   cameraEntity->GetRoot()->GetTransform()
@@ -555,6 +634,72 @@ void generate_test_grid(ce::World *world, ce::iMaterial *material)
   }
 
 }
+
+
+void generate_batched_test_grid(ce::World* world, ce::iMaterial* material)
+{
+
+  auto sphere = create_multi_sphere_mesh(0.25, 16, 12.0f, 25, new ce::Vector3f[]{
+    ce::Vector3f(-2, 0.0f, -2.0f),
+    ce::Vector3f(-1, 0.0f, -2.0f),
+    ce::Vector3f(0, 0.0f, -2.0f),
+    ce::Vector3f(1, 0.0f, -2.0f),
+    ce::Vector3f(2, 0.0f, -2.0f),
+
+    ce::Vector3f(-2, 0.0f, -1.0f),
+    ce::Vector3f(-1, 0.0f, -1.0f),
+    ce::Vector3f(0, 0.0f, -1.0f),
+    ce::Vector3f(1, 0.0f, -1.0f),
+    ce::Vector3f(2, 0.0f, -1.0f),
+    
+    ce::Vector3f(-2, 0.0f, 0.0f),
+    ce::Vector3f(-1, 0.0f, 0.0f),
+    ce::Vector3f(0, 0.0f, 0.0f),
+    ce::Vector3f(1, 0.0f, 0.0f),
+    ce::Vector3f(2, 0.0f, 0.0f),
+
+    ce::Vector3f(-2, 0.0f, 1.0f),
+    ce::Vector3f(-1, 0.0f, 1.0f),
+    ce::Vector3f(0, 0.0f, 1.0f),
+    ce::Vector3f(1, 0.0f, 1.0f),
+    ce::Vector3f(2, 0.0f, 1.0f),
+
+    ce::Vector3f(-2, 0.0f, 2.0f),
+    ce::Vector3f(-1, 0.0f, 2.0f),
+    ce::Vector3f(0, 0.0f, 2.0f),
+    ce::Vector3f(1, 0.0f, 2.0f),
+    ce::Vector3f(2, 0.0f, 2.0f)
+    });
+  auto mesh = new ce::Mesh();
+  mesh->AddMaterialSlot("Default", material);
+  mesh->AddSubMesh(sphere, 0);
+  int gridSize = 100;
+
+  float start = static_cast<float>(gridSize) / 2.0f;
+
+  for (int i = 0; i < gridSize; i+=5)
+  {
+    auto  fi = (float)i;
+    for (int j = 0; j < gridSize; j+=5)
+    {
+      auto fj = (float)j;
+      auto entity = new ce::Entity(std::string("Sphere: ") + std::to_string(i + 1) + ":" + std::to_string(j + 1));
+
+      auto meshStateSphere = new ce::StaticMeshState("Mesh");
+      meshStateSphere->SetStatic(true);
+      meshStateSphere->GetTransform()
+        .SetTranslation(i - start + 2, 0.25f, j - start + 2)
+        .Finish();
+      meshStateSphere->SetMesh(mesh);
+      entity->Attach(meshStateSphere);
+
+
+      world->Attach(entity);
+    }
+  }
+
+}
+
 
 
 void generate_physics(ce::World *world, ce::iMaterial *material)
@@ -726,6 +871,7 @@ void setup_world(ce::World *world)
   generate_terrain(world);
   generate_camera(world);
   generate_physics(world, material);
+//  generate_batched_test_grid(world, material);
   generate_test_grid(world, material);
 
 #if 1

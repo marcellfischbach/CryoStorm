@@ -75,3 +75,35 @@ void CameraHandler::Update(float tpf)
 //    .LookAt(ce::Vector3f(0.0f, 0.0f, 0.0f))
 //    .Finish();
 }
+
+
+
+
+
+
+
+
+CameraHandlerMotion::CameraHandlerMotion()
+    : ce::EntityState(), m_position(5.0f, 5.0f, 5.0f), m_target(0, 0, 0), m_distance(1.0f), m_time(0.0f)
+{
+  CE_CLASS_GEN_CONSTR;
+  SetNeedUpdate(true);
+}
+
+
+
+void CameraHandlerMotion::Update(float tpf)
+{
+  ce::Transform tr = GetRoot()->GetTransform();
+
+  m_time += tpf;
+  m_time = ::fmod(m_time, (3.14156f * 2.0f));
+  ce::Vector3f pos = m_position;
+  pos.y += (::sinf(m_time) * 0.5f + 0.5f) * m_distance;
+  tr.SetTranslation(pos)
+    .LookAt(m_target)
+    .Finish();
+//  tr.SetTranslation(ce::Vector3f(5.0f, 10.0f, 5.0f))
+//    .LookAt(ce::Vector3f(0.0f, 0.0f, 0.0f))
+//    .Finish();
+}
