@@ -11,8 +11,6 @@
 #include <ceCore/graphics/shading/ishader.hh>
 #include <ceCore/graphics/shading/ishaderattribute.hh>
 
-#define PSSM_RENDERER m_pssmRendererAlt
-//#define PSSM_RENDERER m_pssmRenderer
 
 namespace ce::opengl
 {
@@ -21,7 +19,6 @@ namespace ce::opengl
 bool GL4DeferredDirectionalLightRenderer::Initialize(Settings &settings)
 {
   m_pssmRenderer.Initialize(settings);
-  m_pssmRendererAlt.Initialize(settings);
 
   m_nonShadow.m_shader = AssetManager::Get()->Get<iShader>(
       ResourceLocator("file://${engine}/opengl/gl4/deferred/directional_light_deferred_no_shadow.shader"));
@@ -74,11 +71,11 @@ void GL4DeferredDirectionalLightRenderer::Render(const Camera *camera,
   LightRenderShader *lrs = &m_nonShadow;
   if (light->IsCastShadow())
   {
-    PSSM_RENDERER.SetDevice(m_device);
-    PSSM_RENDERER.SetScene(m_scene);
-    PSSM_RENDERER.SetDepthBuffer(gBuffer->GetDepth());
-    PSSM_RENDERER.SetShadowMap(GetShadowMap());
-    PSSM_RENDERER.RenderShadow(light, *camera, *projector);
+    m_pssmRenderer.SetDevice(m_device);
+    m_pssmRenderer.SetScene(m_scene);
+    m_pssmRenderer.SetDepthBuffer(gBuffer->GetDepth());
+    m_pssmRenderer.SetShadowMap(GetShadowMap());
+    m_pssmRenderer.RenderShadow(light, *camera, *projector);
     lrs = &m_shadow;
   }
 
@@ -143,12 +140,12 @@ void GL4DeferredDirectionalLightRenderer::Render(const Camera *camera,
 GL4RenderTarget2D *GL4DeferredDirectionalLightRenderer::GetShadowMap()
 {
 
-  if (PSSM_RENDERER.IsShadowMapValid(m_shadowMap))
+  if (m_pssmRenderer.IsShadowMapValid(m_shadowMap))
   {
     return m_shadowMap;
   }
 
-  GL4RenderTarget2D *target = PSSM_RENDERER.CreateDirectionalLightShadowMap();
+  GL4RenderTarget2D *target = m_pssmRenderer.CreateDirectionalLightShadowMap();
   CE_SET(m_shadowMap, target);
   return target;
 }

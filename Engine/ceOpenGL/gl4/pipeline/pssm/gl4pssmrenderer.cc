@@ -17,11 +17,18 @@
 #include <ceCore/math/clipper/cameraclipper.hh>
 
 #include <algorithm>
-
+#include <ceCore/time.hh>
 
 namespace ce::opengl
 {
 
+GL4PSSMRenderer::GL4PSSMRenderer()
+{
+  for (size_t i = 0; i < m_directionalLightShadowBuffers.size(); i++)
+  {
+    m_directionalLightShadowBuffers[i] = nullptr;
+  }
+}
 
 void GL4PSSMRenderer::Initialize(ce::Settings &settings)
 {
@@ -59,13 +66,13 @@ void GL4PSSMRenderer::Initialize(ce::Settings &settings)
 
 
   m_shadowMappingShader = AssetManager::Get()->Get<iShader>(
-      ResourceLocator("file://${engine}/opengl/gl4/forward/directional_light_shadow_map.shader"));
+      ResourceLocator("file://${engine}/opengl/gl4/pssm/directional_light_shadow_map.shader"));
   if (m_shadowMappingShader)
   {
-    m_attrLayersDepth  = m_shadowMappingShader->GetShaderAttribute("LayersDepth");
-    m_attrLayersBias   = m_shadowMappingShader->GetShaderAttribute("LayersBias");
-    m_attrShadowBuffer = m_shadowMappingShader->GetShaderAttribute("ShadowBuffer");
-    m_attrDepthBuffer  = m_shadowMappingShader->GetShaderAttribute("DepthBuffer");
+    m_attrLayersDepth   = m_shadowMappingShader->GetShaderAttribute("LayersDepth");
+    m_attrLayersBias    = m_shadowMappingShader->GetShaderAttribute("LayersBias");
+    m_attrShadowBuffers = m_shadowMappingShader->GetShaderAttribute("ShadowBuffers");
+    m_attrDepthBuffer   = m_shadowMappingShader->GetShaderAttribute("DepthBuffer");
   }
 
 }
@@ -100,23 +107,22 @@ GL4RenderTarget2D *GL4PSSMRenderer::GetShadowMap()
 
 
 void GL4PSSMRenderer::RenderShadow(const GL4DirectionalLight *directionalLight,
-                                   const ce::Camera &camera,
-                                   const ce::Projector &projector)
+                                      const ce::Camera &camera,
+                                      const ce::Projector &projector)
 {
 
-  RenderShadowBufferNew(directionalLight, camera, projector);
+  RenderShadowBuffer(directionalLight, camera, projector);
   RenderShadowMap(directionalLight, camera, projector);
-//  FilterShadowMap();
+  FilterShadowMap();
 }
 
-
 static void calc_projection_matrix(GL4Device *device,
-                            Vector3f near[4],
-                            Vector3f far[4],
-                            float n,
-                            float f,
-                            const Matrix4f &cameraMatrix,
-                            Matrix4f &projectionMatrix)
+                                   Vector3f near[4],
+                                   Vector3f far[4],
+                                   float n,
+                                   float f,
+                                   const Matrix4f &cameraMatrix,
+                                   Matrix4f &projectionMatrix)
 {
 
   float       l = FLT_MAX;
@@ -142,12 +148,12 @@ static void calc_projection_matrix(GL4Device *device,
 
 
 static void calc_projection_matrix_inv(GL4Device *device,
-                                Vector3f near[4],
-                                Vector3f far[4],
-                                float n,
-                                float f,
-                                const Matrix4f &cameraMatrix,
-                                Matrix4f &projectionMatrix)
+                                       Vector3f near[4],
+                                       Vector3f far[4],
+                                       float n,
+                                       float f,
+                                       const Matrix4f &cameraMatrix,
+                                       Matrix4f &projectionMatrix)
 {
 
   float       l = FLT_MAX;
@@ -156,12 +162,12 @@ static void calc_projection_matrix_inv(GL4Device *device,
   float       t = -FLT_MAX;
   for (size_t i = 0; i < 4; i++)
   {
-    Vector3f v = Matrix4f::Transform(cameraMatrix, near[i]);
+    Vector2f v = Matrix4f::TransformXY(cameraMatrix, near[i]);
     l = ::fminf(v.x, l);
     r = ::fmaxf(v.x, r);
     b = ::fminf(v.y, b);
     t = ::fmaxf(v.y, t);
-    v = Matrix4f::Transform(cameraMatrix, far[i]);
+    v = Matrix4f::TransformXY(cameraMatrix, far[i]);
     l = ::fminf(v.x, l);
     r = ::fmaxf(v.x, r);
     b = ::fminf(v.y, b);
@@ -172,10 +178,10 @@ static void calc_projection_matrix_inv(GL4Device *device,
 }
 
 
-static void calc_center_position (Vector3f near[4], Vector3f far[4], Vector3f &outPos)
+static void calc_center_position(Vector3f near[4], Vector3f far[4], Vector3f &outPos)
 {
-  outPos = Vector3f(0.0f, 0.0f, 0.0f);
-  for (size_t i=0; i<4; i++)
+  outPos        = Vector3f(0.0f, 0.0f, 0.0f);
+  for (size_t i = 0; i < 4; i++)
   {
     outPos += near[i];
     outPos += far[i];
@@ -184,354 +190,144 @@ static void calc_center_position (Vector3f near[4], Vector3f far[4], Vector3f &o
 }
 
 
-void GL4PSSMRenderer::RenderShadowBufferNew(const GL4DirectionalLight *directionalLight,
+void GL4PSSMRenderer::RenderShadowBuffer(const GL4DirectionalLight *directionalLight,
                                             const ce::Camera &camera,
                                             const ce::Projector &projector)
 {
 
-
-  Vector3f nearPoints[4];
-  Vector3f split0Points[4];
-  Vector3f split1Points[4];
-  Vector3f split2Points[4];
-  Vector3f split3Points[4];
-
-  projector.GetPoints(m_shadowNear, nearPoints);
-  projector.GetPoints(m_splits[0], split0Points);
-  projector.GetPoints(m_splits[1], split1Points);
-  projector.GetPoints(m_splits[2], split2Points);
-  projector.GetPoints(m_splits[3], split3Points);
+  Vector3f splitPoints[5][4];
+  projector.GetPoints(m_shadowNear, splitPoints[0]);
+  projector.GetPoints(m_splits[0], splitPoints[1]);
+  projector.GetPoints(m_splits[1], splitPoints[2]);
+  projector.GetPoints(m_splits[2], splitPoints[3]);
+  projector.GetPoints(m_splits[3], splitPoints[4]);
 
   const Matrix4f &camMatInv = camera.GetViewMatrixInv();
 
+  Matrix4f shadowMapView[4];
+  Matrix4f shadowMapProjection[4];
+
   for (size_t i = 0; i < 4; i++)
   {
-    nearPoints[i]   = Matrix4f::Transform(camMatInv, nearPoints[i]);
-    split0Points[i] = Matrix4f::Transform(camMatInv, split0Points[i]);
-    split1Points[i] = Matrix4f::Transform(camMatInv, split1Points[i]);
-    split2Points[i] = Matrix4f::Transform(camMatInv, split2Points[i]);
-    split3Points[i] = Matrix4f::Transform(camMatInv, split3Points[i]);
+    splitPoints[0][i] = Matrix4f::Transform(camMatInv, splitPoints[0][i]);
+    splitPoints[1][i] = Matrix4f::Transform(camMatInv, splitPoints[1][i]);
+    splitPoints[2][i] = Matrix4f::Transform(camMatInv, splitPoints[2][i]);
+    splitPoints[3][i] = Matrix4f::Transform(camMatInv, splitPoints[3][i]);
+    splitPoints[4][i] = Matrix4f::Transform(camMatInv, splitPoints[4][i]);
   }
 
-
-  Vector3f direction = (camera.GetSpot() - camera.GetEye()).Normalize();
-  Vector3f pos0      = camera.GetEye() + direction * (m_shadowNear + m_splits[0]) / 2.0f;
-  Vector3f pos1      = camera.GetEye() + direction * (m_splits[0] + m_splits[1]) / 2.0f;
-  Vector3f pos2      = camera.GetEye() + direction * (m_splits[1] + m_splits[2]) / 2.0f;
-  Vector3f pos3      = camera.GetEye() + direction * (m_splits[2] + m_splits[3]) / 2.0f;
-  Vector3f posTot    = camera.GetEye() + direction * (m_shadowNear + m_splits[3]) / 2.0f;
-  float sizeSplitTot = GetSplitSize(nearPoints, split3Points) / 2.0f;
-
-
-  calc_center_position(nearPoints, split3Points, posTot);
-  calc_center_position(nearPoints, split0Points, pos0);
-  calc_center_position(split0Points, split1Points, pos1);
-  calc_center_position(split1Points, split2Points, pos2);
-  calc_center_position(split2Points, split3Points, pos3);
-
-
-  Matrix4f views[4];
-  views[0].SetLookAt(pos0, pos0 + directionalLight->GetDirection(), Vector3f(0, 1, 0));
-  views[1].SetLookAt(pos1, pos1 + directionalLight->GetDirection(), Vector3f(0, 1, 0));
-  views[2].SetLookAt(pos2, pos2 + directionalLight->GetDirection(), Vector3f(0, 1, 0));
-  views[3].SetLookAt(pos3, pos3 + directionalLight->GetDirection(), Vector3f(0, 1, 0));
-
-  Matrix4f viewTotInv;
-  viewTotInv.SetLookAtInv(posTot, posTot + directionalLight->GetDirection(), Vector3f(0, 1, 0));
-  Matrix4f viewTot;
-  viewTot.SetLookAt(posTot, posTot + directionalLight->GetDirection(), Vector3f(0, 1, 0));
-
-  Matrix4f projectionTot;
-//  m_device->GetOrthographicProjectionInv(-sizeSplitTot,
-//                                         sizeSplitTot,
-//                                         -sizeSplitTot,
-//                                         sizeSplitTot,
-//                                         -1.0f,
-//                                         1.0f,
-//                                         projectionTot);
-//  projectionTot.Debug("Working");
-//  CameraClipper clipper1(viewTotInv, projectionTot, false, false);
-
-
-  calc_projection_matrix_inv(m_device, nearPoints, split3Points, -1.0f, 1.0f, viewTot, projectionTot);
-//  projectionTot.Debug("Not Working");
-  CameraClipper clipper(viewTotInv, projectionTot, false, false);
-
-
-  float near[] = {FLT_MAX, FLT_MAX, FLT_MAX, FLT_MAX};
-  float far[]  = {-FLT_MAX, -FLT_MAX, -FLT_MAX, -FLT_MAX};
-  m_meshesCache.clear();
-  m_scene->ScanMeshes(&clipper, iGfxScene::eSM_Dynamic | iGfxScene::eSM_Static,
-                      [this, &views, &near, &far](GfxMesh *mesh) {
-                        if (mesh->IsCastShadow())
-                        {
-                          const Vector3f *bboxPoints = mesh->GetBoundingBox().GetPoints();
-                          for (unsigned  i           = 0; i < 8; i++)
-                          {
-                            Vector3f point = bboxPoints[i];
-                            float    v0    = Matrix4f::TransformZ(views[0], point);
-                            float    v1    = Matrix4f::TransformZ(views[1], point);
-                            float    v2    = Matrix4f::TransformZ(views[2], point);
-                            float    v3    = Matrix4f::TransformZ(views[3], point);
-
-                            near[0] = ceMin(near[0], v0);
-                            near[1] = ceMin(near[1], v1);
-                            near[2] = ceMin(near[2], v2);
-                            near[3] = ceMin(near[3], v3);
-                            far[0]  = ceMax(far[0], v0);
-                            far[1]  = ceMax(far[1], v1);
-                            far[2]  = ceMax(far[2], v2);
-                            far[3]  = ceMax(far[3], v3);
-                          }
-                          m_meshesCache.emplace_back(mesh);
-                        }
-                      }
-  );
-
-  Matrix4f projection0, projection1, projection2, projection3;
-  calc_projection_matrix(m_device, nearPoints, split0Points, near[0], far[0], views[0], projection0);
-  calc_projection_matrix(m_device, split0Points, split1Points, near[1], far[1], views[1], projection1);
-  calc_projection_matrix(m_device, split1Points, split2Points, near[2], far[2], views[2], projection2);
-  calc_projection_matrix(m_device, split2Points, split3Points, near[3], far[3], views[3], projection3);
-//  m_device->GetOrthographicProjection(-sizeSplit0 - mod0X,
-//                                      sizeSplit0 - mod0X,
-//                                      -sizeSplit0 - mod0Y,
-//                                      sizeSplit0 - mod0Y,
-//                                      near[0],
-//                                      far[0],
-//                                      projection0);
-//  m_device->GetOrthographicProjection(-sizeSplit1 - mod1X,
-//                                      sizeSplit1 - mod1X,
-//                                      -sizeSplit1 - mod1Y,
-//                                      sizeSplit1 - mod1Y,
-//                                      near[1],
-//                                      far[1],
-//                                      projection1);
-//  m_device->GetOrthographicProjection(-sizeSplit2 - mod2X,
-//                                      sizeSplit2 - mod2X,
-//                                      -sizeSplit2 - mod2Y,
-//                                      sizeSplit2 - mod2Y,
-//                                      near[2],
-//                                      far[2],
-//                                      projection2);
-//  m_device->GetOrthographicProjection(-sizeSplit3 - mod3X,
-//                                      sizeSplit3 - mod3X,
-//                                      -sizeSplit3 - mod3Y,
-//                                      sizeSplit3 - mod3Y,
-//                                      near[3],
-//                                      far[3],
-//                                      projection3);
-  Matrix4f projections[] = {
-      projection0,
-      projection1,
-      projection2,
-      projection3
-  };
-
-
-  m_device->SetRenderTarget(GetDirectionalLightShadowBuffer());
-  m_device->SetRenderBuffer(0);
-  m_device->SetDepthWrite(true);
-  m_device->SetDepthTest(true);
-  m_device->SetBlending(false);
-  m_device->SetColorWrite(false, false, false, false);
-  m_device->Clear(false, Color4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, true, 0);
-
-  m_device->SetShadowMapProjectionMatrices(projections, 4);
-  m_device->SetShadowMapViewMatrices(views, 4);
-
-//  std::sort(m_meshesCache.begin(), m_meshesCache.end(), material_shader_compare_less_forward);
-  for (auto mesh: m_meshesCache)
+  size_t      maxShadowCaster = 0;
+  for (size_t i               = 0; i < 4; i++)
   {
-    mesh->RenderUnlit(m_device, eRP_ShadowPSSM);
+
+
+    Vector3f centerPosition;
+    Matrix4f view, viewInv, proj, projInv;
+
+    calc_center_position(splitPoints[i], splitPoints[i + 1], centerPosition);
+
+    view.SetLookAt(centerPosition, centerPosition + directionalLight->GetDirection(), Vector3f(0, 1, 0));
+    viewInv.SetLookAtInv(centerPosition, centerPosition + directionalLight->GetDirection(), Vector3f(0, 1, 0));
+
+
+    Vector3f xAxis            = viewInv.GetXAxis().Normalize();
+    Vector3f yAxis            = viewInv.GetYAxis().Normalize();
+    float    sizeSplit        = GetSplitSize(splitPoints[i], splitPoints[i + 1]) / 2.0f;
+    auto     shadowBufferSize = static_cast<float>(m_directionalLightShadowBufferSize);
+    float    modV             = sizeSplit * 2.0f / shadowBufferSize;
+    float    onAxisX          = xAxis.Dot(centerPosition);
+    float    onAxisY          = yAxis.Dot(centerPosition);
+    float    modX             = fmodf(onAxisX, modV);
+    float    modY             = fmodf(onAxisY, modV);
+
+
+    calc_projection_matrix_inv(m_device, splitPoints[i], splitPoints[i + 1], -1.0f, 1.0f, view, projInv);
+
+
+    CameraClipper clipper(viewInv, projInv, false, false);
+
+
+    float near = FLT_MAX;
+    float far  = -FLT_MAX;
+    m_collector.Clear();
+    m_scene->ScanMeshes(&clipper, iGfxScene::eSM_Dynamic | iGfxScene::eSM_Static, m_collector);
+    std::vector<GfxMesh *> &meshes = m_collector.GetMeshes(eRenderQueue::Default);
+
+    for (const auto &mesh: meshes)
+    {
+      if (mesh->IsCastShadow())
+      {
+        const Vector3f *bboxPoints = mesh->GetBoundingBox().GetPoints();
+        for (unsigned  j           = 0; j < 8; j++)
+        {
+          Vector3f point = bboxPoints[j];
+          float    v     = Matrix4f::TransformZ(view, point);
+
+          near = ::fminf(near, v);
+          far  = ::fmaxf(far, v);
+        }
+      }
+    }
+
+    maxShadowCaster = std::max(maxShadowCaster, meshes.size());
+
+
+    m_device->GetOrthographicProjection(-sizeSplit - modX,
+                                        sizeSplit - modX,
+                                        -sizeSplit - modY,
+                                        sizeSplit - modY,
+                                        near,
+                                        far,
+                                        proj);
+//    calc_projection_matrix(m_device, splitPoints[i], splitPoints[i + 1], near, far, view, proj);
+
+    shadowMapView[i]       = view;
+    shadowMapProjection[i] = proj;
+
+    m_device->ResetTextures();
+    m_device->SetRenderTarget(GetDirectionalLightShadowBuffer(i));
+    m_device->SetRenderBuffer(0);
+    m_device->SetDepthWrite(true);
+    m_device->SetDepthTest(true);
+    m_device->SetBlending(false);
+    m_device->SetColorWrite(false, false, false, false);
+    m_device->Clear(false, Color4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, false, 0);
+
+    m_device->SetProjectionMatrix(proj);
+    m_device->SetViewMatrix(view);
+
+//    std::sort(m_meshesCache.begin(), m_meshesCache.end(), material_shader_compare_less_forward);
+
+    uint64_t        startTime = Time::GetTime();
+//    printf (" [%d @ (%.2f %.2f)]", m_meshesCache.size(), near, far);
+    size_t c = 0;
+    for (const auto &mesh: meshes)
+    {
+      if (mesh->IsCastShadow())
+      {
+        mesh->RenderUnlit(m_device, eRP_Depth);
+        c++;
+      }
+    }
+//    printf ("%d ", c);
   }
-  //  m_device->BindMaterial(nullptr, eRP_COUNT);
-  //  m_device->SetColorWrite(true, true, true, true);
+//  printf ("\n");
+  // 66 430 580 401
+  // 521 3599 4183 2539
 
-}
-
-void GL4PSSMRenderer::RenderShadowBuffer(const GL4DirectionalLight *directionalLight,
-                                         const ce::Camera &camera,
-                                         const ce::Projector &projector)
-{
-
-
-  Vector3f nearPoints[4];
-  Vector3f split0Points[4];
-  Vector3f split1Points[4];
-  Vector3f split2Points[4];
-  Vector3f split3Points[4];
-
-  projector.GetPoints(m_shadowNear, nearPoints);
-  projector.GetPoints(m_splits[0], split0Points);
-  projector.GetPoints(m_splits[1], split1Points);
-  projector.GetPoints(m_splits[2], split2Points);
-  projector.GetPoints(m_splits[3], split3Points);
-
-  float sizeSplit0   = GetSplitSize(nearPoints, split0Points) / 2.0f;
-  float sizeSplit1   = GetSplitSize(split0Points, split1Points) / 2.0f;
-  float sizeSplit2   = GetSplitSize(split1Points, split2Points) / 2.0f;
-  float sizeSplit3   = GetSplitSize(split2Points, split3Points) / 2.0f;
-  float sizeSplitTot = GetSplitSize(nearPoints, split3Points) / 2.0f;
-
-  Vector3f direction = (camera.GetSpot() - camera.GetEye()).Normalize();
-  Vector3f pos0      = camera.GetEye() + direction * (m_shadowNear + m_splits[0]) / 2.0f;
-  Vector3f pos1      = camera.GetEye() + direction * (m_splits[0] + m_splits[1]) / 2.0f;
-  Vector3f pos2      = camera.GetEye() + direction * (m_splits[1] + m_splits[2]) / 2.0f;
-  Vector3f pos3      = camera.GetEye() + direction * (m_splits[2] + m_splits[3]) / 2.0f;
-  Vector3f posTot    = camera.GetEye() + direction * (m_shadowNear + m_splits[3]) / 2.0f;
-
-  Matrix4f mat;
-  mat.SetLookAtInv(Vector3f(0, 0, 0), directionalLight->GetDirection(), Vector3f(0, 1, 0));
-  Vector3f xAxis = mat.GetXAxis().Normalize();
-  Vector3f yAxis = mat.GetYAxis().Normalize();
-
-  auto  shadowBufferSize = static_cast<float>(m_directionalLightShadowBufferSize);
-  float modV0            = sizeSplit0 * 2.0f / shadowBufferSize;
-  float modV1            = sizeSplit1 * 2.0f / shadowBufferSize;
-  float modV2            = sizeSplit2 * 2.0f / shadowBufferSize;
-  float modV3            = sizeSplit3 * 2.0f / shadowBufferSize;
-  float modVTot          = sizeSplitTot * 2.0f / shadowBufferSize;
-  float onAxisX0         = xAxis.Dot(pos0);
-  float onAxisY0         = yAxis.Dot(pos0);
-  float onAxisX1         = xAxis.Dot(pos1);
-  float onAxisY1         = yAxis.Dot(pos1);
-  float onAxisX2         = xAxis.Dot(pos2);
-  float onAxisY2         = yAxis.Dot(pos2);
-  float onAxisX3         = xAxis.Dot(pos3);
-  float onAxisY3         = yAxis.Dot(pos3);
-  float onAxisXTot       = xAxis.Dot(posTot);
-  float onAxisYTot       = yAxis.Dot(posTot);
-
-  float mod0X   = fmodf(onAxisX0, modV0);
-  float mod0Y   = fmodf(onAxisY0, modV0);
-  float mod1X   = fmodf(onAxisX1, modV1);
-  float mod1Y   = fmodf(onAxisY1, modV1);
-  float mod2X   = fmodf(onAxisX2, modV2);
-  float mod2Y   = fmodf(onAxisY2, modV2);
-  float mod3X   = fmodf(onAxisX3, modV3);
-  float mod3Y   = fmodf(onAxisY3, modV3);
-  float modTotX = fmodf(onAxisXTot, modVTot);
-  float modTotY = fmodf(onAxisYTot, modVTot);
-
-  Matrix4f views[4];
-  views[0].SetLookAt(pos0, pos0 + directionalLight->GetDirection(), Vector3f(0, 1, 0));
-  views[1].SetLookAt(pos1, pos1 + directionalLight->GetDirection(), Vector3f(0, 1, 0));
-  views[2].SetLookAt(pos2, pos2 + directionalLight->GetDirection(), Vector3f(0, 1, 0));
-  views[3].SetLookAt(pos3, pos3 + directionalLight->GetDirection(), Vector3f(0, 1, 0));
-
-  Matrix4f viewTot;
-  viewTot.SetLookAtInv(posTot, posTot + directionalLight->GetDirection(), Vector3f(0, 1, 0));
-
-  Matrix4f projectionTot;
-  m_device->GetOrthographicProjectionInv(-sizeSplitTot - modTotX,
-                                         sizeSplitTot - modTotX,
-                                         -sizeSplitTot - modTotY,
-                                         sizeSplitTot - modTotY,
-                                         -1.0f,
-                                         1.0f,
-                                         projectionTot);
-
-
-  CameraClipper clipper(viewTot, projectionTot, false, false);
-
-
-  float near[] = {FLT_MAX, FLT_MAX, FLT_MAX, FLT_MAX};
-  float far[]  = {-FLT_MAX, -FLT_MAX, -FLT_MAX, -FLT_MAX};
-  m_meshesCache.clear();
-  m_scene->ScanMeshes(&clipper, iGfxScene::eSM_Dynamic | iGfxScene::eSM_Static,
-                      [this, &views, &near, &far](GfxMesh *mesh) {
-                        if (mesh->IsCastShadow())
-                        {
-                          const Vector3f *bboxPoints = mesh->GetBoundingBox().GetPoints();
-                          for (unsigned  i           = 0; i < 8; i++)
-                          {
-                            Vector3f point = bboxPoints[i];
-                            float    v0    = Matrix4f::TransformZ(views[0], point);
-                            float    v1    = Matrix4f::TransformZ(views[1], point);
-                            float    v2    = Matrix4f::TransformZ(views[2], point);
-                            float    v3    = Matrix4f::TransformZ(views[3], point);
-
-                            near[0] = ceMin(near[0], v0);
-                            near[1] = ceMin(near[1], v1);
-                            near[2] = ceMin(near[2], v2);
-                            near[3] = ceMin(near[3], v3);
-                            far[0]  = ceMax(far[0], v0);
-                            far[1]  = ceMax(far[1], v1);
-                            far[2]  = ceMax(far[2], v2);
-                            far[3]  = ceMax(far[3], v3);
-                          }
-                          m_meshesCache.emplace_back(mesh);
-                        }
-                      }
-  );
-
-  Matrix4f projection0, projection1, projection2, projection3;
-  m_device->GetOrthographicProjection(-sizeSplit0 - mod0X,
-                                      sizeSplit0 - mod0X,
-                                      -sizeSplit0 - mod0Y,
-                                      sizeSplit0 - mod0Y,
-                                      near[0],
-                                      far[0],
-                                      projection0);
-  m_device->GetOrthographicProjection(-sizeSplit1 - mod1X,
-                                      sizeSplit1 - mod1X,
-                                      -sizeSplit1 - mod1Y,
-                                      sizeSplit1 - mod1Y,
-                                      near[1],
-                                      far[1],
-                                      projection1);
-  m_device->GetOrthographicProjection(-sizeSplit2 - mod2X,
-                                      sizeSplit2 - mod2X,
-                                      -sizeSplit2 - mod2Y,
-                                      sizeSplit2 - mod2Y,
-                                      near[2],
-                                      far[2],
-                                      projection2);
-  m_device->GetOrthographicProjection(-sizeSplit3 - mod3X,
-                                      sizeSplit3 - mod3X,
-                                      -sizeSplit3 - mod3Y,
-                                      sizeSplit3 - mod3Y,
-                                      near[3],
-                                      far[3],
-                                      projection3);
-  Matrix4f projections[] = {
-      projection0,
-      projection1,
-      projection2,
-      projection3
-  };
-
-
-  m_device->SetRenderTarget(GetDirectionalLightShadowBuffer());
-  m_device->SetRenderBuffer(0);
-  m_device->SetDepthWrite(true);
-  m_device->SetDepthTest(true);
-  m_device->SetBlending(false);
-  m_device->SetColorWrite(false, false, false, false);
-  m_device->Clear(false, Color4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, true, 0);
-
-  m_device->SetShadowMapProjectionMatrices(projections, 4);
-  m_device->SetShadowMapViewMatrices(views, 4);
-
-//  std::sort(m_meshesCache.begin(), m_meshesCache.end(), material_shader_compare_less_forward);
-
-  for (auto mesh: m_meshesCache)
-  {
-    mesh->RenderUnlit(m_device, eRP_ShadowPSSM);
-  }
-  //  m_device->BindMaterial(nullptr, eRP_COUNT);
-  //  m_device->SetColorWrite(true, true, true, true);
+  m_device->SetShadowMapProjectionMatrices(shadowMapProjection, 4);
+  m_device->SetShadowMapViewMatrices(shadowMapView, 4);
 
 }
 
 
 void GL4PSSMRenderer::RenderShadowMap(const GL4DirectionalLight *directionalLight,
-                                      const ce::Camera &camera,
-                                      const ce::Projector &projector)
+                                         const ce::Camera &camera,
+                                         const ce::Projector &projector)
 {
   m_device->ResetTextures();
-  GL4RenderTarget2D *target = m_directionalLightShadowMap;
+  GL4RenderTarget2D *target = GetDirectionalLightShadowMapTemp();// m_directionalLightShadowMap;
+//  GL4RenderTarget2D *target = m_directionalLightShadowMap;
   m_device->SetRenderTarget(target);
   m_device->SetRenderBuffer(0);
   m_device->SetDepthWrite(true);
@@ -541,6 +337,7 @@ void GL4PSSMRenderer::RenderShadowMap(const GL4DirectionalLight *directionalLigh
   m_device->Clear(true, Color4f(0.0, 0.0f, 0.0f, 0.0f), true, 1.0f, true, 0);
 
   m_device->SetShader(m_shadowMappingShader);
+  m_device->ResetTextures();
   camera.Bind(m_device);
   projector.Bind(m_device);
 
@@ -553,10 +350,14 @@ void GL4PSSMRenderer::RenderShadowMap(const GL4DirectionalLight *directionalLigh
     m_attrLayersBias->Bind(directionalLight->GetShadowMapBias());
   }
 
-  if (m_attrShadowBuffer)
+  if (m_attrShadowBuffers)
   {
-    eTextureUnit unit = m_device->BindTexture(GetDirectionalLightShadowBuffer()->GetDepthTexture());
-    m_attrShadowBuffer->Bind(unit);
+    for (size_t i = 0; i < 4; i++)
+    {
+      eTextureUnit unit = m_device->BindTexture(GetDirectionalLightShadowBuffer(i)->GetDepthTexture());
+      m_attrShadowBuffers->SetArrayIndex(i);
+      m_attrShadowBuffers->Bind(unit);
+    }
   }
   if (m_attrDepthBuffer)
   {
@@ -583,38 +384,35 @@ void GL4PSSMRenderer::FilterShadowMap()
 }
 
 
-GL4RenderTarget2DArray *GL4PSSMRenderer::GetDirectionalLightShadowBuffer()
+GL4RenderTarget2D *GL4PSSMRenderer::GetDirectionalLightShadowBuffer(size_t split)
 {
-  if (!m_directionalLightShadowBuffer)
+  if (!m_directionalLightShadowBuffers[split])
   {
-    iRenderTarget2DArray::Descriptor desc {};
+    iRenderTarget2D::Descriptor desc {};
     desc.Width  = (uint16_t) m_directionalLightShadowBufferSize;
     desc.Height = (uint16_t) m_directionalLightShadowBufferSize;
-    desc.Layer  = 4;
-    auto shadowRenderTarget = QueryClass<GL4RenderTarget2DArray>(m_device->CreateRenderTarget(desc));
+    auto shadowRenderTarget = QueryClass<GL4RenderTarget2D>(m_device->CreateRenderTarget(desc));
 
 
     if (m_shadowSamplingMode == ShadowSamplingMode::VSM)
     {
-      iTexture2DArray::Descriptor colorDesc {};
+      iTexture2D::Descriptor colorDesc {};
       colorDesc.Width   = desc.Width;
       colorDesc.Height  = desc.Height;
-      colorDesc.Layers  = desc.Layer;
       colorDesc.Format  = ePF_RGBA;
       colorDesc.MipMaps = false;
-      iTexture2DArray *colorTexture = m_device->CreateTexture(colorDesc);
+      iTexture2D *colorTexture = m_device->CreateTexture(colorDesc);
       colorTexture->SetSampler(GetShadowBufferColorSampler());
       shadowRenderTarget->AddColorTexture(colorTexture);
       colorTexture->Release();
     }
 
-    iTexture2DArray::Descriptor depthDesc {};
+    iTexture2D::Descriptor depthDesc {};
     depthDesc.Width   = desc.Width;
     depthDesc.Height  = desc.Height;
-    depthDesc.Layers  = desc.Layer;
     depthDesc.Format  = ePF_Depth;
     depthDesc.MipMaps = false;
-    iTexture2DArray *depthTexture  = m_device->CreateTexture(depthDesc);
+    iTexture2D *depthTexture = m_device->CreateTexture(depthDesc);
     depthTexture->SetSampler(GetShadowBufferDepthSampler());
     shadowRenderTarget->SetDepthTexture(depthTexture);
     depthTexture->Release();
@@ -625,9 +423,9 @@ GL4RenderTarget2DArray *GL4PSSMRenderer::GetDirectionalLightShadowBuffer()
       shadowRenderTarget->Release();
       shadowRenderTarget = nullptr;
     }
-    m_directionalLightShadowBuffer = shadowRenderTarget;
+    m_directionalLightShadowBuffers[split] = shadowRenderTarget;
   }
-  return m_directionalLightShadowBuffer;
+  return m_directionalLightShadowBuffers[split];
 }
 
 bool GL4PSSMRenderer::IsShadowMapValid(GL4RenderTarget2D *shadowMap) const

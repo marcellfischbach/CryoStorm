@@ -5,7 +5,7 @@
 #pragma once
 
 #include <vector>
-#include <ceOpenGL/gl4/pipeline/pssm/gl4directionallightshadowmapfilter.hh>
+#include <ceOpenGL/gl4/pipeline/pssm/gl4pssmfilter.hh>
 #include <ceCore/graphics/scene/gfxscenecollector.hh>
 
 namespace ce
@@ -28,11 +28,12 @@ class GL4Device;
 class GL4DirectionalLight;
 class GL4RenderTarget2DArray;
 class GL4RenderTarget2D;
+class GL4Texture2DArray;
 
 class GL4PSSMRenderer
 {
 public:
-  GL4PSSMRenderer() = default;
+  GL4PSSMRenderer();
   ~GL4PSSMRenderer() = default;
 
   void Initialize(Settings &settings);
@@ -49,13 +50,12 @@ public:
   bool IsShadowMapValid (GL4RenderTarget2D *shadowMap) const;
 private:
   void RenderShadowBuffer(const GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector);
-  void RenderShadowBufferNew(const GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector);
   void RenderShadowMap(const GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector);
   void FilterShadowMap();
 
 
   GL4RenderTarget2D *GetDirectionalLightShadowMapTemp();
-  GL4RenderTarget2DArray *GetDirectionalLightShadowBuffer();
+  GL4RenderTarget2D *GetDirectionalLightShadowBuffer(size_t split);
   static float GetSplitSize(const Vector3f *near, const Vector3f *far);
   iSampler *GetShadowMapColorSampler();
   iSampler *GetShadowBufferColorSampler();
@@ -68,7 +68,7 @@ private:
 
   iTexture2D *m_depthBuffer = nullptr;
 
-  GL4RenderTarget2DArray *m_directionalLightShadowBuffer = nullptr;
+  std::array<GL4RenderTarget2D*, 4> m_directionalLightShadowBuffers;
   size_t                 m_directionalLightShadowBufferSize = 0;
 
 
@@ -95,12 +95,12 @@ private:
 
   iShader          *m_shadowMappingShader = nullptr;
   iShaderAttribute *m_attrLayersDepth     = nullptr;
-  iShaderAttribute *m_attrLayersBias      = nullptr;
-  iShaderAttribute *m_attrShadowBuffer    = nullptr;
-  iShaderAttribute *m_attrDepthBuffer     = nullptr;
+  iShaderAttribute *m_attrLayersBias    = nullptr;
+  iShaderAttribute *m_attrShadowBuffers = nullptr;
+  iShaderAttribute *m_attrDepthBuffer   = nullptr;
 
 
-  GL4DirectionalLightShadowMapFilter m_shadowMapFilter;
+  GL4PSSMFilter m_shadowMapFilter;
 
   GfxSceneCollector m_collector;
   std::vector<GfxMesh *> m_meshesCache;

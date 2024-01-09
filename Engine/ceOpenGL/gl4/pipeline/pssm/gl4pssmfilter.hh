@@ -16,15 +16,15 @@ namespace opengl
 class GL4Device;
 class GL4RenderTarget2D;
 
-class GL4DirectionalLightShadowMapFilter
+class GL4PSSMFilter
 {
 public:
 
 
 
 
-  GL4DirectionalLightShadowMapFilter();
-  ~GL4DirectionalLightShadowMapFilter();
+  GL4PSSMFilter();
+  ~GL4PSSMFilter();
 
   bool Initialize (const Vector2f &distance, float radius, float samples, float maxSampleDistance);
 

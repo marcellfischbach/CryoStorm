@@ -880,7 +880,7 @@ void setup_world(ce::World *world)
                         ce::ceDeg2Rad(-45.0f),
                         ce::Color4f(1.0f, 1.0f, 1.0f, 1.0f),
                         true,
-                        true);
+                        false);
 
 //  add_directional_light(world,
 //                        ce::Vector3f(1.0f, 0.2f, 0.0f),
@@ -890,7 +890,7 @@ void setup_world(ce::World *world)
 //                        false);
 #endif
 
-//  add_point_light(world, ce::Vector3f(0.0f, 5.0f, 0.0f), 50.0f, ce::Color4f(1.0, 1.0f, 1.0f), true);
+  add_point_light(world, ce::Vector3f(0.0f, 5.0f, 0.0f), 50.0f, ce::Color4f(1.0, 1.0f, 1.0f), true);
 
 #if 0
   add_point_light(world, ce::Vector3f(10.0f, 10.0f, 10.0f), 25.0f, ce::Color4f(1.0, 0.0f, 1.0f), false);

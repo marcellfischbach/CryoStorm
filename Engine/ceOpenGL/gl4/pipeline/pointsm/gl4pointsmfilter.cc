@@ -31,7 +31,7 @@ bool GL4PointSMFilter::Initialize(const Vector2f &distance, float radius, float 
 
 
   m_shadowMapFilterShader = AssetManager::Get()->Get<iShader>(
-      ResourceLocator("file://${engine}/opengl/gl4/forward/point_light_shadow_map_filter.shader")
+      ResourceLocator("file://${engine}/opengl/gl4/pointsm/point_light_shadow_map_filter.shader")
   );
   if (!m_shadowMapFilterShader)
   {

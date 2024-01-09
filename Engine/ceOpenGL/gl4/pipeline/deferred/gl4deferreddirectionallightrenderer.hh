@@ -1,7 +1,6 @@
 #pragma once
 
 #include <ceOpenGL/gl4/pipeline/pssm/gl4pssmrenderer.hh>
-#include <ceOpenGL/gl4/pipeline/pssm/gl4pssmrenderer_alt.hh>
 
 
 namespace ce
@@ -65,7 +64,6 @@ private:
   LightRenderShader m_shadow;
 
   GL4PSSMRenderer m_pssmRenderer;
-  GL4PSSMRendererAlt m_pssmRendererAlt;
 
   GL4RenderTarget2D *m_shadowMap = nullptr;
 
