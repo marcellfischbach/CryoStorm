@@ -60,11 +60,12 @@
 #include <regex>
 #include <string>
 #include <ceCore/time.hh>
+
 ce::SDLKeyboard keyboard;
 
 ce::SDLMouse mouse;
 
-ce::LightState* shadowLightState = nullptr;
+ce::LightState *shadowLightState = nullptr;
 
 void UpdateEvents()
 {
@@ -271,7 +272,7 @@ ce::iTerrainMesh *create_terrain_mesh(float size)
 #ifndef FLAT
     float    fi = (float) i / 1024.0f;
 #endif
-    for (int j  = 0; j < 1025; j++)
+    for (int j = 0; j < 1025; j++)
     {
 #ifndef FLAT
       float fj = (float) j / 1024.0f;
@@ -324,9 +325,9 @@ ce::iRenderMesh *create_sphere_mesh(float radius, uint32_t detail, float uv_f)
           cosf(angleV) * sinf(angleH)
       );
       ce::Vector3f tangent(
-          cosf(angleH + (float)M_PI / 2.0f),
+          cosf(angleH + (float) M_PI / 2.0f),
           0.0f,
-          sinf(angleH + (float)M_PI / 2.0f)
+          sinf(angleH + (float) M_PI / 2.0f)
       );
       positions.push_back(normal * radius);
       normals.emplace_back(normal);
@@ -369,9 +370,10 @@ ce::iRenderMesh *create_sphere_mesh(float radius, uint32_t detail, float uv_f)
 }
 
 
-ce::iRenderMesh* create_multi_sphere_mesh(float radius, uint32_t detail, float uv_f, size_t num_spheres, ce::Vector3f* sphere_positions)
+ce::iRenderMesh *
+create_multi_sphere_mesh(float radius, uint32_t detail, float uv_f, size_t num_spheres, ce::Vector3f *sphere_positions)
 {
-  ce::iRenderMeshGenerator* generator = ce::ObjectRegistry::Get<ce::iRenderMeshGeneratorFactory>()->Create();
+  ce::iRenderMeshGenerator *generator = ce::ObjectRegistry::Get<ce::iRenderMeshGeneratorFactory>()->Create();
   std::vector<ce::Vector3f> positions;
   std::vector<ce::Vector3f> normals;
   std::vector<ce::Vector3f> tangents;
@@ -379,29 +381,29 @@ ce::iRenderMesh* create_multi_sphere_mesh(float radius, uint32_t detail, float u
   std::vector<ce::Color4f>  colors;
   std::vector<uint32_t>     indices;
 
-  size_t idxOrigin = 0;
-  for (size_t i = 0; i < num_spheres; i++)
+  size_t      idxOrigin = 0;
+  for (size_t i         = 0; i < num_spheres; i++)
   {
-    ce::Vector3f origin = sphere_positions[i];
-    for (uint32_t v = 0; v < detail; v++)
+    ce::Vector3f  origin = sphere_positions[i];
+    for (uint32_t v      = 0; v < detail; v++)
     {
-      float factV = (float)v / (float)(detail - 1);
-      float angleV = -(float)M_PI_2 + factV * (float)M_PI;
+      float factV  = (float) v / (float) (detail - 1);
+      float angleV = -(float) M_PI_2 + factV * (float) M_PI;
 
       for (uint32_t h = 0; h < detail * 2; h++)
       {
-        float factH = (float)h / (float)(detail * 2 - 1);
-        float angleH = factH * (float)M_PI * 2.0f;
+        float factH  = (float) h / (float) (detail * 2 - 1);
+        float angleH = factH * (float) M_PI * 2.0f;
 
         ce::Vector3f normal(
-          cosf(angleV) * cosf(angleH),
-          sinf(angleV),
-          cosf(angleV) * sinf(angleH)
+            cosf(angleV) * cosf(angleH),
+            sinf(angleV),
+            cosf(angleV) * sinf(angleH)
         );
         ce::Vector3f tangent(
-          cosf(angleH + (float)M_PI / 2.0f),
-          0.0f,
-          sinf(angleH + (float)M_PI / 2.0f)
+            cosf(angleH + (float) M_PI / 2.0f),
+            0.0f,
+            sinf(angleH + (float) M_PI / 2.0f)
         );
         positions.push_back(origin + normal * radius);
         normals.emplace_back(normal);
@@ -415,7 +417,7 @@ ce::iRenderMesh* create_multi_sphere_mesh(float radius, uint32_t detail, float u
     {
       uint32_t      i0 = v * detail * 2;
       uint32_t      i1 = i0 + detail * 2;
-      for (uint32_t h = 0; h < detail * 2 - 1; h++)
+      for (uint32_t h  = 0; h < detail * 2 - 1; h++)
       {
         uint32_t i00 = i0 + h;
         uint32_t i01 = i00 + 1;
@@ -440,7 +442,7 @@ ce::iRenderMesh* create_multi_sphere_mesh(float radius, uint32_t detail, float u
   generator->SetColors(colors);
   generator->SetUV0(uv);
   generator->SetIndices(indices);
-  ce::iRenderMesh* renderMesh = generator->Generate();
+  ce::iRenderMesh *renderMesh = generator->Generate();
   generator->Release();
   return renderMesh;
 
@@ -581,10 +583,10 @@ void generate_test_grid(ce::World *world, ce::iMaterial *material)
 
   for (int a = 0, i = 0; i < gridSize; i++)
   {
-    auto  fi = (float)i;
-    for (int j = 0; j < gridSize; j++, a++)
+    auto     fi = (float) i;
+    for (int j  = 0; j < gridSize; j++, a++)
     {
-      auto fj = (float)j;
+      auto fj     = (float) j;
       auto entity = new ce::Entity(std::string("Sphere: ") + std::to_string(i + 1) + ":" + std::to_string(j + 1));
 
       auto meshStateSphere = new ce::StaticMeshState("Mesh");
@@ -636,60 +638,60 @@ void generate_test_grid(ce::World *world, ce::iMaterial *material)
 }
 
 
-void generate_batched_test_grid(ce::World* world, ce::iMaterial* material)
+void generate_batched_test_grid(ce::World *world, ce::iMaterial *material)
 {
 
-  auto sphere = create_multi_sphere_mesh(0.25, 16, 12.0f, 25, new ce::Vector3f[]{
-    ce::Vector3f(-2, 0.0f, -2.0f),
-    ce::Vector3f(-1, 0.0f, -2.0f),
-    ce::Vector3f(0, 0.0f, -2.0f),
-    ce::Vector3f(1, 0.0f, -2.0f),
-    ce::Vector3f(2, 0.0f, -2.0f),
+  auto sphere = create_multi_sphere_mesh(0.25, 16, 12.0f, 25, new ce::Vector3f[] {
+      ce::Vector3f(-2, 0.0f, -2.0f),
+      ce::Vector3f(-1, 0.0f, -2.0f),
+      ce::Vector3f(0, 0.0f, -2.0f),
+      ce::Vector3f(1, 0.0f, -2.0f),
+      ce::Vector3f(2, 0.0f, -2.0f),
 
-    ce::Vector3f(-2, 0.0f, -1.0f),
-    ce::Vector3f(-1, 0.0f, -1.0f),
-    ce::Vector3f(0, 0.0f, -1.0f),
-    ce::Vector3f(1, 0.0f, -1.0f),
-    ce::Vector3f(2, 0.0f, -1.0f),
-    
-    ce::Vector3f(-2, 0.0f, 0.0f),
-    ce::Vector3f(-1, 0.0f, 0.0f),
-    ce::Vector3f(0, 0.0f, 0.0f),
-    ce::Vector3f(1, 0.0f, 0.0f),
-    ce::Vector3f(2, 0.0f, 0.0f),
+      ce::Vector3f(-2, 0.0f, -1.0f),
+      ce::Vector3f(-1, 0.0f, -1.0f),
+      ce::Vector3f(0, 0.0f, -1.0f),
+      ce::Vector3f(1, 0.0f, -1.0f),
+      ce::Vector3f(2, 0.0f, -1.0f),
 
-    ce::Vector3f(-2, 0.0f, 1.0f),
-    ce::Vector3f(-1, 0.0f, 1.0f),
-    ce::Vector3f(0, 0.0f, 1.0f),
-    ce::Vector3f(1, 0.0f, 1.0f),
-    ce::Vector3f(2, 0.0f, 1.0f),
+      ce::Vector3f(-2, 0.0f, 0.0f),
+      ce::Vector3f(-1, 0.0f, 0.0f),
+      ce::Vector3f(0, 0.0f, 0.0f),
+      ce::Vector3f(1, 0.0f, 0.0f),
+      ce::Vector3f(2, 0.0f, 0.0f),
 
-    ce::Vector3f(-2, 0.0f, 2.0f),
-    ce::Vector3f(-1, 0.0f, 2.0f),
-    ce::Vector3f(0, 0.0f, 2.0f),
-    ce::Vector3f(1, 0.0f, 2.0f),
-    ce::Vector3f(2, 0.0f, 2.0f)
-    });
-  auto mesh = new ce::Mesh();
+      ce::Vector3f(-2, 0.0f, 1.0f),
+      ce::Vector3f(-1, 0.0f, 1.0f),
+      ce::Vector3f(0, 0.0f, 1.0f),
+      ce::Vector3f(1, 0.0f, 1.0f),
+      ce::Vector3f(2, 0.0f, 1.0f),
+
+      ce::Vector3f(-2, 0.0f, 2.0f),
+      ce::Vector3f(-1, 0.0f, 2.0f),
+      ce::Vector3f(0, 0.0f, 2.0f),
+      ce::Vector3f(1, 0.0f, 2.0f),
+      ce::Vector3f(2, 0.0f, 2.0f)
+  });
+  auto mesh   = new ce::Mesh();
   mesh->AddMaterialSlot("Default", material);
   mesh->AddSubMesh(sphere, 0);
   int gridSize = 100;
 
   float start = static_cast<float>(gridSize) / 2.0f;
 
-  for (int i = 0; i < gridSize; i+=5)
+  for (int i = 0; i < gridSize; i += 5)
   {
-    auto  fi = (float)i;
-    for (int j = 0; j < gridSize; j+=5)
+    auto     fi = (float) i;
+    for (int j  = 0; j < gridSize; j += 5)
     {
-      auto fj = (float)j;
+      auto fj     = (float) j;
       auto entity = new ce::Entity(std::string("Sphere: ") + std::to_string(i + 1) + ":" + std::to_string(j + 1));
 
       auto meshStateSphere = new ce::StaticMeshState("Mesh");
       meshStateSphere->SetStatic(true);
       meshStateSphere->GetTransform()
-        .SetTranslation(i - start + 2, 0.25f, j - start + 2)
-        .Finish();
+                     .SetTranslation(i - start + 2, 0.25f, j - start + 2)
+                     .Finish();
       meshStateSphere->SetMesh(mesh);
       entity->Attach(meshStateSphere);
 
@@ -699,7 +701,6 @@ void generate_batched_test_grid(ce::World* world, ce::iMaterial* material)
   }
 
 }
-
 
 
 void generate_physics(ce::World *world, ce::iMaterial *material)
@@ -876,11 +877,11 @@ void setup_world(ce::World *world)
 
 #if 1
   shadowLightState = add_directional_light(world,
-                        ce::Vector3f(1.0f, 0.2f, 0.0f),
-                        ce::ceDeg2Rad(-45.0f),
-                        ce::Color4f(1.0f, 1.0f, 1.0f, 1.0f),
-                        true,
-                        false);
+                                           ce::Vector3f(1.0f, 0.2f, 0.0f),
+                                           ce::ceDeg2Rad(-45.0f),
+                                           ce::Color4f(1.0f, 1.0f, 1.0f, 1.0f),
+                                           true,
+                                           false);
 
 //  add_directional_light(world,
 //                        ce::Vector3f(1.0f, 0.2f, 0.0f),
@@ -952,8 +953,8 @@ int main(int argc, char **argv)
 
 
 #if _DEBUG
-  ce::Size numDrawCallsPerSec = 0;
-  ce::Size numTrianglesPerSec = 0;
+  ce::Size numDrawCallsPerSec    = 0;
+  ce::Size numTrianglesPerSec    = 0;
   ce::Size numShaderStateChanges = 0;
 #endif
 
@@ -980,16 +981,22 @@ int main(int argc, char **argv)
 #if _DEBUG
     device->ResetDebug();
 #endif
-    uint32_t time = SDL_GetTicks();
+    uint32_t time  = SDL_GetTicks();
     uint64_t _time = ce::Time::GetTime();
     if (time > nextSec)
     {
       nextSec += 1000;
       char buffer[1024];
 #if _DEBUG
-      sprintf_s<1024>(buffer, "%s  %d FPS  #%llu calls (%.2f triangles) %.2f shader changes", title.c_str(), frames, numDrawCallsPerSec, (float)numTrianglesPerSec / (float)frames, (float)numShaderStateChanges / (float)frames);
-      numDrawCallsPerSec = 0;
-      numTrianglesPerSec = 0;
+      sprintf_s<1024>(buffer,
+                      "%s  %d FPS  #%llu calls (%.2f triangles) %.2f shader changes",
+                      title.c_str(),
+                      frames,
+                      numDrawCallsPerSec,
+                      (float) numTrianglesPerSec / (float) frames,
+                      (float) numShaderStateChanges / (float) frames);
+      numDrawCallsPerSec    = 0;
+      numTrianglesPerSec    = 0;
       numShaderStateChanges = 0;
 #else
       sprintf_s<1024>(buffer, "%s  %d FPS ", title.c_str(), frames);
