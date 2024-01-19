@@ -4,6 +4,8 @@ program {
         shader "point_light_deferred.vert",
     },
     attributes {
+        attribute RectMin,
+        attribute RectMax,
         attribute CameraPosition,
         attribute LightColor,
         attribute LightAmbientColor,

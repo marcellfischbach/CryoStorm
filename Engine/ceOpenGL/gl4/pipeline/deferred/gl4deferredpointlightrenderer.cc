@@ -10,7 +10,7 @@
 #include <ceCore/graphics/projector.hh>
 #include <ceCore/graphics/shading/ishader.hh>
 #include <ceCore/graphics/shading/ishaderattribute.hh>
-
+#include <ceCore/math/math.hh>
 
 namespace ce::opengl
 {
@@ -24,6 +24,8 @@ bool GL4DeferredPointLightRenderer::Initialize(Settings &settings)
       ResourceLocator("file://${engine}/opengl/gl4/deferred/point_light_deferred_no_shadow.shader"));
   if (m_nonShadow.m_shader)
   {
+    m_nonShadow.m_attrRectMin           = m_nonShadow.m_shader->GetShaderAttribute("RectMin");
+    m_nonShadow.m_attrRectMax           = m_nonShadow.m_shader->GetShaderAttribute("RectMax");
     m_nonShadow.m_attrDiffuseRoughness  = m_nonShadow.m_shader->GetShaderAttribute("DiffuseRoughness");
     m_nonShadow.m_attrNormal            = m_nonShadow.m_shader->GetShaderAttribute("Normal");
     m_nonShadow.m_attrDepth             = m_nonShadow.m_shader->GetShaderAttribute("Depth");
@@ -40,14 +42,16 @@ bool GL4DeferredPointLightRenderer::Initialize(Settings &settings)
   if (m_shadow.m_shader)
   {
 
+    m_shadow.m_attrRectMin           = m_nonShadow.m_shader->GetShaderAttribute("RectMin");
+    m_shadow.m_attrRectMax           = m_nonShadow.m_shader->GetShaderAttribute("RectMax");
     m_shadow.m_attrDiffuseRoughness  = m_shadow.m_shader->GetShaderAttribute("DiffuseRoughness");
     m_shadow.m_attrNormal            = m_shadow.m_shader->GetShaderAttribute("Normal");
     m_shadow.m_attrDepth             = m_shadow.m_shader->GetShaderAttribute("Depth");
     m_shadow.m_attrShadowMap         = m_shadow.m_shader->GetShaderAttribute("ShadowMap");
     m_shadow.m_attrLightColor        = m_shadow.m_shader->GetShaderAttribute("LightColor");
     m_shadow.m_attrLightAmbientColor = m_shadow.m_shader->GetShaderAttribute("LightAmbientColor");
-    m_shadow.m_attrLightPosition  = m_nonShadow.m_shader->GetShaderAttribute("LightPosition");
-    m_shadow.m_attrLightRange     = m_nonShadow.m_shader->GetShaderAttribute("LightRange");
+    m_shadow.m_attrLightPosition     = m_nonShadow.m_shader->GetShaderAttribute("LightPosition");
+    m_shadow.m_attrLightRange        = m_nonShadow.m_shader->GetShaderAttribute("LightRange");
     m_shadow.m_attrCameraPosition    = m_shadow.m_shader->GetShaderAttribute("CameraPosition");
   }
 
@@ -93,8 +97,11 @@ void GL4DeferredPointLightRenderer::Render(const Camera *camera,
                            eBlendFactor::One,
                            eBlendFactor::One
   );
-  m_device->SetViewMatrix(camera->GetViewMatrix(), camera->GetViewMatrixInv());
-  m_device->SetProjectionMatrix(projector->GetProjectionMatrix(m_device), projector->GetProjectionMatrixInv(m_device));
+  const Matrix4f &viewMatrix       = camera->GetViewMatrix();
+  const Matrix4f &projectionMatrix = projector->GetProjectionMatrix(m_device);
+
+  m_device->SetViewMatrix(viewMatrix, camera->GetViewMatrixInv());
+  m_device->SetProjectionMatrix(projectionMatrix, projector->GetProjectionMatrixInv(m_device));
 
   m_device->SetShader(lrs.m_shader);
   if (lrs.m_attrDiffuseRoughness)
@@ -140,8 +147,76 @@ void GL4DeferredPointLightRenderer::Render(const Camera *camera,
   }
 
   m_device->BindMatrices();
+  Vector2f rectMin = Vector2f(0.0f, 0.0f);
+  Vector2f rectMax = Vector2f(1.0f, 1.0f);
+  if ((camera->GetEye() - light->GetPosition()).Length() > light->GetRange() + projector->GetNear())
+  {
+    CalcSphereSizeOnScreen(viewMatrix, projectionMatrix, light, rectMin, rectMax);
+  }
+  if (lrs.m_attrRectMin)
+  {
+    lrs.m_attrRectMin->Bind(rectMin);
+  }
+  if (lrs.m_attrRectMax)
+  {
+    lrs.m_attrRectMax->Bind(rectMax);
+  }
+
   m_device->RenderFullscreen();
 
+}
+
+void GL4DeferredPointLightRenderer::CalcSphereSizeOnScreen(const Matrix4f &camera,
+                                                           const Matrix4f &projection,
+                                                           const GL4PointLight *light,
+                                                           Vector2f &outBottomLeft,
+                                                           Vector2f &outTopRight) const
+{
+#define MIN_MAX min.x = ceMin(min.x, p.x);  min.y = ceMin(min.y, p.y);  max.x = ceMax(max.x, p.x);  max.y = ceMax(max.y, p.y)
+
+  Matrix4f m   = projection * camera;
+  Vector2f min = Vector2f(FLT_MAX, FLT_MAX);
+  Vector2f max = Vector2f(-FLT_MAX, -FLT_MAX);
+  Vector2f p;
+
+  const Vector3f &lp = light->GetPosition();
+  float          lr  = light->GetRange();
+
+  p = OnScreen(lp + Vector3f(-lr, -lr, -lr), m);
+  MIN_MAX;
+  p = OnScreen(lp + Vector3f(-lr, -lr, lr), m);
+  MIN_MAX;
+  p = OnScreen(lp + Vector3f(-lr, lr, -lr), m);
+  MIN_MAX;
+  p = OnScreen(lp + Vector3f(-lr, lr, lr), m);
+  MIN_MAX;
+  p = OnScreen(lp + Vector3f(lr, -lr, -lr), m);
+  MIN_MAX;
+  p = OnScreen(lp + Vector3f(lr, -lr, lr), m);
+  MIN_MAX;
+  p = OnScreen(lp + Vector3f(lr, lr, -lr), m);
+  MIN_MAX;
+  p = OnScreen(lp + Vector3f(lr, lr, lr), m);
+  MIN_MAX;
+#undef  MIN_MAX
+
+  // clamp to borders
+  min.x = ceMax(min.x, 0.0f);
+  min.y = ceMax(min.y, 0.0f);
+  max.x = ceMin(max.x, 1.0f);
+  max.y = ceMin(max.y, 1.0f);
+
+  outBottomLeft = min;
+  outTopRight   = max;
+
+}
+
+Vector2f GL4DeferredPointLightRenderer::OnScreen(const Vector3f &v, const Matrix4f &m) const
+{
+  Vector4f p = m * Vector4f(v, 1.0f);
+
+  return Vector2f((p.x / p.w) * 0.5f + 0.5f,
+                  (p.y / p.w) * 0.5f + 0.5f);
 }
 
 GL4RenderTarget2D *GL4DeferredPointLightRenderer::GetShadowMap()

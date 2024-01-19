@@ -9,6 +9,7 @@ namespace ce
 {
 
 class Camera;
+class Matrix4f;
 class Projector;
 class GBuffer;
 class Settings;
@@ -50,29 +51,38 @@ public:
 
 private:
   GL4RenderTarget2D *GetShadowMap();
+  void CalcSphereSizeOnScreen(const Matrix4f &camera,
+                              const Matrix4f &projection,
+                              const GL4PointLight *light,
+                              Vector2f &outBottomLeft,
+                              Vector2f &outTopRight) const;
+  Vector2f OnScreen(const Vector3f &v, const Matrix4f &m) const;
+
 
   GL4Device *m_device;
   iGfxScene *m_scene;
 
   struct LightRenderShader
   {
-    iShader          *m_shader                 = nullptr;
-    iShaderAttribute *m_attrDiffuseRoughness   = nullptr;
-    iShaderAttribute *m_attrNormal             = nullptr;
-    iShaderAttribute *m_attrDepth              = nullptr;
-    iShaderAttribute *m_attrShadowMap          = nullptr;
-    iShaderAttribute *m_attrLightColor         = nullptr;
+    iShader          *m_shader                = nullptr;
+    iShaderAttribute *m_attrRectMin           = nullptr;
+    iShaderAttribute *m_attrRectMax           = nullptr;
+    iShaderAttribute *m_attrDiffuseRoughness  = nullptr;
+    iShaderAttribute *m_attrNormal            = nullptr;
+    iShaderAttribute *m_attrDepth             = nullptr;
+    iShaderAttribute *m_attrShadowMap         = nullptr;
+    iShaderAttribute *m_attrLightColor        = nullptr;
     iShaderAttribute *m_attrLightAmbientColor = nullptr;
-    iShaderAttribute *m_attrLightPosition  = nullptr;
-    iShaderAttribute *m_attrLightRange     = nullptr;
-    iShaderAttribute *m_attrCameraPosition = nullptr;
+    iShaderAttribute *m_attrLightPosition     = nullptr;
+    iShaderAttribute *m_attrLightRange        = nullptr;
+    iShaderAttribute *m_attrCameraPosition    = nullptr;
   };
 
   LightRenderShader m_nonShadow;
   LightRenderShader m_shadow;
 
 
-  GL4RenderTarget2D *m_shadowMap = nullptr;
+  GL4RenderTarget2D  *m_shadowMap = nullptr;
   GL4PointSMRenderer m_shadowRenderer;
 
 };

@@ -74,6 +74,5 @@ void main ()
         range_factor * specular * ce_LightColor.rgb +
         ce_LightAmbientColor.rgb,
         1.0);
-
 }
 

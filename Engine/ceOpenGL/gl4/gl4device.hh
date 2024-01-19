@@ -110,8 +110,11 @@ public:
   void RenderFullscreen();
   void RenderFullscreen(iTexture2D *texture) override;
   void RenderFullscreen(iTexture2DArray *texture, int layer) override;
-  void
-  RenderFullscreen(iTextureCube *texture, eCubeFace face, const Vector2f &scale, const Vector2f &translation) override;
+  void RenderFullscreen(iTextureCube *texture,
+                        eCubeFace face,
+                        const Vector2f &scale,
+                        const Vector2f &translation) override;
+
 
   void BindForwardLight(const iLight *light, Size idx);
   void FinishForwardLights(Size numLights);
@@ -132,7 +135,7 @@ public:
 #endif
 
 private:
-  void SetActiveTexture (uint32_t activeTexture);
+  void SetActiveTexture(uint32_t activeTexture);
   static void BindUnsafe(iTexture *texture);
   static void UnbindUnsafe(iTexture *texture);
 

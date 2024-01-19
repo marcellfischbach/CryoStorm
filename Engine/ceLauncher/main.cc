@@ -67,6 +67,7 @@ ce::SDLMouse mouse;
 
 ce::LightState *shadowLightState = nullptr;
 
+
 void UpdateEvents()
 {
   keyboard.Update();
@@ -521,7 +522,7 @@ void generate_camera(ce::World *world)
   auto cameraEntity = new ce::Entity("Camera");
   auto cameraState  = new ce::CameraState();
 
-  auto cameraHandler = new CameraHandlerMotion();
+  auto cameraHandler = new CameraHandler();
   cameraEntity->Attach(cameraState);
   cameraEntity->Attach(cameraHandler);
   cameraEntity->GetRoot()->GetTransform()
@@ -879,28 +880,36 @@ void setup_world(ce::World *world)
   shadowLightState = add_directional_light(world,
                                            ce::Vector3f(1.0f, 0.2f, 0.0f),
                                            ce::ceDeg2Rad(-45.0f),
-                                           ce::Color4f(1.0f, 1.0f, 1.0f, 1.0f),
+                                           ce::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 0.9f,
                                            true,
-                                           false);
+                                           true);
 
-//  add_directional_light(world,
-//                        ce::Vector3f(1.0f, 0.2f, 0.0f),
-//                        ce::ceDeg2Rad(45.0f),
-//                        ce::Color4f(1.0f, 1.0f, 1.0f, 1.0f),
-//                        true,
-//                        false);
+  add_directional_light(world,
+                        ce::Vector3f(1.0f, 0.2f, 0.0f),
+                        ce::ceDeg2Rad( -45.0f),
+                        ce::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 0.1f,
+                        true,
+                        false);
 #endif
 
-  add_point_light(world, ce::Vector3f(0.0f, 5.0f, 0.0f), 50.0f, ce::Color4f(1.0, 1.0f, 1.0f), true);
+//  add_point_light(world, ce::Vector3f(0.0f, 5.0f, 0.0f), 50.0f, ce::Color4f(1.0, 1.0f, 1.0f), false);
 
 #if 0
-  add_point_light(world, ce::Vector3f(10.0f, 10.0f, 10.0f), 25.0f, ce::Color4f(1.0, 0.0f, 1.0f), false);
-  add_point_light(world, ce::Vector3f(0.0f, 10.0f, 10.0f), 25.0f, ce::Color4f(0.5, 0.0f, 1.0f), false);
-  add_point_light(world, ce::Vector3f(-10.0f, 10.0f, 10.0f), 25.0f, ce::Color4f(0.0, 0.0f, 1.0f), false);
+  for (int i=-5; i<=5; i+= 1) {
+    for (int j=-5; j<=5; j+= 1) {
 
-  add_point_light(world, ce::Vector3f(10.0f, 10.0f, -10.0f), 25.0f, ce::Color4f(1.0, 1.0f, 0.0f), false);
-  add_point_light(world, ce::Vector3f(0.0f, 10.0f, -10.0f), 25.0f, ce::Color4f(0.5, 1.0f, 0.0f), false);
-  add_point_light(world, ce::Vector3f(-10.0f, 10.0f, -10.0f), 25.0f, ce::Color4f(0.0, 1.0f, 0.0f), false);
+      add_point_light(world,
+                      ce::Vector3f((float)i, 2.0f, (float)j), 5.0f, ce::Color4f(1.0, 0.8f, 0.4f) * 0.1f, false);
+    }
+
+  }
+//  add_point_light(world, ce::Vector3f(10.0f, 10.0f, 10.0f), 10.0f, ce::Color4f(1.0, 0.0f, 1.0f), false);
+//  add_point_light(world, ce::Vector3f(0.0f, 10.0f, 10.0f), 10.0f, ce::Color4f(0.5, 0.0f, 1.0f), false);
+//  add_point_light(world, ce::Vector3f(-10.0f, 10.0f, 10.0f), 10.0f, ce::Color4f(0.0, 0.0f, 1.0f), false);
+//
+//  add_point_light(world, ce::Vector3f(10.0f, 10.0f, -10.0f), 25.0f, ce::Color4f(1.0, 1.0f, 0.0f), false);
+//  add_point_light(world, ce::Vector3f(0.0f, 10.0f, -10.0f), 25.0f, ce::Color4f(0.5, 1.0f, 0.0f), false);
+//  add_point_light(world, ce::Vector3f(-10.0f, 10.0f, -10.0f), 25.0f, ce::Color4f(0.0, 1.0f, 0.0f), false);
 #endif
 }
 
@@ -1066,6 +1075,8 @@ int main(int argc, char **argv)
       }
       frameRenderer->SetRenderPipeline(pipeline);
     }
+
+
 
     if (ce::Input::IsKeyPressed(ce::Key::eK_M))
     {
