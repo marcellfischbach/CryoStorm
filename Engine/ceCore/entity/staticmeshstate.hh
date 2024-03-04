@@ -17,19 +17,19 @@ struct iMaterial;
 CE_CLASS()
 class CE_CORE_API StaticMeshState : public CE_SUPER(SpatialState)
 {
-CE_CLASS_GEN_OBJECT;
+CE_CLASS_GEN ;
 public:
   StaticMeshState(const std::string& name = std::string(""));
-  virtual ~StaticMeshState();
+  ~StaticMeshState() override;
 
 
   void SetMesh(Mesh* mesh);
-  const Mesh* GetMesh() const;
-  Mesh* GetMesh();
+  CE_NODISCARD const Mesh* GetMesh() const;
+  CE_NODISCARD Mesh* GetMesh();
 
   void SetMaterial (Size idx, iMaterial* material);
-  const iMaterial *GetMaterial (Size idx) const;
-  iMaterial *GetMaterial (Size idx);
+  CE_NODISCARD const iMaterial *GetMaterial (Size idx) const;
+  CE_NODISCARD iMaterial *GetMaterial (Size idx);
 
   void SetReceiveShadow (bool receiveShadow);
   CE_NODISCARD bool IsReceiveShadow () const;

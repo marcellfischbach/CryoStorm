@@ -23,6 +23,10 @@ set(SOURCES
         time.hh
         types.hh
 
+        animation/skeleton.cc
+        animation/skeleton.hh
+
+
         entity/camerastate.cc
         entity/camerastate.hh
         entity/collisionstate.cc
@@ -35,6 +39,8 @@ set(SOURCES
         entity/lightstate.hh
         entity/rigidbodystate.cc
         entity/rigidbodystate.hh
+        entity/skeletonmeshstate.cc
+        entity/skeletonmeshstate.hh
         entity/spatialstate.cc
         entity/spatialstate.hh
         entity/staticcolliderstate.cc
