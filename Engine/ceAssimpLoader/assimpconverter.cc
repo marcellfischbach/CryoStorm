@@ -7,6 +7,7 @@
 #include <assimp/scene.h>
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
+#include <assimp/color4.h>
 
 #include <vector>
 
@@ -84,7 +85,7 @@ Weight get_weight(aiMesh *mesh, unsigned vertexID, Skeleton *skeleton)
       if (weight.mVertexId == vertexID)
       {
         size_t boneIndex = i; //skeleton.IndexOf(std::string(bone->mName.C_Str()));
-        if (boneIndex != Skeleton::ILLEGAL_ID)
+        if (boneIndex != Skeleton::ILLEGAL_BONE_ID)
         {
           TempWeight tWeight {
               (int) boneIndex,

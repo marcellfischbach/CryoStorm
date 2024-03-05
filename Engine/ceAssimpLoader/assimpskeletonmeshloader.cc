@@ -91,13 +91,62 @@ iObject *AssimpSkeletonMeshLoader::Load(const Class *cls, const ResourceLocator 
 
 
   Matrix4f parentMatrix;
-  ReadNode(scene->mRootNode, parentMatrix, d);
+  ReadSkeleton(scene->mRootNode, d);
+  ReadMesh(scene->mRootNode, parentMatrix, d);
 
 
   return d.mesh;
 }
 
-void AssimpSkeletonMeshLoader::ReadNode(aiNode *node, const Matrix4f &parentMatrix, LoaderData &d) const
+void AssimpSkeletonMeshLoader::ReadSkeleton(aiNode *node,
+                                            LoaderData &d) const
+{
+  std::string nodeName = std::string (node->mName.C_Str());
+  if (nodeName == "Armature" || nodeName == "Skeleton")
+  {
+    for (unsigned i = 0, in = node->mNumChildren; i < in; ++i)
+    {
+      ReadBone(node->mChildren[i], d, Skeleton::ILLEGAL_BONE_ID);
+    }
+  }
+  else
+  {
+    for (unsigned i = 0, in = node->mNumChildren; i < in; ++i)
+    {
+      ReadSkeleton(node->mChildren[i], d);
+    }
+  }
+}
+
+void AssimpSkeletonMeshLoader::ReadBone(aiNode *node,
+                                        LoaderData &d,
+                                        size_t  parentBoneID) const
+{
+
+  Matrix4f localMatrix  = ConvertMatrix4x4(node->mTransformation);
+  std::string nodeName = std::string (node->mName.C_Str());
+
+  size_t boneID;
+
+  Skeleton &skeleton = d.mesh->GetSkeleton();
+  if (parentBoneID == Skeleton::ILLEGAL_BONE_ID)
+  {
+    boneID = skeleton.AddRoot(nodeName);
+    skeleton.SetBone(boneID, localMatrix);
+  }
+  else
+  {
+    boneID = skeleton.AddChild(nodeName, parentBoneID);
+  }
+
+  for (unsigned i = 0, in = node->mNumChildren; i < in; ++i)
+  {
+    ReadBone(node->mChildren[i], d, boneID);
+  }
+
+}
+
+void AssimpSkeletonMeshLoader::ReadMesh(aiNode *node, const Matrix4f &parentMatrix, LoaderData &d) const
 {
   Matrix4f localMatrix  = ConvertMatrix4x4(node->mTransformation);
   Matrix4f globalMatrix = parentMatrix * localMatrix;
@@ -121,7 +170,7 @@ void AssimpSkeletonMeshLoader::ReadNode(aiNode *node, const Matrix4f &parentMatr
 
   for (unsigned i = 0, in = node->mNumChildren; i < in; ++i)
   {
-    ReadNode(node->mChildren[i], globalMatrix, d);
+    ReadMesh(node->mChildren[i], globalMatrix, d);
   }
 }
 

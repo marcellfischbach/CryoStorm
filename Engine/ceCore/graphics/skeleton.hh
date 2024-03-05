@@ -16,9 +16,9 @@ class CE_CORE_API Skeleton : public CE_SUPER(Object)
 {
   CE_CLASS_GEN_OBJECT;
 public:
-  static const size_t ILLEGAL_ID = ~0x00;
-  static const std::string ILLEGAL_NAME;
-  static const Matrix4f ILLEGAL_MATRIX;
+  static const size_t      ILLEGAL_BONE_ID = ~0x00;
+  static const std::string ILLEGAL_BONE_NAME;
+  static const Matrix4f    ILLEGAL_BONE_MATRIX;
 
   Skeleton();
 

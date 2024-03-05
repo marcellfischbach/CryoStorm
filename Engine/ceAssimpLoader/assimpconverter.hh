@@ -1,11 +1,5 @@
 #pragma once
 
-#include <assimp/color4.h>
-#include <assimp/matrix3x3.h>
-#include <assimp/matrix4x4.h>
-#include <assimp/mesh.h>
-#include <assimp/vector2.h>
-#include <assimp/vector3.h>
 
 
 namespace ce
@@ -18,6 +12,15 @@ struct Vector3f;
 class Skeleton;
 }
 
+
+template <typename TReal> class aiColor4t;
+template <typename TReal> class aiVector3t;
+template <typename TReal> class aiMatrix4x4t;
+typedef aiColor4t<float> aiColor4D;
+typedef aiVector3t<float> aiVector3D;
+typedef aiMatrix4x4t<float> aiMatrix4x4;
+
+struct aiMesh;
 
 
 namespace ce::assimp

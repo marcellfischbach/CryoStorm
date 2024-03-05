@@ -4,8 +4,8 @@
 namespace ce
 {
 
-const std::string Skeleton::ILLEGAL_NAME;
-const Matrix4f Skeleton::ILLEGAL_MATRIX = Matrix4f();
+const std::string Skeleton::ILLEGAL_BONE_NAME;
+const Matrix4f Skeleton::ILLEGAL_BONE_MATRIX = Matrix4f();
 
 Skeleton::Skeleton()
 : Object ()
@@ -89,7 +89,7 @@ size_t Skeleton::IndexOf(const std::string &name) const
       return bone.id;
     }
   }
-  return ILLEGAL_ID;
+  return ILLEGAL_BONE_ID;
 }
 
 void Skeleton::SetBone(size_t idx, const ce::Matrix4f &localMatrix)
@@ -106,7 +106,7 @@ const Matrix4f &Skeleton::GetBone (size_t idx) const
   {
     return m_bones[idx].matrix;
   }
-  return ILLEGAL_MATRIX;
+  return ILLEGAL_BONE_MATRIX;
 }
 
 const std::string &Skeleton::GetName (size_t idx) const
@@ -115,7 +115,7 @@ const std::string &Skeleton::GetName (size_t idx) const
   {
     return m_bones[idx].name;
   }
-  return ILLEGAL_NAME;
+  return ILLEGAL_BONE_NAME;
 }
 
 void Skeleton::UpdateBones()
