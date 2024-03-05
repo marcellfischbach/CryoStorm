@@ -22,6 +22,9 @@ public:
 
   Skeleton();
 
+  void Clear();
+  void InitializeFrom(const Skeleton& skeleton);
+
   CE_NODISCARD size_t AddRoot(const std::string &name);
   CE_NODISCARD size_t AddChild(const std::string &name, size_t parent);
 
@@ -38,6 +41,8 @@ public:
   const std::string &GetName (size_t idx) const;
 
   CE_NODISCARD const std::vector<Matrix4f> &GetSkeletonBones () const;
+
+  Skeleton& operator=(const Skeleton& skeleton);
 
 private:
   size_t Add(const std::string &name);

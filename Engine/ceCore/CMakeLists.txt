@@ -23,8 +23,7 @@ set(SOURCES
         time.hh
         types.hh
 
-        animation/skeleton.cc
-        animation/skeleton.hh
+
 
 
         entity/camerastate.cc
@@ -105,6 +104,10 @@ set(SOURCES
         graphics/projector.hh
         graphics/samplers.cc
         graphics/samplers.hh
+        graphics/skeleton.cc
+        graphics/skeleton.hh
+        graphics/skeletonmesh.cc
+        graphics/skeletonmesh.hh
         graphics/vertexdeclaration.cc
         graphics/vertexdeclaration.hh
 
@@ -176,8 +179,10 @@ set(SOURCES
         math/sphere.hh
         math/vector.hh
         math/vector2f.hh
+        math/vector2i.hh
         math/vector3f.hh
         math/vector4f.hh
+        math/vector4i.hh
 
         math/clipper/boxclipper.cc
         math/clipper/boxclipper.hh

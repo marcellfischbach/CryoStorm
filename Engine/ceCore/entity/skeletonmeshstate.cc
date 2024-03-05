@@ -3,7 +3,7 @@
 //
 
 #include <ceCore/entity/skeletonmeshstate.hh>
-#include <ceCore/animation/skeleton.hh>
+#include <ceCore/graphics/skeletonmesh.hh>
 
 
 namespace ce
@@ -12,30 +12,30 @@ namespace ce
 
 SkeletonMeshState::SkeletonMeshState()
 : StaticMeshState()
-, m_skeleton(nullptr)
 {
 
 }
 
 
-SkeletonMeshState::~SkeletonMeshState ()
+void SkeletonMeshState::SetMesh(ce::Mesh *mesh)
 {
-  CE_RELEASE(m_skeleton);
-  m_skeleton = nullptr;
+  StaticMeshState::SetMesh(mesh);
+
+//  auto skeletonMesh = mesh->Query<SkeletonMesh>();
+  if (auto skeletonMesh = mesh->Query<SkeletonMesh>())
+  {
+    // crete the duplicate of the origin skeleton of the SkeletonMesh
+    m_skeleton = skeletonMesh->GetSkeleton();
+  }
 }
 
 
-void SkeletonMeshState::SetSkeleton(ce::Skeleton *skeleton)
-{
-  CE_SET(m_skeleton, skeleton);
-}
-
-Skeleton* SkeletonMeshState::GetSkeleton()
+Skeleton& SkeletonMeshState::GetSkeleton()
 {
   return m_skeleton;
 }
 
-const Skeleton* SkeletonMeshState::GetSkeleton() const
+const Skeleton& SkeletonMeshState::GetSkeleton() const
 {
   return m_skeleton;
 }

@@ -1,10 +1,10 @@
 
-#include <ceAssimpLoader/assimpmeshloader.hh>
+#include <ceAssimpLoader/assimpskeletonmeshloader.hh>
 #include <ceAssimpLoader/assimpconverter.hh>
 #include <ceCore/graphics/idevice.hh>
-#include <ceCore/graphics/mesh.hh>
 #include <ceCore/graphics/irendermesh.hh>
 #include <ceCore/resource/ifile.hh>
+#include <ceCore/graphics/skeletonmesh.hh>
 #include <ceCore/resource/vfs.hh>
 #include <ceCore/objectregistry.hh>
 #include <ceCore/types.hh>
@@ -16,32 +16,32 @@
 #include <string>
 #include <vector>
 
-
 namespace ce::assimp
 {
+
 
 struct LoaderData
 {
   const aiScene *scene = nullptr;
   std::map<std::string, Size> materialSlots;
-  Mesh *mesh = nullptr;
+  SkeletonMesh *mesh = nullptr;
 
 };
 
-AssimpMeshLoader::AssimpMeshLoader()
+AssimpSkeletonMeshLoader::AssimpSkeletonMeshLoader()
 {
   CE_CLASS_GEN_CONSTR;
 }
 
 
-bool AssimpMeshLoader::CanLoad(const Class *cls, const ResourceLocator &locator) const
+bool AssimpSkeletonMeshLoader::CanLoad(const Class *cls, const ResourceLocator &locator) const
 {
   const std::string &ext = locator.GetExtension();
-  return cls == Mesh::GetStaticClass()
+  return cls == SkeletonMesh::GetStaticClass()
          && ext == std::string("FBX");
 }
 
-iObject *AssimpMeshLoader::Load(const Class *cls, const ResourceLocator &locator) const
+iObject *AssimpSkeletonMeshLoader::Load(const Class *cls, const ResourceLocator &locator) const
 {
   iFile *file = ce::VFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (!file)
@@ -70,7 +70,7 @@ iObject *AssimpMeshLoader::Load(const Class *cls, const ResourceLocator &locator
 
   LoaderData d;
   d.scene = scene;
-  d.mesh  = new Mesh();
+  d.mesh  = new SkeletonMesh();
   for (unsigned i = 0, in = scene->mNumMeshes; i < in; ++i)
   {
     aiMesh     *mesh     = scene->mMeshes[i];
@@ -87,6 +87,9 @@ iObject *AssimpMeshLoader::Load(const Class *cls, const ResourceLocator &locator
   }
 
 
+
+
+
   Matrix4f parentMatrix;
   ReadNode(scene->mRootNode, parentMatrix, d);
 
@@ -94,7 +97,7 @@ iObject *AssimpMeshLoader::Load(const Class *cls, const ResourceLocator &locator
   return d.mesh;
 }
 
-void AssimpMeshLoader::ReadNode(aiNode *node, const Matrix4f &parentMatrix, LoaderData &d) const
+void AssimpSkeletonMeshLoader::ReadNode(aiNode *node, const Matrix4f &parentMatrix, LoaderData &d) const
 {
   Matrix4f localMatrix  = ConvertMatrix4x4(node->mTransformation);
   Matrix4f globalMatrix = parentMatrix * localMatrix;
@@ -103,7 +106,7 @@ void AssimpMeshLoader::ReadNode(aiNode *node, const Matrix4f &parentMatrix, Load
   for (unsigned i = 0, in = node->mNumMeshes; i < in; ++i)
   {
     aiMesh      *mesh        = d.scene->mMeshes[node->mMeshes[i]];
-    iRenderMesh *renderMesh  = ConvertRenderMesh(mesh, globalMatrix, nullptr);
+    iRenderMesh *renderMesh  = ConvertRenderMesh(mesh, globalMatrix, &d.mesh->GetSkeleton());
     aiMaterial  *material    = d.scene->mMaterials[mesh->mMaterialIndex];
 
     aiString aiMatName;
@@ -121,7 +124,5 @@ void AssimpMeshLoader::ReadNode(aiNode *node, const Matrix4f &parentMatrix, Load
     ReadNode(node->mChildren[i], globalMatrix, d);
   }
 }
-
-
 
 }

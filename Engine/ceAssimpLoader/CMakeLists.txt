@@ -9,6 +9,10 @@ set(SOURCES
         assimploadermodule.hh
         assimpmeshloader.cc
         assimpmeshloader.hh
+        assimpconverter.cc
+        assimpconverter.hh
+        assimpskeletonmeshloader.cc
+        assimpskeletonmeshloader.hh
     )
 
 add_library(ceAssimpLoader SHARED

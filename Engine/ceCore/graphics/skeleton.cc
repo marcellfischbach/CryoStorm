@@ -1,5 +1,5 @@
 
-#include <ceCore/animation/skeleton.hh>
+#include <ceCore/graphics/skeleton.hh>
 
 namespace ce
 {
@@ -11,6 +11,34 @@ Skeleton::Skeleton()
 : Object ()
 {
   CE_CLASS_GEN_CONSTR;
+}
+
+void Skeleton::Clear()
+{
+  m_bones.clear();
+  m_skeletonBones.clear();
+  m_rootBones.clear();
+}
+
+void Skeleton::InitializeFrom(const ce::Skeleton &skeleton)
+{
+  Clear();
+
+
+  m_bones = skeleton.m_bones;
+  m_skeletonBones = skeleton.m_skeletonBones;
+  m_rootBones = skeleton.m_rootBones;
+}
+
+Skeleton& Skeleton::operator=(const ce::Skeleton &skeleton)
+{
+  Clear();
+
+  m_bones = skeleton.m_bones;
+  m_skeletonBones = skeleton.m_skeletonBones;
+  m_rootBones = skeleton.m_rootBones;
+
+  return *this;
 }
 
 size_t Skeleton::Add(const std::string &name)
@@ -116,6 +144,8 @@ const std::vector<Matrix4f> &Skeleton::GetSkeletonBones() const
 {
   return m_skeletonBones;
 }
+
+
 
 
 } // ce

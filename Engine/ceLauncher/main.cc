@@ -31,6 +31,7 @@
 #include <ceCore/graphics/irendertarget2d.hh>
 #include <ceCore/graphics/isampler.hh>
 #include <ceCore/graphics/iterrainmesh.hh>
+#include <ceCore/graphics/skeletonmesh.hh>
 #include <ceCore/graphics/samplers.hh>
 #include <ceCore/graphics/mesh.hh>
 #include <ceCore/graphics/projector.hh>
@@ -638,6 +639,11 @@ void generate_test_grid(ce::World *world, ce::iMaterial *material)
 
 }
 
+void add_skeleton_mesh(ce::World* world, ce::iMaterial* material)
+{
+  ce::AssetManager::Get()->Load<ce::SkeletonMesh>("/skinned_mesh.fbx");
+}
+
 
 void generate_batched_test_grid(ce::World *world, ce::iMaterial *material)
 {
@@ -875,6 +881,8 @@ void setup_world(ce::World *world)
   generate_physics(world, material);
 //  generate_batched_test_grid(world, material);
   generate_test_grid(world, material);
+
+  add_skeleton_mesh(world, material);
 
 #if 1
   shadowLightState = add_directional_light(world,

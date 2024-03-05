@@ -23,7 +23,7 @@ public:
   ~StaticMeshState() override;
 
 
-  void SetMesh(Mesh* mesh);
+  virtual void SetMesh(Mesh* mesh);
   CE_NODISCARD const Mesh* GetMesh() const;
   CE_NODISCARD Mesh* GetMesh();
 

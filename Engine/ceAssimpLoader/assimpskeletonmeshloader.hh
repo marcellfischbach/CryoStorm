@@ -14,12 +14,12 @@ namespace ce::assimp
 struct LoaderData;
 
 CE_CLASS()
-class CE_ASSIMP_API AssimpMeshLoader : public CE_SUPER(iAssetLoader)
+class CE_ASSIMP_API AssimpSkeletonMeshLoader : public CE_SUPER(iAssetLoader)
 {
-  CE_CLASS_GEN_OBJECT;
+CE_CLASS_GEN_OBJECT;
 public:
-  AssimpMeshLoader();
-  virtual ~AssimpMeshLoader() { }
+  AssimpSkeletonMeshLoader();
+  virtual ~AssimpSkeletonMeshLoader() { }
 
   virtual bool CanLoad(const Class * cls, const ResourceLocator & locator) const;
 
@@ -28,7 +28,7 @@ public:
 private:
   void ReadNode(aiNode* node, const Matrix4f &parentMatrix, LoaderData& d) const;
 
-  
+
 };
 
 
