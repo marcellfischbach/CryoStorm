@@ -3,6 +3,7 @@
 #include <ceCore/graphics/material/imaterial.hh>
 #include <ceCore/graphics/irendermesh.hh>
 #include <ceCore/graphics/idevice.hh>
+#include <ceCore/graphics/skeleton.hh>
 
 #include <algorithm>
 
@@ -12,6 +13,7 @@ namespace ce
 
 GfxMesh::GfxMesh()
   : iObject()
+  , m_skeleton(nullptr)
 {
   CE_CLASS_GEN_CONSTR;
 }
@@ -249,6 +251,20 @@ bool GfxMesh::IsLightingDirty() const
   return m_lightingDirty;
 }
 
+void GfxMesh::SetSkeleton(ce::Skeleton *skeleton)
+{
+  CE_SET(m_skeleton, skeleton);
+}
+
+Skeleton* GfxMesh::GetSkeleton()
+{
+  return m_skeleton;
+}
+
+const Skeleton* GfxMesh::GetSkeleton() const
+{
+  return m_skeleton;
+}
 
 void GfxMesh::UpdateBoundingBox()
 {

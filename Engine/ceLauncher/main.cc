@@ -12,6 +12,7 @@
 #include <ceCore/entity/entitystate.hh>
 #include <ceCore/entity/lightstate.hh>
 #include <ceCore/entity/rigidbodystate.hh>
+#include <ceCore/entity/skeletonmeshstate.hh>
 #include <ceCore/entity/spatialstate.hh>
 #include <ceCore/entity/staticcolliderstate.hh>
 #include <ceCore/entity/staticmeshstate.hh>
@@ -641,7 +642,20 @@ void generate_test_grid(ce::World *world, ce::iMaterial *material)
 
 void add_skeleton_mesh(ce::World* world, ce::iMaterial* material)
 {
-  ce::AssetManager::Get()->Load<ce::SkeletonMesh>("/skinned_mesh.fbx");
+  ce::SkeletonMesh *mesh = ce::AssetManager::Get()->Load<ce::SkeletonMesh>("/skinned_mesh.fbx");
+
+  ce::Entity* entity = new ce::Entity("Skeleton Entity");
+
+  ce::SkeletonMeshState* meshState = new ce::SkeletonMeshState();
+  meshState->SetMesh(mesh);
+  meshState->SetMaterial(0, material);
+  entity->Attach(meshState);
+
+  entity->GetRoot()->SetLocalMatrix(ce::Matrix4f::Translation(0, 2, 0));
+
+  world->Attach(entity);
+
+
 }
 
 
@@ -880,7 +894,7 @@ void setup_world(ce::World *world)
   generate_camera(world);
   generate_physics(world, material);
 //  generate_batched_test_grid(world, material);
-  generate_test_grid(world, material);
+//  generate_test_grid(world, material);
 
   add_skeleton_mesh(world, material);
 

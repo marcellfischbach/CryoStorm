@@ -23,6 +23,8 @@ public:
   CE_NODISCARD Skeleton &GetSkeleton ();
   CE_NODISCARD const Skeleton &GetSkeleton () const;
 
+protected:
+  GfxMesh *CreateGfxMesh() override;
 
 private:
   Skeleton m_skeleton;

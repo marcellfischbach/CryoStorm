@@ -12,6 +12,7 @@ namespace ce
 
 class Mesh;
 class GfxMesh;
+class Skeleton;
 struct iMaterial;
 
 CE_CLASS()
@@ -49,6 +50,7 @@ public:
    */
 
 protected:
+  virtual GfxMesh* CreateGfxMesh();
   void TransformationUpdatedPreChildren() override;
 
 private:

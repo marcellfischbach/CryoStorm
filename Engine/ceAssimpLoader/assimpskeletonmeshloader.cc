@@ -87,9 +87,6 @@ iObject *AssimpSkeletonMeshLoader::Load(const Class *cls, const ResourceLocator 
   }
 
 
-
-
-
   Matrix4f parentMatrix;
   ReadSkeleton(scene->mRootNode, d);
   ReadMesh(scene->mRootNode, parentMatrix, d);
@@ -108,6 +105,7 @@ void AssimpSkeletonMeshLoader::ReadSkeleton(aiNode *node,
     {
       ReadBone(node->mChildren[i], d, Skeleton::ILLEGAL_BONE_ID);
     }
+    d.mesh->GetSkeleton().UpdateBones();
   }
   else
   {
@@ -132,12 +130,12 @@ void AssimpSkeletonMeshLoader::ReadBone(aiNode *node,
   if (parentBoneID == Skeleton::ILLEGAL_BONE_ID)
   {
     boneID = skeleton.AddRoot(nodeName);
-    skeleton.SetBone(boneID, localMatrix);
   }
   else
   {
     boneID = skeleton.AddChild(nodeName, parentBoneID);
   }
+  skeleton.SetBone(boneID, localMatrix);
 
   for (unsigned i = 0, in = node->mNumChildren; i < in; ++i)
   {
