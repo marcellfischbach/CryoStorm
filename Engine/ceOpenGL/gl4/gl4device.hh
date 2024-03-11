@@ -58,6 +58,8 @@ public:
   void SetShadowMapViewMatrices(const Matrix4f *viewMatrices, Size numMatrices) override;
   void SetShadowMapProjectionMatrices(const Matrix4f *projectionMatrices, Size numMatrices) override;
 
+  void SetSkeletonMatrices (const Matrix4f *skeletonMatrices, Size numMatrices) override;
+
   const Matrix4f &GetViewMatrix() const override;
   const Matrix4f &GetViewMatrixInv() const override;
   const Matrix4f &GetProjectionMatrix() const override;
@@ -214,6 +216,8 @@ private:
   Matrix4f m_shadowMapViewProjectionMatrices[6];
   bool     m_shadowMapViewProjectionMatrixDirty;
 
+  Size m_skeletonMatrixCount;
+  Matrix4f m_skeletonMatrices[256];
 
   float    m_clearColorR;
   float    m_clearColorG;

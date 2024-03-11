@@ -5,6 +5,7 @@
 #include <ceCore/class.hh>
 #include <ceCore/types.hh>
 #include <ceCore/math/boundingbox.hh>
+#include <ceCore/math/vector.hh>
 #include <ceCore/graphics/irendermesh.hh>
 #include <ceCore/graphics/edatatype.hh>
 #include <ceCore/graphics/eprimitivetype.hh>
@@ -83,6 +84,8 @@ public:
   void SetUV3(const std::vector<Vector2f> & uv) override;
   void SetIndices(const std::vector<uint32_t> & indices) override;
   void SetUV0(const std::vector<Vector2f> & uv) override;
+  void SetBoneIndices(const std::vector<Vector4i> &boneIndices) override;
+  void SetBoneWeights(const std::vector<Vector4f> &boneWeights) override;
   void AddVertices(const std::vector<Vector2f> & vertices);
   void AddVertices(const std::vector<Vector3f> & vertices);
   void AddVertices(const std::vector<Vector4f> & vertices);
@@ -94,6 +97,8 @@ public:
   void AddUV1(const std::vector<Vector2f> & uv);
   void AddUV2(const std::vector<Vector2f> & uv);
   void AddUV3(const std::vector<Vector2f> & uv) ;
+  void AddBoneIndices(const std::vector<Vector4i> & boneIndices) ;
+  void AddBoneWeights(const std::vector<Vector4f> & boneWeights) ;
   void AddIndices(const std::vector<uint32_t> & indices);
 
   CE_NODISCARD size_t GetNumberOfVertices() const;
@@ -110,6 +115,8 @@ private:
   std::vector<Vector2f> m_uv1;
   std::vector<Vector2f> m_uv2;
   std::vector<Vector2f> m_uv3;
+  std::vector<Vector4i> m_boneIndices;
+  std::vector<Vector4f> m_boneWeights;
   std::vector<uint32_t> m_indices;
 
 

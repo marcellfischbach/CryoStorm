@@ -48,6 +48,7 @@ GL4Device::GL4Device()
     , m_modelViewMatrixInvDirty(false)
     , m_viewProjectionMatrixInvDirty(false)
     , m_modelViewProjectionMatrixInvDirty(false)
+    , m_skeletonMatrixCount(0)
     , m_clearColorR(0.0f)
     , m_clearColorG(0.0f)
     , m_clearColorB(0.0f)
@@ -69,6 +70,7 @@ GL4Device::GL4Device()
     , m_renderLayer(-1)
 {
   CE_CLASS_GEN_CONSTR;
+
 
 }
 
@@ -132,6 +134,11 @@ bool GL4Device::Initialize()
   {
     m_textures[i] = nullptr;
     m_samplers[i] = nullptr;
+  }
+
+  for (Size i=0; i<256; i++)
+  {
+    m_skeletonMatrices[i].SetIdentity();
   }
 
   CE_GL_ERROR();
@@ -389,6 +396,13 @@ void GL4Device::SetShadowMapProjectionMatrices(const Matrix4f *matrices, Size nu
   m_shadowMapMatrixCount = numberOfMatrices;
   memcpy(m_shadowMapProjectionMatrices, matrices, sizeof(Matrix4f) * numberOfMatrices);
   m_shadowMapViewProjectionMatrixDirty = true;
+}
+
+void GL4Device::SetSkeletonMatrices(const ce::Matrix4f *skeletonMatrices, Size numMatrices)
+{
+  Size cappedNumMatrices = ceMax(numMatrices, (Size)256);
+  memcpy(m_skeletonMatrices, skeletonMatrices, cappedNumMatrices);
+  m_skeletonMatrixCount = cappedNumMatrices;
 }
 
 const Matrix4f &GL4Device::GetViewMatrix() const
@@ -1345,6 +1359,12 @@ void GL4Device::BindMatrices()
       attr->SetArrayIndex(i);
       attr->Bind(m_shadowMapViewProjectionMatrices[i]);
     }
+  }
+
+  attr = m_shader->GetShaderAttribute(eSA_SkeletonMatrices);
+  if (attr)
+  {
+    attr->Bind(m_skeletonMatrices, m_skeletonMatrixCount);
   }
 #endif
 }

@@ -889,6 +889,7 @@ void setup_world(ce::World *world)
 {
   auto assetMan = ce::AssetManager::Get();
   auto material = assetMan->Get<ce::iMaterial>("/materials/Default.mat");
+  auto skinnedMaterial = assetMan->Get<ce::iMaterial>("/materials/DefaultSkinned.mat");
 
   generate_terrain(world);
   generate_camera(world);
@@ -896,7 +897,7 @@ void setup_world(ce::World *world)
 //  generate_batched_test_grid(world, material);
 //  generate_test_grid(world, material);
 
-  add_skeleton_mesh(world, material);
+  add_skeleton_mesh(world, skinnedMaterial);
 
 #if 1
   shadowLightState = add_directional_light(world,

@@ -183,6 +183,16 @@ void GL4RenderMeshGenerator::SetUV3(const std::vector<Vector2f>& uv)
   m_uv3 = uv;
 }
 
+void GL4RenderMeshGenerator::SetBoneIndices(const std::vector<Vector4i> &boneIndices)
+{
+  m_boneIndices = boneIndices;
+}
+
+void GL4RenderMeshGenerator::SetBoneWeights(const std::vector<Vector4f> &boneWeights)
+{
+  m_boneWeights = boneWeights;
+}
+
 void GL4RenderMeshGenerator::SetIndices(const std::vector<uint32_t>& indices)
 {
   m_indices = indices;
@@ -242,6 +252,16 @@ void GL4RenderMeshGenerator::AddUV2(const std::vector<Vector2f>& uv)
 void GL4RenderMeshGenerator::AddUV3(const std::vector<Vector2f>& uv)
 {
   m_uv3.insert(m_uv3.end(), uv.begin(), uv.end());
+}
+
+void GL4RenderMeshGenerator::AddBoneIndices(const std::vector<Vector4i> &boneIndices)
+{
+  m_boneIndices.insert(m_boneIndices.end(), boneIndices.begin(), boneIndices.end());
+}
+
+void GL4RenderMeshGenerator::AddBoneWeights(const std::vector<Vector4f> &boneWeights)
+{
+  m_boneWeights.insert(m_boneWeights.end(), boneWeights.begin(), boneWeights.end());
 }
 
 void GL4RenderMeshGenerator::AddIndices(const std::vector<uint32_t>& indices)
@@ -376,6 +396,27 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
     count += 4;
     offset += 4 * sizeof(float);
   }
+  if (!m_boneIndices.empty())
+  {
+    if (m_boneIndices.size() != vertexCount)
+    {
+      return nullptr;
+    }
+    attributes.emplace_back(VertexDeclaration::Attribute(0, eVS_BoneIdx, 4, eDT_Float, 0, offset));
+    count += 4;
+    offset += 4 * sizeof(float);
+  }
+  if (!m_boneWeights.empty())
+  {
+    if (m_boneWeights.size() != vertexCount)
+    {
+      return nullptr;
+    }
+    attributes.emplace_back(VertexDeclaration::Attribute(0, eVS_BoneWeight, 4, eDT_Float, 0, offset));
+    count += 4;
+    offset += 4 * sizeof(float);
+  }
+
   for (VertexDeclaration::Attribute& attribute : attributes)
   {
     attribute.Stride = offset;
@@ -465,6 +506,22 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
       vBuffer[c++] = v.g;
       vBuffer[c++] = v.b;
       vBuffer[c++] = v.a;
+    }
+    if (!m_boneIndices.empty())
+    {
+      Vector4i& v = m_boneIndices[i];
+      vBuffer[c++] = (float)v.x;
+      vBuffer[c++] = (float)v.y;
+      vBuffer[c++] = (float)v.z;
+      vBuffer[c++] = (float)v.w;
+    }
+    if (!m_boneWeights.empty())
+    {
+      Vector4f& v = m_boneWeights[i];
+      vBuffer[c++] = v.x;
+      vBuffer[c++] = v.y;
+      vBuffer[c++] = v.z;
+      vBuffer[c++] = v.w;
     }
   }
   bbox.Finish();
@@ -565,6 +622,8 @@ void GL4RenderMeshBatchGenerator::Add(const iRenderMesh *mesh, const Matrix4f &m
   std::vector<Vector2f> uv1;
   std::vector<Vector2f> uv2;
   std::vector<Vector2f> uv3;
+  std::vector<Vector4i> boneIndices;
+  std::vector<Vector4f> boneWeights;
   std::vector<uint32_t> indices;
 
   size_t vertexOffset = m_generator.GetNumberOfVertices();
@@ -653,6 +712,18 @@ void GL4RenderMeshBatchGenerator::Add(const iRenderMesh *mesh, const Matrix4f &m
         {
           Vector2f v2 = *reinterpret_cast<Vector2f*>(&b8[i * attribute.Stride + attribute.Offset]);
           uv3.push_back(v2);
+          break;
+        }
+        case eVS_BoneIdx:
+        {
+          Vector4f idx = *reinterpret_cast<Vector4f*>(&b8[i * attribute.Stride + attribute.Offset]);
+          boneIndices.emplace_back(Vector4i((int)idx.x, (int)idx.y, (int)idx.z, (int)idx.w));
+          break;
+        }
+        case eVS_BoneWeight:
+        {
+          Vector4f w = *reinterpret_cast<Vector4f*>(&b8[i * attribute.Stride + attribute.Offset]);
+          boneWeights.push_back(w);
           break;
         }
       }

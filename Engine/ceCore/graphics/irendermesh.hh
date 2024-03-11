@@ -5,9 +5,7 @@
 #include <ceCore/class.hh>
 #include <ceCore/types.hh>
 #include <ceCore/math/boundingbox.hh>
-#include <ceCore/math/vector2f.hh>
-#include <ceCore/math/vector3f.hh>
-#include <ceCore/math/vector4f.hh>
+#include <ceCore/math/vector.hh>
 #include <ceCore/math/color4f.hh>
 #include <ceCore/graphics/erenderpass.hh>
 #include <vector>
@@ -54,6 +52,8 @@ struct CE_CORE_API iRenderMeshGenerator : CE_SUPER(iObject)
   virtual void SetUV1(const std::vector<Vector2f> & uv) = 0;
   virtual void SetUV2(const std::vector<Vector2f> & uv) = 0;
   virtual void SetUV3(const std::vector<Vector2f> & uv) = 0;
+  virtual void SetBoneIndices(const std::vector<Vector4i> & boneIndices) = 0;
+  virtual void SetBoneWeights(const std::vector<Vector4f> & boneWeights) = 0;
   virtual void SetIndices(const std::vector<uint32_t> & indices) = 0;
   CE_NODISCARD virtual iRenderMesh* Generate() = 0;
 };

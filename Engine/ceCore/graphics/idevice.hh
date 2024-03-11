@@ -67,6 +67,8 @@ CE_CLASS_GEN;
   virtual void SetShadowMapViewMatrices(const Matrix4f *viewMatrices, Size numMatrices) = 0;
   virtual void SetShadowMapProjectionMatrices(const Matrix4f *projectionMatrices, Size numMatrices) = 0;
 
+  virtual void SetSkeletonMatrices (const Matrix4f *skeletonMatrices, Size numMatrices) = 0;
+
   virtual const Matrix4f &GetViewMatrix() const = 0;
   virtual const Matrix4f &GetViewMatrixInv() const = 0;
   virtual const Matrix4f &GetProjectionMatrix() const = 0;
