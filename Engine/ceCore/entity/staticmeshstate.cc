@@ -157,19 +157,26 @@ void StaticMeshState::AddMeshToScene(World *world)
         material                          = matSlot.GetDefaultMaterial();
       }
 
-      GfxMesh *sceneMesh = new GfxMesh();
-      sceneMesh->SetBatchable(true);
-      sceneMesh->SetStatic(IsStatic());
-      sceneMesh->SetReceiveShadow(m_receiveShadow);
-      sceneMesh->SetCastShadow(m_castShadow);;
-      sceneMesh->SetMesh(subMesh.GetMesh());
-      sceneMesh->SetMaterial(material);
-      sceneMesh->SetModelMatrix(GetGlobalMatrix());
-      m_gfxMeshes.push_back(sceneMesh);
+      auto gfxMesh = CreateGfxMesh();
+      gfxMesh->SetMesh(subMesh.GetMesh());
+      gfxMesh->SetMaterial(material);
+      m_gfxMeshes.push_back(gfxMesh);
 
-      scene->Add(sceneMesh);
+      scene->Add(gfxMesh);
     }
   }
+}
+
+
+GfxMesh* StaticMeshState::CreateGfxMesh()
+{
+  auto gfxMesh = new GfxMesh();
+  gfxMesh->SetBatchable(true);
+  gfxMesh->SetStatic(IsStatic());
+  gfxMesh->SetReceiveShadow(m_receiveShadow);
+  gfxMesh->SetCastShadow(m_castShadow);;
+  gfxMesh->SetModelMatrix(GetGlobalMatrix());
+  return gfxMesh;
 }
 
 

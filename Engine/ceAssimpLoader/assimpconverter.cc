@@ -150,9 +150,9 @@ Weight get_weight(aiMesh *mesh, unsigned vertexID, Skeleton *skeleton)
   return res;
 }
 
-iRenderMesh *ConvertRenderMesh(aiMesh *mesh, const Matrix4f &matrix, Skeleton* skeleton)
+iRenderMesh *ConvertRenderMesh(aiMesh *mesh, const Matrix4f &matrix2, Skeleton* skeleton)
 {
-
+  Matrix4f matrix;
   std::vector<Vector3f> vertices;
   std::vector<Vector3f> normals;
   std::vector<Vector3f> tangents;

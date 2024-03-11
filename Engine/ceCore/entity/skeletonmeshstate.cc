@@ -40,4 +40,13 @@ const Skeleton& SkeletonMeshState::GetSkeleton() const
   return m_skeleton;
 }
 
+GfxMesh *SkeletonMeshState::CreateGfxMesh()
+{
+  auto gfxMesh = StaticMeshState::CreateGfxMesh();
+
+
+
+  return gfxMesh;
+}
+
 }
