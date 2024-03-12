@@ -37,6 +37,7 @@ public:
 
   void SetBone (size_t idx, const Matrix4f& localMatrix);
   const Matrix4f &GetBone (size_t idx) const;
+  const Matrix4f *GetBoneMatrices() const;
 
   const std::string &GetName (size_t idx) const;
 

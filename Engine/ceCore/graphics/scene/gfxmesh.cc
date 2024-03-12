@@ -41,6 +41,22 @@ void GfxMesh::Render(iDevice* device, eRenderPass pass)
       device->FinishForwardLights(i);
     }
 
+    if (m_skeleton)
+    {
+      Matrix4f *matrices = new Matrix4f[m_skeleton->GetNumberOfBones()];
+//      device->SetSkeletonMatrices(m_skeleton->GetBoneMatrices(), m_skeleton->GetNumberOfBones());
+      device->SetSkeletonMatrices(matrices, m_skeleton->GetNumberOfBones());
+      delete [] matrices;
+    }
+    else
+    {
+      Matrix4f matrices[16];
+      for (int i=0; i<16; i++)
+      {
+        matrices[i].SetIdentity();
+      }
+      device->SetSkeletonMatrices(matrices, 16);
+    }
     device->SetModelMatrix(m_modelMatrix);
     device->Render(m_mesh, pass);
   }

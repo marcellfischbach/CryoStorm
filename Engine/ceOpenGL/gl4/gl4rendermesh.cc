@@ -402,7 +402,7 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
     {
       return nullptr;
     }
-    attributes.emplace_back(VertexDeclaration::Attribute(0, eVS_BoneIdx, 4, eDT_Float, 0, offset));
+    attributes.emplace_back(VertexDeclaration::Attribute(0, eVS_BoneIndices, 4, eDT_Float, 0, offset));
     count += 4;
     offset += 4 * sizeof(float);
   }
@@ -412,7 +412,7 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
     {
       return nullptr;
     }
-    attributes.emplace_back(VertexDeclaration::Attribute(0, eVS_BoneWeight, 4, eDT_Float, 0, offset));
+    attributes.emplace_back(VertexDeclaration::Attribute(0, eVS_BoneWeights, 4, eDT_Float, 0, offset));
     count += 4;
     offset += 4 * sizeof(float);
   }
@@ -714,13 +714,13 @@ void GL4RenderMeshBatchGenerator::Add(const iRenderMesh *mesh, const Matrix4f &m
           uv3.push_back(v2);
           break;
         }
-        case eVS_BoneIdx:
+        case eVS_BoneIndices:
         {
           Vector4f idx = *reinterpret_cast<Vector4f*>(&b8[i * attribute.Stride + attribute.Offset]);
           boneIndices.emplace_back(Vector4i((int)idx.x, (int)idx.y, (int)idx.z, (int)idx.w));
           break;
         }
-        case eVS_BoneWeight:
+        case eVS_BoneWeights:
         {
           Vector4f w = *reinterpret_cast<Vector4f*>(&b8[i * attribute.Stride + attribute.Offset]);
           boneWeights.push_back(w);

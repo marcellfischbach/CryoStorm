@@ -239,6 +239,14 @@ iRenderMesh *ConvertRenderMesh(aiMesh *mesh, const Matrix4f &matrix2, Skeleton* 
   {
     generator->SetColors(colors);
   }
+  if (!bones.empty())
+  {
+    generator->SetBoneIndices(bones);
+  }
+  if (!weights.empty())
+  {
+    generator->SetBoneWeights(weights);
+  }
 
   generator->SetIndices(indices);
   iRenderMesh *renderMesh = generator->Generate();

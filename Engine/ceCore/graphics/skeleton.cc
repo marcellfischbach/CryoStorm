@@ -109,6 +109,11 @@ const Matrix4f &Skeleton::GetBone (size_t idx) const
   return ILLEGAL_BONE_MATRIX;
 }
 
+const Matrix4f *Skeleton::GetBoneMatrices() const
+{
+  return m_skeletonBones.data();
+}
+
 const std::string &Skeleton::GetName (size_t idx) const
 {
   if (idx < m_bones.size())

@@ -15,8 +15,8 @@ enum eVertexStream
   eVS_UV2,
   eVS_UV3,
   eVS_Colors,
-  eVS_BoneIdx,
-  eVS_BoneWeight,
+  eVS_BoneIndices,
+  eVS_BoneWeights,
 };
 
 

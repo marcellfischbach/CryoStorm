@@ -1,0 +1,18 @@
+material {
+    shaders {
+        shader Forward    "/${shaders}/default_skinned/DefaultSkinned.shader",
+        shader Depth      "/${shaders}/default_skinned/DefaultSkinned_Depth.shader",
+        shader GBuffer    "/${shaders}/default_skinned/DefaultSkinned_GBuffer.shader",
+        shader ShadowCube "/${shaders}/default_skinned/DefaultSkinned_PointShadow.shader",
+        shader ShadowPSSM "/${shaders}/default_skinned/DefaultSkinned_PSSM.shader",
+        shader Shadow     "/${shaders}/default_skinned/DefaultSkinned_Shadow.shader"
+    },
+    attributes {
+        attribute Texture "Diffuse" "/textures/CheckerBoard.tex2d",
+        attribute Texture "Normal" "/textures/DefaultNormal.tex2d",
+        attribute Texture "RoughnessMap" "/textures/DefaultRoughness.tex2d",
+        attribute Color4 "Color" 1 1 1 1,
+        attribute Float "Roughness" 0.5,
+        attribute Float "Metallic" 0.0,
+    }
+}

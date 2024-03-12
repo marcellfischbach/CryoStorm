@@ -244,6 +244,8 @@ GL4Shader *LoadShader(const std::string &typeText,
   replace(lines, "eVS_UV3", eVS_UV3);
   replace(lines, "eVS_UV", eVS_UV);
   replace(lines, "eVS_Colors", eVS_Colors);
+  replace(lines, "eVS_BoneIndices", eVS_BoneIndices);
+  replace(lines, "eVS_BoneWeights", eVS_BoneWeights);
   std::string source = merge(lines);
 
   //printf ("source: %s\n%s\n", locator->Encoded().c_str(), source.c_str());
