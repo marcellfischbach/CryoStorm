@@ -376,7 +376,7 @@ ce::iRenderMesh *create_sphere_mesh(float radius, uint32_t detail, float uv_f)
 ce::iRenderMesh *
 create_multi_sphere_mesh(float radius, uint32_t detail, float uv_f, size_t num_spheres, ce::Vector3f *sphere_positions)
 {
-  ce::iRenderMeshGenerator *generator = ce::ObjectRegistry::Get<ce::iRenderMeshGeneratorFactory>()->Create();
+  ce::iRenderMeshGenerator  *generator = ce::ObjectRegistry::Get<ce::iRenderMeshGeneratorFactory>()->Create();
   std::vector<ce::Vector3f> positions;
   std::vector<ce::Vector3f> normals;
   std::vector<ce::Vector3f> tangents;
@@ -640,13 +640,15 @@ void generate_test_grid(ce::World *world, ce::iMaterial *material)
 
 }
 
-void add_skeleton_mesh(ce::World* world, ce::iMaterial* material)
+ce::Skeleton *global_skeleton = nullptr;
+
+void add_skeleton_mesh(ce::World *world, ce::iMaterial *material)
 {
   ce::SkeletonMesh *mesh = ce::AssetManager::Get()->Load<ce::SkeletonMesh>("/skinned_mesh.fbx");
 
-  ce::Entity* entity = new ce::Entity("Skeleton Entity");
+  ce::Entity *entity = new ce::Entity("Skeleton Entity");
 
-  ce::SkeletonMeshState* meshState = new ce::SkeletonMeshState();
+  ce::SkeletonMeshState *meshState = new ce::SkeletonMeshState();
   meshState->SetMesh(mesh);
   meshState->SetMaterial(0, material);
   entity->Attach(meshState);
@@ -655,6 +657,7 @@ void add_skeleton_mesh(ce::World* world, ce::iMaterial* material)
 
   world->Attach(entity);
 
+  global_skeleton = &meshState->GetSkeleton();
 
 }
 
@@ -887,8 +890,8 @@ ce::LightState *add_point_light(ce::World *world,
 
 void setup_world(ce::World *world)
 {
-  auto assetMan = ce::AssetManager::Get();
-  auto material = assetMan->Get<ce::iMaterial>("/materials/Default.mat");
+  auto assetMan        = ce::AssetManager::Get();
+  auto material        = assetMan->Get<ce::iMaterial>("/materials/Default.mat");
   auto skinnedMaterial = assetMan->Get<ce::iMaterial>("/materials/DefaultSkinned.mat");
 
   generate_terrain(world);
@@ -909,7 +912,7 @@ void setup_world(ce::World *world)
 
   add_directional_light(world,
                         ce::Vector3f(1.0f, 0.2f, 0.0f),
-                        ce::ceDeg2Rad( -45.0f),
+                        ce::ceDeg2Rad(-45.0f),
                         ce::Color4f(1.0f, 1.0f, 1.0f, 1.0f) * 0.1f,
                         true,
                         false);
@@ -1008,6 +1011,14 @@ int main(int argc, char **argv)
 
   frameRenderer->SetRenderPipeline(pipeline);
 
+  float rotation[4];
+  bool  rotation_direction[4];
+  for (int i=0; i<4; i++)
+  {
+    rotation[i] = 0.0f;
+    rotation_direction[i] = true;
+  }
+
   while (true)
   {
 #if _DEBUG
@@ -1031,7 +1042,7 @@ int main(int argc, char **argv)
       numTrianglesPerSec    = 0;
       numShaderStateChanges = 0;
 #else
-      sprintf_s<1024>(buffer, "%s  %d FPS ", title.c_str(), frames);
+      sprintf_s < 1024 > (buffer, "%s  %d FPS ", title.c_str(), frames);
 #endif
       SDL_SetWindowTitle(wnd, buffer);
       printf("%s\n", buffer);
@@ -1045,7 +1056,6 @@ int main(int argc, char **argv)
     }
 
     uint32_t deltaTime = time - lastTime;
-
 
 
 
@@ -1082,6 +1092,37 @@ int main(int argc, char **argv)
         debugCache->SetDebug(!debugCache->IsDebug());
       }
 
+
+      for (int i = 0; i < 1; i++)
+      {
+        ce::Matrix4f boneMatrix = global_skeleton->GetBone(i);
+        boneMatrix.SetRotationZ(rotation[i]);
+        global_skeleton->SetBone(i, boneMatrix);
+
+        if (rotation_direction[i])
+        {
+          rotation[i] += tpf;
+          if (rotation[i] > M_PI / 4.0f)
+          {
+            rotation[i]           = M_PI / 4.0f;
+            rotation_direction[i] = false;
+          }
+        }
+        else
+        {
+          rotation[i] -= tpf;
+          if (rotation[i] < 0.0f)
+          {
+            rotation[i]           = 0.0f;
+            rotation_direction[i] = true;
+          }
+        }
+
+
+      }
+      printf ("Rotation: %.2f [%d]\n", rotation[0], rotation_direction[0]);
+      global_skeleton->UpdateBones();
+
       world->Update(tpf);
     }
     if (ce::Input::IsKeyPressed(ce::Key::eK_P))
@@ -1098,7 +1139,6 @@ int main(int argc, char **argv)
       }
       frameRenderer->SetRenderPipeline(pipeline);
     }
-
 
 
     if (ce::Input::IsKeyPressed(ce::Key::eK_M))

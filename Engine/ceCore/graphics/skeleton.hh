@@ -61,6 +61,7 @@ private:
   std::vector<size_t>   m_rootBones;
   std::vector<Bone>     m_bones;
   std::vector<Matrix4f> m_skeletonBones;
+  std::vector<Matrix4f> m_poseMatrices;
 };
 
 } // ce

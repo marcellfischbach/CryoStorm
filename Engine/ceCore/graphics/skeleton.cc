@@ -28,6 +28,12 @@ void Skeleton::InitializeFrom(const ce::Skeleton &skeleton)
   m_bones = skeleton.m_bones;
   m_skeletonBones = skeleton.m_skeletonBones;
   m_rootBones = skeleton.m_rootBones;
+  m_poseMatrices = skeleton.m_skeletonBones;
+  for (auto &matrix: m_poseMatrices)
+  {
+    matrix.Invert();
+  }
+  UpdateBones();
 }
 
 Skeleton& Skeleton::operator=(const ce::Skeleton &skeleton)
@@ -37,6 +43,12 @@ Skeleton& Skeleton::operator=(const ce::Skeleton &skeleton)
   m_bones = skeleton.m_bones;
   m_skeletonBones = skeleton.m_skeletonBones;
   m_rootBones = skeleton.m_rootBones;
+  m_poseMatrices = skeleton.m_skeletonBones;
+  for (auto &matrix: m_poseMatrices)
+  {
+    matrix.Invert();
+  }
+  UpdateBones();
 
   return *this;
 }
@@ -53,6 +65,7 @@ size_t Skeleton::Add(const std::string &name)
   };
   m_bones.push_back(bone);
   m_skeletonBones.push_back(bone.matrix);
+  m_poseMatrices.emplace_back();
   return idx;
 }
 
@@ -126,6 +139,7 @@ const std::string &Skeleton::GetName (size_t idx) const
 void Skeleton::UpdateBones()
 {
   Matrix4f identity;
+  identity.SetIdentity();
   for (const size_t &idx: m_rootBones)
   {
     UpdateBone(idx, identity);
@@ -137,7 +151,7 @@ void Skeleton::UpdateBone(size_t idx, const ce::Matrix4f &parent)
   Bone &bone = m_bones[idx];
 
   Matrix4f global = parent * bone.matrix;
-  m_skeletonBones[idx] = global;
+  m_skeletonBones[idx] = m_poseMatrices[idx] * global;
 
   for (const size_t &childIdx: bone.children)
   {

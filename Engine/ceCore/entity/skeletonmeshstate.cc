@@ -4,6 +4,7 @@
 
 #include <ceCore/entity/skeletonmeshstate.hh>
 #include <ceCore/graphics/skeletonmesh.hh>
+#include <ceCore/graphics/scene/gfxmesh.hh>
 
 
 namespace ce
@@ -43,7 +44,7 @@ const Skeleton& SkeletonMeshState::GetSkeleton() const
 GfxMesh *SkeletonMeshState::CreateGfxMesh()
 {
   auto gfxMesh = StaticMeshState::CreateGfxMesh();
-
+  gfxMesh->SetSkeleton(&m_skeleton);
 
 
   return gfxMesh;

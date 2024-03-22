@@ -400,8 +400,8 @@ void GL4Device::SetShadowMapProjectionMatrices(const Matrix4f *matrices, Size nu
 
 void GL4Device::SetSkeletonMatrices(const ce::Matrix4f *skeletonMatrices, Size numMatrices)
 {
-  Size cappedNumMatrices = ceMax(numMatrices, (Size)256);
-  memcpy(m_skeletonMatrices, skeletonMatrices, cappedNumMatrices);
+  Size cappedNumMatrices = ceMin(numMatrices, (Size)256);
+  memcpy(m_skeletonMatrices, skeletonMatrices, cappedNumMatrices * sizeof(Matrix4f));
   m_skeletonMatrixCount = cappedNumMatrices;
 }
 

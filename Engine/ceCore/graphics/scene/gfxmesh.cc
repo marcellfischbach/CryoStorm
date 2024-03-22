@@ -43,10 +43,7 @@ void GfxMesh::Render(iDevice* device, eRenderPass pass)
 
     if (m_skeleton)
     {
-      Matrix4f *matrices = new Matrix4f[m_skeleton->GetNumberOfBones()];
-//      device->SetSkeletonMatrices(m_skeleton->GetBoneMatrices(), m_skeleton->GetNumberOfBones());
-      device->SetSkeletonMatrices(matrices, m_skeleton->GetNumberOfBones());
-      delete [] matrices;
+      device->SetSkeletonMatrices(m_skeleton->GetBoneMatrices(), m_skeleton->GetNumberOfBones());
     }
     else
     {
