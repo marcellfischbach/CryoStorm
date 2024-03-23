@@ -45,15 +45,6 @@ void GfxMesh::Render(iDevice* device, eRenderPass pass)
     {
       device->SetSkeletonMatrices(m_skeleton->GetBoneMatrices(), m_skeleton->GetNumberOfBones());
     }
-    else
-    {
-      Matrix4f matrices[16];
-      for (int i=0; i<16; i++)
-      {
-        matrices[i].SetIdentity();
-      }
-      device->SetSkeletonMatrices(matrices, 16);
-    }
     device->SetModelMatrix(m_modelMatrix);
     device->Render(m_mesh, pass);
   }
@@ -65,6 +56,11 @@ void GfxMesh::RenderUnlit(iDevice* device, eRenderPass pass)
   //printf ("RenderUnlit(mat: %p)\n", m_material);
   if (device->BindMaterial(m_material, pass))
   {
+    if (m_skeleton)
+    {
+      device->SetSkeletonMatrices(m_skeleton->GetBoneMatrices(), m_skeleton->GetNumberOfBones());
+    }
+
     device->SetModelMatrix(m_modelMatrix);
     device->Render(m_mesh, pass);
   }
@@ -84,6 +80,11 @@ void GfxMesh::RenderForward(iDevice* device, eRenderPass pass, const GfxLight** 
       device->BindForwardLight(light, i);
     }
     device->FinishForwardLights(i);
+
+    if (m_skeleton)
+    {
+      device->SetSkeletonMatrices(m_skeleton->GetBoneMatrices(), m_skeleton->GetNumberOfBones());
+    }
 
     device->SetModelMatrix(m_modelMatrix);
     device->Render(m_mesh, pass);

@@ -151,7 +151,7 @@ void Skeleton::UpdateBone(size_t idx, const ce::Matrix4f &parent)
   Bone &bone = m_bones[idx];
 
   Matrix4f global = parent * bone.matrix;
-  m_skeletonBones[idx] = m_poseMatrices[idx] * global;
+  m_skeletonBones[idx] = global * m_poseMatrices[idx];
 
   for (const size_t &childIdx: bone.children)
   {

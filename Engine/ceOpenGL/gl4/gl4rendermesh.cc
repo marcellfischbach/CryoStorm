@@ -510,10 +510,10 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
     if (!m_boneIndices.empty())
     {
       Vector4i& v = m_boneIndices[i];
-      vBuffer[c++] = (float)v.x;
-      vBuffer[c++] = (float)v.y;
-      vBuffer[c++] = (float)v.z;
-      vBuffer[c++] = (float)v.w;
+      vBuffer[c++] = (float)v.x + 0.25f;
+      vBuffer[c++] = (float)v.y + 0.25f;
+      vBuffer[c++] = (float)v.z + 0.25f;
+      vBuffer[c++] = (float)v.w + 0.25f;
     }
     if (!m_boneWeights.empty())
     {

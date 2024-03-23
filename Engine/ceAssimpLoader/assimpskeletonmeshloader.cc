@@ -88,7 +88,7 @@ iObject *AssimpSkeletonMeshLoader::Load(const Class *cls, const ResourceLocator 
 
 
   Matrix4f parentMatrix;
-  ReadSkeleton(scene->mRootNode, d);
+  ReadSkeleton(scene->mRootNode, parentMatrix, d);
   ReadMesh(scene->mRootNode, parentMatrix, d);
 
 
@@ -96,14 +96,18 @@ iObject *AssimpSkeletonMeshLoader::Load(const Class *cls, const ResourceLocator 
 }
 
 void AssimpSkeletonMeshLoader::ReadSkeleton(aiNode *node,
+                                            const Matrix4f &parentMatrix,
                                             LoaderData &d) const
 {
+  Matrix4f localMatrix  = ConvertMatrix4x4(node->mTransformation);
+  Matrix4f globalMatrix;// = parentMatrix * localMatrix;
+
   std::string nodeName = std::string (node->mName.C_Str());
   if (nodeName == "Armature" || nodeName == "Skeleton")
   {
     for (unsigned i = 0, in = node->mNumChildren; i < in; ++i)
     {
-      ReadBone(node->mChildren[i], d, Skeleton::ILLEGAL_BONE_ID);
+      ReadBone(node->mChildren[i], globalMatrix, d, Skeleton::ILLEGAL_BONE_ID);
     }
     d.mesh->GetSkeleton().UpdateBones();
   }
@@ -111,17 +115,18 @@ void AssimpSkeletonMeshLoader::ReadSkeleton(aiNode *node,
   {
     for (unsigned i = 0, in = node->mNumChildren; i < in; ++i)
     {
-      ReadSkeleton(node->mChildren[i], d);
+      ReadSkeleton(node->mChildren[i], globalMatrix, d);
     }
   }
 }
 
 void AssimpSkeletonMeshLoader::ReadBone(aiNode *node,
+                                        const Matrix4f &parentMatrix,
                                         LoaderData &d,
                                         size_t  parentBoneID) const
 {
 
-  Matrix4f localMatrix  = ConvertMatrix4x4(node->mTransformation);
+  Matrix4f localMatrix  = parentMatrix *  ConvertMatrix4x4(node->mTransformation);
   std::string nodeName = std::string (node->mName.C_Str());
 
   size_t boneID;
@@ -139,7 +144,7 @@ void AssimpSkeletonMeshLoader::ReadBone(aiNode *node,
 
   for (unsigned i = 0, in = node->mNumChildren; i < in; ++i)
   {
-    ReadBone(node->mChildren[i], d, boneID);
+    ReadBone(node->mChildren[i], parentMatrix, d, boneID);
   }
 
 }

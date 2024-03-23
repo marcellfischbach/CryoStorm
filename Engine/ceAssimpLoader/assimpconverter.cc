@@ -84,7 +84,7 @@ Weight get_weight(aiMesh *mesh, unsigned vertexID, Skeleton *skeleton)
       aiVertexWeight &weight = bone->mWeights[w];
       if (weight.mVertexId == vertexID)
       {
-        size_t boneIndex = i; //skeleton.IndexOf(std::string(bone->mName.C_Str()));
+        size_t boneIndex = skeleton->IndexOf(std::string(bone->mName.C_Str()));
         if (boneIndex != Skeleton::ILLEGAL_BONE_ID)
         {
           TempWeight tWeight {
@@ -152,7 +152,7 @@ Weight get_weight(aiMesh *mesh, unsigned vertexID, Skeleton *skeleton)
 
 iRenderMesh *ConvertRenderMesh(aiMesh *mesh, const Matrix4f &matrix2, Skeleton* skeleton)
 {
-  Matrix4f matrix;
+  Matrix4f matrix = matrix2;
   std::vector<Vector3f> vertices;
   std::vector<Vector3f> normals;
   std::vector<Vector3f> tangents;

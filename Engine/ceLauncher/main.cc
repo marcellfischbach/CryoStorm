@@ -653,7 +653,10 @@ void add_skeleton_mesh(ce::World *world, ce::iMaterial *material)
   meshState->SetMaterial(0, material);
   entity->Attach(meshState);
 
-  entity->GetRoot()->SetLocalMatrix(ce::Matrix4f::Translation(0, 2, 0));
+  entity->GetRoot()->SetLocalMatrix(
+      ce::Matrix4f::Rotation(ce::Vector3f(0.0f, 1.0f, 0.0f), M_PI)
+      * ce::Matrix4f::Rotation(ce::Vector3f(1.0f, 0.0f, 0.0f), M_PI / 2.0f)
+      * ce::Matrix4f::Translation(0, 2, 0));
 
   world->Attach(entity);
 
@@ -1011,14 +1014,15 @@ int main(int argc, char **argv)
 
   frameRenderer->SetRenderPipeline(pipeline);
 
-  float rotation[4];
-  bool  rotation_direction[4];
-  for (int i=0; i<4; i++)
+  float    rotation[4];
+  bool     rotation_direction[4];
+  for (int i = 0; i < 4; i++)
   {
-    rotation[i] = 0.0f;
+    rotation[i]           = 0.0f;
     rotation_direction[i] = true;
   }
 
+  bool first = true;
   while (true)
   {
 #if _DEBUG
@@ -1031,13 +1035,13 @@ int main(int argc, char **argv)
       nextSec += 1000;
       char buffer[1024];
 #if _DEBUG
-      sprintf_s<1024>(buffer,
-                      "%s  %d FPS  #%llu calls (%.2f triangles) %.2f shader changes",
-                      title.c_str(),
-                      frames,
-                      numDrawCallsPerSec,
-                      (float) numTrianglesPerSec / (float) frames,
-                      (float) numShaderStateChanges / (float) frames);
+      sprintf_s < 1024 > (buffer,
+          "%s  %d FPS  #%llu calls (%.2f triangles) %.2f shader changes",
+          title.c_str(),
+          frames,
+          numDrawCallsPerSec,
+          (float) numTrianglesPerSec / (float) frames,
+          (float) numShaderStateChanges / (float) frames);
       numDrawCallsPerSec    = 0;
       numTrianglesPerSec    = 0;
       numShaderStateChanges = 0;
@@ -1092,16 +1096,16 @@ int main(int argc, char **argv)
         debugCache->SetDebug(!debugCache->IsDebug());
       }
 
-
-      for (int i = 0; i < 1; i++)
+      for (int i = 0; i < 4; i++)
       {
         ce::Matrix4f boneMatrix = global_skeleton->GetBone(i);
-        boneMatrix.SetRotationZ(rotation[i]);
+        boneMatrix.ClearRotation();
+        boneMatrix.SetRotationY(rotation[i]);
         global_skeleton->SetBone(i, boneMatrix);
 
         if (rotation_direction[i])
         {
-          rotation[i] += tpf;
+          rotation[i] += tpf * 0.1f;
           if (rotation[i] > M_PI / 4.0f)
           {
             rotation[i]           = M_PI / 4.0f;
@@ -1110,7 +1114,7 @@ int main(int argc, char **argv)
         }
         else
         {
-          rotation[i] -= tpf;
+          rotation[i] -= tpf * 0.1f;
           if (rotation[i] < 0.0f)
           {
             rotation[i]           = 0.0f;
@@ -1120,7 +1124,6 @@ int main(int argc, char **argv)
 
 
       }
-      printf ("Rotation: %.2f [%d]\n", rotation[0], rotation_direction[0]);
       global_skeleton->UpdateBones();
 
       world->Update(tpf);
