@@ -43,7 +43,8 @@ void GfxMesh::Render(iDevice* device, eRenderPass pass)
 
     if (m_skeleton)
     {
-      device->SetSkeletonMatrices(m_skeleton->GetBoneMatrices(), m_skeleton->GetNumberOfBones());
+      const std::vector<Matrix4f> &bones = m_skeleton->GetSkeletonBones();
+      device->SetSkeletonMatrices(bones.data(), bones.size());
     }
     device->SetModelMatrix(m_modelMatrix);
     device->Render(m_mesh, pass);
@@ -58,7 +59,8 @@ void GfxMesh::RenderUnlit(iDevice* device, eRenderPass pass)
   {
     if (m_skeleton)
     {
-      device->SetSkeletonMatrices(m_skeleton->GetBoneMatrices(), m_skeleton->GetNumberOfBones());
+      const std::vector<Matrix4f> &bones = m_skeleton->GetSkeletonBones();
+      device->SetSkeletonMatrices(bones.data(), bones.size());
     }
 
     device->SetModelMatrix(m_modelMatrix);
@@ -83,7 +85,8 @@ void GfxMesh::RenderForward(iDevice* device, eRenderPass pass, const GfxLight** 
 
     if (m_skeleton)
     {
-      device->SetSkeletonMatrices(m_skeleton->GetBoneMatrices(), m_skeleton->GetNumberOfBones());
+      const std::vector<Matrix4f> &bones = m_skeleton->GetSkeletonBones();
+      device->SetSkeletonMatrices(bones.data(), bones.size());
     }
 
     device->SetModelMatrix(m_modelMatrix);

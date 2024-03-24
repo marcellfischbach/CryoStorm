@@ -55,8 +55,8 @@ struct CE_CORE_API Quaternion
   CE_FORCEINLINE void SetAxisAngle(float axisX, float axisY, float axisZ, float angle)
   {
     float angle2 = angle / 2.0f;
-    float c = std::cos(angle2);
-    float s = std::sin(angle2);
+    float c      = std::cos(angle2);
+    float s      = std::sin(angle2);
     this->x = axisX * s;
     this->y = axisY * s;
     this->z = axisZ * s;
@@ -76,15 +76,28 @@ struct CE_CORE_API Quaternion
   CE_NODISCARD CE_FORCEINLINE static Quaternion FromAxisAngle(float x, float y, float z, float angle)
   {
     float angle2 = angle / 2.0f;
-    float c = ceCos(angle2);
-    float s = ceSin(angle2);
+    float c      = ceCos(angle2);
+    float s      = ceSin(angle2);
     return Quaternion(x * s, y * s, z * s, c);
   }
 
 
   CE_NODISCARD CE_FORCEINLINE static Quaternion FromMatrix(const Matrix3f &m)
   {
-    float qw = ceSqrt(1.0f + m.m00 + m.m11 + m.m22) / 2.0f;
+    float qw  = ceSqrt(1.0f + m.m00 + m.m11 + m.m22) / 2.0f;
+    float qw4 = qw * 4.0f;
+    return Quaternion(
+        (m.m21 - m.m12) / qw4,
+        (m.m02 - m.m20) / qw4,
+        (m.m10 - m.m01) / qw4,
+        qw
+    );
+  }
+
+
+  CE_NODISCARD CE_FORCEINLINE static Quaternion FromMatrix(const Matrix4f &m)
+  {
+    float qw  = ceSqrt(1.0f + m.m00 + m.m11 + m.m22) / 2.0f;
     float qw4 = qw * 4.0f;
     return Quaternion(
         (m.m21 - m.m12) / qw4,
@@ -120,6 +133,20 @@ struct CE_CORE_API Quaternion
         2.0f * (x * z - w * y), 2.0f * (y * z + w * x), 2.0f * (sqw + sqz) - 1.0f, 0.0f,
         0.0f, 0.0f, 0.0f, 1.0f);
 
+  }
+
+  CE_FORCEINLINE Matrix4f &ToMatrix4(Matrix4f &m) const
+  {
+    float sqx = x * x;
+    float sqy = y * y;
+    float sqz = z * z;
+    float sqw = w * w;
+    m.Set(
+        2.0f * (sqw + sqx) - 1.0f, 2.0f * (x * y - w * z), 2.0f * (x * z + w * y), 0.0f,
+        2.0f * (x * y + w * z), 2.0f * (sqw + sqy) - 1.0f, 2.0f * (y * z - w * x), 0.0f,
+        2.0f * (x * z - w * y), 2.0f * (y * z + w * x), 2.0f * (sqw + sqz) - 1.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f);
+    return m;
   }
 
 

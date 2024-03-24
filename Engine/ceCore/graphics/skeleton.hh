@@ -4,6 +4,7 @@
 #include <ceCore/coreexport.hh>
 #include <ceCore/class.hh>
 #include <ceCore/math/matrix4f.hh>
+#include <ceCore/math/quaternion.hh>
 #include <vector>
 
 
@@ -16,6 +17,15 @@ class CE_CORE_API Skeleton : public CE_SUPER(Object)
 {
   CE_CLASS_GEN_OBJECT;
 public:
+  struct Bone
+  {
+    size_t              id;
+    std::string         name;
+    std::vector<size_t> children;
+    Vector3f            offset;
+    Quaternion          rotation;
+  };
+
   static const size_t      ILLEGAL_BONE_ID = ~0x00;
   static const std::string ILLEGAL_BONE_NAME;
   static const Matrix4f    ILLEGAL_BONE_MATRIX;
@@ -32,36 +42,29 @@ public:
 
 
 
-  size_t GetNumberOfBones () const;
-  size_t IndexOf(const std::string & name) const;
+  CE_NODISCARD size_t GetNumberOfBones () const;
+  CE_NODISCARD size_t IndexOf(const std::string & name) const;
 
-  void SetBone (size_t idx, const Matrix4f& localMatrix);
-  const Matrix4f &GetBone (size_t idx) const;
-  const Matrix4f *GetBoneMatrices() const;
-
-  const std::string &GetName (size_t idx) const;
+  CE_NODISCARD Bone& GetBone(size_t idx);
+  CE_NODISCARD const Bone& GetBone(size_t idx) const;
 
   CE_NODISCARD const std::vector<Matrix4f> &GetSkeletonBones () const;
 
   Skeleton& operator=(const Skeleton& skeleton);
 
+
 private:
   size_t Add(const std::string &name);
   void UpdateBone (size_t idx, const Matrix4f &parent);
 
-  struct Bone
-  {
-    size_t              id;
-    std::string         name;
-    std::vector<size_t> children;
-    Matrix4f            matrix;
-  };
+
 
 private:
   std::vector<size_t>   m_rootBones;
   std::vector<Bone>     m_bones;
   std::vector<Matrix4f> m_skeletonBones;
   std::vector<Matrix4f> m_poseMatrices;
+  static Bone           IllegalBone;
 };
 
 } // ce

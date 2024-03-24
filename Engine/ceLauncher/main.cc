@@ -6,6 +6,7 @@
 #include <ceBullet/bulletmodule.hh>
 #include <ceCore/coremodule.hh>
 #include <ceCore/settings.hh>
+#include <ceCore/animation/skeletonanimation.hh>
 #include <ceCore/entity/camerastate.hh>
 #include <ceCore/entity/collisionstate.hh>
 #include <ceCore/entity/entity.hh>
@@ -580,9 +581,10 @@ void generate_test_grid(ce::World *world, ce::iMaterial *material)
   auto mesh   = new ce::Mesh();
   mesh->AddMaterialSlot("Default", material);
   mesh->AddSubMesh(sphere, 0);
-  int gridSize = 100;
+  int gridSize = 1;
 
   float start = static_cast<float>(gridSize) / 2.0f;
+  start = 0.0f;
 
   for (int a = 0, i = 0; i < gridSize; i++)
   {
@@ -641,27 +643,31 @@ void generate_test_grid(ce::World *world, ce::iMaterial *material)
 }
 
 ce::Skeleton *global_skeleton = nullptr;
+ce::SkeletonAnimation *global_animation = nullptr;
 
 void add_skeleton_mesh(ce::World *world, ce::iMaterial *material)
 {
+
   ce::SkeletonMesh *mesh = ce::AssetManager::Get()->Load<ce::SkeletonMesh>("/skinned_mesh.fbx");
-
   ce::Entity *entity = new ce::Entity("Skeleton Entity");
-
   ce::SkeletonMeshState *meshState = new ce::SkeletonMeshState();
   meshState->SetMesh(mesh);
   meshState->SetMaterial(0, material);
   entity->Attach(meshState);
 
   entity->GetRoot()->SetLocalMatrix(
-      ce::Matrix4f::Rotation(ce::Vector3f(0.0f, 1.0f, 0.0f), M_PI)
+      ce::Matrix4f::Translation(0, 2, 0)
+      * ce::Matrix4f::Rotation(ce::Vector3f(0.0f, 1.0f, 0.0f), M_PI)
       * ce::Matrix4f::Rotation(ce::Vector3f(1.0f, 0.0f, 0.0f), M_PI / 2.0f)
-      * ce::Matrix4f::Translation(0, 2, 0));
+  );
 
   world->Attach(entity);
 
   global_skeleton = &meshState->GetSkeleton();
 
+
+  ce::SkeletonAnimationPack* animationPack = ce::AssetManager::Get()->Load<ce::SkeletonAnimationPack>("/skinned_mesh.fbx");
+  global_animation = animationPack->Get("Armature|MyAnimation01");
 }
 
 
@@ -901,7 +907,7 @@ void setup_world(ce::World *world)
   generate_camera(world);
   generate_physics(world, material);
 //  generate_batched_test_grid(world, material);
-//  generate_test_grid(world, material);
+  generate_test_grid(world, material);
 
   add_skeleton_mesh(world, skinnedMaterial);
 
@@ -1098,10 +1104,11 @@ int main(int argc, char **argv)
 
       for (int i = 0; i < 4; i++)
       {
-        ce::Matrix4f boneMatrix = global_skeleton->GetBone(i);
-        boneMatrix.ClearRotation();
-        boneMatrix.SetRotationY(rotation[i]);
-        global_skeleton->SetBone(i, boneMatrix);
+        ce::Skeleton::Bone &bone = global_skeleton->GetBone(i);
+//        boneMatrix.ClearRotation();
+//        boneMatrix.SetRotationY(rotation[i]);
+//        global_skeleton->SetBone(i, boneMatrix);
+        bone.rotation = ce::Quaternion::FromAxisAngle(ce::Vector3f(0.0f, 1.0f, 0.0f), -rotation[i]);
 
         if (rotation_direction[i])
         {

@@ -24,6 +24,10 @@ set(SOURCES
         types.hh
 
 
+        animation/skeletonanimation.cc
+        animation/skeletonanimation.hh
+        animation/skeletonanimationplayer.cc
+        animation/skeletonanimationplayer.hh
 
 
         entity/camerastate.cc

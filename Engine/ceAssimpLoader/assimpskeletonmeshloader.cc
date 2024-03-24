@@ -140,7 +140,11 @@ void AssimpSkeletonMeshLoader::ReadBone(aiNode *node,
   {
     boneID = skeleton.AddChild(nodeName, parentBoneID);
   }
-  skeleton.SetBone(boneID, localMatrix);
+
+  Quaternion rotation = Quaternion::FromMatrix(localMatrix);
+  Skeleton::Bone &bone = skeleton.GetBone(boneID);
+  bone.rotation = rotation;
+  bone.offset = localMatrix.GetTranslation();
 
   for (unsigned i = 0, in = node->mNumChildren; i < in; ++i)
   {

@@ -11,6 +11,8 @@ set(SOURCES
         assimpmeshloader.hh
         assimpconverter.cc
         assimpconverter.hh
+        assimpskeletonanimationloader.cc
+        assimpskeletonanimationloader.hh
         assimpskeletonmeshloader.cc
         assimpskeletonmeshloader.hh
     )
