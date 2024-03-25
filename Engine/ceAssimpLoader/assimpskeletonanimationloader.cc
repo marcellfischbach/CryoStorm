@@ -69,7 +69,7 @@ SkeletonAnimation *AssimpSkeletonAnimationLoader::Read(aiAnimation *animation) c
 {
   SkeletonAnimation *result = new SkeletonAnimation();
   result->SetName(std::string(animation->mName.C_Str()));
-  result->SetDuration((float)animation->mDuration);
+  result->SetNumberOfFrames((float) animation->mDuration);
   result->SetFramesPerSecond((float)animation->mTicksPerSecond);
 
   for (int i = 0; i < animation->mNumChannels; ++i)
@@ -84,7 +84,7 @@ SkeletonAnimation *AssimpSkeletonAnimationLoader::Read(aiAnimation *animation) c
       result->AddRotationFrame(channelName, rotation.mTime, Quaternion(rotation.mValue.x,
                                                                        rotation.mValue.y,
                                                                        rotation.mValue.z,
-                                                                       rotation.mValue.w));
+                                                                       -rotation.mValue.w));
     }
 
     for (int r = 0; r < channel->mNumPositionKeys; ++r)

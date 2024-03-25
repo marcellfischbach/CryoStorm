@@ -9,6 +9,7 @@
 namespace ce
 {
 
+class Skeleton;
 
 CE_CLASS()
 class CE_CORE_API SkeletonAnimation : public CE_SUPER(iObject)
@@ -18,17 +19,17 @@ CE_CLASS_GEN_OBJECT;
 public:
   struct FrameRotation
   {
-    float     time;
+    float     frame;
     Quaternion rotation;
   };
   struct FramePosition
   {
-    float   time;
+    float   frame;
     Vector3f position;
   };
   struct FrameScale
   {
-    float   time;
+    float   frame;
     Vector3f scale;
   };
 
@@ -49,19 +50,26 @@ public:
   void SetName(const std::string &name);
   const std::string &GetName() const;
 
-  void SetDuration(float duration);
-  float GetDuration () const;
+  void SetNumberOfFrames(float numberOfFrames);
+  float GetNumberOfFrames() const;
   
   void SetFramesPerSecond(float framesPerSecond);
   float GetFramesPerSecond () const;
-  
+
+  void SetLoop(bool loop);
+  bool IsLoop () const;
+
+  float GetDuration() const;
+
+
+  void PushSkeleton(ce::Skeleton *skeleton, float frame, float blendFactor) const;
 
   void AddRotationFrame(const std::string &channelName,
-                        float time,
+                        float frame,
                         const Quaternion &rotation);
 
   void AddPositionFrame(const std::string &channelName,
-                        float time,
+                        float frame,
                         const Vector3f &position);
 
   void AddScaleFrame(const std::string &channelName,
@@ -69,9 +77,11 @@ public:
                         const Vector3f &scale);
 
 private:
-  std::string          m_name;
-  float                m_duration;
-  float                m_framesPerSecond;
+
+  std::string m_name;
+  float       m_numberOfFrames;
+  float       m_framesPerSecond;
+  bool        m_loop;
   Channel &GetChannel(const std::string &channelName);
   std::vector<Channel> m_channels;
 };

@@ -7,6 +7,7 @@
 #include <ceCore/coremodule.hh>
 #include <ceCore/settings.hh>
 #include <ceCore/animation/skeletonanimation.hh>
+#include <ceCore/animation/skeletonanimationplayer.hh>
 #include <ceCore/entity/camerastate.hh>
 #include <ceCore/entity/collisionstate.hh>
 #include <ceCore/entity/entity.hh>
@@ -644,6 +645,7 @@ void generate_test_grid(ce::World *world, ce::iMaterial *material)
 
 ce::Skeleton *global_skeleton = nullptr;
 ce::SkeletonAnimation *global_animation = nullptr;
+ce::SkeletonAnimationPlayer *global_player = nullptr;
 
 void add_skeleton_mesh(ce::World *world, ce::iMaterial *material)
 {
@@ -668,6 +670,11 @@ void add_skeleton_mesh(ce::World *world, ce::iMaterial *material)
 
   ce::SkeletonAnimationPack* animationPack = ce::AssetManager::Get()->Load<ce::SkeletonAnimationPack>("/skinned_mesh.fbx");
   global_animation = animationPack->Get("Armature|MyAnimation01");
+  global_animation->SetLoop(true);
+
+  global_player = new ce::SkeletonAnimationPlayer();
+  global_player->SetSkeleton(global_skeleton);
+  global_player->SetAnimation(global_animation);
 }
 
 
@@ -1028,6 +1035,7 @@ int main(int argc, char **argv)
     rotation_direction[i] = true;
   }
 
+  global_player->Start();
   bool first = true;
   while (true)
   {
@@ -1102,36 +1110,7 @@ int main(int argc, char **argv)
         debugCache->SetDebug(!debugCache->IsDebug());
       }
 
-      for (int i = 0; i < 4; i++)
-      {
-        ce::Skeleton::Bone &bone = global_skeleton->GetBone(i);
-//        boneMatrix.ClearRotation();
-//        boneMatrix.SetRotationY(rotation[i]);
-//        global_skeleton->SetBone(i, boneMatrix);
-        bone.rotation = ce::Quaternion::FromAxisAngle(ce::Vector3f(0.0f, 1.0f, 0.0f), -rotation[i]);
-
-        if (rotation_direction[i])
-        {
-          rotation[i] += tpf * 0.1f;
-          if (rotation[i] > M_PI / 4.0f)
-          {
-            rotation[i]           = M_PI / 4.0f;
-            rotation_direction[i] = false;
-          }
-        }
-        else
-        {
-          rotation[i] -= tpf * 0.1f;
-          if (rotation[i] < 0.0f)
-          {
-            rotation[i]           = 0.0f;
-            rotation_direction[i] = true;
-          }
-        }
-
-
-      }
-      global_skeleton->UpdateBones();
+      global_player->Update(tpf);
 
       world->Update(tpf);
     }

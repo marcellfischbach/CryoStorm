@@ -13,6 +13,7 @@ Skeleton::Bone Skeleton::IllegalBone = {
     ILLEGAL_BONE_NAME,
     std::vector<size_t>(),
     Vector3f(),
+    Quaternion(),
     Quaternion()
 };
 
@@ -71,6 +72,7 @@ size_t Skeleton::Add(const std::string &name)
       name,
       std::vector<size_t>(),
       Vector3f(),
+      Quaternion(),
       Quaternion()
   };
   m_bones.push_back(bone);

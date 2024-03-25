@@ -24,6 +24,7 @@ public:
     std::vector<size_t> children;
     Vector3f            offset;
     Quaternion          rotation;
+    Quaternion          poseRotation;
   };
 
   static const size_t      ILLEGAL_BONE_ID = ~0x00;

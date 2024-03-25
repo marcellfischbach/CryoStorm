@@ -17,13 +17,19 @@ struct CE_CORE_API Quaternion
   float w;
 
   CE_FORCEINLINE explicit Quaternion(float x = 0.0f, float y = 0.0f, float z = 0.0f, float w = 1.0f)
-      : x(x), y(y), z(z), w(w)
+      : x(x)
+      , y(y)
+      , z(z)
+      , w(w)
   {
 
   }
 
   CE_FORCEINLINE explicit Quaternion(const Vector3f &v, float w = 0.0f)
-      : x(v.x), y(v.y), z(v.z), w(w)
+      : x(v.x)
+      , y(v.y)
+      , z(v.z)
+      , w(w)
   {
 
   }
@@ -62,6 +68,7 @@ struct CE_CORE_API Quaternion
     this->z = axisZ * s;
     this->w = c;
   }
+
 
   CE_FORCEINLINE void SetAxisAngle(const Vector3f &v, float angle)
   {
@@ -148,6 +155,42 @@ struct CE_CORE_API Quaternion
         0.0f, 0.0f, 0.0f, 1.0f);
     return m;
   }
+
+
+  CE_FORCEINLINE static Quaternion Blend (const Quaternion &q0, const Quaternion &q1, float f)
+  {
+    float f0 = 1.0f - f;
+    float f1 = f;
+    return Quaternion(
+        q0.x * f0 + q1.x * f1,
+        q0.y * f0 + q1.y * f1,
+        q0.z * f0 + q1.z * f1,
+        q0.w * f0 + q1.w * f1
+        );
+  }
+
+  CE_FORCEINLINE friend Quaternion operator*(const Quaternion &q, float f)
+  {
+    return Quaternion(q.x * f, q.y * f, q.z * f, q.w * f);
+  }
+
+  CE_FORCEINLINE friend Quaternion operator+(const Quaternion &q0, const Quaternion &q1)
+  {
+    return Quaternion(q0.x + q1.x,
+                      q0.y + q1.y,
+                      q0.z + q1.z,
+                      q0.w + q1.w);
+  }
+
+
+  CE_FORCEINLINE friend Quaternion operator-(const Quaternion &q0, const Quaternion &q1)
+  {
+    return Quaternion(q0.x - q1.x,
+                      q0.y - q1.y,
+                      q0.z - q1.z,
+                      q0.w - q1.w);
+  }
+
 
 
   CE_FORCEINLINE friend Quaternion operator*(const Quaternion &q0, const Quaternion &q1)

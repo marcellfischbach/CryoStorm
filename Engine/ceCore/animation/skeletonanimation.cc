@@ -1,10 +1,15 @@
 #include <ceCore/animation/skeletonanimation.hh>
+#include <ceCore/graphics/skeleton.hh>
 
 namespace ce
 {
 
 SkeletonAnimation::SkeletonAnimation()
-    : m_channels()
+    : m_name("")
+    , m_numberOfFrames(0.0f)
+    , m_framesPerSecond(24.0f)
+    , m_loop(false)
+    , m_channels()
 {
   CE_CLASS_GEN_CONSTR;
 }
@@ -24,14 +29,14 @@ const std::string &SkeletonAnimation::GetName() const
   return m_name;
 }
 
-void SkeletonAnimation::SetDuration(float duration)
+void SkeletonAnimation::SetNumberOfFrames(float numberOfFrames)
 {
-  m_duration = duration;
+  m_numberOfFrames = numberOfFrames;
 }
 
-float SkeletonAnimation::GetDuration() const
+float SkeletonAnimation::GetNumberOfFrames() const
 {
-  return m_duration;
+  return m_numberOfFrames;
 }
 
 void SkeletonAnimation::SetFramesPerSecond(float framesPerSecond)
@@ -44,50 +49,129 @@ float SkeletonAnimation::GetFramesPerSecond() const
   return m_framesPerSecond;
 }
 
+void SkeletonAnimation::SetLoop(bool loop)
+{
+  m_loop = loop;
+}
+
+bool SkeletonAnimation::IsLoop() const
+{
+  return m_loop;
+}
+
+float SkeletonAnimation::GetDuration() const
+{
+  return m_numberOfFrames / m_framesPerSecond;
+}
+
+void skeleton_animation_update_bone_rotation(const SkeletonAnimation::Channel &channel,
+                                             Skeleton::Bone &bone,
+                                             float frame,
+                                             float blendFactor)
+{
+  if (channel.rotations.empty())
+  {
+    return;
+  }
+
+  auto last = &channel.rotations[0];
+  for (const auto &frameX1: channel.rotations)
+  {
+    if (frameX1.frame >= frame)
+    {
+      auto &frameX0 = *last;
+      float a = (frame - frameX0.frame) / (frameX1.frame - frameX0.frame);
+
+      Quaternion quat = Quaternion::Blend(frameX0.rotation, frameX1.rotation, a);
+      bone.rotation = bone.rotation + (quat * bone.poseRotation) * blendFactor;
+      return;
+    }
+
+    last = &frameX1;
+  }
+
+}
+
+void skeleton_animation_update_bone_position(const SkeletonAnimation::Channel &channel,
+                                             Skeleton::Bone &bone,
+                                             float frame,
+                                             float blendFactor)
+{
+
+}
+
+void skeleton_animation_update_bone_scale(const SkeletonAnimation::Channel &channel,
+                                          Skeleton::Bone &bone,
+                                          float frame,
+                                          float blendFactor)
+{
+
+}
+
+void skeleton_animation_update_bone(const SkeletonAnimation::Channel &channel,
+                                    Skeleton::Bone &bone,
+                                    float frame,
+                                    float blendFactor)
+{
+  skeleton_animation_update_bone_rotation(channel, bone, frame, blendFactor);
+  skeleton_animation_update_bone_position(channel, bone, frame, blendFactor);
+  skeleton_animation_update_bone_scale(channel, bone, frame, blendFactor);
+}
+
+
+void SkeletonAnimation::PushSkeleton(ce::Skeleton *skeleton, float frame, float blendFactor) const
+{
+  for (const auto &channel: m_channels)
+  {
+    Skeleton::Bone &bone = skeleton->GetBone(skeleton->IndexOf(channel.name));
+    ce::skeleton_animation_update_bone(channel, bone, frame, blendFactor);
+  }
+}
+
 void SkeletonAnimation::AddRotationFrame(const std::string &channelName,
-                                         float time,
+                                         float frame,
                                          const Quaternion &rotation)
 {
-  FrameRotation frame {
-      time,
+  FrameRotation rotFrame {
+      frame,
       rotation,
   };
 
   Channel   &channel = GetChannel(channelName);
   for (auto it       = channel.rotations.begin(); it != channel.rotations.end(); it++)
   {
-    if (it->time > time)
+    if (it->frame > frame)
     {
-      channel.rotations.insert(it, frame);
+      channel.rotations.insert(it, rotFrame);
       return;
     }
   }
-  channel.rotations.push_back(frame);
+  channel.rotations.push_back(rotFrame);
 }
 
-void SkeletonAnimation::AddPositionFrame(const std::string &channelName, float time, const ce::Vector3f &position)
+void SkeletonAnimation::AddPositionFrame(const std::string &channelName, float frame, const ce::Vector3f &position)
 {
-  FramePosition frame {
-      time,
+  FramePosition posFrame {
+      frame,
       position,
   };
 
   Channel   &channel = GetChannel(channelName);
   for (auto it       = channel.positions.begin(); it != channel.positions.end(); it++)
   {
-    if (it->time > time)
+    if (it->frame > frame)
     {
-      channel.positions.insert(it, frame);
+      channel.positions.insert(it, posFrame);
       return;
     }
   }
-  channel.positions.push_back(frame);
+  channel.positions.push_back(posFrame);
 }
 
 
 void SkeletonAnimation::AddScaleFrame(const std::string &channelName, float time, const ce::Vector3f &scale)
 {
-  FrameScale frame {
+  FrameScale scaleFrame {
       time,
       scale,
   };
@@ -95,14 +179,13 @@ void SkeletonAnimation::AddScaleFrame(const std::string &channelName, float time
   Channel   &channel = GetChannel(channelName);
   for (auto it       = channel.scales.begin(); it != channel.scales.end(); it++)
   {
-    if (it->time > time)
-
+    if (it->frame > time)
     {
-      channel.scales.insert(it, frame);
+      channel.scales.insert(it, scaleFrame);
       return;
     }
   }
-  channel.scales.push_back(frame);
+  channel.scales.push_back(scaleFrame);
 }
 
 
