@@ -647,6 +647,28 @@ ce::Skeleton *global_skeleton = nullptr;
 ce::SkeletonAnimation *global_animation = nullptr;
 ce::SkeletonAnimationPlayer *global_player = nullptr;
 
+ce::Entity* bones[4];
+
+ce::Entity *add_bone (ce::World *world, ce::iMaterial* material)
+{
+
+  ce::Mesh *mesh = ce::AssetManager::Get()->Load<ce::Mesh>("/bone_x.fbx");
+  if (!mesh)
+  {
+    return nullptr;
+  }
+
+  ce::Entity* entity = new ce::Entity("Bone");
+  ce::StaticMeshState *meshState = new ce::StaticMeshState();
+  meshState->SetMesh(mesh);
+  meshState->SetMaterial(0, material);
+  entity->Attach(meshState);
+  entity->GetRoot()->SetLocalMatrix(ce::Matrix4f());
+
+  world->Attach (entity);
+  return entity;
+}
+
 void add_skeleton_mesh(ce::World *world, ce::iMaterial *material)
 {
 
@@ -676,6 +698,8 @@ void add_skeleton_mesh(ce::World *world, ce::iMaterial *material)
   global_player->SetSkeleton(global_skeleton);
   global_player->SetAnimation(global_animation);
 }
+
+
 
 
 void generate_batched_test_grid(ce::World *world, ce::iMaterial *material)
@@ -918,6 +942,11 @@ void setup_world(ce::World *world)
 
   add_skeleton_mesh(world, skinnedMaterial);
 
+  bones[0] = add_bone(world, material);
+  bones[1] = add_bone(world, material);
+  bones[2] = add_bone(world, material);
+  bones[3] = add_bone(world, material);
+
 #if 1
   shadowLightState = add_directional_light(world,
                                            ce::Vector3f(1.0f, 0.2f, 0.0f),
@@ -1111,6 +1140,18 @@ int main(int argc, char **argv)
       }
 
       global_player->Update(tpf);
+
+      ce::Matrix4f boneBase = ce::Matrix4f::Translation(0, 2, 0)
+      * ce::Matrix4f::Rotation(ce::Vector3f(0.0f, 1.0f, 0.0f), M_PI)
+      * ce::Matrix4f::Rotation(ce::Vector3f(1.0f, 0.0f, 0.0f), M_PI / 2.0f);
+      for (int i=0; i<4; i++) 
+      {
+        ce::Matrix4f mat = global_skeleton->GetBone(i).globalMatrix;
+        mat = boneBase * mat;
+
+        bones[i]->GetRoot()->SetLocalMatrix(mat);
+        
+      }
 
       world->Update(tpf);
     }

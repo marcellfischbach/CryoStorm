@@ -83,7 +83,7 @@ void skeleton_animation_update_bone_rotation(const SkeletonAnimation::Channel &c
       float a = (frame - frameX0.frame) / (frameX1.frame - frameX0.frame);
 
       Quaternion quat = Quaternion::Blend(frameX0.rotation, frameX1.rotation, a);
-      bone.rotation = bone.rotation + (quat * bone.poseRotation) * blendFactor;
+      bone.rotation = bone.rotation + quat  * blendFactor;
       return;
     }
 

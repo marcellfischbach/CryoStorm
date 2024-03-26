@@ -25,6 +25,7 @@ public:
     Vector3f            offset;
     Quaternion          rotation;
     Quaternion          poseRotation;
+    Matrix4f            globalMatrix;
   };
 
   static const size_t      ILLEGAL_BONE_ID = ~0x00;

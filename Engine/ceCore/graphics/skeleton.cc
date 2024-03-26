@@ -14,7 +14,8 @@ Skeleton::Bone Skeleton::IllegalBone = {
     std::vector<size_t>(),
     Vector3f(),
     Quaternion(),
-    Quaternion()
+    Quaternion(),
+    Matrix4f()
 };
 
 Skeleton::Skeleton()
@@ -73,7 +74,8 @@ size_t Skeleton::Add(const std::string &name)
       std::vector<size_t>(),
       Vector3f(),
       Quaternion(),
-      Quaternion()
+      Quaternion(),
+      Matrix4f()
   };
   m_bones.push_back(bone);
   m_skeletonBones.emplace_back();
@@ -156,6 +158,7 @@ void Skeleton::UpdateBone(size_t idx, const ce::Matrix4f &parent)
 
 
   Matrix4f global = parent * local;
+  bone.globalMatrix = global;
   m_skeletonBones[idx] = global * m_poseMatrices[idx];
 
   for (const size_t &childIdx: bone.children)
