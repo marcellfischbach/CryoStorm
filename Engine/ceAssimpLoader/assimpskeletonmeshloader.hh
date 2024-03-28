@@ -27,7 +27,7 @@ public:
 
 private:
   void ReadSkeleton(aiNode* node, const Matrix4f &parentMatrix, LoaderData& d) const;
-  void ReadBone(aiNode* node, const Matrix4f &parentMatrix, LoaderData& d, size_t parentBoneID) const;
+  void ReadBone(aiNode* node, LoaderData& d, size_t parentBoneID) const;
   void ReadMesh(aiNode* node, const Matrix4f &parentMatrix, LoaderData& d) const;
 
 

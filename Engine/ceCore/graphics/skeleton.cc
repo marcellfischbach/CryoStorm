@@ -20,6 +20,7 @@ Skeleton::Bone Skeleton::IllegalBone = {
 
 Skeleton::Skeleton()
     : Object()
+    , m_base()
 {
   CE_CLASS_GEN_CONSTR;
 }
@@ -102,6 +103,16 @@ size_t Skeleton::AddChild(const std::string &name, size_t parent)
   return idx;
 }
 
+void Skeleton::SetBase(const ce::Matrix4f &base)
+{
+  m_base = base;
+}
+
+const Matrix4f &Skeleton::GetBase() const
+{
+  return m_base;
+}
+
 size_t Skeleton::GetNumberOfBones() const
 {
   return m_bones.size();
@@ -144,7 +155,7 @@ void Skeleton::UpdateBones()
   identity.SetIdentity();
   for (const size_t &idx: m_rootBones)
   {
-    UpdateBone(idx, identity);
+    UpdateBone(idx, m_base);
   }
 }
 

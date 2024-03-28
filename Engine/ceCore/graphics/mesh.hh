@@ -77,7 +77,8 @@ public:
   void SetDefaultMaterial(Size idx, iMaterial* defaultMaterial);
   Size GetNumberOfMaterialSlots() const;
   const MaterialSlot& GetMaterialSlot(Size idx) const;
-  
+  size_t IndexOfMaterialSlot(const std::string &materialName) const;
+
 
 
   void AddSubMesh(iRenderMesh* mesh, Size materialSlotIdx);

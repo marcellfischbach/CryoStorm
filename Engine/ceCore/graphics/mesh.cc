@@ -83,6 +83,17 @@ const Mesh::MaterialSlot& Mesh::GetMaterialSlot(Size idx) const
   return m_materialSlots[idx];
 }
 
+size_t Mesh::IndexOfMaterialSlot(const std::string &materialName) const
+{
+  for (size_t i=0; i<m_materialSlots.size(); i++)
+  {
+    if (m_materialSlots[i].m_name == materialName)
+    {
+      return i;
+    }
+  }
+  return ~0x00;
+}
 
 
 

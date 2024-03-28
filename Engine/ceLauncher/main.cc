@@ -643,13 +643,13 @@ void generate_test_grid(ce::World *world, ce::iMaterial *material)
 
 }
 
-ce::Skeleton *global_skeleton = nullptr;
-ce::SkeletonAnimation *global_animation = nullptr;
-ce::SkeletonAnimationPlayer *global_player = nullptr;
+ce::Skeleton                *global_skeleton  = nullptr;
+ce::SkeletonAnimation       *global_animation = nullptr;
+ce::SkeletonAnimationPlayer *global_player    = nullptr;
 
-ce::Entity* bones[4];
+ce::Entity *bones[4];
 
-ce::Entity *add_bone (ce::World *world, ce::iMaterial* material)
+ce::Entity *add_bone(ce::World *world, ce::iMaterial *material)
 {
 
   ce::Mesh *mesh = ce::AssetManager::Get()->Load<ce::Mesh>("/bone_x.fbx");
@@ -658,39 +658,38 @@ ce::Entity *add_bone (ce::World *world, ce::iMaterial* material)
     return nullptr;
   }
 
-  ce::Entity* entity = new ce::Entity("Bone");
+  ce::Entity          *entity    = new ce::Entity("Bone");
   ce::StaticMeshState *meshState = new ce::StaticMeshState();
   meshState->SetMesh(mesh);
   meshState->SetMaterial(0, material);
   entity->Attach(meshState);
   entity->GetRoot()->SetLocalMatrix(ce::Matrix4f());
 
-  world->Attach (entity);
+//  world->Attach(entity);
   return entity;
 }
 
 void add_skeleton_mesh(ce::World *world, ce::iMaterial *material)
 {
 
-  ce::SkeletonMesh *mesh = ce::AssetManager::Get()->Load<ce::SkeletonMesh>("/skinned_mesh.fbx");
-  ce::Entity *entity = new ce::Entity("Skeleton Entity");
+  ce::SkeletonMesh      *mesh      = ce::AssetManager::Get()->Load<ce::SkeletonMesh>("/skinned_mesh.fbx");
+  ce::Entity            *entity    = new ce::Entity("Skeleton Entity");
   ce::SkeletonMeshState *meshState = new ce::SkeletonMeshState();
   meshState->SetMesh(mesh);
   meshState->SetMaterial(0, material);
   entity->Attach(meshState);
 
-  entity->GetRoot()->SetLocalMatrix(
-      ce::Matrix4f::Translation(0, 2, 0)
-      * ce::Matrix4f::Rotation(ce::Vector3f(0.0f, 1.0f, 0.0f), M_PI)
-      * ce::Matrix4f::Rotation(ce::Vector3f(1.0f, 0.0f, 0.0f), M_PI / 2.0f)
-  );
+  entity->GetRoot()->GetTransform()
+        .SetRotation(ce::Quaternion::FromAxisAngle(1.0f, 0.0f, 0.0f, -M_PI / 2.0f * 1.0f))
+        .Finish();
 
   world->Attach(entity);
 
   global_skeleton = &meshState->GetSkeleton();
 
 
-  ce::SkeletonAnimationPack* animationPack = ce::AssetManager::Get()->Load<ce::SkeletonAnimationPack>("/skinned_mesh.fbx");
+  ce::SkeletonAnimationPack
+      *animationPack = ce::AssetManager::Get()->Load<ce::SkeletonAnimationPack>("/skinned_mesh.fbx");
   global_animation = animationPack->Get("Armature|MyAnimation01");
   global_animation->SetLoop(true);
 
@@ -698,8 +697,6 @@ void add_skeleton_mesh(ce::World *world, ce::iMaterial *material)
   global_player->SetSkeleton(global_skeleton);
   global_player->SetAnimation(global_animation);
 }
-
-
 
 
 void generate_batched_test_grid(ce::World *world, ce::iMaterial *material)
@@ -928,17 +925,95 @@ ce::LightState *add_point_light(ce::World *world,
   return lightState;
 }
 
+void generate_axis_grid(ce::World *world)
+{
+  auto sphere = create_sphere_mesh(0.25, 16, 12.0f);
+  auto matR   = ce::AssetManager::Get()->Get<ce::iMaterial>("/materials/DefaultRed.mat");
+  auto matG   = ce::AssetManager::Get()->Get<ce::iMaterial>("/materials/DefaultGreen.mat");
+  auto matB   = ce::AssetManager::Get()->Get<ce::iMaterial>("/materials/DefaultBlue.mat");
+
+  auto meshR = new ce::Mesh();
+  auto meshG = new ce::Mesh();
+  auto meshB = new ce::Mesh();
+  meshR->AddMaterialSlot("Default", matR);
+  meshG->AddMaterialSlot("Default", matG);
+  meshB->AddMaterialSlot("Default", matB);
+  meshR->AddSubMesh(sphere, 0);
+  meshG->AddSubMesh(sphere, 0);
+  meshB->AddSubMesh(sphere, 0);
+
+
+  int      gridSize = 10;
+  for (int i        = 0; i < gridSize; i++)
+  {
+    {
+      auto entity          = new ce::Entity();
+      auto meshStateSphere = new ce::StaticMeshState("Mesh");
+      meshStateSphere->SetStatic(true);
+      meshStateSphere->GetTransform().SetTranslation((float) (i + 1) * 0.5f, 0.0f, 0.0f).Finish();
+      meshStateSphere->SetMesh(meshR);
+      entity->Attach(meshStateSphere);
+      world->Attach(entity);
+    }
+    {
+      auto entity          = new ce::Entity();
+      auto meshStateSphere = new ce::StaticMeshState("Mesh");
+      meshStateSphere->SetStatic(true);
+      meshStateSphere->GetTransform().SetTranslation(0.0f, (float) (i + 1) * 0.5f, 0.0f).Finish();
+      meshStateSphere->SetMesh(meshG);
+      entity->Attach(meshStateSphere);
+      world->Attach(entity);
+    }
+    {
+      auto entity          = new ce::Entity();
+      auto meshStateSphere = new ce::StaticMeshState("Mesh");
+      meshStateSphere->SetStatic(true);
+      meshStateSphere->GetTransform().SetTranslation(0.0f, 0.0f, (float) (i + 1) * 0.5f).Finish();
+      meshStateSphere->SetMesh(meshB);
+      entity->Attach(meshStateSphere);
+      world->Attach(entity);
+    }
+
+  }
+}
+
+void generate_cube_fbx(ce::World *world)
+{
+  auto mat  = ce::AssetManager::Get()->Get<ce::iMaterial>("/materials/Default.mat");
+  auto matR = ce::AssetManager::Get()->Get<ce::iMaterial>("/materials/DefaultRed.mat");
+  auto matG = ce::AssetManager::Get()->Get<ce::iMaterial>("/materials/DefaultGreen.mat");
+  auto matB = ce::AssetManager::Get()->Get<ce::iMaterial>("/materials/DefaultBlue.mat");
+
+  ce::Mesh *mesh = ce::AssetManager::Get()->Get<ce::Mesh>("/cube.fbx");
+  mesh->SetDefaultMaterial(mesh->IndexOfMaterialSlot("Material"), mat);
+  mesh->SetDefaultMaterial(mesh->IndexOfMaterialSlot("Red"), matR);
+  mesh->SetDefaultMaterial(mesh->IndexOfMaterialSlot("Green"), matG);
+  mesh->SetDefaultMaterial(mesh->IndexOfMaterialSlot("Blue"), matB);
+
+  auto entity          = new ce::Entity();
+  auto meshStateSphere = new ce::StaticMeshState("Mesh");
+  meshStateSphere->SetStatic(true);
+  meshStateSphere->GetTransform().SetRotation(ce::Quaternion::FromAxisAngle(1.0f, 0.0f, 0.0f, -M_PI / 2.0f)).Finish();
+  meshStateSphere->SetMesh(mesh);
+  entity->Attach(meshStateSphere);
+  world->Attach(entity);
+}
+
 void setup_world(ce::World *world)
 {
+
   auto assetMan        = ce::AssetManager::Get();
   auto material        = assetMan->Get<ce::iMaterial>("/materials/Default.mat");
   auto skinnedMaterial = assetMan->Get<ce::iMaterial>("/materials/DefaultSkinned.mat");
+
 
   generate_terrain(world);
   generate_camera(world);
   generate_physics(world, material);
 //  generate_batched_test_grid(world, material);
   generate_test_grid(world, material);
+  generate_axis_grid(world);
+//  generate_cube_fbx(world);
 
   add_skeleton_mesh(world, skinnedMaterial);
 
@@ -1142,15 +1217,15 @@ int main(int argc, char **argv)
       global_player->Update(tpf);
 
       ce::Matrix4f boneBase = ce::Matrix4f::Translation(0, 2, 0)
-      * ce::Matrix4f::Rotation(ce::Vector3f(0.0f, 1.0f, 0.0f), M_PI)
-      * ce::Matrix4f::Rotation(ce::Vector3f(1.0f, 0.0f, 0.0f), M_PI / 2.0f);
-      for (int i=0; i<4; i++) 
+                              * ce::Matrix4f::Rotation(ce::Vector3f(0.0f, 1.0f, 0.0f), M_PI)
+                              * ce::Matrix4f::Rotation(ce::Vector3f(1.0f, 0.0f, 0.0f), M_PI / 2.0f);
+      for (int     i        = 0; i < 4; i++)
       {
         ce::Matrix4f mat = global_skeleton->GetBone(i).globalMatrix;
         mat = boneBase * mat;
 
         bones[i]->GetRoot()->SetLocalMatrix(mat);
-        
+
       }
 
       world->Update(tpf);

@@ -40,6 +40,9 @@ public:
   CE_NODISCARD size_t AddRoot(const std::string &name);
   CE_NODISCARD size_t AddChild(const std::string &name, size_t parent);
 
+  void SetBase(const Matrix4f &base);
+  const Matrix4f &GetBase () const;
+
   void UpdateBones ();
 
 
@@ -66,6 +69,7 @@ private:
   std::vector<Bone>     m_bones;
   std::vector<Matrix4f> m_skeletonBones;
   std::vector<Matrix4f> m_poseMatrices;
+  Matrix4f              m_base;
   static Bone           IllegalBone;
 };
 
