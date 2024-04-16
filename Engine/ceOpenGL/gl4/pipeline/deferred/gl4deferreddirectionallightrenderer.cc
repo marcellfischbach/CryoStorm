@@ -73,7 +73,7 @@ void GL4DeferredDirectionalLightRenderer::Render(const Camera *camera,
   {
     m_pssmRenderer.SetDevice(m_device);
     m_pssmRenderer.SetScene(m_scene);
-    m_pssmRenderer.SetDepthBuffer(gBuffer->GetDepth());
+    m_pssmRenderer.SetBuffers(gBuffer->GetDepth(), gBuffer->GetNormal());
     m_pssmRenderer.SetShadowMap(GetShadowMap());
     m_pssmRenderer.RenderShadow(light, *camera, *projector);
     lrs = &m_shadow;

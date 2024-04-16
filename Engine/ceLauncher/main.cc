@@ -683,7 +683,7 @@ void add_skeleton_mesh(ce::World *world, ce::iMaterial *material)
         .SetRotation(ce::Quaternion::FromAxisAngle(1.0f, 0.0f, 0.0f, -M_PI / 2.0f * 1.0f))
         .Finish();
 
-  world->Attach(entity);
+//  world->Attach(entity);
 
   global_skeleton = &meshState->GetSkeleton();
 

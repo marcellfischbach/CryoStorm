@@ -60,7 +60,7 @@ void GL4ForwardDirectionalLightRenderer::RenderShadowMaps(const Camera &camera,
 {
   m_pssmRenderer.SetDevice(m_device);
   m_pssmRenderer.SetScene(m_scene);
-  m_pssmRenderer.SetDepthBuffer(m_depthBuffer);
+  m_pssmRenderer.SetBuffers(m_depthBuffer, nullptr); // no normal buffer present in forward shading
 
 
   size_t lightIdx = 0;

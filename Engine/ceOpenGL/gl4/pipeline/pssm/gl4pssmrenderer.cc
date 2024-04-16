@@ -58,11 +58,11 @@ void GL4PSSMRenderer::Initialize(ce::Settings &settings)
   }
 
   Vector2f distance       = settings.GetVector2f("directional_light.shadow_map.filter.distance", Vector2f(1, 25));
-  float    radius         = settings.GetFloat("directional_light.shadow_map.filter.radius", 10.0f);
-  float    samples        = settings.GetFloat("directional_light.shadow_map.filter.samples", 25.0f);
+  float    radiusPerCent  = settings.GetFloat("directional_light.shadow_map.filter.radius", 1.0f);
+  float    samplesFactor  = settings.GetFloat("directional_light.shadow_map.filter.samplesFactor", 1.0f);
   float    sampleDistance = settings.GetFloat("directional_light.shadow_map.filter.sampleDistance", 0.1f);
 
-  m_shadowMapFilter.Initialize(Vector2f(distance.x, distance.y - distance.x), radius, samples, sampleDistance);
+  m_shadowMapFilter.Initialize(Vector2f(distance.x, distance.y - distance.x), radiusPerCent / 100.0f, samplesFactor, sampleDistance);
 
 
   m_shadowMappingShader = AssetManager::Get()->Get<iShader>(
@@ -83,11 +83,17 @@ void GL4PSSMRenderer::SetDevice(GL4Device *device)
   CE_SET(m_device, device);
 }
 
-void GL4PSSMRenderer::SetDepthBuffer(iTexture2D *depthBuffer)
+void GL4PSSMRenderer::SetBuffers(iTexture2D *depthBuffer, iTexture2D *normalBuffer)
 {
   CE_SET(m_depthBuffer, depthBuffer);
-  m_directionalLightShadowMapWidth  = m_depthBuffer->GetWidth();
-  m_directionalLightShadowMapHeight = m_depthBuffer->GetHeight();
+  CE_SET(m_normalBuffer, normalBuffer);
+
+  if (m_depthBuffer)
+  {
+    m_directionalLightShadowMapWidth  = m_depthBuffer->GetWidth();
+    m_directionalLightShadowMapHeight = m_depthBuffer->GetHeight();
+  }
+
 }
 
 void GL4PSSMRenderer::SetScene(iGfxScene *scene)
@@ -107,8 +113,8 @@ GL4RenderTarget2D *GL4PSSMRenderer::GetShadowMap()
 
 
 void GL4PSSMRenderer::RenderShadow(const GL4DirectionalLight *directionalLight,
-                                      const ce::Camera &camera,
-                                      const ce::Projector &projector)
+                                   const ce::Camera &camera,
+                                   const ce::Projector &projector)
 {
 
   RenderShadowBuffer(directionalLight, camera, projector);
@@ -191,8 +197,8 @@ static void calc_center_position(Vector3f near[4], Vector3f far[4], Vector3f &ou
 
 
 void GL4PSSMRenderer::RenderShadowBuffer(const GL4DirectionalLight *directionalLight,
-                                            const ce::Camera &camera,
-                                            const ce::Projector &projector)
+                                         const ce::Camera &camera,
+                                         const ce::Projector &projector)
 {
 
   Vector3f splitPoints[5][4];
@@ -300,7 +306,7 @@ void GL4PSSMRenderer::RenderShadowBuffer(const GL4DirectionalLight *directionalL
 
     uint64_t        startTime = Time::GetTime();
 //    printf (" [%d @ (%.2f %.2f)]", m_meshesCache.size(), near, far);
-    size_t c = 0;
+    size_t          c         = 0;
     for (const auto &mesh: meshes)
     {
       if (mesh->IsCastShadow())
@@ -322,8 +328,8 @@ void GL4PSSMRenderer::RenderShadowBuffer(const GL4DirectionalLight *directionalL
 
 
 void GL4PSSMRenderer::RenderShadowMap(const GL4DirectionalLight *directionalLight,
-                                         const ce::Camera &camera,
-                                         const ce::Projector &projector)
+                                      const ce::Camera &camera,
+                                      const ce::Projector &projector)
 {
   m_device->ResetTextures();
   GL4RenderTarget2D *target = GetDirectionalLightShadowMapTemp();// m_directionalLightShadowMap;
@@ -377,6 +383,7 @@ void GL4PSSMRenderer::FilterShadowMap()
 
   m_shadowMapFilter.Render(m_device,
                            m_depthBuffer,
+                           m_normalBuffer,
                            GetDirectionalLightShadowMapTemp()->GetColorTexture(0),
                            m_directionalLightShadowMap
   );

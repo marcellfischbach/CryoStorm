@@ -38,7 +38,7 @@ public:
 
   void Initialize(Settings &settings);
 
-  void SetDepthBuffer (iTexture2D *depthBuffer);
+  void SetBuffers(iTexture2D *depthBuffer, iTexture2D *normalBuffer);
   void SetDevice (GL4Device *device);
   void SetScene (iGfxScene *scene);
   GL4RenderTarget2D *CreateDirectionalLightShadowMap();
@@ -67,6 +67,7 @@ private:
 
 
   iTexture2D *m_depthBuffer = nullptr;
+  iTexture2D *m_normalBuffer = nullptr;
 
   std::array<GL4RenderTarget2D*, 4> m_directionalLightShadowBuffers;
   size_t                 m_directionalLightShadowBufferSize = 0;
