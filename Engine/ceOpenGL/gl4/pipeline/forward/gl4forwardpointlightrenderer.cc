@@ -41,9 +41,9 @@ GL4ForwardPointLightRenderer::~GL4ForwardPointLightRenderer()
 {
 }
 
-void GL4ForwardPointLightRenderer::Initialize(Settings &settings)
+void GL4ForwardPointLightRenderer::Initialize()
 {
-  m_shadowRenderer.Initialize(settings);
+  m_shadowRenderer.Initialize();
 }
 
 void GL4ForwardPointLightRenderer::Clear()

@@ -39,9 +39,8 @@ GL4ForwardPipeline::GL4ForwardPipeline()
 
 void GL4ForwardPipeline::Initialize()
 {
-  Settings settings(ResourceLocator("file:///config/graphics.config"));
-  m_pointLightRenderer.Initialize(settings);
-  m_directionalLightRenderer.Initialize(settings);
+  m_pointLightRenderer.Initialize();
+  m_directionalLightRenderer.Initialize();
 
 }
 

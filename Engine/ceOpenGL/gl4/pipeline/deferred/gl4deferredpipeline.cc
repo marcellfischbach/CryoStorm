@@ -36,10 +36,9 @@ GL4DeferredPipeline::~GL4DeferredPipeline()
 
 void GL4DeferredPipeline::Initialize()
 {
-  Settings settings(ResourceLocator("file:///config/graphics.config"));
 
-  m_directionalLightRenderer.Initialize(settings);
-  m_pointLightRenderer.Initialize(settings);
+  m_directionalLightRenderer.Initialize();
+  m_pointLightRenderer.Initialize();
 }
 
 

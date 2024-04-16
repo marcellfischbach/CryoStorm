@@ -30,8 +30,9 @@ GL4PSSMRenderer::GL4PSSMRenderer()
   }
 }
 
-void GL4PSSMRenderer::Initialize(ce::Settings &settings)
+void GL4PSSMRenderer::Initialize()
 {
+  const SettingsFile &settings = Settings::Get().Graphics();
   m_shadowNear = settings.GetFloat("directional_light.shadow_map.near", 1.0f);
   m_shadowFar  = settings.GetFloat("directional_light.shadow_map.far", 1.0f);
   Vector4f splits = settings.GetVector4f("directional_light.shadow_map.cascades", Vector4f(0.0f, 1.0f, 1.0f, 1.0f));
@@ -83,10 +84,9 @@ void GL4PSSMRenderer::SetDevice(GL4Device *device)
   CE_SET(m_device, device);
 }
 
-void GL4PSSMRenderer::SetBuffers(iTexture2D *depthBuffer, iTexture2D *normalBuffer)
+void GL4PSSMRenderer::SetDepthBuffer(iTexture2D *depthBuffer)
 {
   CE_SET(m_depthBuffer, depthBuffer);
-  CE_SET(m_normalBuffer, normalBuffer);
 
   if (m_depthBuffer)
   {
@@ -383,7 +383,6 @@ void GL4PSSMRenderer::FilterShadowMap()
 
   m_shadowMapFilter.Render(m_device,
                            m_depthBuffer,
-                           m_normalBuffer,
                            GetDirectionalLightShadowMapTemp()->GetColorTexture(0),
                            m_directionalLightShadowMap
   );

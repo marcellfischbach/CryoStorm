@@ -28,7 +28,7 @@ public:
 
   bool Initialize (const Vector2f &distance, float radius, float samplesFactor, float maxSampleDistance);
 
-  void Render (GL4Device* device, iTexture2D* depthBuffer, iTexture2D* normalBuffer, iTexture2D *shadowMap, GL4RenderTarget2D *target);
+  void Render (GL4Device* device, iTexture2D* depthBuffer,  iTexture2D *shadowMap, GL4RenderTarget2D *target);
 
 
 private:
@@ -39,7 +39,6 @@ private:
 
   iShader *m_shadowMapFilterShader = nullptr;
   iShaderAttribute *m_attrFilterDepthBuffer = nullptr;
-  iShaderAttribute *m_attrFilterNormalBuffer = nullptr;
   iShaderAttribute *m_attrFilterShadowMap = nullptr;
   iShaderAttribute *m_attrFilterRadius = nullptr;
   iShaderAttribute *m_attrFilterDistance = nullptr;

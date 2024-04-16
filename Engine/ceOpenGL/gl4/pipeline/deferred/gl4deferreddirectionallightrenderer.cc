@@ -16,9 +16,9 @@ namespace ce::opengl
 {
 
 
-bool GL4DeferredDirectionalLightRenderer::Initialize(Settings &settings)
+bool GL4DeferredDirectionalLightRenderer::Initialize()
 {
-  m_pssmRenderer.Initialize(settings);
+  m_pssmRenderer.Initialize();
 
   m_nonShadow.m_shader = AssetManager::Get()->Get<iShader>(
       ResourceLocator("file://${engine}/opengl/gl4/deferred/directional_light_deferred_no_shadow.shader"));
@@ -73,7 +73,7 @@ void GL4DeferredDirectionalLightRenderer::Render(const Camera *camera,
   {
     m_pssmRenderer.SetDevice(m_device);
     m_pssmRenderer.SetScene(m_scene);
-    m_pssmRenderer.SetBuffers(gBuffer->GetDepth(), gBuffer->GetNormal());
+    m_pssmRenderer.SetDepthBuffer(gBuffer->GetDepth());
     m_pssmRenderer.SetShadowMap(GetShadowMap());
     m_pssmRenderer.RenderShadow(light, *camera, *projector);
     lrs = &m_shadow;

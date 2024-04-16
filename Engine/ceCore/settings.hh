@@ -14,12 +14,12 @@ namespace ce
 class CrimsonFile;
 class CrimsonFileElement;
 
-class CE_CORE_API Settings
+class CE_CORE_API SettingsFile
 {
 public:
-  Settings(const std::string& encodedLocator);
-  Settings(const ResourceLocator& locator);
-  ~Settings();
+  SettingsFile(const std::string& encodedLocator);
+  SettingsFile(const ResourceLocator& locator);
+  ~SettingsFile();
 
   CE_NODISCARD bool IsValid() const;
 
@@ -40,6 +40,20 @@ private:
   CrimsonFile* m_file;
 };
 
+class CE_CORE_API Settings
+{
+public:
+  static Settings &Get();
+
+  const SettingsFile &Graphics() const;
+  const SettingsFile &Display() const;
+private:
+  Settings ();
+  static Settings* s_settings;
+
+  SettingsFile *m_graphics;
+  SettingsFile *m_display;
+};
 
 }
 

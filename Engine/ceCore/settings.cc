@@ -7,19 +7,19 @@
 namespace ce
 {
 
-Settings::Settings(const std::string& locator)
+SettingsFile::SettingsFile(const std::string& locator)
   : m_file(nullptr)
 {
   Initialize(ResourceLocator(locator));
 }
 
-Settings::Settings(const ResourceLocator& locator)
+SettingsFile::SettingsFile(const ResourceLocator& locator)
   : m_file(nullptr)
 {
   Initialize(locator);
 }
 
-void Settings::Initialize(const ResourceLocator& locator)
+void SettingsFile::Initialize(const ResourceLocator& locator)
 {
   iFile* file = VFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (file)
@@ -34,18 +34,18 @@ void Settings::Initialize(const ResourceLocator& locator)
   }
 }
 
-Settings::~Settings()
+SettingsFile::~SettingsFile()
 {
   delete m_file;
   m_file = nullptr;
 }
 
-bool Settings::IsValid() const
+bool SettingsFile::IsValid() const
 {
   return m_file;
 }
 
-std::string Settings::GetText(const std::string& path, const std::string& defaultValue) const
+std::string SettingsFile::GetText(const std::string& path, const std::string& defaultValue) const
 {
   CrimsonFileElement* element = GetElement(path);
   if (element)
@@ -55,7 +55,7 @@ std::string Settings::GetText(const std::string& path, const std::string& defaul
   return defaultValue;
 }
 
-float Settings::GetFloat(const std::string& path, float defaultValue) const
+float SettingsFile::GetFloat(const std::string& path, float defaultValue) const
 {
   CrimsonFileElement* element = GetElement(path);
   if (element)
@@ -65,7 +65,7 @@ float Settings::GetFloat(const std::string& path, float defaultValue) const
   return defaultValue;
 }
 
-int Settings::GetInt(const std::string& path, int defaultValue) const
+int SettingsFile::GetInt(const std::string& path, int defaultValue) const
 {
   CrimsonFileElement* element = GetElement(path);
   if (element)
@@ -75,7 +75,7 @@ int Settings::GetInt(const std::string& path, int defaultValue) const
   return defaultValue;
 }
 
-bool Settings::GetBool(const std::string& path, bool defaultValue) const
+bool SettingsFile::GetBool(const std::string& path, bool defaultValue) const
 {
   std::string v = GetText(path, defaultValue ? "true" : "false");
   return std::string("true") == v
@@ -85,7 +85,7 @@ bool Settings::GetBool(const std::string& path, bool defaultValue) const
     || std::string("1") == v;
 }
 
-Vector2f Settings::GetVector2f(const std::string& path, const Vector2f& defaultValue) const
+Vector2f SettingsFile::GetVector2f(const std::string& path, const Vector2f& defaultValue) const
 {
   CrimsonFileElement* element = GetElement(path);
   if (element && element->GetNumberOfAttributes() >= 2)
@@ -98,7 +98,7 @@ Vector2f Settings::GetVector2f(const std::string& path, const Vector2f& defaultV
   return defaultValue;
 }
 
-Vector3f Settings::GetVector3f(const std::string& path, const Vector3f& defaultValue) const
+Vector3f SettingsFile::GetVector3f(const std::string& path, const Vector3f& defaultValue) const
 {
   CrimsonFileElement* element = GetElement(path);
   if (element)
@@ -132,7 +132,7 @@ Vector3f Settings::GetVector3f(const std::string& path, const Vector3f& defaultV
 }
 
 
-Vector4f Settings::GetVector4f(const std::string& path, const Vector4f& defaultValue) const
+Vector4f SettingsFile::GetVector4f(const std::string& path, const Vector4f& defaultValue) const
 {
   CrimsonFileElement* element = GetElement(path);
   if (element)
@@ -179,7 +179,7 @@ Vector4f Settings::GetVector4f(const std::string& path, const Vector4f& defaultV
 }
 
 
-Vector2i Settings::GetVector2i(const std::string& path, const Vector2i& defaultValue) const
+Vector2i SettingsFile::GetVector2i(const std::string& path, const Vector2i& defaultValue) const
 {
   CrimsonFileElement* element = GetElement(path);
   if (element && element->GetNumberOfAttributes() >= 2)
@@ -191,9 +191,47 @@ Vector2i Settings::GetVector2i(const std::string& path, const Vector2i& defaultV
   }
   return defaultValue;
 }
-CrimsonFileElement* Settings::GetElement(const std::string& path) const
+CrimsonFileElement* SettingsFile::GetElement(const std::string& path) const
 {
   return m_file ? m_file->Root()->GetChild(path) : nullptr;
+}
+
+
+Settings* Settings::s_settings = nullptr;
+
+Settings &Settings::Get()
+{
+  if (!s_settings)
+  {
+    s_settings = new Settings();
+  }
+  return *s_settings;
+}
+
+Settings::Settings()
+{
+  SettingsFile master ("file:///settings.config");
+
+  if (master.IsValid())
+  {
+    m_graphics = new SettingsFile(master.GetText("graphics"));
+    m_display  = new SettingsFile(master.GetText("display"));
+  }
+  else
+  {
+    m_graphics = new SettingsFile("file:///${config}/graphics.config");
+    m_display = new SettingsFile("file:///${config}/display.config");
+  }
+}
+
+const SettingsFile &Settings::Display() const
+{
+  return *m_display;
+}
+
+const SettingsFile &Settings::Graphics() const
+{
+  return *m_graphics;
 }
 
 }

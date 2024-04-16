@@ -160,7 +160,9 @@ bool initialize_modules(int argc, char **argv)
   }
   printf("Starting with base-path: '%s'\n", basePath.c_str());
   ce::VFS::Get()->SetBasePath(basePath);
-  ce::Settings settings("file:///${config}/display.config");
+
+  const ce::SettingsFile &settings = ce::Settings::Get().Display();
+
 
   SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE);
 
@@ -1085,7 +1087,8 @@ int main(int argc, char **argv)
   int wnd_width, wnd_height;
   SDL_GetWindowSize(wnd, &wnd_width, &wnd_height);
 
-  ce::Settings settings("file:///${config}/display.config");
+
+  const ce::SettingsFile &settings = ce::Settings::Get().Display();
   ce::Vector2i resolution   = settings.GetVector2i("resolution", ce::Vector2i(wnd_width, wnd_height));
   int          width        = resolution.x;
   int          height       = resolution.y;
@@ -1094,7 +1097,7 @@ int main(int argc, char **argv)
   setup_world(world);
 
 
-  std::string title  = ce::Settings("display.config").GetText("title");
+  std::string title  = settings.GetText("title");
   float       rot    = 0.0f;
   float       entRot = 0.0f;
 

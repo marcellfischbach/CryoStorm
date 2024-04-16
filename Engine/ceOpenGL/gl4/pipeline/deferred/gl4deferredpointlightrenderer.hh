@@ -33,7 +33,7 @@ public:
   GL4DeferredPointLightRenderer() = default;
   ~GL4DeferredPointLightRenderer() = default;
 
-  bool Initialize(Settings &settings);
+  bool Initialize();
 
   void SetDevice(iDevice *device);
   void SetScene(iGfxScene *scene);

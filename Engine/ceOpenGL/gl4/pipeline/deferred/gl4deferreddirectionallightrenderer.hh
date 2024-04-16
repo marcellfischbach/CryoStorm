@@ -9,7 +9,6 @@ namespace ce
 class Camera;
 class Projector;
 class GBuffer;
-class Settings;
 struct iDevice;
 struct iDirectionalLight;
 struct iGfxScene;
@@ -29,7 +28,7 @@ public:
   GL4DeferredDirectionalLightRenderer() = default;
   ~GL4DeferredDirectionalLightRenderer() = default;
 
-  bool Initialize(Settings &settings);
+  bool Initialize();
 
   void SetDevice (iDevice* device);
   void SetScene(iGfxScene *scene);

@@ -41,7 +41,7 @@ public:
   GL4ForwardPointLightRenderer();
   ~GL4ForwardPointLightRenderer();
 
-  void Initialize(Settings &settings);
+  void Initialize();
 
   void SetDevice(iDevice *device);
   void SetScene(iGfxScene *scene);

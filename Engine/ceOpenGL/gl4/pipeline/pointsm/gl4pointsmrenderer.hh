@@ -40,7 +40,7 @@ public:
   GL4PointSMRenderer();
   ~GL4PointSMRenderer() = default;
 
-  void Initialize(Settings &settings);
+  void Initialize();
 
   void SetDepthBuffer(iTexture2D *depthBuffer);
   void SetDevice(GL4Device *device);

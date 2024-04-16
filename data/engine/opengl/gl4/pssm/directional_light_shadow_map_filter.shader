@@ -7,9 +7,10 @@ program{
         attribute ShadowMap,
         attribute DepthBuffer,
         attribute FilterRadius,
-        attribute FilterSamples,
+        attribute FilterSamplesFactor,
         attribute FilterDistance,
         attribute FilterMaxSampleDistance,
         attribute ScreenAspect,
+        attribute ScreenSize,
     }
 }

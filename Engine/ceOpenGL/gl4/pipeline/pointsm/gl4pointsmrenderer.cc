@@ -29,8 +29,9 @@ GL4PointSMRenderer::GL4PointSMRenderer()
   }
 }
 
-void GL4PointSMRenderer::Initialize(ce::Settings &settings)
+void GL4PointSMRenderer::Initialize()
 {
+  const SettingsFile &settings = Settings::Get().Graphics();
   m_pointLightShadowBufferSize = settings.GetInt("point_light.shadow_map.size", 1024);
   std::string filter = settings.GetText("point_light.shadow_map.filter.mode", "Plain");
   if (filter == std::string("Plain"))

@@ -16,9 +16,9 @@ namespace ce::opengl
 {
 
 
-bool GL4DeferredPointLightRenderer::Initialize(Settings &settings)
+bool GL4DeferredPointLightRenderer::Initialize()
 {
-  m_shadowRenderer.Initialize(settings);
+  m_shadowRenderer.Initialize();
 
   m_nonShadow.m_shader = AssetManager::Get()->Get<iShader>(
       ResourceLocator("file://${engine}/opengl/gl4/deferred/point_light_deferred_no_shadow.shader"));
