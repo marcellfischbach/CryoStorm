@@ -7,11 +7,17 @@
 
 struct aiMesh;
 struct aiNode;
+struct aiMaterial;
+
+namespace ce
+{
+struct iMaterial;
+}
 
 namespace ce::assimp
 {
 
-struct LoaderData;
+struct StaticLoaderData;
 
 CE_CLASS()
 class CE_ASSIMP_API AssimpMeshLoader : public CE_SUPER(iAssetLoader)
@@ -26,9 +32,8 @@ public:
   virtual iObject* Load(const Class * cls, const ResourceLocator & locator) const;
 
 private:
-  void ReadNode(aiNode* node, const Matrix4f &parentMatrix, LoaderData& d) const;
+  void ReadNode(aiNode* node, const Matrix4f &parentMatrix, StaticLoaderData& d) const;
 
-  
 };
 
 

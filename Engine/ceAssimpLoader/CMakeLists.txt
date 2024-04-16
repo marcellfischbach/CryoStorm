@@ -7,6 +7,8 @@ set(SOURCES
         assimpexport.hh
         assimploadermodule.cc
         assimploadermodule.hh
+        assimpmaterialloader.cc
+        assimpmaterialloader.hh
         assimpmeshloader.cc
         assimpmeshloader.hh
         assimpconverter.cc

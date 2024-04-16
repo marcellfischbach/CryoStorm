@@ -981,21 +981,13 @@ void generate_axis_grid(ce::World *world)
 
 void generate_cube_fbx(ce::World *world)
 {
-  auto mat  = ce::AssetManager::Get()->Get<ce::iMaterial>("/materials/Default.mat");
-  auto matR = ce::AssetManager::Get()->Get<ce::iMaterial>("/materials/DefaultRed.mat");
-  auto matG = ce::AssetManager::Get()->Get<ce::iMaterial>("/materials/DefaultGreen.mat");
-  auto matB = ce::AssetManager::Get()->Get<ce::iMaterial>("/materials/DefaultBlue.mat");
 
-  ce::Mesh *mesh = ce::AssetManager::Get()->Get<ce::Mesh>("/cube.fbx");
-  mesh->SetDefaultMaterial(mesh->IndexOfMaterialSlot("Material"), mat);
-  mesh->SetDefaultMaterial(mesh->IndexOfMaterialSlot("Red"), matR);
-  mesh->SetDefaultMaterial(mesh->IndexOfMaterialSlot("Green"), matG);
-  mesh->SetDefaultMaterial(mesh->IndexOfMaterialSlot("Blue"), matB);
+  ce::Mesh *mesh = ce::AssetManager::Get()->Get<ce::Mesh>("/colored_cube.fbx");
 
   auto entity          = new ce::Entity();
   auto meshStateSphere = new ce::StaticMeshState("Mesh");
   meshStateSphere->SetStatic(true);
-  meshStateSphere->GetTransform().SetRotation(ce::Quaternion::FromAxisAngle(1.0f, 0.0f, 0.0f, -M_PI / 2.0f)).Finish();
+  meshStateSphere->GetTransform().SetTranslation(5.0f, 5.0f, 5.0f).Finish();
   meshStateSphere->SetMesh(mesh);
   entity->Attach(meshStateSphere);
   world->Attach(entity);
@@ -1015,7 +1007,7 @@ void setup_world(ce::World *world)
 //  generate_batched_test_grid(world, material);
   generate_test_grid(world, material);
   generate_axis_grid(world);
-//  generate_cube_fbx(world);
+  generate_cube_fbx(world);
 
   add_skeleton_mesh(world, skinnedMaterial);
 

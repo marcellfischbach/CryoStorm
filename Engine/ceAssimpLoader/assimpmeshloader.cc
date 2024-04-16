@@ -1,5 +1,6 @@
 
 #include <ceAssimpLoader/assimpmeshloader.hh>
+#include <ceAssimpLoader/assimpmaterialloader.hh>
 #include <ceAssimpLoader/assimpconverter.hh>
 #include <ceCore/graphics/idevice.hh>
 #include <ceCore/graphics/mesh.hh>
@@ -20,10 +21,11 @@
 namespace ce::assimp
 {
 
-struct LoaderData
+struct StaticLoaderData
 {
   const aiScene *scene = nullptr;
   std::map<std::string, Size> materialSlots;
+  std::map<std::string, iMaterial*> defaultMaterials;
   Mesh *mesh = nullptr;
 
 };
@@ -89,7 +91,7 @@ iObject *AssimpMeshLoader::Load(const Class *cls, const ResourceLocator &locator
   );
 
 
-  LoaderData d;
+  StaticLoaderData d;
   d.scene = scene;
   d.mesh  = new Mesh();
   for (unsigned i = 0, in = scene->mNumMeshes; i < in; ++i)
@@ -104,6 +106,7 @@ iObject *AssimpMeshLoader::Load(const Class *cls, const ResourceLocator &locator
     {
       Size idx = d.mesh->AddMaterialSlot(materialName);
       d.materialSlots[materialName] = idx;
+      d.defaultMaterials[materialName] = AssimpMaterialLoader::Read(material);
     }
   }
 
@@ -111,13 +114,18 @@ iObject *AssimpMeshLoader::Load(const Class *cls, const ResourceLocator &locator
   Matrix4f parentMatrix;
   debug_node(scene->mRootNode, parentMatrix, "");
   ReadNode(scene->mRootNode, parentMatrix, d);
-  
 
+  for (auto it = d.materialSlots.begin(); it!=d.materialSlots.end(); it++)
+  {
+    size_t slotIdx = it->second;
+    iMaterial* material = d.defaultMaterials[it->first];
+    d.mesh->SetDefaultMaterial(slotIdx, material);
+  }
 
   return d.mesh;
 }
 
-void AssimpMeshLoader::ReadNode(aiNode *node, const Matrix4f &parentMatrix, LoaderData &d) const
+void AssimpMeshLoader::ReadNode(aiNode *node, const Matrix4f &parentMatrix, StaticLoaderData &d) const
 {
   Matrix4f localMatrix  = ConvertMatrix4x4(node->mTransformation);
   Matrix4f globalMatrix = parentMatrix * localMatrix;
@@ -146,6 +154,7 @@ void AssimpMeshLoader::ReadNode(aiNode *node, const Matrix4f &parentMatrix, Load
     ReadNode(node->mChildren[i], globalMatrix, d);
   }
 }
+
 
 
 

@@ -11,7 +11,7 @@ struct aiNode;
 namespace ce::assimp
 {
 
-struct LoaderData;
+struct SkeletonLoaderData;
 
 CE_CLASS()
 class CE_ASSIMP_API AssimpSkeletonMeshLoader : public CE_SUPER(iAssetLoader)
@@ -26,9 +26,9 @@ public:
   virtual iObject* Load(const Class * cls, const ResourceLocator & locator) const;
 
 private:
-  void ReadSkeleton(aiNode* node, const Matrix4f &parentMatrix, LoaderData& d) const;
-  void ReadBone(aiNode* node, LoaderData& d, size_t parentBoneID) const;
-  void ReadMesh(aiNode* node, const Matrix4f &parentMatrix, LoaderData& d) const;
+  void ReadSkeleton(aiNode* node, const Matrix4f &parentMatrix, SkeletonLoaderData& d) const;
+  void ReadBone(aiNode* node, SkeletonLoaderData& d, size_t parentBoneID) const;
+  void ReadMesh(aiNode* node, const Matrix4f &parentMatrix, SkeletonLoaderData& d) const;
 
 
 };
