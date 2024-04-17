@@ -5,6 +5,8 @@ add_definitions(-D_USE_MATH_DEFINES)
 set(SOURCES
         camerahandler.cc
         camerahandler.hh
+        demopostprocess.cc
+        demopostprocess.hh
         launchermodule.cc
         launchermodule.hh
         main.cc
@@ -12,7 +14,6 @@ set(SOURCES
         mirrorhandler.hh
         testhandler.cc
         testhandler.hh
-
 
         window/sdlinputsystem.cc
         window/sdlinputsystem.hh

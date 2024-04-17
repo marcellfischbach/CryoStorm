@@ -2,6 +2,8 @@
 #pragma once
 
 #include <ceCore/graphics/postprocessing.hh>
+#include <ceCore/graphics/itexture2d.hh>
+#include <ceCore/graphics/irendertarget2d.hh>
 
 namespace ce
 {
@@ -36,9 +38,10 @@ void PostProcessing::AddProcess(iPostProcess* process)
 void PostProcessing::SetInput(PPImageType type, iTexture2D* texture)
 {
   m_textures[(size_t)type] = texture;
+  m_originTextures[(size_t)type] = texture;
 }
 
-iTexture2D *PostProcessing::GetOutput(PPImageType type) 
+iTexture2D* PostProcessing::GetOutput(PPImageType type)
 {
   return m_textures[(size_t)type];
 }
@@ -50,7 +53,11 @@ void PostProcessing::Process(iDevice* device)
   {
     for (auto input : process->GetInputDefinitions())
     {
-      process->SetInput(input.Idx, m_textures[(size_t)input.Type]);
+
+      iTexture2D* texture = input.Source == PPInputSource::LastStep
+        ? m_textures[(size_t)input.Type]
+        : m_originTextures[(size_t)input.Type];
+      process->SetInput(input.Idx, texture);
     }
     process->Process(device);
     for (auto output : process->GetOutputDefinitions())
@@ -59,5 +66,19 @@ void PostProcessing::Process(iDevice* device)
     }
   }
 }
+
+
+void BasePostProcess::SetInput(size_t idx, ce::iTexture2D *texture)
+{
+  CE_SET(m_inputs[idx], texture);
+}
+
+iTexture2D* BasePostProcess::GetOutput(size_t idx) const
+{
+
+  return m_outputs[idx];
+}
+
+
 
 }

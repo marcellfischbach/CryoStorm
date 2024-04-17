@@ -47,22 +47,22 @@ bool AssimpSkeletonMeshLoader::CanLoad(const Class *cls, const ResourceLocator &
 static void debug_node (aiNode *node, const Matrix4f &parent, const std::string &indent)
 {
 
-  Matrix4f local = ConvertMatrix4x4(node->mTransformation);
-  Matrix4f global = parent * local;
-
-
-  std::string line = indent + std::string (node->mName.C_Str());
-  std::string line_indent = std::string (line.length(), ' ');
-  printf ("%s %6.2f %6.2f %6.2f %6.2f\n",line.c_str(), local.m00, local.m01, local.m02, local.m03);
-  printf ("%s %6.2f %6.2f %6.2f %6.2f\n",line_indent.c_str(), local.m10, local.m11, local.m12, local.m13);
-  printf ("%s %6.2f %6.2f %6.2f %6.2f\n",line_indent.c_str(), local.m20, local.m21, local.m22, local.m23);
-  printf ("%s %6.2f %6.2f %6.2f %6.2f\n",line_indent.c_str(), local.m30, local.m31, local.m32, local.m33);
-  printf ("%s------------------------------------------\n", indent.c_str());
-  fflush(stdout);
-  for (int i = 0; i < node->mNumChildren; ++i)
-  {
-    debug_node (node->mChildren[i], global, indent + "     ");
-  }
+//  Matrix4f local = ConvertMatrix4x4(node->mTransformation);
+//  Matrix4f global = parent * local;
+//
+//
+//  std::string line = indent + std::string (node->mName.C_Str());
+//  std::string line_indent = std::string (line.length(), ' ');
+//  printf ("%s %6.2f %6.2f %6.2f %6.2f\n",line.c_str(), local.m00, local.m01, local.m02, local.m03);
+//  printf ("%s %6.2f %6.2f %6.2f %6.2f\n",line_indent.c_str(), local.m10, local.m11, local.m12, local.m13);
+//  printf ("%s %6.2f %6.2f %6.2f %6.2f\n",line_indent.c_str(), local.m20, local.m21, local.m22, local.m23);
+//  printf ("%s %6.2f %6.2f %6.2f %6.2f\n",line_indent.c_str(), local.m30, local.m31, local.m32, local.m33);
+//  printf ("%s------------------------------------------\n", indent.c_str());
+//  fflush(stdout);
+//  for (int i = 0; i < node->mNumChildren; ++i)
+//  {
+//    debug_node (node->mChildren[i], global, indent + "     ");
+//  }
 }
 
 iObject *AssimpSkeletonMeshLoader::Load(const Class *cls, const ResourceLocator &locator) const

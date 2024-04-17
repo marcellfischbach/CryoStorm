@@ -123,6 +123,7 @@ set(SOURCES
         graphics/material/materialinstance.cc
         graphics/material/materialinstance.hh
 
+
         graphics/scene/gfxcamera.cc
         graphics/scene/gfxcamera.hh
         graphics/scene/gfxlight.cc

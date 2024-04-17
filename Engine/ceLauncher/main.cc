@@ -3,6 +3,7 @@
 #include <ceLauncher/window/sdlkeyboard.hh>
 #include <ceLauncher/window/sdlmouse.hh>
 #include <ceLauncher/launchermodule.hh>
+#include <ceLauncher/demopostprocess.hh>
 #include <ceBullet/bulletmodule.hh>
 #include <ceCore/coremodule.hh>
 #include <ceCore/settings.hh>
@@ -37,6 +38,7 @@
 #include <ceCore/graphics/skeletonmesh.hh>
 #include <ceCore/graphics/samplers.hh>
 #include <ceCore/graphics/mesh.hh>
+#include <ceCore/graphics/postprocessing.hh>
 #include <ceCore/graphics/projector.hh>
 #include <ceCore/graphics/shading/ishader.hh>
 #include <ceCore/graphics/shading/ishaderattribute.hh>
@@ -1113,10 +1115,14 @@ int main(int argc, char **argv)
 
   auto renderTarget   = create_render_target(device, width, height, multiSamples);
   auto colorTexture   = renderTarget->GetColorTexture(0);
+  auto depthTexture   = renderTarget->GetDepthTexture();
   auto *frameRenderer = ce::ObjectRegistry::Get<ce::iFrameRenderer>();
 
   auto forwardPipeline  = new ce::opengl::GL4ForwardPipeline();
   auto deferredPipeline = new ce::opengl::GL4DeferredPipeline();
+
+  auto postProcessing = new ce::PostProcessing();
+  postProcessing->AddProcess(new DemoPostProcess());
 
 
   forwardPipeline->Initialize();
@@ -1263,11 +1269,16 @@ int main(int argc, char **argv)
 
     frameRenderer->Render(renderTarget, device, world->GetScene());
 
+    postProcessing->SetInput(ce::PPImageType::Color, colorTexture);
+    postProcessing->SetInput(ce::PPImageType::Depth, depthTexture);
+    postProcessing->Process(device);
+    ce::iTexture2D* finalColor = postProcessing->GetOutput(ce::PPImageType::Color);
+
     device->SetRenderTarget(nullptr);
     device->SetViewport(0, 0, wnd_width, wnd_height);
     device->SetDepthTest(false);
     device->SetBlending(false);
-    device->RenderFullscreen(colorTexture);
+    device->RenderFullscreen(finalColor);
     device->SetDepthTest(true);
 
 

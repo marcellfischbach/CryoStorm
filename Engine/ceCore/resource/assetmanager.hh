@@ -66,6 +66,7 @@ protected:
 
   std::vector<iAssetLoader *> m_loaders;
 
+  std::map<ResourceLocator, iObject*> m_cachedObjects;
 
 private:
   static AssetManager *s_assetManager;

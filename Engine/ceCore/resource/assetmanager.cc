@@ -38,7 +38,15 @@ void AssetManager::RegisterLoader(iAssetLoader* loader)
 
 iObject* AssetManager::Get(const Class* cls, const ResourceLocator& locator)
 {
-  return Load(cls, locator);
+  auto it = m_cachedObjects.find(locator);
+  if (it != m_cachedObjects.end())
+  {
+    return it->second;
+  }
+  iObject* obj = Load(cls, locator);
+  CE_ADDREF(obj);
+  m_cachedObjects[locator] = obj;
+  return obj;
 }
 
 

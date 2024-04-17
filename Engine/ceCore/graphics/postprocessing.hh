@@ -11,17 +11,28 @@ namespace ce
 
 struct iDevice;
 struct iTexture2D;
+struct iRenderTarget2D;
+
+struct iPostProcess;
 
 enum class PPImageType
 {
   Color,
+  Normal,
   Depth,
+  Count
 };
 
+enum class PPInputSource
+{
+  Origin,
+  LastStep,
+};
 
 struct PPInputDefinition
 {
   size_t Idx;
+  PPInputSource Source;
   PPImageType Type;
 };
 
@@ -34,6 +45,8 @@ struct PPOutputDefinition
 
 
 
+
+
 CE_CLASS()
 struct CE_CORE_API iPostProcess : public CE_SUPER(iObject)
 {
@@ -42,13 +55,31 @@ struct CE_CORE_API iPostProcess : public CE_SUPER(iObject)
   ~iPostProcess() override = default;
 
   virtual const std::vector<PPInputDefinition>& GetInputDefinitions() const = 0;
-  virtual const std::vector<PPInputDefinition>& GetOutputDefinitions() const = 0;
+  virtual const std::vector<PPOutputDefinition>& GetOutputDefinitions() const = 0;
 
   virtual void SetInput(size_t idx, iTexture2D * texture) = 0;
   virtual iTexture2D* GetOutput(size_t idx) const = 0;
 
   virtual void Process(iDevice * device) = 0;
 
+};
+
+
+CE_CLASS()
+class CE_CORE_API BasePostProcess : public CE_SUPER(iPostProcess)
+{
+  CE_CLASS_GEN_OBJECT;
+public:
+
+  void SetInput(size_t idx, iTexture2D * texture) override;
+  iTexture2D* GetOutput(size_t idx) const override;
+
+protected:
+  void DeclareInput ()
+  void SetOutput(PPImageType type, iTexture2D* texture);
+
+  std::vector<iTexture2D*> m_inputs;
+  std::vector<iTexture2D*> m_outputs;
 };
 
 
@@ -68,7 +99,8 @@ public:
 
 
 public:
-  iTexture2D* m_textures[2];
+  iTexture2D* m_textures[(size_t)PPImageType::Count];
+  iTexture2D* m_originTextures[(size_t)PPImageType::Count];
 
   std::vector<iPostProcess*> m_processes;
 
