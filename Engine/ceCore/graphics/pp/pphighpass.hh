@@ -1,22 +1,20 @@
 
-
 #pragma once
 
+#include <ceCore/coreexport.hh>
 #include <ceCore/graphics/postprocessing.hh>
 
 namespace ce
 {
-struct iRenderTarget2D;
-struct iShader;
-struct iShaderAttribute;
-}
+
 
 CE_CLASS()
-class DemoPostProcess : public CE_SUPER(ce::SimplePostProcess)
+class CE_CORE_API PPHighPass : public CE_SUPER(SimplePostProcess)
 {
-CE_CLASS_GEN_OBJECT;
+  CE_CLASS_GEN;
 public:
-  DemoPostProcess();
+  PPHighPass();
+  ~PPHighPass() override;
 
   void Process(ce::iDevice *device) override;
 
@@ -25,4 +23,7 @@ private:
 
   ce::iShader *m_shader;
   ce::iShaderAttribute *m_attribColor;
+  ce::iShaderAttribute *m_attribHighValue;
 };
+
+} // ce

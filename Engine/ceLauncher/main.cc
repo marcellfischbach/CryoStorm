@@ -40,6 +40,7 @@
 #include <ceCore/graphics/mesh.hh>
 #include <ceCore/graphics/postprocessing.hh>
 #include <ceCore/graphics/projector.hh>
+#include <ceCore/graphics/pp/pp.hh>
 #include <ceCore/graphics/shading/ishader.hh>
 #include <ceCore/graphics/shading/ishaderattribute.hh>
 #include <ceCore/graphics/material/material.hh>
@@ -1055,6 +1056,42 @@ void setup_world(ce::World *world)
 #endif
 }
 
+ce::PostProcessing* setup_post_processing ()
+{
+  ce::PostProcessing* postProcessing = new ce::PostProcessing();
+//  DemoPostProcess *demoPP = new DemoPostProcess();
+//  postProcessing->AddProcess(demoPP);
+//  postProcessing->Bind({demoPP, 0, nullptr, (size_t)ce::PPImageType::Color});
+//  postProcessing->BindOutput({nullptr, (size_t)ce::PPImageType::Color, demoPP, 0});
+
+  auto highPass = new ce::PPHighPass();
+  auto scaleDown0 = new ce::PPScaleDown();
+  auto scaleDown1 = new ce::PPScaleDown();
+  auto blurH = new ce::PPBlurH();
+  auto blurV = new ce::PPBlurV();
+  auto combine = new ce::PPCombine();
+
+  postProcessing->AddProcess(highPass);
+  postProcessing->AddProcess(scaleDown0);
+  postProcessing->AddProcess(scaleDown1);
+  postProcessing->AddProcess(blurH);
+  postProcessing->AddProcess(blurV);
+  postProcessing->AddProcess(combine);
+
+
+  postProcessing->Bind({highPass, 0, nullptr, (size_t)ce::PPImageType::Color});
+//  postProcessing->Bind({scaleDown0, 0, highPass, 0});
+//  postProcessing->Bind({scaleDown1, 0, scaleDown0, 0});
+
+  postProcessing->Bind({blurH, 0, highPass, 0});
+  postProcessing->Bind({blurV, 0, blurH, 0});
+  postProcessing->Bind({combine, 0, nullptr, (size_t)ce::PPImageType::Color});
+  postProcessing->Bind({combine, 1, blurV, 0});
+  postProcessing->BindOutput({nullptr, (size_t)ce::PPImageType::Color, combine, 0});
+
+  return postProcessing;
+}
+
 int main(int argc, char **argv)
 {
 
@@ -1121,8 +1158,9 @@ int main(int argc, char **argv)
   auto forwardPipeline  = new ce::opengl::GL4ForwardPipeline();
   auto deferredPipeline = new ce::opengl::GL4DeferredPipeline();
 
-  auto postProcessing = new ce::PostProcessing();
-  postProcessing->AddProcess(new DemoPostProcess());
+  auto postProcessing = setup_post_processing ();
+
+
 
 
   forwardPipeline->Initialize();
