@@ -54,13 +54,14 @@ void PostProcessing::AddProcess(iPostProcess *process)
 
 void PostProcessing::Bind(const ce::PPBind &bind)
 {
-  m_bindings.push_back(bind);
-  m_planDirty = true;
-}
-
-void PostProcessing::BindOutput(const ce::PPBind &bind)
-{
-  m_outputBindings.push_back(bind);
+  if (bind.DstPP)
+  {
+    m_bindings.push_back(bind);
+  }
+  else
+  {
+    m_outputBindings.push_back(bind);
+  }
   m_planDirty = true;
 }
 
@@ -75,7 +76,7 @@ iTexture2D *PostProcessing::GetOutput(PPImageType type)
 }
 
 
-void PostProcessing::Process(iDevice *device)
+void PostProcessing::Process(iDevice *device, iRenderTarget2D *finalTarget)
 {
   if (m_planDirty)
   {
@@ -89,25 +90,26 @@ void PostProcessing::Process(iDevice *device)
     {
       if (binding.SrcPP)
       {
-        process.Process->SetInput(binding.Idx, binding.SrcPP->GetOutput(binding.SrcIdx));
+        process.Process->SetInput(binding.DstIdx, binding.SrcPP->GetOutput(binding.SrcIdx));
       }
       else
       {
-        process.Process->SetInput(binding.Idx, m_inputTextures[binding.SrcIdx]);
+        process.Process->SetInput(binding.DstIdx, m_inputTextures[binding.SrcIdx]);
       }
     }
-    process.Process->Process(device);
+
+    process.Process->Process(device, process.Process == m_finalProcess ?  finalTarget : nullptr);
   }
 
   for (const auto &binding: m_outputBindings)
   {
     if (binding.SrcPP)
     {
-      m_outputTextures[binding.Idx] = binding.SrcPP->GetOutput(binding.SrcIdx);
+      m_outputTextures[binding.DstIdx] = binding.SrcPP->GetOutput(binding.SrcIdx);
     }
     else
     {
-      m_outputTextures[binding.Idx] = m_inputTextures[binding.SrcIdx];
+      m_outputTextures[binding.DstIdx] = m_inputTextures[binding.SrcIdx];
     }
   }
 
@@ -154,6 +156,11 @@ void PostProcessing::RebuildPlan()
       break;
     }
   }
+
+  if (!m_outputBindings.empty())
+  {
+    m_finalProcess = m_outputBindings[0].SrcPP;
+  }
 }
 
 
@@ -162,7 +169,7 @@ std::vector<PPBind> PostProcessing::GetBindingsForProcess(const iPostProcess *pr
   std::vector<PPBind> result;
   for (const auto     &binding: m_bindings)
   {
-    if (binding.PP == process)
+    if (binding.DstPP == process)
     {
       result.push_back(binding);
     }
@@ -189,6 +196,7 @@ iTexture2D *BasePostProcess::GetOutput(size_t idx) const
 
   return m_outputs[idx];
 }
+
 
 BasePostProcess::~BasePostProcess()
 {
@@ -284,6 +292,7 @@ bool SimplePostProcess::UpdateRenderTarget(iDevice *device,
     sampler->SetAddressU(eTAM_Clamp);
     sampler->SetAddressV(eTAM_Clamp);
     sampler->SetAddressW(eTAM_Clamp);
+    sampler->SetFilterMode(eFM_MinMagNearest);
     colorTexture->SetSampler(sampler);
 
     m_renderTarget->AddColorTexture(colorTexture);

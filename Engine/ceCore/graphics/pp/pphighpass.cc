@@ -4,7 +4,8 @@
 namespace ce
 {
 
-PPHighPass::PPHighPass()
+PPHighPass::PPHighPass(float highValue)
+: m_highValue(highValue)
 {
   DeclareInput(PPImageType::Color, "Color");
   DeclareOutput(PPImageType::Color, "Color");
@@ -22,8 +23,16 @@ PPHighPass::~PPHighPass()
 }
 
 
-bool PPHighPass::RefreshOutputTexture(ce::iDevice *device)
+
+bool PPHighPass::RefreshOutputTexture(ce::iDevice *device, iRenderTarget2D *finalTarget)
 {
+  if (finalTarget)
+  {
+    CE_SET(m_renderTarget, finalTarget);
+    return finalTarget;
+  }
+
+
   if (!m_inputs[0])
   {
     return false;
@@ -40,9 +49,9 @@ bool PPHighPass::RefreshOutputTexture(ce::iDevice *device)
                             ce::ePF_Depth);
 }
 
-void PPHighPass::Process(ce::iDevice *device)
+void PPHighPass::Process(iDevice *device, iRenderTarget2D *finalTarget)
 {
-  if (m_shader && m_attribColor && RefreshOutputTexture(device))
+  if (m_shader && m_attribColor && RefreshOutputTexture(device, finalTarget))
   {
     device->SetRenderTarget(m_renderTarget);
     device->Clear(false, ce::Color4f(0, 0, 0, 0), false, 1.0f, false, 0);
@@ -57,7 +66,7 @@ void PPHighPass::Process(ce::iDevice *device)
     }
     if (m_attribHighValue)
     {
-      m_attribHighValue->Bind(0.8f);
+      m_attribHighValue->Bind(m_highValue);
     }
     device->RenderFullscreen();
   }

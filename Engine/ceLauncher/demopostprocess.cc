@@ -37,7 +37,7 @@ bool DemoPostProcess::RefreshOutputTexture(ce::iDevice *device)
                             ce::ePF_Depth);
 }
 
-void DemoPostProcess::Process(ce::iDevice *device)
+void DemoPostProcess::Process(ce::iDevice *device, ce::iRenderTarget2D *finalTarget)
 {
   if (m_shader && m_attribColor && RefreshOutputTexture(device))
   {

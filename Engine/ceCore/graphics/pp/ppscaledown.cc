@@ -41,7 +41,7 @@ bool PPScaleDown::RefreshOutputTexture(ce::iDevice *device)
                             ce::ePF_Depth);
 }
 
-void PPScaleDown::Process(ce::iDevice *device)
+void PPScaleDown::Process(iDevice *device, iRenderTarget2D *finalTarget)
 {
   if (m_shader && m_attribColor && RefreshOutputTexture(device))
   {

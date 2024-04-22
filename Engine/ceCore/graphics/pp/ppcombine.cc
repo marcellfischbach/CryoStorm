@@ -24,8 +24,15 @@ PPCombine::~PPCombine()
 }
 
 
-bool PPCombine::RefreshOutputTexture(ce::iDevice *device)
+bool PPCombine::RefreshOutputTexture(ce::iDevice *device, iRenderTarget2D *finalTarget)
 {
+  if (finalTarget)
+  {
+    CE_SET(m_renderTarget, finalTarget);
+    return finalTarget;
+  }
+
+
   if (!m_inputs[0])
   {
     return false;
@@ -42,9 +49,9 @@ bool PPCombine::RefreshOutputTexture(ce::iDevice *device)
                             ce::ePF_Depth);
 }
 
-void PPCombine::Process(ce::iDevice *device)
+void PPCombine::Process(iDevice *device, iRenderTarget2D *finalTarget)
 {
-  if (m_shader && m_attribColor0 && m_attribColor1 && RefreshOutputTexture(device))
+  if (m_shader && m_attribColor0 && m_attribColor1 && RefreshOutputTexture(device, finalTarget))
   {
     device->SetRenderTarget(m_renderTarget);
     device->Clear(false, ce::Color4f(0, 0, 0, 0), false, 1.0f, false, 0);

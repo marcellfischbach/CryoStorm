@@ -9,11 +9,13 @@ in vec2 texCoord;
 
 void main ()
 {
-    vec4 c = texture(ce_Color, texCoord);
+    vec3 c = texture(ce_Color, texCoord).rgb;
 
+    float l = length(c);
     if (c.r >= ce_HighValue || c.g >= ce_HighValue || c.b >= ce_HighValue)
     {
-        ce_FragColor = c;
+        float f = 1.0 - ce_HighValue;
+        ce_FragColor = vec4(c - normalize(c) * ce_HighValue, 0.0) / f;
     }
     else
     {

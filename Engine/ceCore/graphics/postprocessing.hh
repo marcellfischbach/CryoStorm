@@ -61,7 +61,7 @@ CE_CLASS_GEN;
   virtual void SetInput(size_t idx, iTexture2D *texture) = 0;
   virtual iTexture2D *GetOutput(size_t idx) const = 0;
 
-  virtual void Process(iDevice *device) = 0;
+  virtual void Process(iDevice *device, iRenderTarget2D *finalTarget) = 0;
 
 };
 
@@ -90,8 +90,8 @@ private:
   std::vector<PPOutputDefinition> m_outputDefinitions;
 
 protected:
-  std::vector<iTexture2D *>      m_inputs;
-  std::vector<iTexture2D *>      m_outputs;
+  std::vector<iTexture2D *> m_inputs;
+  std::vector<iTexture2D *> m_outputs;
 };
 
 CE_CLASS()
@@ -121,10 +121,11 @@ protected:
 
 struct PPBind
 {
-  iPostProcess *PP;
-  size_t       Idx;
   iPostProcess *SrcPP;
   size_t       SrcIdx;
+  iPostProcess *DstPP;
+  size_t       DstIdx;
+
 };
 
 
@@ -140,10 +141,9 @@ public:
 
   void AddProcess(iPostProcess *process);
   void Bind(const PPBind &bind);
-  void BindOutput(const PPBind &bind);
 
   void SetInput(PPImageType type, iTexture2D *texture);
-  void Process(iDevice *device);
+  void Process(iDevice *device, iRenderTarget2D *finalTarget);
   iTexture2D *GetOutput(PPImageType type);
 
 private:
@@ -155,6 +155,7 @@ public:
   iTexture2D *m_outputTextures[(size_t) PPImageType::Count];
 
   std::vector<iPostProcess *> m_processes;
+  iPostProcess                *m_finalProcess;
   std::vector<PPBind>         m_bindings;
   std::vector<PPBind>         m_outputBindings;
 

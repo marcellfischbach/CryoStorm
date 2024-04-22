@@ -16,7 +16,7 @@ public:
   PPScaleDown();
   ~PPScaleDown() override;
 
-  void Process(ce::iDevice *device) override;
+  void Process(iDevice *device, iRenderTarget2D *finalTarget) override;
 
 private:
   bool RefreshOutputTexture (ce::iDevice* device);

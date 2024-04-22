@@ -13,13 +13,16 @@ class CE_CORE_API PPBlurV : public CE_SUPER(SimplePostProcess)
 {
   CE_CLASS_GEN;
 public:
-  PPBlurV();
+  PPBlurV(size_t sampleCount = 10, float sampleScale = 1.0f);
   ~PPBlurV() override;
 
-  void Process(ce::iDevice *device) override;
+  void Process(iDevice *device, iRenderTarget2D *finalTarget) override;
 
 private:
   bool RefreshOutputTexture (ce::iDevice* device);
+
+  size_t m_sampleCount;
+  float m_sampleScale;
 
   ce::iShader *m_shader;
   ce::iShaderAttribute *m_attribColor;

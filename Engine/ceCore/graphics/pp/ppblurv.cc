@@ -4,7 +4,9 @@
 namespace ce
 {
 
-PPBlurV::PPBlurV()
+PPBlurV::PPBlurV(size_t sampleCount, float sampleScale)
+    : m_sampleCount(sampleCount)
+    , m_sampleScale(sampleScale)
 {
   DeclareInput(PPImageType::Color, "Color");
   DeclareOutput(PPImageType::Color, "Color");
@@ -43,7 +45,7 @@ bool PPBlurV::RefreshOutputTexture(ce::iDevice *device)
                             ce::ePF_Depth);
 }
 
-void PPBlurV::Process(ce::iDevice *device)
+void PPBlurV::Process(iDevice *device, iRenderTarget2D *finalTarget)
 {
   if (m_shader && m_attribColor && RefreshOutputTexture(device))
   {
@@ -64,11 +66,11 @@ void PPBlurV::Process(ce::iDevice *device)
     }
     if (m_attribSampleScale)
     {
-      m_attribSampleScale->Bind(10.0f);
+      m_attribSampleScale->Bind(m_sampleScale);
     }
     if (m_attribSampleCount)
     {
-      m_attribSampleCount->Bind(30);
+      m_attribSampleCount->Bind((int)m_sampleCount);
     }
     device->RenderFullscreen();
   }

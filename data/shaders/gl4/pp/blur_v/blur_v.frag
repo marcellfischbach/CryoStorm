@@ -14,9 +14,14 @@ void main ()
     float sum = 0.0;
     for (int i=-ce_SampleCount; i<=ce_SampleCount; i++)
     {
-        float f = 1.0f - abs(i) / float(ce_SampleCount);
-        sum += f;
-        c += texture (ce_Color, texCoord + vec2(0.0f, float(i) * ce_TextureSizeInv * ce_SampleScale)) * f;
+        vec2 coord = texCoord + vec2(0.0, float(i) * ce_TextureSizeInv * ce_SampleScale);
+        if (coord.y >= 0.0 && coord.y <= 1.0)
+        {
+            float f = abs(i) / float(ce_SampleCount);
+            f = 1.0f -  f * f;
+            sum += f;
+            c += texture (ce_Color, coord) * f;
+        }
     }
     c /= sum;
     ce_FragColor = c;

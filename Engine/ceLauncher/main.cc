@@ -434,13 +434,13 @@ create_multi_sphere_mesh(float radius, uint32_t detail, float uv_f, size_t num_s
         uint32_t i10 = i1 + h;
         uint32_t i11 = i10 + 1;
 
-        indices.emplace_back(idxOrigin + i00);
-        indices.emplace_back(idxOrigin + i10);
-        indices.emplace_back(idxOrigin + i11);
+        indices.push_back(idxOrigin + i00);
+        indices.push_back(idxOrigin + i10);
+        indices.push_back(idxOrigin + i11);
 
-        indices.emplace_back(idxOrigin + i00);
-        indices.emplace_back(idxOrigin + i11);
-        indices.emplace_back(idxOrigin + i01);
+        indices.push_back(idxOrigin + i00);
+        indices.push_back(idxOrigin + i11);
+        indices.push_back(idxOrigin + i01);
       }
     }
     idxOrigin += detail * detail * 2;
@@ -526,16 +526,55 @@ ce::iRenderTarget2D *create_render_target(ce::iDevice *device, uint32_t width, u
   return renderTarget;
 }
 
+
+ce::PostProcessing* setup_post_processing ()
+{
+  ce::PostProcessing* postProcessing = new ce::PostProcessing();
+
+
+  auto highPass = new ce::PPHighPass(0.8f);
+  auto scaleDown0 = new ce::PPScaleDown();
+  auto scaleDown1 = new ce::PPScaleDown();
+  auto blurH = new ce::PPBlurH(60, 1.0f);
+  auto blurV = new ce::PPBlurV(60, 1.0f);
+  auto combine = new ce::PPCombine();
+
+  postProcessing->AddProcess(highPass);
+  postProcessing->AddProcess(scaleDown0);
+  postProcessing->AddProcess(scaleDown1);
+  postProcessing->AddProcess(blurH);
+  postProcessing->AddProcess(blurV);
+  postProcessing->AddProcess(combine);
+
+
+  postProcessing->Bind({nullptr, (size_t)ce::PPImageType::Color, highPass, 0});
+  postProcessing->Bind({highPass, 0, scaleDown0, 0});
+  postProcessing->Bind({scaleDown0, 0, scaleDown1, 0});
+
+  postProcessing->Bind({scaleDown1, 0, blurH, 0 });
+  postProcessing->Bind({blurH, 0, blurV, 0});
+  postProcessing->Bind({nullptr, (size_t)ce::PPImageType::Color, combine, 0});
+  postProcessing->Bind({blurV, 0, combine, 1});
+  postProcessing->Bind({combine, 0, nullptr, (size_t)ce::PPImageType::Color });
+
+  return postProcessing;
+}
+
 void generate_camera(ce::World *world)
 {
   auto cameraEntity = new ce::Entity("Camera");
   auto cameraState  = new ce::CameraState();
 
+
+  auto postProcessing = setup_post_processing ();
+  cameraState->SetPostProcessing(postProcessing);
+
+
   auto cameraHandler = new CameraHandler();
   cameraEntity->Attach(cameraState);
   cameraEntity->Attach(cameraHandler);
   cameraEntity->GetRoot()->GetTransform()
-              .SetTranslation(ce::Vector3f(5, 5, 5))
+              .SetTranslation(ce::Vector3f(-5, 5, -5))
               .LookAt(ce::Vector3f(0, 0, 0))
               .Finish();
   world->Attach(cameraEntity);
@@ -1056,41 +1095,6 @@ void setup_world(ce::World *world)
 #endif
 }
 
-ce::PostProcessing* setup_post_processing ()
-{
-  ce::PostProcessing* postProcessing = new ce::PostProcessing();
-//  DemoPostProcess *demoPP = new DemoPostProcess();
-//  postProcessing->AddProcess(demoPP);
-//  postProcessing->Bind({demoPP, 0, nullptr, (size_t)ce::PPImageType::Color});
-//  postProcessing->BindOutput({nullptr, (size_t)ce::PPImageType::Color, demoPP, 0});
-
-  auto highPass = new ce::PPHighPass();
-  auto scaleDown0 = new ce::PPScaleDown();
-  auto scaleDown1 = new ce::PPScaleDown();
-  auto blurH = new ce::PPBlurH();
-  auto blurV = new ce::PPBlurV();
-  auto combine = new ce::PPCombine();
-
-  postProcessing->AddProcess(highPass);
-  postProcessing->AddProcess(scaleDown0);
-  postProcessing->AddProcess(scaleDown1);
-  postProcessing->AddProcess(blurH);
-  postProcessing->AddProcess(blurV);
-  postProcessing->AddProcess(combine);
-
-
-  postProcessing->Bind({highPass, 0, nullptr, (size_t)ce::PPImageType::Color});
-//  postProcessing->Bind({scaleDown0, 0, highPass, 0});
-//  postProcessing->Bind({scaleDown1, 0, scaleDown0, 0});
-
-  postProcessing->Bind({blurH, 0, highPass, 0});
-  postProcessing->Bind({blurV, 0, blurH, 0});
-  postProcessing->Bind({combine, 0, nullptr, (size_t)ce::PPImageType::Color});
-  postProcessing->Bind({combine, 1, blurV, 0});
-  postProcessing->BindOutput({nullptr, (size_t)ce::PPImageType::Color, combine, 0});
-
-  return postProcessing;
-}
 
 int main(int argc, char **argv)
 {
@@ -1157,8 +1161,6 @@ int main(int argc, char **argv)
 
   auto forwardPipeline  = new ce::opengl::GL4ForwardPipeline();
   auto deferredPipeline = new ce::opengl::GL4DeferredPipeline();
-
-  auto postProcessing = setup_post_processing ();
 
 
 
@@ -1307,10 +1309,11 @@ int main(int argc, char **argv)
 
     frameRenderer->Render(renderTarget, device, world->GetScene());
 
-    postProcessing->SetInput(ce::PPImageType::Color, colorTexture);
-    postProcessing->SetInput(ce::PPImageType::Depth, depthTexture);
-    postProcessing->Process(device);
-    ce::iTexture2D* finalColor = postProcessing->GetOutput(ce::PPImageType::Color);
+//    postProcessing->SetInput(ce::PPImageType::Color, colorTexture);
+//    postProcessing->SetInput(ce::PPImageType::Depth, depthTexture);
+//    postProcessing->Process(device);
+//    ce::iTexture2D* finalColor = postProcessing->GetOutput(ce::PPImageType::Color);
+    ce::iTexture2D *finalColor = renderTarget->GetColorTexture(0);
 
     device->SetRenderTarget(nullptr);
     device->SetViewport(0, 0, wnd_width, wnd_height);

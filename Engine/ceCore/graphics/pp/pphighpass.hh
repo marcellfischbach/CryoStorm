@@ -13,13 +13,14 @@ class CE_CORE_API PPHighPass : public CE_SUPER(SimplePostProcess)
 {
   CE_CLASS_GEN;
 public:
-  PPHighPass();
+  PPHighPass(float highValue = 0.8f);
   ~PPHighPass() override;
 
-  void Process(ce::iDevice *device) override;
+  void Process(iDevice *device, iRenderTarget2D *finalTarget) override;
 
 private:
-  bool RefreshOutputTexture (ce::iDevice* device);
+  bool RefreshOutputTexture (ce::iDevice* device, iRenderTarget2D *finalTarget);
+  float m_highValue;
 
   ce::iShader *m_shader;
   ce::iShaderAttribute *m_attribColor;

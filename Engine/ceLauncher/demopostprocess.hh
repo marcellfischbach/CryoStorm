@@ -18,7 +18,7 @@ CE_CLASS_GEN_OBJECT;
 public:
   DemoPostProcess();
 
-  void Process(ce::iDevice *device) override;
+  void Process(ce::iDevice *device, ce::iRenderTarget2D *finalTarget) override;
 
 private:
   bool RefreshOutputTexture (ce::iDevice* device);

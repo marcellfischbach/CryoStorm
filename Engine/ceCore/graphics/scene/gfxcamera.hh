@@ -44,8 +44,7 @@ public:
   bool IsRenderShadows() const;
 
   void SetPostProcessing(PostProcessing *postProcessing);
-  PostProcessing *GetPostProcessing();
-  const PostProcessing *GetPostProcessing() const;
+  PostProcessing *GetPostProcessing() const;
 
   void UpdateData(float near, float far, float angle, float angleWidthHeight);
 

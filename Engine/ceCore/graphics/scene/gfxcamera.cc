@@ -114,12 +114,7 @@ void GfxCamera::SetPostProcessing(PostProcessing* postProcessing)
   CE_SET(m_postProcessing, postProcessing);
 }
 
-PostProcessing* GfxCamera::GetPostProcessing()
-{
-  return m_postProcessing;
-}
-
-const PostProcessing* GfxCamera::GetPostProcessing() const
+PostProcessing* GfxCamera::GetPostProcessing() const
 {
   return m_postProcessing;
 }

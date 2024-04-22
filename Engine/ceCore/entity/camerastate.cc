@@ -6,6 +6,7 @@
 #include <ceCore/math/vector4f.hh>
 #include <math.h>
 #include <ceCore/graphics/irendertarget2d.hh>
+#include <ceCore/graphics/postprocessing.hh>
 #include <ceCore/graphics/scene/gfxcamera.hh>
 #include <ceCore/graphics/scene/igfxscene.hh>
 #include <ceCore/entity/world.hh>
@@ -22,7 +23,8 @@ CameraState::CameraState()
       m_angleWidthHeight(0.0f),
       m_gfxCamera(new GfxCamera()),
       m_order(0),
-      m_renderTarget(nullptr)
+      m_renderTarget(nullptr),
+      m_postProcessing(nullptr)
 {
   CE_CLASS_GEN_CONSTR;
   m_gfxCamera->SetCamera(&m_camera);
@@ -153,6 +155,17 @@ bool CameraState::IsRenderShadows() const
   return m_renderShadows;
 }
 
+void CameraState::SetPostProcessing(ce::PostProcessing *postProcessing)
+{
+  CE_SET(m_postProcessing, postProcessing);
+  UpdateGfxCamera();
+}
+
+ce::PostProcessing* CameraState::GetPostPRocessing() const
+{
+  return m_postProcessing;
+}
+
 const Camera &CameraState::GetCamera() const
 {
   return m_camera;
@@ -194,6 +207,7 @@ void CameraState::UpdateGfxCamera()
   m_gfxCamera->SetOrder(m_order);
   m_gfxCamera->SetRenderTarget(m_renderTarget);
   m_gfxCamera->SetRenderShadows(m_renderShadows);
+  m_gfxCamera->SetPostProcessing(m_postProcessing);
   m_gfxCamera->UpdateData(m_near, m_far, m_angle, m_angleWidthHeight);
   m_gfxCamera->UpdateClear(m_clearMode, m_clearColor, m_clearDepth);
 }
