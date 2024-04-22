@@ -112,6 +112,7 @@ iObject *AssimpMeshLoader::Load(const Class *cls, const ResourceLocator &locator
 
 
   Matrix4f parentMatrix;
+  parentMatrix.SetRotationY((float)M_PI);
   debug_node(scene->mRootNode, parentMatrix, "");
   ReadNode(scene->mRootNode, parentMatrix, d);
 

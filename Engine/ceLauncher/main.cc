@@ -667,7 +667,7 @@ ce::Entity *add_bone(ce::World *world, ce::iMaterial *material)
   entity->Attach(meshState);
   entity->GetRoot()->SetLocalMatrix(ce::Matrix4f());
 
-//  world->Attach(entity);
+  world->Attach(entity);
   return entity;
 }
 
@@ -681,9 +681,9 @@ void add_skeleton_mesh(ce::World *world, ce::iMaterial *material)
   meshState->SetMaterial(0, material);
   entity->Attach(meshState);
 
-  entity->GetRoot()->GetTransform()
-        .SetRotation(ce::Quaternion::FromAxisAngle(1.0f, 0.0f, 0.0f, -M_PI / 2.0f * 1.0f))
-        .Finish();
+//  entity->GetRoot()->GetTransform()
+//        .SetRotation(ce::Quaternion::FromAxisAngle(0.0f, 1.0f, 0.0f, M_PI / 1.0f * 1.0f))
+//        .Finish();
 
 //  world->Attach(entity);
 
@@ -1217,7 +1217,7 @@ int main(int argc, char **argv)
       for (int     i        = 0; i < 4; i++)
       {
         ce::Matrix4f mat = global_skeleton->GetBone(i).globalMatrix;
-        mat = boneBase * mat;
+//        mat = boneBase * mat;
 
         bones[i]->GetRoot()->SetLocalMatrix(mat);
 

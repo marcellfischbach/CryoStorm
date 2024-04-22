@@ -37,6 +37,7 @@ void Skeleton::InitializeFrom(const ce::Skeleton &skeleton)
   Clear();
 
 
+  m_base          = skeleton.m_base;
   m_bones         = skeleton.m_bones;
   m_skeletonBones = skeleton.m_skeletonBones;
   m_rootBones     = skeleton.m_rootBones;
@@ -52,6 +53,7 @@ Skeleton &Skeleton::operator=(const ce::Skeleton &skeleton)
 {
   Clear();
 
+  m_base          = skeleton.m_base;
   m_bones         = skeleton.m_bones;
   m_skeletonBones = skeleton.m_skeletonBones;
   m_rootBones     = skeleton.m_rootBones;

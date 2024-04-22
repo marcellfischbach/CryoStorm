@@ -113,6 +113,8 @@ iObject *AssimpSkeletonMeshLoader::Load(const Class *cls, const ResourceLocator 
 
 
   Matrix4f parentMatrix;
+  parentMatrix.SetRotationY((float)M_PI);
+
   debug_node(scene->mRootNode, parentMatrix,  "");
   ReadSkeleton(scene->mRootNode, parentMatrix, d);
   ReadMesh(scene->mRootNode, parentMatrix, d);
