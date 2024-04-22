@@ -21,7 +21,7 @@ void main()
     //
     // Generate diffuse roughness
     float roughness = texture(ce_RoughnessMap, texCoord).r * ce_Roughness;
-    vec4 color = /*texture(ce_Diffuse, texCoord) **/ ce_Color;
+    vec4 color = texture(ce_Diffuse, texCoord) * ce_Color;
     ce_FragDiffuseRoughness = vec4(color.rgb, roughness);
 
     //

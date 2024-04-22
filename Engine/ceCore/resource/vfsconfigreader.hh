@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <string>
+
 namespace ce
 {
 class CrimsonFile;
@@ -16,14 +18,16 @@ private:
   VFSConfigReader();
 
 public:
-  static void Read ();
+  static void Read(const std::string &configPath);
 
 private:
   static void ReadConfig (const CrimsonFile *file);
   static void ReadVFS(const CrimsonFileElement *vfsElement);
+  static void ReadArchives (const CrimsonFileElement *archivesElement);
+  static void ReadArchive (const CrimsonFileElement *archiveElement);
   static void ReadAliases(const CrimsonFileElement *aliasesElement);
   static void ReadAlias(const CrimsonFileElement *aliasElement);
-  static CrimsonFile *OpenConfigFile() ;
+  static CrimsonFile *OpenConfigFile(const std::string &configPath) ;
 };
 
 } // ce

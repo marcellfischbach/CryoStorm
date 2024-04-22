@@ -6,21 +6,6 @@ namespace ce
 {
 
 
-std::string extract_proto(const std::string& locator)
-{
-  if (locator.starts_with("file://"))
-  {
-    return "file://";
-  }
-  else if (locator.starts_with("bundle://"))
-  {
-    return "bundle://";
-  }
-  else
-  {
-    return "file://";
-  }
-}
 
 std::string extract_path(const std::string& locator)
 {
@@ -75,7 +60,6 @@ std::string extract_extension(const std::string& locator)
 ResourceLocator::ResourceLocator(const std::string& encoded)
   : m_locator(encoded)
 {
-  m_proto = extract_proto(encoded);
   m_path = extract_path(encoded);
   m_filename = extract_filename(encoded);
   m_extension = extract_extension(encoded);
@@ -85,7 +69,6 @@ ResourceLocator::ResourceLocator(const std::string& encoded)
 
 ResourceLocator::ResourceLocator(const ResourceLocator& parent, const std::string& encoded)
 {
-  m_proto = extract_proto(encoded);
   m_path = extract_path(encoded);
   m_filename = extract_filename(encoded);
   m_extension = extract_extension(encoded);
@@ -101,7 +84,6 @@ ResourceLocator::ResourceLocator(const ResourceLocator& parent, const std::strin
 
 ResourceLocator::ResourceLocator(const ResourceLocator* parent, const std::string& encoded)
 {
-  m_proto = extract_proto(encoded);
   m_path = extract_path(encoded);
   m_filename = extract_filename(encoded);
   m_extension = extract_extension(encoded);

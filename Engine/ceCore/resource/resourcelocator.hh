@@ -14,8 +14,6 @@ public:
 	ResourceLocator(const ResourceLocator *parent, const std::string &encoded);
 
 	const std::string& GetLocator() const;
-
-	const std::string& GetProto() const;
 	const std::string& GetPath() const;
 	const std::string& GetFilename() const;
 	const std::string& GetExtension() const;
@@ -28,7 +26,6 @@ private:
 	std::string m_locator;
 
 
-	std::string m_proto;
 	std::string m_path;
 	std::string m_filename;
 	std::string m_extension;

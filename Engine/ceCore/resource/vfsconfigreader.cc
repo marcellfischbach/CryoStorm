@@ -2,6 +2,8 @@
 #include <ceCore/resource/vfsconfigreader.hh>
 #include <ceCore/resource/vfs.hh>
 #include <ceCore/resource/file.hh>
+#include <ceCore/resource/filesystemarchive.hh>
+#include <ceCore/resource/filesystemfile.hh>
 #include <ceCore/resource/resourcelocator.hh>
 #include <ceCore/autoptr.hh>
 
@@ -15,9 +17,9 @@ VFSConfigReader::VFSConfigReader()
 {
 }
 
-void VFSConfigReader::Read()
+void VFSConfigReader::Read(const std::string &configPath)
 {
-  AutoDelete config(OpenConfigFile());
+  AutoDelete config(OpenConfigFile(configPath));
   ReadConfig(config);
 }
 
@@ -33,8 +35,36 @@ void VFSConfigReader::ReadVFS(const CrimsonFileElement* vfsElement)
 {
   CE_NOT_NULL(vfsElement);
 
+  const CrimsonFileElement* archivesElement = vfsElement->GetChild("archives");
+  ReadArchives(archivesElement);
+
   const CrimsonFileElement* aliasesElement = vfsElement->GetChild("aliases");
   ReadAliases(aliasesElement);
+
+
+}
+
+void VFSConfigReader::ReadArchives(const ce::CrimsonFileElement *archivesElement)
+{
+  CE_NOT_NULL(archivesElement);
+  for (int i = 0, in=archivesElement->GetNumberOfChildren(); i<in; ++i)
+  {
+    const CrimsonFileElement *child = archivesElement->GetChild(i);
+    ReadArchive(child);
+  }
+}
+
+void VFSConfigReader::ReadArchive(const ce::CrimsonFileElement *archiveElement)
+{
+  if (archiveElement->GetTagName() == "filesystem" || archiveElement->GetTagName() == "fs")
+  {
+    int priority = archiveElement->GetAttribute(0, 0);
+    std::string path = archiveElement->GetAttribute(1, "");
+    if (!path.empty())
+    {
+      VFS::Get()->AddArchive (new FileSystemArchive(path, priority));
+    }
+  }
 }
 
 void VFSConfigReader::ReadAliases(const CrimsonFileElement* aliasesElement)
@@ -60,10 +90,15 @@ void VFSConfigReader::ReadAlias(const CrimsonFileElement* aliasElement)
   }
 }
 
-CrimsonFile* VFSConfigReader::OpenConfigFile()
+CrimsonFile* VFSConfigReader::OpenConfigFile(const std::string& configPath)
 {
-  AutoDelete<iFile> fsFile = VFS::Get()->Open(ResourceLocator("/vfs.config"), eAM_Read, eOM_Binary);
+  AutoDelete<iFile> fsFile (new FileSystemFile(configPath + "/vfs.config"));
   if (!fsFile)
+  {
+    return nullptr;
+  }
+
+  if  (!fsFile->Open(eAM_Read, eOM_Text))
   {
     return nullptr;
   }

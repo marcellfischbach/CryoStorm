@@ -4,6 +4,8 @@
 #include <ceCore/resource/resourcelocator.hh>
 #include <ceCore/resource/file.hh>
 #include <ceCore/resource/filesystemfile.hh>
+#include <ceCore/resource/iarchive.hh>
+
 #include <regex>
 
 namespace ce
@@ -21,16 +23,31 @@ VFS* VFS::Get()
   return &vfs;
 }
 
-void VFS::SetBasePath(const std::string& basePath)
+void VFS::SetRootPath(const std::string& rootPath)
 {
-  m_basePath = basePath;
+  m_rootPath = rootPath;
 
-  VFSConfigReader::Read();
+  VFSConfigReader::Read(rootPath);
 }
 
-const std::string& VFS::GetBasePath() const
+const std::string& VFS::GetRootPath() const
 {
-  return m_basePath;
+  return m_rootPath;
+}
+
+void VFS::AddArchive(ce::iArchive *archive)
+{
+  if (archive)
+  {
+    archive->AddRef();
+    m_archives.push_back(archive);
+
+    struct
+    {
+      bool operator()(iArchive* a, iArchive *b) const { return a->GetPriority() > b->GetPriority(); }
+    } customLess;
+    std::sort(m_archives.begin(), m_archives.end(), customLess);
+  }
 }
 
 void VFS::InsertAlias(const std::string& alias, const std::string& replacement)
@@ -40,23 +57,24 @@ void VFS::InsertAlias(const std::string& alias, const std::string& replacement)
 
 iFile* VFS::Open(const ResourceLocator& resourceLocator, eAccessMode accessMode, eOpenMode openMode) const
 {
-  iFile* file = File(resourceLocator);
-  if (!file)
+
+  std::string resourcePathWithReplacedAliases = ReplaceAliases(resourceLocator.Encoded());
+  for (const auto &archive: m_archives)
   {
-    return nullptr;
+    iFile* file = archive->Open(resourcePathWithReplacedAliases, accessMode, openMode);
+    if (file)
+    {
+      return file;
+    }
   }
-  if (!file->Open(accessMode, openMode))
-  {
-    file->Release();
-    return nullptr;
-  }
-  return file;
+
+  return nullptr;
 }
 
 iFile* VFS::File(const ResourceLocator& resourceLocator) const
 {
   std::string resourcePathWithReplacedAliases = ReplaceAliases(resourceLocator.Encoded());
-  return new FileSystemFile(m_basePath + "/" + resourcePathWithReplacedAliases);
+  return new FileSystemFile(m_rootPath + "/" + resourcePathWithReplacedAliases);
 }
 
 std::string VFS::ReplaceAliases(const std::string& str) const

@@ -229,8 +229,11 @@ set(SOURCES
         resource/eseekmode.hh
         resource/file.cc
         resource/file.hh
+        resource/filesystemarchive.cc
+        resource/filesystemarchive.hh
         resource/filesystemfile.cc
         resource/filesystemfile.hh
+        resource/iarchive.hh
         resource/iassetloader.hh
         resource/ifile.hh
         resource/resourceexceptions.hh

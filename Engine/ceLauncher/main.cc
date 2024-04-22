@@ -152,7 +152,7 @@ SDL_GLContext context;
 
 bool initialize_modules(int argc, char **argv)
 {
-  std::string basePath("../data");
+  std::string basePath("../");
   for (int    i = 0; i < argc; i++)
   {
     std::string arg(argv[i]);
@@ -162,7 +162,7 @@ bool initialize_modules(int argc, char **argv)
     }
   }
   printf("Starting with base-path: '%s'\n", basePath.c_str());
-  ce::VFS::Get()->SetBasePath(basePath);
+  ce::VFS::Get()->SetRootPath(basePath);
 
   const ce::SettingsFile &settings = ce::Settings::Get().Display();
 
