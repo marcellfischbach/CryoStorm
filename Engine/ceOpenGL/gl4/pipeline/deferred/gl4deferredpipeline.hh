@@ -63,6 +63,7 @@ private:
 
 
   void SetupVariables(iRenderTarget2D *target, const GfxCamera *camera, iDevice *device, iGfxScene *scene);
+  iRenderTarget2D *UpdateRenderTarget (iDevice* device, iRenderTarget2D* target);
   void UpdateIntermediate();
   void ScanVisibleMeshes(iClipper *clipper);
   void BindCamera();
@@ -75,7 +76,7 @@ private:
   const Projector *m_projector;
   iGfxScene       *m_scene;
   iRenderTarget2D *m_intermediate;
-  iRenderTarget2D *m_target;
+  iRenderTarget2D *m_target = nullptr;
 
   GfxSceneCollector      m_collector;
   std::vector<GfxMesh *> m_shadedMeshes;

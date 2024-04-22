@@ -123,6 +123,18 @@ set(SOURCES
         graphics/material/materialinstance.cc
         graphics/material/materialinstance.hh
 
+        graphics/pp/pp.hh
+        graphics/pp/ppcombine.cc
+        graphics/pp/ppcombine.hh
+        graphics/pp/ppblurh.cc
+        graphics/pp/ppblurh.hh
+        graphics/pp/ppblurv.cc
+        graphics/pp/ppblurv.hh
+        graphics/pp/pphighpass.cc
+        graphics/pp/pphighpass.hh
+        graphics/pp/ppscaledown.cc
+        graphics/pp/ppscaledown.hh
+
         graphics/scene/gfxcamera.cc
         graphics/scene/gfxcamera.hh
         graphics/scene/gfxlight.cc

@@ -14,6 +14,7 @@ namespace ce
 
 class GfxCamera;
 struct iRenderTarget2D;
+class PostProcessing;
 
 CE_CLASS()
 class CE_CORE_API CameraState : public CE_SUPER(SpatialState)
@@ -54,6 +55,9 @@ public:
 
   void SetRenderShadows (bool renderShadows);
   bool IsRenderShadows () const;
+
+  void SetPostProcessing (PostProcessing* postProcessing);
+  PostProcessing* GetPostPRocessing () const;
 
   const Camera& GetCamera() const;
   const Projector& GetProjector() const;
@@ -99,9 +103,11 @@ private:
 
   Camera m_camera;
   Projector m_projector;
+  PostProcessing* m_postProcessing;
 
   void UpdateGfxCamera ();
   GfxCamera *m_gfxCamera;
+
 
 
 };

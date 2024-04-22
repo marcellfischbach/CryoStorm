@@ -184,8 +184,9 @@ void GL4Device::Clear(bool clearColor,
   if (clearStencil)
   {
     flags |= GL_STENCIL_BUFFER_BIT;
-    if (clearStencil != m_clearStencil)
+    if (stencil != m_clearStencil)
     {
+      m_clearStencil = stencil;
       glClearStencil(stencil);
     }
   }

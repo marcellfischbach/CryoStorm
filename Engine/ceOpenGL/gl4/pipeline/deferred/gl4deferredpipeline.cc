@@ -9,6 +9,7 @@
 #include <ceCore/graphics/idevice.hh>
 #include <ceCore/graphics/irendertarget2d.hh>
 #include <ceCore/graphics/gbuffer.hh>
+#include <ceCore/graphics/postprocessing.hh>
 #include <ceCore/graphics/scene/igfxscene.hh>
 #include <ceCore/graphics/scene/gfxcamera.hh>
 #include <ceCore/graphics/scene/gfxmesh.hh>
@@ -45,10 +46,14 @@ void GL4DeferredPipeline::Initialize()
 void GL4DeferredPipeline::Render(iRenderTarget2D *target, const GfxCamera *camera, iDevice *device, iGfxScene *scene)
 {
   SetupVariables(target, camera, device, scene);
+  if (!m_target)
+  {
+    return;
+  }
+
   RenderGBuffer(target->GetWidth(), target->GetHeight());
 
-
-  device->SetRenderTarget(target);
+  device->SetRenderTarget(m_target);
   device->SetRenderBuffer(0);
   device->SetDepthTest(false);
   device->SetDepthWrite(false);
@@ -70,8 +75,18 @@ void GL4DeferredPipeline::Render(iRenderTarget2D *target, const GfxCamera *camer
     case 3:
       device->RenderFullscreen(m_gBuffer->GetDepth());
       break;
-
   }
+
+
+  PostProcessing * pp = camera->GetPostProcessing();
+  if (pp)
+  {
+    pp->SetInput(PPImageType::Color, m_target->GetColorTexture(0));
+    pp->SetInput(PPImageType::Depth, m_gBuffer->GetDepth());
+    pp->SetInput(PPImageType::Normal, m_gBuffer->GetNormal());
+    pp->Process(device, target);
+  }
+
 }
 
 void GL4DeferredPipeline::RenderGBuffer(uint16_t width,
@@ -139,7 +154,7 @@ void GL4DeferredPipeline::SetupVariables(iRenderTarget2D *target,
   m_camera    = camera->GetCamera();
   m_projector = camera->GetProjector();
   m_scene     = scene;
-  m_target    = target;
+  m_target    = camera->GetPostProcessing() ? UpdateRenderTarget (device, target) : target;
 
   UpdateIntermediate();
 
@@ -148,6 +163,64 @@ void GL4DeferredPipeline::SetupVariables(iRenderTarget2D *target,
   m_directionalLightRenderer.SetDevice(device);
   m_directionalLightRenderer.SetScene(scene);
 
+}
+
+iRenderTarget2D* GL4DeferredPipeline::UpdateRenderTarget(ce::iDevice *device, ce::iRenderTarget2D *target)
+{
+  if (!target)
+  {
+    CE_RELEASE(m_target);
+    return nullptr;
+  }
+
+  
+  iRenderTarget2D *renderTarget = m_target;
+
+  if (renderTarget && renderTarget->GetWidth() == target->GetWidth() && renderTarget->GetHeight() == target->GetHeight())
+  {
+    // all is properly set up
+    return renderTarget;
+  }
+
+  //  recreate the target
+  CE_RELEASE(renderTarget);
+
+  iRenderTarget2D::Descriptor desc {
+    target->GetWidth(),
+    target->GetHeight()
+  };
+  renderTarget = device->CreateRenderTarget(desc);
+  if (!renderTarget)
+  {
+    return nullptr;
+  }
+
+  iTexture2D::Descriptor colorDesc {
+    ePF_RGBA,
+    target->GetWidth(),
+    target->GetHeight(),
+    false,
+    1
+  };
+  iTexture2D* colorTexture = device->CreateTexture(colorDesc);
+  iSampler* colorSampler = device->CreateSampler();
+  colorSampler->SetFilterMode(eFM_MinMagNearest);
+  colorSampler->SetAddressU(eTAM_Clamp);
+  colorSampler->SetAddressV(eTAM_Clamp);
+  colorSampler->SetAddressW(eTAM_Clamp);
+  colorTexture->SetSampler(colorSampler);
+  renderTarget->AddColorTexture(colorTexture);
+  CE_RELEASE(colorTexture);
+  CE_RELEASE(colorSampler);
+
+  if (!renderTarget->Compile())
+  {
+    CE_RELEASE(renderTarget);
+    renderTarget = nullptr;
+  }
+
+
+  return renderTarget;
 }
 
 void GL4DeferredPipeline::UpdateIntermediate()
