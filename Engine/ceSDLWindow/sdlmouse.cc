@@ -1,8 +1,8 @@
 
-#include <ceLauncher/window/sdlmouse.hh>
-#include <ceLauncher/window/sdlbutton_map.hh>
+#include <ceSDLWindow/sdlmouse.hh>
+#include <ceSDLWindow/sdlbutton_map.hh>
 
-namespace ce
+namespace ce::sdlwindow
 {
 
 SDLMouse::SDLMouse()
@@ -95,22 +95,22 @@ int32_t SDLMouse::GetWheelHorizontal() const
 }
 
 
-bool SDLMouse::IsButtonDown(eMouseButton mouseButton) const 
+bool SDLMouse::IsButtonDown(eMouseButton mouseButton) const
 {
   return m_current[(size_t)mouseButton];
 }
 
-bool SDLMouse::IsButtonUp(eMouseButton mouseButton) const 
+bool SDLMouse::IsButtonUp(eMouseButton mouseButton) const
 {
   return !m_current[(size_t)mouseButton];
 }
 
-bool SDLMouse::IsButtonPressed(eMouseButton mouseButton) const 
+bool SDLMouse::IsButtonPressed(eMouseButton mouseButton) const
 {
   return !m_last[(size_t)mouseButton] && m_current[(size_t)mouseButton];
 }
 
-bool SDLMouse::IsButtonReleased(eMouseButton mouseButton) const 
+bool SDLMouse::IsButtonReleased(eMouseButton mouseButton) const
 {
   return m_last[(size_t)mouseButton] && !m_current[(size_t)mouseButton];
 }

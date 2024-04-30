@@ -1,7 +1,7 @@
 
-#include <ceCore/input/input.hh>
-#include <ceCore/input/iinputsystem.hh>
-#include <ceCore/objectregistry.hh>
+#include "input.hh"
+#include "iinputsystem.hh"
+#include "ceCore/objectregistry.hh"
 
 namespace ce
 {

@@ -12,6 +12,9 @@ set(SOURCES
         coreexport.hh
         coremodule.cc
         coremodule.hh
+        engine.cc
+        engine.hh
+        imodule.hh
         objectregistry.cc
         objectregistry.hh
         outofboundsexception.hh
@@ -245,6 +248,7 @@ set(SOURCES
         resource/vfsconfigreader.hh
 
         #window/wnddesc.hh
+
         window/iwindow.hh
 
         )

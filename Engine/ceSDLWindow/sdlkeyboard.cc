@@ -1,7 +1,7 @@
-#include <ceLauncher/window/sdlkeyboard.hh>
-#include <ceLauncher/window/sdlkey_map.hh>
+#include <ceSDLWindow/sdlkeyboard.hh>
+#include <ceSDLWindow/sdlkey_map.hh>
 
-namespace ce
+namespace ce::sdlwindow
 {
 
 SDLKeyboard::SDLKeyboard()

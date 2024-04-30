@@ -1,11 +1,9 @@
 
-#include <ceLauncher/window/sdlinputsystem.hh>
-#include <ceLauncher/window/sdlkeyboard.hh>
-#include <ceLauncher/window/sdlmouse.hh>
 #include <ceLauncher/launchermodule.hh>
 #include <ceLauncher/demopostprocess.hh>
 #include <ceBullet/bulletmodule.hh>
 #include <ceCore/coremodule.hh>
+#include <ceCore/engine.hh>
 #include <ceCore/settings.hh>
 #include <ceCore/animation/skeletonanimation.hh>
 #include <ceCore/animation/skeletonanimationplayer.hh>
@@ -21,7 +19,7 @@
 #include <ceCore/entity/staticmeshstate.hh>
 #include <ceCore/entity/terrainmeshstate.hh>
 #include <ceCore/entity/world.hh>
-#include <ceCore/input/input.hh>
+#include "ceCore/input/input.hh"
 #include <ceCore/math/math.hh>
 #include <ceCore/math/color4f.hh>
 #include <ceCore/objectregistry.hh>
@@ -52,6 +50,7 @@
 #include <ceCore/resource/vfs.hh>
 #include <ceCore/resource/resourcelocator.hh>
 #include <ceCore/physics/physics.hh>
+#include <ceCore/window/iwindow.hh>
 #include <ceAssimpLoader/assimploadermodule.hh>
 #include <ceOpenGL/openglmodule.hh>
 #include <GL/glew.h>
@@ -62,54 +61,24 @@
 #include <ceLauncher/mirrorhandler.hh>
 #include <ceLauncher/testhandler.hh>
 
+#include <ceSDLWindow/sdlwindowmodule.hh>
 #include <iostream>
 #include <SDL.h>
 #include <regex>
 #include <string>
 #include <ceCore/time.hh>
 
-ce::SDLKeyboard keyboard;
-
-ce::SDLMouse mouse;
 
 ce::LightState *shadowLightState = nullptr;
 
 
 void UpdateEvents()
 {
-  keyboard.Update();
-  mouse.Update();
-  SDL_Event evt;
-  while (SDL_PollEvent(&evt))
-  {
-    switch (evt.type)
-    {
-      case SDL_KEYDOWN:
-        keyboard.Update(evt.key.keysym.scancode, true);
-        break;
-      case SDL_KEYUP:
-        keyboard.Update(evt.key.keysym.scancode, false);
-        break;
-      case SDL_MOUSEBUTTONDOWN:
-        mouse.Update(evt.button.button, true);
-        break;
-      case SDL_MOUSEBUTTONUP:
-        mouse.Update(evt.button.button, false);
-        break;
-      case SDL_MOUSEWHEEL:
-        mouse.Update(evt.wheel.y, evt.wheel.x);
-        break;
-      case SDL_MOUSEMOTION:
-        mouse.Update(evt.motion.x, evt.motion.y, evt.motion.xrel, evt.motion.yrel);
-        break;
-
-    }
-  }
 
 }
 
 
-bool register_modules(int argc, char **argv)
+bool register_modules(int argc, char **argv, ce::Engine* engine)
 {
 
   if (!ce::LauncherModule::Register(argc, argv))
@@ -122,12 +91,19 @@ bool register_modules(int argc, char **argv)
     printf("Unable to register core\n");
     return false;
   }
+  ce::sdlwindow::SDLWindowModule windowModule;
+  if (!windowModule.Register(argc, argv, engine))
+  {
+    printf("Unable to register sdl window");
+    return false;
+  }
   if (!ce::bullet::BulletModule::Register(argc, argv))
   {
     printf("Unable to register bullet");
     return false;
   }
-  if (!ce::opengl::OpenGLModule::Register(argc, argv))
+  ce::opengl::OpenGLModule openGlModule;
+  if (!openGlModule.Register(argc, argv, engine))
   {
     printf("Unable to register opengl\n");
     return false;
@@ -150,85 +126,27 @@ SDL_Window *wnd;
 
 SDL_GLContext context;
 
-bool initialize_modules(int argc, char **argv)
+bool initialize_modules(int argc, char **argv, ce::Engine* engine)
 {
-  std::string basePath("../");
-  for (int    i = 0; i < argc; i++)
-  {
-    std::string arg(argv[i]);
-    if (arg == std::string("--data") && i + 1 < argc)
-    {
-      basePath = std::string(argv[++i]);
-    }
-  }
-  printf("Starting with base-path: '%s'\n", basePath.c_str());
-  ce::VFS::Get()->SetRootPath(basePath);
-
-  const ce::SettingsFile &settings = ce::Settings::Get().Display();
-
-
-  SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE);
-
-  SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
-  SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
-  SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
-  SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
-  SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-  SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
-  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-  SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
-
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 4);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-
-  uint32_t     flags    = SDL_WINDOW_OPENGL;
-  // flags |= SDL_WINDOW_BORDERLESS;
-  std::string  title    = settings.GetText("title");
-  ce::Vector2i res      = settings.GetVector2i("resolution");
-  ce::Vector2i pos      = settings.GetVector2i("pos");
-  std::string  viewMode = settings.GetText("viewmode", "windowed");
-  if (viewMode == "fullscreen")
-  {
-    flags |= SDL_WINDOW_FULLSCREEN;
-  }
-  else if (viewMode == "desktop")
-  {
-    flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
-  }
-  else if (viewMode == "windowed")
-  {
-    flags |= SDL_WINDOW_BORDERLESS;
-  }
-  else if (viewMode != "windowed")
-  {
-    printf("Illegal viewmode: '%s'. Defaulting to 'windowed'\n", viewMode.c_str());
-  }
-
-  bool vsync = settings.GetBool("vsync");
-  wnd = SDL_CreateWindow(title.c_str(),
-                         pos.x, pos.y,
-                         res.x, res.y, flags
-  );
-  mouse.SetWindow(wnd);
-  //  wnd = SDL_CreateWindow("Spice", 0, 0, 1920, 1080, flags);
-  context = SDL_GL_CreateContext(wnd);
-  SDL_GL_SetSwapInterval(vsync ? 1 : 0);
-
-  SDL_ShowWindow(wnd);
-  SDL_GL_MakeCurrent(wnd, context);
-
   if (!ce::CoreModule::Initialize(argc, argv))
   {
     printf("Unable to initialize core\n");
     return false;
   }
+  ce::sdlwindow::SDLWindowModule windowModule;
+  if (!windowModule.Initialize(argc, argv, engine))
+  {
+    printf("Unable to register sdl window");
+    return false;
+  }
+
   if (!ce::bullet::BulletModule::Initialize(argc, argv))
   {
     printf("Unable to initialize bullet\n");
     return false;
   }
-  if (!ce::opengl::OpenGLModule::Initialize(argc, argv))
+  ce::opengl::OpenGLModule openGlModule;
+  if (!openGlModule.Initialize(argc, argv, engine))
   {
     printf("Unable to initialize opengl\n");
     return false;
@@ -1095,11 +1013,15 @@ void setup_world(ce::World *world)
 #endif
 }
 
+#include <Windows.h>
+
+typedef void (*ModuleInit)();
 
 int main(int argc, char **argv)
 {
+  ce::Engine *engine = ce::Engine::Get();
 
-  if (!register_modules(argc, argv))
+  if (!register_modules(argc, argv, engine))
   {
     return -1;
   }
@@ -1107,32 +1029,28 @@ int main(int argc, char **argv)
   ce::DebugCache *debugCache = new ce::DebugCache();
   ce::ObjectRegistry::Register<ce::DebugCache>(debugCache);
 
-  if (!initialize_modules(argc, argv))
+  if (!initialize_modules(argc, argv, engine))
   {
     return -1;
   }
 
   set_window_icon();
 
-  ce::iDevice *device = ce::ObjectRegistry::Get<ce::iDevice>();
+  ce::iDevice *device = engine->GetDevice();
+  ce::iWindow* window = engine->GetWindow();
 
 
   ce::World *world = new ce::World();
 
-  int wnd_width, wnd_height;
-  SDL_GetWindowSize(wnd, &wnd_width, &wnd_height);
 
 
   const ce::SettingsFile &settings = ce::Settings::Get().Display();
-  ce::Vector2i resolution   = settings.GetVector2i("resolution", ce::Vector2i(wnd_width, wnd_height));
-  int          width        = resolution.x;
-  int          height       = resolution.y;
   int          multiSamples = settings.GetInt("multisamples", 1);
 
   setup_world(world);
 
 
-  std::string title  = settings.GetText("title");
+//  std::string title  = settings.GetText("title");
   float       rot    = 0.0f;
   float       entRot = 0.0f;
 
@@ -1154,7 +1072,8 @@ int main(int argc, char **argv)
   float sunRotation    = 0.0f;
   float lightnRotation = 0.0f;
 
-  auto renderTarget   = create_render_target(device, width, height, multiSamples);
+  std::string title = window->GetTitle();
+  auto renderTarget   = create_render_target(device, window->GetWidth(), window->GetHeight(), multiSamples);
   auto colorTexture   = renderTarget->GetColorTexture(0);
   auto depthTexture   = renderTarget->GetDepthTexture();
   auto *frameRenderer = ce::ObjectRegistry::Get<ce::iFrameRenderer>();
@@ -1207,7 +1126,7 @@ int main(int argc, char **argv)
 #else
       sprintf_s < 1024 > (buffer, "%s  %d FPS ", title.c_str(), frames);
 #endif
-      SDL_SetWindowTitle(wnd, buffer);
+      window->SetTitle(std::string(buffer));
       printf("%s\n", buffer);
       fflush(stdout);
       frames = 0;
@@ -1224,8 +1143,7 @@ int main(int argc, char **argv)
 
 
 
-//    SDL_GL_MakeCurrent(wnd, context);
-    UpdateEvents();
+    window->ProcessUpdates();
 
     if (ce::Input::IsKeyPressed(ce::Key::eK_Escape))
     {
@@ -1316,7 +1234,7 @@ int main(int argc, char **argv)
     ce::iTexture2D *finalColor = renderTarget->GetColorTexture(0);
 
     device->SetRenderTarget(nullptr);
-    device->SetViewport(0, 0, wnd_width, wnd_height);
+    device->SetViewport(0, 0, window->GetWidth(), window->GetHeight());
     device->SetDepthTest(false);
     device->SetBlending(false);
     device->RenderFullscreen(finalColor);
@@ -1329,7 +1247,7 @@ int main(int argc, char **argv)
     numShaderStateChanges += device->GetNumberOfShaderStateChanges();
 #endif
 
-    SDL_GL_SwapWindow(wnd);
+    window->Present();
 
 
 //    break;

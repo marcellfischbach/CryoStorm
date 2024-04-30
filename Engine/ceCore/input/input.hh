@@ -1,11 +1,11 @@
 #pragma once
 
-#include <ceCore/coreexport.hh>
-#include <ceCore/input/key.hh>
-#include <ceCore/input/button.hh>
-#include <ceCore/math/vector2f.hh>
-#include <ceCore/input/ikeyboard.hh>
-#include <ceCore/input/imouse.hh>
+#include "ceCore/coreexport.hh"
+#include "key.hh"
+#include "button.hh"
+#include "ceCore/math/vector2f.hh"
+#include "ikeyboard.hh"
+#include "imouse.hh"
 
 namespace ce
 {

@@ -1,10 +1,10 @@
 
 #pragma once
 
-#include <ceCore/defs.hh>
-#include <ceCore/types.hh>
-#include <ceCore/input/button.hh>
-#include <ceCore/input/ecursormode.hh>
+#include "ceCore/defs.hh"
+#include "ceCore/types.hh"
+#include "button.hh"
+#include "ecursormode.hh"
 
 namespace ce
 {

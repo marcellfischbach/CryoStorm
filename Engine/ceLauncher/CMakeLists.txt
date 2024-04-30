@@ -15,12 +15,12 @@ set(SOURCES
         testhandler.cc
         testhandler.hh
 
-        window/sdlinputsystem.cc
-        window/sdlinputsystem.hh
-        window/sdlkeyboard.cc
-        window/sdlkeyboard.hh
-        window/sdlmouse.cc
-        window/sdlmouse.hh
+        ../ceSDLWindow/sdlinputsystem.cc
+        ../ceSDLWindow/sdlinputsystem.hh
+        ../ceSDLWindow/sdlkeyboard.cc
+        ../ceSDLWindow/sdlkeyboard.hh
+        ../ceSDLWindow/sdlmouse.cc
+        ../ceSDLWindow/sdlmouse.hh
         )
 
 
@@ -39,5 +39,6 @@ target_link_libraries(ceLauncher
         ceOpenGL
         ceImgLoader
         ceAssimpLoader
+        ceSDLWindow
         ${SDL_LIBRARY}
         )

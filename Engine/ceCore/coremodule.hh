@@ -16,4 +16,7 @@ private:
 
 }
 
+extern "C" CE_CORE_API void initialize_core_module ();
+
+
 #endif // COREMODULE_HH

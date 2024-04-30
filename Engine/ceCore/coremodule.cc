@@ -7,9 +7,13 @@
 #include <ceCore/loaders/samplerloader.hh>
 #include <ceCore/loaders/terrainlayerloader.hh>
 #include <ceCore/loaders/textureloader.hh>
+#include <ceCore/resource/vfs.hh>
 
 
-
+void initialize_core_module()
+{
+  printf ("initialize_core_module\n");
+}
 
 namespace ce
 {
@@ -17,6 +21,18 @@ namespace ce
 bool CoreModule::Register(int argc, char** argv)
 {
   register_classes();
+
+  std::string basePath("../");
+  for (int    i = 0; i < argc; i++)
+  {
+    std::string arg(argv[i]);
+    if (arg == std::string("--data") && i + 1 < argc)
+    {
+      basePath = std::string(argv[++i]);
+    }
+  }
+  printf("Starting with base-path: '%s'\n", basePath.c_str());
+  ce::VFS::Get()->SetRootPath(basePath);
 
   ObjectRegistry::Register<iFrameRenderer>(new DefaultFrameRenderer);
   AssetManager::Set(new AssetManager());

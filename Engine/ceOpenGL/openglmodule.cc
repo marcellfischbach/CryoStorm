@@ -2,6 +2,7 @@
 #include <ceOpenGL/openglmodule.hh>
 #include <master.refl.cc>
 
+#include <ceCore/engine.hh>
 #include <ceCore/objectregistry.hh>
 #include <ceCore/graphics/samplers.hh>
 #include <ceCore/resource/assetmanager.hh>
@@ -16,13 +17,17 @@
 namespace ce::opengl
 {
 
-bool OpenGLModule::Register(int argc, char** argv)
+bool OpenGLModule::Register(int argc, char** argv, Engine* engine)
 {
   register_classes();
 
   AssetManager::Get()->RegisterLoader(new GL4ProgramLoader());
   AssetManager::Get()->RegisterLoader(new GL4ShaderLoader());
-  ObjectRegistry::Register<iDevice>(new GL4Device());
+
+  GL4Device *device = new GL4Device();
+  ObjectRegistry::Register<iDevice>(device);
+  engine->SetDevice(device);
+
 //  ObjectRegistry::Register<iRenderPipeline>(new GL4ForwardPipeline());
 //  ObjectRegistry::Register<iRenderPipeline>(new GL4DeferredPipeline());
   ObjectRegistry::Register<iRenderMeshGeneratorFactory>(new GL4RenderMeshGeneratorFactory());
@@ -31,9 +36,9 @@ bool OpenGLModule::Register(int argc, char** argv)
   return true;
 }
 
-bool OpenGLModule::Initialize(int argc, char** argv)
+bool OpenGLModule::Initialize(int argc, char** argv, Engine* engine)
 {
-  GL4Device* gl4Graphics = ObjectRegistry::Get<iDevice>()->Query<GL4Device>();
+  GL4Device* gl4Graphics = (GL4Device*)engine->GetDevice();
   bool initialized = gl4Graphics->Initialize();
   if (initialized) 
   {

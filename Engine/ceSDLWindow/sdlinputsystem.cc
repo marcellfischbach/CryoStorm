@@ -1,7 +1,7 @@
-#include <ceLauncher/window/sdlinputsystem.hh>
+#include <ceSDLWindow/sdlinputsystem.hh>
 
 
-namespace ce
+namespace ce::sdlwindow
 {
 
 SDLInputSystem::SDLInputSystem(SDLKeyboard* keyboard, SDLMouse* mouse)

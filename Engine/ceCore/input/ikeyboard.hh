@@ -1,9 +1,9 @@
 #ifndef IKEYBOARD_HH
 #define IKEYBOARD_HH
 
-#include <ceCore/coreexport.hh>
-#include <ceCore/input/key.hh>
-#include <ceCore/class.hh>
+#include "ceCore/coreexport.hh"
+#include "key.hh"
+#include "ceCore/class.hh"
 
 
 namespace ce

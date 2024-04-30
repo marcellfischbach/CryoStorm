@@ -1,5 +1,5 @@
 #include <ceLauncher/camerahandler.hh>
-#include <ceCore/input/input.hh>
+#include "ceCore/input/input.hh"
 #include <ceCore/math/vector3f.hh>
 #include <ceCore/entity/transform.hh>
 #include <ceCore/entity/spatialstate.hh>

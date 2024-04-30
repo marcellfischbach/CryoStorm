@@ -1,10 +1,10 @@
 #pragma once
 
 
-#include <ceCore/input/imouse.hh>
+#include "ceCore/input/imouse.hh"
 #include <SDL.h>
 
-namespace ce
+namespace ce::sdlwindow
 {
 
 
