@@ -15,7 +15,7 @@ namespace ce
 
 class CE_CORE_API AssetManager
 {
-  friend class CoreModule;
+  friend class Engine;
 public:
   static void Set(AssetManager *manager);
   static AssetManager *Get();

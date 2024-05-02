@@ -12,7 +12,7 @@
 namespace ce::assimp
 {
 
-bool AssimpLoaderModule::Register(int argc, char** argv)
+bool AssimpLoaderModule::Register(int argc, char** argv, Engine* engine)
 {
   register_classes();
 
@@ -24,10 +24,15 @@ bool AssimpLoaderModule::Register(int argc, char** argv)
   return true;
 }
 
-bool AssimpLoaderModule::Initialize(int argc, char** argv)
+bool AssimpLoaderModule::Initialize(int argc, char** argv, Engine* engine)
 {
   return true;
 }
 
 
+}
+
+CE_DEFINE_LIBRARY(ceAssimpLoader)
+{
+  return new ce::assimp::AssimpLoaderModule;
 }

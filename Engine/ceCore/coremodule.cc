@@ -18,24 +18,12 @@ void initialize_core_module()
 namespace ce
 {
 
-bool CoreModule::Register(int argc, char** argv)
+bool CoreModule::Register(int argc, char** argv, Engine* engine)
 {
   register_classes();
 
-  std::string basePath("../");
-  for (int    i = 0; i < argc; i++)
-  {
-    std::string arg(argv[i]);
-    if (arg == std::string("--data") && i + 1 < argc)
-    {
-      basePath = std::string(argv[++i]);
-    }
-  }
-  printf("Starting with base-path: '%s'\n", basePath.c_str());
-  ce::VFS::Get()->SetRootPath(basePath);
 
   ObjectRegistry::Register<iFrameRenderer>(new DefaultFrameRenderer);
-  AssetManager::Set(new AssetManager());
   AssetManager* assetMan = AssetManager::Get();
   assetMan->RegisterLoader(new SamplerLoader());
   assetMan->RegisterLoader(new MaterialLoader());
@@ -46,10 +34,18 @@ bool CoreModule::Register(int argc, char** argv)
   return true;
 }
 
-bool CoreModule::Initialize(int argc, char** argv)
+bool CoreModule::Initialize(int argc, char** argv, Engine *engine)
 {
 
   return true;
 }
 
+
+
+}
+
+
+CE_DEFINE_LIBRARY(ceCore)
+{
+  return new ce::CoreModule;
 }

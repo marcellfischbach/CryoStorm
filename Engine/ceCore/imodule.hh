@@ -12,5 +12,8 @@ struct iModule
 
 };
 
+#define CE_DECLARE_LIBRARY(name) extern "C" __declspec(dllexport) ce::iModule* name##_load_library()
+#define CE_DEFINE_LIBRARY(name) ce::iModule* name##_load_library()
+
 
 }

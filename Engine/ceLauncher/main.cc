@@ -77,92 +77,110 @@ void UpdateEvents()
 
 }
 
-
-bool register_modules(int argc, char **argv, ce::Engine* engine)
-{
-
-  if (!ce::LauncherModule::Register(argc, argv))
-  {
-    printf("Unable to register launcher\n");
-    return false;
-  }
-  if (!ce::CoreModule::Register(argc, argv))
-  {
-    printf("Unable to register core\n");
-    return false;
-  }
-  ce::sdlwindow::SDLWindowModule windowModule;
-  if (!windowModule.Register(argc, argv, engine))
-  {
-    printf("Unable to register sdl window");
-    return false;
-  }
-  if (!ce::bullet::BulletModule::Register(argc, argv))
-  {
-    printf("Unable to register bullet");
-    return false;
-  }
-  ce::opengl::OpenGLModule openGlModule;
-  if (!openGlModule.Register(argc, argv, engine))
-  {
-    printf("Unable to register opengl\n");
-    return false;
-  }
-  if (!ce::assimp::AssimpLoaderModule::Register(argc, argv))
-  {
-    printf("Unable to register assimp loader\n");
-    return false;
-  }
-  if (!ce::img::ImgLoaderModule::Register(argc, argv))
-  {
-    printf("Unable to register png loader\n");
-    return false;
-  }
-
-  return true;
-}
+//
+//bool register_modules(int argc, char **argv, ce::Engine* engine)
+//{
+//  LauncherModule launcherModule;
+//  if (!launcherModule.Register(argc, argv, engine))
+//  {
+//    printf("Unable to register launcher\n");
+//    return false;
+//  }
+//
+//  ce::CoreModule coreModule;
+//  if (!coreModule.Register(argc, argv, engine))
+//  {
+//    printf("Unable to register core\n");
+//    return false;
+//  }
+//
+//  ce::sdlwindow::SDLWindowModule windowModule;
+//  if (!windowModule.Register(argc, argv, engine))
+//  {
+//    printf("Unable to register sdl window");
+//    return false;
+//  }
+//  ce::bullet::BulletModule bulletModule;
+//  if (!bulletModule.Register(argc, argv, engine))
+//  {
+//    printf("Unable to register bullet");
+//    return false;
+//  }
+//  ce::opengl::OpenGLModule openGlModule;
+//  if (!openGlModule.Register(argc, argv, engine))
+//  {
+//    printf("Unable to register opengl\n");
+//    return false;
+//  }
+//  ce::assimp::AssimpLoaderModule assimpLoaderModule;
+//  if (!assimpLoaderModule.Register(argc, argv, engine))
+//  {
+//    printf("Unable to register assimp loader\n");
+//    return false;
+//  }
+//  ce::img::ImgLoaderModule imgLoaderModule;
+//  if (!imgLoaderModule.Register(argc, argv, engine))
+//  {
+//    printf("Unable to register png loader\n");
+//    return false;
+//  }
+//
+//  return true;
+//}
 
 SDL_Window *wnd;
 
 SDL_GLContext context;
 
-bool initialize_modules(int argc, char **argv, ce::Engine* engine)
-{
-  if (!ce::CoreModule::Initialize(argc, argv))
-  {
-    printf("Unable to initialize core\n");
-    return false;
-  }
-  ce::sdlwindow::SDLWindowModule windowModule;
-  if (!windowModule.Initialize(argc, argv, engine))
-  {
-    printf("Unable to register sdl window");
-    return false;
-  }
-
-  if (!ce::bullet::BulletModule::Initialize(argc, argv))
-  {
-    printf("Unable to initialize bullet\n");
-    return false;
-  }
-  ce::opengl::OpenGLModule openGlModule;
-  if (!openGlModule.Initialize(argc, argv, engine))
-  {
-    printf("Unable to initialize opengl\n");
-    return false;
-  }
-  if (!ce::assimp::AssimpLoaderModule::Initialize(argc, argv))
-  {
-    printf("Unable to initialize assimp loader\n");
-    return false;
-  }
-  if (!ce::img::ImgLoaderModule::Initialize(argc, argv))
-  {
-    printf("Unable to initialize png loader\n");
-    return false;
-  }
-  return true;
-}
+//bool initialize_modules(int argc, char **argv, ce::Engine* engine)
+//{
+//  LauncherModule launcherModule;
+//  if (!launcherModule.Initialize(argc, argv, engine))
+//  {
+//    printf("Unable to initialize launcher\n");
+//    return false;
+//  }
+//
+//  ce::CoreModule coreModule;
+//  if (!coreModule.Initialize(argc, argv, engine))
+//  {
+//    printf("Unable to initialize core\n");
+//    return false;
+//  }
+//
+//  ce::sdlwindow::SDLWindowModule windowModule;
+//  if (!windowModule.Initialize(argc, argv, engine))
+//  {
+//    printf("Unable to initialize sdl window");
+//    return false;
+//  }
+//  ce::bullet::BulletModule bulletModule;
+//  if (!bulletModule.Initialize(argc, argv, engine))
+//  {
+//    printf("Unable to initialize bullet");
+//    return false;
+//  }
+//  ce::opengl::OpenGLModule openGlModule;
+//  if (!openGlModule.Initialize(argc, argv, engine))
+//  {
+//    printf("Unable to initialize opengl\n");
+//    return false;
+//  }
+//  ce::assimp::AssimpLoaderModule assimpLoaderModule;
+//  if (!assimpLoaderModule.Initialize(argc, argv, engine))
+//  {
+//    printf("Unable to initialize assimp loader\n");
+//    return false;
+//  }
+//  ce::img::ImgLoaderModule imgLoaderModule;
+//  if (!imgLoaderModule.Initialize(argc, argv, engine))
+//  {
+//    printf("Unable to initialize png loader\n");
+//    return false;
+//  }
+//
+//  return true;
+//}
 
 void set_window_icon()
 {
@@ -1013,26 +1031,31 @@ void setup_world(ce::World *world)
 #endif
 }
 
-#include <Windows.h>
-
-typedef void (*ModuleInit)();
 
 int main(int argc, char **argv)
 {
-  ce::Engine *engine = ce::Engine::Get();
 
-  if (!register_modules(argc, argv, engine))
+
+
+  ce::Engine *engine = ce::Engine::Get();
+  if (!engine->Initialize(argc, argv, new LauncherModule()))
   {
+    printf ("Unable to initialize engine\n");
     return -1;
-  }
+  };
+
+//  if (!register_modules(argc, argv, engine))
+//  {
+//    return -1;
+//  }
 
   ce::DebugCache *debugCache = new ce::DebugCache();
   ce::ObjectRegistry::Register<ce::DebugCache>(debugCache);
 
-  if (!initialize_modules(argc, argv, engine))
-  {
-    return -1;
-  }
+//  if (!initialize_modules(argc, argv, engine))
+//  {
+//    return -1;
+//  }
 
   set_window_icon();
 

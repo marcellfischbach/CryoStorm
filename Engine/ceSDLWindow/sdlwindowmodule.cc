@@ -37,3 +37,8 @@ bool SDLWindowModule::Initialize(int argc, char **argv, ce::Engine *engine)
 
 
 }
+
+CE_DEFINE_LIBRARY(ceSDLWindow)
+{
+  return new ce::sdlwindow::SDLWindowModule;
+}

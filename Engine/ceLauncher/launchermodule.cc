@@ -4,10 +4,8 @@
 #include <ceCore/objectregistry.hh>
 
 
-namespace ce
-{
 
-bool LauncherModule::Register(int argc, char** argv)
+bool LauncherModule::Register(int argc, char** argv, ce::Engine* engine)
 {
   register_classes();
 
@@ -15,9 +13,9 @@ bool LauncherModule::Register(int argc, char** argv)
   return true;
 }
 
-bool LauncherModule::Initialize(int argc, char** argv)
+bool LauncherModule::Initialize(int argc, char** argv, ce::Engine* engine)
 {
   return true;
 }
 
-}
+

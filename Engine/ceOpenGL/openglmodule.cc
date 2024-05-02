@@ -60,3 +60,8 @@ bool OpenGLModule::Initialize(int argc, char** argv, Engine* engine)
 
 
 }
+
+CE_DEFINE_LIBRARY(ceOpenGL)
+{
+  return new ce::opengl::OpenGLModule;
+}

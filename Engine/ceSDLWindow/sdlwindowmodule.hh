@@ -20,3 +20,6 @@ public:
 };
 
 }
+
+
+CE_DECLARE_LIBRARY(ceSDLWindow);

@@ -11,7 +11,7 @@
 namespace ce::img
 {
 
-bool ImgLoaderModule::Register(int argc, char** argv)
+bool ImgLoaderModule::Register(int argc, char** argv, Engine* engine)
 {
   register_classes();
 
@@ -22,10 +22,15 @@ bool ImgLoaderModule::Register(int argc, char** argv)
   return true;
 }
 
-bool ImgLoaderModule::Initialize(int argc, char** argv)
+bool ImgLoaderModule::Initialize(int argc, char** argv, Engine* engine)
 {
   return true;
 }
 
 
+}
+
+CE_DEFINE_LIBRARY(ceImgLoader)
+{
+  return new ce::img::ImgLoaderModule;
 }

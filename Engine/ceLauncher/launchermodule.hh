@@ -1,18 +1,15 @@
 
 #pragma once
 
-namespace ce
-{
+#include <ceCore/imodule.hh>
 
 
-class LauncherModule
+
+class LauncherModule : public ce::iModule
 {
 public:
-  static bool Register(int argc, char** argv);
-  static bool Initialize(int argc, char** argv);
+  bool Register(int argc, char** argv, ce::Engine* engine);
+  bool Initialize(int argc, char** argv, ce::Engine* engine);
 
-private:
-  LauncherModule() { }
 };
 
-}

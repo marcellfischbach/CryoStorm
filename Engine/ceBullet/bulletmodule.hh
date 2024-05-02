@@ -2,18 +2,19 @@
 #pragma once
 
 #include <ceBullet/bulletexport.hh>
+#include <ceCore/imodule.hh>
 
 namespace ce::bullet
 {
 
-class CE_BULLET_API BulletModule
+class CE_BULLET_API BulletModule : public iModule
 {
 public:
-  static bool Register(int argc, char** argv);
-  static bool Initialize(int argc, char** argv);
+  bool Register(int argc, char** argv, Engine* engine);
+  bool Initialize(int argc, char** argv, Engine* engine);
 
-private:
-  BulletModule() { }
 };
 
 }
+
+CE_DECLARE_LIBRARY(ceBullet);

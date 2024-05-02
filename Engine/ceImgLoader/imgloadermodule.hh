@@ -2,18 +2,19 @@
 #pragma once
 
 #include <ceImgLoader/imgloaderexport.hh>
+#include <ceCore/imodule.hh>
 
 namespace ce::img
 {
 
-class CE_IMGLOADER_API ImgLoaderModule
+class CE_IMGLOADER_API ImgLoaderModule : public iModule
 {
 public:
-  static bool Register(int argc, char** argv);
-  static bool Initialize(int argc, char** argv);
+  bool Register(int argc, char** argv, Engine *engine);
+  bool Initialize(int argc, char** argv, Engine *engine);
 
-private:
-  ImgLoaderModule() { }
 };
 
 }
+
+CE_DECLARE_LIBRARY(ceImgLoader);

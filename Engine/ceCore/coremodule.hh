@@ -2,21 +2,20 @@
 #define COREMODULE_HH
 
 #include <ceCore/coreexport.hh>
+#include <cecore/imodule.hh>
 
 namespace ce
 {
-class CE_CORE_API CoreModule
+class CE_CORE_API CoreModule : public iModule
 {
 public:
-    static bool Register(int argc, char **argv);
-    static bool Initialize(int argc, char **argv);
-private:
-  CoreModule() { }
+  bool Register(int argc, char **argv, Engine *engine);
+  bool Initialize(int argc, char **argv, Engine *engine);
 };
 
 }
 
-extern "C" CE_CORE_API void initialize_core_module ();
+CE_DECLARE_LIBRARY(ceCore);
 
 
 #endif // COREMODULE_HH

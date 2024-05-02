@@ -16,3 +16,5 @@ public:
 };
 
 }
+
+CE_DECLARE_LIBRARY(ceOpenGL);

@@ -2,18 +2,19 @@
 #pragma once
 
 #include <ceAssimpLoader/assimpexport.hh>
+#include <ceCore/imodule.hh>
 
 namespace ce::assimp
 {
 
-class CE_ASSIMP_API AssimpLoaderModule
+class CE_ASSIMP_API AssimpLoaderModule : public iModule
 {
 public:
-  static bool Register(int argc, char** argv);
-  static bool Initialize(int argc, char** argv);
+  bool Register(int argc, char** argv, Engine *engine);
+  bool Initialize(int argc, char** argv, Engine *engine);
 
-private:
-  AssimpLoaderModule() { }
 };
 
 }
+
+CE_DECLARE_LIBRARY(ceAssimpLoader);

@@ -9,7 +9,7 @@
 namespace ce::bullet
 {
 
-bool BulletModule::Register(int argc, char** argv)
+bool BulletModule::Register(int argc, char** argv, Engine* engine)
 {
   register_classes();
 
@@ -19,10 +19,15 @@ bool BulletModule::Register(int argc, char** argv)
   return true;
 }
 
-bool BulletModule::Initialize(int argc, char** argv)
+bool BulletModule::Initialize(int argc, char** argv, Engine* engine)
 {
   return true;
 }
 
 
+}
+
+CE_DEFINE_LIBRARY(ceBullet)
+{
+  return new ce::bullet::BulletModule;
 }
