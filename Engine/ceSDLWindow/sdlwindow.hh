@@ -35,6 +35,8 @@ public:
   int GetWidth() const override;
   int GetHeight() const override;
 
+  void SetWindowIcon (const ResourceLocator &locator) override;
+
   void Show() override;
   void Hide() override;
   void Present() override;

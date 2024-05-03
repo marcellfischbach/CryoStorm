@@ -8,6 +8,7 @@
 
 #include <ceCore/engine.hh>
 #include <ceCore/objectregistry.hh>
+#include <ceCore/settings.hh>
 
 #include <master.refl.cc>
 
@@ -31,6 +32,13 @@ bool SDLWindowModule::Initialize(int argc, char **argv, ce::Engine *engine)
 {
   SDLWindow *window = (SDLWindow*)engine->GetWindow();
   window->Initialize();
+
+  const std::string &iconName = Settings::Get().Display().GetText("icon");
+  if (!iconName.empty())
+  {
+    window->SetWindowIcon(ResourceLocator(iconName));
+  }
+  
   window->Show();
   return true;
 }
@@ -40,5 +48,6 @@ bool SDLWindowModule::Initialize(int argc, char **argv, ce::Engine *engine)
 
 CE_DEFINE_LIBRARY(ceSDLWindow)
 {
+  printf ("Load library: ceSDLWindow\n");
   return new ce::sdlwindow::SDLWindowModule;
 }

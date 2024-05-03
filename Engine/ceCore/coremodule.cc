@@ -47,5 +47,6 @@ bool CoreModule::Initialize(int argc, char** argv, Engine *engine)
 
 CE_DEFINE_LIBRARY(ceCore)
 {
+  printf ("Load library: ceCore\n");
   return new ce::CoreModule;
 }

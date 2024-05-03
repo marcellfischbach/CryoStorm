@@ -4,6 +4,7 @@
 
 #include <ceCore/engine.hh>
 #include <ceCore/objectregistry.hh>
+#include <ceCore/settings.hh>
 #include <ceCore/graphics/samplers.hh>
 #include <ceCore/resource/assetmanager.hh>
 #include <ceOpenGL/gl4/gl4device.hh>
@@ -28,8 +29,19 @@ bool OpenGLModule::Register(int argc, char** argv, Engine* engine)
   ObjectRegistry::Register<iDevice>(device);
   engine->SetDevice(device);
 
-//  ObjectRegistry::Register<iRenderPipeline>(new GL4ForwardPipeline());
-//  ObjectRegistry::Register<iRenderPipeline>(new GL4DeferredPipeline());
+  std::string renderPipline = Settings::Get().Graphics().GetText("pipeline", "forward");
+  if (renderPipline == std::string("forward"))
+  {
+    ObjectRegistry::Register<iRenderPipeline>(new GL4ForwardPipeline());
+  }
+  else if (renderPipline == std::string("deferred"))
+  {
+    ObjectRegistry::Register<iRenderPipeline>(new GL4DeferredPipeline());
+  }
+  else
+  {
+    return false;
+  }
   ObjectRegistry::Register<iRenderMeshGeneratorFactory>(new GL4RenderMeshGeneratorFactory());
   ObjectRegistry::Register<iRenderMeshBatchGeneratorFactory>(new GL4RenderMeshBatchGeneratorFactory());
   ObjectRegistry::Register<iTerrainMeshGeneratorFactory>(new GL4TerrainMeshGeneratorFactory());
@@ -49,6 +61,7 @@ bool OpenGLModule::Initialize(int argc, char** argv, Engine* engine)
 
   }
 
+
   iRenderPipeline* pipeline = ObjectRegistry::Get<iRenderPipeline>();
   if (pipeline)
   {
@@ -63,5 +76,6 @@ bool OpenGLModule::Initialize(int argc, char** argv, Engine* engine)
 
 CE_DEFINE_LIBRARY(ceOpenGL)
 {
+  printf ("Load library: ceOpenGL\n");
   return new ce::opengl::OpenGLModule;
 }

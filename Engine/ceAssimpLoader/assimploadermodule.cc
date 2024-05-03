@@ -34,5 +34,6 @@ bool AssimpLoaderModule::Initialize(int argc, char** argv, Engine* engine)
 
 CE_DEFINE_LIBRARY(ceAssimpLoader)
 {
+  printf ("Load library: ceAssimpLoader\n");
   return new ce::assimp::AssimpLoaderModule;
 }

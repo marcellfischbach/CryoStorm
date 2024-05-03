@@ -29,5 +29,6 @@ bool BulletModule::Initialize(int argc, char** argv, Engine* engine)
 
 CE_DEFINE_LIBRARY(ceBullet)
 {
+  printf ("Load library: ceBullet\n");
   return new ce::bullet::BulletModule;
 }

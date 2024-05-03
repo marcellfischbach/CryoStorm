@@ -10,6 +10,7 @@
 namespace ce
 {
 
+class ResourceLocator;
 
 struct WndDesc;
 CE_CLASS()
@@ -29,6 +30,13 @@ struct CE_CORE_API iWindow : public iObject
   virtual void SetResolution(uint16_t width, uint16_t height) = 0;
   virtual int GetWidth() const = 0;
   virtual int GetHeight() const = 0;
+
+
+  /**
+   * Optional.
+   * @param iconName
+   */
+  virtual void SetWindowIcon (const ResourceLocator &iconName) = 0;
 
   virtual void Show () = 0;
   virtual void Hide () = 0;

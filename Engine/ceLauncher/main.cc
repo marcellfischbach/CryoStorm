@@ -1,8 +1,5 @@
 
 #include <ceLauncher/launchermodule.hh>
-#include <ceLauncher/demopostprocess.hh>
-#include <ceBullet/bulletmodule.hh>
-#include <ceCore/coremodule.hh>
 #include <ceCore/engine.hh>
 #include <ceCore/settings.hh>
 #include <ceCore/animation/skeletonanimation.hh>
@@ -10,7 +7,6 @@
 #include <ceCore/entity/camerastate.hh>
 #include <ceCore/entity/collisionstate.hh>
 #include <ceCore/entity/entity.hh>
-#include <ceCore/entity/entitystate.hh>
 #include <ceCore/entity/lightstate.hh>
 #include <ceCore/entity/rigidbodystate.hh>
 #include <ceCore/entity/skeletonmeshstate.hh>
@@ -23,7 +19,6 @@
 #include <ceCore/math/math.hh>
 #include <ceCore/math/color4f.hh>
 #include <ceCore/objectregistry.hh>
-#include <ceCore/graphics/camera.hh>
 #include <ceCore/graphics/idevice.hh>
 #include <ceCore/graphics/iframerenderer.hh>
 #include <ceCore/graphics/image.hh>
@@ -34,178 +29,31 @@
 #include <ceCore/graphics/isampler.hh>
 #include <ceCore/graphics/iterrainmesh.hh>
 #include <ceCore/graphics/skeletonmesh.hh>
-#include <ceCore/graphics/samplers.hh>
 #include <ceCore/graphics/mesh.hh>
 #include <ceCore/graphics/postprocessing.hh>
-#include <ceCore/graphics/projector.hh>
 #include <ceCore/graphics/pp/pp.hh>
-#include <ceCore/graphics/shading/ishader.hh>
 #include <ceCore/graphics/shading/ishaderattribute.hh>
-#include <ceCore/graphics/material/material.hh>
-#include <ceCore/graphics/material/materialinstance.hh>
 #include <ceCore/graphics/scene/igfxscene.hh>
-#include <ceCore/graphics/scene/gfxmesh.hh>
 #include <ceCore/physics/physics.hh>
 #include <ceCore/resource/assetmanager.hh>
 #include <ceCore/resource/vfs.hh>
-#include <ceCore/resource/resourcelocator.hh>
-#include <ceCore/physics/physics.hh>
 #include <ceCore/window/iwindow.hh>
-#include <ceAssimpLoader/assimploadermodule.hh>
-#include <ceOpenGL/openglmodule.hh>
-#include <GL/glew.h>
+#include <ceCore/time.hh>
 
-#include <ceImgLoader/imgloadermodule.hh>
 
 #include <ceLauncher/camerahandler.hh>
-#include <ceLauncher/mirrorhandler.hh>
-#include <ceLauncher/testhandler.hh>
 
-#include <ceSDLWindow/sdlwindowmodule.hh>
 #include <iostream>
 #include <SDL.h>
 #include <regex>
+#include <sstream>
 #include <string>
-#include <ceCore/time.hh>
 
 
 ce::LightState *shadowLightState = nullptr;
 
 
-void UpdateEvents()
-{
 
-}
-
-//
-//bool register_modules(int argc, char **argv, ce::Engine* engine)
-//{
-//  LauncherModule launcherModule;
-//  if (!launcherModule.Register(argc, argv, engine))
-//  {
-//    printf("Unable to register launcher\n");
-//    return false;
-//  }
-//
-//  ce::CoreModule coreModule;
-//  if (!coreModule.Register(argc, argv, engine))
-//  {
-//    printf("Unable to register core\n");
-//    return false;
-//  }
-//
-//  ce::sdlwindow::SDLWindowModule windowModule;
-//  if (!windowModule.Register(argc, argv, engine))
-//  {
-//    printf("Unable to register sdl window");
-//    return false;
-//  }
-//  ce::bullet::BulletModule bulletModule;
-//  if (!bulletModule.Register(argc, argv, engine))
-//  {
-//    printf("Unable to register bullet");
-//    return false;
-//  }
-//  ce::opengl::OpenGLModule openGlModule;
-//  if (!openGlModule.Register(argc, argv, engine))
-//  {
-//    printf("Unable to register opengl\n");
-//    return false;
-//  }
-//  ce::assimp::AssimpLoaderModule assimpLoaderModule;
-//  if (!assimpLoaderModule.Register(argc, argv, engine))
-//  {
-//    printf("Unable to register assimp loader\n");
-//    return false;
-//  }
-//  ce::img::ImgLoaderModule imgLoaderModule;
-//  if (!imgLoaderModule.Register(argc, argv, engine))
-//  {
-//    printf("Unable to register png loader\n");
-//    return false;
-//  }
-//
-//  return true;
-//}
-
-SDL_Window *wnd;
-
-SDL_GLContext context;
-
-//bool initialize_modules(int argc, char **argv, ce::Engine* engine)
-//{
-//  LauncherModule launcherModule;
-//  if (!launcherModule.Initialize(argc, argv, engine))
-//  {
-//    printf("Unable to initialize launcher\n");
-//    return false;
-//  }
-//
-//  ce::CoreModule coreModule;
-//  if (!coreModule.Initialize(argc, argv, engine))
-//  {
-//    printf("Unable to initialize core\n");
-//    return false;
-//  }
-//
-//  ce::sdlwindow::SDLWindowModule windowModule;
-//  if (!windowModule.Initialize(argc, argv, engine))
-//  {
-//    printf("Unable to initialize sdl window");
-//    return false;
-//  }
-//  ce::bullet::BulletModule bulletModule;
-//  if (!bulletModule.Initialize(argc, argv, engine))
-//  {
-//    printf("Unable to initialize bullet");
-//    return false;
-//  }
-//  ce::opengl::OpenGLModule openGlModule;
-//  if (!openGlModule.Initialize(argc, argv, engine))
-//  {
-//    printf("Unable to initialize opengl\n");
-//    return false;
-//  }
-//  ce::assimp::AssimpLoaderModule assimpLoaderModule;
-//  if (!assimpLoaderModule.Initialize(argc, argv, engine))
-//  {
-//    printf("Unable to initialize assimp loader\n");
-//    return false;
-//  }
-//  ce::img::ImgLoaderModule imgLoaderModule;
-//  if (!imgLoaderModule.Initialize(argc, argv, engine))
-//  {
-//    printf("Unable to initialize png loader\n");
-//    return false;
-//  }
-//
-//  return true;
-//}
-
-void set_window_icon()
-{
-  auto image = ce::AssetManager::Get()->Load<ce::Image>("file:///icons/ce24.png");
-  if (!image)
-  {
-    return;
-  }
-
-  SDL_Surface *surf = SDL_CreateRGBSurface(0,
-                                           image->GetWidth(),
-                                           image->GetHeight(),
-                                           32,
-                                           0xff000000,
-                                           0x00ff0000,
-                                           0x0000ff00,
-                                           0x000000ff);
-  SDL_LockSurface(surf);
-  SDL_memcpy(surf->pixels, image->GetData(), image->GetWidth() * image->GetHeight() * 4);
-  SDL_UnlockSurface(surf);
-  SDL_SetSurfaceBlendMode(surf, SDL_BLENDMODE_BLEND);
-
-  SDL_SetWindowIcon(wnd, surf);
-
-}
 
 ce::iTerrainMesh *create_terrain_mesh(float size)
 {
@@ -851,10 +699,7 @@ void generate_physics(ce::World *world, ce::iMaterial *material)
 
 }
 
-#include <regex>
-#include <sstream>
-#include <ceOpenGL/gl4/pipeline/forward/gl4forwardpipeline.hh>
-#include <ceOpenGL/gl4/pipeline/deferred/gl4deferredpipeline.hh>
+
 
 ce::LightState *add_directional_light(ce::World *world,
                                       const ce::Vector3f &axis,
@@ -1044,20 +889,11 @@ int main(int argc, char **argv)
     return -1;
   };
 
-//  if (!register_modules(argc, argv, engine))
-//  {
-//    return -1;
-//  }
+
 
   ce::DebugCache *debugCache = new ce::DebugCache();
   ce::ObjectRegistry::Register<ce::DebugCache>(debugCache);
 
-//  if (!initialize_modules(argc, argv, engine))
-//  {
-//    return -1;
-//  }
-
-  set_window_icon();
 
   ce::iDevice *device = engine->GetDevice();
   ce::iWindow* window = engine->GetWindow();
@@ -1097,22 +933,8 @@ int main(int argc, char **argv)
 
   std::string title = window->GetTitle();
   auto renderTarget   = create_render_target(device, window->GetWidth(), window->GetHeight(), multiSamples);
-  auto colorTexture   = renderTarget->GetColorTexture(0);
-  auto depthTexture   = renderTarget->GetDepthTexture();
   auto *frameRenderer = ce::ObjectRegistry::Get<ce::iFrameRenderer>();
 
-  auto forwardPipeline  = new ce::opengl::GL4ForwardPipeline();
-  auto deferredPipeline = new ce::opengl::GL4DeferredPipeline();
-
-
-
-
-  forwardPipeline->Initialize();
-  deferredPipeline->Initialize();
-  ce::iRenderPipeline *pipeline = deferredPipeline;
-
-
-  frameRenderer->SetRenderPipeline(pipeline);
 
   float    rotation[4];
   bool     rotation_direction[4];
@@ -1130,7 +952,6 @@ int main(int argc, char **argv)
     device->ResetDebug();
 #endif
     uint32_t time  = SDL_GetTicks();
-    uint64_t _time = ce::Time::GetTime();
     if (time > nextSec)
     {
       nextSec += 1000;
@@ -1211,36 +1032,6 @@ int main(int argc, char **argv)
       }
 
       world->Update(tpf);
-    }
-    if (ce::Input::IsKeyPressed(ce::Key::eK_P))
-    {
-      if (pipeline == forwardPipeline)
-      {
-        printf("Switch to: DeferredPipeline\n");
-        pipeline = deferredPipeline;
-      }
-      else
-      {
-        printf("Switch to: FowardPipeline\n");
-        pipeline = forwardPipeline;
-      }
-      frameRenderer->SetRenderPipeline(pipeline);
-    }
-
-
-    if (ce::Input::IsKeyPressed(ce::Key::eK_M))
-    {
-      if (pipeline == deferredPipeline)
-      {
-        if (ce::Input::IsKeyDown(ce::Key::eK_LeftShift))
-        {
-          deferredPipeline->DecRenderMode();
-        }
-        else
-        {
-          deferredPipeline->IncRenderMode();
-        }
-      }
     }
 
     if (ce::Input::IsKeyPressed(ce::Key::eK_L) && shadowLightState)

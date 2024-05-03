@@ -58,18 +58,22 @@ typedef iModule *(*load_library_func_ptr)();
 iModule *open_module(CrimsonFileElement *moduleElement)
 {
 #ifdef  CE_WIN32
-  std::string mode              = moduleElement->GetTagName();
-  std::string lib_name          = moduleElement->GetAttribute(0)->GetValue();
+  std::string lib_name              = moduleElement->GetTagName();
   std::string dll_name          = lib_name + std::string(".dll");
   std::string load_library_name = lib_name + "_load_library";
 
-  HMODULE library = LoadLibraryEx(dll_name.c_str(), nullptr, 0);
-  if (!library)
+  HMODULE handle = GetModuleHandle(dll_name.c_str());
+  if (!handle)
   {
-    return nullptr;
+    handle = LoadLibraryEx(dll_name.c_str(), nullptr, 0);
+    if (!handle)
+    {
+      return nullptr;
+    }
   }
 
-  load_library_func_ptr load_library_func = (load_library_func_ptr) GetProcAddress(library, load_library_name.c_str());
+
+  load_library_func_ptr load_library_func = (load_library_func_ptr) GetProcAddress(handle, load_library_name.c_str());
   if (!load_library_func)
   {
     return nullptr;

@@ -32,5 +32,6 @@ bool ImgLoaderModule::Initialize(int argc, char** argv, Engine* engine)
 
 CE_DEFINE_LIBRARY(ceImgLoader)
 {
+  printf ("Load library: ceImgLoader\n");
   return new ce::img::ImgLoaderModule;
 }

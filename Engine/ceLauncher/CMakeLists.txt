@@ -15,12 +15,7 @@ set(SOURCES
         testhandler.cc
         testhandler.hh
 
-        ../ceSDLWindow/sdlinputsystem.cc
-        ../ceSDLWindow/sdlinputsystem.hh
-        ../ceSDLWindow/sdlkeyboard.cc
-        ../ceSDLWindow/sdlkeyboard.hh
-        ../ceSDLWindow/sdlmouse.cc
-        ../ceSDLWindow/sdlmouse.hh
+
         )
 
 
@@ -35,10 +30,11 @@ CE_MOC(ceLauncher ceLauncher)
 
 target_link_libraries(ceLauncher
         ceCore
-        ceBullet
-        ceOpenGL
-        ceImgLoader
-        ceAssimpLoader
-        ceSDLWindow
         ${SDL_LIBRARY}
         )
+
+#add_dependencies(ceLauncher ceAssimpLoader)
+#add_dependencies(ceLauncher ceBullet)
+#add_dependencies(ceLauncher ceImgLoader)
+#add_dependencies(ceLauncher ceOpenGL)
+#add_dependencies(ceLauncher ceSDLWindow)

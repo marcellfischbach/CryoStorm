@@ -4,6 +4,8 @@
 
 #include <ceSDLWindow/sdlwindow.hh>
 #include <ceCore/settings.hh>
+#include <ceCore/resource/assetmanager.hh>
+#include <ceCore/graphics/image.hh>
 
 namespace ce::sdlwindow
 {
@@ -52,11 +54,11 @@ bool SDLWindow::Initialize()
     return false;
   }
 
-  m_posX = pos.x;
-  m_posY = pos.y;
-  m_width = res.x;
+  m_posX   = pos.x;
+  m_posY   = pos.y;
+  m_width  = res.x;
   m_height = res.y;
-  m_title = title;
+  m_title  = title;
 
   bool vsync = settings.GetBool("vsync");
   m_window = SDL_CreateWindow(title.c_str(),
@@ -132,6 +134,33 @@ int SDLWindow::GetHeight() const
   return m_height;
 }
 
+void SDLWindow::SetWindowIcon(const ce::ResourceLocator &locator)
+{
+  if (m_window)
+  {
+
+    auto image = ce::AssetManager::Get()->Load<ce::Image>("file:///icons/ce24.png");
+    if (!image)
+    {
+      return;
+    }
+
+    SDL_Surface *surf = SDL_CreateRGBSurface(0,
+                                             image->GetWidth(),
+                                             image->GetHeight(),
+                                             32,
+                                             0xff000000,
+                                             0x00ff0000,
+                                             0x0000ff00,
+                                             0x000000ff);
+    SDL_LockSurface(surf);
+    SDL_memcpy(surf->pixels, image->GetData(), image->GetWidth() * image->GetHeight() * 4);
+    SDL_UnlockSurface(surf);
+    SDL_SetSurfaceBlendMode(surf, SDL_BLENDMODE_BLEND);
+
+    SDL_SetWindowIcon(m_window, surf);
+  }
+}
 
 void SDLWindow::Show()
 {
