@@ -3,6 +3,7 @@
 //
 
 #include <ceCore/engine.hh>
+#include <ceCore/entity/world.hh>
 #include <ceCore/graphics/idevice.hh>
 #include <ceCore/graphics/iframerenderer.hh>
 #include <ceCore/graphics/defaultframerenderer.hh>
@@ -51,6 +52,16 @@ void Engine::SetWindow(ce::iWindow *window)
 iWindow *Engine::GetWindow()
 {
   return m_window;
+}
+
+void Engine::SetWorld(ce::World *world)
+{
+  CE_SET(m_world, world);
+}
+
+World* Engine::GetWorld()
+{
+  return m_world;
 }
 
 typedef iModule *(*load_library_func_ptr)();
@@ -154,7 +165,24 @@ bool Engine::Initialize(int argc, char **argv, ce::iModule *application)
 
   CE_RELEASE(modulesConfig);
 
+  if (!m_world)
+  {
+    m_world = new World();
+  }
+
   return true;
+}
+
+int Engine::Run()
+{
+  while (true)
+  {
+#if _DEBUG
+    m_device->ResetDebug();
+#endif
+
+
+  }
 }
 
 
@@ -162,6 +190,7 @@ Engine *Engine::s_instance = nullptr;
 
 Engine::Engine()
     : m_frameRenderer(new DefaultFrameRenderer())
+    , m_world (nullptr)
 {
 
 }

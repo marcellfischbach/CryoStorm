@@ -15,6 +15,8 @@ struct iModule;
 struct iFrameRenderer;
 struct iWindow;
 
+class World;
+
 class CE_CORE_API  Engine
 {
 public:
@@ -27,12 +29,18 @@ public:
   void SetFrameRenderer(iFrameRenderer *frameRenderer);
   iFrameRenderer *GetFrameRenderer();
 
+  void SetWorld(World *world);
+  World *GetWorld();
+
   bool Initialize(int argc, char** argv, ce::iModule *application);
+
+  int Run ();
 
 private:
   iWindow        *m_window        = nullptr;
   iDevice        *m_device        = nullptr;
   iFrameRenderer *m_frameRenderer = nullptr;
+  World          *m_world;
 
   std::vector<iModule*> m_modules;
 

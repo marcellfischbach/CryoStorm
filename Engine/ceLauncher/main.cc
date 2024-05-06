@@ -2,6 +2,7 @@
 #include <ceLauncher/launchermodule.hh>
 #include <ceCore/engine.hh>
 #include <ceCore/settings.hh>
+#include <ceCore/ticker.hh>
 #include <ceCore/animation/skeletonanimation.hh>
 #include <ceCore/animation/skeletonanimationplayer.hh>
 #include <ceCore/entity/camerastate.hh>
@@ -44,7 +45,6 @@
 #include <ceLauncher/camerahandler.hh>
 
 #include <iostream>
-#include <SDL.h>
 #include <regex>
 #include <sstream>
 #include <string>
@@ -876,6 +876,20 @@ void setup_world(ce::World *world)
 #endif
 }
 
+int main2(int argc, char** argv)
+{
+  ce::Engine *engine = ce::Engine::Get();
+  if (!engine->Initialize(argc, argv, new LauncherModule()))
+  {
+    printf ("Unable to initialize engine\n");
+    return -1;
+  };
+
+
+  setup_world(engine->GetWorld());
+
+  return engine->Run();
+}
 
 int main(int argc, char **argv)
 {
@@ -913,9 +927,9 @@ int main(int argc, char **argv)
   float       rot    = 0.0f;
   float       entRot = 0.0f;
 
-  uint32_t nextSec  = SDL_GetTicks() + 1000;
+  int64_t lastTime = ce::Ticker::Tick();
+  int64_t nextSec  = lastTime + 1000;
   uint32_t frames   = 0;
-  uint32_t lastTime = SDL_GetTicks();
 
   bool anim = false;
 
@@ -951,7 +965,7 @@ int main(int argc, char **argv)
 #if _DEBUG
     device->ResetDebug();
 #endif
-    uint32_t time  = SDL_GetTicks();
+    int64_t time  = ce::Ticker::Tick();
     if (time > nextSec)
     {
       nextSec += 1000;

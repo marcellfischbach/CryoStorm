@@ -22,10 +22,11 @@ set(SOURCES
         settings.hh
         string.cc
         string.hh
+        ticker.cc
+        ticker.hh
         time.cc
         time.hh
         types.hh
-
 
         animation/skeletonanimation.cc
         animation/skeletonanimation.hh
