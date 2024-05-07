@@ -7,6 +7,8 @@ set(SOURCES
         camerahandler.hh
         demopostprocess.cc
         demopostprocess.hh
+        exitgamestate.cc
+        exitgamestate.hh
         launchermodule.cc
         launchermodule.hh
         main.cc

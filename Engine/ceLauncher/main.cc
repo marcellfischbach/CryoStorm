@@ -1,5 +1,6 @@
 
 #include <ceLauncher/launchermodule.hh>
+#include <ceLauncher/exitgamestate.hh>
 #include <ceCore/engine.hh>
 #include <ceCore/settings.hh>
 #include <ceCore/ticker.hh>
@@ -816,6 +817,13 @@ void generate_cube_fbx(ce::World *world)
   world->Attach(entity);
 }
 
+void generate_exit_game(ce::World *world)
+{
+  ce::Entity* entity = new ce::Entity();
+  entity->Attach(new ExitGameState);
+  world->Attach(entity);
+}
+
 void setup_world(ce::World *world)
 {
 
@@ -823,7 +831,7 @@ void setup_world(ce::World *world)
   auto material        = assetMan->Get<ce::iMaterial>("/materials/Default.mat");
   auto skinnedMaterial = assetMan->Get<ce::iMaterial>("/materials/DefaultSkinned.mat");
 
-
+  generate_exit_game(world);
   generate_terrain(world);
   generate_camera(world);
   generate_physics(world, material);
@@ -876,7 +884,7 @@ void setup_world(ce::World *world)
 #endif
 }
 
-int main2(int argc, char** argv)
+int main(int argc, char** argv)
 {
   ce::Engine *engine = ce::Engine::Get();
   if (!engine->Initialize(argc, argv, new LauncherModule()))
@@ -891,7 +899,7 @@ int main2(int argc, char** argv)
   return engine->Run();
 }
 
-int main(int argc, char **argv)
+int main2(int argc, char **argv)
 {
 
 

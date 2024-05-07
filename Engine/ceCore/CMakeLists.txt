@@ -14,6 +14,8 @@ set(SOURCES
         coremodule.hh
         engine.cc
         engine.hh
+        fps.cc
+        fps.hh
         imodule.hh
         objectregistry.cc
         objectregistry.hh

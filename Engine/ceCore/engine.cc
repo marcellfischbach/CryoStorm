@@ -3,10 +3,14 @@
 //
 
 #include <ceCore/engine.hh>
+#include <ceCore/fps.hh>
+#include <ceCore/objectregistry.hh>
+#include <ceCore/settings.hh>
 #include <ceCore/entity/world.hh>
 #include <ceCore/graphics/idevice.hh>
 #include <ceCore/graphics/iframerenderer.hh>
 #include <ceCore/graphics/defaultframerenderer.hh>
+#include <ceCore/graphics/irendertarget2d.hh>
 #include <ceCore/window/iwindow.hh>
 #include <ceCore/resource/assetmanager.hh>
 #include <ceCore/resource/file.hh>
@@ -59,9 +63,15 @@ void Engine::SetWorld(ce::World *world)
   CE_SET(m_world, world);
 }
 
-World* Engine::GetWorld()
+World *Engine::GetWorld()
 {
   return m_world;
+}
+
+void Engine::Exit(int returnValue)
+{
+  m_exitValue = returnValue;
+  m_active = false;
 }
 
 typedef iModule *(*load_library_func_ptr)();
@@ -69,7 +79,7 @@ typedef iModule *(*load_library_func_ptr)();
 iModule *open_module(CrimsonFileElement *moduleElement)
 {
 #ifdef  CE_WIN32
-  std::string lib_name              = moduleElement->GetTagName();
+  std::string lib_name          = moduleElement->GetTagName();
   std::string dll_name          = lib_name + std::string(".dll");
   std::string load_library_name = lib_name + "_load_library";
 
@@ -95,6 +105,53 @@ iModule *open_module(CrimsonFileElement *moduleElement)
   return nullptr;
 #endif
 }
+
+ce::iRenderTarget2D *create_render_target(ce::iDevice *device, uint32_t width, uint32_t height, uint16_t multiSamples)
+{
+  ce::iSampler *colorSampler = device->CreateSampler();
+  colorSampler->SetFilterMode(ce::eFM_MinMagNearest);
+
+  ce::iSampler *depthSampler = device->CreateSampler();
+  depthSampler->SetFilterMode(ce::eFM_MinMagNearest);
+  depthSampler->SetTextureCompareFunc(ce::eCF_LessOrEqual);
+  depthSampler->SetTextureCompareMode(ce::eTCM_None);
+
+  ce::iTexture2D::Descriptor rt_col_desc = {};
+  rt_col_desc.Width        = width;
+  rt_col_desc.Height       = height;
+  rt_col_desc.Format       = ce::ePF_RGBA;
+  rt_col_desc.MipMaps      = false;
+  rt_col_desc.MultiSamples = multiSamples;
+  ce::iTexture2D *color_texture = device->CreateTexture(rt_col_desc);
+  color_texture->SetSampler(colorSampler);
+
+  ce::iTexture2D::Descriptor rt_dpth_desc = {};
+  rt_dpth_desc.Width        = width;
+  rt_dpth_desc.Height       = height;
+  rt_dpth_desc.Format       = ce::ePF_DepthStencil;
+  rt_dpth_desc.MipMaps      = false;
+  rt_dpth_desc.MultiSamples = multiSamples;
+  ce::iTexture2D *depth_texture = device->CreateTexture(rt_dpth_desc);
+  depth_texture->SetSampler(depthSampler);
+  printf("CreateDepthTexture: %p\n", depth_texture);
+
+
+  ce::iRenderTarget2D::Descriptor rt_desc = {};
+  rt_desc.Width  = width;
+  rt_desc.Height = height;
+
+  ce::iRenderTarget2D *renderTarget = device->CreateRenderTarget(rt_desc);
+  renderTarget->AddColorTexture(color_texture);
+//  renderTarget->SetDepthBuffer(ce::ePF_Depth);
+  renderTarget->SetDepthTexture(depth_texture);
+  if (!renderTarget->Compile())
+  {
+    printf("Unable to compile render target: %s\n", renderTarget->GetCompileLog().c_str());
+    return nullptr;
+  }
+  return renderTarget;
+}
+
 
 bool Engine::Initialize(int argc, char **argv, ce::iModule *application)
 {
@@ -170,19 +227,75 @@ bool Engine::Initialize(int argc, char **argv, ce::iModule *application)
     m_world = new World();
   }
 
-  return true;
+
+  int multiSamples = Settings::Get().Display().GetInt("multisamples", 1);
+  m_renderTarget = create_render_target(m_device, m_window->GetWidth(), m_window->GetHeight(), multiSamples);
+
+  ce::ObjectRegistry::Register<ce::DebugCache>(new ce::DebugCache());
+
+
+  return m_renderTarget != nullptr;
 }
 
 int Engine::Run()
 {
-  while (true)
+  FPS      fps;
+  uint32_t lastFPS = 0;
+
+#if _DEBUG
+  size_t numDrawCallsPerSec    = 0;
+  size_t numTrianglesPerSec    = 0;
+  size_t numShaderStateChanges = 0;
+#endif
+
+  while (m_active)
   {
 #if _DEBUG
     m_device->ResetDebug();
 #endif
+    m_window->ProcessUpdates();
 
 
+    int64_t frameTime = fps.Tick();
+    if (frameTime != 0)
+    {
+      uint32_t currentFPS = fps.Get();
+      if (currentFPS != lastFPS)
+      {
+        lastFPS = currentFPS;
+
+        std::string title = std::string("CrimsonEdge ") + std::to_string(currentFPS) + std::string(" FPS");
+        m_window->SetTitle(title);
+        printf("%s\n", title.c_str());
+      }
+
+      float tpf = (float) frameTime / 1000.0f;
+
+      m_world->Update(tpf);
+    }
+
+
+    m_frameRenderer->Render(m_renderTarget, m_device, m_world->GetScene());
+
+    ce::iTexture2D *finalColor = m_renderTarget->GetColorTexture(0);
+
+    m_device->SetRenderTarget(nullptr);
+    m_device->SetViewport(0, 0, m_window->GetWidth(), m_window->GetHeight());
+    m_device->SetDepthTest(false);
+    m_device->SetBlending(false);
+    m_device->RenderFullscreen(finalColor);
+    m_device->SetDepthTest(true);
+
+
+#if _DEBUG
+    numDrawCallsPerSec += m_device->GetNumberOfDrawCalls();
+    numTrianglesPerSec += m_device->GetNumberOfTriangles();
+    numShaderStateChanges += m_device->GetNumberOfShaderStateChanges();
+#endif
+
+    m_window->Present();
   }
+  return m_exitValue;
 }
 
 
@@ -190,7 +303,7 @@ Engine *Engine::s_instance = nullptr;
 
 Engine::Engine()
     : m_frameRenderer(new DefaultFrameRenderer())
-    , m_world (nullptr)
+    , m_world(nullptr)
 {
 
 }
