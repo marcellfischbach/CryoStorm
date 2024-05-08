@@ -17,7 +17,6 @@ class SpatialState;
 CE_CLASS(jclass="org.crimsonedge.core.entity.Entity")
 class CE_CORE_API Entity : public CE_SUPER(iObject)
 {
-
   CE_CLASS_GEN_OBJECT;
 public:
   Entity(const std::string &name = std::string(""));

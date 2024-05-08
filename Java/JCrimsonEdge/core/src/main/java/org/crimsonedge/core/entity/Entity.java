@@ -11,5 +11,6 @@ public class Entity extends CoreObject {
 
     public Entity(long ref) {
         super(ref);
+        System.out.println("Entity.Entity(" + ref + ")");
     }
 }

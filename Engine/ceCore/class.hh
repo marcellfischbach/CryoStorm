@@ -6,6 +6,7 @@
 
 #ifdef CE_JAVA
 #include <jni.h>
+#include <ceCore/java.hh>
 #endif
 
 //
