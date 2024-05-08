@@ -4,6 +4,8 @@
 #include <ceCore/imodule.hh>
 
 
+namespace ce::launcher
+{
 
 class LauncherModule : public ce::iModule
 {
@@ -13,3 +15,4 @@ public:
 
 };
 
+}

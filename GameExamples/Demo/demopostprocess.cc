@@ -1,6 +1,6 @@
 
 #include <vector>
-#include <ceLauncher/demopostprocess.hh>
+#include "demopostprocess.hh"
 #include <ceCore/resource/assetmanager.hh>
 #include <ceCore/graphics/idevice.hh>
 #include <ceCore/graphics/itexture2d.hh>

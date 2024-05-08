@@ -6,6 +6,7 @@
 #include <ceCore/fps.hh>
 #include <ceCore/objectregistry.hh>
 #include <ceCore/settings.hh>
+#include <ceCore/coremodule.hh>
 #include <ceCore/entity/world.hh>
 #include <ceCore/graphics/idevice.hh>
 #include <ceCore/graphics/iframerenderer.hh>
@@ -17,6 +18,7 @@
 #include <ceCore/resource/resourcelocator.hh>
 #include <ceCore/resource/vfs.hh>
 #include <ceCore/imodule.hh>
+#include <ceCore/igame.hh>
 
 #ifdef CE_WIN32
 
@@ -71,17 +73,24 @@ World *Engine::GetWorld()
 void Engine::Exit(int returnValue)
 {
   m_exitValue = returnValue;
-  m_active = false;
+  m_active    = false;
 }
 
 typedef iModule *(*load_library_func_ptr)();
 
-iModule *open_module(CrimsonFileElement *moduleElement)
+
+struct OpenModule
+{
+  iModule *module;
+  iGame   *game;
+};
+
+OpenModule open_module(const std::string &moduleName)
 {
 #ifdef  CE_WIN32
-  std::string lib_name          = moduleElement->GetTagName();
-  std::string dll_name          = lib_name + std::string(".dll");
-  std::string load_library_name = lib_name + "_load_library";
+  std::string dll_name             = moduleName + std::string(".dll");
+  std::string load_library_name    = moduleName + "_load_library";
+  std::string create_game_instance = "create_game_instance";
 
   HMODULE handle = GetModuleHandle(dll_name.c_str());
   if (!handle)
@@ -89,7 +98,7 @@ iModule *open_module(CrimsonFileElement *moduleElement)
     handle = LoadLibraryEx(dll_name.c_str(), nullptr, 0);
     if (!handle)
     {
-      return nullptr;
+      return OpenModule {nullptr, nullptr};
     }
   }
 
@@ -97,13 +106,28 @@ iModule *open_module(CrimsonFileElement *moduleElement)
   load_library_func_ptr load_library_func = (load_library_func_ptr) GetProcAddress(handle, load_library_name.c_str());
   if (!load_library_func)
   {
-    return nullptr;
+    return OpenModule {nullptr, nullptr};
   }
 
-  return load_library_func();
+  iModule *module                   = load_library_func();
+  iGame   *game                     = nullptr;
+  create_game_instance_func_ptr
+          create_game_instance_func =
+              (create_game_instance_func_ptr) GetProcAddress(handle, create_game_instance.c_str());
+  if (create_game_instance_func)
+  {
+    game = create_game_instance_func();
+  }
+
+  return OpenModule {module, game};
 #else
   return nullptr;
 #endif
+}
+
+OpenModule open_module(CrimsonFileElement *moduleElement)
+{
+  return open_module(moduleElement->GetTagName());
 }
 
 ce::iRenderTarget2D *create_render_target(ce::iDevice *device, uint32_t width, uint32_t height, uint16_t multiSamples)
@@ -153,7 +177,7 @@ ce::iRenderTarget2D *create_render_target(ce::iDevice *device, uint32_t width, u
 }
 
 
-bool Engine::Initialize(int argc, char **argv, ce::iModule *application)
+bool Engine::Initialize(int argc, char **argv, iModule *module)
 {
   std::string basePath("../");
   for (int    i = 0; i < argc; i++)
@@ -185,35 +209,62 @@ bool Engine::Initialize(int argc, char **argv, ce::iModule *application)
     return false;
   }
 
-  for (size_t i = 0, in = file.Root()->GetNumberOfChildren(); i < in; i++)
+  std::vector<iModule *> modules;
+  modules.push_back(new CoreModule());
+  if (module)
+  {
+    modules.push_back(module);
+  }
+
+  iGame       *game = nullptr;
+  for (size_t i     = 0, in = file.Root()->GetNumberOfChildren(); i < in; i++)
   {
     CrimsonFileElement *moduleElement = file.Root()->GetChild(i);
     if (moduleElement)
     {
-      iModule *module = open_module(moduleElement);
-      if (module)
+      OpenModule openMod = open_module(moduleElement);
+      if (openMod.module)
       {
-        m_modules.push_back(module);
+        modules.push_back(openMod.module);
       }
+
     }
   }
 
-  if (application)
+  OpenModule gameModule = open_module("ceGame");
+  game = gameModule.game;
+  if (gameModule.module)
   {
-    m_modules.push_back(application);
+    modules.push_back(gameModule.module);
   }
 
-  for (auto module: m_modules)
+
+  if (!game)
   {
-    if (!module->Register(argc, argv, this))
+    printf("No game defined\n");
+    return false;
+  }
+
+
+  for (
+    auto module
+      : modules)
+  {
+    if (!module->
+                   Register(argc, argv,
+                            this))
     {
       return false;
     }
   }
 
-  for (auto module: m_modules)
+  for (
+    auto module
+      : modules)
   {
-    if (!module->Initialize(argc, argv, this))
+    if (!module->
+                   Initialize(argc, argv,
+                              this))
     {
       return false;
     }
@@ -230,11 +281,16 @@ bool Engine::Initialize(int argc, char **argv, ce::iModule *application)
 
   int multiSamples = Settings::Get().Display().GetInt("multisamples", 1);
   m_renderTarget = create_render_target(m_device, m_window->GetWidth(), m_window->GetHeight(), multiSamples);
+  if (m_renderTarget == nullptr)
+  {
+    return false;
+  }
 
-  ce::ObjectRegistry::Register<ce::DebugCache>(new ce::DebugCache());
+  ce::ObjectRegistry::Register<ce::DebugCache>(new
+                                                   ce::DebugCache()
+  );
 
-
-  return m_renderTarget != nullptr;
+  return game->Initialize(this);
 }
 
 int Engine::Run()

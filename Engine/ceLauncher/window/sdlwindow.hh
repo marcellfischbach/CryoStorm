@@ -4,20 +4,19 @@
 
 #pragma once
 
-#include <ceSDLWindow/sdlwindowexport.hh>
-#include <ceSDLWindow/sdlmouse.hh>
-#include <ceSDLWindow/sdlkeyboard.hh>
+#include <ceLauncher/window/sdlmouse.hh>
+#include <ceLauncher/window/sdlkeyboard.hh>
 #include <ceCore/window/iwindow.hh>
 #include <SDL.h>
 
-namespace ce::sdlwindow
+namespace ce::launcher
 {
 
 
 
 
 CE_CLASS()
-class CE_SDL_API SDLWindow : public CE_SUPER(iWindow)
+class SDLWindow : public CE_SUPER(iWindow)
 {
 CE_CLASS_GEN_OBJECT;
 

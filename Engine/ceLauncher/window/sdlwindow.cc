@@ -2,12 +2,12 @@
 // Created by mcel on 30.04.2024.
 //
 
-#include <ceSDLWindow/sdlwindow.hh>
+#include <ceLauncher/window/sdlwindow.hh>
 #include <ceCore/settings.hh>
 #include <ceCore/resource/assetmanager.hh>
 #include <ceCore/graphics/image.hh>
 
-namespace ce::sdlwindow
+namespace ce::launcher
 {
 
 bool SDLWindow::Initialize()

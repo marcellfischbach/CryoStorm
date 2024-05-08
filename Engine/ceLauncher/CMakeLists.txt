@@ -3,28 +3,30 @@
 add_definitions(-D_USE_MATH_DEFINES)
 
 set(SOURCES
-        camerahandler.cc
-        camerahandler.hh
-        demopostprocess.cc
-        demopostprocess.hh
-        exitgamestate.cc
-        exitgamestate.hh
         launchermodule.cc
         launchermodule.hh
         main.cc
-        mirrorhandler.cc
-        mirrorhandler.hh
-        testhandler.cc
-        testhandler.hh
+        window/sdlbutton_map.hh
+        window/sdlinputsystem.cc
+        window/sdlinputsystem.hh
+        window/sdlkey_map.hh
+        window/sdlkeyboard.cc
+        window/sdlkeyboard.hh
+        window/sdlmouse.cc
+        window/sdlmouse.hh
+        window/sdlwindow.cc
+        window/sdlwindow.hh
 
-
-        )
+)
 
 
 add_executable(ceLauncher ${SOURCES}
-        )
+)
 
-add_dependencies(ceLauncher ceMOC)
+add_dependencies(ceLauncher
+        ceMOC
+        ceGame
+)
 
 
 CE_MOC(ceLauncher ceLauncher)
@@ -33,7 +35,7 @@ CE_MOC(ceLauncher ceLauncher)
 target_link_libraries(ceLauncher
         ceCore
         ${SDL_LIBRARY}
-        )
+)
 
 #add_dependencies(ceLauncher ceAssimpLoader)
 #add_dependencies(ceLauncher ceBullet)

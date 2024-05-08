@@ -1,10 +1,10 @@
 
 #pragma once
 
-#include "ceCore/input/button.hh"
+#include <ceCore/input/button.hh>
 #include <ceCore/types.hh>
 
-namespace ce::sdlwindow
+namespace ce::launcher
 {
 
 static eMouseButton Map(uint8_t button)

@@ -79,6 +79,7 @@ include_directories(${CrimsonEdge_SOURCE_DIR}/Editor)
 add_subdirectory(3rdparty)
 #add_subdirectory(ClassGenerator)
 add_subdirectory(Engine)
+add_subdirectory(GameExamples)
 add_subdirectory(moc)
 #add_subdirectory(Editor)
 

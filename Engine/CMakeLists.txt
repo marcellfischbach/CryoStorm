@@ -7,7 +7,6 @@ add_subdirectory(ceCore)
 add_subdirectory(ceLauncher)
 add_subdirectory(ceImgLoader)
 add_subdirectory(ceOpenGL)
-add_subdirectory(ceSDLWindow)
 #add_subdirectory(SpiceRefl)
 
 #add_subdirectory(SpiceSDLWindow)

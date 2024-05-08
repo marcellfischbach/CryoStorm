@@ -1,8 +1,8 @@
 
-#include <ceSDLWindow/sdlmouse.hh>
-#include <ceSDLWindow/sdlbutton_map.hh>
+#include <ceLauncher/window/sdlmouse.hh>
+#include <ceLauncher/window/sdlbutton_map.hh>
 
-namespace ce::sdlwindow
+namespace ce::launcher
 {
 
 SDLMouse::SDLMouse()

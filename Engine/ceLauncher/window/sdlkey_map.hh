@@ -1,10 +1,10 @@
 #ifndef SDLKEY_MAP_HH
 #define SDLKEY_MAP_HH
 
-#include "ceCore/input/key.hh"
+#include <ceCore/input/key.hh>
 #include <SDL.h>
 
-namespace ce::sdlwindow
+namespace ce::launcher
 {
 
 static Key Map(SDL_Scancode scanCode)

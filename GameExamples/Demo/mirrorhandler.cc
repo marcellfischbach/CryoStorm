@@ -1,5 +1,5 @@
 
-#include <ceLauncher/mirrorhandler.hh>
+#include "mirrorhandler.hh"
 
 
 MirrorHandler::MirrorHandler()

@@ -16,6 +16,7 @@ set(SOURCES
         engine.hh
         fps.cc
         fps.hh
+        igame.hh
         imodule.hh
         objectregistry.cc
         objectregistry.hh

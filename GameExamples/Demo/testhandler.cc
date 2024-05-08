@@ -1,5 +1,5 @@
 
-#include <ceLauncher/testhandler.hh>
+#include "testhandler.hh"
 
 using namespace ce;
 

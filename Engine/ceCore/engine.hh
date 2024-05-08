@@ -33,7 +33,7 @@ public:
   void SetWorld(World *world);
   World *GetWorld();
 
-  bool Initialize(int argc, char **argv, ce::iModule *application);
+  bool Initialize(int argc, char **argv, iModule *module);
 
   int Run();
   void Exit(int returnValue = 0);
@@ -44,8 +44,6 @@ private:
   iFrameRenderer  *m_frameRenderer = nullptr;
   iRenderTarget2D *m_renderTarget  = nullptr;
   World           *m_world         = nullptr;
-
-  std::vector<iModule *> m_modules;
 
   bool m_active    = true;
   int  m_exitValue = 0;

@@ -1,10 +1,10 @@
 #ifndef SDLKEYBOARD_HH
 #define SDLKEYBOARD_HH
 
-#include "ceCore/input/ikeyboard.hh"
+#include <ceCore/input/ikeyboard.hh>
 #include <SDL.h>
 
-namespace ce::sdlwindow
+namespace ce::launcher
 {
 
 class SDLKeyboard : public iKeyboard

@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <math.h>
+#include <cmath>
 #include <ceCore/defs.hh>
 #include <ceCore/types.hh>
 

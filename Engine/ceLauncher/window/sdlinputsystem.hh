@@ -1,15 +1,15 @@
 #pragma once
 
-#include "ceCore/input/iinputsystem.hh"
-#include <ceSDLWindow/sdlkeyboard.hh>
-#include <ceSDLWindow/sdlmouse.hh>
-#include <ceSDLWindow/sdlwindow.hh>
+#include <ceCore/input/iinputsystem.hh>
+#include <ceLauncher/window/sdlkeyboard.hh>
+#include <ceLauncher/window/sdlmouse.hh>
+#include <ceLauncher/window/sdlwindow.hh>
 
-namespace ce::sdlwindow
+namespace ce::launcher
 {
 
 CE_CLASS()
-class CE_SDL_API SDLInputSystem : public CE_SUPER(iInputSystem)
+class  SDLInputSystem : public CE_SUPER(iInputSystem)
 {
 CE_CLASS_GEN_OBJECT;
 public:
