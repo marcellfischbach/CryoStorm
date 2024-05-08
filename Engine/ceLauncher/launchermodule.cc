@@ -10,7 +10,7 @@
 namespace ce::launcher
 {
 
-bool LauncherModule::Register(int argc, char **argv, Engine *engine)
+bool LauncherModule::Register(const std::vector<std::string> &args, Engine *engine)
 {
   register_classes();
 
@@ -23,7 +23,7 @@ bool LauncherModule::Register(int argc, char **argv, Engine *engine)
   return true;
 }
 
-bool LauncherModule::Initialize(int argc, char **argv, ce::Engine *engine)
+bool LauncherModule::Initialize(const std::vector<std::string> &args, Engine *engine)
 {
   SDLWindow *window = (SDLWindow*)engine->GetWindow();
   window->Initialize();

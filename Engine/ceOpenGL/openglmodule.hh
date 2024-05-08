@@ -10,8 +10,8 @@ namespace ce::opengl
 class CE_OGL_API OpenGLModule : public iModule
 {
 public:
-  bool Register(int argc, char** argv, Engine* engine) override;
-  bool Initialize(int argc, char** argv, Engine *engine) override;
+  bool Register(const std::vector<std::string> &args, Engine *engine) override;
+  bool Initialize(const std::vector<std::string> &args, Engine *engine) override;
 
 };
 

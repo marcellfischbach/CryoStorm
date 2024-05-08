@@ -157,7 +157,6 @@ ce::iRenderTarget2D *create_render_target(ce::iDevice *device, uint32_t width, u
   rt_dpth_desc.MultiSamples = multiSamples;
   ce::iTexture2D *depth_texture = device->CreateTexture(rt_dpth_desc);
   depth_texture->SetSampler(depthSampler);
-  printf("CreateDepthTexture: %p\n", depth_texture);
 
 
   ce::iRenderTarget2D::Descriptor rt_desc = {};
@@ -177,15 +176,15 @@ ce::iRenderTarget2D *create_render_target(ce::iDevice *device, uint32_t width, u
 }
 
 
-bool Engine::Initialize(int argc, char **argv, iModule *module)
+bool Engine::Initialize(const std::vector<std::string> &args, iModule *module)
 {
   std::string basePath("../");
-  for (int    i = 0; i < argc; i++)
+  for (size_t    i = 0, in = args.size(); i < in; i++)
   {
-    std::string arg(argv[i]);
-    if (arg == std::string("--data") && i + 1 < argc)
+    const std::string &arg(args[i]);
+    if (arg == std::string("--data") && i + 1 < in)
     {
-      basePath = std::string(argv[++i]);
+      basePath = std::string(args[++i]);
     }
   }
   printf("Starting with base-path: '%s'\n", basePath.c_str());
@@ -246,25 +245,17 @@ bool Engine::Initialize(int argc, char **argv, iModule *module)
   }
 
 
-  for (
-    auto module
-      : modules)
+  for (auto module: modules)
   {
-    if (!module->
-                   Register(argc, argv,
-                            this))
+    if (!module->Register(args, this))
     {
       return false;
     }
   }
 
-  for (
-    auto module
-      : modules)
+  for (auto module: modules)
   {
-    if (!module->
-                   Initialize(argc, argv,
-                              this))
+    if (!module->Initialize(args, this))
     {
       return false;
     }
@@ -279,6 +270,9 @@ bool Engine::Initialize(int argc, char **argv, iModule *module)
   }
 
 
+  printf ("Window: %p\n", m_window);
+  fflush(stdout);
+
   int multiSamples = Settings::Get().Display().GetInt("multisamples", 1);
   m_renderTarget = create_render_target(m_device, m_window->GetWidth(), m_window->GetHeight(), multiSamples);
   if (m_renderTarget == nullptr)
@@ -286,17 +280,13 @@ bool Engine::Initialize(int argc, char **argv, iModule *module)
     return false;
   }
 
-  ce::ObjectRegistry::Register<ce::DebugCache>(new
-                                                   ce::DebugCache()
-  );
+  ce::ObjectRegistry::Register<ce::DebugCache>(new ce::DebugCache());
 
   return game->Initialize(this);
 }
 
 int Engine::Run()
 {
-  FPS      fps;
-  uint32_t lastFPS = 0;
 
 #if _DEBUG
   size_t numDrawCallsPerSec    = 0;
@@ -309,39 +299,10 @@ int Engine::Run()
 #if _DEBUG
     m_device->ResetDebug();
 #endif
+
     m_window->ProcessUpdates();
-
-
-    int64_t frameTime = fps.Tick();
-    if (frameTime != 0)
-    {
-      uint32_t currentFPS = fps.Get();
-      if (currentFPS != lastFPS)
-      {
-        lastFPS = currentFPS;
-
-        std::string title = std::string("CrimsonEdge ") + std::to_string(currentFPS) + std::string(" FPS");
-        m_window->SetTitle(title);
-        printf("%s\n", title.c_str());
-      }
-
-      float tpf = (float) frameTime / 1000.0f;
-
-      m_world->Update(tpf);
-    }
-
-
-    m_frameRenderer->Render(m_renderTarget, m_device, m_world->GetScene());
-
-    ce::iTexture2D *finalColor = m_renderTarget->GetColorTexture(0);
-
-    m_device->SetRenderTarget(nullptr);
-    m_device->SetViewport(0, 0, m_window->GetWidth(), m_window->GetHeight());
-    m_device->SetDepthTest(false);
-    m_device->SetBlending(false);
-    m_device->RenderFullscreen(finalColor);
-    m_device->SetDepthTest(true);
-
+    ProcessFrame ();
+    m_window->Present();
 
 #if _DEBUG
     numDrawCallsPerSec += m_device->GetNumberOfDrawCalls();
@@ -349,9 +310,43 @@ int Engine::Run()
     numShaderStateChanges += m_device->GetNumberOfShaderStateChanges();
 #endif
 
-    m_window->Present();
   }
   return m_exitValue;
+}
+
+void Engine::ProcessFrame()
+{
+  int64_t frameTime = m_fps.Tick();
+  if (frameTime != 0)
+  {
+    uint32_t currentFPS = m_fps.Get();
+    if (currentFPS != m_lastFPS)
+    {
+      m_lastFPS = currentFPS;
+
+      std::string title = std::string("CrimsonEdge ") + std::to_string(currentFPS) + std::string(" FPS");
+      printf("[%p] %s\n", m_window, title.c_str());
+      fflush(stdout);
+      m_window->SetTitle(title);
+    }
+
+    float tpf = (float) frameTime / 1000.0f;
+
+    m_world->Update(tpf);
+  }
+
+
+  m_frameRenderer->Render(m_renderTarget, m_device, m_world->GetScene());
+
+  ce::iTexture2D *finalColor = m_renderTarget->GetColorTexture(0);
+
+  m_device->SetRenderTarget(nullptr);
+  m_device->SetViewport(0, 0, m_window->GetWidth(), m_window->GetHeight());
+  m_device->SetDepthTest(false);
+  m_device->SetBlending(false);
+  m_device->RenderFullscreen(finalColor);
+  m_device->SetDepthTest(true);
+
 }
 
 

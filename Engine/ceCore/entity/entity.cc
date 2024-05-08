@@ -365,3 +365,13 @@ SpatialState *Entity::GetAbsolutParentRoot()
 }
 
 }
+
+
+#ifdef CE_JAVA
+#include <jni.h>
+extern "C" JNIEXPORT void JNICALL Java_org_crimsonedge_core_entity_Entity_doSomething(JNIEnv *env, jclass cls)
+{
+  printf ("Called in C-Library\n");
+  fflush(stdout);
+}
+#endif

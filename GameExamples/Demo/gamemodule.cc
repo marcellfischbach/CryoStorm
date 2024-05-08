@@ -9,13 +9,13 @@ CE_DEFINE_LIBRARY(ceGame)
 }
 
 
-bool GameModule::Register(int argc, char **argv, ce::Engine *engine)
+bool GameModule::Register(const std::vector<std::string> &args, ce::Engine *engine)
 {
   register_classes();
   return true;
 }
 
-bool GameModule::Initialize(int argc, char **argv, ce::Engine *engine)
+bool GameModule::Initialize(const std::vector<std::string> &args, ce::Engine *engine)
 {
   return true;
 }

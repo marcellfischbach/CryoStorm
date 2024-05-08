@@ -14,7 +14,7 @@ class World;
 class EntityState;
 class SpatialState;
 
-CE_CLASS()
+CE_CLASS(jclass="org.crimsonedge.core.entity.Entity")
 class CE_CORE_API Entity : public CE_SUPER(iObject)
 {
 

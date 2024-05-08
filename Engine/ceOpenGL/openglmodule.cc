@@ -18,7 +18,7 @@
 namespace ce::opengl
 {
 
-bool OpenGLModule::Register(int argc, char** argv, Engine* engine)
+bool OpenGLModule::Register(const std::vector<std::string> &args, Engine *engine)
 {
   register_classes();
 
@@ -48,7 +48,7 @@ bool OpenGLModule::Register(int argc, char** argv, Engine* engine)
   return true;
 }
 
-bool OpenGLModule::Initialize(int argc, char** argv, Engine* engine)
+bool OpenGLModule::Initialize(const std::vector<std::string> &args, Engine *engine)
 {
   GL4Device* gl4Graphics = (GL4Device*)engine->GetDevice();
   bool initialized = gl4Graphics->Initialize();

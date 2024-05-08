@@ -5,6 +5,7 @@
 #pragma once
 
 #include <ceCore/coreexport.hh>
+#include <ceCore/fps.hh>
 #include <vector>
 
 namespace ce
@@ -33,9 +34,11 @@ public:
   void SetWorld(World *world);
   World *GetWorld();
 
-  bool Initialize(int argc, char **argv, iModule *module);
+
+  bool Initialize(const std::vector<std::string> &args, iModule *module);
 
   int Run();
+  void ProcessFrame();
   void Exit(int returnValue = 0);
 
 private:
@@ -47,6 +50,11 @@ private:
 
   bool m_active    = true;
   int  m_exitValue = 0;
+
+
+  // Frame counting stuff
+  FPS      m_fps;
+  uint32_t m_lastFPS;
 public:
   static Engine *Get();
 

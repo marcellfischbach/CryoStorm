@@ -18,7 +18,7 @@ void initialize_core_module()
 namespace ce
 {
 
-bool CoreModule::Register(int argc, char** argv, Engine* engine)
+bool CoreModule::Register(const std::vector<std::string> &args, Engine *engine)
 {
   register_classes();
 
@@ -34,7 +34,7 @@ bool CoreModule::Register(int argc, char** argv, Engine* engine)
   return true;
 }
 
-bool CoreModule::Initialize(int argc, char** argv, Engine *engine)
+bool CoreModule::Initialize(const std::vector<std::string> &args, Engine *engine)
 {
 
   return true;

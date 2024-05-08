@@ -12,7 +12,7 @@
 namespace ce::assimp
 {
 
-bool AssimpLoaderModule::Register(int argc, char** argv, Engine* engine)
+bool AssimpLoaderModule::Register(const std::vector<std::string> &args, Engine *engine)
 {
   register_classes();
 
@@ -24,7 +24,7 @@ bool AssimpLoaderModule::Register(int argc, char** argv, Engine* engine)
   return true;
 }
 
-bool AssimpLoaderModule::Initialize(int argc, char** argv, Engine* engine)
+bool AssimpLoaderModule::Initialize(const std::vector<std::string> &args, Engine *engine)
 {
   return true;
 }

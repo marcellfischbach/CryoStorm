@@ -21,6 +21,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 unset(CMAKE_CXX_CL_SHOWINCLUDE)
 
 set(DISABLE_RENDERING OFF)
+set(JAVA_BINDINGS ON)
 
 
 include(${CrimsonEdge_SOURCE_DIR}/Scripts/CrimsonEdge.cmake) 
@@ -40,6 +41,13 @@ if (${DISABLE_RENDERING})
 add_definitions(-DCE_DISABLE_RENDERING)
 endif()
 
+if (${JAVA_BINDINGS})
+	find_package(JNI)
+	if(${JNI_FOUND})
+		add_definitions(-DCE_JAVA)
+		include_directories(${JNI_INCLUDE_DIRS})
+	endif()
+endif()
 
 string( TOLOWER "${CMAKE_BUILD_TYPE}" CMAKE_BUILD_TYPE_LOWER )
 if(NOT Win32)

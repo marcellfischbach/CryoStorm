@@ -255,17 +255,29 @@ set(SOURCES
 
         window/iwindow.hh
 
-        )
+)
+
+
+if (${JAVA_BINDINGS})
+    SET(SOURCES ${SOURCES}
+            java.cc
+            java.hh
+            engine_java.cc
+    )
+endif ()
 
 
 add_library(ceCore SHARED
         ${SOURCES}
-        )
+)
 
 target_link_libraries(ceCore
         ${PNG_LIBRARIES}
+)
 
-        )
+if (${JAVA_BINDINGS})
+    target_link_libraries(ceCore ${JNI_LIBRARIES})
+endif ()
 
 add_dependencies(ceCore ceMOC)
 CE_MOC(ceCore)
@@ -274,7 +286,7 @@ CE_MOC(ceCore)
 install(TARGETS ceCore
         RUNTIME DESTINATION bin
         ARCHIVE DESTINATION lib
-        )
+)
 
 install(DIRECTORY . DESTINATION include/ceCore FILES_MATCHING PATTERN "*.hh")
 

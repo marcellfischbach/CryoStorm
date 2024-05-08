@@ -11,7 +11,7 @@
 namespace ce::img
 {
 
-bool ImgLoaderModule::Register(int argc, char** argv, Engine* engine)
+bool ImgLoaderModule::Register(const std::vector<std::string> &args, Engine *engine)
 {
   register_classes();
 
@@ -22,7 +22,7 @@ bool ImgLoaderModule::Register(int argc, char** argv, Engine* engine)
   return true;
 }
 
-bool ImgLoaderModule::Initialize(int argc, char** argv, Engine* engine)
+bool ImgLoaderModule::Initialize(const std::vector<std::string> &args, Engine *engine)
 {
   return true;
 }

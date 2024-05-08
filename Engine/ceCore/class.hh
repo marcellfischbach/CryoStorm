@@ -4,6 +4,10 @@
 #include <cstdint>
 #include <ceCore/defs.hh>
 
+#ifdef CE_JAVA
+#include <jni.h>
+#endif
+
 //
 // Meta information for CE_CLASS definitions
 //  Virtual - Prevent the ceMOC from implementing CreateInstance 
@@ -12,12 +16,59 @@
 #define CE_SUPER(Cls) Cls
 #define CE_PROPERTY(...)
 #define CE_FUNCTION(...)
+#ifdef CE_JAVA
 #define CE_CLASS_GEN public: \
     const ce::Class *GetClass () const override; \
     static const ce::Class *GetStaticClass (); \
     void *QueryClass(const ce::Class *clazz) override; \
-    const void *QueryClass(const ce::Class *clazz) const override
+    const void *QueryClass(const ce::Class *clazz) const override; \
+    jobject CreateJObject () const
+#else
+#define CE_CLASS_GEN public: \
+    const ce::Class *GetClass () const override; \
+    static const ce::Class *GetStaticClass (); \
+    void *QueryClass(const ce::Class *clazz) override; \
+    const void *QueryClass(const ce::Class *clazz) const override;
+#endif
 
+#ifdef CE_JAVA
+#define CE_CLASS_GEN_OBJECT \
+    CE_CLASS_GEN; \
+    void AddRef() override \
+    { \
+      m_refCount++; \
+    } \
+    void Release() override  \
+    { \
+      --m_refCount; \
+      if (m_refCount <= 0) \
+      { \
+          delete this;\
+      } \
+    } \
+    CE_NODISCARD int64_t RefCount () const override \
+    { \
+      return m_refCount; \
+    }                       \
+    void SetJObject(jobject object) const override \
+    {                       \
+      m_jobject = object; \
+    }                       \
+    CE_NODISCARD jobject GetJObject() const override\
+    {                       \
+      if (!m_jobject && !m_jobjectChecked)       \
+      {                     \
+        m_jobject = CreateJObject();                \
+        m_jobjectChecked = true; \
+      }                     \
+      return m_jobject;\
+    }\
+    private: \
+      int64_t m_refCount = 1; \
+      mutable bool m_jobjectChecked = false; \
+      mutable jobject m_jobject = nullptr
+
+#else
 #define CE_CLASS_GEN_OBJECT \
     CE_CLASS_GEN; \
     void AddRef() override \
@@ -38,6 +89,7 @@
     } \
     private: \
       int64_t m_refCount = 1
+#endif
 
 #define CE_CLASS_GEN_CONSTR m_refCount = 1
 
@@ -140,6 +192,11 @@ struct CE_CORE_API iObject
 
   CE_NODISCARD virtual int64_t RefCount() const = 0;
 
+#ifdef CE_JAVA
+  virtual void SetJObject(jobject object) const = 0;
+  CE_NODISCARD virtual jobject GetJObject() const = 0;
+#endif
+
   template<typename T>
   CE_NODISCARD T* Query()
   {
@@ -154,6 +211,8 @@ struct CE_CORE_API iObject
     return reinterpret_cast<const T*>(QueryClass(T::GetStaticClass()));
   }
   CE_NODISCARD virtual const void* QueryClass(const Class* clazz) const;
+
+
 };
 
 

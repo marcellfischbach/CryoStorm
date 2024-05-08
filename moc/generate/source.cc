@@ -750,6 +750,8 @@ std::string ClassGenerator::GenerateClass(ClassNode * classNode, std::list<Names
   cls += GenerateQueryClass(classNode, nss, meta, true);
 
 
+  cls += GenerateCreateJObject (classNode, nss, meta);
+
   return cls;
 
 }
@@ -796,6 +798,26 @@ std::string ClassGenerator::GenerateQueryClass(ClassNode * classNode, std::list<
   query += "  return nullptr;\n";
   query += "}\n\n";
   return query;
+}
+
+std::string ClassGenerator::GenerateCreateJObject(ce::moc::ClassNode *classNode,
+                                            std::list<NamespaceNode *> &nss,
+                                            ce::moc::CSMetaNode *meta)
+{
+  std::string fns = Generator::GetFullNamespaceName(nss);
+  std::string className = classNode->GetName();
+
+
+  std::string getter;
+  getter += "#ifdef CE_JAVA\n";
+  getter += "jobject " + fns + className + "::CreateJObject() const\n";
+  getter += "{\n";
+  getter += " return nullptr;\n";
+  getter += "}\n";
+  getter += "#endif\n";
+
+
+  return getter;
 }
 
 

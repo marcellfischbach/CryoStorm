@@ -9,7 +9,7 @@
 namespace ce::bullet
 {
 
-bool BulletModule::Register(int argc, char** argv, Engine* engine)
+bool BulletModule::Register(const std::vector<std::string> &args, Engine *engine)
 {
   register_classes();
 
@@ -19,7 +19,7 @@ bool BulletModule::Register(int argc, char** argv, Engine* engine)
   return true;
 }
 
-bool BulletModule::Initialize(int argc, char** argv, Engine* engine)
+bool BulletModule::Initialize(const std::vector<std::string> &args, Engine *engine)
 {
   return true;
 }

@@ -18,7 +18,7 @@ struct CE_CORE_API iWindow : public iObject
 {
   CE_CLASS_GEN;
 
-  virtual ~iWindow() {  }
+  ~iWindow() override {  }
 
   virtual void SetTitle(const std::string& title) = 0;
   virtual const std::string &GetTitle() const = 0;
