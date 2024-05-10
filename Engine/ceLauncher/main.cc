@@ -12,7 +12,7 @@ int main(int argc, char** argv)
 
   ce::Engine *engine = ce::Engine::Get();
 
-  if (!engine->Initialize(args, new ce::launcher::LauncherModule()))
+  if (!engine->Initialize(args, new ce::launcher::LauncherModule(), nullptr))
   {
     printf ("Unable to initialize engine\n");
     return -1;

@@ -852,7 +852,7 @@ std::string ClassGenerator::GenerateCreateJObject(ce::moc::ClassNode *classNode,
   {
     std::string jclass = meta->Get("jclass");
     jclass = convert_java_class_path(jclass);
-    getter += "  static jclass cls = ce::Java::Get()->FindClass (\"" + jclass + "\");\n";
+    getter += "  static jclass cls = ce::Java::Get() ? ce::Java::Get()->FindClass (\"" + jclass + "\") : nullptr;\n";
     getter += "  if (cls)\n";
     getter += "  {\n";
     getter += "    static jmethodID ctor = ce::Java::Get()->GetMethodID(cls, \"<init>\", \"(J)V\");\n";

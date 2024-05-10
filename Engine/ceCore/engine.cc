@@ -176,7 +176,7 @@ ce::iRenderTarget2D *create_render_target(ce::iDevice *device, uint32_t width, u
 }
 
 
-bool Engine::Initialize(const std::vector<std::string> &args, iModule *module)
+bool Engine::Initialize(const std::vector<std::string> &args, iModule *externalModule, iGame *externalGame)
 {
   std::string basePath("../");
   for (size_t    i = 0, in = args.size(); i < in; i++)
@@ -210,12 +210,12 @@ bool Engine::Initialize(const std::vector<std::string> &args, iModule *module)
 
   std::vector<iModule *> modules;
   modules.push_back(new CoreModule());
-  if (module)
+  if (externalModule)
   {
-    modules.push_back(module);
+    modules.push_back(externalModule);
   }
 
-  iGame       *game = nullptr;
+  std::vector<iGame*> games;
   for (size_t i     = 0, in = file.Root()->GetNumberOfChildren(); i < in; i++)
   {
     CrimsonFileElement *moduleElement = file.Root()->GetChild(i);
@@ -226,24 +226,26 @@ bool Engine::Initialize(const std::vector<std::string> &args, iModule *module)
       {
         modules.push_back(openMod.module);
       }
-
+      if (openMod.game)
+      {
+        games.push_back(openMod.game);
+      }
     }
   }
 
   OpenModule gameModule = open_module("ceGame");
-  game = gameModule.game;
   if (gameModule.module)
   {
     modules.push_back(gameModule.module);
   }
-
-
-  if (!game)
+  if (gameModule.game)
   {
-    printf("No game defined\n");
-    return false;
+    games.push_back(gameModule.game);
   }
-
+  if (externalGame)
+  {
+    games.push_back(externalGame);
+  }
 
   for (auto module: modules)
   {
@@ -282,7 +284,10 @@ bool Engine::Initialize(const std::vector<std::string> &args, iModule *module)
 
   ce::ObjectRegistry::Register<ce::DebugCache>(new ce::DebugCache());
 
-  return game->Initialize(this);
+  for (auto game : games)
+  {
+    game->Initialize(this);
+  }
 }
 
 int Engine::Run()

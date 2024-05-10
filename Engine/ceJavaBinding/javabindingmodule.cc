@@ -3,6 +3,7 @@
 #include <jni.h>
 #include <master.refl.cc>
 #include <ceJavaBinding/javabindingmodule.hh>
+#include <ceJavaBinding/javagame.hh>
 #include <ceJavaBinding/lwjglwindow.hh>
 #include <ceJavaBinding/lwjglinputsystem.hh>
 #include <ceCore/objectregistry.hh>
@@ -21,7 +22,6 @@ JNIEXPORT void JNICALL Java_org_crimsonedge_launcher_Bootstrapper_nbootstrap(JNI
 }
 
 
-
 }
 
 
@@ -33,7 +33,7 @@ bool JavaBindingModule::Register(const std::vector<std::string> &args, Engine *e
   register_classes();
 
 //  SDLWindow *window = new SDLWindow();
-  LwjglWindow *window = LwjglWindow::Get();
+  LwjglWindow      *window      = LwjglWindow::Get();
   LwjglInputSystem *inputSystem = new LwjglInputSystem(window->GetKeyboard(), window->GetMouse());
   ObjectRegistry::Register<iInputSystem>(inputSystem);
   ObjectRegistry::Register<iWindow>(window);
@@ -65,19 +65,26 @@ extern "C"
 {
 
 
-JNIEXPORT jboolean JNICALL Java_org_crimsonedge_core_Engine_nInitialize(JNIEnv *env, jclass cls, jobjectArray jargs)
+JNIEXPORT jboolean
+JNICALL Java_org_crimsonedge_core_Engine_nInitialize(JNIEnv *env, jclass cls, jobjectArray jargs, jobject gameObject)
 {
   ce::Java::Set(env);
-  jsize argc = env->GetArrayLength(jargs);
+  jsize                    argc = env->GetArrayLength(jargs);
   std::vector<std::string> args;
-  for (jsize i=0; i<argc; i++)
+  for (jsize               i    = 0; i < argc; i++)
   {
-    jstring arg = (jstring)(env->GetObjectArrayElement(jargs, i));
-    const char* argv = env->GetStringUTFChars(arg, 0);
+    auto       arg   = (jstring) (env->GetObjectArrayElement(jargs, i));
+    const char *argv = env->GetStringUTFChars(arg, 0);
     args.emplace_back(argv);
   }
 
-  bool result = ce::Engine::Get()->Initialize(args, new ce::java::JavaBindingModule());
+  gameObject = gameObject ? env->NewGlobalRef(gameObject) : nullptr;
+
+  ce::java::JavaGame *game = gameObject
+                             ? new ce::java::JavaGame(gameObject)
+                             : nullptr;
+
+  bool result = ce::Engine::Get()->Initialize(args, new ce::java::JavaBindingModule(), game);
   fflush(stdout);
   return result;
 }
@@ -87,7 +94,6 @@ extern "C" JNIEXPORT void JNICALL Java_org_crimsonedge_core_Engine_nProcessFrame
   ce::Java::Set(env);
   ce::Engine::Get()->ProcessFrame();
 }
-
 
 
 }

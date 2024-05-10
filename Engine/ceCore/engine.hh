@@ -7,6 +7,7 @@
 #include <ceCore/coreexport.hh>
 #include <ceCore/fps.hh>
 #include <vector>
+#include "igame.hh"
 
 namespace ce
 {
@@ -35,7 +36,7 @@ public:
   World *GetWorld();
 
 
-  bool Initialize(const std::vector<std::string> &args, iModule *module);
+  bool Initialize(const std::vector<std::string> &args, iModule *externalModule, ce::iGame *externalGame);
 
   int Run();
   void ProcessFrame();
