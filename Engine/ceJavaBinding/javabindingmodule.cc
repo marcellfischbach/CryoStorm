@@ -3,7 +3,7 @@
 #include <jni.h>
 #include <master.refl.cc>
 #include <ceJavaBinding/javabindingmodule.hh>
-#include <ceJavaBinding/javagame.hh>
+#include <ceCore/game_java.hh>
 #include <ceJavaBinding/lwjglwindow.hh>
 #include <ceJavaBinding/lwjglinputsystem.hh>
 #include <ceCore/objectregistry.hh>
@@ -80,8 +80,8 @@ JNICALL Java_org_crimsonedge_core_Engine_nInitialize(JNIEnv *env, jclass cls, jo
 
   gameObject = gameObject ? env->NewGlobalRef(gameObject) : nullptr;
 
-  ce::java::JavaGame *game = gameObject
-                             ? new ce::java::JavaGame(gameObject)
+  ce::GameJava *game = gameObject
+                             ? new ce::GameJava(gameObject)
                              : nullptr;
 
   bool result = ce::Engine::Get()->Initialize(args, new ce::java::JavaBindingModule(), game);

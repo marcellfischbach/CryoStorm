@@ -4,20 +4,18 @@
 
 #pragma once
 
-#include <ceJavaBinding/javaexport.hh>
+#include <ceCore/coreexport.hh>
 #include <ceCore/igame.hh>
 #include <jni.h>
 
 
-namespace ce::java
+namespace ce
 {
 
-
-
-class CE_JAVA_API JavaGame : public iGame
+class CE_CORE_API GameJava : public iGame
 {
 public:
-  JavaGame (jobject gameObject);
+  GameJava(jobject gameObject);
 
   bool Initialize (ce::Engine* engine) override;
 

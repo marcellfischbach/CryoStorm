@@ -262,7 +262,14 @@ if (${JAVA_BINDINGS})
     SET(SOURCES ${SOURCES}
             java.cc
             java.hh
+            game_java.cc
+            game_java.hh
             engine_java.cc
+
+            resource/javaarchive.cc
+            resource/javaarchive.hh
+            resource/javafile.cc
+            resource/javafile.hh
     )
 endif ()
 

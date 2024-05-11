@@ -11,5 +11,8 @@ public class CoreObject {
         this.ref = ref;
     }
 
+    public long getRef() {
+        return ref;
+    }
 
 }

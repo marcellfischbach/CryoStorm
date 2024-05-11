@@ -2,21 +2,21 @@
 // Created by Marcell on 10.05.2024.
 //
 
-#include <ceJavaBinding/javagame.hh>
+#include <ceCore/game_java.hh>
 #include <ceCore/java.hh>
 
 
-namespace ce::java
+namespace ce
 {
 
-JavaGame::JavaGame(jobject gameObject)
+GameJava::GameJava(jobject gameObject)
 : m_gameObject(gameObject)
 {
 
 }
 
 
-bool JavaGame::Initialize(ce::Engine *engine)
+bool GameJava::Initialize(ce::Engine *engine)
 {
   static jclass cls = Java::Get()->FindClass("org/crimsonedge/core/IGame");
   printf ("cls: %p\n", cls);

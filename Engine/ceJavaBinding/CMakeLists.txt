@@ -6,8 +6,6 @@ add_definitions(-DCE_JAVA_EXPORT)
 set(SOURCES
         javabindingmodule.cc
         javabindingmodule.hh
-        javagame.cc
-        javagame.hh
         lwjglinputsystem.cc
         lwjglinputsystem.hh
         lwjglkeyboard.cc

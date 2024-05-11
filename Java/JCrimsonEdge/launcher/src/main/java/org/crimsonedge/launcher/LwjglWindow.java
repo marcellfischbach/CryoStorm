@@ -50,7 +50,7 @@ public class LwjglWindow extends AWTGLCanvas {
     @Override
     public void initGL() {
         System.out.println("LwjglWindow.initGL");
-        Engine.instance().initialize(this.args);
+        Engine.instance().initialize(this.args, new LauncherGame());
     }
 
     @Override

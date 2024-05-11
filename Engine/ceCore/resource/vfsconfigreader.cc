@@ -4,6 +4,7 @@
 #include <ceCore/resource/file.hh>
 #include <ceCore/resource/filesystemarchive.hh>
 #include <ceCore/resource/filesystemfile.hh>
+#include <ceCore/resource/javaarchive.hh>
 #include <ceCore/resource/resourcelocator.hh>
 #include <ceCore/autoptr.hh>
 
@@ -65,6 +66,17 @@ void VFSConfigReader::ReadArchive(const ce::CrimsonFileElement *archiveElement)
       VFS::Get()->AddArchive (new FileSystemArchive(path, priority));
     }
   }
+#ifdef CE_JAVA
+  else if (archiveElement->GetTagName() == "java")
+  {
+    int priority = archiveElement->GetAttribute(0, 0);
+    std::string path = archiveElement->GetAttribute(1, "");
+    if (!path.empty())
+    {
+      VFS::Get()->AddArchive (new JavaArchive(path, priority));
+    }
+  }
+#endif
 }
 
 void VFSConfigReader::ReadAliases(const CrimsonFileElement* aliasesElement)
