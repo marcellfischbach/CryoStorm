@@ -32,8 +32,10 @@ JNICALL Java_org_crimsonedge_core_CoreObject_nCreateClass(JNIEnv *env, jobject c
 {
   try
   {
-    std::string     className(env->GetStringUTFChars(classNameStr, 0));
-    const ce::Class *pClass = ce::ClassRegistry::Get()->GetClass(className);
+    const char      *classNameChars = env->GetStringUTFChars(classNameStr, 0);
+    const ce::Class *pClass = ce::ClassRegistry::Get()->GetClass(classNameChars);
+    env->ReleaseStringUTFChars(classNameStr, classNameChars);
+
     if (!pClass)
     {
       return 0;

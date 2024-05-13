@@ -360,9 +360,6 @@ ce::PostProcessing* setup_post_processing ()
 void generate_camera(ce::World *world)
 {
   auto cameraEntity = new ce::Entity("Camera");
-  printf ("cameraEntity: %llu\n", cameraEntity);
-  fflush(stdout);
-  cameraEntity->GetJObject();
 
   auto cameraState  = new ce::CameraState();
 

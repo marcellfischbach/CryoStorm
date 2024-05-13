@@ -110,8 +110,6 @@ public:
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + arg1 + ")V";
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), sig.c_str()) : nullptr;
-    printf ("%s -> %s: %p %p\n", className.c_str(), sig.c_str(), cls, methodId);
-    fflush(stdout);
   }
 
   void call(JNIEnv *env, T0 arg0, T1 arg1)

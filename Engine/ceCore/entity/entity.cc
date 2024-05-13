@@ -8,10 +8,10 @@ namespace ce
 
 Entity::Entity(const std::string &name)
     : iObject()
-      , m_name(name)
-      , m_rootState(nullptr)
-      , m_parent(nullptr)
-      , m_world(nullptr)
+    , m_name(name)
+    , m_rootState(nullptr)
+    , m_parent(nullptr)
+    , m_world(nullptr)
 {
   CE_CLASS_GEN_CONSTR;
 }
@@ -37,7 +37,7 @@ void Entity::SetWorld(World *world)
   {
     if (m_world)
     {
-      for (auto state : m_states)
+      for (auto state: m_states)
       {
         state->DetachFromWorld(m_world);
       }
@@ -45,13 +45,13 @@ void Entity::SetWorld(World *world)
     CE_SET(m_world, world);
     if (m_world)
     {
-      for (auto state : m_states)
+      for (auto state: m_states)
       {
         state->AttachToWorld(m_world);
       }
     }
 
-    for (auto child : m_children)
+    for (auto child: m_children)
     {
       child->SetWorld(world);
     }
@@ -164,46 +164,45 @@ Entity *Entity::GetChild(Size idx)
   return const_cast<Entity *>(static_cast<const Entity *>(this)->GetChild(idx));
 }
 
-const EntityState* Entity::GetState(const Class* cls) const
+const EntityState *Entity::GetState(const Class *cls) const
 {
-  for (auto state : m_states)
+  for (auto state: m_states)
   {
     if (cls->IsAssignableFrom(state->GetClass()))
     {
-      return static_cast<const EntityState*>(state->QueryClass(cls));
+      return static_cast<const EntityState *>(state->QueryClass(cls));
     }
   }
   return nullptr;
 }
 
-EntityState* Entity::GetState(const Class* cls)
+EntityState *Entity::GetState(const Class *cls)
 {
-  return const_cast<EntityState*>(static_cast<const Entity*>(this)->GetState(cls));
+  return const_cast<EntityState *>(static_cast<const Entity *>(this)->GetState(cls));
 }
 
 
-
-std::vector<const EntityState*> Entity::GetStates(const Class* cls) const
+std::vector<const EntityState *> Entity::GetStates(const Class *cls) const
 {
-  std::vector<const EntityState*> result;
-  for (auto state : m_states)
+  std::vector<const EntityState *> result;
+  for (auto                        state: m_states)
   {
     if (cls->IsAssignableFrom(state->GetClass()))
     {
-      result.emplace_back(static_cast<const EntityState*>(state->QueryClass(cls)));
+      result.emplace_back(static_cast<const EntityState *>(state->QueryClass(cls)));
     }
   }
   return result;
 }
 
-std::vector<EntityState*> Entity::GetStates(const Class* cls)
+std::vector<EntityState *> Entity::GetStates(const Class *cls)
 {
-  std::vector<EntityState*> result;
-  for (auto state : m_states)
+  std::vector<EntityState *> result;
+  for (auto                  state: m_states)
   {
     if (cls->IsAssignableFrom(state->GetClass()))
     {
-      result.emplace_back(static_cast<EntityState*>(state->QueryClass(cls)));
+      result.emplace_back(static_cast<EntityState *>(state->QueryClass(cls)));
     }
   }
   return result;
@@ -367,11 +366,3 @@ SpatialState *Entity::GetAbsolutParentRoot()
 }
 
 
-#ifdef CE_JAVA
-#include <jni.h>
-extern "C" JNIEXPORT void JNICALL Java_org_crimsonedge_core_entity_Entity_doSomething(JNIEnv *env, jclass cls)
-{
-  printf ("Called in C-Library\n");
-  fflush(stdout);
-}
-#endif

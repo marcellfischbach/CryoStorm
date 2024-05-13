@@ -99,7 +99,7 @@ void LwjglWindow::Present()
 
 void LwjglWindow::ProcessUpdates()
 {
-
+  m_keyboard.Swap();
 }
 
 LwjglMouse* LwjglWindow::GetMouse()

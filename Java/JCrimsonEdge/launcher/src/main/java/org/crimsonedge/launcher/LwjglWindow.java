@@ -7,8 +7,10 @@ import org.lwjgl.opengl.awt.GLData;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
-public class LwjglWindow extends AWTGLCanvas {
+public class LwjglWindow extends AWTGLCanvas  {
 
     private String[] args;
 
@@ -37,6 +39,18 @@ public class LwjglWindow extends AWTGLCanvas {
             }
         };
         SwingUtilities.invokeLater(renderLoop);
+
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                super.keyReleased(e);
+            }
+        });
     }
 
     public int getWindowWidth () {

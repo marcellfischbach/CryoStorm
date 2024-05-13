@@ -82,6 +82,7 @@ bool World::Attach(Entity *entity)
   {
     return false;
   }
+
   m_entities.push_back(entity);
   entity->SetWorld(this);
   entity->AddRef();

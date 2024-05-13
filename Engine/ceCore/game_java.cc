@@ -19,7 +19,6 @@ GameJava::GameJava(jobject gameObject)
 bool GameJava::Initialize(ce::Engine *engine)
 {
   static jclass cls = Java::Get()->FindClass("org/crimsonedge/core/IGame");
-  printf ("cls: %p\n", cls);
   if (cls)
   {
     static jmethodID initialize = Java::Get()->GetMethodID(cls, "initialize", "()Z");

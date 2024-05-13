@@ -267,6 +267,11 @@ if (${JAVA_BINDINGS})
             game_java.hh
             engine_java.cc
 
+            entity/entity_java.cc
+            entity/javastate.cc
+            entity/javastate.hh
+            entity/world_java.cc
+
             resource/javaarchive.cc
             resource/javaarchive.hh
             resource/javafile.cc

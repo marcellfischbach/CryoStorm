@@ -271,10 +271,6 @@ bool Engine::Initialize(const std::vector<std::string> &args, iModule *externalM
     m_world = new World();
   }
 
-
-  printf ("Window: %p\n", m_window);
-  fflush(stdout);
-
   int multiSamples = Settings::Get().Display().GetInt("multisamples", 1);
   m_renderTarget = create_render_target(m_device, m_window->GetWidth(), m_window->GetHeight(), multiSamples);
   if (m_renderTarget == nullptr)
@@ -288,6 +284,7 @@ bool Engine::Initialize(const std::vector<std::string> &args, iModule *externalM
   {
     game->Initialize(this);
   }
+  return true;
 }
 
 int Engine::Run()
@@ -330,7 +327,7 @@ void Engine::ProcessFrame()
       m_lastFPS = currentFPS;
 
       std::string title = std::string("CrimsonEdge ") + std::to_string(currentFPS) + std::string(" FPS");
-      printf("[%p] %s\n", m_window, title.c_str());
+      printf("%s\n", title.c_str());
       fflush(stdout);
       m_window->SetTitle(title);
     }

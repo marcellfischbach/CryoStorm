@@ -12,8 +12,13 @@ public class World extends CoreObject {
         super(ref);
     }
 
-    public void attach (Entity entity) {
+    public void log () {
+        System.out.println("Log");
+    }
 
+    private static native void nAttach (long thisRef, long entityRef);
+    public void attach (Entity entity) {
+        nAttach(getRef(), entity.getRef());
     }
 
     public void detach (Entity entity) {
