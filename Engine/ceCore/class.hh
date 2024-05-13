@@ -6,7 +6,6 @@
 
 #ifdef CE_JAVA
 #include <jni.h>
-#include <ceCore/java.hh>
 #endif
 
 //
@@ -215,6 +214,7 @@ struct CE_CORE_API iObject
 
 
 };
+
 
 
 class AutoRelease
@@ -554,3 +554,6 @@ public:
 
 }
 
+#ifdef CE_JAVA
+#include <ceCore/java.hh>
+#endif

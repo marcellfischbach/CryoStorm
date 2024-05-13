@@ -12,6 +12,7 @@ public class JavaArchive extends CoreObject implements IArchive {
     private String rootPath;
 
     public JavaArchive() {
+        super("ce::JavaArchive");
     }
 
     public JavaArchive(long ref) {
@@ -46,12 +47,13 @@ public class JavaArchive extends CoreObject implements IArchive {
         }
 
 
-        InputStream resourceAsStream = JavaArchive.class.getResourceAsStream(this.rootPath + "/" + locator);
+        String path = this.rootPath + "/" + locator;
+        InputStream resourceAsStream = JavaArchive.class.getResourceAsStream(path);
         if (resourceAsStream == null) {
             return null;
         }
 
-        JavaFile file = new JavaFile(resourceAsStream);
+        JavaFile file = new JavaFile(path, resourceAsStream);
         if (!file.open(accessMode, openMode)) {
             return null;
         }

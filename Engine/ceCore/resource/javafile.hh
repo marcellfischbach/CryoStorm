@@ -17,6 +17,7 @@ namespace ce
 CE_CLASS()
 class JavaFile : public CE_SUPER(iFile)
 {
+  CE_CLASS_GEN_OBJECT;
 public:
   const std::string &GetName() const override;
   bool Open(eAccessMode accessMode, eOpenMode openMode) override;
@@ -27,6 +28,9 @@ public:
   Size Read(Size elementSize, Size elementCount, void *buffer) override;
   Size Write(Size elementSize, Size elementCount, const void *buffer) override;
   void Close() override;
+
+private:
+  mutable std::string m_name;
 };
 
 

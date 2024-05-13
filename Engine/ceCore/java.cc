@@ -3,11 +3,13 @@
 //
 
 #include <ceCore/java.hh>
+#include <ceCore/classregistry.hh>
 
 namespace ce
 {
 
 JNIEnv *Java::s_env = nullptr;
+
 
 void Java::Set(JNIEnv *env)
 {
@@ -17,6 +19,40 @@ void Java::Set(JNIEnv *env)
 JNIEnv *Java::Get()
 {
   return s_env;
+}
+
+}
+
+extern "C"
+{
+
+
+JNIEXPORT jlong
+JNICALL Java_org_crimsonedge_core_CoreObject_nCreateClass(JNIEnv *env, jobject coreObject, jstring classNameStr)
+{
+  try
+  {
+    std::string     className(env->GetStringUTFChars(classNameStr, 0));
+    const ce::Class *pClass = ce::ClassRegistry::Get()->GetClass(className);
+    if (!pClass)
+    {
+      return 0;
+    }
+    ce::iObject *obj = pClass->CreateInstance();
+    if (!obj)
+    {
+      return 0;
+    }
+
+    fflush(stdout);
+    coreObject = env->NewGlobalRef(coreObject);
+    obj->SetJObject(coreObject);
+    return reinterpret_cast<jlong>(obj);
+  }
+  catch (std::exception &e)
+  {
+    return 0;
+  }
 }
 
 }

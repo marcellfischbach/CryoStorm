@@ -7,10 +7,10 @@ public class Entity extends CoreObject {
     public static native void doSomething ();
 
     public Entity() {
+        super("ce::Entity");
     }
 
     public Entity(long ref) {
         super(ref);
-        System.out.println("Entity.Entity(" + ref + ")");
     }
 }

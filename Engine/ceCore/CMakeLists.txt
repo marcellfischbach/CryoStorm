@@ -262,6 +262,7 @@ if (${JAVA_BINDINGS})
     SET(SOURCES ${SOURCES}
             java.cc
             java.hh
+            java_methods.hh
             game_java.cc
             game_java.hh
             engine_java.cc

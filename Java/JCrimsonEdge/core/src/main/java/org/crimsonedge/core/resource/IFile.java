@@ -16,7 +16,7 @@ public interface IFile {
 
     long tell();
 
-    int read (int elementSize, int elementCount, ByteBuffer byteBuffer);
+    int read (int elementSize, int elementCount, byte[] byteBuffer);
 
     int write (int elementSize, int elementCount, ByteBuffer byteBuffer);
 

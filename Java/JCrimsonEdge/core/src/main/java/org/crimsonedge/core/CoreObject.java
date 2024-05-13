@@ -4,7 +4,10 @@ public class CoreObject {
 
     private long ref;
 
-    public CoreObject() {
+    private native long nCreateClass (String className);
+
+    public CoreObject(String cClassName) {
+        ref = nCreateClass(cClassName);
     }
 
     public CoreObject(long ref) {
