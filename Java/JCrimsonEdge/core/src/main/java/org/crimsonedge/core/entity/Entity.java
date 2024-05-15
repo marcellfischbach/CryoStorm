@@ -1,7 +1,9 @@
 package org.crimsonedge.core.entity;
 
+import org.crimsonedge.core.CeClass;
 import org.crimsonedge.core.CoreObject;
 
+@CeClass("ce::Entity")
 public class Entity extends CoreObject {
 
     private static native boolean nAttachEntity (long thisRef, long childRef);
@@ -10,7 +12,6 @@ public class Entity extends CoreObject {
     private static native boolean nDetachState (long thisRef, long stateRef);
 
     public Entity() {
-        super("ce::Entity");
     }
 
     public Entity(long ref) {

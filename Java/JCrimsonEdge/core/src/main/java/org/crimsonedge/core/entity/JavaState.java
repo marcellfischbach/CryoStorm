@@ -1,9 +1,11 @@
 package org.crimsonedge.core.entity;
 
+import org.crimsonedge.core.CeClass;
+
+@CeClass("ce::JavaState")
 public class JavaState extends EntityState{
 
     public JavaState() {
-        super("ce::JavaState");
     }
 
     public JavaState(long ref) {

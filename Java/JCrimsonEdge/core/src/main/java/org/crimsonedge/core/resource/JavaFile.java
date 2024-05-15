@@ -1,11 +1,13 @@
 package org.crimsonedge.core.resource;
 
+import org.crimsonedge.core.CeClass;
 import org.crimsonedge.core.CoreObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 
+@CeClass("ce::JavaFile")
 public class JavaFile extends CoreObject implements IFile {
 
     private final String name;
@@ -17,7 +19,7 @@ public class JavaFile extends CoreObject implements IFile {
     private int ptr;
 
     public JavaFile(String name, InputStream inputStream) {
-        super("ce::JavaFile");
+        super();
         this.name = name;
         this.inputStream = inputStream;
         this.data = readAll(inputStream);

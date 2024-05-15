@@ -65,7 +65,7 @@ std::string ClassGenerator::OutputClass(ClassNode *classNode, std::list<Namespac
   std::string visibility = "private";
 
   CSMetaNode *lastMeta = nullptr;
-  for (auto child: childBlock->GetChildren())
+  for (auto  child: childBlock->GetChildren())
   {
     if (child->GetType() == eANT_Visibility)
     {
@@ -216,7 +216,7 @@ ClassGenerator::GenerateFunctionVoidInvokeMethod(ClassNode *classNode, FunctionN
     fkt += "    va_start(lst, obj);\n";
 
     const std::vector<Argument> &arguments = function->GetArguments();
-    for (auto argument: arguments)
+    for (auto                   argument: arguments)
     {
       std::string type = GenerateTypeForMethodInvokation(argument.GetType());
       fkt += "    " + type + argument.GetName() + " = va_arg(lst, " + type + ");\n";
@@ -273,7 +273,7 @@ ClassGenerator::GenerateFunctionValueInvokeMethod(ClassNode *classNode, Function
     fkt += "    va_start(lst, obj);\n";
 
     const std::vector<Argument> &arguments = function->GetArguments();
-    for (auto argument: arguments)
+    for (auto                   argument: arguments)
     {
       std::string type = GenerateTypeForMethodInvokation(argument.GetType());
       fkt += "    " + type + argument.GetName() + " = va_arg(lst, " + type + ");\n";
@@ -344,7 +344,7 @@ std::string ClassGenerator::GenerateFunctionReferenceInvokeMethod(ClassNode *cla
     fkt += "    va_start(lst, obj);\n";
 
     const std::vector<Argument> &arguments = function->GetArguments();
-    for (auto argument: arguments)
+    for (auto                   argument: arguments)
     {
       std::string type = GenerateTypeForMethodInvokation(argument.GetType());
       fkt += "    " + type + argument.GetName() + " = va_arg(lst, " + type + ");\n";
@@ -410,7 +410,7 @@ std::string ClassGenerator::GenerateFunctionPointerInvokeMethod(ClassNode *class
     fkt += "    va_start(lst, obj);\n";
 
     const std::vector<Argument> &arguments = function->GetArguments();
-    for (auto argument: arguments)
+    for (auto                   argument: arguments)
     {
       std::string type = GenerateTypeForMethodInvokation(argument.GetType());
       fkt += "    " + type + argument.GetName() + " = va_arg(lst, " + type + ");\n";
@@ -821,9 +821,9 @@ std::string convert_java_class_path(const std::string &jclass)
   {
     classPath = classPath.substr(1);
   }
-  if (!classPath.empty() && classPath[classPath.length()-1] == '"')
+  if (!classPath.empty() && classPath[classPath.length() - 1] == '"')
   {
-    classPath = classPath.substr(0, classPath.length()-1);
+    classPath = classPath.substr(0, classPath.length() - 1);
   }
   while (true)
   {
@@ -861,6 +861,29 @@ std::string ClassGenerator::GenerateCreateJObject(ce::moc::ClassNode *classNode,
     getter += "      return ce::Java::Get()->NewObject(cls, ctor, reinterpret_cast<jlong>(this));\n";
     getter += "    }\n";
     getter += "  }\n";
+  }
+  else
+  {
+    for (auto super: classNode->GetSupers())
+    {
+      std::string superType = super.GetType().GetTypeName();
+      if (super.IsCSSuper()
+          && superType != "iObject"
+          && superType != "ce::iObject"
+          && superType != "Object"
+          && superType != "ce::Object"
+          )
+      {
+        getter += "  {\n";
+        getter += "    jobject obj = " + superType + "::CreateJObject();\n";
+        getter += "    if (obj)\n";
+        getter += "    {\n";
+        getter += "      return obj;\n";
+        getter += "    }\n";
+        getter += "  }\n";
+      }
+    }
+
   }
   getter += " return nullptr;\n";
 

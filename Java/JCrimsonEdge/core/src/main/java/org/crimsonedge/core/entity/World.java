@@ -1,11 +1,12 @@
 package org.crimsonedge.core.entity;
 
+import org.crimsonedge.core.CeClass;
 import org.crimsonedge.core.CoreObject;
 
+@CeClass("ce::World")
 public class World extends CoreObject {
 
     public World() {
-        super("ce::World");
     }
 
     public World(long ref) {

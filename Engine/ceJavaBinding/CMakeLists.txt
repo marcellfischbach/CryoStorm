@@ -24,7 +24,10 @@ add_dependencies(ceJavaBinding
         ceMOC
         ceGame
 )
-
+add_dependencies(ceJavaBinding ceAssimpLoader)
+add_dependencies(ceJavaBinding ceBullet)
+add_dependencies(ceJavaBinding ceImgLoader)
+add_dependencies(ceJavaBinding ceOpenGL)
 
 CE_MOC(ceJavaBinding ceJavaBinding)
 
@@ -33,4 +36,5 @@ target_link_libraries(ceJavaBinding
         ceCore
         ${JNI_LIBRARIES}
 )
+
 

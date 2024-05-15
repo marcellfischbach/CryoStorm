@@ -1,10 +1,12 @@
 package org.crimsonedge.core.resource;
 
+import org.crimsonedge.core.CeClass;
 import org.crimsonedge.core.CoreObject;
 
 import java.io.File;
 import java.io.InputStream;
 
+@CeClass("ce::JavaArchive")
 public class JavaArchive extends CoreObject implements IArchive {
 
     private int priority;
@@ -12,7 +14,6 @@ public class JavaArchive extends CoreObject implements IArchive {
     private String rootPath;
 
     public JavaArchive() {
-        super("ce::JavaArchive");
     }
 
     public JavaArchive(long ref) {

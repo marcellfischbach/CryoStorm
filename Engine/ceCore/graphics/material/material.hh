@@ -28,7 +28,7 @@ struct iShaderAttribute;
 struct iTexture;
 
 
-CE_CLASS()
+CE_CLASS(jclass="org.crimsonedge.core.graphics.material.Material")
 class CE_CORE_API Material : public CE_SUPER(iMaterial)
 {
   friend class MaterialInstance;

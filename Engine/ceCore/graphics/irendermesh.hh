@@ -34,7 +34,7 @@ struct CE_CORE_API iRenderMesh : public CE_SUPER(iObject)
 };
 
 
-CE_CLASS()
+CE_CLASS(jclass="org.crimsonedge.core.graphics.IRenderMeshGenerator")
 struct CE_CORE_API iRenderMeshGenerator : CE_SUPER(iObject)
 {
   CE_CLASS_GEN;
@@ -59,7 +59,7 @@ struct CE_CORE_API iRenderMeshGenerator : CE_SUPER(iObject)
 };
 
 
-CE_CLASS()
+CE_CLASS(jclass="org.crimsonedge.core.graphics.IRenderMeshGeneratorFactory")
 struct CE_CORE_API iRenderMeshGeneratorFactory : CE_SUPER(iObject)
 {
   CE_CLASS_GEN;

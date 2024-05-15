@@ -122,7 +122,6 @@ private:
 
 };
 
-
 CE_CLASS()
 class CE_OGL_API GL4RenderMeshGeneratorFactory : public CE_SUPER(iRenderMeshGeneratorFactory)
 {

@@ -260,18 +260,25 @@ set(SOURCES
 
 if (${JAVA_BINDINGS})
     SET(SOURCES ${SOURCES}
+            engine_java.cc
             java.cc
             java.hh
             java_methods.hh
             game_java.cc
             game_java.hh
-            engine_java.cc
+            objectregistry_java.cc
+
 
             entity/entity_java.cc
             entity/javastate.cc
             entity/javastate.hh
             entity/world_java.cc
 
+            graphics/graphics_java.cc
+            graphics/material/material_java.cc
+            graphics/material/materialinstance_java.cc
+
+            resource/assetmanager_java.cc
             resource/javaarchive.cc
             resource/javaarchive.hh
             resource/javafile.cc

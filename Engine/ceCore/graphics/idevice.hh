@@ -31,7 +31,7 @@ namespace ce
 
 struct iShader;
 
-CE_CLASS()
+CE_CLASS(jclass="org.crimsonedge.core.graphics.IDevice")
 struct CE_CORE_API iDevice : public CE_SUPER(iObject)
 {
 CE_CLASS_GEN;

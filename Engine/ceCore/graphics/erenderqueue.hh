@@ -4,7 +4,7 @@
 namespace ce
 {
 
-enum class eRenderQueue
+enum class  eRenderQueue
 {
   Default,
   Transparency,

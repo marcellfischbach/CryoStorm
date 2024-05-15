@@ -9,13 +9,11 @@
 
 namespace ce
 {
-
 struct iShaderAttribute;
 
 namespace opengl
 {
 class GL4Program;
-
 
 CE_CLASS()
 class CE_OGL_API GL4Device : public CE_SUPER(iDevice)

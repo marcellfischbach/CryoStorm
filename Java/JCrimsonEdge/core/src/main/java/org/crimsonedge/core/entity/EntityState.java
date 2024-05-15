@@ -4,8 +4,8 @@ import org.crimsonedge.core.CoreObject;
 
 public abstract class EntityState extends CoreObject  {
 
-    public EntityState(String cClassName) {
-        super(cClassName);
+
+    public EntityState() {
     }
 
     public EntityState(long ref) {
