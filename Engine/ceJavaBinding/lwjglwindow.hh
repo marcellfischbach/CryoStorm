@@ -46,10 +46,11 @@ public:
 
   void ProcessUpdates() override;
 
+
   LwjglMouse *GetMouse ();
   LwjglKeyboard *GetKeyboard ();
 private:
-  std::string m_title;
+  mutable std::string m_title;
   jobject m_javaWindow;
 
   LwjglKeyboard m_keyboard;

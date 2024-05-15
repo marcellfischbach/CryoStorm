@@ -24,9 +24,7 @@ public:
   bool IsKeyReleased(Key key) const override;
 
 
-private:
-  bool m_keys[eK_COUNT];
-  bool m_prefKeys[eK_COUNT];
+
 };
 
 }

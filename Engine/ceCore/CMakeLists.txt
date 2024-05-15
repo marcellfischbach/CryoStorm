@@ -278,6 +278,8 @@ if (${JAVA_BINDINGS})
             graphics/material/material_java.cc
             graphics/material/materialinstance_java.cc
 
+            input/input_java.cc
+
             resource/assetmanager_java.cc
             resource/javaarchive.cc
             resource/javaarchive.hh

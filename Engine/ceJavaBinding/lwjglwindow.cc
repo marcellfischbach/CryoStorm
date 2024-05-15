@@ -4,16 +4,21 @@
 
 #include <ceJavaBinding/lwjglwindow.hh>
 #include <ceCore/java.hh>
+#include <ceCore/java_methods.hh>
+
+#define THIS_CLASS_NAME "org/crimsonedge/core/window/IWindow"
 
 extern "C"
 {
-JNIEXPORT jlong JNICALL Java_org_crimsonedge_launcher_LwjglWindow_nInitWindow(JNIEnv *env, jclass cls, jobject window)
+JNIEXPORT jlong JNICALL Java_org_crimsonedge_launcher_LwjglWindowCanvas_nInitWindow(JNIEnv *env, jclass cls, jobject window)
 {
   window = env->NewGlobalRef(window);
 
   ce::java::LwjglWindow *lwjgWindow = new ce::java::LwjglWindow(window);
   return reinterpret_cast<jlong>(lwjgWindow);
 }
+
+
 
 }
 
@@ -35,46 +40,60 @@ LwjglWindow::LwjglWindow(jobject javaWindow)
 
 void LwjglWindow::SetTitle(const std::string &title)
 {
-  // dont set from outside
+  static JavaCallVoid1<jstring> setTitle(Java::Get(), m_javaWindow, THIS_CLASS_NAME, "setTitle", JAVA_STRING);
+
+  jstring titleString = Java::Get()->NewStringUTF(title.c_str());
+  setTitle.call(Java::Get(), titleString);
+
 }
 
 const std::string &LwjglWindow::GetTitle() const
 {
+  static JavaCallObject<jstring> getTitle(Java::Get(), m_javaWindow, THIS_CLASS_NAME, "getTitle", JAVA_STRING);
+
+  jstring jString = getTitle.call(Java::Get(), nullptr);
+  if (jString)
+  {
+    const char* ptr = Java::Get()->GetStringUTFChars(jString, 0);
+    m_title = std::string(ptr);
+    Java::Get()->ReleaseStringUTFChars(jString, ptr);
+  }
   return m_title;
 }
 
 void LwjglWindow::SetPosition(int16_t x, int16_t y)
 {
-  // dont set from outside
+  static JavaCallVoid2<jint, jint> setPosition (Java::Get(), m_javaWindow, THIS_CLASS_NAME, "setPosition", JAVA_INT, JAVA_INT);
+  setPosition.call(Java::Get(), x, y);
 }
 
 int LwjglWindow::GetPositionX() const
 {
+  static JavaCallInt getPositionX (Java::Get(), m_javaWindow, THIS_CLASS_NAME, "getPositionX");
 
-  return 0;
+  return (int)getPositionX.call(Java::Get(), 0);
 }
 int LwjglWindow::GetPositionY() const
 {
-  return 0;
+  static JavaCallInt getPositionY (Java::Get(), m_javaWindow, THIS_CLASS_NAME, "getPositionY");
+
+  return (int)getPositionY.call(Java::Get(), 0);
 }
 
 void LwjglWindow::SetResolution(uint16_t width, uint16_t height)
 {
-
+  static JavaCallVoid2<jint, jint> setResolution (Java::Get(), m_javaWindow, THIS_CLASS_NAME, "setResoluation", JAVA_INT, JAVA_INT);
+  setResolution.call(Java::Get(), width, height);
 }
 int LwjglWindow::GetWidth() const
 {
-  JNIEnv           *env    = Java::Get();
-  static jclass    cls            = env->FindClass("org/crimsonedge/launcher/LwjglWindow");
-  static jmethodID getWindowWidth = env->GetMethodID(cls, "getWindowWidth", "()I");
-  return env->CallIntMethod(m_javaWindow, getWindowWidth);
+  static JavaCallInt getWidth (Java::Get(), m_javaWindow, THIS_CLASS_NAME, "getWidth");
+  return getWidth.call(Java::Get(), 100);
 }
 int LwjglWindow::GetHeight() const
 {
-  JNIEnv           *env    = Java::Get();
-  static jclass    cls            = env->FindClass("org/crimsonedge/launcher/LwjglWindow");
-  static jmethodID getWindowHeight = env->GetMethodID(cls, "getWindowHeight", "()I");
-  return env->CallIntMethod(m_javaWindow, getWindowHeight);
+  static JavaCallInt getHeight (Java::Get(), m_javaWindow, THIS_CLASS_NAME, "getHeight");
+  return getHeight.call(Java::Get(), 100);
 }
 
 
@@ -102,16 +121,15 @@ void LwjglWindow::ProcessUpdates()
   m_keyboard.Swap();
 }
 
-LwjglMouse* LwjglWindow::GetMouse()
+LwjglMouse *LwjglWindow::GetMouse()
 {
   return &m_mouse;
 }
 
-LwjglKeyboard* LwjglWindow::GetKeyboard()
+LwjglKeyboard *LwjglWindow::GetKeyboard()
 {
   return &m_keyboard;
 }
-
 
 
 }

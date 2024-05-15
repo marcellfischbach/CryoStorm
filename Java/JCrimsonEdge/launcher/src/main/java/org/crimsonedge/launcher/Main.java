@@ -18,7 +18,7 @@ public class Main {
             frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             frame.setLocation(100, 100);
             frame.setLayout(new GridBagLayout());
-            frame.add(new LwjglWindow(args), new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+            frame.add(new LwjglWindowCanvas(args), new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
             frame.setVisible(true);
 
         });

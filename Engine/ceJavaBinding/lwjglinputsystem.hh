@@ -8,7 +8,7 @@
 namespace ce::java
 {
 
-CE_CLASS()
+CE_CLASS(jclass="org.crimsonedge.launcher.LwjglInputSystem")
 class  LwjglInputSystem : public CE_SUPER(iInputSystem)
 {
 CE_CLASS_GEN_OBJECT;

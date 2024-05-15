@@ -5,6 +5,7 @@
 #pragma once
 
 #include <ceCore/input/imouse.hh>
+#include <ceCore/java.hh>
 
 namespace ce::java
 {
@@ -12,6 +13,7 @@ namespace ce::java
 class LwjglMouse : public iMouse
 {
 public:
+  LwjglMouse();
   ~LwjglMouse() = default;
 
   void SetVisible (bool visible) override;
@@ -33,7 +35,10 @@ public:
   CE_NODISCARD bool IsButtonUp(eMouseButton mouseButton) const override;
   CE_NODISCARD bool IsButtonPressed(eMouseButton mouseButton) const override;
   CE_NODISCARD bool IsButtonReleased(eMouseButton mouseButton) const override;
-  
+
+private:
+  jobject jobj;
+  jclass cls;
 };
 
 }

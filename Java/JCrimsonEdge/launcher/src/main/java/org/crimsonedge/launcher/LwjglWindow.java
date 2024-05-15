@@ -1,87 +1,77 @@
 package org.crimsonedge.launcher;
 
-import org.crimsonedge.core.Engine;
-import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.awt.AWTGLCanvas;
-import org.lwjgl.opengl.awt.GLData;
+import org.crimsonedge.core.CeClass;
+import org.crimsonedge.core.CoreObject;
+import org.crimsonedge.core.window.IWindow;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+@CeClass("ce::java::LwjglWindow")
+public class LwjglWindow extends CoreObject implements IWindow {
 
-public class LwjglWindow extends AWTGLCanvas  {
+    private String title;
 
-    private String[] args;
+    private final LwjglWindowCanvas canvas;
 
-    private static native long nInitWindow (LwjglWindow window);
-
-    private long wnd;
-
-    public LwjglWindow(String[] args) {
-        super(glData());
-        this.wnd = nInitWindow(this);
-
-        this.args = args;
-        Dimension size = new Dimension(1024, 768);
-        setMinimumSize(size);
-        setMaximumSize(size);
-        setPreferredSize(size);
-
-        Runnable renderLoop = new Runnable() {
-            @Override
-            public void run() {
-                if (!isValid()) {
-                    return;
-                }
-                render();
-                SwingUtilities.invokeLater(this);
-            }
-        };
-        SwingUtilities.invokeLater(renderLoop);
-
-        addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                super.keyPressed(e);
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-                super.keyReleased(e);
-            }
-        });
-    }
-
-    public int getWindowWidth () {
-        return getWidth();
-    }
-
-    public int getWindowHeight () {
-        return getHeight();
+    public LwjglWindow(LwjglWindowCanvas canvas) {
+        this.canvas = canvas;
     }
 
     @Override
-    public void initGL() {
-        System.out.println("LwjglWindow.initGL");
-        Engine.instance().initialize(this.args, new LauncherGame());
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     @Override
-    public void paintGL() {
-        Engine.instance().processFrame();
-
-        swapBuffers();
+    public String getTitle() {
+        return this.title;
     }
 
+    @Override
+    public void setPosition(int x, int y) {
+        //
+    }
 
+    @Override
+    public int getPositionX() {
+        return 0;
+    }
 
-    private static GLData glData() {
-        GLData data = new GLData();
-        data.majorVersion = 4;
-        data.minorVersion = 4;
-        data.profile = GLData.Profile.CORE;
-        data.swapInterval = 0;
-        return data;
+    @Override
+    public int getPositionY() {
+        return 0;
+    }
+
+    @Override
+    public void setResolution(int width, int height) {
+
+    }
+
+    @Override
+    public int getWidth() {
+        return this.canvas.getWidth();
+    }
+
+    @Override
+    public int getHeight() {
+        return this.getHeight();
+    }
+
+    @Override
+    public void show() {
+        //
+    }
+
+    @Override
+    public void hide() {
+        //
+    }
+
+    @Override
+    public void present() {
+        //
+    }
+
+    @Override
+    public void processUpdates() {
+        //
     }
 }
