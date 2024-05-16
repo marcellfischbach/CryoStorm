@@ -4,11 +4,11 @@ namespace ce
 {
 
 
-enum class eCursorMode
+enum eCursorMode
 {
-  Free,
-  Confined,
-  Fixed
+  eCM_Free,
+  eCM_Confined,
+  eCM_Fixed
 };
 
 

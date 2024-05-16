@@ -13,10 +13,10 @@ SDLMouse::SDLMouse()
   , m_wheel(0)
   , m_wheelHorizontal(0)
   , m_cursorVisible(true)
-  , m_cursorMode(eCursorMode::Free)
+  , m_cursorMode(eCursorMode::eCM_Free)
   , m_window(nullptr)
 {
-  for (int i = 0; i < (size_t)eMouseButton::COUNT; i++)
+  for (int i = 0; i < (size_t)eMouseButton::eMB_COUNT; i++)
   {
     m_current[i] = m_last[i] = false;
   }
@@ -43,15 +43,15 @@ void SDLMouse::SetCursorMode(eCursorMode mode)
   m_cursorMode = mode;
   switch (m_cursorMode)
   {
-  case eCursorMode::Free:
+  case eCursorMode::eCM_Free:
     SDL_SetWindowGrab(m_window, SDL_FALSE);
     SDL_SetRelativeMouseMode(SDL_FALSE);
     break;
-  case eCursorMode::Confined:
+  case eCursorMode::eCM_Confined:
     SDL_SetRelativeMouseMode(SDL_FALSE);
     SDL_SetWindowGrab(m_window, SDL_TRUE);
     break;
-  case eCursorMode::Fixed:
+  case eCursorMode::eCM_Fixed:
     SDL_SetWindowGrab(m_window, SDL_FALSE);
     SDL_SetRelativeMouseMode(SDL_TRUE);
     break;
@@ -122,13 +122,13 @@ void SDLMouse::Update()
   m_wheelHorizontal = 0;
   m_relX = 0;
   m_relY = 0;
-  memcpy(m_last, m_current, sizeof(bool) * (size_t)eMouseButton::COUNT);
+  memcpy(m_last, m_current, sizeof(bool) * (size_t)eMouseButton::eMB_COUNT);
 
 }
 
 void SDLMouse::Update(uint8_t button, bool down)
 {
-  if (button < (size_t)eMouseButton::COUNT)
+  if (button < (size_t)eMouseButton::eMB_COUNT)
   {
     m_current[(size_t)Map(button)] = down;
   }

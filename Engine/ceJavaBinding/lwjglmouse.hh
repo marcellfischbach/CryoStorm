@@ -16,6 +16,8 @@ public:
   LwjglMouse();
   ~LwjglMouse() = default;
 
+  jobject GetJObject ();
+
   void SetVisible (bool visible) override;
   CE_NODISCARD bool IsVisible () const override;
 

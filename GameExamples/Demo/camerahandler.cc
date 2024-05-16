@@ -1,3 +1,4 @@
+
 #include "camerahandler.hh"
 #include <ceCore/input/input.hh>
 #include <ceCore/math/vector3f.hh>
@@ -15,7 +16,7 @@ CameraHandler::CameraHandler()
 void CameraHandler::OnAttachedToWorld(ce::World *world)
 {
   EntityState::OnAttachedToWorld(world);
-  ce::Input::GetMouse()->SetCursorMode(ce::eCursorMode::Fixed);
+//  ce::Input::GetMouse()->SetCursorMode(ce::eCursorMode::eCM_Fixed);
 }
 
 void CameraHandler::Update(float tpf)
@@ -46,23 +47,33 @@ void CameraHandler::Update(float tpf)
     dir *= 2.0f;
   }
 
-  const ce::Vector2f &mouse = ce::Input::GetMouseDelta();
-  m_rotX += -mouse.y * m_rotSpeed;
-  m_rotY += -mouse.x * m_rotSpeed;
-
-  float clamp = (float) M_PI * 0.48f;
-  float pi2   = (float) M_PI * 2.0f;
-  m_rotX = ce::ceClamp(m_rotX, -clamp, clamp);
-
-  while (m_rotY > pi2)
+  ce::iMouse         *pMouse = ce::Input::GetMouse();
+  if (pMouse->IsButtonDown(ce::eMB_Right))
   {
-    m_rotY -= pi2;
-  }
-  while (m_rotY < 0)
-  {
-    m_rotY += pi2;
-  }
+    pMouse->SetCursorMode(ce::eCM_Fixed);
+    pMouse->SetVisible(false);
+    const ce::Vector2f &mouse = ce::Input::GetMouseDelta();
+    m_rotX += -mouse.y * m_rotSpeed;
+    m_rotY += -mouse.x * m_rotSpeed;
 
+    float clamp = (float) M_PI * 0.48f;
+    float pi2   = (float) M_PI * 2.0f;
+    m_rotX = ce::ceClamp(m_rotX, -clamp, clamp);
+
+    while (m_rotY > pi2)
+    {
+      m_rotY -= pi2;
+    }
+    while (m_rotY < 0)
+    {
+      m_rotY += pi2;
+    }
+  }
+  else {
+    pMouse->SetCursorMode(ce::eCM_Free);
+    pMouse->SetVisible(true);
+
+  }
   ce::Quaternion rotY = ce::Quaternion::FromAxisAngle(0.0f, 1.0f, 0.0f, m_rotY);
   ce::Quaternion rotX = ce::Quaternion::FromAxisAngle(1.0f, 0.0f, 0.0f, m_rotX);
   ce::Quaternion rot  = rotX * rotY;

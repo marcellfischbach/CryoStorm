@@ -10,15 +10,36 @@
 
 extern "C"
 {
-JNIEXPORT jlong JNICALL Java_org_crimsonedge_launcher_LwjglWindowCanvas_nInitWindow(JNIEnv *env, jclass cls, jobject window)
-{
-  window = env->NewGlobalRef(window);
 
-  ce::java::LwjglWindow *lwjgWindow = new ce::java::LwjglWindow(window);
+JNIEXPORT jlong JNICALL Java_org_crimsonedge_launcher_LwjglWindow_nCreate(JNIEnv *env, jclass cls)
+{
+  ce::Java::Set(env);
+  auto lwjgWindow = new ce::java::LwjglWindow();
   return reinterpret_cast<jlong>(lwjgWindow);
 }
 
 
+JNIEXPORT void JNICALL Java_org_crimsonedge_launcher_LwjglWindow_nSetJObject(JNIEnv *env, jclass cls, jlong ref, jobject object)
+{
+  object = env->NewGlobalRef(object);
+
+  auto window = reinterpret_cast<ce::java::LwjglWindow*>(ref);
+  window->SetJObject(object);
+
+}
+
+JNIEXPORT jobject JNICALL Java_org_crimsonedge_launcher_LwjglWindow_nGetMouse(JNIEnv *env, jclass cls, jlong ref)
+{
+  auto window = reinterpret_cast<ce::java::LwjglWindow*>(ref);
+  return window->GetMouse()->GetJObject();
+}
+
+
+JNIEXPORT jobject JNICALL Java_org_crimsonedge_launcher_LwjglWindow_nGetKeyboard(JNIEnv *env, jclass cls, jlong ref)
+{
+  auto window = reinterpret_cast<ce::java::LwjglWindow*>(ref);
+  return window->GetKeyboard()->GetJObject();
+}
 
 }
 
@@ -32,15 +53,14 @@ LwjglWindow *LwjglWindow::Get()
   return s_instance;
 }
 
-LwjglWindow::LwjglWindow(jobject javaWindow)
-    : m_javaWindow(javaWindow)
+LwjglWindow::LwjglWindow()
 {
   s_instance = this;
 }
 
 void LwjglWindow::SetTitle(const std::string &title)
 {
-  static JavaCallVoid1<jstring> setTitle(Java::Get(), m_javaWindow, THIS_CLASS_NAME, "setTitle", JAVA_STRING);
+  static JavaCallVoid1<jstring> setTitle(Java::Get(), this, THIS_CLASS_NAME, "setTitle", JAVA_STRING);
 
   jstring titleString = Java::Get()->NewStringUTF(title.c_str());
   setTitle.call(Java::Get(), titleString);
@@ -49,7 +69,7 @@ void LwjglWindow::SetTitle(const std::string &title)
 
 const std::string &LwjglWindow::GetTitle() const
 {
-  static JavaCallObject<jstring> getTitle(Java::Get(), m_javaWindow, THIS_CLASS_NAME, "getTitle", JAVA_STRING);
+  static JavaCallObject<jstring> getTitle(Java::Get(), this, THIS_CLASS_NAME, "getTitle", JAVA_STRING);
 
   jstring jString = getTitle.call(Java::Get(), nullptr);
   if (jString)
@@ -63,36 +83,36 @@ const std::string &LwjglWindow::GetTitle() const
 
 void LwjglWindow::SetPosition(int16_t x, int16_t y)
 {
-  static JavaCallVoid2<jint, jint> setPosition (Java::Get(), m_javaWindow, THIS_CLASS_NAME, "setPosition", JAVA_INT, JAVA_INT);
+  static JavaCallVoid2<jint, jint> setPosition (Java::Get(), this, THIS_CLASS_NAME, "setPosition", JAVA_INT, JAVA_INT);
   setPosition.call(Java::Get(), x, y);
 }
 
 int LwjglWindow::GetPositionX() const
 {
-  static JavaCallInt getPositionX (Java::Get(), m_javaWindow, THIS_CLASS_NAME, "getPositionX");
+  static JavaCallInt getPositionX (Java::Get(), this, THIS_CLASS_NAME, "getPositionX");
 
   return (int)getPositionX.call(Java::Get(), 0);
 }
 int LwjglWindow::GetPositionY() const
 {
-  static JavaCallInt getPositionY (Java::Get(), m_javaWindow, THIS_CLASS_NAME, "getPositionY");
+  static JavaCallInt getPositionY (Java::Get(), this, THIS_CLASS_NAME, "getPositionY");
 
   return (int)getPositionY.call(Java::Get(), 0);
 }
 
 void LwjglWindow::SetResolution(uint16_t width, uint16_t height)
 {
-  static JavaCallVoid2<jint, jint> setResolution (Java::Get(), m_javaWindow, THIS_CLASS_NAME, "setResoluation", JAVA_INT, JAVA_INT);
+  static JavaCallVoid2<jint, jint> setResolution (Java::Get(), this, THIS_CLASS_NAME, "setResoluation", JAVA_INT, JAVA_INT);
   setResolution.call(Java::Get(), width, height);
 }
 int LwjglWindow::GetWidth() const
 {
-  static JavaCallInt getWidth (Java::Get(), m_javaWindow, THIS_CLASS_NAME, "getWidth");
+  static JavaCallInt getWidth (Java::Get(), this, THIS_CLASS_NAME, "getWidth");
   return getWidth.call(Java::Get(), 100);
 }
 int LwjglWindow::GetHeight() const
 {
-  static JavaCallInt getHeight (Java::Get(), m_javaWindow, THIS_CLASS_NAME, "getHeight");
+  static JavaCallInt getHeight (Java::Get(), this, THIS_CLASS_NAME, "getHeight");
   return getHeight.call(Java::Get(), 100);
 }
 
@@ -118,7 +138,6 @@ void LwjglWindow::Present()
 
 void LwjglWindow::ProcessUpdates()
 {
-  m_keyboard.Swap();
 }
 
 LwjglMouse *LwjglWindow::GetMouse()

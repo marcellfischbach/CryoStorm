@@ -271,6 +271,8 @@ bool Engine::Initialize(const std::vector<std::string> &args, iModule *externalM
     m_world = new World();
   }
 
+  printf ("Create render target: %p\n", m_window);
+  fflush(stdout);
   int multiSamples = Settings::Get().Display().GetInt("multisamples", 1);
   m_renderTarget = create_render_target(m_device, m_window->GetWidth(), m_window->GetHeight(), multiSamples);
   if (m_renderTarget == nullptr)

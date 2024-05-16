@@ -858,7 +858,12 @@ std::string ClassGenerator::GenerateCreateJObject(ce::moc::ClassNode *classNode,
     getter += "    static jmethodID ctor = ce::Java::Get()->GetMethodID(cls, \"<init>\", \"(J)V\");\n";
     getter += "    if (ctor)\n";
     getter += "    {\n";
-    getter += "      return ce::Java::Get()->NewObject(cls, ctor, reinterpret_cast<jlong>(this));\n";
+    getter += "      jobject obj = ce::Java::Get()->NewObject(cls, ctor, reinterpret_cast<jlong>(this));\n";
+    getter += "      if (obj)\n";
+    getter += "      {\n";
+    getter += "        obj = ce::Java::Get()->NewGlobalRef(obj);\n";
+    getter += "        return obj;\n";
+    getter += "      }\n";
     getter += "    }\n";
     getter += "  }\n";
   }

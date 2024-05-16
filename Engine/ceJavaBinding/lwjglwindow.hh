@@ -11,12 +11,12 @@
 namespace ce::java
 {
 
-CE_CLASS()
+CE_CLASS(jclass="org.crimsonedge.launcher.LwjglWindow")
 class CE_JAVA_API LwjglWindow : public CE_SUPER(iWindow)
 {
   CE_CLASS_GEN_OBJECT;
 public:
-  LwjglWindow(jobject javaWindow);
+  LwjglWindow();
   ~LwjglWindow() override = default;
 
   static LwjglWindow* Get();
@@ -51,7 +51,6 @@ public:
   LwjglKeyboard *GetKeyboard ();
 private:
   mutable std::string m_title;
-  jobject m_javaWindow;
 
   LwjglKeyboard m_keyboard;
   LwjglMouse m_mouse;

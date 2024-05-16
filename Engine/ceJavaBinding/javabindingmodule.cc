@@ -16,7 +16,7 @@ extern "C"
 {
 
 
-JNIEXPORT void JNICALL Java_org_crimsonedge_launcher_Bootstrapper_nbootstrap(JNIEnv *env, jclass cls)
+JNIEXPORT void JNICALL Java_org_crimsonedge_launcher_JavaBinding_nSetEnv(JNIEnv *env, jclass cls)
 {
   ce::Java::Set(env);
 }

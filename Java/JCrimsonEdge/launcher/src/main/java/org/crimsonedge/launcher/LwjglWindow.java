@@ -1,18 +1,31 @@
 package org.crimsonedge.launcher;
 
-import org.crimsonedge.core.CeClass;
 import org.crimsonedge.core.CoreObject;
 import org.crimsonedge.core.window.IWindow;
 
-@CeClass("ce::java::LwjglWindow")
 public class LwjglWindow extends CoreObject implements IWindow {
 
     private String title;
 
     private final LwjglWindowCanvas canvas;
 
+    private final LwjglMouse mouse;
+
+    private final LwjglKeyboard keyboard;
+
+    private static native long nCreate();
+    private static native void nSetJObject (long ref, Object obj);
+
+    private static native LwjglMouse nGetMouse (long ref);
+    private static native LwjglKeyboard nGetKeyboard(long ref);
+
     public LwjglWindow(LwjglWindowCanvas canvas) {
+        super (nCreate());
+        nSetJObject(getRef(), this);
+        this.mouse = nGetMouse(getRef());
+        this.keyboard = nGetKeyboard(getRef());
         this.canvas = canvas;
+        this.mouse.setCanvas(canvas);
     }
 
     @Override
@@ -52,7 +65,7 @@ public class LwjglWindow extends CoreObject implements IWindow {
 
     @Override
     public int getHeight() {
-        return this.getHeight();
+        return this.canvas.getHeight();
     }
 
     @Override
@@ -73,5 +86,13 @@ public class LwjglWindow extends CoreObject implements IWindow {
     @Override
     public void processUpdates() {
         //
+    }
+
+    public LwjglMouse getMouse() {
+        return mouse;
+    }
+
+    public LwjglKeyboard getKeyboard() {
+        return keyboard;
     }
 }

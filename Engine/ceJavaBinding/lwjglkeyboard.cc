@@ -3,37 +3,49 @@
 //
 
 #include <ceJavaBinding/lwjglkeyboard.hh>
+#include <ceCore/java_methods.hh>
+
+#define THIS_CLASS "org/crimsonedge/launcher/LwjglKeyboard"
 
 namespace ce::java
 {
-
-void LwjglKeyboard::Swap()
+LwjglKeyboard::LwjglKeyboard()
 {
+  JNIEnv *pEnv = Java::Get();
+  cls = pEnv->FindClass(THIS_CLASS);
+  jmethodID constructor = pEnv->GetMethodID(cls, "<init>", "(J)V");
+  jobj = pEnv->NewObject(cls, constructor, reinterpret_cast<jlong>(this));
+  jobj = pEnv->NewGlobalRef(jobj);
 }
 
-void LwjglKeyboard::Update(ce::Key key, bool down)
+jobject LwjglKeyboard::GetJObject()
 {
+  return jobj;
 }
 
 bool LwjglKeyboard::IsKeyDown(ce::Key key) const
 {
-  return false;
+  static JavaCallBoolean1<jint> jcall (Java::Get(), jobj, THIS_CLASS, "isKeyDown", JAVA_INT);
+  return jcall.call(Java::Get(), key, false);
 }
 
 bool LwjglKeyboard::IsKeyUp(ce::Key key) const
 {
-  return true;
+  static JavaCallBoolean1<jint> jcall (Java::Get(), jobj, THIS_CLASS, "isKeyUp", JAVA_INT);
+  return jcall.call(Java::Get(), key, true);
 }
 
 
 bool LwjglKeyboard::IsKeyPressed(ce::Key key) const
 {
-  return false;
+  static JavaCallBoolean1<jint> jcall (Java::Get(), jobj, THIS_CLASS, "isKeyPressed", JAVA_INT);
+  return jcall.call(Java::Get(), key, false);
 }
 
 bool LwjglKeyboard::IsKeyReleased(ce::Key key) const
 {
-  return false;
+  static JavaCallBoolean1<jint> jcall (Java::Get(), jobj, THIS_CLASS, "isKeyReleased", JAVA_INT);
+  return jcall.call(Java::Get(), key, false);
 }
 
 

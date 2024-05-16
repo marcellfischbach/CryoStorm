@@ -49,8 +49,8 @@ private:
   int32_t m_relY;
   int32_t m_wheel;
   int32_t m_wheelHorizontal;
-  bool m_current[(size_t)eMouseButton::COUNT];
-  bool m_last[(size_t)eMouseButton::COUNT];
+  bool m_current[(size_t)eMouseButton::eMB_COUNT];
+  bool m_last[(size_t)eMouseButton::eMB_COUNT];
 
   bool m_cursorVisible;
   eCursorMode m_cursorMode;

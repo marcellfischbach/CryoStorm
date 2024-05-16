@@ -3,18 +3,21 @@ package org.crimsonedge.launcher;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Bootstrapper {
+public class JavaBinding {
 
-    public static void bootstrap() {
+    public static void loadLibraries() {
         Map<String, String> newEnv = new HashMap<>();
 
         System.loadLibrary("ceCore");
         System.loadLibrary("ceJavaBinding");
-        nbootstrap();
 
     }
 
-    private static native void nbootstrap();
+    public static void setEnv () {
+        nSetEnv();
+    }
+
+    private static native void nSetEnv();
 
 
 }

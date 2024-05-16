@@ -5,18 +5,18 @@
 namespace ce
 {
 
-enum class eMouseButton
+enum eMouseButton
 {
-  Left,
-  Middle,
-  Right,
-  Alt3,
-  Alt4,
-  Alt5,
-  Alt6,
-  Alt7,
-  Undefined,
-  COUNT,
+  eMB_Left,
+  eMB_Middle,
+  eMB_Right,
+  eMB_Alt3,
+  eMB_Alt4,
+  eMB_Alt5,
+  eMB_Alt6,
+  eMB_Alt7,
+  eMB_Undefined,
+  eMB_COUNT,
 };
 
 

@@ -6,16 +6,18 @@
 
 #include <ceCore/input/ikeyboard.hh>
 
+
 namespace ce::java
 {
 
 class LwjglKeyboard : public iKeyboard
 {
 public:
+  LwjglKeyboard();
   ~LwjglKeyboard() = default;
 
-  void Swap();
-  void Update (Key key, bool down);
+  jobject GetJObject ();
+
 
   bool IsKeyDown(Key key) const override;
   bool IsKeyUp(Key key) const override;
@@ -24,7 +26,9 @@ public:
   bool IsKeyReleased(Key key) const override;
 
 
-
+private:
+  jobject jobj;
+  jclass cls;
 };
 
 }

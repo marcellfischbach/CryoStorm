@@ -40,7 +40,7 @@ void JavaArchive::SetPriority(int priority)
 
 iFile *JavaArchive::Open(const std::string &locator, eAccessMode accessMode, eOpenMode openMode)
 {
-  JNIEnv        *env = Java::Get();
+  JNIEnv                                               *env = Java::Get();
   static JavaCallObject3<jobject, jstring, jint, jint> open(env,
                                                             this,
                                                             THIS_JAVA_CLASS,
@@ -49,7 +49,9 @@ iFile *JavaArchive::Open(const std::string &locator, eAccessMode accessMode, eOp
                                                             JAVA_STRING,
                                                             JAVA_INT,
                                                             JAVA_INT);
-  jobject res = open.call(env, env->NewStringUTF(locator.c_str()), accessMode, openMode, nullptr);
+
+  jstring arg0 = env->NewStringUTF(locator.c_str());
+  jobject res  = open.call(env, arg0, accessMode, openMode, nullptr);
   IF_NULL(res);
 
   static jclass coreObjectClass = env->FindClass("org/crimsonedge/core/CoreObject");
