@@ -324,8 +324,6 @@ void Engine::ProcessFrame()
       (m_renderTarget->GetWidth() != m_window->GetWidth() || m_renderTarget->GetHeight() != m_window->GetHeight()))
   {
     m_renderTarget->Release();
-    printf("Create render target\n");
-    fflush(stdout);
     m_renderTarget = create_render_target(m_device, m_window->GetWidth(), m_window->GetHeight(), m_multiSamples);
     if (m_renderTarget == nullptr)
     {
