@@ -1,4 +1,7 @@
 #include <ceCore/entity/entity.hh>
+#include <ceCore/entity/spatialstate.hh>
+#include <ceCore/entity/world.hh>
+
 
 extern "C"
 {
@@ -20,13 +23,23 @@ JNICALL Java_org_crimsonedge_core_entity_Entity_nGetName(JNIEnv *env, jclass cls
   return env->NewStringUTF(entity->GetName().c_str());
 }
 
+JNIEXPORT jobject
+JNICALL Java_org_crimsonedge_core_entity_Entity_nGetWorld(JNIEnv *env, jclass cls, jlong entityRef)
+{
+  auto entity = reinterpret_cast<ce::Entity *>(entityRef);
+  ce::World *pWorld = entity->GetWorld();
+  return pWorld ? pWorld->GetJObject() : nullptr;
+}
+
+
 JNIEXPORT jboolean
-JNICALL Java_org_crimsonedge_core_entity_Entity_nAttachEntity(JNIEnv *env, jclass cls, jlong thisRef, jlong childRef)
+JNICALL Java_org_crimsonedge_core_entity_Entity_nAttachEntity(JNIEnv *env, jclass cls, jlong thisRef, jlong childRef, jlong parentStateRef)
 {
   auto entity = reinterpret_cast<ce::Entity *>(thisRef);
+  auto parent = reinterpret_cast<ce::SpatialState*>(parentStateRef);
   auto child  = reinterpret_cast<ce::Entity *>(childRef);
 
-  return entity->Attach(child);
+  return entity->Attach(child, parent);
 }
 
 JNIEXPORT jboolean
@@ -37,6 +50,35 @@ JNICALL Java_org_crimsonedge_core_entity_Entity_nDetachEntity(JNIEnv *env, jclas
 
   return entity->Detach(child);
 }
+
+
+
+JNIEXPORT jobject
+JNICALL Java_org_crimsonedge_core_entity_Entity_nGetParent(JNIEnv *env, jclass cls, jlong entityRef)
+{
+  auto entity = reinterpret_cast<ce::Entity *>(entityRef);
+  ce::Entity *pEntity = entity->GetParent();
+  return pEntity ? pEntity->GetJObject() : nullptr;
+}
+
+
+
+JNIEXPORT jint
+JNICALL Java_org_crimsonedge_core_entity_Entity_nGetNumberOfChildren(JNIEnv *env, jclass cls, jlong entityRef)
+{
+  auto entity = reinterpret_cast<ce::Entity *>(entityRef);
+  return (jint)entity->GetNumberOfChildren();
+}
+
+JNIEXPORT jobject
+JNICALL Java_org_crimsonedge_core_entity_Entity_nGetChild(JNIEnv *env, jclass cls, jlong entityRef, jint idx)
+{
+  auto entity = reinterpret_cast<ce::Entity *>(entityRef);
+  ce::Entity *pEntity = entity->GetChild(idx);
+  return pEntity ? pEntity->GetJObject() : nullptr;
+}
+
+
 
 JNIEXPORT jboolean
 JNICALL Java_org_crimsonedge_core_entity_Entity_nAttachState(JNIEnv *env, jclass cls, jlong thisRef, jlong stateRef)
@@ -55,5 +97,27 @@ JNICALL Java_org_crimsonedge_core_entity_Entity_nDetachState(JNIEnv *env, jclass
 
   return entity->Detach(state);
 }
+
+
+
+JNIEXPORT void
+JNICALL Java_org_crimsonedge_core_entity_Entity_nSetRoot(JNIEnv *env, jclass cls, jlong thisRef, jlong rootStateRef)
+{
+  auto entity = reinterpret_cast<ce::Entity *>(thisRef);
+  auto state  = reinterpret_cast<ce::SpatialState *>(rootStateRef);
+
+  entity->SetRoot(state);
+}
+
+
+
+JNIEXPORT void
+JNICALL Java_org_crimsonedge_core_entity_Entity_nGetRoot(JNIEnv *env, jclass cls, jlong thisRef)
+{
+  auto entity = reinterpret_cast<ce::Entity *>(thisRef);
+  ce::SpatialState *pState = entity->GetRoot();
+  pState? pState->GetJObject() : nullptr;
+}
+
 
 }

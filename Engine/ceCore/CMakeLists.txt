@@ -270,11 +270,15 @@ if (${JAVA_BINDINGS})
 
 
             entity/entity_java.cc
+            entity/entitystate_java.cc
             entity/javastate.cc
             entity/javastate.hh
+            entity/spatialstate_java.cc
+            entity/staticmeshstate_java.cc
             entity/world_java.cc
 
-            graphics/graphics_java.cc
+            graphics/mesh_java.cc
+            graphics/irendermesh_java.cc
             graphics/material/material_java.cc
             graphics/material/materialinstance_java.cc
 

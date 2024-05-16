@@ -16,7 +16,7 @@ namespace ce
 struct iDevice;
 class VertexDeclaration;
 
-CE_CLASS()
+CE_CLASS(jclass="org.crimsonedge.core.graphics.IRenderMesh")
 struct CE_CORE_API iRenderMesh : public CE_SUPER(iObject)
 {
   CE_CLASS_GEN;

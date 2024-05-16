@@ -75,7 +75,10 @@ JNICALL Java_org_crimsonedge_core_Engine_nInitialize(JNIEnv *env, jclass cls, jo
   {
     auto       arg   = (jstring) (env->GetObjectArrayElement(jargs, i));
     const char *argv = env->GetStringUTFChars(arg, 0);
-    args.emplace_back(argv);
+    std::string cArg (argv);
+    args.push_back(cArg);
+    env->ReleaseStringUTFChars(arg, argv);
+
   }
 
   gameObject = gameObject ? env->NewGlobalRef(gameObject) : nullptr;

@@ -1,5 +1,7 @@
 package org.crimsonedge.core.resource;
 
+import org.crimsonedge.core.CeClass;
+
 import java.nio.ByteBuffer;
 
 public interface IFile {

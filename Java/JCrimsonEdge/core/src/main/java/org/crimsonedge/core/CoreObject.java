@@ -1,6 +1,6 @@
 package org.crimsonedge.core;
 
-public class CoreObject {
+public class CoreObject implements ICoreObject{
 
     private long ref;
 
@@ -20,6 +20,7 @@ public class CoreObject {
         this.ref = ref;
     }
 
+    @Override
     public long getRef() {
         return ref;
     }

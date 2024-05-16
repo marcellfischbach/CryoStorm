@@ -187,7 +187,7 @@ bool Engine::Initialize(const std::vector<std::string> &args, iModule *externalM
       basePath = std::string(args[++i]);
     }
   }
-  printf("Starting with base-path: '%s'\n", basePath.c_str());
+  printf("Starting with base-path: '%s'\n", basePath.c_str()); fflush(stdout);
   ce::VFS::Get()->SetRootPath(basePath);
 
   if (!AssetManager::Get())
