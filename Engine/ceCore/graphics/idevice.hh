@@ -111,6 +111,7 @@ CE_CLASS_GEN;
   virtual iPointLight *CreatePointLight() = 0;
 
 
+  virtual void ClearTextureCache () = 0;
   virtual void ResetTextures() = 0;
   virtual void MarkTexture() = 0;
   virtual void ResetTexturesToMark() = 0;

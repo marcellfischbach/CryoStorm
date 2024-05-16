@@ -38,6 +38,7 @@ bool GBuffer::Update(ce::iDevice *device, uint16_t width, uint16_t height)
     CE_RELEASE(m_emissionMetallic);
   }
 
+  device->ClearTextureCache();
   UpdateSamplers(device);
 
   m_bufferIds.clear();
@@ -81,6 +82,7 @@ bool GBuffer::Update(ce::iDevice *device, uint16_t width, uint16_t height)
     }
     printf ("GBuffer compiled successfully\n");
   }
+  device->ClearTextureCache();
   return true;
 }
 

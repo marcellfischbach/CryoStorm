@@ -20,16 +20,19 @@ public class LwjglWindowCanvas extends AWTGLCanvas  {
 
     private final LwjglWindow window;
 
+    private int renderWidth;
+
+    private int renderHeight;
+
     public LwjglWindowCanvas(String[] args) {
         super(glData());
 
-        this.window = new LwjglWindow(this);
+        this.renderWidth = 1024;
+        this.renderHeight = 768;
 
+        this.window = new LwjglWindow(this);
         this.args = args;
-        Dimension size = new Dimension(1024, 768);
-        setMinimumSize(size);
-        setMaximumSize(size);
-        setPreferredSize(size);
+
 
         Runnable renderLoop = new Runnable() {
             @Override
@@ -79,9 +82,31 @@ public class LwjglWindowCanvas extends AWTGLCanvas  {
             }
         });
 
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                timer.restart();
+            }
+        });
+        timer.restart();
     }
 
 
+    private Timer timer = new Timer(200, e -> handleResized());
+
+    private void handleResized() {
+        this.renderWidth = getWidth();
+        this.renderHeight = getHeight();
+    }
+
+
+    public int getRenderWidth() {
+        return renderWidth;
+    }
+
+    public int getRenderHeight() {
+        return renderHeight;
+    }
 
     @Override
     public void initGL() {

@@ -60,12 +60,12 @@ public class LwjglWindow extends CoreObject implements IWindow {
 
     @Override
     public int getWidth() {
-        return this.canvas.getWidth();
+        return this.canvas.getRenderWidth();
     }
 
     @Override
     public int getHeight() {
-        return this.canvas.getHeight();
+        return this.canvas.getRenderHeight();
     }
 
     @Override

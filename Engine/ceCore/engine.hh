@@ -51,6 +51,7 @@ private:
 
   bool m_active    = true;
   int  m_exitValue = 0;
+  int m_multiSamples = 1;
 
 
   // Frame counting stuff

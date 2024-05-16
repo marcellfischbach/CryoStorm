@@ -800,6 +800,15 @@ iDirectionalLight *GL4Device::CreateDirectionalLight()
   return new GL4DirectionalLight();
 }
 
+void GL4Device::ClearTextureCache()
+{
+  for (size_t i=0; i<eTU_COUNT; i++)
+  {
+    m_textures[i] = nullptr;
+  }
+  ResetTextures();
+}
+
 void GL4Device::ResetTextures()
 {
   m_nextTextureUnit = eTU_Unit0;
@@ -901,6 +910,7 @@ void GL4Device::UnbindUnsafe(iTexture *texture)
       break;
   }
   CE_GL_ERROR()
+
 }
 
 eTextureUnit GL4Device::BindTexture(iTexture *texture)
@@ -922,6 +932,7 @@ eTextureUnit GL4Device::BindTexture(iTexture *texture)
   {
     iTexture *oldTexture = m_textures[unit];
     m_textures[unit] = texture;
+//    CE_ADDREF(texture);
 
     CE_GL_ERROR()
     SetActiveTexture(GL_TEXTURE0 + unit);
@@ -932,6 +943,7 @@ eTextureUnit GL4Device::BindTexture(iTexture *texture)
 
     SetSampler(unit, texture->GetSampler());
     CE_GL_ERROR()
+//    CE_RELEASE(oldTexture);
   }
   else
   {

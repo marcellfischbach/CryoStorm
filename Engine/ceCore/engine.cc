@@ -179,7 +179,7 @@ ce::iRenderTarget2D *create_render_target(ce::iDevice *device, uint32_t width, u
 bool Engine::Initialize(const std::vector<std::string> &args, iModule *externalModule, iGame *externalGame)
 {
   std::string basePath("../");
-  for (size_t    i = 0, in = args.size(); i < in; i++)
+  for (size_t i = 0, in = args.size(); i < in; i++)
   {
     const std::string &arg(args[i]);
     if (arg == std::string("--data") && i + 1 < in)
@@ -215,8 +215,8 @@ bool Engine::Initialize(const std::vector<std::string> &args, iModule *externalM
     modules.push_back(externalModule);
   }
 
-  std::vector<iGame*> games;
-  for (size_t i     = 0, in = file.Root()->GetNumberOfChildren(); i < in; i++)
+  std::vector<iGame *> games;
+  for (size_t          i = 0, in = file.Root()->GetNumberOfChildren(); i < in; i++)
   {
     CrimsonFileElement *moduleElement = file.Root()->GetChild(i);
     if (moduleElement)
@@ -271,10 +271,10 @@ bool Engine::Initialize(const std::vector<std::string> &args, iModule *externalM
     m_world = new World();
   }
 
-  printf ("Create render target: %p\n", m_window);
+  printf("Create render target: %p\n", m_window);
   fflush(stdout);
-  int multiSamples = Settings::Get().Display().GetInt("multisamples", 1);
-  m_renderTarget = create_render_target(m_device, m_window->GetWidth(), m_window->GetHeight(), multiSamples);
+  m_multiSamples = Settings::Get().Display().GetInt("multisamples", 1);
+  m_renderTarget = create_render_target(m_device, m_window->GetWidth(), m_window->GetHeight(), m_multiSamples);
   if (m_renderTarget == nullptr)
   {
     return false;
@@ -282,7 +282,7 @@ bool Engine::Initialize(const std::vector<std::string> &args, iModule *externalM
 
   ce::ObjectRegistry::Register<ce::DebugCache>(new ce::DebugCache());
 
-  for (auto game : games)
+  for (auto game: games)
   {
     game->Initialize(this);
   }
@@ -305,7 +305,7 @@ int Engine::Run()
 #endif
 
     m_window->ProcessUpdates();
-    ProcessFrame ();
+    ProcessFrame();
     m_window->Present();
 
 #if _DEBUG
@@ -320,6 +320,19 @@ int Engine::Run()
 
 void Engine::ProcessFrame()
 {
+  if (m_renderTarget &&
+      (m_renderTarget->GetWidth() != m_window->GetWidth() || m_renderTarget->GetHeight() != m_window->GetHeight()))
+  {
+    m_renderTarget->Release();
+    printf("Create render target\n");
+    fflush(stdout);
+    m_renderTarget = create_render_target(m_device, m_window->GetWidth(), m_window->GetHeight(), m_multiSamples);
+    if (m_renderTarget == nullptr)
+    {
+      return;
+    }
+  }
+
   int64_t frameTime = m_fps.Tick();
   if (frameTime != 0)
   {

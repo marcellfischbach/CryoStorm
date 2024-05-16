@@ -99,7 +99,7 @@ public:
   iDirectionalLight *CreateDirectionalLight() override;
   iPointLight *CreatePointLight() override;
 
-
+  void ClearTextureCache () override;
   void ResetTextures() override;
   void MarkTexture() override;
   void ResetTexturesToMark() override;
