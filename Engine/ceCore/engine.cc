@@ -179,6 +179,7 @@ ce::iRenderTarget2D *create_render_target(ce::iDevice *device, uint32_t width, u
 bool Engine::Initialize(const std::vector<std::string> &args, iModule *externalModule, iGame *externalGame)
 {
   std::string basePath("../");
+  std::string configFilename = "vfs.config";
   for (size_t i = 0, in = args.size(); i < in; i++)
   {
     const std::string &arg(args[i]);
@@ -186,9 +187,13 @@ bool Engine::Initialize(const std::vector<std::string> &args, iModule *externalM
     {
       basePath = std::string(args[++i]);
     }
+    else if (arg == std::string("--config") && i + 1 < in)
+    {
+      configFilename = std::string(args[++i]);
+    }
   }
   printf("Starting with base-path: '%s'\n", basePath.c_str()); fflush(stdout);
-  ce::VFS::Get()->SetRootPath(basePath);
+  ce::VFS::Get()->SetRootPath(basePath, configFilename);
 
   if (!AssetManager::Get())
   {

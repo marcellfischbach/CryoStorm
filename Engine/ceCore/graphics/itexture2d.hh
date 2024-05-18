@@ -26,7 +26,7 @@ struct CE_CORE_API iTexture2D : public CE_SUPER(iTexture)
 
 
   CE_CLASS_GEN;
-  virtual ~iTexture2D() { }
+  ~iTexture2D() override { }
 
   bool IsMultiSampling() const
   {

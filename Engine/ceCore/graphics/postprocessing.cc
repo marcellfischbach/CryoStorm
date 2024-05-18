@@ -265,10 +265,12 @@ bool SimplePostProcess::UpdateRenderTarget(iDevice *device,
 
   // clear the outputs
   CE_RELEASE(m_renderTarget);
-  for (const auto &output: m_outputs)
+  for (int i = 0 , in = m_outputs.size(); i<in; ++i)
   {
-    CE_RELEASE(output);
+    CE_RELEASE(m_outputs[i]);
+    m_outputs[i] = nullptr;
   }
+
 
   ce::iRenderTarget2D::Descriptor desc {(uint16_t) width, (uint16_t) height};
   m_renderTarget = device->CreateRenderTarget(desc);

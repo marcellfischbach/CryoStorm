@@ -37,8 +37,7 @@ target_link_libraries(ceLauncher
         ${SDL_LIBRARY}
 )
 
-#add_dependencies(ceLauncher ceAssimpLoader)
-#add_dependencies(ceLauncher ceBullet)
-#add_dependencies(ceLauncher ceImgLoader)
-#add_dependencies(ceLauncher ceOpenGL)
-#add_dependencies(ceLauncher ceSDLWindow)
+add_dependencies(ceLauncher ceAssimpLoader)
+add_dependencies(ceLauncher ceBullet)
+add_dependencies(ceLauncher ceImgLoader)
+add_dependencies(ceLauncher ceOpenGL)

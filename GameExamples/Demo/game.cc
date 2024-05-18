@@ -323,7 +323,7 @@ ce::iRenderTarget2D *create_render_target(ce::iDevice *device, uint32_t width, u
 ce::PostProcessing* setup_post_processing ()
 {
   ce::PostProcessing* postProcessing = nullptr;
-#if 0
+#if 1
   postProcessing = new ce::PostProcessing();
 
 

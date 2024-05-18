@@ -163,6 +163,10 @@ void GL4RenderTarget2D::SetDepthBuffer(ePixelFormat format)
   glBindRenderbuffer(GL_RENDERBUFFER, m_depthBuffer);
   glRenderbufferStorage(GL_RENDERBUFFER, internalFormat, m_width, m_height);
   glFramebufferRenderbuffer(GL_FRAMEBUFFER, attachment, GL_RENDERBUFFER, m_depthBuffer);
+
+  CE_RELEASE(m_depthTexture.textureCube);
+  CE_RELEASE(m_depthTexture.texture);
+
 }
 
 void GL4RenderTarget2D::AddColorTexture(iTexture2D *colorTexture)
@@ -174,7 +178,7 @@ void GL4RenderTarget2D::AddColorTexture(iTexture2D *colorTexture)
 
 
   GL4Texture2D *txt = colorTexture->Query<GL4Texture2D>();
-  txt->AddRef();
+  CE_ADDREF(txt);
 
 
   GLenum attachment = GL_DEPTH_ATTACHMENT;
@@ -205,7 +209,7 @@ void GL4RenderTarget2D::AddColorTexture(iTextureCube *colorTexture, eCubeFace fa
 
 
   GL4TextureCube *txt = colorTexture->Query<GL4TextureCube>();
-  txt->AddRef();
+  CE_ADDREF(txt);
 
 
   GLenum attachment = GL_DEPTH_ATTACHMENT;

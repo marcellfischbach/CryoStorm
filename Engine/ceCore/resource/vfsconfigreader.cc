@@ -18,9 +18,9 @@ VFSConfigReader::VFSConfigReader()
 {
 }
 
-void VFSConfigReader::Read(const std::string &configPath)
+void VFSConfigReader::Read(const std::string &configPath, const std::string &filename)
 {
-  AutoDelete config(OpenConfigFile(configPath));
+  AutoDelete config(OpenConfigFile(configPath, filename));
   ReadConfig(config);
 }
 
@@ -102,13 +102,16 @@ void VFSConfigReader::ReadAlias(const CrimsonFileElement* aliasElement)
   }
 }
 
-CrimsonFile* VFSConfigReader::OpenConfigFile(const std::string& configPath)
+CrimsonFile* VFSConfigReader::OpenConfigFile(const std::string& configPath, const std::string &filename)
 {
-  AutoDelete<iFile> fsFile (new FileSystemFile(configPath + "/vfs.config"));
+  std::string configFile = configPath + "/" + filename;
+  AutoDelete<iFile> fsFile (new FileSystemFile(configFile));
   if (!fsFile)
   {
+    printf ("VFS config file '%s' could not be found\n", configFile.c_str()); fflush(stdout);
     return nullptr;
   }
+  printf ("Open VFS config file'%s'\n", configFile.c_str()); fflush(stdout);
 
   if  (!fsFile->Open(eAM_Read, eOM_Text))
   {

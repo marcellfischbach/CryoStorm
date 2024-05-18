@@ -16,7 +16,7 @@ CE_CLASS(virtual)
 struct CE_CORE_API iTexture : public CE_SUPER(iObject)
 {
   CE_CLASS_GEN;
-  virtual ~iTexture() { }
+  ~iTexture() override { }
 
   virtual eTextureType GetType() const = 0;
 

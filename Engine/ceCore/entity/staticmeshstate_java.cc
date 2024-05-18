@@ -10,7 +10,7 @@ extern "C"
 
 
 JNIEXPORT void
-JNICALL Java_org_crimsonedge_core_entity_StaticMeshState_nSetMesh(JNIEnv *env, jclass cls, jlong ref, long meshRef)
+JNICALL Java_org_crimsonedge_core_entity_StaticMeshState_nSetMesh(JNIEnv *env, jclass cls, jlong ref, jlong meshRef)
 {
   auto staticMeshState = CE_STATIC_MESH(ref);
   auto mesh            = reinterpret_cast<ce::Mesh *>(meshRef);

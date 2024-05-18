@@ -20,7 +20,7 @@ class CE_CORE_API VFS
 {
 public:
   static VFS *Get();
-  void SetRootPath(const std::string &rootPath);
+  void SetRootPath(const std::string &rootPath, const std::string &configFilename);
   CE_NODISCARD const std::string &GetRootPath() const;
 
   void AddArchive (iArchive* archive);

@@ -18,7 +18,7 @@ private:
   VFSConfigReader();
 
 public:
-  static void Read(const std::string &configPath);
+  static void Read(const std::string &configPath, const std::string &filename);
 
 private:
   static void ReadConfig (const CrimsonFile *file);
@@ -27,7 +27,7 @@ private:
   static void ReadArchive (const CrimsonFileElement *archiveElement);
   static void ReadAliases(const CrimsonFileElement *aliasesElement);
   static void ReadAlias(const CrimsonFileElement *aliasElement);
-  static CrimsonFile *OpenConfigFile(const std::string &configPath) ;
+  static CrimsonFile *OpenConfigFile(const std::string &configPath, const std::string &filename) ;
 };
 
 } // ce

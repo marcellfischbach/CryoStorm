@@ -7,7 +7,7 @@ public class CoreObject implements ICoreObject{
     private native long nCreateClass (String className);
 
     public CoreObject() {
-        CeClass cls = getClass().getAnnotation(CeClass.class);
+        CeClass cls = getCeClass(getClass());
         if (cls != null) {
             ref = nCreateClass(cls.value());
         }
@@ -18,6 +18,18 @@ public class CoreObject implements ICoreObject{
 
     public CoreObject(long ref) {
         this.ref = ref;
+    }
+
+    private static CeClass getCeClass(Class<?> cls) {
+        while (cls != null) {
+            CeClass ceClass = cls.getAnnotation(CeClass.class);
+            if (ceClass != null) {
+                return ceClass;
+            }
+
+            cls = cls.getSuperclass();
+        }
+        return null;
     }
 
     @Override
