@@ -21,4 +21,9 @@ public class JavaState extends EntityState{
     public void update(float tpf) {
 
     }
+
+    public SpatialState getRoot () {
+        Entity entity = getEntity();
+        return entity != null ? entity.getRoot() : null;
+    }
 }

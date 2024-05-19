@@ -123,7 +123,7 @@ Transform SpatialState::GetTransform()
 {
   if (m_parent)
   {
-    return Transform(this, m_parent->GetGlobalMatrix(), m_localMatrix);
+    return Transform(this, m_localMatrix, m_parent->GetGlobalMatrix());
   }
   return Transform(this, m_localMatrix);
 }

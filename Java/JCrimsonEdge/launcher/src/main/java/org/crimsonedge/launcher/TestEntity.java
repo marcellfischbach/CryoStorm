@@ -29,6 +29,7 @@ public class TestEntity extends Entity {
         mesh.addSubMesh(plane, slot);
 
         StaticMeshState staticMeshState = new StaticMeshState();
+
         staticMeshState.setMesh(mesh);
         staticMeshState.setCastShadow(false);
         attach(staticMeshState);
