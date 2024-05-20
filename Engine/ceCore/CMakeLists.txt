@@ -281,6 +281,8 @@ if (${JAVA_BINDINGS})
             graphics/irendermesh_java.cc
             graphics/material/material_java.cc
             graphics/material/materialinstance_java.cc
+            graphics/shading/ishader_java.cc
+            graphics/shading/ishaderattribute_java.cc
 
             input/input_java.cc
 
