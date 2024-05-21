@@ -1,6 +1,7 @@
 #pragma  once
 
 #include <string>
+#include <ceCore/class.hh>
 #include <ceCore/types.hh>
 #include <ceCore/math/color4f.hh>
 #include <ceCore/math/vector.hh>
@@ -11,6 +12,8 @@ namespace ce
 
 struct iShaderAttribute
 {
+  CE_DECLARE_JAVA("org/crimsonedge/core/graphics/shading/IShaderAttribute")
+
 	virtual ~iShaderAttribute()
 	{
 

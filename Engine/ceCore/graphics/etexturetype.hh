@@ -4,7 +4,7 @@
 namespace ce
 {
 
-enum class eTextureType
+enum eTextureType
 {
   Texture1D,
   Texture2D,

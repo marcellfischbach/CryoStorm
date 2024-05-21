@@ -12,7 +12,7 @@ namespace ce
 
 struct iSampler;
 
-CE_CLASS(virtual)
+CE_CLASS(virtual, jclass="org.crimsonedge.core.graphics.ITexture")
 struct CE_CORE_API iTexture : public CE_SUPER(iObject)
 {
   CE_CLASS_GEN;

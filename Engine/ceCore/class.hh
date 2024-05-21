@@ -75,6 +75,38 @@ private: \
       mutable bool m_jobjectChecked = false; \
       mutable jobject m_jobject = nullptr
 
+
+#define CE_DECLARE_JAVA(fqcn) \
+private: \
+      mutable bool m_jobjectChecked = false; \
+      mutable jobject m_jobject = nullptr; \
+public:                                \
+    CE_NODISCARD jobject GetJObject() const\
+    {                       \
+      if (!m_jobject && !m_jobjectChecked)       \
+      {                                \
+          static jclass cls = ce::Java::Get() ? ce::Java::Get()->FindClass (fqcn) : nullptr; \
+          if (cls) \
+          { \
+            static jmethodID ctor = ce::Java::Get()->GetMethodID(cls, "<init>", "(J)V"); \
+            if (ctor) \
+            { \
+              jobject obj = ce::Java::Get()->NewObject(cls, ctor, reinterpret_cast<jlong>(this)); \
+              if (obj) \
+              { \
+                m_jobject = ce::Java::Get()->NewGlobalRef(obj);                              \
+                if (!m_jobject)        \
+                {                      \
+                  return nullptr;\
+                }\
+              } \
+            } \
+          } \
+        m_jobjectChecked = true; \
+      }                     \
+      return m_jobject; \
+    }
+
 #else
 #define CE_CLASS_GEN_OBJECT \
     CE_CLASS_GEN; \
@@ -96,6 +128,9 @@ private: \
     } \
     private: \
       int64_t m_refCount = 1
+
+#define CE_DECLARE_JAVA(fqcn)
+
 #endif
 
 #define CE_CLASS_GEN_CONSTR m_refCount = 1

@@ -277,8 +277,11 @@ if (${JAVA_BINDINGS})
             entity/staticmeshstate_java.cc
             entity/world_java.cc
 
-            graphics/mesh_java.cc
+            graphics/idevice_java.cc
             graphics/irendermesh_java.cc
+            graphics/itexture_java.cc
+            graphics/itexture2d_java.cc
+            graphics/mesh_java.cc
             graphics/material/material_java.cc
             graphics/material/materialinstance_java.cc
             graphics/shading/ishader_java.cc
@@ -292,6 +295,7 @@ if (${JAVA_BINDINGS})
             resource/javafile.cc
             resource/javafile.hh
     )
+
 endif ()
 
 

@@ -3,11 +3,10 @@ package org.crimsonedge.launcher;
 import org.crimsonedge.core.ObjectRegistry;
 import org.crimsonedge.core.entity.Entity;
 import org.crimsonedge.core.entity.StaticMeshState;
-import org.crimsonedge.core.graphics.IRenderMesh;
-import org.crimsonedge.core.graphics.IRenderMeshGenerator;
-import org.crimsonedge.core.graphics.IRenderMeshGeneratorFactory;
-import org.crimsonedge.core.graphics.Mesh;
+import org.crimsonedge.core.graphics.*;
 import org.crimsonedge.core.graphics.material.IMaterial;
+import org.crimsonedge.core.graphics.shading.IShader;
+import org.crimsonedge.core.graphics.shading.IShaderAttribute;
 import org.crimsonedge.core.math.Vector2f;
 import org.crimsonedge.core.math.Vector3f;
 import org.crimsonedge.core.math.Vector4f;
@@ -19,11 +18,41 @@ import java.util.stream.Stream;
 
 public class TestEntity extends Entity {
 
+    static byte[] textureRGB(int width, int height) {
+        byte[] res = new byte[width * height * 3];
+        for (int i=0; i<height; i++) {
+            for (int j=0; j<width; j++) {
+                int o = (i*width+j) * 3;
+
+                res[o] = (byte)0x00;
+                res[o+1] = (byte)0x00;
+                res[o+2] = (byte)0xff;
+            }
+        }
+        return res;
+    }
+
+
     public TestEntity() {
         super ();
 
-        IRenderMesh plane = generatePlane();
+        IDevice device = ObjectRegistry.get(IDevice.class);
+
+        ITexture2D.Descriptor desc = new ITexture2D.Descriptor();
+        desc.format = EPixelFormat.RGB;
+        desc.width = 256;
+        desc.height = 256;
+        desc.mipMaps = false;
+        desc.multiSamples = 1;
+
+        ITexture2D txt2d = device.createTexture(desc);
+        txt2d.data(0, EPixelFormat.RGB, textureRGB(desc.width, desc.height));
+
         IMaterial planeMaterial = AssetManager.get(IMaterial.class, "/materials/Default.mat");
+        int diffuseIdx = planeMaterial.indexOf("Diffuse");
+        planeMaterial.set(diffuseIdx, txt2d);
+
+        IRenderMesh plane = generatePlane();
         Mesh mesh = new Mesh();
         int slot = mesh.addMaterialSlot("Default", planeMaterial);
         mesh.addSubMesh(plane, slot);

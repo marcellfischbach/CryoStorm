@@ -11,7 +11,7 @@ namespace ce
 {
 
 class Image;
-CE_CLASS()
+CE_CLASS(jclass="org.crimsonedge.core.graphics.ITexture2D")
 struct CE_CORE_API iTexture2D : public CE_SUPER(iTexture)
 {
 
