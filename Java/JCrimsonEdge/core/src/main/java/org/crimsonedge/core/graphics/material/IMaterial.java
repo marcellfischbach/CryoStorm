@@ -5,10 +5,8 @@ import org.crimsonedge.core.ICoreObject;
 import org.crimsonedge.core.graphics.EFillMode;
 import org.crimsonedge.core.graphics.ERenderQueue;
 import org.crimsonedge.core.graphics.EShadingMode;
-import org.crimsonedge.core.math.Color4f;
-import org.crimsonedge.core.math.Vector2f;
-import org.crimsonedge.core.math.Vector3f;
-import org.crimsonedge.core.math.Vector4f;
+import org.crimsonedge.core.graphics.ITexture;
+import org.crimsonedge.core.math.*;
 
 @CeClass("ce::iMaterial")
 public interface IMaterial extends ICoreObject {
@@ -28,7 +26,7 @@ public interface IMaterial extends ICoreObject {
      void set(int idx, Vector4f v) ;
      void set(int idx, Color4f v) ;
      void set(int idx, int value) ;
-//     void Set(int idx,  Matrix3f  m) ;
-//     void Set(int idx,  Matrix4f  m) ;
-//     void Set(int idx, iTexture  texture) ;
+     void set(int idx, Matrix3f m) ;
+     void set(int idx, Matrix4f m) ;
+     void set(int idx, ITexture texture) ;
 }

@@ -5,10 +5,8 @@ import org.crimsonedge.core.CoreObject;
 import org.crimsonedge.core.graphics.EFillMode;
 import org.crimsonedge.core.graphics.ERenderQueue;
 import org.crimsonedge.core.graphics.EShadingMode;
-import org.crimsonedge.core.math.Color4f;
-import org.crimsonedge.core.math.Vector2f;
-import org.crimsonedge.core.math.Vector3f;
-import org.crimsonedge.core.math.Vector4f;
+import org.crimsonedge.core.graphics.ITexture;
+import org.crimsonedge.core.math.*;
 
 @CeClass("ce::MaterialInstance")
 public class MaterialInstance extends CoreObject implements IMaterial {
@@ -43,6 +41,9 @@ public class MaterialInstance extends CoreObject implements IMaterial {
 
     private static native void nSetInt(long ref, int idx, int value);
 
+    private static native void nSetMatrix3f(long ref, int idx, float[] m);
+    private static native void nSetMatrix4f(long ref, int idx, float[] m);
+    private static native void nSetTexture(long ref, int idx, long textureRef);
 
     public void setMaterial(Material material) {
         nSetMaterial(getRef(), material != null ? material.getRef() : 0);
@@ -108,5 +109,29 @@ public class MaterialInstance extends CoreObject implements IMaterial {
     @Override
     public void set(int idx, int value) {
         nSetInt(getRef(), idx, value);
+    }
+
+
+    private static final float[] F9 = new float[9];
+
+    @Override
+    public void set(int idx, Matrix3f m) {
+        m.toArray(F9);
+        nSetMatrix3f(getRef(), idx, F9);
+    }
+
+
+    private static final float[] F16 = new float[16];
+
+    @Override
+    public void set(int idx, Matrix4f m) {
+        m.toArray(F16);
+        nSetMatrix4f(getRef(), idx, F16);
+
+    }
+
+    @Override
+    public void set(int idx, ITexture texture) {
+        nSetTexture(getRef(), idx, texture != null ? texture.getRef() : 0L);
     }
 }
