@@ -19,8 +19,9 @@
 
 
     <modules>
-        <module>core</module>
-        <module>launcher</module>
+        <module>CeCore</module>
+        <module>CeLWJGLWindow</module>
+        <module>Demo</module>
     </modules>
 
 
@@ -28,13 +29,13 @@
         <dependencies>
             <dependency>
                 <groupId>org.crimsonedge</groupId>
-                <artifactId>core</artifactId>
+                <artifactId>CeCore</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>org.crimsonedge</groupId>
-                <artifactId>launcher</artifactId>
+                <artifactId>CeLWJGLWindow</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
 

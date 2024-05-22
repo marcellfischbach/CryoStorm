@@ -9,5 +9,5 @@ add_subdirectory(ceLauncher)
 add_subdirectory(ceOpenGL)
 
 if (${JAVA_BINDINGS})
-    add_subdirectory(ceJavaBinding)
+    add_subdirectory(ceJavaLWJGL)
 endif()
