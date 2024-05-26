@@ -323,7 +323,7 @@ ce::iRenderTarget2D *create_render_target(ce::iDevice *device, uint32_t width, u
 ce::PostProcessing* setup_post_processing ()
 {
   ce::PostProcessing* postProcessing = nullptr;
-#if 1
+#if 0
   postProcessing = new ce::PostProcessing();
 
 
@@ -362,6 +362,8 @@ void generate_camera(ce::World *world)
   auto cameraEntity = new ce::Entity("Camera");
 
   auto cameraState  = new ce::CameraState();
+  cameraState->SetClearMode(ce::eClearMode::DepthColor);
+  cameraState->SetClearColor(ce::Color4f(0.0f, 0.0f, 0.5f));
 
 
   auto postProcessing = setup_post_processing ();

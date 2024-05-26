@@ -11,6 +11,7 @@ namespace ce
 class Camera;
 class Projector;
 struct iRenderTarget2D;
+struct iTextureCube;
 class PostProcessing;
 
 CE_CLASS()
@@ -30,7 +31,10 @@ public:
   Projector *GetProjector();
 
   eClearMode GetClearMode() const;
+  eClearColorMode GetClearColorMode() const;
   const Color4f &GetClearColor() const;
+  iTextureCube* GetClearSkybox();
+  const iTextureCube* GetClearSkybox() const;
   float GetClearDepth() const;
 
   void SetRenderTarget(iRenderTarget2D *renderTarget);
@@ -48,7 +52,7 @@ public:
 
   void UpdateData(float near, float far, float angle, float angleWidthHeight);
 
-  void UpdateClear(eClearMode mode, const Color4f &color, float depth);
+  void UpdateClear(eClearMode mode, eClearColorMode clearColorMode, const Color4f &color, iTextureCube *skybox, float depth);
 
   void UpdateProjector(uint32_t width, uint32_t height);
 
@@ -60,11 +64,14 @@ private:
   float m_angleWidthHeight;
 
 
-  eClearMode m_clearMode;
-  Color4f    m_clearColor;
-  float      m_clearDepth;
+  eClearMode      m_clearMode;
+  eClearColorMode m_clearColorMode;
 
-  Camera *m_camera;
+  Color4f      m_clearColor;
+  iTextureCube *m_clearSkybox;
+  float        m_clearDepth;
+
+  Camera    *m_camera;
   Projector *m_projector;
 
   iRenderTarget2D *m_renderTarget;

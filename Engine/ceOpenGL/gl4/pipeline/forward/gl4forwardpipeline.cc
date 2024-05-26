@@ -212,7 +212,14 @@ void GL4ForwardPipeline::RenderForwardToTarget()
   m_device->SetDepthWrite(true);
   m_device->SetBlending(false);
   m_device->SetDepthFunc(eCF_LessOrEqual);
-  m_device->Clear(true, Color4f(0.0f, 0.0f, 0.0f, 0.0f), true, 1.0f, true, 0);
+
+  bool clearColor =
+           (m_gfxCamera->GetClearMode() == eClearMode::Color || m_gfxCamera->GetClearMode() == eClearMode::DepthColor)
+           && m_gfxCamera->GetClearColorMode() == eClearColorMode::PlainColor;
+  bool clearDepth =
+           (m_gfxCamera->GetClearMode() == eClearMode::Depth || m_gfxCamera->GetClearMode() == eClearMode::DepthColor);
+
+  m_device->Clear(clearColor, m_gfxCamera->GetClearColor(), clearDepth, 1.0f, clearDepth, 0);
 
   std::vector<GfxMesh*>& defaultMeshes = m_collector.GetMeshes(eRenderQueue::Default);
   for (auto            & mesh : defaultMeshes)

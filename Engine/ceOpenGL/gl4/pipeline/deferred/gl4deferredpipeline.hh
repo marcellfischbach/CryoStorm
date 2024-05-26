@@ -57,6 +57,7 @@ public:
 private:
 
   void RenderGBuffer(uint16_t width, uint16_t height);
+  void RenderBackMask();
   void RenderLights();
   void RenderDirectionalLight(const GL4DirectionalLight *directionalLight);
   void RenderPointLight(const GL4PointLight *pointLight);
@@ -85,6 +86,9 @@ private:
 
   GL4DeferredDirectionalLightRenderer m_directionalLightRenderer;
   GL4DeferredPointLightRenderer m_pointLightRenderer;
+
+  iShader *m_backMaskShader;
+  iShaderAttribute *m_attrBackMaskDepth;
   int m_renderMode;
 };
 

@@ -37,9 +37,15 @@ GL4DeferredPipeline::~GL4DeferredPipeline()
 
 void GL4DeferredPipeline::Initialize()
 {
-
   m_directionalLightRenderer.Initialize();
   m_pointLightRenderer.Initialize();
+
+  m_backMaskShader = AssetManager::Get()->Get<iShader>(
+      ResourceLocator("file://${engine}/opengl/gl4/deferred/back_mask.shader"));
+  if (m_backMaskShader)
+  {
+    m_attrBackMaskDepth = m_backMaskShader->GetShaderAttribute("Depth");
+  }
 }
 
 
@@ -59,8 +65,16 @@ void GL4DeferredPipeline::Render(iRenderTarget2D *target, const GfxCamera *camer
   device->SetDepthWrite(false);
   device->SetColorWrite(true, true, true, true);
   device->SetBlending(false);
-  device->Clear(true, Color4f(0.0f, 0.0f, 0.0f, 0.0f), false, 1.0f, true, 0);
 
+  bool clearColor =
+           (m_gfxCamera->GetClearMode() == eClearMode::Color || m_gfxCamera->GetClearMode() == eClearMode::DepthColor)
+           && m_gfxCamera->GetClearColorMode() == eClearColorMode::PlainColor;
+  device->Clear(clearColor, m_gfxCamera->GetClearColor(), false, 1.0f, true, 0);
+
+  if (clearColor)
+  {
+    RenderBackMask();
+  }
   switch (m_renderMode)
   {
     case 0:
@@ -78,7 +92,7 @@ void GL4DeferredPipeline::Render(iRenderTarget2D *target, const GfxCamera *camer
   }
 
 
-  PostProcessing * pp = camera->GetPostProcessing();
+  PostProcessing *pp = camera->GetPostProcessing();
   if (pp)
   {
     pp->SetInput(PPImageType::Color, m_target->GetColorTexture(0));
@@ -102,16 +116,32 @@ void GL4DeferredPipeline::RenderGBuffer(uint16_t width,
   m_device->SetDepthTest(true);
   m_device->SetDepthWrite(true);
   m_device->SetColorWrite(true, true, true, true);
-  m_device->Clear(true, Color4f(0.0f, 0.0f, 0.0f, 0.0f), true, 1.0f, true, 0);
+  m_device->Clear(true, Color4f(0.0f, 0.0f, 0.0f, 0.0f),
+                  m_gfxCamera->GetClearMode() == eClearMode::Depth ||
+                  m_gfxCamera->GetClearMode() == eClearMode::DepthColor,
+                  1.0f, true, 0);
   m_device->BindMaterial(nullptr, eRP_GBuffer);
   std::vector<GfxMesh *> &meshes = m_collector.GetMeshes(eRenderQueue::Default);
 
 
-  for (const auto        mesh: meshes)
+  for (const auto mesh: meshes)
   {
     mesh->Render(m_device, eRP_GBuffer);
   }
 
+}
+
+void GL4DeferredPipeline::RenderBackMask()
+{
+  if (!m_backMaskShader || !m_attrBackMaskDepth)
+  {
+    return;
+  }
+  
+  m_device->SetShader(m_backMaskShader);
+  eTextureUnit unit = m_device->BindTexture(m_gBuffer->GetDepth());
+  m_attrBackMaskDepth->Bind(unit);
+  m_device->RenderFullscreen();
 }
 
 
@@ -122,10 +152,10 @@ void GL4DeferredPipeline::RenderLights()
     switch (light->GetLight()->GetType())
     {
       case eLT_Directional:
-        RenderDirectionalLight(ce::QueryClass <GL4DirectionalLight>(light->GetLight()));
+        RenderDirectionalLight(ce::QueryClass<GL4DirectionalLight>(light->GetLight()));
         break;
       case eLT_Point:
-        RenderPointLight(ce::QueryClass <GL4PointLight>(light->GetLight()));
+        RenderPointLight(ce::QueryClass<GL4PointLight>(light->GetLight()));
         break;
       default:
         break;
@@ -154,7 +184,7 @@ void GL4DeferredPipeline::SetupVariables(iRenderTarget2D *target,
   m_camera    = camera->GetCamera();
   m_projector = camera->GetProjector();
   m_scene     = scene;
-  m_target    = camera->GetPostProcessing() ? UpdateRenderTarget (device, target) : target;
+  m_target    = camera->GetPostProcessing() ? UpdateRenderTarget(device, target) : target;
 
   UpdateIntermediate();
 
@@ -165,7 +195,7 @@ void GL4DeferredPipeline::SetupVariables(iRenderTarget2D *target,
 
 }
 
-iRenderTarget2D* GL4DeferredPipeline::UpdateRenderTarget(ce::iDevice *device, ce::iRenderTarget2D *target)
+iRenderTarget2D *GL4DeferredPipeline::UpdateRenderTarget(ce::iDevice *device, ce::iRenderTarget2D *target)
 {
   if (!target)
   {
@@ -173,10 +203,11 @@ iRenderTarget2D* GL4DeferredPipeline::UpdateRenderTarget(ce::iDevice *device, ce
     return nullptr;
   }
 
-  
+
   iRenderTarget2D *renderTarget = m_target;
 
-  if (renderTarget && renderTarget->GetWidth() == target->GetWidth() && renderTarget->GetHeight() == target->GetHeight())
+  if (renderTarget && renderTarget->GetWidth() == target->GetWidth() &&
+      renderTarget->GetHeight() == target->GetHeight())
   {
     // all is properly set up
     return renderTarget;
@@ -186,8 +217,8 @@ iRenderTarget2D* GL4DeferredPipeline::UpdateRenderTarget(ce::iDevice *device, ce
   CE_RELEASE(renderTarget);
 
   iRenderTarget2D::Descriptor desc {
-    target->GetWidth(),
-    target->GetHeight()
+      target->GetWidth(),
+      target->GetHeight()
   };
   renderTarget = device->CreateRenderTarget(desc);
   if (!renderTarget)
@@ -196,14 +227,14 @@ iRenderTarget2D* GL4DeferredPipeline::UpdateRenderTarget(ce::iDevice *device, ce
   }
 
   iTexture2D::Descriptor colorDesc {
-    ePF_RGBA,
-    target->GetWidth(),
-    target->GetHeight(),
-    false,
-    1
+      ePF_RGBA,
+      target->GetWidth(),
+      target->GetHeight(),
+      false,
+      1
   };
-  iTexture2D* colorTexture = device->CreateTexture(colorDesc);
-  iSampler* colorSampler = device->CreateSampler();
+  iTexture2D *colorTexture = device->CreateTexture(colorDesc);
+  iSampler   *colorSampler = device->CreateSampler();
   colorSampler->SetFilterMode(eFM_MinMagNearest);
   colorSampler->SetAddressU(eTAM_Clamp);
   colorSampler->SetAddressV(eTAM_Clamp);

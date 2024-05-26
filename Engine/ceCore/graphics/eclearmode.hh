@@ -5,12 +5,17 @@ namespace ce
 {
 
 
-enum class eClearMode
+enum eClearMode
 {
   None,
   Depth,
   Color,
   DepthColor
+};
+
+enum eClearColorMode {
+  PlainColor,
+  Skybox
 };
 
 }

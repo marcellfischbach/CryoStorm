@@ -209,7 +209,7 @@ void CameraState::UpdateGfxCamera()
   m_gfxCamera->SetRenderShadows(m_renderShadows);
   m_gfxCamera->SetPostProcessing(m_postProcessing);
   m_gfxCamera->UpdateData(m_near, m_far, m_angle, m_angleWidthHeight);
-  m_gfxCamera->UpdateClear(m_clearMode, m_clearColor, m_clearDepth);
+  m_gfxCamera->UpdateClear(m_clearMode, eClearColorMode::PlainColor, m_clearColor, nullptr, m_clearDepth);
 }
 
 }
