@@ -8,7 +8,7 @@ CE_DEFINE_GAME(Game)
 
 
 #include <ceLauncher/launchermodule.hh>
-#include "../../GameExamples/Demo/exitgamestate.hh"
+#include "exitgamestate.hh"
 #include <ceCore/engine.hh>
 #include <ceCore/settings.hh>
 #include <ceCore/ticker.hh>
@@ -41,6 +41,7 @@ CE_DEFINE_GAME(Game)
 #include <ceCore/graphics/skeletonmesh.hh>
 #include <ceCore/graphics/mesh.hh>
 #include <ceCore/graphics/postprocessing.hh>
+#include <ceCore/graphics/skybox/simpleskybox.hh>
 #include <ceCore/graphics/pp/pp.hh>
 #include <ceCore/graphics/shading/ishaderattribute.hh>
 #include <ceCore/graphics/scene/igfxscene.hh>
@@ -364,7 +365,8 @@ void generate_camera(ce::World *world)
   auto cameraState  = new ce::CameraState();
   cameraState->SetClearMode(ce::eClearMode::DepthColor);
   cameraState->SetClearColor(ce::Color4f(0.0f, 0.0f, 0.5f));
-
+  cameraState->SetClearColorMode(ce::eClearColorMode::Skybox);
+  cameraState->SetSkyboxRenderer(new ce::SimpleSkybox());
 
   auto postProcessing = setup_post_processing ();
   cameraState->SetPostProcessing(postProcessing);

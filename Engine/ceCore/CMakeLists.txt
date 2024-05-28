@@ -106,6 +106,7 @@ set(SOURCES
         graphics/itexture2darray.hh
         graphics/itexturecube.hh
         graphics/isampler.hh
+        graphics/iskyboxrenderer.hh
         graphics/ivertexbuffer.hh
         graphics/mesh.cc
         graphics/mesh.hh
@@ -168,6 +169,13 @@ set(SOURCES
 
         graphics/shading/ishader.hh
         graphics/shading/ishaderattribute.hh
+
+
+        graphics/skybox/simpleskybox.cc
+        graphics/skybox/simpleskybox.hh
+        graphics/skybox/skyboxmesh.cc
+        graphics/skybox/skyboxmesh.hh
+
 
         input/iinputsystem.hh
         input/ikeyboard.hh

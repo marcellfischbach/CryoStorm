@@ -14,15 +14,16 @@ namespace ce
 
 class GfxCamera;
 struct iRenderTarget2D;
+struct iSkyboxRenderer;
 class PostProcessing;
 
 CE_CLASS()
 class CE_CORE_API CameraState : public CE_SUPER(SpatialState)
 {
-  CE_CLASS_GEN_OBJECT;
+CE_CLASS_GEN_OBJECT;
 public:
   CameraState();
-  ~CameraState () override;
+  ~CameraState() override;
 
 
   void SetNear(float near);
@@ -40,27 +41,33 @@ public:
   void SetOrder(int order);
   int GetOrder() const;
 
-  void SetRenderTarget(iRenderTarget2D* renderTarget);
+  void SetRenderTarget(iRenderTarget2D *renderTarget);
   iRenderTarget2D *GetRenderTarget();
   const iRenderTarget2D *GetRenderTarget() const;
 
-  void SetClearMode (eClearMode clearMode);
-  eClearMode GetClearMode () const;
+  void SetClearMode(eClearMode clearMode);
+  eClearMode GetClearMode() const;
+
+  void SetClearColorMode(eClearColorMode clearMode);
+  eClearColorMode GetClearColorMode() const;
 
   void SetClearColor(const Color4f &clearColor);
   const Color4f &GetClearColor() const;
 
   void SetClearDepth(float clearDepth);
-  float GetClearDepth () const;
+  float GetClearDepth() const;
 
-  void SetRenderShadows (bool renderShadows);
-  bool IsRenderShadows () const;
+  void SetRenderShadows(bool renderShadows);
+  bool IsRenderShadows() const;
 
-  void SetPostProcessing (PostProcessing* postProcessing);
-  PostProcessing* GetPostPRocessing () const;
+  void SetPostProcessing(PostProcessing *postProcessing);
+  PostProcessing *GetPostPRocessing() const;
 
-  const Camera& GetCamera() const;
-  const Projector& GetProjector() const;
+  void SetSkyboxRenderer(iSkyboxRenderer *skyboxRenderer);
+  iSkyboxRenderer *GetSkyboxRenderer() const;
+
+  const Camera &GetCamera() const;
+  const Projector &GetProjector() const;
 
   void Update(u32 width, u32 height);
 
@@ -72,42 +79,45 @@ protected:
 
 private:
   CE_PROPERTY()
-    float m_near;
+  float m_near;
   CE_PROPERTY()
-    float m_far;
-
-  CE_PROPERTY()
-    float m_angle;
+  float m_far;
 
   CE_PROPERTY()
-    float m_angleWidthHeight;
+  float m_angle;
 
   CE_PROPERTY()
-    int m_order;
+  float m_angleWidthHeight;
 
   CE_PROPERTY()
-    iRenderTarget2D *m_renderTarget;
+  int m_order;
 
   CE_PROPERTY()
-    eClearMode m_clearMode = eClearMode::DepthColor;
+  iRenderTarget2D *m_renderTarget;
 
   CE_PROPERTY()
-    Color4f m_clearColor = Color4f();
+  eClearMode m_clearMode = eClearMode::DepthColor;
 
   CE_PROPERTY()
-    float m_clearDepth = 1.0f;
+  eClearColorMode m_clearColorMode = eClearColorMode::PlainColor;
 
   CE_PROPERTY()
-    bool m_renderShadows = true;
+  Color4f m_clearColor = Color4f();
+
+  CE_PROPERTY()
+  float m_clearDepth = 1.0f;
+
+  CE_PROPERTY()
+  bool m_renderShadows = true;
 
 
-  Camera m_camera;
-  Projector m_projector;
-  PostProcessing* m_postProcessing;
+  Camera          m_camera;
+  Projector       m_projector;
+  PostProcessing  *m_postProcessing;
+  iSkyboxRenderer *m_skyboxRenderer;
 
-  void UpdateGfxCamera ();
-  GfxCamera *m_gfxCamera;
-
+  void UpdateGfxCamera();
+  GfxCamera       *m_gfxCamera;
 
 
 };

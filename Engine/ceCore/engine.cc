@@ -12,6 +12,7 @@
 #include <ceCore/graphics/iframerenderer.hh>
 #include <ceCore/graphics/defaultframerenderer.hh>
 #include <ceCore/graphics/irendertarget2d.hh>
+#include <ceCore/graphics/iskyboxrenderer.hh>
 #include <ceCore/window/iwindow.hh>
 #include <ceCore/resource/assetmanager.hh>
 #include <ceCore/resource/file.hh>
@@ -48,6 +49,16 @@ void Engine::SetFrameRenderer(ce::iFrameRenderer *frameRenderer)
 iFrameRenderer *Engine::GetFrameRenderer()
 {
   return m_frameRenderer;
+}
+
+void Engine::SetSkyboxRenderer(ce::iSkyboxRenderer *skyboxRenderer)
+{
+  CE_SET(m_skyboxRenderer, skyboxRenderer);
+}
+
+iSkyboxRenderer* Engine::GetSkyboxRenderer()
+{
+  return m_skyboxRenderer;
 }
 
 void Engine::SetWindow(ce::iWindow *window)

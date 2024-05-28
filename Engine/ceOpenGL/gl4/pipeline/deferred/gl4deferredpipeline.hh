@@ -6,6 +6,7 @@
 #include <ceOpenGL/gl4/pipeline/deferred/gl4deferredpointlightrenderer.hh>
 #include <ceCore/graphics/irenderpipeline.hh>
 #include <ceCore/graphics/scene/gfxscenecollector.hh>
+#include <ceCore/graphics/skybox/skyboxmesh.hh>
 
 namespace ce
 {
@@ -15,6 +16,7 @@ class Projector;
 class GBuffer;
 struct iClipper;
 struct iDirectionalLight;
+struct iSkyboxRenderer;
 
 namespace opengl
 {
@@ -58,6 +60,8 @@ private:
 
   void RenderGBuffer(uint16_t width, uint16_t height);
   void RenderBackMask();
+  void PrepareSkybox(iSkyboxRenderer* skyboxRenderer);
+  void RenderSkybox(iSkyboxRenderer* skyboxRenderer);
   void RenderLights();
   void RenderDirectionalLight(const GL4DirectionalLight *directionalLight);
   void RenderPointLight(const GL4PointLight *pointLight);
@@ -90,6 +94,7 @@ private:
   iShader *m_backMaskShader;
   iShaderAttribute *m_attrBackMaskDepth;
   int m_renderMode;
+  SkyboxMesh m_skyboxMesh;
 };
 
 

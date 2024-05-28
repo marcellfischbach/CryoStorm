@@ -4,6 +4,7 @@
 #include <ceCore/graphics/postprocessing.hh>
 #include <ceCore/graphics/projector.hh>
 #include <ceCore/graphics/irendertarget2d.hh>
+#include <ceCore/graphics/iskyboxrenderer.hh>
 #include <ceCore/graphics/itexturecube.hh>
 
 
@@ -20,7 +21,7 @@ GfxCamera::GfxCamera()
     , m_angleWidthHeight(0.0f)
     , m_renderTarget(nullptr)
     , m_order(0)
-    , m_clearSkybox(nullptr)
+    , m_skyboxRenderer(nullptr)
     , m_renderShadows(true)
     , m_postProcessing(nullptr)
 {
@@ -79,17 +80,6 @@ const Color4f &GfxCamera::GetClearColor() const
   return m_clearColor;
 }
 
-iTextureCube *GfxCamera::GetClearSkybox()
-{
-  return m_clearSkybox;
-}
-
-
-const iTextureCube *GfxCamera::GetClearSkybox() const
-{
-  return m_clearSkybox;
-}
-
 float GfxCamera::GetClearDepth() const
 {
   return m_clearDepth;
@@ -103,6 +93,16 @@ void GfxCamera::SetRenderTarget(iRenderTarget2D *renderTarget)
 iRenderTarget2D *GfxCamera::GetRenderTarget()
 {
   return m_renderTarget;
+}
+
+void GfxCamera::SetSkyboxRenderer(ce::iSkyboxRenderer *skyboxRenderer)
+{
+  CE_SET(m_skyboxRenderer, skyboxRenderer);
+}
+
+iSkyboxRenderer *GfxCamera::GetSkyboxRenderer() const
+{
+  return m_skyboxRenderer;
 }
 
 const iRenderTarget2D *GfxCamera::GetRenderTarget() const
@@ -153,13 +153,13 @@ void GfxCamera::UpdateData(float near, float far, float angle, float angleWidthH
 void GfxCamera::UpdateClear(eClearMode mode,
                             eClearColorMode clearColorMode,
                             const Color4f &color,
-                            iTextureCube *skybox,
+                            iSkyboxRenderer *skybox,
                             float depth)
 {
-  m_clearMode  = mode;
+  m_clearMode      = mode;
   m_clearColorMode = clearColorMode;
-  m_clearColor = color;
-  CE_SET(m_clearSkybox, skybox);
+  m_clearColor     = color;
+  CE_SET(m_skyboxRenderer, skybox);
   m_clearDepth = depth;
 }
 

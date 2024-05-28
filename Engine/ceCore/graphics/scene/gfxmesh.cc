@@ -28,7 +28,7 @@ GfxMesh::~GfxMesh()
 
 void GfxMesh::Render(iDevice* device, eRenderPass pass)
 {
-  //printf ("Render(mat: %p)\n", m_material);
+  //printf ("Prepare(mat: %p)\n", m_material);
   if (device->BindMaterial(m_material, pass))
   {
     if (pass == eRP_Forward)

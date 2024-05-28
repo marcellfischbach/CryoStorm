@@ -16,6 +16,7 @@ struct iDevice;
 struct iModule;
 struct iFrameRenderer;
 struct iRenderTarget2D;
+struct iSkyboxRenderer;
 struct iWindow;
 
 class World;
@@ -32,6 +33,9 @@ public:
   void SetFrameRenderer(iFrameRenderer *frameRenderer);
   iFrameRenderer *GetFrameRenderer();
 
+  void SetSkyboxRenderer(iSkyboxRenderer *skyboxRenderer);
+  iSkyboxRenderer *GetSkyboxRenderer();
+
   void SetWorld(World *world);
   World *GetWorld();
 
@@ -43,15 +47,16 @@ public:
   void Exit(int returnValue = 0);
 
 private:
-  iWindow         *m_window        = nullptr;
-  iDevice         *m_device        = nullptr;
-  iFrameRenderer  *m_frameRenderer = nullptr;
-  iRenderTarget2D *m_renderTarget  = nullptr;
-  World           *m_world         = nullptr;
+  iWindow         *m_window         = nullptr;
+  iDevice         *m_device         = nullptr;
+  iFrameRenderer  *m_frameRenderer  = nullptr;
+  iSkyboxRenderer *m_skyboxRenderer = nullptr;
+  iRenderTarget2D *m_renderTarget   = nullptr;
+  World           *m_world          = nullptr;
 
-  bool m_active    = true;
-  int  m_exitValue = 0;
-  int m_multiSamples = 1;
+  bool m_active       = true;
+  int  m_exitValue    = 0;
+  int  m_multiSamples = 1;
 
 
   // Frame counting stuff

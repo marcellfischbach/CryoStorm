@@ -6,6 +6,7 @@
 #include <ceCore/math/vector4f.hh>
 #include <math.h>
 #include <ceCore/graphics/irendertarget2d.hh>
+#include <ceCore/graphics/iskyboxrenderer.hh>
 #include <ceCore/graphics/postprocessing.hh>
 #include <ceCore/graphics/scene/gfxcamera.hh>
 #include <ceCore/graphics/scene/igfxscene.hh>
@@ -24,6 +25,7 @@ CameraState::CameraState()
       m_gfxCamera(new GfxCamera()),
       m_order(0),
       m_renderTarget(nullptr),
+      m_skyboxRenderer(nullptr),
       m_postProcessing(nullptr)
 {
   CE_CLASS_GEN_CONSTR;
@@ -104,6 +106,16 @@ iRenderTarget2D* CameraState::GetRenderTarget()
   return m_renderTarget;
 }
 
+void CameraState::SetSkyboxRenderer(ce::iSkyboxRenderer *skyboxRenderer)
+{
+  CE_SET(m_skyboxRenderer, skyboxRenderer);
+}
+
+iSkyboxRenderer* CameraState::GetSkyboxRenderer() const
+{
+  return m_skyboxRenderer;
+}
+
 const iRenderTarget2D* CameraState::GetRenderTarget() const
 {
   return m_renderTarget;
@@ -121,6 +133,21 @@ eClearMode CameraState::GetClearMode() const
 {
   return m_clearMode;
 }
+
+
+
+
+void CameraState::SetClearColorMode(eClearColorMode clearColorMode)
+{
+  m_clearColorMode = clearColorMode;
+  UpdateGfxCamera();
+}
+
+eClearColorMode CameraState::GetClearColorMode() const
+{
+  return m_clearColorMode;
+}
+
 
 void CameraState::SetClearColor(const Color4f &clearColor)
 {
@@ -209,7 +236,7 @@ void CameraState::UpdateGfxCamera()
   m_gfxCamera->SetRenderShadows(m_renderShadows);
   m_gfxCamera->SetPostProcessing(m_postProcessing);
   m_gfxCamera->UpdateData(m_near, m_far, m_angle, m_angleWidthHeight);
-  m_gfxCamera->UpdateClear(m_clearMode, eClearColorMode::PlainColor, m_clearColor, nullptr, m_clearDepth);
+  m_gfxCamera->UpdateClear(m_clearMode, m_clearColorMode, m_clearColor, m_skyboxRenderer, m_clearDepth);
 }
 
 }

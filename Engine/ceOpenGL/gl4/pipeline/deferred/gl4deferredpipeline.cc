@@ -2,11 +2,13 @@
 #include <ceOpenGL/gl4/gl4directionallight.hh>
 #include <ceOpenGL/gl4/gl4pointlight.hh>
 #include <ceCore/settings.hh>
+#include <ceCore/engine.hh>
 #include <ceCore/math/iclipper.hh>
 #include <ceCore/math/clipper/cameraclipper.hh>
 #include <ceCore/graphics/camera.hh>
 #include <ceCore/graphics/projector.hh>
 #include <ceCore/graphics/idevice.hh>
+#include <ceCore/graphics/iskyboxrenderer.hh>
 #include <ceCore/graphics/irendertarget2d.hh>
 #include <ceCore/graphics/gbuffer.hh>
 #include <ceCore/graphics/postprocessing.hh>
@@ -59,22 +61,37 @@ void GL4DeferredPipeline::Render(iRenderTarget2D *target, const GfxCamera *camer
 
   RenderGBuffer(target->GetWidth(), target->GetHeight());
 
+
+  bool clearColor  =
+           (m_gfxCamera->GetClearMode() == eClearMode::Color || m_gfxCamera->GetClearMode() == eClearMode::DepthColor)
+           && m_gfxCamera->GetClearColorMode() == eClearColorMode::PlainColor;
+  bool clearSkybox =
+           (m_gfxCamera->GetClearMode() == eClearMode::Color || m_gfxCamera->GetClearMode() == eClearMode::DepthColor)
+           && m_gfxCamera->GetClearColorMode() == eClearColorMode::Skybox;
+
+  if (clearSkybox)
+  {
+    PrepareSkybox(camera->GetSkyboxRenderer());
+  }
+
   device->SetRenderTarget(m_target);
   device->SetRenderBuffer(0);
   device->SetDepthTest(false);
   device->SetDepthWrite(false);
   device->SetColorWrite(true, true, true, true);
   device->SetBlending(false);
-
-  bool clearColor =
-           (m_gfxCamera->GetClearMode() == eClearMode::Color || m_gfxCamera->GetClearMode() == eClearMode::DepthColor)
-           && m_gfxCamera->GetClearColorMode() == eClearColorMode::PlainColor;
   device->Clear(clearColor, m_gfxCamera->GetClearColor(), false, 1.0f, true, 0);
 
   if (clearColor)
   {
     RenderBackMask();
   }
+  else if (clearSkybox)
+  {
+    RenderSkybox(camera->GetSkyboxRenderer());
+  }
+
+
   switch (m_renderMode)
   {
     case 0:
@@ -137,18 +154,28 @@ void GL4DeferredPipeline::RenderBackMask()
   {
     return;
   }
-  
+
   m_device->SetShader(m_backMaskShader);
   eTextureUnit unit = m_device->BindTexture(m_gBuffer->GetDepth());
   m_attrBackMaskDepth->Bind(unit);
   m_device->RenderFullscreen();
 }
 
+void GL4DeferredPipeline::PrepareSkybox(iSkyboxRenderer *skyboxRenderer)
+{
+  skyboxRenderer->Render(m_device);
+}
+
+void GL4DeferredPipeline::RenderSkybox(iSkyboxRenderer *skyboxRenderer)
+{
+  m_skyboxMesh.Render(m_device, skyboxRenderer->GetTexture());
+}
 
 void GL4DeferredPipeline::RenderLights()
 {
   CameraClipper clppr(*m_camera, *m_projector);
-  m_scene->ScanLights(&clppr, ~0x00, [this](GfxLight *light) {
+  m_scene->ScanLights(&clppr, ~0x00, [this](GfxLight *light)
+  {
     switch (light->GetLight()->GetType())
     {
       case eLT_Directional:
@@ -233,8 +260,8 @@ iRenderTarget2D *GL4DeferredPipeline::UpdateRenderTarget(ce::iDevice *device, ce
       false,
       1
   };
-  iTexture2D *colorTexture = device->CreateTexture(colorDesc);
-  iSampler   *colorSampler = device->CreateSampler();
+  iTexture2D             *colorTexture = device->CreateTexture(colorDesc);
+  iSampler               *colorSampler = device->CreateSampler();
   colorSampler->SetFilterMode(eFM_MinMagNearest);
   colorSampler->SetAddressU(eTAM_Clamp);
   colorSampler->SetAddressV(eTAM_Clamp);

@@ -40,8 +40,12 @@ CE_CLASS_GEN;
   {}
 
   virtual void SetViewport(int16_t x, int16_t y, uint16_t width, uint16_t height) = 0;
-  virtual void
-  Clear(bool clearColor, const Color4f &color, bool clearDepth, float depth, bool clearStencil, uint8_t stencil) = 0;
+  virtual void  Clear(bool clearColor,
+                      const Color4f &color,
+                      bool clearDepth,
+                      float depth,
+                      bool clearStencil,
+                      uint8_t stencil) = 0;
 
   virtual void SetColorWrite(bool redMask, bool greenMask, bool blueMask, bool alphaMask) = 0;
   virtual void SetDepthWrite(bool depthMask) = 0;
