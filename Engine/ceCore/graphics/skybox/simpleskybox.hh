@@ -5,6 +5,7 @@
 #pragma once
 
 #include <ceCore/coreexport.hh>
+#include <ceCore/graphics/irendertarget2d.hh>
 #include <ceCore/graphics/irendertargetcube.hh>
 #include <ceCore/graphics/iskyboxrenderer.hh>
 

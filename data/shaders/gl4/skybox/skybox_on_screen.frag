@@ -9,5 +9,5 @@ in vec3 uv;
 void main ()
 {
     ce_FragColor = texture(ce_Skybox, uv);
-    ce_FragColor = vec4(uv * 0.5 + 0.5, 1.0);
+//    ce_FragColor += vec4(uv * 0.5 + 0.5, 1.0);
 }

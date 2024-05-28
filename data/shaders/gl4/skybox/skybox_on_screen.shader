@@ -5,5 +5,6 @@ program {
     }
     attributes {
         attribute "Skybox",
+        attribute "RenderPlane"
     }
 }

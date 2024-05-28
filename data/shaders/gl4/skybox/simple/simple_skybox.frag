@@ -2,7 +2,10 @@
 layout (location = 0)  out vec4 ce_FragColor;
 
 
+in vec4 color;
+in vec3 uv;
+
 void main ()
 {
-    ce_FragColor = vec4(0, 0, 0, 0);
+    ce_FragColor = color;
 }

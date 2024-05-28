@@ -28,9 +28,13 @@ void SimpleSkybox::Render(iDevice *device)
   device->SetColorWrite(true, true, true, true);
   device->SetDepthWrite(false);
   device->SetDepthTest(false);
+  device->SetBlending(false);
   device->Clear(true, Color4f(0.5f, 0.0f, 0.0f, 1.0f), false, 1.0f, false, 0);
 
-  device->SetRenderBuffer(0);
+  device->SetShader(m_prepShader);
+  device->RenderFullscreen();
+
+
 }
 
 
@@ -61,28 +65,26 @@ bool SimpleSkybox::PrepRenderTarget(ce::iDevice *device)
   CE_RELEASE(m_skyboxTexture);
 
   iTextureCube::Descriptor txtDesc {
-      ePF_RGB,
+      ePF_RGBA,
       1024,
       false // maybe later
   };
 
+  iSampler *sampler = device->CreateSampler();
+  sampler->SetFilterMode(eFM_MinMagNearest);
+  sampler->SetAnisotropy(1);
+  sampler->SetMinLOD(0);
+  sampler->SetMaxLOD(0);
+  sampler->SetAddressU(eTAM_Clamp);
+  sampler->SetAddressV(eTAM_Clamp);
+  sampler->SetAddressW(eTAM_Clamp);
   m_skyboxTexture = device->CreateTexture(txtDesc);
-  if (!m_skyboxTexture)
-  {
-    return false;
-  }
+  m_skyboxTexture->SetSampler(sampler);
 
-  iRenderTargetCube::Descriptor trgtDesc {
-    1024
-  };
+
+
+  iRenderTargetCube::Descriptor trgtDesc { 1024 };
   m_skyboxTarget = device->CreateRenderTarget(trgtDesc);
-  if (!m_skyboxTarget)
-  {
-    CE_RELEASE(m_skyboxTexture);
-    m_skyboxTexture = nullptr;
-    return false;
-  }
-
   m_skyboxTarget->AddColorTexture(m_skyboxTexture);
   return m_skyboxTarget->Compile();
 }

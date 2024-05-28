@@ -3,6 +3,8 @@
 //
 
 #include <ceCore/graphics/skybox/skyboxmesh.hh>
+#include <ceCore/graphics/camera.hh>
+#include <ceCore/graphics/projector.hh>
 #include <ceCore/graphics/idevice.hh>
 #include <ceCore/graphics/itexturecube.hh>
 #include <ceCore/graphics/irendermesh.hh>
@@ -14,7 +16,7 @@
 namespace ce
 {
 
-void SkyboxMesh::Render(ce::iDevice *device, iTextureCube *texture)
+void SkyboxMesh::Render(iDevice* device, float size, iTextureCube *texture)
 {
   if (!texture)
   {
@@ -27,9 +29,11 @@ void SkyboxMesh::Render(ce::iDevice *device, iTextureCube *texture)
   {
     device->SetShader(shader);
     device->ResetTextures();
-//    eTextureUnit unit = device->BindTexture(texture);
-//    m_attrSkybox->Bind(unit);
-    renderMesh->Render(device, eRenderPass::eRP_Forward);
+
+    m_attrRenderPlane->Bind(size);
+    eTextureUnit unit = device->BindTexture(texture);
+    m_attrSkybox->Bind(unit);
+    device->Render(m_renderMesh, eRenderPass::eRP_Forward);
   }
 }
 
@@ -127,14 +131,22 @@ iShader* SkyboxMesh::Shader(ce::iDevice *device)
     }
   }
 
-//  if (!m_attrSkybox)
-//  {
-//    m_attrSkybox = m_shader->GetShaderAttribute("Skybox");
-//    if (!m_attrSkybox)
-//    {
-//      return nullptr;
-//    }
-//  }
+  if (!m_attrRenderPlane)
+  {
+    m_attrRenderPlane = m_shader->GetShaderAttribute("RenderPlane");
+    if (m_attrRenderPlane)
+    {
+      return nullptr;
+    }
+  }
+  if (!m_attrSkybox)
+  {
+    m_attrSkybox = m_shader->GetShaderAttribute("Skybox");
+    if (!m_attrSkybox)
+    {
+      return nullptr;
+    }
+  }
   return m_shader;
 }
 

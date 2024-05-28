@@ -89,13 +89,14 @@ void GL4DeferredPipeline::Render(iRenderTarget2D *target, const GfxCamera *camer
   else if (clearSkybox)
   {
     RenderSkybox(camera->GetSkyboxRenderer());
+//    RenderBackMask();
   }
 
 
   switch (m_renderMode)
   {
     case 0:
-      RenderLights();
+//      RenderLights();
       break;
     case 2:
       device->RenderFullscreen(m_gBuffer->GetDiffuseRoughness());
@@ -156,6 +157,7 @@ void GL4DeferredPipeline::RenderBackMask()
   }
 
   m_device->SetShader(m_backMaskShader);
+  m_device->ResetTextures();
   eTextureUnit unit = m_device->BindTexture(m_gBuffer->GetDepth());
   m_attrBackMaskDepth->Bind(unit);
   m_device->RenderFullscreen();
@@ -168,7 +170,7 @@ void GL4DeferredPipeline::PrepareSkybox(iSkyboxRenderer *skyboxRenderer)
 
 void GL4DeferredPipeline::RenderSkybox(iSkyboxRenderer *skyboxRenderer)
 {
-  m_skyboxMesh.Render(m_device, skyboxRenderer->GetTexture());
+  m_skyboxMesh.Render(m_device, (m_projector->GetNear() + m_projector->GetFar()) * 0.5f, skyboxRenderer->GetTexture());
 }
 
 void GL4DeferredPipeline::RenderLights()
