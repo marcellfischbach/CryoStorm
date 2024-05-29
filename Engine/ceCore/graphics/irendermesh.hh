@@ -7,6 +7,7 @@
 #include <ceCore/math/boundingbox.hh>
 #include <ceCore/math/vector.hh>
 #include <ceCore/math/color4f.hh>
+#include <ceCore/graphics/eprimitivetype.hh>
 #include <ceCore/graphics/erenderpass.hh>
 #include <vector>
 
@@ -41,6 +42,7 @@ struct CE_CORE_API iRenderMeshGenerator : CE_SUPER(iObject)
 
   ~iRenderMeshGenerator() override = default;
 
+  virtual void SetPrimitiveType(ePrimitiveType primitiveType) = 0;
   virtual void SetVertices(const std::vector<Vector2f> & vertices) = 0;
   virtual void SetVertices(const std::vector<Vector3f> & vertices) = 0;
   virtual void SetVertices(const std::vector<Vector4f> & vertices) = 0;

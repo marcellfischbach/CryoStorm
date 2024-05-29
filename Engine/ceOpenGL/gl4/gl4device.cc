@@ -59,6 +59,7 @@ GL4Device::GL4Device()
     , m_fullscreenBlitProgram(nullptr)
     , m_fullscreenBlitMSProgram(nullptr)
     , m_fullscreenBlitRenderMesh(nullptr)
+    , m_pixelRenderMesh (nullptr)
     , m_fullscreenBlitArrayProgram(nullptr)
     , m_fullscreenBlitCubeProgram(nullptr)
     , m_fullscreenBlitCubePosXRenderMesh(nullptr)
@@ -1001,6 +1002,14 @@ void GL4Device::Render(iRenderMesh *mesh, eRenderPass pass)
 #endif
 }
 
+void GL4Device::RenderPixel()
+{
+#ifndef CE_DISABLE_RENDERING
+  iRenderMesh *mesh = PixelRenderMesh();
+  mesh->Render(this, eRP_Forward);
+#endif
+}
+
 void GL4Device::RenderFullscreen()
 {
 #ifndef CE_DISABLE_RENDERING
@@ -1008,6 +1017,7 @@ void GL4Device::RenderFullscreen()
   mesh->Render(this, eRP_Forward);
 #endif
 }
+
 
 void GL4Device::RenderFullscreen(iTexture2D *texture)
 {
@@ -1540,6 +1550,28 @@ iRenderMesh *GL4Device::FullscreenBlitRenderMesh()
   }
   return m_fullscreenBlitRenderMesh;
 }
+
+
+iRenderMesh *GL4Device::PixelRenderMesh()
+{
+  if (!m_fullscreenBlitRenderMesh)
+  {
+    GL4RenderMeshGenerator gen;
+
+    std::vector<Vector4f> vertices4;
+    vertices4.push_back(Vector4f(0.0f, 0.0f, 0.0f, 1.0f));
+    std::vector<uint32_t> indices;
+    indices.push_back(0);
+
+
+    gen.SetVertices(vertices4);
+    gen.SetIndices(indices);
+    gen.SetPrimitiveType(ePT_Points);
+    m_fullscreenBlitRenderMesh = gen.Generate();
+  }
+  return m_fullscreenBlitRenderMesh;
+}
+
 
 GL4Program *GL4Device::FullscreenBlitCubeProgram()
 {

@@ -15,21 +15,14 @@ void SimpleSkybox::Render(iDevice *device)
     return;
   }
 
-  std::vector<uint32_t> buffers;
-  buffers.push_back(0);
-  buffers.push_back(1);
-  buffers.push_back(2);
-  buffers.push_back(3);
-  buffers.push_back(4);
-  buffers.push_back(5);
 
   device->SetRenderTarget(m_skyboxTarget);
-  device->SetRenderBuffer(buffers);
+  device->SetRenderBuffer(0);
   device->SetColorWrite(true, true, true, true);
   device->SetDepthWrite(false);
   device->SetDepthTest(false);
   device->SetBlending(false);
-  device->Clear(true, Color4f(0.5f, 0.0f, 0.0f, 1.0f), false, 1.0f, false, 0);
+  device->Clear(true, Color4f(0.0f, 0.0f, 0.0f, 1.0f), false, 1.0f, false, 0);
 
   device->SetShader(m_prepShader);
   device->RenderFullscreen();
@@ -61,12 +54,14 @@ bool SimpleSkybox::PrepRenderTarget(ce::iDevice *device)
     return true;
   }
 
+  uint16_t skyboxSize = 2048;
+
   CE_RELEASE(m_skyboxTarget);
   CE_RELEASE(m_skyboxTexture);
 
   iTextureCube::Descriptor txtDesc {
       ePF_RGBA,
-      1024,
+      skyboxSize,
       false // maybe later
   };
 
@@ -83,7 +78,7 @@ bool SimpleSkybox::PrepRenderTarget(ce::iDevice *device)
 
 
 
-  iRenderTargetCube::Descriptor trgtDesc { 1024 };
+  iRenderTargetCube::Descriptor trgtDesc { skyboxSize };
   m_skyboxTarget = device->CreateRenderTarget(trgtDesc);
   m_skyboxTarget->AddColorTexture(m_skyboxTexture);
   return m_skyboxTarget->Compile();

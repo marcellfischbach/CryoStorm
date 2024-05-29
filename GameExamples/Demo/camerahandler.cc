@@ -6,7 +6,8 @@
 #include <ceCore/entity/spatialstate.hh>
 
 CameraHandler::CameraHandler()
-        : ce::EntityState(), m_speed(4.0f), m_rotSpeed(0.0025f), m_rotY(1.88), m_rotX(-0.96)
+//        : ce::EntityState(), m_speed(4.0f), m_rotSpeed(0.0025f), m_rotY(1.88), m_rotX(-0.96)
+        : ce::EntityState(), m_speed(4.0f), m_rotSpeed(0.0025f), m_rotY(4.02), m_rotX(0.33)
 {
   CE_CLASS_GEN_CONSTR;
   SetNeedUpdate(true);
@@ -24,32 +25,34 @@ void CameraHandler::Update(float tpf)
   ce::Transform tr = GetRoot()->GetTransform();
   ce::Vector3f  dir;
 
-  if (ce::Input::IsKeyDown(ce::Key::eK_W))
-  {
-    dir += tr.GetForward() * tpf * m_speed;
-  }
-  if (ce::Input::IsKeyDown(ce::Key::eK_S))
-  {
-    dir += tr.GetBackward() * tpf * m_speed;
-  }
-  if (ce::Input::IsKeyDown(ce::Key::eK_A))
-  {
-    dir += tr.GetLeft() * tpf * m_speed;
-  }
-  if (ce::Input::IsKeyDown(ce::Key::eK_D))
-  {
-    dir += tr.GetRight() * tpf * m_speed;
-  }
 
-  if (ce::Input::IsKeyDown(ce::Key::eK_LeftShift) ||
-      ce::Input::IsKeyDown(ce::Key::eK_RightShift))
-  {
-    dir *= 2.0f;
-  }
 
   ce::iMouse         *pMouse = ce::Input::GetMouse();
   if (pMouse->IsButtonDown(ce::eMB_Right))
   {
+    if (ce::Input::IsKeyDown(ce::Key::eK_W))
+    {
+      dir += tr.GetForward() * tpf * m_speed;
+    }
+    if (ce::Input::IsKeyDown(ce::Key::eK_S))
+    {
+      dir += tr.GetBackward() * tpf * m_speed;
+    }
+    if (ce::Input::IsKeyDown(ce::Key::eK_A))
+    {
+      dir += tr.GetLeft() * tpf * m_speed;
+    }
+    if (ce::Input::IsKeyDown(ce::Key::eK_D))
+    {
+      dir += tr.GetRight() * tpf * m_speed;
+    }
+
+    if (ce::Input::IsKeyDown(ce::Key::eK_LeftShift) ||
+        ce::Input::IsKeyDown(ce::Key::eK_RightShift))
+    {
+      dir *= 2.0f;
+    }
+
     pMouse->SetCursorMode(ce::eCM_Fixed);
     pMouse->SetVisible(false);
     const ce::Vector2f &mouse = ce::Input::GetMouseDelta();
@@ -85,6 +88,7 @@ void CameraHandler::Update(float tpf)
 //  tr.SetTranslation(ce::Vector3f(5.0f, 10.0f, 5.0f))
 //    .LookAt(ce::Vector3f(0.0f, 0.0f, 0.0f))
 //    .Finish();
+
 }
 
 

@@ -107,6 +107,7 @@ public:
   eTextureUnit BindTexture(iTexture *texture) override;
   bool BindMaterial(iMaterial *material, eRenderPass pass) override;
   void Render(iRenderMesh *mesh, eRenderPass pass) override;
+  void RenderPixel();
   void RenderFullscreen();
   void RenderFullscreen(iTexture2D *texture) override;
   void RenderFullscreen(iTexture2DArray *texture, int layer) override;
@@ -251,6 +252,8 @@ private:
   GL4Program       *m_fullscreenBlitMSProgram;
   iRenderMesh *FullscreenBlitRenderMesh();
   iRenderMesh      *m_fullscreenBlitRenderMesh;
+  iRenderMesh *PixelRenderMesh();
+  iRenderMesh      *m_pixelRenderMesh;
 
   GL4Program *FullscreenBlitArrayProgram();
   GL4Program       *m_fullscreenBlitArrayProgram;

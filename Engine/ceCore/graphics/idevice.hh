@@ -122,6 +122,7 @@ CE_CLASS_GEN;
   virtual eTextureUnit BindTexture(iTexture *texture) = 0;
   virtual bool BindMaterial(iMaterial *material, eRenderPass pass) = 0;
   virtual void Render(iRenderMesh *mesh, eRenderPass pass) = 0;
+  virtual void RenderPixel() = 0;
   virtual void RenderFullscreen() = 0;
   virtual void RenderFullscreen(iTexture2D *texture) = 0;
   virtual void RenderFullscreen(iTexture2DArray *texture, int layer) = 0;

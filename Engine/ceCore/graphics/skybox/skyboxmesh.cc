@@ -16,7 +16,7 @@
 namespace ce
 {
 
-void SkyboxMesh::Render(iDevice* device, float size, iTextureCube *texture)
+void SkyboxMesh::Render(iDevice *device, float size, iTextureCube *texture, iTexture2D *depth)
 {
   if (!texture)
   {
@@ -24,20 +24,32 @@ void SkyboxMesh::Render(iDevice* device, float size, iTextureCube *texture)
   }
 
   iRenderMesh *renderMesh = RenderMesh(device);
-  iShader *shader = Shader(device);
+  iShader     *shader     = Shader(device);
   if (renderMesh && shader)
   {
     device->SetShader(shader);
     device->ResetTextures();
 
-    m_attrRenderPlane->Bind(size);
-    eTextureUnit unit = device->BindTexture(texture);
-    m_attrSkybox->Bind(unit);
+    if (m_attrRenderPlane)
+    {
+      m_attrRenderPlane->Bind(size);
+    }
+
+    if (m_attrSkybox && texture)
+    {
+      eTextureUnit unit = device->BindTexture(texture);
+      m_attrSkybox->Bind(unit);
+    }
+    if (m_attrDepth && depth)
+    {
+      eTextureUnit unit = device->BindTexture(depth);
+      m_attrDepth->Bind(unit);
+    }
     device->Render(m_renderMesh, eRenderPass::eRP_Forward);
   }
 }
 
-iRenderMesh* SkyboxMesh::RenderMesh(ce::iDevice *device)
+iRenderMesh *SkyboxMesh::RenderMesh(ce::iDevice *device)
 {
   if (!m_renderMesh)
   {
@@ -120,7 +132,7 @@ iRenderMesh* SkyboxMesh::RenderMesh(ce::iDevice *device)
   return m_renderMesh;
 }
 
-iShader* SkyboxMesh::Shader(ce::iDevice *device)
+iShader *SkyboxMesh::Shader(ce::iDevice *device)
 {
   if (!m_shader)
   {
@@ -131,22 +143,9 @@ iShader* SkyboxMesh::Shader(ce::iDevice *device)
     }
   }
 
-  if (!m_attrRenderPlane)
-  {
-    m_attrRenderPlane = m_shader->GetShaderAttribute("RenderPlane");
-    if (m_attrRenderPlane)
-    {
-      return nullptr;
-    }
-  }
-  if (!m_attrSkybox)
-  {
-    m_attrSkybox = m_shader->GetShaderAttribute("Skybox");
-    if (!m_attrSkybox)
-    {
-      return nullptr;
-    }
-  }
+  m_attrRenderPlane = m_shader->GetShaderAttribute("RenderPlane");
+  m_attrSkybox      = m_shader->GetShaderAttribute("Skybox");
+  m_attrDepth       = m_shader->GetShaderAttribute("Depth");
   return m_shader;
 }
 

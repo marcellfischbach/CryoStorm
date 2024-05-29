@@ -72,6 +72,7 @@ public:
   GL4RenderMeshGenerator();
   ~GL4RenderMeshGenerator() override;
 
+  void SetPrimitiveType(ePrimitiveType primitiveType);
   void SetVertices(const std::vector<Vector2f> & vertices) override;
   void SetVertices(const std::vector<Vector3f> & vertices) override;
   void SetVertices(const std::vector<Vector4f> & vertices) override;
@@ -104,6 +105,7 @@ public:
   CE_NODISCARD size_t GetNumberOfVertices() const;
   iRenderMesh* Generate() override;
 private:
+  ePrimitiveType m_primitiveType;
   std::vector<Vector2f> m_vertices2;
   std::vector<Vector3f> m_vertices3;
   std::vector<Vector4f> m_vertices4;

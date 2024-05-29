@@ -738,6 +738,8 @@ ce::LightState *add_directional_light(ce::World *world,
             .SetRotation(ce::Quaternion::FromAxisAngle(axis.Normalized(), rad))
             .Finish();
   world->Attach(entity);
+  const ce::Vector3f &direction = lightState->GetTransform().GetForward();
+  printf ("%.2f %.2f %.2f\n", direction.x, direction.y, direction.z);
   return lightState;
 }
 

@@ -8,10 +8,13 @@ uniform mat4 ce_ProjectionMatrix;
 uniform float ce_RenderPlane;
 
 out vec3 uv;
+out vec4 fragCoord;
 
 void main ()
 {
     vec3 pos = mat3(ce_ViewMatrix) * ce_Position.xyz * ce_RenderPlane;
     gl_Position = ce_ProjectionMatrix * vec4(pos, 1.0);
+
+    fragCoord = gl_Position;
     uv = ce_UV;
 }

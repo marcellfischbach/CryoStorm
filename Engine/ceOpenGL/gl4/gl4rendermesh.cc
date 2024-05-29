@@ -14,43 +14,43 @@ namespace ce::opengl
 
 
 static GLenum PrimitiveTypeMap[] = {
-        GL_POINTS,
-        GL_LINES,
-        GL_TRIANGLES
+    GL_POINTS,
+    GL_LINES,
+    GL_TRIANGLES
 };
 
 static GLenum DataTypeMap[] = {
-        GL_BYTE,
-        GL_UNSIGNED_BYTE,
-        GL_SHORT,
-        GL_UNSIGNED_SHORT,
-        GL_INT,
-        GL_UNSIGNED_INT,
-        GL_FLOAT,
-        GL_DOUBLE
+    GL_BYTE,
+    GL_UNSIGNED_BYTE,
+    GL_SHORT,
+    GL_UNSIGNED_SHORT,
+    GL_INT,
+    GL_UNSIGNED_INT,
+    GL_FLOAT,
+    GL_DOUBLE
 };
 
 
 GL4RenderMesh::GL4RenderMesh(uint32_t vao,
-                             const VertexDeclaration& vd,
+                             const VertexDeclaration &vd,
                              Size vertexCount,
-                             GL4VertexBuffer* vb,
-                             GL4IndexBuffer* ib,
+                             GL4VertexBuffer *vb,
+                             GL4IndexBuffer *ib,
                              ePrimitiveType primitiveType,
                              eDataType indexType,
                              Size count,
-                             const BoundingBox& boundingBox)
-        : iRenderMesh()
-        , m_vao(vao)
-        , m_vertexDeclaration(vd)
-        , m_vertexBuffer(nullptr)
-        , m_indexBuffer(nullptr)
-        , m_primType(PrimitiveTypeMap[primitiveType])
-        , m_indexDataType(indexType)
-        , m_indexType(DataTypeMap[indexType])
-        , m_count(count)
-        , m_boundingBox(boundingBox)
-        , m_vertexCount(vertexCount)
+                             const BoundingBox &boundingBox)
+    : iRenderMesh()
+    , m_vao(vao)
+    , m_vertexDeclaration(vd)
+    , m_vertexBuffer(nullptr)
+    , m_indexBuffer(nullptr)
+    , m_primType(PrimitiveTypeMap[primitiveType])
+    , m_indexDataType(indexType)
+    , m_indexType(DataTypeMap[indexType])
+    , m_count(count)
+    , m_boundingBox(boundingBox)
+    , m_vertexCount(vertexCount)
 {
   CE_CLASS_GEN_CONSTR;
   CE_SET(m_vertexBuffer, vb);
@@ -82,7 +82,7 @@ Size GL4RenderMesh::GetNumberOfVertices() const
   return m_vertexCount;
 }
 
-const BoundingBox& GL4RenderMesh::GetBoundingBox() const
+const BoundingBox &GL4RenderMesh::GetBoundingBox() const
 {
   return m_boundingBox;
 }
@@ -92,13 +92,16 @@ const VertexDeclaration &GL4RenderMesh::GetVertexDeclaration() const
   return m_vertexDeclaration;
 }
 
-void GL4RenderMesh::Render(iDevice* graphics, eRenderPass pass)
+void GL4RenderMesh::Render(iDevice *graphics, eRenderPass pass)
 {
   CE_GL_ERROR();
   glBindVertexArray(m_vao);
   CE_GL_ERROR();
   glDrawElements(m_primType, (GLsizei) m_count, m_indexType, nullptr);
-
+  GLenum error = glGetError();
+  if (error != GL_NO_ERROR) {
+    printf ("Error\n");
+  }
   CE_GL_ERROR();
 //  glBindVertexArray(0);
   CE_GL_ERROR();
@@ -118,8 +121,8 @@ Size GL4RenderMesh::GetNumberOfTriangles() const
 #endif
 
 GL4RenderMeshGenerator::GL4RenderMeshGenerator()
-        :
-        iRenderMeshGenerator()
+    : iRenderMeshGenerator()
+    , m_primitiveType(ePT_Triangles)
 {
   CE_CLASS_GEN_CONSTR;
 }
@@ -127,58 +130,63 @@ GL4RenderMeshGenerator::GL4RenderMeshGenerator()
 GL4RenderMeshGenerator::~GL4RenderMeshGenerator() = default;
 
 
-void GL4RenderMeshGenerator::SetVertices(const std::vector<Vector2f>& vertices)
+void GL4RenderMeshGenerator::SetPrimitiveType(ce::ePrimitiveType primitiveType)
 {
-  m_vertices2= vertices;
+  m_primitiveType = primitiveType;
 }
 
-void GL4RenderMeshGenerator::SetVertices(const std::vector<Vector3f>& vertices)
+void GL4RenderMeshGenerator::SetVertices(const std::vector<Vector2f> &vertices)
+{
+  m_vertices2 = vertices;
+}
+
+void GL4RenderMeshGenerator::SetVertices(const std::vector<Vector3f> &vertices)
 {
   m_vertices3 = vertices;
 }
 
-void GL4RenderMeshGenerator::SetVertices(const std::vector<Vector4f>& vertices)
+void GL4RenderMeshGenerator::SetVertices(const std::vector<Vector4f> &vertices)
 {
   m_vertices4 = vertices;
 }
 
 
-void GL4RenderMeshGenerator::SetNormals(const std::vector<Vector3f>& normals)
+void GL4RenderMeshGenerator::SetNormals(const std::vector<Vector3f> &normals)
 {
   m_normals = normals;
 }
 
-void GL4RenderMeshGenerator::SetColors(const std::vector<Color4f>& colors)
+void GL4RenderMeshGenerator::SetColors(const std::vector<Color4f> &colors)
 {
   m_colors = colors;
 }
 
-void GL4RenderMeshGenerator::SetTangents(const std::vector<Vector3f>& tangents)
+void GL4RenderMeshGenerator::SetTangents(const std::vector<Vector3f> &tangents)
 {
   m_tangents = tangents;
 }
 
-void GL4RenderMeshGenerator::SetUV0(const std::vector<Vector2f>& uv)
+void GL4RenderMeshGenerator::SetUV0(const std::vector<Vector2f> &uv)
 {
   m_uv02 = uv;
 }
 
-void GL4RenderMeshGenerator::SetUV0(const std::vector<Vector3f>& uv)
+void GL4RenderMeshGenerator::SetUV0(const std::vector<Vector3f> &uv)
 {
   m_uv03 = uv;
 }
 
-void GL4RenderMeshGenerator::SetUV1(const std::vector<Vector2f>& uv)
+void GL4RenderMeshGenerator::SetUV1(const std::vector<Vector2f> &uv)
 {
   m_uv1 = uv;
 }
 
-void GL4RenderMeshGenerator::SetUV2(const std::vector<Vector2f>& uv)
+void GL4RenderMeshGenerator::SetUV2(const std::vector<Vector2f> &uv)
 {
   m_uv2 = uv;
 }
 
-void GL4RenderMeshGenerator::SetUV3(const std::vector<Vector2f>& uv)
+void GL4RenderMeshGenerator::SetUV3(const std::vector<Vector2f> &uv)
 {
   m_uv3 = uv;
 }
@@ -193,63 +201,63 @@ void GL4RenderMeshGenerator::SetBoneWeights(const std::vector<Vector4f> &boneWei
   m_boneWeights = boneWeights;
 }
 
-void GL4RenderMeshGenerator::SetIndices(const std::vector<uint32_t>& indices)
+void GL4RenderMeshGenerator::SetIndices(const std::vector<uint32_t> &indices)
 {
   m_indices = indices;
 }
 
-void GL4RenderMeshGenerator::AddVertices(const std::vector<Vector2f>& vertices)
+void GL4RenderMeshGenerator::AddVertices(const std::vector<Vector2f> &vertices)
 {
   m_vertices2.insert(m_vertices2.end(), vertices.begin(), vertices.end());
 }
 
-void GL4RenderMeshGenerator::AddVertices(const std::vector<Vector3f>& vertices)
+void GL4RenderMeshGenerator::AddVertices(const std::vector<Vector3f> &vertices)
 {
   m_vertices3.insert(m_vertices3.end(), vertices.begin(), vertices.end());
 }
 
-void GL4RenderMeshGenerator::AddVertices(const std::vector<Vector4f>& vertices)
+void GL4RenderMeshGenerator::AddVertices(const std::vector<Vector4f> &vertices)
 {
   m_vertices4.insert(m_vertices4.end(), vertices.begin(), vertices.end());
 }
 
 
-void GL4RenderMeshGenerator::AddNormals(const std::vector<Vector3f>& normals)
+void GL4RenderMeshGenerator::AddNormals(const std::vector<Vector3f> &normals)
 {
   m_normals.insert(m_normals.end(), normals.begin(), normals.end());
 }
 
-void GL4RenderMeshGenerator::AddColors(const std::vector<Color4f>& colors)
+void GL4RenderMeshGenerator::AddColors(const std::vector<Color4f> &colors)
 {
   m_colors.insert(m_colors.end(), colors.begin(), colors.end());
 }
 
-void GL4RenderMeshGenerator::AddTangents(const std::vector<Vector3f>& tangents)
+void GL4RenderMeshGenerator::AddTangents(const std::vector<Vector3f> &tangents)
 {
   m_tangents.insert(m_tangents.end(), tangents.begin(), tangents.end());
 }
 
-void GL4RenderMeshGenerator::AddUV0(const std::vector<Vector2f>& uv)
+void GL4RenderMeshGenerator::AddUV0(const std::vector<Vector2f> &uv)
 {
   m_uv02.insert(m_uv02.end(), uv.begin(), uv.end());
 }
 
-void GL4RenderMeshGenerator::AddUV0(const std::vector<Vector3f>& uv)
+void GL4RenderMeshGenerator::AddUV0(const std::vector<Vector3f> &uv)
 {
   m_uv03.insert(m_uv03.end(), uv.begin(), uv.end());
 }
 
-void GL4RenderMeshGenerator::AddUV1(const std::vector<Vector2f>& uv)
+void GL4RenderMeshGenerator::AddUV1(const std::vector<Vector2f> &uv)
 {
   m_uv1.insert(m_uv1.end(), uv.begin(), uv.end());
 }
 
-void GL4RenderMeshGenerator::AddUV2(const std::vector<Vector2f>& uv)
+void GL4RenderMeshGenerator::AddUV2(const std::vector<Vector2f> &uv)
 {
   m_uv2.insert(m_uv2.end(), uv.begin(), uv.end());
 }
 
-void GL4RenderMeshGenerator::AddUV3(const std::vector<Vector2f>& uv)
+void GL4RenderMeshGenerator::AddUV3(const std::vector<Vector2f> &uv)
 {
   m_uv3.insert(m_uv3.end(), uv.begin(), uv.end());
 }
@@ -264,7 +272,7 @@ void GL4RenderMeshGenerator::AddBoneWeights(const std::vector<Vector4f> &boneWei
   m_boneWeights.insert(m_boneWeights.end(), boneWeights.begin(), boneWeights.end());
 }
 
-void GL4RenderMeshGenerator::AddIndices(const std::vector<uint32_t>& indices)
+void GL4RenderMeshGenerator::AddIndices(const std::vector<uint32_t> &indices)
 {
   m_indices.insert(m_indices.end(), indices.begin(), indices.end());
 }
@@ -275,11 +283,11 @@ size_t GL4RenderMeshGenerator::GetNumberOfVertices() const
   return std::max(m_vertices2.size(), std::max(m_vertices3.size(), m_vertices4.size()));
 }
 
-iRenderMesh* GL4RenderMeshGenerator::Generate()
+iRenderMesh *GL4RenderMeshGenerator::Generate()
 {
   glBindVertexArray(0);
   int numVertexDefs = 0;
-  int numUV0Defs = 0;
+  int numUV0Defs    = 0;
   numVertexDefs += m_vertices2.empty() ? 0 : 1;
   numVertexDefs += m_vertices3.empty() ? 0 : 1;
   numVertexDefs += m_vertices4.empty() ? 0 : 1;
@@ -291,9 +299,9 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
   }
 
   std::vector<VertexDeclaration::Attribute> attributes;
-  uint16_t offset = 0;
-  uint16_t count = 0;
-  Size vertexCount = 0;
+  uint16_t                                  offset      = 0;
+  uint16_t                                  count       = 0;
+  Size                                      vertexCount = 0;
   if (!m_vertices2.empty())
   {
     attributes.emplace_back(VertexDeclaration::Attribute(0, eVS_Vertices, 2, eDT_Float, 0, 0));
@@ -417,7 +425,7 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
     offset += 4 * sizeof(float);
   }
 
-  for (VertexDeclaration::Attribute& attribute : attributes)
+  for (VertexDeclaration::Attribute &attribute: attributes)
   {
     attribute.Stride = offset;
   }
@@ -425,20 +433,20 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
   BoundingBox bbox;
   bbox.Clear();
   VertexDeclaration vd(attributes);
-  auto vBuffer = new float[count * vertexCount];
+  auto              vBuffer = new float[count * vertexCount];
 
   for (Size i = 0, c = 0; i < vertexCount; ++i)
   {
     if (!m_vertices2.empty())
     {
-      Vector2f& v = m_vertices2[i];
+      Vector2f &v = m_vertices2[i];
       vBuffer[c++] = v.x;
       vBuffer[c++] = v.y;
       bbox.Add(Vector3f(v.x, v.y, 0.0f));
     }
     else if (!m_vertices3.empty())
     {
-      Vector3f& v = m_vertices3[i];
+      Vector3f &v = m_vertices3[i];
       vBuffer[c++] = v.x;
       vBuffer[c++] = v.y;
       vBuffer[c++] = v.z;
@@ -446,62 +454,62 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
     }
     else if (!m_vertices4.empty())
     {
-      Vector4f& v = m_vertices4[i];
+      Vector4f &v = m_vertices4[i];
       vBuffer[c++] = v.x;
       vBuffer[c++] = v.y;
       vBuffer[c++] = v.z;
       vBuffer[c++] = v.w;
-      bbox.Add((Vector3f)v);
+      bbox.Add((Vector3f) v);
     }
 
     if (!m_normals.empty())
     {
-      Vector3f& v = m_normals[i];
+      Vector3f &v = m_normals[i];
       vBuffer[c++] = v.x;
       vBuffer[c++] = v.y;
       vBuffer[c++] = v.z;
     }
     if (!m_tangents.empty())
     {
-      Vector3f& v = m_tangents[i];
+      Vector3f &v  = m_tangents[i];
       vBuffer[c++] = v.x;
       vBuffer[c++] = v.y;
       vBuffer[c++] = v.z;
     }
     if (!m_uv02.empty())
     {
-      Vector2f& v = m_uv02[i];
+      Vector2f &v  = m_uv02[i];
       vBuffer[c++] = v.x;
       vBuffer[c++] = v.y;
     }
     else if (!m_uv03.empty())
     {
-      Vector3f& v = m_uv03[i];
+      Vector3f &v = m_uv03[i];
       vBuffer[c++] = v.x;
       vBuffer[c++] = v.y;
       vBuffer[c++] = v.z;
     }
     if (!m_uv1.empty())
     {
-      Vector2f& v = m_uv1[i];
+      Vector2f &v  = m_uv1[i];
       vBuffer[c++] = v.x;
       vBuffer[c++] = v.y;
     }
     if (!m_uv2.empty())
     {
-      Vector2f& v = m_uv2[i];
+      Vector2f &v  = m_uv2[i];
       vBuffer[c++] = v.x;
       vBuffer[c++] = v.y;
     }
     if (!m_uv3.empty())
     {
-      Vector2f& v = m_uv3[i];
+      Vector2f &v  = m_uv3[i];
       vBuffer[c++] = v.x;
       vBuffer[c++] = v.y;
     }
     if (!m_colors.empty())
     {
-      Color4f& v = m_colors[i];
+      Color4f &v   = m_colors[i];
       vBuffer[c++] = v.r;
       vBuffer[c++] = v.g;
       vBuffer[c++] = v.b;
@@ -509,15 +517,15 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
     }
     if (!m_boneIndices.empty())
     {
-      Vector4i& v = m_boneIndices[i];
-      vBuffer[c++] = (float)v.x + 0.25f;
-      vBuffer[c++] = (float)v.y + 0.25f;
-      vBuffer[c++] = (float)v.z + 0.25f;
-      vBuffer[c++] = (float)v.w + 0.25f;
+      Vector4i &v  = m_boneIndices[i];
+      vBuffer[c++] = (float) v.x + 0.25f;
+      vBuffer[c++] = (float) v.y + 0.25f;
+      vBuffer[c++] = (float) v.z + 0.25f;
+      vBuffer[c++] = (float) v.w + 0.25f;
     }
     if (!m_boneWeights.empty())
     {
-      Vector4f& v = m_boneWeights[i];
+      Vector4f &v  = m_boneWeights[i];
       vBuffer[c++] = v.x;
       vBuffer[c++] = v.y;
       vBuffer[c++] = v.z;
@@ -528,11 +536,11 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
 
   auto vb = new GL4VertexBuffer();
   vb->Bind();
-  vb->CreateForRendering(vertexCount* offset, eBU_Static);
-  vb->Copy(vBuffer, vertexCount* offset);
+  vb->CreateForRendering(vertexCount * offset, eBU_Static);
+  vb->Copy(vBuffer, vertexCount * offset);
   delete[] vBuffer;
 
-  auto ib = new GL4IndexBuffer();
+  auto      ib = new GL4IndexBuffer();
   eDataType indexType;
   if (vertexCount >= 65536)
   {
@@ -543,8 +551,8 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
   }
   else
   {
-    auto iBuffer = new uint16_t[m_indices.size()];
-    for (Size i = 0, in = m_indices.size(); i < in; ++i)
+    auto      iBuffer = new uint16_t[m_indices.size()];
+    for (Size i       = 0, in = m_indices.size(); i < in; ++i)
     {
       iBuffer[i] = static_cast<uint16_t>(m_indices[i]);
     }
@@ -562,31 +570,31 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
 
   ib->Bind();
   vb->Bind();
-  const std::vector<VertexDeclaration::Attribute>& vdAttributes = vd.GetAttributes(0);
-  for (const VertexDeclaration::Attribute& attribute : vdAttributes)
+  const std::vector<VertexDeclaration::Attribute> &vdAttributes = vd.GetAttributes(0);
+  for (const VertexDeclaration::Attribute         &attribute: vdAttributes)
   {
     glVertexAttribPointer(
-            attribute.Location,
-            attribute.Size,
-            DataTypeMap[attribute.Type],
-            false,
-            attribute.Stride,
-            reinterpret_cast<const void*>(attribute.Offset)
+        attribute.Location,
+        attribute.Size,
+        DataTypeMap[attribute.Type],
+        false,
+        attribute.Stride,
+        reinterpret_cast<const void *>(attribute.Offset)
     );
     glEnableVertexAttribArray(attribute.Location);
   }
   glBindVertexArray(0);
 
   auto mesh = new GL4RenderMesh(
-          vao,
-          vd,
-          vertexCount,
-          vb,
-          ib,
-          ePT_Triangles,
-          indexType,
-          m_indices.size(),
-          bbox
+      vao,
+      vd,
+      vertexCount,
+      vb,
+      ib,
+      m_primitiveType,
+      indexType,
+      m_indices.size(),
+      bbox
   );
 
   ib->Release();
@@ -596,13 +604,13 @@ iRenderMesh* GL4RenderMeshGenerator::Generate()
 
 
 GL4RenderMeshGeneratorFactory::GL4RenderMeshGeneratorFactory()
-        :
-        iRenderMeshGeneratorFactory()
+    :
+    iRenderMeshGeneratorFactory()
 {
   CE_CLASS_GEN_CONSTR;
 }
 
-iRenderMeshGenerator* GL4RenderMeshGeneratorFactory::Create()
+iRenderMeshGenerator *GL4RenderMeshGeneratorFactory::Create()
 {
   return new GL4RenderMeshGenerator();
 }
@@ -610,12 +618,12 @@ iRenderMeshGenerator* GL4RenderMeshGeneratorFactory::Create()
 
 void GL4RenderMeshBatchGenerator::Add(const iRenderMesh *mesh, const Matrix4f &matrix)
 {
-  auto gl4Mesh = static_cast<const GL4RenderMesh*>(mesh);
+  auto                  gl4Mesh = static_cast<const GL4RenderMesh *>(mesh);
   std::vector<Vector2f> vertices2;
   std::vector<Vector3f> vertices3;
   std::vector<Vector4f> vertices4;
   std::vector<Vector3f> normals;
-  std::vector<Color4f> colors;
+  std::vector<Color4f>  colors;
   std::vector<Vector3f> tangents;
   std::vector<Vector2f> uv02;
   std::vector<Vector3f> uv03;
@@ -627,36 +635,36 @@ void GL4RenderMeshBatchGenerator::Add(const iRenderMesh *mesh, const Matrix4f &m
   std::vector<uint32_t> indices;
 
   size_t vertexOffset = m_generator.GetNumberOfVertices();
-  auto rotMat = (Matrix3f)matrix;
-  size_t numVertices = gl4Mesh->GetNumberOfVertices();
-  void* buffer = nullptr;
+  auto   rotMat       = (Matrix3f) matrix;
+  size_t numVertices  = gl4Mesh->GetNumberOfVertices();
+  void *buffer = nullptr;
   Size bufferSize = 0;
   gl4Mesh->m_vertexBuffer->Map(&buffer, bufferSize);
-  auto* b8 = reinterpret_cast<uint8_t*>(buffer);
-  for (const auto& attribute : mesh->GetVertexDeclaration().GetAttributes(0))
+  auto            *b8 = reinterpret_cast<uint8_t *>(buffer);
+  for (const auto &attribute: mesh->GetVertexDeclaration().GetAttributes(0))
   {
-    for (size_t i=0; i<numVertices; i++)
+    for (size_t i = 0; i < numVertices; i++)
     {
-      switch(attribute.Location)
+      switch (attribute.Location)
       {
         case eVS_Vertices:
           switch (attribute.Size)
           {
             case 2:
             {
-              Vector2f v2 = *reinterpret_cast<Vector2f*>(&b8[i * attribute.Stride + attribute.Offset]);
-              vertices2.push_back((Vector2f)(matrix * Vector4f(v2, 0, 1)));
+              Vector2f v2 = *reinterpret_cast<Vector2f *>(&b8[i * attribute.Stride + attribute.Offset]);
+              vertices2.push_back((Vector2f) (matrix * Vector4f(v2, 0, 1)));
               break;
             }
             case 3:
             {
-              Vector3f v3 = *reinterpret_cast<Vector3f*>(&b8[i * attribute.Stride + attribute.Offset]);
-              vertices3.push_back((Vector3f)(matrix * Vector4f(v3, 1)));
+              Vector3f v3 = *reinterpret_cast<Vector3f *>(&b8[i * attribute.Stride + attribute.Offset]);
+              vertices3.push_back((Vector3f) (matrix * Vector4f(v3, 1)));
               break;
             }
             case 4:
             {
-              Vector4f v4 = *reinterpret_cast<Vector4f*>(&b8[i * attribute.Stride + attribute.Offset]);
+              Vector4f v4 = *reinterpret_cast<Vector4f *>(&b8[i * attribute.Stride + attribute.Offset]);
               vertices4.push_back(matrix * v4);
               break;
             }
@@ -681,48 +689,49 @@ void GL4RenderMeshBatchGenerator::Add(const iRenderMesh *mesh, const Matrix4f &m
           break;
         }
         case eVS_UV0:
-        switch (attribute.Size){
-          case 2:
+          switch (attribute.Size)
           {
-            Vector2f v2 = *reinterpret_cast<Vector2f*>(&b8[i * attribute.Stride + attribute.Offset]);
-            uv02.push_back(v2);
-            break;
+            case 2:
+            {
+              Vector2f v2 = *reinterpret_cast<Vector2f *>(&b8[i * attribute.Stride + attribute.Offset]);
+              uv02.push_back(v2);
+              break;
+            }
+            case 3:
+            {
+              Vector3f v3 = *reinterpret_cast<Vector3f *>(&b8[i * attribute.Stride + attribute.Offset]);
+              uv03.push_back(v3);
+              break;
+            }
           }
-          case 3:
-          {
-            Vector3f v3 = *reinterpret_cast<Vector3f*>(&b8[i * attribute.Stride + attribute.Offset]);
-            uv03.push_back(v3);
-            break;
-          }
-        }
-        break;
+          break;
         case eVS_UV1:
         {
-          Vector2f v2 = *reinterpret_cast<Vector2f*>(&b8[i * attribute.Stride + attribute.Offset]);
+          Vector2f v2 = *reinterpret_cast<Vector2f *>(&b8[i * attribute.Stride + attribute.Offset]);
           uv1.push_back(v2);
           break;
         }
         case eVS_UV2:
         {
-          Vector2f v2 = *reinterpret_cast<Vector2f*>(&b8[i * attribute.Stride + attribute.Offset]);
+          Vector2f v2 = *reinterpret_cast<Vector2f *>(&b8[i * attribute.Stride + attribute.Offset]);
           uv2.push_back(v2);
           break;
         }
         case eVS_UV3:
         {
-          Vector2f v2 = *reinterpret_cast<Vector2f*>(&b8[i * attribute.Stride + attribute.Offset]);
+          Vector2f v2 = *reinterpret_cast<Vector2f *>(&b8[i * attribute.Stride + attribute.Offset]);
           uv3.push_back(v2);
           break;
         }
         case eVS_BoneIndices:
         {
-          Vector4f idx = *reinterpret_cast<Vector4f*>(&b8[i * attribute.Stride + attribute.Offset]);
-          boneIndices.emplace_back(Vector4i((int)idx.x, (int)idx.y, (int)idx.z, (int)idx.w));
+          Vector4f idx = *reinterpret_cast<Vector4f *>(&b8[i * attribute.Stride + attribute.Offset]);
+          boneIndices.emplace_back(Vector4i((int) idx.x, (int) idx.y, (int) idx.z, (int) idx.w));
           break;
         }
         case eVS_BoneWeights:
         {
-          Vector4f w = *reinterpret_cast<Vector4f*>(&b8[i * attribute.Stride + attribute.Offset]);
+          Vector4f w = *reinterpret_cast<Vector4f *>(&b8[i * attribute.Stride + attribute.Offset]);
           boneWeights.push_back(w);
           break;
         }
@@ -736,21 +745,21 @@ void GL4RenderMeshBatchGenerator::Add(const iRenderMesh *mesh, const Matrix4f &m
   {
     case eDT_UnsignedShort:
     {
-      auto *s16 = reinterpret_cast<uint16_t *>(buffer);
-      for (unsigned i = 0; i < gl4Mesh->GetNumberOfIndices(); i++)
+      auto          *s16 = reinterpret_cast<uint16_t *>(buffer);
+      for (unsigned i    = 0; i < gl4Mesh->GetNumberOfIndices(); i++)
       {
         uint16_t idx = *s16++;
-        indices.push_back(idx + (uint32_t)vertexOffset);
+        indices.push_back(idx + (uint32_t) vertexOffset);
       }
       break;
     }
     case eDT_UnsignedInt:
     {
-      auto *s32 = reinterpret_cast<uint32_t *>(buffer);
-      for (unsigned i = 0; i < gl4Mesh->GetNumberOfIndices(); i++)
+      auto          *s32 = reinterpret_cast<uint32_t *>(buffer);
+      for (unsigned i    = 0; i < gl4Mesh->GetNumberOfIndices(); i++)
       {
         uint32_t idx = *s32++;
-        indices.push_back(idx + (uint32_t)vertexOffset);
+        indices.push_back(idx + (uint32_t) vertexOffset);
       }
       break;
 
@@ -759,7 +768,6 @@ void GL4RenderMeshBatchGenerator::Add(const iRenderMesh *mesh, const Matrix4f &m
       break;
   }
   gl4Mesh->m_indexBuffer->Unmap();
-
 
 
   if (!vertices2.empty())
@@ -814,7 +822,7 @@ void GL4RenderMeshBatchGenerator::Add(const iRenderMesh *mesh, const Matrix4f &m
 
 }
 
-iRenderMesh * GL4RenderMeshBatchGenerator::Generate()
+iRenderMesh *GL4RenderMeshBatchGenerator::Generate()
 {
   return m_generator.Generate();
 }
@@ -827,7 +835,7 @@ GL4RenderMeshBatchGeneratorFactory::GL4RenderMeshBatchGeneratorFactory()
   CE_CLASS_GEN_CONSTR;
 }
 
-iRenderMeshBatchGenerator* GL4RenderMeshBatchGeneratorFactory::Create()
+iRenderMeshBatchGenerator *GL4RenderMeshBatchGeneratorFactory::Create()
 {
   return new GL4RenderMeshBatchGenerator();
 }
