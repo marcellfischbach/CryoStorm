@@ -163,7 +163,7 @@ void GL4DeferredPipeline::RenderBackMask()
 }
 
 
-bool  skyboxPrepared = false;
+static bool  skyboxPrepared = false;
 void GL4DeferredPipeline::PrepareSkybox(iSkyboxRenderer *skyboxRenderer)
 {
   if (!skyboxPrepared)

@@ -13,6 +13,7 @@
 #include <ceCore/graphics/irendertarget2d.hh>
 #include <ceCore/graphics/irendertargetcube.hh>
 #include <ceCore/graphics/isampler.hh>
+#include <ceCore/graphics/iskyboxrenderer.hh>
 #include <ceCore/math/clipper/boxclipper.hh>
 #include <ceCore/math/clipper/cameraclipper.hh>
 #include <ceCore/math/clipper/multiplaneclipper.hh>
@@ -24,14 +25,13 @@
 #include <GL/glew.h>
 
 
-
 namespace ce::opengl
 {
 
 const float MinLightInfluence = 0.0f;
 
 GL4ForwardPipeline::GL4ForwardPipeline()
-  : m_frame(0), m_device(nullptr), m_scene(nullptr), m_target(nullptr)
+    : m_frame(0), m_device(nullptr), m_scene(nullptr), m_target(nullptr)
 {
   CE_CLASS_GEN_CONSTR;
 
@@ -49,16 +49,16 @@ GL4ForwardPipeline::~GL4ForwardPipeline() noexcept
 
 }
 
-static bool transparent_mesh_compare_less(const GfxMesh* mesh0, const GfxMesh* mesh1)
+static bool transparent_mesh_compare_less(const GfxMesh *mesh0, const GfxMesh *mesh1)
 {
   return false;
 }
 
-void GL4ForwardPipeline::Render(iRenderTarget2D* target,
-                                const GfxCamera* camera,
-                                iDevice* device,
-                                iGfxScene* scene
-)
+void GL4ForwardPipeline::Render(iRenderTarget2D *target,
+                                const GfxCamera *camera,
+                                iDevice *device,
+                                iGfxScene *scene
+                               )
 {
   CE_GL_ERROR();
   ++m_frame;
@@ -71,18 +71,19 @@ void GL4ForwardPipeline::Render(iRenderTarget2D* target,
 
   BindCamera();
   RenderDepthToTarget();
-  ApplyDepthBufferToLightRenderers ();
+  ApplyDepthBufferToLightRenderers();
 
 
   CollectLightsAndShadows(&clppr);
   RenderShadowMaps();
 
   BindCamera();
+  RenderBackground();
   RenderForwardToTarget();
 
   if (ObjectRegistry::Get<DebugCache>()->IsDebug())
   {
-      RenderDebugToTarget();
+    RenderDebugToTarget();
   }
 
   Cleanup();
@@ -92,10 +93,10 @@ void GL4ForwardPipeline::Render(iRenderTarget2D* target,
 
 }
 
-void GL4ForwardPipeline::SetupVariables(iRenderTarget2D* target,
-                                        const GfxCamera* camera,
-                                        iDevice* device,
-                                        iGfxScene* scene)
+void GL4ForwardPipeline::SetupVariables(iRenderTarget2D *target,
+                                        const GfxCamera *camera,
+                                        iDevice *device,
+                                        iGfxScene *scene)
 {
   m_device    = device;
   m_gfxCamera = camera;
@@ -113,7 +114,7 @@ void GL4ForwardPipeline::SetupVariables(iRenderTarget2D* target,
 
 }
 
-void GL4ForwardPipeline::CollectLightsAndShadows(iClipper* clipper)
+void GL4ForwardPipeline::CollectLightsAndShadows(iClipper *clipper)
 {
   m_dynamicLights.clear();
   m_staticLights.clear();
@@ -121,8 +122,7 @@ void GL4ForwardPipeline::CollectLightsAndShadows(iClipper* clipper)
 
   size_t lightOffset = 0;
   m_scene->ScanLights(clipper, iGfxScene::eSM_Global,
-                      [this, &lightOffset](GfxLight* light)
-                      {
+                      [this, &lightOffset](GfxLight *light) {
 
                         if (lightOffset >= MaxLights)
                         {
@@ -141,8 +141,7 @@ void GL4ForwardPipeline::CollectLightsAndShadows(iClipper* clipper)
   // collect the "normal" static and dynamic lights
 
   m_scene->ScanLights(clipper, iGfxScene::eSM_Dynamic | iGfxScene::eSM_Static,
-                      [this](GfxLight* light)
-                      {
+                      [this](GfxLight *light) {
                         LightScanned(light);
                         CollectShadowLights(light);
                         return true;
@@ -156,13 +155,13 @@ void GL4ForwardPipeline::CollectLightsAndShadows(iClipper* clipper)
   m_numberOfFixedLights = lightOffset;
 }
 
-void GL4ForwardPipeline::ScanVisibleMeshes(iClipper* clipper)
+void GL4ForwardPipeline::ScanVisibleMeshes(iClipper *clipper)
 {
   m_collector.Clear();
   m_scene->ScanMeshes(clipper, m_collector);
 
-  std::vector<GfxMesh*>& defaultMeshes     = m_collector.GetMeshes(eRenderQueue::Default);
-  std::vector<GfxMesh*>& transparentMeshes = m_collector.GetMeshes(eRenderQueue::Transparency);
+  std::vector<GfxMesh *> &defaultMeshes     = m_collector.GetMeshes(eRenderQueue::Default);
+  std::vector<GfxMesh *> &transparentMeshes = m_collector.GetMeshes(eRenderQueue::Transparency);
 
   std::sort(defaultMeshes.begin(), defaultMeshes.end(), material_shader_compare_less_forward);
   std::sort(transparentMeshes.begin(), transparentMeshes.end(), transparent_mesh_compare_less);
@@ -194,17 +193,31 @@ void GL4ForwardPipeline::RenderDepthToTarget()
   m_device->SetDepthTest(true);
   m_device->SetDepthWrite(true);
   m_device->SetDepthFunc(eCF_LessOrEqual);
-  const std::vector<GfxMesh*>& defaultMeshes = m_collector.GetMeshes(eRenderQueue::Default);
-  for (auto            & mesh : defaultMeshes)
+  const std::vector<GfxMesh *> &defaultMeshes = m_collector.GetMeshes(eRenderQueue::Default);
+  for (auto                    &mesh: defaultMeshes)
   {
-      RenderUnlitDepthMesh(mesh);
+    RenderUnlitDepthMesh(mesh);
   }
 
 }
 
-
-void GL4ForwardPipeline::RenderForwardToTarget()
+void GL4ForwardPipeline::RenderBackground()
 {
+  bool clearColor  =
+           (m_gfxCamera->GetClearMode() == eClearMode::Color || m_gfxCamera->GetClearMode() == eClearMode::DepthColor)
+           && m_gfxCamera->GetClearColorMode() == eClearColorMode::PlainColor;
+  bool clearSkybox =
+           (m_gfxCamera->GetClearMode() == eClearMode::Color || m_gfxCamera->GetClearMode() == eClearMode::DepthColor)
+           && m_gfxCamera->GetClearColorMode() == eClearColorMode::Skybox;
+  bool clearDepth  =
+           (m_gfxCamera->GetClearMode() == eClearMode::Depth || m_gfxCamera->GetClearMode() == eClearMode::DepthColor);
+
+
+  if (clearSkybox)
+  {
+    PrepareSkybox(m_gfxCamera->GetSkyboxRenderer());
+  }
+
   m_device->SetRenderTarget(m_target);
   m_device->SetRenderBuffer(0);
   m_device->SetColorWrite(true, true, true, true);
@@ -213,16 +226,40 @@ void GL4ForwardPipeline::RenderForwardToTarget()
   m_device->SetBlending(false);
   m_device->SetDepthFunc(eCF_LessOrEqual);
 
-  bool clearColor =
-           (m_gfxCamera->GetClearMode() == eClearMode::Color || m_gfxCamera->GetClearMode() == eClearMode::DepthColor)
-           && m_gfxCamera->GetClearColorMode() == eClearColorMode::PlainColor;
-  bool clearDepth =
-           (m_gfxCamera->GetClearMode() == eClearMode::Depth || m_gfxCamera->GetClearMode() == eClearMode::DepthColor);
-
   m_device->Clear(clearColor, m_gfxCamera->GetClearColor(), clearDepth, 1.0f, clearDepth, 0);
 
-  std::vector<GfxMesh*>& defaultMeshes = m_collector.GetMeshes(eRenderQueue::Default);
-  for (auto            & mesh : defaultMeshes)
+  if (clearSkybox)
+  {
+    RenderSkybox(m_gfxCamera->GetSkyboxRenderer());
+  }
+}
+
+static bool  skyboxPrepared = false;
+void GL4ForwardPipeline::PrepareSkybox(iSkyboxRenderer *skyboxRenderer)
+{
+  if (!skyboxPrepared)
+  {
+    skyboxRenderer->Render(m_device);
+    skyboxPrepared = true;
+  }
+
+}
+
+void GL4ForwardPipeline::RenderSkybox(iSkyboxRenderer *skyboxRenderer)
+{
+  m_skyboxMesh.Render(m_device,
+                      (m_projector->GetNear() + m_projector->GetFar()) * 0.5f,
+                      skyboxRenderer->GetTexture(),
+                      nullptr);
+}
+
+
+
+void GL4ForwardPipeline::RenderForwardToTarget()
+{
+
+  std::vector<GfxMesh *> &defaultMeshes = m_collector.GetMeshes(eRenderQueue::Default);
+  for (auto              &mesh: defaultMeshes)
   {
     auto material = mesh->GetMaterial();
     if (material->GetShadingMode() == eShadingMode::Shaded)
@@ -239,8 +276,8 @@ void GL4ForwardPipeline::RenderForwardToTarget()
   m_device->SetDepthWrite(false);
   m_device->SetDepthFunc(eCF_LessOrEqual);
 
-  std::vector<GfxMesh*>& transparentMeshes = m_collector.GetMeshes(eRenderQueue::Transparency);
-  for (auto            & mesh : transparentMeshes)
+  std::vector<GfxMesh *> &transparentMeshes = m_collector.GetMeshes(eRenderQueue::Transparency);
+  for (auto              &mesh: transparentMeshes)
   {
     auto material = mesh->GetMaterial();
     if (material->GetShadingMode() == eShadingMode::Shaded)
@@ -288,7 +325,7 @@ void GL4ForwardPipeline::Cleanup()
 
 }
 
-void GL4ForwardPipeline::LightScanned(GfxLight* light)
+void GL4ForwardPipeline::LightScanned(GfxLight *light)
 {
   if (light->IsStatic())
   {
@@ -305,17 +342,17 @@ void GL4ForwardPipeline::LightScanned(GfxLight* light)
   }
 }
 
-void GL4ForwardPipeline::RenderUnlitDepthMesh(GfxMesh* mesh)
+void GL4ForwardPipeline::RenderUnlitDepthMesh(GfxMesh *mesh)
 {
   mesh->RenderUnlit(m_device, eRP_Depth);
 }
 
-void GL4ForwardPipeline::RenderUnlitForwardMesh(GfxMesh* mesh)
+void GL4ForwardPipeline::RenderUnlitForwardMesh(GfxMesh *mesh)
 {
   mesh->RenderUnlit(m_device, eRP_Forward);
 }
 
-void GL4ForwardPipeline::RenderMesh(GfxMesh* mesh, std::array<const GfxLight*, MaxLights>& lights, Size offset)
+void GL4ForwardPipeline::RenderMesh(GfxMesh *mesh, std::array<const GfxLight *, MaxLights> &lights, Size offset)
 {
   if (mesh->IsStatic())
   {
@@ -332,10 +369,10 @@ void GL4ForwardPipeline::RenderMesh(GfxMesh* mesh, std::array<const GfxLight*, M
 
     auto dynamicLights = CalcMeshLightInfluences(mesh, m_dynamicLights, true);
     Size numLights     = AssignLights(
-      mesh->GetLights(),
-      dynamicLights,
-      lights,
-      offset
+        mesh->GetLights(),
+        dynamicLights,
+        lights,
+        offset
     );
     CE_GL_ERROR();
     mesh->RenderForward(m_device, eRP_Forward, lights.data(), numLights);
@@ -346,10 +383,10 @@ void GL4ForwardPipeline::RenderMesh(GfxMesh* mesh, std::array<const GfxLight*, M
     auto staticLights  = CalcMeshLightInfluences(mesh, m_staticLights, true);
     auto dynamicLights = CalcMeshLightInfluences(mesh, m_dynamicLights, true);
     Size numLights     = AssignLights(
-      staticLights,
-      dynamicLights,
-      lights,
-      offset
+        staticLights,
+        dynamicLights,
+        lights,
+        offset
     );
     CE_GL_ERROR();
     mesh->RenderForward(m_device, eRP_Forward, lights.data(), numLights);
@@ -359,7 +396,7 @@ void GL4ForwardPipeline::RenderMesh(GfxMesh* mesh, std::array<const GfxLight*, M
 
 }
 
-void GL4ForwardPipeline::CollectShadowLights(GfxLight* light)
+void GL4ForwardPipeline::CollectShadowLights(GfxLight *light)
 {
   if (!light)
   {
@@ -372,16 +409,16 @@ void GL4ForwardPipeline::CollectShadowLights(GfxLight* light)
   }
   switch (lght->GetType())
   {
-  case eLT_Point:
-    m_pointLightRenderer.Add(static_cast<GL4PointLight*>(light->GetLight()));
-    break;
+    case eLT_Point:
+      m_pointLightRenderer.Add(static_cast<GL4PointLight *>(light->GetLight()));
+      break;
 
-  case eLT_Directional:
-    m_directionalLightRenderer.Add(static_cast<GL4DirectionalLight*>(light->GetLight()));
-    break;
+    case eLT_Directional:
+      m_directionalLightRenderer.Add(static_cast<GL4DirectionalLight *>(light->GetLight()));
+      break;
 
-  default:
-    break;
+    default:
+      break;
   }
 }
 
@@ -397,11 +434,11 @@ void GL4ForwardPipeline::RenderShadowMaps()
 }
 
 Size GL4ForwardPipeline::AssignLights(
-  const std::vector<GfxMesh::Light>& static_lights,
-  const std::vector<GfxMesh::Light>& dynamic_lights,
-  std::array<const GfxLight*, MaxLights>& lights,
-  Size offset
-)
+    const std::vector<GfxMesh::Light> &static_lights,
+    const std::vector<GfxMesh::Light> &dynamic_lights,
+    std::array<const GfxLight *, MaxLights> &lights,
+    Size offset
+                                     )
 {
   for (Size s = 0, d = 0, sn = static_lights.size(), dn = dynamic_lights.size();
        offset < MaxLights && (s < sn || d < dn); offset++)
@@ -434,7 +471,7 @@ Size GL4ForwardPipeline::AssignLights(
   return offset;
 }
 
-float GL4ForwardPipeline::CalcMeshLightInfluence(const GfxLight* light, const GfxMesh* mesh) const
+float GL4ForwardPipeline::CalcMeshLightInfluence(const GfxLight *light, const GfxMesh *mesh) const
 {
   if (!light || !mesh)
   {
@@ -447,41 +484,41 @@ float GL4ForwardPipeline::CalcMeshLightInfluence(const GfxLight* light, const Gf
   float lightDistanceFactor = 0.0f;
   switch (light->GetLight()->GetType())
   {
-  case eLT_Directional:
-    lightDistanceFactor = 1.0f;
-    break;
-  case eLT_Point:
-    auto     pointLight = light->GetLight()->Query<iPointLight>();
-    Vector3f lightPos   = pointLight->GetPosition();
-    Vector3f meshPos    = mesh->GetModelMatrix().GetTranslation();
-    Vector3f delta      = lightPos - meshPos;
-    float    halfSize   = mesh->GetMesh()->GetBoundingBox().GetDiagonal() / 2.0f;
-    float    distance   = delta.Length();
-    float    overlap    = pointLight->GetRange() + halfSize - distance;
-    if (overlap > 0.0f)
-    {
-      lightDistanceFactor = overlap / pointLight->GetRange();
-    }
-    break;
+    case eLT_Directional:
+      lightDistanceFactor = 1.0f;
+      break;
+    case eLT_Point:
+      auto     pointLight = light->GetLight()->Query<iPointLight>();
+      Vector3f lightPos   = pointLight->GetPosition();
+      Vector3f meshPos    = mesh->GetModelMatrix().GetTranslation();
+      Vector3f delta      = lightPos - meshPos;
+      float    halfSize   = mesh->GetMesh()->GetBoundingBox().GetDiagonal() / 2.0f;
+      float    distance   = delta.Length();
+      float    overlap    = pointLight->GetRange() + halfSize - distance;
+      if (overlap > 0.0f)
+      {
+        lightDistanceFactor = overlap / pointLight->GetRange();
+      }
+      break;
 
   }
   return lightPower * lightDistanceFactor;
 }
 
-std::vector<GfxMesh::Light> GL4ForwardPipeline::CalcMeshLightInfluences(const GfxMesh* mesh,
-                                                                        const std::vector<GfxLight*>& lights,
+std::vector<GfxMesh::Light> GL4ForwardPipeline::CalcMeshLightInfluences(const GfxMesh *mesh,
+                                                                        const std::vector<GfxLight *> &lights,
                                                                         bool sorted
-) const
+                                                                       ) const
 {
   std::vector<GfxMesh::Light> influences;
-  for (GfxLight               * light : lights)
+  for (GfxLight *light: lights)
   {
     float influence = CalcMeshLightInfluence(light, mesh);
     if (influence <= MinLightInfluence)
     {
       continue;
     }
-    GfxMesh::Light l{};
+    GfxMesh::Light l {};
     l.Light     = light;
     l.Influence = influence;
     influences.push_back(l);
@@ -491,8 +528,7 @@ std::vector<GfxMesh::Light> GL4ForwardPipeline::CalcMeshLightInfluences(const Gf
   {
     std::sort(influences.begin(),
               influences.end(),
-              [](GfxMesh::Light& l0, GfxMesh::Light& l1)
-              { return l0.Influence > l1.Influence; }
+              [](GfxMesh::Light &l0, GfxMesh::Light &l1) { return l0.Influence > l1.Influence; }
     );
   }
 
@@ -500,15 +536,15 @@ std::vector<GfxMesh::Light> GL4ForwardPipeline::CalcMeshLightInfluences(const Gf
   return influences;
 }
 
-void GL4ForwardPipeline::AppendLights(GfxMesh* mesh, const std::vector<GfxLight*>& lights) const
+void GL4ForwardPipeline::AppendLights(GfxMesh *mesh, const std::vector<GfxLight *> &lights) const
 {
   if (lights.empty())
   {
     return;
   }
 
-  auto     meshLights = CalcMeshLightInfluences(mesh, lights, false);
-  for (auto& meshLight : meshLights)
+  auto meshLights = CalcMeshLightInfluences(mesh, lights, false);
+  for (auto &meshLight: meshLights)
   {
     mesh->AddLight(meshLight.Light, meshLight.Influence);
   }

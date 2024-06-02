@@ -113,7 +113,7 @@ CrimsonFile* VFSConfigReader::OpenConfigFile(const std::string& configPath, cons
   }
   printf ("Open VFS config file'%s'\n", configFile.c_str()); fflush(stdout);
 
-  if  (!fsFile->Open(eAM_Read, eOM_Text))
+  if  (!fsFile->Open(eAM_Read, eOM_Binary))
   {
     return nullptr;
   }

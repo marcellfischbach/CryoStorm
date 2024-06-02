@@ -8,6 +8,7 @@
 #include <ceCore/graphics/camera.hh>
 #include <ceCore/graphics/irenderpipeline.hh>
 #include <ceCore/graphics/projector.hh>
+#include <ceCore/graphics/skybox/skyboxmesh.hh>
 #include <ceCore/graphics/scene/gfxmesh.hh>
 #include <ceCore/graphics/scene/gfxscenecollector.hh>
 #include <ceCore/types.hh>
@@ -22,6 +23,7 @@ class GfxMesh;
 
 struct iClipper;
 struct iSampler;
+struct iSkyboxRenderer;
 
 namespace opengl
 {
@@ -48,6 +50,9 @@ private:
   void ScanVisibleMeshes(iClipper* clipper);
   void BindCamera();
   void RenderDepthToTarget ();
+  void RenderBackground();
+  void PrepareSkybox(iSkyboxRenderer *skyboxRenderer);
+  void RenderSkybox(iSkyboxRenderer *skyboxRenderer);
   void RenderForwardToTarget ();
   void RenderDebugToTarget ();
   void ApplyDepthBufferToLightRenderers();
@@ -99,6 +104,7 @@ private:
 
   GL4ForwardPointLightRenderer m_pointLightRenderer;
   GL4ForwardDirectionalLightRenderer m_directionalLightRenderer;
+  SkyboxMesh m_skyboxMesh;
 
 
 };

@@ -23,11 +23,9 @@ VFS* VFS::Get()
   return &vfs;
 }
 
-void VFS::SetRootPath(const std::string &rootPath, const std::string &configFilename)
+void VFS::SetRootPath(const std::string &rootPath)
 {
   m_rootPath = rootPath;
-
-  VFSConfigReader::Read(rootPath, configFilename);
 }
 
 const std::string& VFS::GetRootPath() const

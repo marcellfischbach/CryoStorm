@@ -23,31 +23,67 @@ void SkyboxMesh::Render(iDevice *device, float size, iTextureCube *texture, iTex
     return;
   }
 
+  if (depth)
+  {
+    RenderDeferred(device, size, texture, depth);
+  }
+  else
+  {
+    RenderForward(device, size, texture);
+  }
+}
+
+void SkyboxMesh::RenderDeferred(ce::iDevice *device, float size, ce::iTextureCube *texture, ce::iTexture2D *depth)
+{
   iRenderMesh *renderMesh = RenderMesh(device);
-  iShader     *shader     = Shader(device);
+  iShader     *shader     = ShaderDeferred(device);
   if (renderMesh && shader)
   {
     device->SetShader(shader);
     device->ResetTextures();
 
-    if (m_attrRenderPlane)
+    if (m_attrDeferredRenderPlane)
     {
-      m_attrRenderPlane->Bind(size);
+      m_attrDeferredRenderPlane->Bind(size);
     }
 
-    if (m_attrSkybox && texture)
+    if (m_attrDeferredSkybox && texture)
     {
       eTextureUnit unit = device->BindTexture(texture);
-      m_attrSkybox->Bind(unit);
+      m_attrDeferredSkybox->Bind(unit);
     }
-    if (m_attrDepth && depth)
+    if (m_attrDeferredDepth)
     {
       eTextureUnit unit = device->BindTexture(depth);
-      m_attrDepth->Bind(unit);
+      m_attrDeferredDepth->Bind(unit);
     }
     device->Render(m_renderMesh, eRenderPass::eRP_Forward);
   }
 }
+
+void SkyboxMesh::RenderForward(ce::iDevice *device, float size, ce::iTextureCube *texture)
+{
+  iRenderMesh *renderMesh = RenderMesh(device);
+  iShader     *shader     = ShaderForward(device);
+  if (renderMesh && shader)
+  {
+    device->SetShader(shader);
+    device->ResetTextures();
+
+    if (m_attrForwardRenderPlane)
+    {
+      m_attrForwardRenderPlane->Bind(size);
+    }
+
+    if (m_attrForwardSkybox && texture)
+    {
+      eTextureUnit unit = device->BindTexture(texture);
+      m_attrForwardSkybox->Bind(unit);
+    }
+    device->Render(m_renderMesh, eRenderPass::eRP_Forward);
+  }
+}
+
 
 iRenderMesh *SkyboxMesh::RenderMesh(ce::iDevice *device)
 {
@@ -132,21 +168,38 @@ iRenderMesh *SkyboxMesh::RenderMesh(ce::iDevice *device)
   return m_renderMesh;
 }
 
-iShader *SkyboxMesh::Shader(ce::iDevice *device)
+iShader *SkyboxMesh::ShaderDeferred(iDevice *device)
 {
-  if (!m_shader)
+  if (!m_shaderDeferred)
   {
-    m_shader = AssetManager::Get()->Get<iShader>("${shaders}/skybox/skybox_on_screen.shader");
-    if (!m_shader)
+    m_shaderDeferred = AssetManager::Get()->Get<iShader>("${shaders}/skybox/skybox_on_screen_deferred.shader");
+    if (!m_shaderDeferred)
     {
       return nullptr;
     }
   }
 
-  m_attrRenderPlane = m_shader->GetShaderAttribute("RenderPlane");
-  m_attrSkybox      = m_shader->GetShaderAttribute("Skybox");
-  m_attrDepth       = m_shader->GetShaderAttribute("Depth");
-  return m_shader;
+  m_attrDeferredRenderPlane = m_shaderDeferred->GetShaderAttribute("RenderPlane");
+  m_attrDeferredSkybox = m_shaderDeferred->GetShaderAttribute("Skybox");
+  m_attrDeferredDepth = m_shaderDeferred->GetShaderAttribute("Depth");
+  return m_shaderDeferred;
+}
+
+
+iShader *SkyboxMesh::ShaderForward(iDevice *device)
+{
+  if (!m_shaderForward)
+  {
+    m_shaderForward = AssetManager::Get()->Get<iShader>("${shaders}/skybox/skybox_on_screen_forward.shader");
+    if (!m_shaderForward)
+    {
+      return nullptr;
+    }
+  }
+
+  m_attrForwardRenderPlane = m_shaderForward->GetShaderAttribute("RenderPlane");
+  m_attrForwardSkybox = m_shaderForward->GetShaderAttribute("Skybox");
+  return m_shaderForward;
 }
 
 } // ce

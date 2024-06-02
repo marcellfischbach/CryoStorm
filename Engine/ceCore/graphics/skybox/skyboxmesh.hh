@@ -21,14 +21,22 @@ public:
 
   void Render (iDevice* device, float size, iTextureCube *texture, iTexture2D *depth);
 private:
+  void RenderDeferred (iDevice* device, float size, iTextureCube *texture, iTexture2D *depth);
+  void RenderForward (iDevice* device, float size, iTextureCube *texture);
+
   iRenderMesh *RenderMesh (iDevice * device);
-  iShader* Shader(iDevice *device);
+  iShader* ShaderDeferred(iDevice *device);
+  iShader* ShaderForward(iDevice *device);
   iRenderMesh* m_renderMesh = nullptr;
 
-  iShader* m_shader = nullptr;
-  iShaderAttribute *m_attrSkybox = nullptr;
-  iShaderAttribute *m_attrRenderPlane = nullptr;
-  iShaderAttribute *m_attrDepth = nullptr;
+  iShader* m_shaderDeferred = nullptr;
+  iShaderAttribute *m_attrDeferredSkybox      = nullptr;
+  iShaderAttribute *m_attrDeferredRenderPlane = nullptr;
+  iShaderAttribute *m_attrDeferredDepth      = nullptr;
+
+  iShader* m_shaderForward = nullptr;
+  iShaderAttribute *m_attrForwardSkybox      = nullptr;
+  iShaderAttribute *m_attrForwardRenderPlane = nullptr;
 };
 
 } // ce

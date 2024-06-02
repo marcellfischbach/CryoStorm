@@ -325,14 +325,15 @@ ce::PostProcessing* setup_post_processing ()
 {
   ce::PostProcessing* postProcessing = nullptr;
 #if 0
+  
   postProcessing = new ce::PostProcessing();
 
 
-  auto highPass = new ce::PPHighPass(0.8f);
+  auto highPass = new ce::PPHighPass(0.92f);
   auto scaleDown0 = new ce::PPScaleDown();
   auto scaleDown1 = new ce::PPScaleDown();
-  auto blurH = new ce::PPBlurH(60, 1.5f);
-  auto blurV = new ce::PPBlurV(60, 1.5f);
+  auto blurH = new ce::PPBlurH(30, 1.f);
+  auto blurV = new ce::PPBlurV(30, 1.f);
   auto combine = new ce::PPCombine();
 
   postProcessing->AddProcess(highPass);
@@ -428,10 +429,10 @@ void generate_test_grid(ce::World *world, ce::iMaterial *material)
   auto mesh   = new ce::Mesh();
   mesh->AddMaterialSlot("Default", material);
   mesh->AddSubMesh(sphere, 0);
-  int gridSize = 1;
+  int gridSize = 100;
 
   float start = static_cast<float>(gridSize) / 2.0f;
-  start = 0.0f;
+//  start = 0.0f;
 
   for (int a = 0, i = 0; i < gridSize; i++)
   {

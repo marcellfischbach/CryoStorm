@@ -22,7 +22,7 @@ void SimpleSkybox::Render(iDevice *device)
   device->SetDepthWrite(false);
   device->SetDepthTest(false);
   device->SetBlending(false);
-  device->Clear(true, Color4f(0.0f, 0.0f, 0.0f, 1.0f), false, 1.0f, false, 0);
+//  device->Clear(true, Color4f(0.0f, 0.0f, 0.0f, 1.0f), false, 1.0f, false, 0);
 
   device->SetShader(m_prepShader);
   device->RenderFullscreen();

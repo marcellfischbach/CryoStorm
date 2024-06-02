@@ -1,10 +1,8 @@
-//
-// Created by MCEL on 22.07.2022.
-//
 
 
 #pragma once
 
+#include <ceCore/coreexport.hh>
 #include <string>
 
 namespace ce
@@ -12,7 +10,7 @@ namespace ce
 class CrimsonFile;
 class CrimsonFileElement;
 
-class VFSConfigReader
+class CE_CORE_API VFSConfigReader
 {
 private:
   VFSConfigReader();

@@ -408,8 +408,12 @@ bool CrimsonFile::Parse(iFile *file)
   file->Seek(eSM_Set, 0);
 
   char *buffer = new char[size + 1];
-  file->Read(1, size, buffer);
-  buffer[size]         = '\0';
+  memset(buffer, 0, sizeof(char) * (size + 1));
+  size_t readSize = file->Read(1, size, buffer);
+  if (readSize != size)
+  {
+    printf("%s size: %ld  readSize: %zu\n", file->GetName().c_str(), size, readSize);
+  }
 
   BufferBuffer bBuf(buffer, size);
   bool         success = Parse(&bBuf);

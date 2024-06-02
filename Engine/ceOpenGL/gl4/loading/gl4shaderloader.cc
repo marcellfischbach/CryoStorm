@@ -260,7 +260,7 @@ GL4Shader *LoadShader(const std::string &typeText,
   }
   catch (const GL4ShaderCompileException &sce)
   {
-    printf("Shader:\n");
+    printf("ShaderDeferred:\n");
     std::vector<std::string> lines = split(source);
     for (Size                i     = 0, in = lines.size(); i < in; ++i)
     {
