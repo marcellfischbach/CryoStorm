@@ -14,6 +14,7 @@
 #include <ceCore/graphics/irendertargetcube.hh>
 #include <ceCore/graphics/isampler.hh>
 #include <ceCore/graphics/iskyboxrenderer.hh>
+#include <ceCore/graphics/postprocessing.hh>
 #include <ceCore/math/clipper/boxclipper.hh>
 #include <ceCore/math/clipper/cameraclipper.hh>
 #include <ceCore/math/clipper/multiplaneclipper.hh>
@@ -62,38 +63,38 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target,
 {
   CE_GL_ERROR();
   ++m_frame;
-  SetupVariables(target, camera, device, scene);
-
-
-  CameraClipper clppr(*m_camera, *m_projector);
-
-  ScanVisibleMeshes(&clppr);
-
-  BindCamera();
-  RenderDepthToTarget();
-  ApplyDepthBufferToLightRenderers();
-
-
-  CollectLightsAndShadows(&clppr);
-  RenderShadowMaps();
-
-  BindCamera();
-  RenderBackground();
-  RenderForwardToTarget();
-
-  if (ObjectRegistry::Get<DebugCache>()->IsDebug())
+  if (SetupVariables(target, camera, device, scene))
   {
-    RenderDebugToTarget();
+
+
+    CameraClipper clppr(*m_camera, *m_projector);
+
+    ScanVisibleMeshes(&clppr);
+
+    BindCamera();
+    RenderDepthToTarget();
+    ApplyDepthBufferToLightRenderers();
+
+    CollectLightsAndShadows(&clppr);
+    RenderShadowMaps();
+
+    BindCamera();
+    RenderBackground();
+    RenderForwardMeshes();
+    RenderPostProcessing(target);
+
+
+    if (ObjectRegistry::Get<DebugCache>()->IsDebug())
+    {
+      RenderDebugToTarget();
+    }
+
+    Cleanup();
   }
-
-  Cleanup();
-
-
-  CE_GL_ERROR();
 
 }
 
-void GL4ForwardPipeline::SetupVariables(iRenderTarget2D *target,
+bool GL4ForwardPipeline::SetupVariables(iRenderTarget2D *target,
                                         const GfxCamera *camera,
                                         iDevice *device,
                                         iGfxScene *scene)
@@ -103,7 +104,7 @@ void GL4ForwardPipeline::SetupVariables(iRenderTarget2D *target,
   m_camera    = camera->GetCamera();
   m_projector = camera->GetProjector();
   m_scene     = scene;
-  m_target    = target;
+  m_target    = camera->GetPostProcessing() ? UpdateRenderTarget(device, target) : target;
 
   m_pointLightRenderer.SetDevice(device);
   m_pointLightRenderer.SetScene(scene);
@@ -112,6 +113,101 @@ void GL4ForwardPipeline::SetupVariables(iRenderTarget2D *target,
   m_directionalLightRenderer.SetScene(scene);
   m_directionalLightRenderer.Clear();
 
+  return m_target;
+}
+
+
+iRenderTarget2D *GL4ForwardPipeline::UpdateRenderTarget(ce::iDevice *device, ce::iRenderTarget2D *target)
+{
+  if (!target)
+  {
+    CE_RELEASE(m_target);
+    return nullptr;
+  }
+
+
+  iRenderTarget2D *renderTarget = m_target;
+
+  if (renderTarget && renderTarget->GetWidth() == target->GetWidth() &&
+      renderTarget->GetHeight() == target->GetHeight())
+  {
+    // all is properly set up
+    return renderTarget;
+  }
+
+  if (renderTarget)
+  {
+    printf ("Update render target %dx%d -> %dx%d\n",
+            m_target->GetWidth(), m_target->GetHeight(),
+            target->GetWidth(), target->GetHeight()
+            );
+  }
+  else
+  {
+    printf ("Render target is null\n");
+  }
+
+
+  //  recreate the target
+  CE_RELEASE(renderTarget);
+
+  iRenderTarget2D::Descriptor desc {
+      target->GetWidth(),
+      target->GetHeight()
+  };
+  renderTarget = device->CreateRenderTarget(desc);
+  if (!renderTarget)
+  {
+    return nullptr;
+  }
+
+  iTexture2D::Descriptor colorDesc {
+      ePF_RGBA,
+      target->GetWidth(),
+      target->GetHeight(),
+      false,
+      1
+  };
+  iTexture2D             *colorTexture = device->CreateTexture(colorDesc);
+  iSampler               *colorSampler = device->CreateSampler();
+  colorSampler->SetFilterMode(eFM_MinMagNearest);
+  colorSampler->SetAddressU(eTAM_Clamp);
+  colorSampler->SetAddressV(eTAM_Clamp);
+  colorSampler->SetAddressW(eTAM_Clamp);
+  colorTexture->SetSampler(colorSampler);
+  renderTarget->AddColorTexture(colorTexture);
+  CE_RELEASE(colorTexture);
+  CE_RELEASE(colorSampler);
+
+  iTexture2D::Descriptor depthDesc {
+      ePF_Depth,
+      target->GetWidth(),
+      target->GetHeight(),
+      false,
+      1
+  };
+  iTexture2D             *depthTexture = device->CreateTexture(depthDesc);
+  iSampler               *depthSampler = device->CreateSampler();
+  depthSampler->SetFilterMode(eFM_MinMagNearest);
+  depthSampler->SetAddressU(eTAM_Clamp);
+  depthSampler->SetAddressV(eTAM_Clamp);
+  depthSampler->SetAddressW(eTAM_Clamp);
+  depthSampler->SetTextureCompareFunc(eCF_LessOrEqual);
+  depthSampler->SetTextureCompareMode(eTCM_None);
+  depthTexture->SetSampler(depthSampler);
+  renderTarget->SetDepthTexture(depthTexture);
+  CE_RELEASE(depthTexture);
+  CE_RELEASE(depthSampler);
+
+  if (!renderTarget->Compile())
+  {
+    printf ("render target not compiled\n");
+    CE_RELEASE(renderTarget);
+    renderTarget = nullptr;
+  }
+
+
+  return renderTarget;
 }
 
 void GL4ForwardPipeline::CollectLightsAndShadows(iClipper *clipper)
@@ -255,7 +351,7 @@ void GL4ForwardPipeline::RenderSkybox(iSkyboxRenderer *skyboxRenderer)
 
 
 
-void GL4ForwardPipeline::RenderForwardToTarget()
+void GL4ForwardPipeline::RenderForwardMeshes()
 {
 
   std::vector<GfxMesh *> &defaultMeshes = m_collector.GetMeshes(eRenderQueue::Default);
@@ -308,6 +404,20 @@ void GL4ForwardPipeline::ApplyDepthBufferToLightRenderers()
   m_pointLightRenderer.SetDepthBuffer(m_target->GetDepthTexture());
 }
 
+void GL4ForwardPipeline::RenderPostProcessing(iRenderTarget2D *target)
+{
+  PostProcessing *pp = m_gfxCamera->GetPostProcessing();
+  if (pp)
+  {
+    pp->SetInput(PPImageType::Color, m_target->GetColorTexture(0));
+    pp->SetInput(PPImageType::Depth, m_target->GetDepthTexture());
+    pp->SetInput(PPImageType::Normal, nullptr);
+    pp->Process(m_device, target);
+  }
+
+}
+
+
 void GL4ForwardPipeline::Cleanup()
 {
   m_device->BindMaterial(nullptr, eRP_COUNT);
@@ -321,8 +431,6 @@ void GL4ForwardPipeline::Cleanup()
   m_camera    = nullptr;
   m_projector = nullptr;
   m_scene     = nullptr;
-  m_target    = nullptr;
-
 }
 
 void GL4ForwardPipeline::LightScanned(GfxLight *light)

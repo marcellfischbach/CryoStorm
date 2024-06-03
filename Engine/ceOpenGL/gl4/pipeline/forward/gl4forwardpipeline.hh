@@ -44,20 +44,26 @@ public:
 
   void Render(iRenderTarget2D * taget, const GfxCamera * camera, iDevice * device, iGfxScene * scene) override;
 
+protected:
+  void PrepareSkybox(iSkyboxRenderer *skyboxRenderer);
+  void RenderSkybox(iSkyboxRenderer *skyboxRenderer);
+  void RenderPostProcessing(iRenderTarget2D *target);
+
+
 private:
-  void SetupVariables(iRenderTarget2D *target,  const GfxCamera *camera,iDevice *device,iGfxScene *scene);
+  bool SetupVariables(iRenderTarget2D *target,  const GfxCamera *camera,iDevice *device,iGfxScene *scene);
   void CollectLightsAndShadows (iClipper *clipper);
   void ScanVisibleMeshes(iClipper* clipper);
   void BindCamera();
   void RenderDepthToTarget ();
   void RenderBackground();
-  void PrepareSkybox(iSkyboxRenderer *skyboxRenderer);
-  void RenderSkybox(iSkyboxRenderer *skyboxRenderer);
-  void RenderForwardToTarget ();
+  void RenderForwardMeshes();
   void RenderDebugToTarget ();
   void ApplyDepthBufferToLightRenderers();
   void Cleanup ();
 
+
+  iRenderTarget2D *UpdateRenderTarget(ce::iDevice *device, ce::iRenderTarget2D *target);
 
   void LightScanned(GfxLight * light);
   void RenderUnlitDepthMesh(GfxMesh * mesh);
@@ -79,7 +85,7 @@ private:
   void AppendLights(GfxMesh * mesh, const std::vector<GfxLight*> &lights) const;
 
 
-
+protected:
   uint64_t m_frame;
   iDevice* m_device;
   const GfxCamera *m_gfxCamera;
@@ -87,6 +93,7 @@ private:
   const Projector *m_projector;
   iGfxScene  * m_scene;
   iRenderTarget2D * m_target;
+private:
   std::array<const GfxLight *, MaxLights> m_renderLights = {};
   size_t m_numberOfFixedLights;
 

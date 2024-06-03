@@ -53,69 +53,14 @@ void GL4DeferredPipeline::Initialize()
 
 void GL4DeferredPipeline::Render(iRenderTarget2D *target, const GfxCamera *camera, iDevice *device, iGfxScene *scene)
 {
-  SetupVariables(target, camera, device, scene);
-  if (!m_target)
+  if (SetupVariables(target, camera, device, scene))
   {
-    return;
-  }
-
-  RenderGBuffer(target->GetWidth(), target->GetHeight());
-
-
-  bool clearColor  =
-           (m_gfxCamera->GetClearMode() == eClearMode::Color || m_gfxCamera->GetClearMode() == eClearMode::DepthColor)
-           && m_gfxCamera->GetClearColorMode() == eClearColorMode::PlainColor;
-  bool clearSkybox =
-           (m_gfxCamera->GetClearMode() == eClearMode::Color || m_gfxCamera->GetClearMode() == eClearMode::DepthColor)
-           && m_gfxCamera->GetClearColorMode() == eClearColorMode::Skybox;
-
-  if (clearSkybox)
-  {
-    PrepareSkybox(camera->GetSkyboxRenderer());
-  }
-
-  device->SetRenderTarget(m_target);
-  device->SetRenderBuffer(0);
-  device->SetDepthTest(false);
-  device->SetDepthWrite(false);
-  device->SetColorWrite(true, true, true, true);
-  device->SetBlending(false);
-  device->Clear(clearColor, m_gfxCamera->GetClearColor(), false, 1.0f, true, 0);
-
-  if (clearColor)
-  {
-    RenderBackMask();
-  }
-  else if (clearSkybox)
-  {
-    RenderSkybox(camera->GetSkyboxRenderer());
-  }
-
-
-  switch (m_renderMode)
-  {
-    case 0:
-      RenderLights();
-      break;
-    case 2:
-      device->RenderFullscreen(m_gBuffer->GetDiffuseRoughness());
-      break;
-    case 1:
-      device->RenderFullscreen(m_gBuffer->GetNormal());
-      break;
-    case 3:
-      device->RenderFullscreen(m_gBuffer->GetDepth());
-      break;
-  }
-
-
-  PostProcessing *pp = camera->GetPostProcessing();
-  if (pp)
-  {
-    pp->SetInput(PPImageType::Color, m_target->GetColorTexture(0));
-    pp->SetInput(PPImageType::Depth, m_gBuffer->GetDepth());
-    pp->SetInput(PPImageType::Normal, m_gBuffer->GetNormal());
-    pp->Process(device, target);
+    RenderGBuffer(target->GetWidth(), target->GetHeight());
+    RenderBackground();
+    RenderLighting();
+    RenderTransparent ();
+    RenderPostProcessing(target);
+    Cleanup();
   }
 
 }
@@ -148,18 +93,36 @@ void GL4DeferredPipeline::RenderGBuffer(uint16_t width,
 
 }
 
-void GL4DeferredPipeline::RenderBackMask()
+void GL4DeferredPipeline::RenderBackground()
 {
-  if (!m_backMaskShader || !m_attrBackMaskDepth)
+  bool clearColor  =
+           (m_gfxCamera->GetClearMode() == eClearMode::Color || m_gfxCamera->GetClearMode() == eClearMode::DepthColor)
+           && m_gfxCamera->GetClearColorMode() == eClearColorMode::PlainColor;
+  bool clearSkybox =
+           (m_gfxCamera->GetClearMode() == eClearMode::Color || m_gfxCamera->GetClearMode() == eClearMode::DepthColor)
+           && m_gfxCamera->GetClearColorMode() == eClearColorMode::Skybox;
+
+  if (clearSkybox)
   {
-    return;
+    PrepareSkybox(m_gfxCamera->GetSkyboxRenderer());
   }
 
-  m_device->SetShader(m_backMaskShader);
-  m_device->ResetTextures();
-  eTextureUnit unit = m_device->BindTexture(m_gBuffer->GetDepth());
-  m_attrBackMaskDepth->Bind(unit);
-  m_device->RenderFullscreen();
+  m_device->SetRenderTarget(m_target);
+  m_device->SetRenderBuffer(0);
+  m_device->SetDepthTest(false);
+  m_device->SetDepthWrite(false);
+  m_device->SetColorWrite(true, true, true, true);
+  m_device->SetBlending(false);
+  m_device->Clear(clearColor, m_gfxCamera->GetClearColor(), false, 1.0f, true, 0);
+
+  if (clearColor)
+  {
+    RenderBackMask();
+  }
+  else if (clearSkybox)
+  {
+    RenderSkybox(m_gfxCamera->GetSkyboxRenderer());
+  }
 }
 
 
@@ -182,11 +145,45 @@ void GL4DeferredPipeline::RenderSkybox(iSkyboxRenderer *skyboxRenderer)
                       m_gBuffer->GetDepth());
 }
 
+
+void GL4DeferredPipeline::RenderBackMask()
+{
+  if (!m_backMaskShader || !m_attrBackMaskDepth)
+  {
+    return;
+  }
+
+  m_device->SetShader(m_backMaskShader);
+  m_device->ResetTextures();
+  eTextureUnit unit = m_device->BindTexture(m_gBuffer->GetDepth());
+  m_attrBackMaskDepth->Bind(unit);
+  m_device->RenderFullscreen();
+}
+
+
+void GL4DeferredPipeline::RenderLighting()
+{
+  switch (m_renderMode)
+  {
+    case 0:
+      RenderLights();
+      break;
+    case 2:
+      m_device->RenderFullscreen(m_gBuffer->GetDiffuseRoughness());
+      break;
+    case 1:
+      m_device->RenderFullscreen(m_gBuffer->GetNormal());
+      break;
+    case 3:
+      m_device->RenderFullscreen(m_gBuffer->GetDepth());
+      break;
+  }
+}
+
 void GL4DeferredPipeline::RenderLights()
 {
   CameraClipper clppr(*m_camera, *m_projector);
-  m_scene->ScanLights(&clppr, ~0x00, [this](GfxLight *light)
-  {
+  m_scene->ScanLights(&clppr, ~0x00, [this](GfxLight *light) {
     switch (light->GetLight()->GetType())
     {
       case eLT_Directional:
@@ -202,6 +199,40 @@ void GL4DeferredPipeline::RenderLights()
   });
 }
 
+void GL4DeferredPipeline::RenderTransparent()
+{
+
+}
+
+void GL4DeferredPipeline::RenderPostProcessing(iRenderTarget2D *target)
+{
+  PostProcessing *pp = m_gfxCamera->GetPostProcessing();
+  if (pp)
+  {
+    pp->SetInput(PPImageType::Color, m_target->GetColorTexture(0));
+    pp->SetInput(PPImageType::Depth, m_target->GetDepthTexture());
+    pp->SetInput(PPImageType::Normal, nullptr);
+    pp->Process(m_device, target);
+  }
+
+}
+
+void GL4DeferredPipeline::Cleanup()
+{
+  m_device->BindMaterial(nullptr, eRP_COUNT);
+
+  m_device->SetBlending(false);
+  m_device->SetDepthWrite(true);
+  m_device->SetDepthTest(true);
+
+  m_device    = nullptr;
+  m_gfxCamera = nullptr;
+  m_camera    = nullptr;
+  m_projector = nullptr;
+  m_scene     = nullptr;
+
+}
+
 void GL4DeferredPipeline::RenderDirectionalLight(const GL4DirectionalLight *directionalLight)
 {
   m_directionalLightRenderer.Render(m_camera, m_projector, m_gBuffer, directionalLight, m_target);
@@ -212,7 +243,7 @@ void GL4DeferredPipeline::RenderPointLight(const GL4PointLight *pointLight)
   m_pointLightRenderer.Render(m_camera, m_projector, m_gBuffer, pointLight, m_target);
 }
 
-void GL4DeferredPipeline::SetupVariables(iRenderTarget2D *target,
+bool GL4DeferredPipeline::SetupVariables(iRenderTarget2D *target,
                                          const GfxCamera *camera,
                                          iDevice *device,
                                          iGfxScene *scene)
@@ -231,6 +262,7 @@ void GL4DeferredPipeline::SetupVariables(iRenderTarget2D *target,
   m_directionalLightRenderer.SetDevice(device);
   m_directionalLightRenderer.SetScene(scene);
 
+  return m_target;
 }
 
 iRenderTarget2D *GL4DeferredPipeline::UpdateRenderTarget(ce::iDevice *device, ce::iRenderTarget2D *target)

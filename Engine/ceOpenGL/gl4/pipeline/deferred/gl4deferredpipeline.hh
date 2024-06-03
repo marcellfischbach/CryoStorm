@@ -2,6 +2,7 @@
 #pragma once
 
 #include <ceOpenGL/openglexport.hh>
+#include <ceOpenGL/gl4/pipeline/forward/gl4forwardpipeline.hh>
 #include <ceOpenGL/gl4/pipeline/deferred/gl4deferreddirectionallightrenderer.hh>
 #include <ceOpenGL/gl4/pipeline/deferred/gl4deferredpointlightrenderer.hh>
 #include <ceCore/graphics/irenderpipeline.hh>
@@ -59,15 +60,20 @@ public:
 private:
 
   void RenderGBuffer(uint16_t width, uint16_t height);
-  void RenderBackMask();
+  void RenderBackground ();
   void PrepareSkybox(iSkyboxRenderer* skyboxRenderer);
   void RenderSkybox(iSkyboxRenderer* skyboxRenderer);
+  void RenderBackMask();
+  void RenderLighting ();
   void RenderLights();
   void RenderDirectionalLight(const GL4DirectionalLight *directionalLight);
   void RenderPointLight(const GL4PointLight *pointLight);
+  void RenderTransparent ();
+  void RenderPostProcessing (iRenderTarget2D *target);
+  void Cleanup();
 
 
-  void SetupVariables(iRenderTarget2D *target, const GfxCamera *camera, iDevice *device, iGfxScene *scene);
+  bool SetupVariables(iRenderTarget2D *target, const GfxCamera *camera, iDevice *device, iGfxScene *scene);
   iRenderTarget2D *UpdateRenderTarget (iDevice* device, iRenderTarget2D* target);
   void UpdateIntermediate();
   void ScanVisibleMeshes(iClipper *clipper);
