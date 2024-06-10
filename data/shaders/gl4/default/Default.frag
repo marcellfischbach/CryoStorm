@@ -57,8 +57,8 @@ void main()
 
 
     ce_FragColor = vec4(mix(dielectric, metallic, ce_Metallic), color.a);
-    ce_FragColor = vec4(clamp(texCoord.xy, 0.0, 1.0), 0.0, 1.0);
 }
+
 
 
 

@@ -830,7 +830,7 @@ void generate_axis_grid(ce::World *world)
 void generate_cube_fbx(ce::World *world)
 {
 
-  ce::Mesh *mesh = ce::AssetManager::Get()->Get<ce::Mesh>("/colored_cube.fbx");
+  ce::Mesh *mesh = ce::AssetManager::Get()->Get<ce::Mesh>("/cube2.fbx");
   ce::iMaterial *dustMaterial = ce::AssetManager::Get()->Get<ce::iMaterial>("/materials/Dust.mat");
   ce::s_material_names[dustMaterial] = "Dust";
 

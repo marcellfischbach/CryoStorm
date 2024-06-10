@@ -1,4 +1,6 @@
 material {
+    queue Transparency,
+    blend Blend,
     depth Write Test,
     shaders {
         shader Forward    "/${shaders}/default/Default.shader",
