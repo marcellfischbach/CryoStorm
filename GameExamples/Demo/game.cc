@@ -778,6 +778,10 @@ void generate_axis_grid(ce::World *world)
   auto matG   = ce::AssetManager::Get()->Get<ce::iMaterial>("/materials/DefaultGreen.mat");
   auto matB   = ce::AssetManager::Get()->Get<ce::iMaterial>("/materials/DefaultBlue.mat");
 
+  ce::s_material_names[matR] = "DefaultRed";
+  ce::s_material_names[matG] = "DefaultGreen";
+  ce::s_material_names[matB] = "DefaultBlue";
+
   auto meshR = new ce::Mesh();
   auto meshG = new ce::Mesh();
   auto meshB = new ce::Mesh();
@@ -828,6 +832,8 @@ void generate_cube_fbx(ce::World *world)
 
   ce::Mesh *mesh = ce::AssetManager::Get()->Get<ce::Mesh>("/colored_cube.fbx");
   ce::iMaterial *dustMaterial = ce::AssetManager::Get()->Get<ce::iMaterial>("/materials/Dust.mat");
+  ce::s_material_names[dustMaterial] = "Dust";
+
   for (int i = 0; i < mesh->GetNumberOfMaterialSlots(); ++i)
   {
     mesh->SetDefaultMaterial(i, dustMaterial);
@@ -857,6 +863,9 @@ void setup_world(ce::World *world)
   auto assetMan        = ce::AssetManager::Get();
   auto material        = assetMan->Get<ce::iMaterial>("/materials/Default.mat");
   auto skinnedMaterial = assetMan->Get<ce::iMaterial>("/materials/DefaultSkinned.mat");
+  ce::s_material_names[material] = "Default";
+  ce::s_material_names[skinnedMaterial] = "Skinned";
+
 
   generate_exit_game(world);
   generate_terrain(world);

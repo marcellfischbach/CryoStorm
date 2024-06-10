@@ -252,16 +252,34 @@ void GL4ForwardPipeline::CollectLightsAndShadows(iClipper *clipper)
   m_numberOfFixedLights = lightOffset;
 }
 
+bool firstRun = true;
 void GL4ForwardPipeline::ScanVisibleMeshes(iClipper *clipper)
 {
   m_collector.Clear();
-  m_scene->ScanMeshes(clipper, m_collector);
+  m_scene->ScanMeshes(/*clipper*/ nullptr, m_collector);
 
   std::vector<GfxMesh *> &defaultMeshes     = m_collector.GetMeshes(eRenderQueue::Default);
   std::vector<GfxMesh *> &transparentMeshes = m_collector.GetMeshes(eRenderQueue::Transparency);
 
+
   std::sort(defaultMeshes.begin(), defaultMeshes.end(), material_shader_compare_less_forward);
   std::sort(transparentMeshes.begin(), transparentMeshes.end(), transparent_mesh_compare_less);
+
+  if (firstRun)
+  {
+    iMaterial *mat = nullptr;
+    printf("Meshes: \n");
+    for (const auto &mesh: defaultMeshes)
+    {
+      iMaterial *pMaterial = mesh->GetMaterial();
+      if (pMaterial != mat)
+      {
+        printf("   %s\n", s_material_names[pMaterial].c_str());
+      }
+      mat = pMaterial;
+    }
+    firstRun = false;
+  }
 }
 
 void GL4ForwardPipeline::BindCamera()
@@ -323,7 +341,7 @@ void GL4ForwardPipeline::RenderBackground()
   m_device->SetBlending(false);
   m_device->SetDepthFunc(eCF_LessOrEqual);
 
-  m_device->Clear(clearColor, m_gfxCamera->GetClearColor(), clearDepth, 1.0f, clearDepth, 0);
+  m_device->Clear(clearColor, m_gfxCamera->GetClearColor(), true, 1.0f, clearDepth, 0);
 
   if (clearSkybox)
   {

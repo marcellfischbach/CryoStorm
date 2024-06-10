@@ -13,6 +13,7 @@
 #include <ceCore/graphics/erenderqueue.hh>
 #include <ceCore/graphics/itexture.hh>
 #include <string>
+#include <map>
 #include <ceCore/graphics/eshadingmode.hh>
 
 
@@ -50,5 +51,8 @@ struct CE_CORE_API iMaterial : public CE_SUPER(iObject)
   virtual void Set(Size idx, const Matrix4f & m) = 0;
   virtual void Set(Size idx, iTexture * texture) = 0;
 };
+
+
+CE_CORE_API extern std::map<iMaterial*, std::string> s_material_names;
 
 }

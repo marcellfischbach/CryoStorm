@@ -279,6 +279,7 @@ void TerrainMeshState::UpdateMaterial()
   if (!m_material)
   {
     m_material = AssetManager::Get()->Get<iMaterial>(ResourceLocator("/materials/terrain/terrain4.mat"));
+    ce::s_material_names[m_material] = "Terrain4";
     if (!m_material)
     {
       return;

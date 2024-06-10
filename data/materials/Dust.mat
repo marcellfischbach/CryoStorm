@@ -1,5 +1,5 @@
 material {
-    depth Test,
+    depth Write Test,
     shaders {
         shader Forward    "/${shaders}/default/Default.shader",
         shader Depth      "/${shaders}/default/Default_Depth.shader",

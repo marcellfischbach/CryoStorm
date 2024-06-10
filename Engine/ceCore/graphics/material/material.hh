@@ -60,6 +60,8 @@ public:
   CE_NODISCARD bool IsDepthWrite() const;
   void SetDepthTest (bool depthTest);
   CE_NODISCARD bool IsDepthTest() const;
+  void SetDepthFunc (eCompareFunc depthFun);
+  CE_NODISCARD eCompareFunc GetDepthFunc() const;
   void SetShadingMode (eShadingMode shadingMode);
   CE_NODISCARD eShadingMode GetShadingMode () const override;
 
@@ -122,6 +124,7 @@ private:
 
   bool m_depthWrite = true;
   bool m_depthTest  = true;
+  eCompareFunc m_depthFunc = eCF_Less;
 
   eShadingMode m_shadingMode = eShadingMode::Shaded;
 };

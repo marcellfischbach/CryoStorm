@@ -21,22 +21,22 @@ SamplerLoader::SamplerLoader()
 eFilterMode FilterMode(const std::string& filterMode)
 {
 #define IF_(name) IF(eFM_, name, filterMode)
-#define ELSE_IF_(name) else IF(eFM_, name, filterMode)
+#define _IF_(name) else IF(eFM_, name, filterMode)
   IF_(MinMagNearest);
-  ELSE_IF_(MinNearestMagLinear);
-  ELSE_IF_(MinLinearMagNearest);
-  ELSE_IF_(MinMagLinear);
-  ELSE_IF_(MinMagMipNearest);
-  ELSE_IF_(MinMagNearestMipLinear);
-  ELSE_IF_(MinNearestMagLinearMipNearest);
-  ELSE_IF_(MinNearestMagMipLinear);
-  ELSE_IF_(MinLinearMagMipNearest);
-  ELSE_IF_(MinLinearMagNearestMipLinear);
-  ELSE_IF_(MinMagLinearMipNearest);
-  ELSE_IF_(MinMagMipLinear);
-  ELSE_IF_(Anisotropic);
+  _IF_(MinNearestMagLinear);
+  _IF_(MinLinearMagNearest);
+  _IF_(MinMagLinear);
+  _IF_(MinMagMipNearest);
+  _IF_(MinMagNearestMipLinear);
+  _IF_(MinNearestMagLinearMipNearest);
+  _IF_(MinNearestMagMipLinear);
+  _IF_(MinLinearMagMipNearest);
+  _IF_(MinLinearMagNearestMipLinear);
+  _IF_(MinMagLinearMipNearest);
+  _IF_(MinMagMipLinear);
+  _IF_(Anisotropic);
 #undef IF_
-#undef ELSE_IF_
+#undef _IF_
   return eFM_MinMagNearest;
 }
 
@@ -45,13 +45,13 @@ eTextureAddressMode AddressMode(const std::string& addressMode)
 {
 
 #define IF_(name) IF(eTAM_, name, addressMode)
-#define ELSE_IF_(name) else IF(eTAM_, name, addressMode)
+#define _IF_(name) else IF(eTAM_, name, addressMode)
   IF_(Repeat);
-  ELSE_IF_(Clamp);
-  ELSE_IF_(Mirror);
-  ELSE_IF_(MirrorOnce);
+  _IF_(Clamp);
+  _IF_(Mirror);
+  _IF_(MirrorOnce);
 #undef IF_
-#undef ELSE_IF_
+#undef _IF_
   return eTAM_Repeat;
 }
 
@@ -59,11 +59,11 @@ eTextureCompareMode TextureCompareMode(const std::string& compareMode)
 {
 
 #define IF_(name) IF(eTCM_, name, compareMode)
-#define ELSE_IF_(name) else IF(eTCM_, name, compareMode)
+#define _IF_(name) else IF(eTCM_, name, compareMode)
   IF_(CompareToR);
-  ELSE_IF_(None);
+  _IF_(None);
 #undef IF_
-#undef ELSE_IF_
+#undef _IF_
   return eTCM_None;
 }
 
@@ -71,17 +71,17 @@ eCompareFunc CompareFunc(const std::string& compareFunc)
 {
 
 #define IF_(name) IF(eCF_, name, compareFunc)
-#define ELSE_IF_(name) else IF(eCF_, name, compareFunc)
+#define _IF_(name) else IF(eCF_, name, compareFunc)
   IF_(Less);
-  ELSE_IF_(LessOrEqual);
-  ELSE_IF_(Greater);
-  ELSE_IF_(GreaterOrEqual);
-  ELSE_IF_(Equal);
-  ELSE_IF_(NotEqual);
-  ELSE_IF_(Always);
-  ELSE_IF_(Never);
+  _IF_(LessOrEqual);
+  _IF_(Greater);
+  _IF_(GreaterOrEqual);
+  _IF_(Equal);
+  _IF_(NotEqual);
+  _IF_(Always);
+  _IF_(Never);
 #undef IF_
-#undef ELSE_IF_
+#undef _IF_
   return eCF_Always;
 }
 
