@@ -1,4 +1,5 @@
 material {
+    depth Test Write,
     shaders {
         shader Forward    "/${shaders}/default/Default.shader",
         shader Depth      "/${shaders}/default/Default_Depth.shader",
@@ -14,5 +15,6 @@ material {
         attribute Color4 "Color" 1 1 1 1,
         attribute Float "Roughness" 0.5,
         attribute Float "Metallic" 0.0,
+        attribute Int "ReceiveShadow" 1,
     }
 }

@@ -80,7 +80,8 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target,
 
     BindCamera();
     RenderBackground();
-    RenderForwardMeshes();
+    RenderOpaqueMeshes();
+    RenderTransparentMeshes();
     RenderPostProcessing(target);
 
 
@@ -351,7 +352,7 @@ void GL4ForwardPipeline::RenderSkybox(iSkyboxRenderer *skyboxRenderer)
 
 
 
-void GL4ForwardPipeline::RenderForwardMeshes()
+void GL4ForwardPipeline::RenderOpaqueMeshes()
 {
 
   std::vector<GfxMesh *> &defaultMeshes = m_collector.GetMeshes(eRenderQueue::Default);
@@ -368,6 +369,10 @@ void GL4ForwardPipeline::RenderForwardMeshes()
     }
   }
 
+}
+
+void GL4ForwardPipeline::RenderTransparentMeshes()
+{
 
   m_device->SetDepthWrite(false);
   m_device->SetDepthFunc(eCF_LessOrEqual);

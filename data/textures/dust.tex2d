@@ -1,0 +1,6 @@
+texture2d {
+
+    image "dust.png",
+    sampler "Default",
+    mipmaps
+}

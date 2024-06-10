@@ -14,6 +14,7 @@ program {
     attribute "Normal1",
     attribute "Normal2",
     attribute "Normal3",
+    attribute "ReceiveShadow",
 
   }
 }

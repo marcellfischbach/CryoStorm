@@ -18,6 +18,6 @@ material {
         attribute Texture "Normal1",
         attribute Texture "Normal2",
         attribute Texture "Normal3",
-
+        attribute Int "ReceiveShadow" 1,
     }
 }

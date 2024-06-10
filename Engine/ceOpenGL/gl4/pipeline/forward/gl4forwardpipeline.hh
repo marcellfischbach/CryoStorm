@@ -57,7 +57,8 @@ private:
   void BindCamera();
   void RenderDepthToTarget ();
   void RenderBackground();
-  void RenderForwardMeshes();
+  void RenderOpaqueMeshes();
+  void RenderTransparentMeshes ();
   void RenderDebugToTarget ();
   void ApplyDepthBufferToLightRenderers();
   void Cleanup ();

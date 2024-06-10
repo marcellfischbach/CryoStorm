@@ -1,4 +1,5 @@
 material {
+    depth Test,
     shaders {
         shader Forward    "/${shaders}/default/Default.shader",
         shader Depth      "/${shaders}/default/Default_Depth.shader",
@@ -8,12 +9,12 @@ material {
         shader Shadow     "/${shaders}/default/Default_Shadow.shader"
     },
     attributes {
-        attribute Texture "Diffuse" "/textures/CheckerBoard.tex2d",
+        attribute Texture "Diffuse" "/textures/dust.tex2d",
         attribute Texture "Normal" "/textures/DefaultNormal.tex2d",
         attribute Texture "RoughnessMap" "/textures/DefaultRoughness.tex2d",
-        attribute Color4 "Color" 0.5 1 0.5 1,
+        attribute Color4 "Color" 1 1 1 1,
         attribute Float "Roughness" 0.5,
         attribute Float "Metallic" 0.0,
-        attribute Int "ReceiveShadow" 1,
+        attribute Int "ReceiveShadow" 0,
     }
 }

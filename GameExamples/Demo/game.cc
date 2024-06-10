@@ -827,12 +827,19 @@ void generate_cube_fbx(ce::World *world)
 {
 
   ce::Mesh *mesh = ce::AssetManager::Get()->Get<ce::Mesh>("/colored_cube.fbx");
+  ce::iMaterial *dustMaterial = ce::AssetManager::Get()->Get<ce::iMaterial>("/materials/Dust.mat");
+  for (int i = 0; i < mesh->GetNumberOfMaterialSlots(); ++i)
+  {
+    mesh->SetDefaultMaterial(i, dustMaterial);
+  }
 
   auto entity          = new ce::Entity();
   auto meshStateSphere = new ce::StaticMeshState("Mesh");
   meshStateSphere->SetStatic(true);
   meshStateSphere->GetTransform().SetTranslation(5.0f, 5.0f, 5.0f).Finish();
   meshStateSphere->SetMesh(mesh);
+
+
   entity->Attach(meshStateSphere);
   world->Attach(entity);
 }

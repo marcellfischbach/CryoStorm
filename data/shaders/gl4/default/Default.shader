@@ -10,5 +10,6 @@ program {
         attribute "Roughness",
         attribute "Metallic",
         attribute "Color",
+        attribute "ReceiveShadow"
     }
 }

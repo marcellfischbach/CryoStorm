@@ -14,5 +14,6 @@ material {
         attribute Color4 "Color" 0.5 0.5 1 1,
         attribute Float "Roughness" 0.5,
         attribute Float "Metallic" 0.0,
+        attribute Int "ReceiveShadow" 1,
     }
 }

@@ -165,7 +165,7 @@ bool Material::BindShader(iDevice* device, eRenderPass pass) const
 void Material::BindBlending(iDevice *device) const
 {
   device->SetBlending(m_blending);
-  if (m_blending)
+//  if (m_blending)
   {
     device->SetBlendFactor(m_srcFactorColor, m_srcFactorAlpha, m_dstFactorColor, m_dstFactorAlpha);
   }
@@ -173,8 +173,8 @@ void Material::BindBlending(iDevice *device) const
 
 void Material::BindDepthMode(iDevice *device) const
 {
-//  device->SetDepthWrite(m_depthWrite);
-//  device->SetDepthTest(m_depthTest);
+  device->SetDepthWrite(m_depthWrite);
+  device->SetDepthTest(m_depthTest);
 }
 
 void Material::BindFillMode(iDevice* device) const

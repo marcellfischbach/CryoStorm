@@ -163,7 +163,26 @@ void MaterialLoader::LoadBlending(Material* material,
 
   if (blendElement)
   {
-    if (blendElement->GetNumberOfAttributes() == 2)
+    if (blendElement->GetNumberOfAttributes() == 1)
+    {
+      blending = true;
+      const std::string &blendString = blendElement->GetAttribute(0, "Blend");
+      if (blendString == "Blend")
+      {
+        srcColor = eBlendFactor::SrcAlpha;
+        srcAlpha = eBlendFactor::SrcAlpha;
+        dstColor = eBlendFactor::OneMinusSrcAlpha;
+        dstAlpha = eBlendFactor::OneMinusSrcAlpha;
+      }
+      else if (blendString == "Add")
+      {
+        srcColor = eBlendFactor::SrcAlpha;
+        srcAlpha = eBlendFactor::SrcAlpha;
+        dstColor = eBlendFactor::One;
+        dstAlpha = eBlendFactor::One;
+      }
+    }
+    else if (blendElement->GetNumberOfAttributes() == 2)
     {
       blending = true;
       srcColor = BlendFactor(blendElement->GetAttribute(0, "One"), eBlendFactor::One);

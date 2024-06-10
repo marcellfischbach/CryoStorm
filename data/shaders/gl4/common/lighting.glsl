@@ -6,6 +6,8 @@ uniform float ce_LightRange[4];
 uniform int ce_LightCastShadow[4];
 uniform sampler2D ce_LightShadowMap[4];
 
+uniform int ce_ReceiveShadow;
+
 
 #include <oren-nayar.glsl>
 #include <lambert.glsl>
@@ -72,7 +74,7 @@ light_result_t calc_light(int idx, vec3 light_ambient, vec3 light_color, vec4 li
         attenuation = 1.0;
     }
 
-    if (ce_LightCastShadow[idx] > 0)
+    if (ce_LightCastShadow[idx] > 0 && ce_ReceiveShadow > 0)
     {
         shadow = texture (ce_LightShadowMap[idx], screen_coord).r;
     }
