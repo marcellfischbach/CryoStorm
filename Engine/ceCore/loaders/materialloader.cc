@@ -209,7 +209,7 @@ void MaterialLoader::LoadDepth(Material *material,
                                const CrimsonFileElement *materialElement,
                                const ResourceLocator &locator)
 {
-#define _IF_(name) if (std::string(#name) == depthValue) { depthWrite = eCompareFunc::eCF_##name; }
+#define _IF_(name) if (std::string(#name) == depthValue) { depthFun = eCompareFunc::eCF_##name; }
 
   auto *depthElement = materialElement->GetChild("depth");
   if (!depthElement)

@@ -13,6 +13,7 @@ CE_DEFINE_GAME(Game)
 
 #include <ceLauncher/launchermodule.hh>
 #include "exitgamestate.hh"
+#include "testhandler.hh"
 #include <ceCore/engine.hh>
 #include <ceCore/settings.hh>
 #include <ceCore/ticker.hh>
@@ -461,25 +462,25 @@ void generate_test_grid(ce::World *world, ce::iMaterial *material)
         case 0:
         {
 
-          auto testHandler01 = new TestHandler01(ce::Vector3f(fi - 50.0f, 0.25f, fj - 50.0f), 0.25f, 0.5f + rnd);
+          auto testHandler01 = new TestHandler01(ce::Vector3f(i - start, 0.25f, j - start), 0.25f, 0.5f + rnd);
           entity->Attach(testHandler01);
           break;
         }
         case 1:
         {
-          auto testHandler02 = new TestHandler02(ce::Vector3f(fi - 50.0f, 0.25f, fj - 50.0f), 0.25f, 0.5f + rnd);
+          auto testHandler02 = new TestHandler02(ce::Vector3f(i - start, 0.25f, j - start), 0.25f, 0.5f + rnd);
           entity->Attach(testHandler02);
           break;
         }
         case 2:
         {
-          auto testHandler03 = new TestHandler03(ce::Vector3f(fi - 50.0f, 0.25f, fj - 50.0f), 0.25f, 0.5f + rnd);
+          auto testHandler03 = new TestHandler03(ce::Vector3f(i - start, 0.25f, j - start), 0.25f, 0.5f + rnd);
           entity->Attach(testHandler03);
           break;
         }
         case 3:
         {
-          auto testHandler04 = new TestHandler04(ce::Vector3f(fi - 50.0f, 0.25f, fj - 50.0f), 0.25f, 0.5f + rnd);
+          auto testHandler04 = new TestHandler04(ce::Vector3f(i - start, 0.25f, j - start), 0.25f, 0.5f + rnd);
           entity->Attach(testHandler04);
           break;
         }
