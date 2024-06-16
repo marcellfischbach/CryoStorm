@@ -14,6 +14,7 @@
 #include <ceOpenGL/gl4/loading/gl4shaderloader.hh>
 #include <ceOpenGL/gl4/pipeline/forward/gl4forwardpipeline.hh>
 #include <ceOpenGL/gl4/pipeline/deferred/gl4deferredpipeline.hh>
+#include <ceOpenGL/gl4/shadergraph/gl4shadergraphcompiler.hh>
 
 namespace ce::opengl
 {
@@ -42,6 +43,8 @@ bool OpenGLModule::Register(const std::vector<std::string> &args, Engine *engine
   {
     return false;
   }
+
+  ObjectRegistry::Register<iShaderGraphCompilerFactory>(new GL4ShaderGraphCompilerFactory());
   ObjectRegistry::Register<iRenderMeshGeneratorFactory>(new GL4RenderMeshGeneratorFactory());
   ObjectRegistry::Register<iRenderMeshBatchGeneratorFactory>(new GL4RenderMeshBatchGeneratorFactory());
   ObjectRegistry::Register<iTerrainMeshGeneratorFactory>(new GL4TerrainMeshGeneratorFactory());

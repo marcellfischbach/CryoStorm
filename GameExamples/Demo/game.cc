@@ -3,6 +3,10 @@
 //
 
 #include "game.hh"
+#include <ceCore/graphics/shadergraph/ishadergraphcompiler.hh>
+#include <ceCore/graphics/shadergraph/shadergraph.hh>
+#include <ceCore/graphics/shadergraph/sgnodes.hh>
+#include <ceCore/objectregistry.hh>
 
 CE_DEFINE_GAME(Game)
 
@@ -842,7 +846,7 @@ void generate_cube_fbx(ce::World *world)
   auto entity          = new ce::Entity();
   auto meshStateSphere = new ce::StaticMeshState("Mesh");
   meshStateSphere->SetStatic(true);
-  meshStateSphere->GetTransform().SetTranslation(5.0f, 5.0f, 5.0f).Finish();
+  meshStateSphere->GetTransform().SetTranslation(5.0f, 0.0f, 0.4f).Finish();
   meshStateSphere->SetMesh(mesh);
 
 
@@ -923,6 +927,36 @@ void setup_world(ce::World *world)
 
 bool Game::Initialize(ce::Engine *engine)
 {
+  auto sg = new ce::ShaderGraph();
+
+  auto v2 = sg->Add<ce::SGConstVec2>();
+  auto c3 = sg->Add<ce::SGConstColor3>();
+  auto add = sg->Add<ce::SGAdd>();
+
+  add->Bind(0, c3);
+  sg->Bind(0, add);
+
+
+  ce::iShaderGraphCompilerFactory *compilerFactory = ce::ObjectRegistry::Get<ce::iShaderGraphCompilerFactory>();
+  if (compilerFactory)
+  {
+    ce::iShaderGraphCompiler* compiler = compilerFactory->Create();
+    if (compiler)
+    {
+      ce::Material* material = compiler->Compile(sg);
+      if (!material)
+      {
+        printf("Unable to compile shader graph\n%s\n", compiler->GetError().c_str());
+      }
+      else
+      {
+        printf("Compiled successfully\n");
+      }
+    }
+  }
+
+
+
   setup_world(engine->GetWorld());
   return true;
 }

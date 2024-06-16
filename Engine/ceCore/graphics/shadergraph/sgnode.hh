@@ -1,9 +1,10 @@
 #pragma once
 
 #include <ceCore/coreexport.hh>
+#include <ceCore/class.hh>
 #include <ceCore/graphics/shadergraph/esgvaluetype.hh>
-#include <utility>
 #include <ceCore/math/vector.hh>
+#include <utility>
 #include <string>
 #include <set>
 #include <vector>
@@ -11,12 +12,16 @@
 namespace ce
 {
 
+eSGValueType EvalValueType(eSGValueType v0, eSGValueType v1);
+
 class SGNode;
 class SGNodeInput;
 class SGNodeOutput;
 
-class CE_CORE_API SGNodeIO
+CE_CLASS()
+class CE_CORE_API SGNodeIO : public CE_SUPER(iObject)
 {
+  CE_CLASS_GEN_OBJECT;
 public:
   CE_NODISCARD const SGNode *GetNode() const
   { return m_node; }
@@ -26,10 +31,10 @@ public:
   CE_NODISCARD const std::string &GetName() const
   { return m_name; }
 
-  void SetType(eSGValueType type)
-  { m_type = type; }
-  CE_NODISCARD eSGValueType GetType() const
-  { return m_type; }
+  void SetTypes(eSGValueType types)
+  { m_types = types; }
+  CE_NODISCARD eSGValueType GetTypes() const
+  { return m_types; }
 
 protected:
   SGNodeIO(SGNode *node, std::string name) : m_node(node), m_name(std::move(name))
@@ -41,65 +46,110 @@ private:
 
   SGNode *m_node;
   std::string m_name;
-  eSGValueType m_type = eSGValueType::Invalid;
+  eSGValueType m_types = eSGValueType::Invalid;
 
 };
 
-class CE_CORE_API SGNodeOutput : public SGNodeIO
+CE_CLASS()
+class CE_CORE_API SGNodeOutput : public CE_SUPER(SGNodeIO)
 {
+  CE_CLASS_GEN;
 public:
   SGNodeOutput(SGNode *node, const std::string &name) : SGNodeIO(node, name)
   {}
   ~SGNodeOutput() override
-  { m_inputs.clear(); }
+  { m_destinations.clear(); }
 
 
-  void add(SGNodeInput *input)
-  { m_inputs.insert(input); }
-  void remove(SGNodeInput *input)
-  { m_inputs.erase(input); }
+  void Add(SGNodeInput *input)
+  { m_destinations.insert(input); }
+  void Remove(SGNodeInput *input)
+  { m_destinations.erase(input); }
   CE_NODISCARD const std::set<SGNodeInput *> &GetInputs() const
-  { return m_inputs; }
+  { return m_destinations; }
+
+  CE_NODISCARD eSGValueType GetValueType() const
+  {
+    return m_valueType;
+  }
+  void SetValueType(eSGValueType valueType)
+  {
+    m_valueType = valueType;
+  }
+protected:
+
 private:
-  std::set<SGNodeInput *> m_inputs;
+  eSGValueType            m_valueType = eSGValueType::Invalid;
+  std::set<SGNodeInput *> m_destinations;
 };
 
-class CE_CORE_API SGNodeInput : public SGNodeIO
+CE_CLASS()
+class CE_CORE_API SGNodeInput : public CE_SUPER(SGNodeIO)
 {
+  CE_CLASS_GEN;
 public:
   SGNodeInput(SGNode *node, const std::string &name) : SGNodeIO(node, name)
   {}
   ~SGNodeInput() override = default;
 
-  void SetOutput(SGNodeOutput *output)
-  { m_output = output; }
-  CE_NODISCARD SGNodeOutput *GetOutput()
-  { return m_output; }
-  CE_NODISCARD const SGNodeOutput *GetOutput() const
-  { return m_output; }
+  void SetSource(SGNodeOutput *output)
+  { m_source = output; }
+  CE_NODISCARD SGNodeOutput *GetSource()
+  { return m_source; }
+  CE_NODISCARD const SGNodeOutput *GetSource() const
+  { return m_source; }
+  CE_NODISCARD float GetScale() const
+  {
+    return m_scalar;
+  }
+  void SetScalar(float scalar)
+  {
+    m_scalar = scalar;
+  }
+
+  eSGValueType GetInputValueType() const;
 
 private:
-  SGNodeOutput *m_output = nullptr;
+  SGNodeOutput *m_source = nullptr;
+
+  float m_scalar;
 };
 
 
-class CE_CORE_API SGNode
+CE_CLASS()
+class CE_CORE_API SGNode : public CE_SUPER(iObject)
 {
-public:
-  virtual ~SGNode();
+  CE_CLASS_GEN_OBJECT;
 
+public:
+  ~SGNode() override;
+  const std::string& GetName() const;
+
+  virtual void CalcIOTypes() = 0;
+
+  void Bind(size_t inputIdx, SGNode* node, size_t outputIdx = 0);
+
+  size_t GetNumberOfInputs() const;
+  SGNodeInput* GetInput(size_t idx);
+  const SGNodeInput* GetInput(size_t idx) const;
+
+  size_t GetNumberOfOutputs() const;
+  SGNodeOutput* GetOutput(size_t idx);
+  const SGNodeOutput* GetOutput(size_t idx) const;
 
 protected:
-  SGNode(const std::string &key, const std::string &name);
+  explicit SGNode(const std::string &name);
 
-  void defineInput(const std::string &name, eSGValueType bindTypes, eSGValueType valueType);
-  void defineOutput(const std::string &name, eSGValueType type);
+  SGNodeInput* DefineInput(const std::string &name, eSGValueType types);
+  SGNodeOutput* DefineOutput(const std::string &name, eSGValueType types);
 
-  virtual void calcIOTypes() = 0;
+
 
 private:
-  std::string m_key;
   std::string m_name;
+
+  std::vector<SGNodeInput*>  m_inputs;
+  std::vector<SGNodeOutput*> m_outputs;
 };
 
 

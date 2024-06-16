@@ -76,6 +76,8 @@ set(SOURCES
 		gl4/pipeline/pssm/gl4pssmfilter.cc
 		gl4/pipeline/pssm/gl4pssmfilter.hh
 
+		gl4/shadergraph/gl4shadergraphcompiler.cc
+		gl4/shadergraph/gl4shadergraphcompiler.hh
 
 		gl4/shading/gl4program.cc
 		gl4/shading/gl4program.hh

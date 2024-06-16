@@ -164,6 +164,8 @@ set(SOURCES
         graphics/shadergraph/esgvaluetype.hh
         graphics/shadergraph/sgnode.cc
         graphics/shadergraph/sgnode.hh
+        graphics/shadergraph/sgnodes.cc
+        graphics/shadergraph/sgnodes.hh
         graphics/shadergraph/shadergraph.cc
         graphics/shadergraph/shadergraph.hh
 
