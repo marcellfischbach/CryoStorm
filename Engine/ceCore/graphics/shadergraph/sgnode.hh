@@ -122,7 +122,10 @@ class CE_CORE_API SGNode : public CE_SUPER(iObject)
   CE_CLASS_GEN_OBJECT;
 
 public:
-  ~SGNode() override;
+  ~SGNode() override = default;
+  void SetInfo(const std::string &info);
+  const std::string &GetInfo () const;
+
   const std::string& GetName() const;
 
   virtual void CalcIOTypes() = 0;
@@ -147,6 +150,7 @@ protected:
 
 private:
   std::string m_name;
+  std::string m_info;
 
   std::vector<SGNodeInput*>  m_inputs;
   std::vector<SGNodeOutput*> m_outputs;

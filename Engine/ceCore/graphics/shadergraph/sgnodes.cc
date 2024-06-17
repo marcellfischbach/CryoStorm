@@ -10,8 +10,8 @@ namespace ce
 /* *********************************************************/
 
 const std::string SGConstFloat::OUT_V = "V";
-SGConstFloat::SGConstFloat()  
-  : SGNode("Const Float")
+SGConstFloat::SGConstFloat()
+    : SGNode("Const Float")
 {
   DefineInput("X", eSGValueType::Invalid);
   DefineOutput(OUT_V, eSGValueType::Float);
@@ -39,7 +39,7 @@ const std::string SGConstVec2::OUT_Y = "Y";
 
 
 SGConstVec2::SGConstVec2()
-  : SGNode("Const Vec2")
+    : SGNode("Const Vec2")
 {
   DefineInput("X", eSGValueType::Invalid);
   DefineInput("Y", eSGValueType::Invalid);
@@ -73,7 +73,7 @@ const std::string SGConstVec3::OUT_X = "X";
 const std::string SGConstVec3::OUT_Y = "Y";
 const std::string SGConstVec3::OUT_Z = "Z";
 SGConstVec3::SGConstVec3()
-  : SGNode("Const Vec3")
+    : SGNode("Const Vec3")
 {
   DefineInput("X", eSGValueType::Invalid);
   DefineInput("Y", eSGValueType::Invalid);
@@ -110,7 +110,7 @@ const std::string SGConstVec4::OUT_Z = "Z";
 const std::string SGConstVec4::OUT_W = "W";
 
 SGConstVec4::SGConstVec4()
-  : SGNode("Const Vec4")
+    : SGNode("Const Vec4")
 {
   DefineInput("X", eSGValueType::Invalid);
   DefineInput("Y", eSGValueType::Invalid);
@@ -154,7 +154,7 @@ const std::string SGConstColor3::OUT_G = "G";
 const std::string SGConstColor3::OUT_B = "B";
 
 SGConstColor3::SGConstColor3()
-  : SGNode("Const Color3")
+    : SGNode("Const Color3")
 {
   DefineInput("R", eSGValueType::Invalid);
   DefineInput("G", eSGValueType::Invalid);
@@ -193,7 +193,7 @@ const std::string SGConstColor4::OUT_B = "B";
 const std::string SGConstColor4::OUT_A = "A";
 
 SGConstColor4::SGConstColor4()
-  : SGNode("Const Color4")
+    : SGNode("Const Color4")
 {
   DefineInput("R", eSGValueType::Invalid);
   DefineInput("G", eSGValueType::Invalid);
@@ -228,14 +228,14 @@ void SGConstColor4::CalcIOTypes()
 /*     Vec 2                                               */
 /* *********************************************************/
 
-const std::string SGVec2::IN_X = "X";
-const std::string SGVec2::IN_Y = "Y";
+const std::string SGVec2::IN_X  = "X";
+const std::string SGVec2::IN_Y  = "Y";
 const std::string SGVec2::OUT_V = "V";
 const std::string SGVec2::OUT_X = "X";
 const std::string SGVec2::OUT_Y = "Y";
 
 SGVec2::SGVec2()
-  : SGNode("Vec2")
+    : SGNode("Vec2")
 {
   DefineInput(IN_X, eSGValueType::Float);
   DefineInput(IN_Y, eSGValueType::Float);
@@ -258,16 +258,16 @@ void SGVec2::CalcIOTypes()
 /*     Vec 3                                               */
 /* *********************************************************/
 
-const std::string SGVec3::IN_X = "X";
-const std::string SGVec3::IN_Y = "Y";
-const std::string SGVec3::IN_Z = "Z";
+const std::string SGVec3::IN_X  = "X";
+const std::string SGVec3::IN_Y  = "Y";
+const std::string SGVec3::IN_Z  = "Z";
 const std::string SGVec3::OUT_V = "V";
 const std::string SGVec3::OUT_X = "X";
 const std::string SGVec3::OUT_Y = "Y";
 const std::string SGVec3::OUT_Z = "Z";
 
 SGVec3::SGVec3()
-  : SGNode("Vec3")
+    : SGNode("Vec3")
 {
   DefineInput(IN_X, eSGValueType::Float);
   DefineInput(IN_Y, eSGValueType::Float);
@@ -293,10 +293,10 @@ void SGVec3::CalcIOTypes()
 /*     Vec 4                                               */
 /* *********************************************************/
 
-const std::string SGVec4::IN_X = "X";
-const std::string SGVec4::IN_Y = "Y";
-const std::string SGVec4::IN_Z = "Z";
-const std::string SGVec4::IN_W = "W";
+const std::string SGVec4::IN_X  = "X";
+const std::string SGVec4::IN_Y  = "Y";
+const std::string SGVec4::IN_Z  = "Z";
+const std::string SGVec4::IN_W  = "W";
 const std::string SGVec4::OUT_V = "V";
 const std::string SGVec4::OUT_X = "X";
 const std::string SGVec4::OUT_Y = "Y";
@@ -304,7 +304,7 @@ const std::string SGVec4::OUT_Z = "Z";
 const std::string SGVec4::OUT_W = "W";
 
 SGVec4::SGVec4()
-  : SGNode("Vec4")
+    : SGNode("Vec4")
 {
   DefineInput(IN_X, eSGValueType::Float);
   DefineInput(IN_Y, eSGValueType::Float);
@@ -326,6 +326,26 @@ void SGVec4::CalcIOTypes()
   GetOutput(4)->SetValueType(eSGValueType::Float);
 }
 
+/* *********************************************************/
+/*     Decompose Vec 2                                     */
+/* *********************************************************/
+
+const std::string SGDecomposeVec2::OUT_X = "X";
+const std::string SGDecomposeVec2::OUT_Y = "Y";
+
+SGDecomposeVec2::SGDecomposeVec2()
+: SGNode("Decompose Vec2")
+{
+  DefineInput("V", eSGValueType::Vector2);
+  DefineOutput(OUT_X, eSGValueType::Float);
+  DefineOutput(OUT_Y, eSGValueType::Float);
+}
+
+void SGDecomposeVec2::CalcIOTypes()
+{
+  GetOutput(0)->SetValueType(eSGValueType::Float);
+  GetOutput(1)->SetValueType(eSGValueType::Float);
+}
 
 
 /* *********************************************************/
@@ -334,9 +354,9 @@ void SGVec4::CalcIOTypes()
 
 const std::string SGBinaryOperator::OUT_V = "V";
 
-SGBinaryOperator::SGBinaryOperator(const std::string& name, eOperator op)
-  : SGNode(name)
-  , m_op(op)
+SGBinaryOperator::SGBinaryOperator(const std::string &name, eOperator op)
+    : SGNode(name)
+    , m_op(op)
 {
   DefineInput("A", eSGValueType::All);
   DefineInput("B", eSGValueType::All);
@@ -351,8 +371,8 @@ SGBinaryOperator::eOperator SGBinaryOperator::GetOperator() const
 
 void SGBinaryOperator::CalcIOTypes()
 {
-  auto s0 = GetInput(0)->GetInputValueType();
-  auto s1 = GetInput(1)->GetInputValueType();
+  auto s0  = GetInput(0)->GetInputValueType();
+  auto s1  = GetInput(1)->GetInputValueType();
   auto out = GetOutput(0);
 
   out->SetValueType(EvalValueType(s0, s1));
@@ -379,6 +399,38 @@ SGMod::SGMod() : SGBinaryOperator("Mod", eOperator::Mod)
 }
 
 
+
+
+
+/* *********************************************************/
+/*     Streaming input                                     */
+/* *********************************************************/
+
+
+SGStreamNode::SGStreamNode(const std::string &name, eVertexStream stream, eSGValueType type)
+    : SGNode(name)
+    , m_stream(stream)
+    , m_type(type)
+{
+  DefineOutput("V", type);
+}
+
+void SGStreamNode::CalcIOTypes()
+{
+  GetOutput(0)->SetValueType(m_type);
+}
+
+eVertexStream SGStreamNode::GetStream() const
+{
+  return m_stream;
+}
+
+
+SGTexCoord::SGTexCoord()
+    : SGStreamNode("TexCoord", eVS_UV, eSGValueType::Vector2)
+{
+
+}
 
 
 } // ce

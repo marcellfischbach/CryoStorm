@@ -4,6 +4,7 @@
 #include <ceOpenGL/gl4/shading/gl4shader.hh>
 #include <ceOpenGL/gl4/gl4exceptions.hh>
 #include <algorithm>
+#include <ceCore/graphics/shadergraph/sgnodes.hh>
 
 namespace ce::opengl
 {
@@ -89,42 +90,42 @@ bool GL4ShaderGraphCompiler::CheckForCycle()
   return false;
 }
 
-/**
- * Checks wether reference is an ancestor of node.
- */
-bool is_ancestor(SGNode* reference, SGNode* node)
+
+static void linearize(std::set<SGNode*> &untouched, SGNodeInput* input, std::vector<SGNode*> &linearized)
 {
-  if (node == reference)
+  SGNodeOutput *source = input->GetSource();
+  if (!source)
   {
-    return true;
+    return;
+  }
+  SGNode *sourceNode = source->GetNode();
+  auto it = untouched.find(sourceNode);
+  if (it == untouched.end())
+  {
+    return;
+  }
+  linearized.push_back(sourceNode);
+  untouched.erase(it);
+
+  for (size_t i=0, in=sourceNode->GetNumberOfInputs(); i<in; i++)
+  {
+    linearize (untouched, sourceNode->GetInput(i), linearized);
   }
 
-  for (size_t i = 0, in = node->GetNumberOfInputs(); i < in; i++)
-  {
-    SGNodeInput* input = node->GetInput(i);
-    SGNodeOutput* source = input->GetSource();
-    SGNode* sourceNode = source ? source->GetNode() : nullptr;
-    if (sourceNode)
-    {
-      if (is_ancestor(reference, sourceNode))
-      {
-        return true;
-      }
-    }
-  }
-  return false;
 }
-
 
 
 void GL4ShaderGraphCompiler::LinearizeNodes()
 {
+  std::set<SGNode*> untouchedNodes;
   for (size_t i = 0, in = m_shaderGraph->GetNumberOfNodes(); i < in; i++)
   {
-    m_linearizedNodes.push_back(m_shaderGraph->GetNode(i));
+    untouchedNodes.insert(m_shaderGraph->GetNode(i));
   }
-  std::sort(m_linearizedNodes.begin(), m_linearizedNodes.end(), is_ancestor);
 
+  m_linearizedNodes.clear();
+  linearize(untouchedNodes, m_shaderGraph->GetDiffuseInput(), m_linearizedNodes);
+  std::reverse(m_linearizedNodes.begin(), m_linearizedNodes.end());
 }
 
 

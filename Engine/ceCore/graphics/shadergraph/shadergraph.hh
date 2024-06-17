@@ -17,7 +17,7 @@ public:
   ShaderGraph();
   ~ShaderGraph() override;
 
-  template<typename T>T* Add();
+  template<typename T>T* Add(const std::string &info = std::string (""));
   void BindDiffuse(SGNode * node, size_t outputIdx = 0);
 
   SGNodeInput* GetDiffuseInput();
@@ -45,7 +45,7 @@ private:
 };
 
 template<typename T> 
-T* ShaderGraph::Add()
+T* ShaderGraph::Add(const std::string &info)
 {
   if (!T::GetStaticClass()->IsInstanceOf<SGNode>())
   {
@@ -63,6 +63,7 @@ T* ShaderGraph::Add()
     t->Release();
     return nullptr;
   }
+  node->SetInfo(info);
   m_nodes.push_back(node);
   return t;
 }

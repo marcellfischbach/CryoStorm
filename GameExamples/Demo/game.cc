@@ -931,15 +931,23 @@ bool Game::Initialize(ce::Engine *engine)
   auto sg = new ce::ShaderGraph();
   sg->SetAlphaDiscard(0.5f, ce::eCF_Less);
 
-  auto colorA= sg->Add<ce::SGConstColor4>();
-  auto colorB = sg->Add<ce::SGConstColor4>();
-  auto colorC = sg->Add<ce::SGConstColor4>();
-  auto colorD = sg->Add<ce::SGConstColor4>();
-  auto vec4 = sg->Add<ce::SGVec4>();
+  auto colorA= sg->Add<ce::SGConstColor4>("colorA");
+  auto colorB = sg->Add<ce::SGConstColor4>("colorB");
+  auto colorC = sg->Add<ce::SGConstColor4>("colorC");
+  auto colorD = sg->Add<ce::SGConstColor4>("colorD");
+  auto vec4 = sg->Add<ce::SGVec4>("vec4");
 
-  auto add = sg->Add<ce::SGAdd>();
-  auto sub = sg->Add<ce::SGSub>();
-  auto mul = sg->Add<ce::SGMul>();
+  auto add = sg->Add<ce::SGAdd>("add");
+  auto sub = sg->Add<ce::SGSub>("sub");
+  auto mul = sg->Add<ce::SGMul>("mul");
+
+  auto uv = sg->Add<ce::SGTexCoord>("uv");
+
+  auto vec2 = sg->Add<ce::SGConstVec2>("vec2");
+  auto dVec2 = sg->Add<ce::SGDecomposeVec2>("dVec2");
+
+  vec2->SetValue(1.0f, 0.5f);
+
 
   colorA->SetValue(0.5f, 0.25f, 0.125f, 1.0f);
   colorB->SetValue(0.5f, 0.25f, 0.125f, 1.0f);
@@ -955,9 +963,10 @@ bool Game::Initialize(ce::Engine *engine)
   mul->Bind(0, add);
   mul->Bind(1, sub);
 
+  dVec2->Bind(0, vec2);
 
-  vec4->Bind(0, colorA, 1);
-  vec4->Bind(1, colorB, 2);
+  vec4->Bind(0, dVec2, 0);
+  vec4->Bind(1, dVec2, 1);
   vec4->Bind(2, colorC, 3);
   vec4->Bind(3, colorD, 4);
 

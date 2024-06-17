@@ -30,6 +30,7 @@ std::string get_gl_type(eSGValueType type)
   case eSGValueType::Vector3: return "vec3";
   case eSGValueType::Vector4: return "vec4";
   }
+  return "";
 }
 
 std::string get_operator(SGBinaryOperator::eOperator op)
@@ -42,6 +43,7 @@ std::string get_operator(SGBinaryOperator::eOperator op)
   case SGBinaryOperator::Div: return "/";
   case SGBinaryOperator::Mod: return "%";
   }
+  return "";
 }
 
 
@@ -298,6 +300,29 @@ void GL4ShaderGraphCompiler::GenerateVariable(SGNodeOutput* output)
       res_f = v + ".a";
       res_p = "a";
       res_ft = eSGValueType::Float;
+    }
+  }
+  else if (cls->IsInstanceOf<SGDecomposeVec2>())
+  {
+    SGNodeInput *input = node->GetInput(0);
+    SGNodeOutput *source = input->GetSource();
+    if (m_outputVariables.contains(source))
+    {
+      OutputVariable &variable = m_outputVariables[source];
+      res_v = variable.FullQuallified;
+      res_t = variable.FullQuallifiedType;
+      res_ft = eSGValueType::Float;
+
+      if (output->GetName() == SGDecomposeVec2::OUT_X)
+      {
+        res_p = "x";
+        res_f = variable.FullQuallified + ".x";
+      }
+      else if (output->GetName() == SGDecomposeVec2::OUT_Y)
+      {
+        res_p = "y";
+        res_f = variable.FullQuallified + ".y";
+      }
     }
   }
 
