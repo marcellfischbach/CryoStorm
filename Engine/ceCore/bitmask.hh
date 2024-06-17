@@ -59,6 +59,16 @@ operator ~(TEnum rhs)
 }
 
 template<typename TEnum>
+typename std::enable_if<EnableBitMaskOperators<TEnum>::enable, bool>::type
+operator ==(TEnum lhs, TEnum rhs)
+{
+  return
+    static_cast<typename std::underlying_type<TEnum>::type>(lhs) ==
+    static_cast<typename std::underlying_type<TEnum>::type>(rhs);
+
+}
+
+template<typename TEnum>
 typename std::enable_if<EnableBitMaskOperators<TEnum>::enable, TEnum>::type&
 operator |=(TEnum &lhs, TEnum rhs)
 {

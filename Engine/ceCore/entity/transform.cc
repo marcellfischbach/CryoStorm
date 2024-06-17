@@ -72,7 +72,7 @@ Transform &Transform::SetScale(const Vector3f &scale)
 }
 
 
-const Vector3f &Transform::GetScale() const
+const Vector3f &Transform::GetScalar() const
 {
   return m_scale;
 }

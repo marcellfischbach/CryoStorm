@@ -26,7 +26,7 @@ public:
   const Quaternion &GetRotation () const;
 
   Transform& SetScale(const Vector3f &scale);
-  const Vector3f &GetScale() const;
+  const Vector3f &GetScalar() const;
 
   Transform& LookAt(const Vector3f &at, const Vector3f &up = Vector3f(0.0f, 1.0f, 0.0f));
 

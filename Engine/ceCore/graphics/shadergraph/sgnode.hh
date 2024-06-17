@@ -98,7 +98,7 @@ public:
   { return m_source; }
   CE_NODISCARD const SGNodeOutput *GetSource() const
   { return m_source; }
-  CE_NODISCARD float GetScale() const
+  CE_NODISCARD float GetScalar() const
   {
     return m_scalar;
   }
@@ -134,8 +134,8 @@ public:
   const SGNodeInput* GetInput(size_t idx) const;
 
   size_t GetNumberOfOutputs() const;
-  SGNodeOutput* GetOutput(size_t idx);
-  const SGNodeOutput* GetOutput(size_t idx) const;
+  SGNodeOutput* GetOutput(size_t idx = 0);
+  const SGNodeOutput* GetOutput(size_t idx = 0) const;
 
 protected:
   explicit SGNode(const std::string &name);

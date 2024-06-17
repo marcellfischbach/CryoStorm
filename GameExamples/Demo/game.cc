@@ -929,13 +929,40 @@ void setup_world(ce::World *world)
 bool Game::Initialize(ce::Engine *engine)
 {
   auto sg = new ce::ShaderGraph();
+  sg->SetAlphaDiscard(0.5f, ce::eCF_Less);
 
-  auto v2 = sg->Add<ce::SGConstVec2>();
-  auto c3 = sg->Add<ce::SGConstColor3>();
+  auto colorA= sg->Add<ce::SGConstColor4>();
+  auto colorB = sg->Add<ce::SGConstColor4>();
+  auto colorC = sg->Add<ce::SGConstColor4>();
+  auto colorD = sg->Add<ce::SGConstColor4>();
+  auto vec4 = sg->Add<ce::SGVec4>();
+
   auto add = sg->Add<ce::SGAdd>();
+  auto sub = sg->Add<ce::SGSub>();
+  auto mul = sg->Add<ce::SGMul>();
 
-  add->Bind(0, c3);
-  sg->Bind(0, add);
+  colorA->SetValue(0.5f, 0.25f, 0.125f, 1.0f);
+  colorB->SetValue(0.5f, 0.25f, 0.125f, 1.0f);
+  colorC->SetValue(0.25f, 0.5f, 0.25f, 1.0f);
+  colorD->SetValue(0.75, 0.5f, 0.25f, 1.0f);
+
+  add->Bind(0, colorA, 1);
+  add->Bind(1, colorB, 2);
+
+  sub->Bind(0, colorC, 3);
+  sub->Bind(1, colorD, 4);
+
+  mul->Bind(0, add);
+  mul->Bind(1, sub);
+
+
+  vec4->Bind(0, colorA, 1);
+  vec4->Bind(1, colorB, 2);
+  vec4->Bind(2, colorC, 3);
+  vec4->Bind(3, colorD, 4);
+
+
+  sg->BindDiffuse(vec4);
 
 
   ce::iShaderGraphCompilerFactory *compilerFactory = ce::ObjectRegistry::Get<ce::iShaderGraphCompilerFactory>();

@@ -1,5 +1,8 @@
 
 #include <ceOpenGL/gl4/shadergraph/gl4shadergraphcompiler.hh>
+#include <ceOpenGL/gl4/shading/gl4program.hh>
+#include <ceOpenGL/gl4/shading/gl4shader.hh>
+#include <ceOpenGL/gl4/gl4exceptions.hh>
 #include <algorithm>
 
 namespace ce::opengl
@@ -22,7 +25,17 @@ Material* GL4ShaderGraphCompiler::Compile(ce::ShaderGraph* shaderGraph)
   {
     return nullptr;
   }
-  printf("GL4ShaderGraphCompiler::Compile\n");
+
+  GenerateVariables();
+
+  SourceBundle depth, deferred, forward, shadow, shadowPSSM, shadowPoint;
+  GenerateDepth(depth);
+
+  iShader* depthShader = Compile(depth);
+
+  Material* material = new Material();
+  material->SetShader(eRP_Depth, depthShader);
+
   m_errorString = "Unknown error";
   return nullptr;
 }
@@ -122,12 +135,10 @@ static std::string types_string(eSGValueType types)
   bool first = true;
 
   std::string res = "[";
-  TEST(Scalar)
+  TEST(Float)
     TEST(Vector2)
     TEST(Vector3)
     TEST(Vector4)
-    TEST(Color3)
-    TEST(Color4)
 #undef FIRST
 #undef TEST
 #undef ELSE_TEST
@@ -167,7 +178,7 @@ bool GL4ShaderGraphCompiler::Verify(SGNode* node)
         SGNode* sourceNode = source->GetNode();
         if (sourceNode)
         {
-          m_errorString = "Type mismatch. Output " + sourceNode->GetName() + "::" + source->GetName() + " types " + types_string(source->GetTypes()) +
+          m_errorString = "Type mismatch. Output " + sourceNode->GetName() + "::" + source->GetName() + " types " + types_string(source->GetValueType()) +
             " do not match input " + node->GetName() + "::" + input->GetName() + " types " + types_string(input->GetTypes());
           return false;
         }
@@ -178,8 +189,119 @@ bool GL4ShaderGraphCompiler::Verify(SGNode* node)
   return true;
 }
 
+static GL4Shader* Compile(eGL4ShaderType type, const std::string& src)
+{
+  try {
+    GL4Shader* shader = new GL4Shader(type);
+    shader->SetSource(src);
+    shader->Compile();
+    return shader;
+  }
+  catch (GL4ShaderCompileException& exc)
+  {
+    printf("Compile error\n%s\n%s\n", src.c_str(), exc.what());
+  }
+  return nullptr;
+}
+
+static std::string ShaderTypeName[] = {
+  "Vertex",
+  "TessEval",
+  "TessControl",
+  "Geometry",
+  "Fragment",
+  "Compute"
+};
 
 
+static bool Attach(GL4Program* program, eGL4ShaderType type, const std::string& src)
+{
+  if (src.empty())
+  {
+    return true;
+  }
+
+  printf("%s:\n%s\n", ShaderTypeName [type].c_str(), src.c_str());
+
+  GL4Shader* shader = Compile(type, src);
+  if (!shader)
+  {
+    return false;
+  }
+
+  program->AttachShader(shader);
+  shader->Release();
+  return true;
+}
+
+
+iShader* GL4ShaderGraphCompiler::Compile(SourceBundle& bundle)
+{
+
+  if (bundle.vert.empty() || bundle.frag.empty())
+  {
+    return nullptr;
+  }
+  GL4Program* program = new GL4Program();
+  if (!Attach(program, eST_Vertex, bundle.vert)
+    || !Attach(program, eST_TessEval, bundle.eval)
+    || !Attach(program, eST_TessControl, bundle.ctrl)
+    || !Attach(program, eST_Geometry, bundle.geom)
+    || !Attach(program, eST_Fragment, bundle.frag))
+  {
+    program->Release();
+    return nullptr;
+  }
+
+  try {
+    program->Link();
+    return program;
+  }
+  catch (GL4ProgramLinkException& exc)
+  {
+    printf("Unable to link program:\n%s\n", exc.what());
+  }
+
+  return nullptr;
+}
+
+
+void GL4ShaderGraphCompiler::ScanNeededVariables(std::set<SGNode*>& nodes, SGNodeInput* input)
+{
+  auto source = input->GetSource();
+  if (!source)
+  {
+    return;
+  }
+
+  auto sourceNode = source->GetNode();
+  nodes.insert(sourceNode);
+
+
+  for (size_t i = 0, in = sourceNode->GetNumberOfInputs(); i < in; i++)
+  {
+    ScanNeededVariables(nodes, sourceNode->GetInput(i));
+  }
+}
+
+std::vector<SGNode*> GL4ShaderGraphCompiler::ScanNeededVariables(std::vector<SGNodeInput*> inputs)
+{
+  std::set<SGNode*> needs;
+  for (auto input : inputs)
+  {
+    ScanNeededVariables(needs, input);
+  }
+
+  std::vector<SGNode*> result;
+  for (auto node : m_linearizedNodes)
+  {
+    if (needs.contains(node))
+    {
+      result.push_back(node);
+    }
+  }
+  return result;
+}
 
 
 iShaderGraphCompiler* GL4ShaderGraphCompilerFactory::Create() const

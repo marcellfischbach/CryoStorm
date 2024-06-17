@@ -132,7 +132,7 @@ eSGValueType SGNodeInput::GetInputValueType() const
   {
     return m_source->GetValueType();
   }
-  return eSGValueType::Scalar;
+  return eSGValueType::Float;
 }
 
 
@@ -143,12 +143,12 @@ eSGValueType EvalValueType (eSGValueType v0, eSGValueType v1)
     return v0;
   }
 
-  if (v0 == eSGValueType::Scalar)
+  if (v0 == eSGValueType::Float)
   {
     return v1;
   }
 
-  if (v1 == eSGValueType::Scalar)
+  if (v1 == eSGValueType::Float)
   {
       return v0;
   }

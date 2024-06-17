@@ -3,6 +3,7 @@
 #include <ceCore/coreexport.hh>
 #include <ceCore/class.hh>
 #include <ceCore/graphics/shadergraph/sgnode.hh>
+#include <ceCore/graphics/ecomparefunc.hh>
 
 namespace ce
 {
@@ -16,28 +17,10 @@ public:
   ShaderGraph();
   ~ShaderGraph() override;
 
-  template<typename T>
-  T* Add()
-  {
-    if (!T::GetStaticClass()->IsInstanceOf<SGNode>())
-    {
-      return nullptr;
-    }
-    T* t = T::GetStaticClass()->CreateInstance<T>();
-    if (!t)
-    {
-      return nullptr;
-    }
+  template<typename T>T* Add();
+  void BindDiffuse(SGNode * node, size_t outputIdx = 0);
 
-    SGNode* node = t->Query<SGNode>();
-    if (!node)
-    {
-      t->Release();
-      return nullptr;
-    }
-    m_nodes.push_back(node);
-    return t;
-  }
+  SGNodeInput* GetDiffuseInput();
 
   void CalcIOTypes() override;
 
@@ -45,15 +28,45 @@ public:
   SGNode* GetNode(size_t idx);
   const SGNode* GetNode(size_t idx) const;
 
+  void SetAlphaDiscard(float threshold, eCompareFunc compreFunc);
+  float GetAlphaDiscard_Threshold() const;
+  eCompareFunc GetAlphaDiscard_Func() const;
+
 private:
   std::vector<SGNode*> m_nodes;
 
 
-  SGNodeInput* m_diffuse;
-  
+  SGNodeInput* m_diffuse = nullptr;
+  float m_alphaDiscard_Threshold = 0.5f;
+  eCompareFunc m_alphaDiscard_Func = eCF_Never;
+
 
 
 };
+
+template<typename T> 
+T* ShaderGraph::Add()
+{
+  if (!T::GetStaticClass()->IsInstanceOf<SGNode>())
+  {
+    return nullptr;
+  }
+  T* t = T::GetStaticClass()->CreateInstance<T>();
+  if (!t)
+  {
+    return nullptr;
+  }
+
+  SGNode* node = t->Query<SGNode>();
+  if (!node)
+  {
+    t->Release();
+    return nullptr;
+  }
+  m_nodes.push_back(node);
+  return t;
+}
+
 
 
 }
