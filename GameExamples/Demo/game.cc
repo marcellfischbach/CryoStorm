@@ -926,10 +926,33 @@ void setup_world(ce::World *world)
 }
 
 
+ce::iMaterial *create_sg_material ()
+{
+  auto sg = new ce::ShaderGraph();
+  sg->SetAlphaDiscard(0.5f, ce::eCF_Never);
+
+  auto color = sg->Add<ce::SGConstColor4>("diffuse");
+  sg->BindDiffuse(color);
+
+  color->SetValue(0.5f, 0.0f, 0.0f, 1.0f);
+
+  ce::iShaderGraphCompilerFactory *compilerFactory = ce::ObjectRegistry::Get<ce::iShaderGraphCompilerFactory>();
+  if (compilerFactory)
+  {
+    ce::iShaderGraphCompiler* compiler = compilerFactory->Create();
+    if (compiler)
+    {
+      ce::Material* material = compiler->Compile(sg);
+      return material;
+    }
+  }
+
+}
+
 bool Game::Initialize(ce::Engine *engine)
 {
   auto sg = new ce::ShaderGraph();
-  sg->SetAlphaDiscard(0.5f, ce::eCF_Less);
+  sg->SetAlphaDiscard(0.5f, ce::eCF_Never);
 
   auto colorA= sg->Add<ce::SGConstColor4>("colorA");
   auto colorB = sg->Add<ce::SGConstColor4>("colorB");

@@ -1,9 +1,9 @@
 
 
 #include <ceOpenGL/gl4/shadergraph/gl4shadergraphcompiler.hh>
+#include <ceCore/resource/assetmanager.hh>
 #include <ceCore/graphics/evertexstream.hh>
 #include <ceCore/graphics/shadergraph/sgnodes.hh>
-#include <algorithm>
 
 namespace ce::opengl
 {
