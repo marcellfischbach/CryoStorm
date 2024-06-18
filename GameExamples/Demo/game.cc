@@ -963,7 +963,7 @@ bool Game::Initialize(ce::Engine *engine)
   mul->Bind(0, add);
   mul->Bind(1, sub);
 
-  dVec2->Bind(0, vec2);
+  dVec2->Bind(0, uv);
 
   vec4->Bind(0, dVec2, 0);
   vec4->Bind(1, dVec2, 1);

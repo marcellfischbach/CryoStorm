@@ -34,8 +34,6 @@ void SGConstFloat::CalcIOTypes()
 /* *********************************************************/
 
 const std::string SGConstVec2::OUT_V = "V";
-const std::string SGConstVec2::OUT_X = "X";
-const std::string SGConstVec2::OUT_Y = "Y";
 
 
 SGConstVec2::SGConstVec2()
@@ -44,8 +42,6 @@ SGConstVec2::SGConstVec2()
   DefineInput("X", eSGValueType::Invalid);
   DefineInput("Y", eSGValueType::Invalid);
   DefineOutput(OUT_V, eSGValueType::Vector2);
-  DefineOutput(OUT_X, eSGValueType::Float);
-  DefineOutput(OUT_Y, eSGValueType::Float);
 }
 
 void SGConstVec2::SetValue(float x, float y)
@@ -58,8 +54,6 @@ void SGConstVec2::SetValue(float x, float y)
 void SGConstVec2::CalcIOTypes()
 {
   GetOutput(0)->SetValueType(eSGValueType::Vector2);
-  GetOutput(1)->SetValueType(eSGValueType::Float);
-  GetOutput(2)->SetValueType(eSGValueType::Float);
 }
 
 
@@ -69,9 +63,6 @@ void SGConstVec2::CalcIOTypes()
 
 
 const std::string SGConstVec3::OUT_V = "V";
-const std::string SGConstVec3::OUT_X = "X";
-const std::string SGConstVec3::OUT_Y = "Y";
-const std::string SGConstVec3::OUT_Z = "Z";
 SGConstVec3::SGConstVec3()
     : SGNode("Const Vec3")
 {
@@ -79,9 +70,6 @@ SGConstVec3::SGConstVec3()
   DefineInput("Y", eSGValueType::Invalid);
   DefineInput("Z", eSGValueType::Invalid);
   DefineOutput(OUT_V, eSGValueType::Vector3);
-  DefineOutput(OUT_X, eSGValueType::Float);
-  DefineOutput(OUT_Y, eSGValueType::Float);
-  DefineOutput(OUT_Z, eSGValueType::Float);
 }
 
 void SGConstVec3::SetValue(float x, float y, float z)
@@ -94,9 +82,6 @@ void SGConstVec3::SetValue(float x, float y, float z)
 void SGConstVec3::CalcIOTypes()
 {
   GetOutput(0)->SetValueType(eSGValueType::Vector3);
-  GetOutput(1)->SetValueType(eSGValueType::Float);
-  GetOutput(2)->SetValueType(eSGValueType::Float);
-  GetOutput(3)->SetValueType(eSGValueType::Float);
 
 }
 
@@ -104,10 +89,6 @@ void SGConstVec3::CalcIOTypes()
 /*     Const Vector 4                                      */
 /* *********************************************************/
 const std::string SGConstVec4::OUT_V = "V";
-const std::string SGConstVec4::OUT_X = "X";
-const std::string SGConstVec4::OUT_Y = "Y";
-const std::string SGConstVec4::OUT_Z = "Z";
-const std::string SGConstVec4::OUT_W = "W";
 
 SGConstVec4::SGConstVec4()
     : SGNode("Const Vec4")
@@ -117,10 +98,6 @@ SGConstVec4::SGConstVec4()
   DefineInput("Z", eSGValueType::Invalid);
   DefineInput("W", eSGValueType::Invalid);
   DefineOutput(OUT_V, eSGValueType::Vector4);
-  DefineOutput(OUT_X, eSGValueType::Float);
-  DefineOutput(OUT_Y, eSGValueType::Float);
-  DefineOutput(OUT_Z, eSGValueType::Float);
-  DefineOutput(OUT_W, eSGValueType::Float);
 }
 
 
@@ -135,10 +112,6 @@ void SGConstVec4::SetValue(float x, float y, float z, float w)
 void SGConstVec4::CalcIOTypes()
 {
   GetOutput(0)->SetValueType(eSGValueType::Vector4);
-  GetOutput(1)->SetValueType(eSGValueType::Float);
-  GetOutput(2)->SetValueType(eSGValueType::Float);
-  GetOutput(3)->SetValueType(eSGValueType::Float);
-  GetOutput(4)->SetValueType(eSGValueType::Float);
 }
 
 
@@ -149,9 +122,6 @@ void SGConstVec4::CalcIOTypes()
 /* *********************************************************/
 
 const std::string SGConstColor3::OUT_V = "V";
-const std::string SGConstColor3::OUT_R = "R";
-const std::string SGConstColor3::OUT_G = "G";
-const std::string SGConstColor3::OUT_B = "B";
 
 SGConstColor3::SGConstColor3()
     : SGNode("Const Color3")
@@ -160,9 +130,6 @@ SGConstColor3::SGConstColor3()
   DefineInput("G", eSGValueType::Invalid);
   DefineInput("B", eSGValueType::Invalid);
   DefineOutput(OUT_V, eSGValueType::Vector3);
-  DefineOutput(OUT_R, eSGValueType::Float);
-  DefineOutput(OUT_G, eSGValueType::Float);
-  DefineOutput(OUT_B, eSGValueType::Float);
 }
 
 void SGConstColor3::SetValue(float r, float g, float b)
@@ -175,9 +142,6 @@ void SGConstColor3::SetValue(float r, float g, float b)
 void SGConstColor3::CalcIOTypes()
 {
   GetOutput(0)->SetValueType(eSGValueType::Vector3);
-  GetOutput(1)->SetValueType(eSGValueType::Float);
-  GetOutput(2)->SetValueType(eSGValueType::Float);
-  GetOutput(3)->SetValueType(eSGValueType::Float);
 }
 
 
@@ -187,10 +151,6 @@ void SGConstColor3::CalcIOTypes()
 /* *********************************************************/
 
 const std::string SGConstColor4::OUT_V = "V";
-const std::string SGConstColor4::OUT_R = "R";
-const std::string SGConstColor4::OUT_G = "G";
-const std::string SGConstColor4::OUT_B = "B";
-const std::string SGConstColor4::OUT_A = "A";
 
 SGConstColor4::SGConstColor4()
     : SGNode("Const Color4")
@@ -200,10 +160,6 @@ SGConstColor4::SGConstColor4()
   DefineInput("B", eSGValueType::Invalid);
   DefineInput("A", eSGValueType::Invalid);
   DefineOutput(OUT_V, eSGValueType::Vector3);
-  DefineOutput(OUT_R, eSGValueType::Float);
-  DefineOutput(OUT_G, eSGValueType::Float);
-  DefineOutput(OUT_B, eSGValueType::Float);
-  DefineOutput(OUT_A, eSGValueType::Float);
 }
 
 void SGConstColor4::SetValue(float r, float g, float b, float a)
@@ -217,10 +173,6 @@ void SGConstColor4::SetValue(float r, float g, float b, float a)
 void SGConstColor4::CalcIOTypes()
 {
   GetOutput(0)->SetValueType(eSGValueType::Vector4);
-  GetOutput(1)->SetValueType(eSGValueType::Float);
-  GetOutput(2)->SetValueType(eSGValueType::Float);
-  GetOutput(3)->SetValueType(eSGValueType::Float);
-  GetOutput(4)->SetValueType(eSGValueType::Float);
 }
 
 
@@ -231,8 +183,6 @@ void SGConstColor4::CalcIOTypes()
 const std::string SGVec2::IN_X  = "X";
 const std::string SGVec2::IN_Y  = "Y";
 const std::string SGVec2::OUT_V = "V";
-const std::string SGVec2::OUT_X = "X";
-const std::string SGVec2::OUT_Y = "Y";
 
 SGVec2::SGVec2()
     : SGNode("Vec2")
@@ -240,15 +190,11 @@ SGVec2::SGVec2()
   DefineInput(IN_X, eSGValueType::Float);
   DefineInput(IN_Y, eSGValueType::Float);
   DefineOutput(OUT_V, eSGValueType::Vector3);
-  DefineOutput(OUT_X, eSGValueType::Float);
-  DefineOutput(OUT_Y, eSGValueType::Float);
 }
 
 void SGVec2::CalcIOTypes()
 {
   GetOutput(0)->SetValueType(eSGValueType::Vector3);
-  GetOutput(1)->SetValueType(eSGValueType::Float);
-  GetOutput(2)->SetValueType(eSGValueType::Float);
 }
 
 
@@ -262,9 +208,6 @@ const std::string SGVec3::IN_X  = "X";
 const std::string SGVec3::IN_Y  = "Y";
 const std::string SGVec3::IN_Z  = "Z";
 const std::string SGVec3::OUT_V = "V";
-const std::string SGVec3::OUT_X = "X";
-const std::string SGVec3::OUT_Y = "Y";
-const std::string SGVec3::OUT_Z = "Z";
 
 SGVec3::SGVec3()
     : SGNode("Vec3")
@@ -273,9 +216,6 @@ SGVec3::SGVec3()
   DefineInput(IN_Y, eSGValueType::Float);
   DefineInput(IN_Z, eSGValueType::Float);
   DefineOutput(OUT_V, eSGValueType::Vector3);
-  DefineOutput(OUT_X, eSGValueType::Float);
-  DefineOutput(OUT_Y, eSGValueType::Float);
-  DefineOutput(OUT_Z, eSGValueType::Float);
 }
 
 void SGVec3::CalcIOTypes()
@@ -298,10 +238,6 @@ const std::string SGVec4::IN_Y  = "Y";
 const std::string SGVec4::IN_Z  = "Z";
 const std::string SGVec4::IN_W  = "W";
 const std::string SGVec4::OUT_V = "V";
-const std::string SGVec4::OUT_X = "X";
-const std::string SGVec4::OUT_Y = "Y";
-const std::string SGVec4::OUT_Z = "Z";
-const std::string SGVec4::OUT_W = "W";
 
 SGVec4::SGVec4()
     : SGNode("Vec4")
@@ -311,32 +247,25 @@ SGVec4::SGVec4()
   DefineInput(IN_Z, eSGValueType::Float);
   DefineInput(IN_W, eSGValueType::Float);
   DefineOutput(OUT_V, eSGValueType::Vector3);
-  DefineOutput(OUT_X, eSGValueType::Float);
-  DefineOutput(OUT_Y, eSGValueType::Float);
-  DefineOutput(OUT_Z, eSGValueType::Float);
-  DefineOutput(OUT_W, eSGValueType::Float);
 }
 
 void SGVec4::CalcIOTypes()
 {
   GetOutput(0)->SetValueType(eSGValueType::Vector3);
-  GetOutput(1)->SetValueType(eSGValueType::Float);
-  GetOutput(2)->SetValueType(eSGValueType::Float);
-  GetOutput(3)->SetValueType(eSGValueType::Float);
-  GetOutput(4)->SetValueType(eSGValueType::Float);
 }
 
 /* *********************************************************/
 /*     Decompose Vec 2                                     */
 /* *********************************************************/
 
+const std::string SGDecomposeVec2::IN_V = "V";
 const std::string SGDecomposeVec2::OUT_X = "X";
 const std::string SGDecomposeVec2::OUT_Y = "Y";
 
 SGDecomposeVec2::SGDecomposeVec2()
 : SGNode("Decompose Vec2")
 {
-  DefineInput("V", eSGValueType::Vector2);
+  DefineInput(IN_V, eSGValueType::Vector2);
   DefineOutput(OUT_X, eSGValueType::Float);
   DefineOutput(OUT_Y, eSGValueType::Float);
 }
@@ -346,6 +275,63 @@ void SGDecomposeVec2::CalcIOTypes()
   GetOutput(0)->SetValueType(eSGValueType::Float);
   GetOutput(1)->SetValueType(eSGValueType::Float);
 }
+
+
+/* *********************************************************/
+/*     Decompose Vec 3                                     */
+/* *********************************************************/
+
+const std::string SGDecomposeVec3::IN_V = "V";
+const std::string SGDecomposeVec3::OUT_X = "X";
+const std::string SGDecomposeVec3::OUT_Y = "Y";
+const std::string SGDecomposeVec3::OUT_Z = "Z";
+
+SGDecomposeVec3::SGDecomposeVec3()
+    : SGNode("Decompose Vec3")
+{
+  DefineInput(IN_V, eSGValueType::Vector2);
+  DefineOutput(OUT_X, eSGValueType::Float);
+  DefineOutput(OUT_Y, eSGValueType::Float);
+  DefineOutput(OUT_Z, eSGValueType::Float);
+}
+
+void SGDecomposeVec3::CalcIOTypes()
+{
+  GetOutput(0)->SetValueType(eSGValueType::Float);
+  GetOutput(1)->SetValueType(eSGValueType::Float);
+  GetOutput(2)->SetValueType(eSGValueType::Float);
+}
+
+
+/* *********************************************************/
+/*     Decompose Vec 4                                     */
+/* *********************************************************/
+
+const std::string SGDecomposeVec4::IN_V = "V";
+const std::string SGDecomposeVec4::OUT_X = "X";
+const std::string SGDecomposeVec4::OUT_Y = "Y";
+const std::string SGDecomposeVec4::OUT_Z = "Z";
+const std::string SGDecomposeVec4::OUT_W = "W";
+
+SGDecomposeVec4::SGDecomposeVec4()
+    : SGNode("Decompose Vec4")
+{
+  DefineInput(IN_V, eSGValueType::Vector2);
+  DefineOutput(OUT_X, eSGValueType::Float);
+  DefineOutput(OUT_Y, eSGValueType::Float);
+  DefineOutput(OUT_Z, eSGValueType::Float);
+  DefineOutput(OUT_W, eSGValueType::Float);
+}
+
+void SGDecomposeVec4::CalcIOTypes()
+{
+  GetOutput(0)->SetValueType(eSGValueType::Float);
+  GetOutput(1)->SetValueType(eSGValueType::Float);
+  GetOutput(2)->SetValueType(eSGValueType::Float);
+  GetOutput(3)->SetValueType(eSGValueType::Float);
+}
+
+
 
 
 /* *********************************************************/

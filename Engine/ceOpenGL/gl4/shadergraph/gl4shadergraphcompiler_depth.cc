@@ -2,31 +2,61 @@
 
 #include <ceOpenGL/gl4/shadergraph/gl4shadergraphcompiler.hh>
 #include <ceCore/graphics/evertexstream.hh>
+#include <ceCore/graphics/shadergraph/sgnodes.hh>
+#include <algorithm>
 
 namespace ce::opengl
 {
-
-
+std::string stream_name(eVertexStream stream);
+std::string get_gl_type(eSGValueType type);
 
 std::string GL4ShaderGraphCompiler::GenerateDepth_Vert()
 {
-  std::string src;
+  std::string                src;
+  std::vector<SGNodeInput *> inputs;
+  inputs.push_back(m_shaderGraph->GetDiffuseInput());
+  std::vector<SGNode *>      nodes   = ScanNeededVariables(inputs);
+  std::vector<StreamInput> streams = FindStreams(nodes);
 
 
-
-  bool needUVs = m_shaderGraph->GetAlphaDiscard_Func() != eCF_Always && m_shaderGraph->GetAlphaDiscard_Func() != eCF_Never;
+  bool needUVs =
+           m_shaderGraph->GetAlphaDiscard_Func() != eCF_Always && m_shaderGraph->GetAlphaDiscard_Func() != eCF_Never;
 
   src += "#version 330\n";
   src += "\n";
   src += "layout (location = " + std::to_string(eVS_Vertices) + ") in vec4 ce_Position;\n";
 
+  for (const auto &stream: streams)
+  {
+    if (stream.Stream != eVS_Vertices)
+    {
+      src += "layout (location = " + std::to_string(stream.Stream) + ") " +
+             "in " + get_gl_type(stream.Type) + " ce_" + stream_name(stream.Stream) + ";\n";
+    }
+  }
+
   src += "\n";
   src += "uniform mat4 ce_ModelViewProjectionMatrix;\n";
   src += "\n";
+  for (const auto &stream: streams)
+  {
+    if (stream.Stream != eVS_Vertices)
+    {
+      src += "out " + get_gl_type(stream.Type) + " ce_vs_out_" + stream_name(stream.Stream) + ";\n";
+    }
+  }
   src += "\n";
   src += "void main ()\n";
   src += "{\n";
   src += "  gl_Position = ce_ModelViewProjectionMatrix * ce_Position;\n";
+
+  for (const auto &stream: streams)
+  {
+    if (stream.Stream != eVS_Vertices)
+    {
+      src += "  ce_vs_out_" + stream_name(stream.Stream) + " = ce_" + stream_name(stream.Stream) + ";\n";
+    }
+  }
   src += "}\n";
 
 
@@ -43,35 +73,39 @@ std::string GL4ShaderGraphCompiler::GenerateDepth_Geom()
 }
 
 static std::string CompareOperator[] = {
-  std::string("<"),
-  std::string("<="),
-  std::string(">"),
-  std::string(">="),
-  std::string("=="),
-  std::string("!="),
-  std::string(""),
-  std::string(""),
+    std::string("<"),
+    std::string("<="),
+    std::string(">"),
+    std::string(">="),
+    std::string("=="),
+    std::string("!="),
+    std::string(""),
+    std::string(""),
 };
 
 std::string GL4ShaderGraphCompiler::GenerateDepth_Frag()
 {
-  std::vector<SGNodeInput*> inputs;
+  std::vector<SGNodeInput *> inputs;
   inputs.push_back(m_shaderGraph->GetDiffuseInput());
-  std::vector<SGNode*> nodes = ScanNeededVariables(inputs);
-
-
+  std::vector<SGNode *> nodes = ScanNeededVariables(inputs);
+  std::vector<StreamInput> streams = FindStreams(nodes);
 
 
   std::string src;
-  bool needAlphaDiscard = m_shaderGraph->GetAlphaDiscard_Func() != eCF_Always && m_shaderGraph->GetAlphaDiscard_Func() != eCF_Never;
+  bool        needAlphaDiscard = m_shaderGraph->GetAlphaDiscard_Func() != eCF_Always &&
+                                 m_shaderGraph->GetAlphaDiscard_Func() != eCF_Never;
 
   src += "#version 330\n";
   src += "layout (location = 0) out vec4 ce_FragColor;\n";
   src += "\n";
-  if (needAlphaDiscard)
+  for (const auto &stream: streams)
   {
-    src += "in vec2 outVS_TexCoord;\n";
+    if (stream.Stream != eVS_Vertices)
+    {
+      src += "out " + get_gl_type(stream.Type) + " ce_vs_out_" + stream_name(stream.Stream) + ";\n";
+    }
   }
+
   src += "\n";
   src += "void main ()\n";
   src += "{\n";
@@ -83,13 +117,13 @@ std::string GL4ShaderGraphCompiler::GenerateDepth_Frag()
     return src;
   }
 
-  for (auto node : nodes)
+  for (auto node: nodes)
   {
-    src += "  " + m_nodeVariables[node].Decl + "\n";
+    src += "  " + m_nodeVariables[node].StagedDecl("ce_vs_out_") + "\n";
   }
 
-  // calculte the diffuse value
-  auto diffuse = GetInputValue(m_shaderGraph->GetDiffuseInput());
+  // calculate the diffuse value
+  auto        diffuse = GetInputValue(m_shaderGraph->GetDiffuseInput());
   std::string diffuseVar;
   if (diffuse.Type == eSGValueType::Float)
   {
@@ -106,16 +140,17 @@ std::string GL4ShaderGraphCompiler::GenerateDepth_Frag()
     diffuseVar = diffuse.Name;
   }
 
-  
+
   if (needAlphaDiscard)
   {
-    src += "  if (" + diffuseVar + ".a " + CompareOperator[m_shaderGraph->GetAlphaDiscard_Func()] + " " + std::to_string(m_shaderGraph->GetAlphaDiscard_Threshold()) + ")\n";
+    src += "  if (" + diffuseVar + ".a " + CompareOperator[m_shaderGraph->GetAlphaDiscard_Func()] + " " +
+           std::to_string(m_shaderGraph->GetAlphaDiscard_Threshold()) + ")\n";
     src += "  {\n";
     src += "    discard;\n";
     src += "  }\n";
   }
 
-  src += "  ce_FragColor = "+diffuseVar+"; \n";
+  src += "  ce_FragColor = " + diffuseVar + "; \n";
   src += "}\n";
 
   return src;
@@ -123,7 +158,7 @@ std::string GL4ShaderGraphCompiler::GenerateDepth_Frag()
 }
 
 
-void GL4ShaderGraphCompiler::GenerateDepth(GL4ShaderGraphCompiler::SourceBundle& bundle)
+void GL4ShaderGraphCompiler::GenerateDepth(GL4ShaderGraphCompiler::SourceBundle &bundle)
 {
 
   bundle.vert = GenerateDepth_Vert();

@@ -30,8 +30,6 @@ class CE_CORE_API SGConstVec2 : public CE_SUPER(SGNode)
 CE_CLASS_GEN;
 public:
   const static std::string OUT_V;
-  const static std::string OUT_X;
-  const static std::string OUT_Y;
 
   SGConstVec2();
   ~SGConstVec2() override = default;
@@ -48,9 +46,6 @@ class CE_CORE_API SGConstVec3 : public CE_SUPER(SGNode)
 CE_CLASS_GEN;
 public:
   const static std::string OUT_V;
-  const static std::string OUT_X;
-  const static std::string OUT_Y;
-  const static std::string OUT_Z;
 
   SGConstVec3();
   ~SGConstVec3() override = default;
@@ -67,10 +62,6 @@ class CE_CORE_API SGConstVec4 : public CE_SUPER(SGNode)
 CE_CLASS_GEN;
 public:
   const static std::string OUT_V;
-  const static std::string OUT_X;
-  const static std::string OUT_Y;
-  const static std::string OUT_Z;
-  const static std::string OUT_W;
 
   SGConstVec4();
   ~SGConstVec4() override = default;
@@ -87,9 +78,6 @@ class CE_CORE_API SGConstColor3 : public CE_SUPER(SGNode)
 CE_CLASS_GEN;
 public:
   const static std::string OUT_V;
-  const static std::string OUT_R;
-  const static std::string OUT_G;
-  const static std::string OUT_B;
 
   SGConstColor3();
   ~SGConstColor3() override = default;
@@ -105,10 +93,6 @@ class CE_CORE_API SGConstColor4 : public CE_SUPER(SGNode)
 CE_CLASS_GEN;
 public:
   const static std::string OUT_V;
-  const static std::string OUT_R;
-  const static std::string OUT_G;
-  const static std::string OUT_B;
-  const static std::string OUT_A;
 
   SGConstColor4();
   ~SGConstColor4() override = default;
@@ -127,8 +111,6 @@ public:
   const static std::string IN_X;
   const static std::string IN_Y;
   const static std::string OUT_V;
-  const static std::string OUT_X;
-  const static std::string OUT_Y;
 
   SGVec2();
   ~SGVec2() override = default;
@@ -146,9 +128,6 @@ public:
   const static std::string IN_Y;
   const static std::string IN_Z;
   const static std::string OUT_V;
-  const static std::string OUT_X;
-  const static std::string OUT_Y;
-  const static std::string OUT_Z;
 
   SGVec3();
   ~SGVec3() override = default;
@@ -167,10 +146,6 @@ public:
   const static std::string IN_Z;
   const static std::string IN_W;
   const static std::string OUT_V;
-  const static std::string OUT_X;
-  const static std::string OUT_Y;
-  const static std::string OUT_Z;
-  const static std::string OUT_W;
 
   SGVec4();
   ~SGVec4() override = default;
@@ -184,11 +159,51 @@ class CE_CORE_API SGDecomposeVec2 : public CE_SUPER(SGNode)
 {
 CE_CLASS_GEN;
 public:
+  const static std::string IN_V;
   const static std::string OUT_X;
   const static std::string OUT_Y;
 
   SGDecomposeVec2();
   ~SGDecomposeVec2() override = default;
+
+  void CalcIOTypes() override;
+
+};
+
+
+
+CE_CLASS()
+class CE_CORE_API SGDecomposeVec3 : public CE_SUPER(SGNode)
+{
+CE_CLASS_GEN;
+public:
+  const static std::string IN_V;
+  const static std::string OUT_X;
+  const static std::string OUT_Y;
+  const static std::string OUT_Z;
+
+  SGDecomposeVec3();
+  ~SGDecomposeVec3() override = default;
+
+  void CalcIOTypes() override;
+
+};
+
+
+
+CE_CLASS()
+class CE_CORE_API SGDecomposeVec4 : public CE_SUPER(SGNode)
+{
+CE_CLASS_GEN;
+public:
+  const static std::string IN_V;
+  const static std::string OUT_X;
+  const static std::string OUT_Y;
+  const static std::string OUT_Z;
+  const static std::string OUT_W;
+
+  SGDecomposeVec4();
+  ~SGDecomposeVec4() override = default;
 
   void CalcIOTypes() override;
 

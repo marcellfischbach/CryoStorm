@@ -254,6 +254,8 @@ struct CE_CORE_API iObject
   }
   CE_NODISCARD virtual const void *QueryClass(const Class *clazz) const;
 
+  template<typename T>
+  bool IsInstanceOf() const;
 
 };
 
@@ -590,6 +592,16 @@ T *csNewClassInstance(const Class *clazz)
   return reinterpret_cast<T *>(clazz->CreateInstance());
 }
 
+template<typename T>
+bool InstanceOf(const iObject *obj)
+{
+  if (!obj)
+  {
+    return false;
+  }
+  return obj->GetClass()->IsInstanceOf<T>();
+}
+
 
 class CE_CORE_API iObjectClass : public Class
 {
@@ -601,6 +613,14 @@ public:
   virtual ce::iObject *CreateInstance() const;
 
 };
+
+
+template<typename T>
+bool iObject::IsInstanceOf() const
+{
+  return GetClass()->IsInstanceOf<T>();
+}
+
 #ifdef CE_JAVA
 
 }
