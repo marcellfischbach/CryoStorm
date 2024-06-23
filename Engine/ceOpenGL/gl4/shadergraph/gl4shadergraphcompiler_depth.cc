@@ -18,6 +18,9 @@ std::string GL4ShaderGraphCompiler::GenerateDepth_Vert()
   std::vector<SGNode *>      nodes   = ScanNeededVariables(inputs);
   std::vector<StreamInput> streams = FindStreams(nodes);
 
+  std::vector<SGNode*> noInput;
+  std::vector<ResourceInput> resources = FindResources(noInput);
+
 
   bool needUVs =
            m_shaderGraph->GetAlphaDiscard_Func() != eCF_Always && m_shaderGraph->GetAlphaDiscard_Func() != eCF_Never;
@@ -34,9 +37,14 @@ std::string GL4ShaderGraphCompiler::GenerateDepth_Vert()
              "in " + get_gl_type(stream.Type) + " ce_" + stream_name(stream.Stream) + ";\n";
     }
   }
-
   src += "\n";
+
   src += "uniform mat4 ce_ModelViewProjectionMatrix;\n";
+  for (const auto &resource : resources)
+  {
+    src += "uniform " + resource.Type + " ce_" + resource.Name + ";\n";
+  }
+
   src += "\n";
   for (const auto &stream: streams)
   {
@@ -89,6 +97,7 @@ std::string GL4ShaderGraphCompiler::GenerateDepth_Frag()
   inputs.push_back(m_shaderGraph->GetDiffuseInput());
   std::vector<SGNode *> nodes = ScanNeededVariables(inputs);
   std::vector<StreamInput> streams = FindStreams(nodes);
+  std::vector<ResourceInput> resources = FindResources(nodes);
 
 
   std::string src;
@@ -98,13 +107,21 @@ std::string GL4ShaderGraphCompiler::GenerateDepth_Frag()
   src += "#version 330\n";
   src += "layout (location = 0) out vec4 ce_FragColor;\n";
   src += "\n";
+  for (const auto &resource : resources)
+  {
+    src += "uniform " + resource.Type + " ce_" + resource.Name + ";\n";
+  }
+  src += "\n";
   for (const auto &stream: streams)
   {
     if (stream.Stream != eVS_Vertices)
     {
-      src += "out " + get_gl_type(stream.Type) + " ce_vs_out_" + stream_name(stream.Stream) + ";\n";
+      src += "in " + get_gl_type(stream.Type) + " ce_vs_out_" + stream_name(stream.Stream) + ";\n";
     }
   }
+
+
+
 
   src += "\n";
   src += "void main ()\n";
@@ -119,7 +136,11 @@ std::string GL4ShaderGraphCompiler::GenerateDepth_Frag()
 
   for (auto node: nodes)
   {
-    src += "  " + m_nodeVariables[node].StagedDecl("ce_vs_out_") + "\n";
+    const std::string &decl = m_nodeVariables[node].StagedDecl("ce_vs_out_");
+    if (!decl.empty())
+    {
+      src += "  " + decl + "\n";
+    }
   }
 
   // calculate the diffuse value

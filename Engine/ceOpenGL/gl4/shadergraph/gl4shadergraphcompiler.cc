@@ -22,10 +22,16 @@ Material* GL4ShaderGraphCompiler::Compile(ce::ShaderGraph* shaderGraph)
   {
     return nullptr;
   }
+  if (!VerifyResources())
+  {
+    return nullptr;
+  }
+
+  // TODO: time for code optimization
 
   LinearizeNodes();
 
-  if (!Verify())
+  if (!VerifyNodesType())
   {
     return nullptr;
   }
@@ -41,7 +47,7 @@ Material* GL4ShaderGraphCompiler::Compile(ce::ShaderGraph* shaderGraph)
   material->SetShader(eRP_Depth, depthShader);
 
   m_errorString = "Unknown error";
-  return nullptr;
+  return material;
 }
 
 const std::string& GL4ShaderGraphCompiler::GetError() const
@@ -150,22 +156,22 @@ static std::string types_string(eSGValueType types)
   return res;
 }
 
-bool GL4ShaderGraphCompiler::Verify()
+bool GL4ShaderGraphCompiler::VerifyNodesType()
 {
   // we can calc the io types and check the output to input type in one step 
   // because all output values, that are needed for the inputs,  are check already
   // because the nodes are linearized already
   for (auto node : m_linearizedNodes)
   {
-    if (!Verify(node))
+    if (!VerifyNodeType(node))
     {
       return false;
     }
   }
-  return Verify(m_shaderGraph);
+  return VerifyNodeType(m_shaderGraph);
 }
 
-bool GL4ShaderGraphCompiler::Verify(SGNode* node)
+bool GL4ShaderGraphCompiler::VerifyNodeType(SGNode* node)
 {
   node->CalcIOTypes();
 
@@ -190,6 +196,31 @@ bool GL4ShaderGraphCompiler::Verify(SGNode* node)
     }
   }
 
+  return true;
+}
+
+bool GL4ShaderGraphCompiler::VerifyResources()
+{
+  std::map<std::string, SGResourceNode*> resources;
+  for (size_t i = 0, in=m_shaderGraph->GetNumberOfNodes(); i<in; ++i)
+  {
+    SGNode *node = m_shaderGraph->GetNode(i);
+    SGResourceNode *resourceNode = node->Query<SGResourceNode>();
+    if (resourceNode)
+    {
+      auto it = resources.find(resourceNode->GetResourceName());
+      if (it != resources.end())
+      {
+        if (it->second->GetClass() != resourceNode->GetClass())
+        {
+          m_errorString = "Resource [" + resourceNode->GetResourceName() + "] " + resourceNode->GetClass()->GetName()
+              + " previously declared as " + it->second->GetClass()->GetName();
+          return false;
+        }
+      }
+      resources[resourceNode->GetResourceName()] = resourceNode;
+    }
+  }
   return true;
 }
 

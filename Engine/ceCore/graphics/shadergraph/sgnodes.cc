@@ -189,12 +189,12 @@ SGVec2::SGVec2()
 {
   DefineInput(IN_X, eSGValueType::Float);
   DefineInput(IN_Y, eSGValueType::Float);
-  DefineOutput(OUT_V, eSGValueType::Vector3);
+  DefineOutput(OUT_V, eSGValueType::Vector2);
 }
 
 void SGVec2::CalcIOTypes()
 {
-  GetOutput(0)->SetValueType(eSGValueType::Vector3);
+  GetOutput(0)->SetValueType(eSGValueType::Vector2);
 }
 
 
@@ -258,12 +258,12 @@ void SGVec4::CalcIOTypes()
 /*     Decompose Vec 2                                     */
 /* *********************************************************/
 
-const std::string SGDecomposeVec2::IN_V = "V";
+const std::string SGDecomposeVec2::IN_V  = "V";
 const std::string SGDecomposeVec2::OUT_X = "X";
 const std::string SGDecomposeVec2::OUT_Y = "Y";
 
 SGDecomposeVec2::SGDecomposeVec2()
-: SGNode("Decompose Vec2")
+    : SGNode("Decompose Vec2")
 {
   DefineInput(IN_V, eSGValueType::Vector2);
   DefineOutput(OUT_X, eSGValueType::Float);
@@ -281,7 +281,7 @@ void SGDecomposeVec2::CalcIOTypes()
 /*     Decompose Vec 3                                     */
 /* *********************************************************/
 
-const std::string SGDecomposeVec3::IN_V = "V";
+const std::string SGDecomposeVec3::IN_V  = "V";
 const std::string SGDecomposeVec3::OUT_X = "X";
 const std::string SGDecomposeVec3::OUT_Y = "Y";
 const std::string SGDecomposeVec3::OUT_Z = "Z";
@@ -307,7 +307,7 @@ void SGDecomposeVec3::CalcIOTypes()
 /*     Decompose Vec 4                                     */
 /* *********************************************************/
 
-const std::string SGDecomposeVec4::IN_V = "V";
+const std::string SGDecomposeVec4::IN_V  = "V";
 const std::string SGDecomposeVec4::OUT_X = "X";
 const std::string SGDecomposeVec4::OUT_Y = "Y";
 const std::string SGDecomposeVec4::OUT_Z = "Z";
@@ -416,6 +416,55 @@ SGTexCoord::SGTexCoord()
     : SGStreamNode("TexCoord", eVS_UV, eSGValueType::Vector2)
 {
 
+}
+
+
+SGResourceNode::SGResourceNode(const std::string &name, eMaterialAttributeType matType)
+    : SGNode(name)
+    , m_matType(matType)
+{
+
+}
+
+
+void SGResourceNode::SetResourceName(const std::string &name)
+{
+  m_resourceName = name;
+}
+
+const std::string &SGResourceNode::GetResourceName() const
+{
+  return m_resourceName;
+}
+
+eMaterialAttributeType SGResourceNode::GetMatType() const
+{
+  return m_matType;
+}
+
+
+SGResourceFloat::SGResourceFloat()
+: SGResourceNode("Resource Float", eMAT_Float)
+{
+  DefineOutput("V", eSGValueType::Float);
+}
+
+void SGResourceFloat::CalcIOTypes()
+{
+  GetOutput(0)->SetValueType(eSGValueType::Float);
+}
+
+SGTexture2D::SGTexture2D()
+    : SGResourceNode("Texture2D", eMAT_Texture)
+{
+  DefineInput("UV", eSGValueType::Vector2);
+  DefineOutput("Color", eSGValueType::Vector4);
+}
+
+
+void SGTexture2D::CalcIOTypes()
+{
+  GetOutput(0)->SetValueType(eSGValueType::Vector4);
 }
 
 

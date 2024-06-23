@@ -947,6 +947,7 @@ ce::iMaterial *create_sg_material ()
     }
   }
 
+  return nullptr;
 }
 
 bool Game::Initialize(ce::Engine *engine)
@@ -954,47 +955,24 @@ bool Game::Initialize(ce::Engine *engine)
   auto sg = new ce::ShaderGraph();
   sg->SetAlphaDiscard(0.5f, ce::eCF_Never);
 
-  auto colorA= sg->Add<ce::SGConstColor4>("colorA");
-  auto colorB = sg->Add<ce::SGConstColor4>("colorB");
-  auto colorC = sg->Add<ce::SGConstColor4>("colorC");
-  auto colorD = sg->Add<ce::SGConstColor4>("colorD");
-  auto vec4 = sg->Add<ce::SGVec4>("vec4");
 
-  auto add = sg->Add<ce::SGAdd>("add");
-  auto sub = sg->Add<ce::SGSub>("sub");
-  auto mul = sg->Add<ce::SGMul>("mul");
 
   auto uv = sg->Add<ce::SGTexCoord>("uv");
-
-  auto vec2 = sg->Add<ce::SGConstVec2>("vec2");
   auto dVec2 = sg->Add<ce::SGDecomposeVec2>("dVec2");
+  auto vec2 = sg->Add<ce::SGVec2>("vec2");
+  auto texDiffuse = sg->Add<ce::SGTexture2D>("Diffuse");
+  texDiffuse->SetResourceName("Diffuse");
 
-  vec2->SetValue(1.0f, 0.5f);
-
-
-  colorA->SetValue(0.5f, 0.25f, 0.125f, 1.0f);
-  colorB->SetValue(0.5f, 0.25f, 0.125f, 1.0f);
-  colorC->SetValue(0.25f, 0.5f, 0.25f, 1.0f);
-  colorD->SetValue(0.75, 0.5f, 0.25f, 1.0f);
-
-  add->Bind(0, colorA, 1);
-  add->Bind(1, colorB, 2);
-
-  sub->Bind(0, colorC, 3);
-  sub->Bind(1, colorD, 4);
-
-  mul->Bind(0, add);
-  mul->Bind(1, sub);
 
   dVec2->Bind(0, uv);
 
-  vec4->Bind(0, dVec2, 0);
-  vec4->Bind(1, dVec2, 1);
-  vec4->Bind(2, colorC, 3);
-  vec4->Bind(3, colorD, 4);
+  vec2->Bind(0, dVec2, 1);
+  vec2->Bind(1, dVec2, 0);
 
 
-  sg->BindDiffuse(vec4);
+  texDiffuse->Bind(0, vec2);
+
+  sg->BindDiffuse(texDiffuse);
 
 
   ce::iShaderGraphCompilerFactory *compilerFactory = ce::ObjectRegistry::Get<ce::iShaderGraphCompilerFactory>();

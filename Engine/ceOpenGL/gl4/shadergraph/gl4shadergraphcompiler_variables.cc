@@ -85,36 +85,89 @@ std::string stream_name(eVertexStream stream)
   return "";
 }
 
+void GL4ShaderGraphCompiler::AddStream(std::vector<StreamInput> &streams,
+                                       ce::eVertexStream stream,
+                                       ce::eSGValueType type)
+{
+  for (auto it = streams.begin(); it != streams.end(); it++)
+  {
+    if (it->Stream == stream)
+    {
+      return;
+    }
+  }
+  streams.push_back({stream, type});
+
+}
+
 std::vector<GL4ShaderGraphCompiler::StreamInput> GL4ShaderGraphCompiler::FindStreams(std::vector<SGNode *> &nodes)
 {
 
   std::vector<StreamInput> streams;
   for (auto                node: nodes)
   {
-    auto *streamNode = node->Query<SGStreamNode>();
+    auto streamNode = node->Query<SGStreamNode>();
     if (streamNode)
     {
-      bool      alreadyContaining = false;
-      for (auto it                = streams.begin(); it != streams.end(); it++)
+      AddStream(streams, streamNode->GetStream(), streamNode->GetOutput()->GetValueType());
+    }
+    auto texture2DNode = node->Query<SGTexture2D>();
+    if (texture2DNode)
+    {
+      if (!texture2DNode->GetInput(0)->GetSource())
       {
-        if (it->Stream == streamNode->GetStream())
-        {
-          alreadyContaining = true;
-          break;
-        }
-      }
-      if (!alreadyContaining)
-      {
-        streams.push_back({streamNode->GetStream(), streamNode->GetOutput()->GetValueType()});
+        AddStream(streams, eVS_UV, eSGValueType::Vector2);
       }
     }
   }
 
-  std::sort(streams.begin(), streams.end(), [](StreamInput &a, StreamInput &b) -> bool
-  {
+  std::sort(streams.begin(), streams.end(), [](StreamInput &a, StreamInput &b) -> bool {
     return a.Stream < b.Stream;
   });
   return streams;
+}
+
+void GL4ShaderGraphCompiler::AddResource(std::vector<ResourceInput> &resources,
+                                         const std::string &resourceName,
+                                         const std::string &resourceType,
+                                         ce::eMaterialAttributeType matType)
+{
+  for (auto it = resources.begin(); it != resources.end(); it++)
+  {
+    if (it->Name == resourceName)
+    {
+      return;
+    }
+  }
+
+  resources.push_back({resourceName, resourceType, matType});
+}
+
+std::vector<GL4ShaderGraphCompiler::ResourceInput> GL4ShaderGraphCompiler::FindResources(std::vector<SGNode *> &nodes)
+{
+  std::vector<ResourceInput> resources;
+  for (auto                  node: nodes)
+  {
+    auto resourceNode = node->Query<SGResourceNode>();
+    if (resourceNode)
+    {
+      if (resourceNode->IsInstanceOf<SGTexture2D>())
+      {
+        AddResource(resources, resourceNode->GetResourceName(), "sampler2D", resourceNode->GetMatType());
+      }
+      else
+      {
+        AddResource(resources,
+                    resourceNode->GetResourceName(),
+                    get_gl_type(resourceNode->GetOutput()->GetValueType()),
+                    resourceNode->GetMatType());
+      }
+    }
+  }
+  std::sort(resources.begin(), resources.end(), [](ResourceInput &a, ResourceInput &b) -> bool {
+    return a.Name.compare(b.Name) < 0;
+  });
+  return resources;
 }
 
 
@@ -191,6 +244,33 @@ void GL4ShaderGraphCompiler::GenerateVariable(SGNode *node)
         eSGValueType::Vector4,
         false
     };
+  }
+  else if (cls->IsInstanceOf<SGVec2>())
+  {
+    std::string v      = VarName();
+    auto        inputX = GetInputValue(node->GetInput(0));
+    auto        inputY = GetInputValue(node->GetInput(1));
+
+    if (inputX.Name == inputY.Name  && inputX.PostFix != "")
+    {
+      m_nodeVariables[node] = {
+          "vec2 " + v + " = " + inputX.Name + "." + inputX.PostFix + inputY.PostFix + ";",
+          v,
+          eSGValueType::Vector2,
+          false
+      };
+
+    }
+    else
+    {
+      m_nodeVariables[node] = {
+          "vec2 " + v + " = vec2(" + inputX.FullQualified() + ", " + inputY.FullQualified() + ");",
+          v,
+          eSGValueType::Vector2,
+          false
+      };
+    }
+
   }
   else if (cls->IsInstanceOf<SGVec3>())
   {
@@ -340,6 +420,37 @@ void GL4ShaderGraphCompiler::GenerateVariable(SGNode *node)
         true
     };
   }
+  else if (cls->IsInstanceOf<SGResourceNode>())
+  {
+    if (cls->IsInstanceOf<SGTexture2D>())
+    {
+      auto        texture2D = node->Query<SGTexture2D>();
+      std::string v         = VarName();
+      SGNodeInput *uvInput  = texture2D->GetInput(0);
+      std::string uv        = uvInput->GetSource()
+                              ? GetInputValue(uvInput).FullQualified()
+                              : ("#STREAM-STAGE#" + stream_name(eVertexStream::eVS_UV));
+
+      m_nodeVariables[node] = {
+          "vec4 " + v + " = texture(ce_" + texture2D->GetResourceName() + ", " + uv + ");",
+          v,
+          texture2D->GetOutput(0)->GetValueType(),
+          false
+      };
+
+
+    }
+    else
+    {
+      auto resource = node->Query<SGResourceNode>();
+      m_nodeVariables[node] = {
+          "",
+          "ce_" + resource->GetResourceName(),
+          resource->GetOutput(0)->GetValueType(),
+          false
+      };
+    }
+  }
   else if (cls->IsInstanceOf<SGBinaryOperator>())
   {
     auto        bin    = node->Query<SGBinaryOperator>();
@@ -449,7 +560,7 @@ void GL4ShaderGraphCompiler::GenerateVariable(SGNodeOutput *output)
   }
 
 
-  m_outputVariables[output] =  { name, postfix, type, stream };
+  m_outputVariables[output] = {name, postfix, type, stream};
 }
 
 
@@ -471,7 +582,6 @@ GL4ShaderGraphCompiler::OutputVariable GL4ShaderGraphCompiler::GetInputValue(SGN
   };
 }
 
-
 std::string GL4ShaderGraphCompiler::VarName()
 {
   size_t idx = m_nextVariableName;
@@ -481,10 +591,11 @@ std::string GL4ShaderGraphCompiler::VarName()
 }
 
 
-static void string_replace(std::string& str, const std::string& oldStr, const std::string& newStr)
+static void string_replace(std::string &str, const std::string &oldStr, const std::string &newStr)
 {
   std::string::size_type pos = 0u;
-  while((pos = str.find(oldStr, pos)) != std::string::npos){
+  while ((pos = str.find(oldStr, pos)) != std::string::npos)
+  {
     str.replace(pos, oldStr.length(), newStr);
     pos += newStr.length();
   }
@@ -505,7 +616,7 @@ std::string GL4ShaderGraphCompiler::OutputVariable::FullQualified()
   return StagedName() + "." + PostFix;
 }
 
-std::string GL4ShaderGraphCompiler::OutputVariable::StagedName ()
+std::string GL4ShaderGraphCompiler::OutputVariable::StagedName()
 {
   if (Stream)
   {

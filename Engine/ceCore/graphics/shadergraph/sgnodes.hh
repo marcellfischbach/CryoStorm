@@ -3,6 +3,7 @@
 
 #include <ceCore/coreexport.hh>
 #include <ceCore/graphics/shadergraph/sgnode.hh>
+#include <ceCore/graphics/material/ematerialattributetype.hh>
 #include <ceCore/graphics/evertexstream.hh>
 
 namespace ce
@@ -317,6 +318,52 @@ CE_CLASS_GEN;
 public:
   SGTexCoord();
   ~SGTexCoord() override = default;
+};
+
+CE_CLASS()
+class CE_CORE_API SGResourceNode : public CE_SUPER(SGNode)
+{
+  CE_CLASS_GEN;
+protected:
+  SGResourceNode(const std::string &name, eMaterialAttributeType matType);
+
+public:
+  ~SGResourceNode() override = default;
+
+  void SetResourceName (const std::string &name);
+  const std::string &GetResourceName () const;
+
+  eMaterialAttributeType GetMatType () const;
+
+private:
+  eMaterialAttributeType m_matType;
+  std::string m_resourceName;
+
+};
+
+CE_CLASS()
+class CE_CORE_API SGResourceFloat : public CE_SUPER(SGResourceNode)
+{
+CE_CLASS_GEN;
+public:
+  SGResourceFloat();
+  ~SGResourceFloat() override = default;
+
+  void CalcIOTypes() override;
+
+};
+
+
+CE_CLASS()
+class CE_CORE_API SGTexture2D : public CE_SUPER(SGResourceNode)
+{
+  CE_CLASS_GEN;
+public:
+  SGTexture2D();
+  ~SGTexture2D() override = default;
+
+  void CalcIOTypes() override;
+
 };
 
 

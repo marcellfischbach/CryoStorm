@@ -8,6 +8,7 @@
 
 #include <ceCore/graphics/shadergraph/ishadergraphcompiler.hh>
 #include <ceCore/graphics/shadergraph/sgnode.hh>
+#include <ceCore/graphics/shadergraph/sgnodes.hh>
 #include <ceCore/graphics/evertexstream.hh>
 
 
@@ -49,20 +50,27 @@ private:
 
   struct OutputVariable
   {
-    std::string Name;
-    std::string PostFix;
+    std::string  Name;
+    std::string  PostFix;
     eSGValueType Type;
     bool         Stream;
 
     std::string FullQualified();
 
-    std::string StagedName ();
+    std::string StagedName();
   };
 
   struct StreamInput
   {
     eVertexStream Stream;
     eSGValueType  Type;
+  };
+
+  struct ResourceInput
+  {
+    std::string Name;
+    std::string Type;
+    eMaterialAttributeType MatType;
   };
 
 
@@ -73,11 +81,15 @@ private:
 
   bool CheckForCycle();
   void LinearizeNodes();
-  bool Verify();
-  bool Verify(SGNode *node);
+  bool VerifyNodesType();
+  bool VerifyNodeType(SGNode *node);
+  bool VerifyResources();
   void ScanNeededVariables(std::set<SGNode *> &nodes, SGNodeInput *input);
   std::vector<SGNode *> ScanNeededVariables(std::vector<SGNodeInput *> inputs);
+  void AddStream(std::vector<StreamInput>&streams, eVertexStream stream, eSGValueType type);
   std::vector<StreamInput> FindStreams(std::vector<SGNode *> &nodes);
+  void AddResource(std::vector<ResourceInput> &resources, const std::string &resourceName, const std::string &resourceType, eMaterialAttributeType matType);
+  std::vector<ResourceInput> FindResources(std::vector<SGNode *> &nodes);
 
   void GenerateVariables();
   void GenerateVariable(SGNode *node);
@@ -95,6 +107,7 @@ private:
   size_t                                   m_nextVariableName;
   std::map<SGNode *, NodeVariable>         m_nodeVariables;
   std::map<SGNodeOutput *, OutputVariable> m_outputVariables;
+  std::vector<ResourceInput>               m_resources;
 };
 
 
