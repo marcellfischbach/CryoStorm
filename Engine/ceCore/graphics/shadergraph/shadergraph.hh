@@ -3,6 +3,7 @@
 #include <ceCore/coreexport.hh>
 #include <ceCore/class.hh>
 #include <ceCore/graphics/shadergraph/sgnode.hh>
+#include <ceCore/graphics/shadergraph/sgnodes.hh>
 #include <ceCore/graphics/ecomparefunc.hh>
 
 namespace ce
@@ -18,6 +19,7 @@ public:
   ~ShaderGraph() override;
 
   template<typename T>T* Add(const std::string &info = std::string (""));
+  template<typename T>T* AddResource(const std::string &resourceName, const std::string &info = std::string (""));
   void BindDiffuse(SGNode * node, size_t outputIdx = 0);
 
   SGNodeInput* GetDiffuseInput();
@@ -63,6 +65,34 @@ T* ShaderGraph::Add(const std::string &info)
     t->Release();
     return nullptr;
   }
+  node->SetInfo(info);
+  m_nodes.push_back(node);
+  return t;
+}
+
+
+
+template<typename T>
+T* ShaderGraph::AddResource(const std::string &resourceName, const std::string &info)
+{
+
+  if (!T::GetStaticClass()->IsInstanceOf<SGResourceNode>())
+  {
+    return nullptr;
+  }
+  T* t = T::GetStaticClass()->CreateInstance<T>();
+  if (!t)
+  {
+    return nullptr;
+  }
+
+  SGResourceNode* node = t->Query<SGResourceNode>();
+  if (!node)
+  {
+    t->Release();
+    return nullptr;
+  }
+  node->SetResourceName(resourceName);
   node->SetInfo(info);
   m_nodes.push_back(node);
   return t;

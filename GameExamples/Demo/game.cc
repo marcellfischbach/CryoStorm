@@ -958,21 +958,45 @@ bool Game::Initialize(ce::Engine *engine)
 
 
   auto uv = sg->Add<ce::SGTexCoord>("uv");
-  auto dVec2 = sg->Add<ce::SGDecomposeVec2>("dVec2");
-  auto vec2 = sg->Add<ce::SGVec2>("vec2");
-  auto texDiffuse = sg->Add<ce::SGTexture2D>("Diffuse");
-  texDiffuse->SetResourceName("Diffuse");
+  auto texRoughness = sg->AddResource<ce::SGTexture2D>("Roughness", "Roughness");
+  auto texDiffuse = sg->AddResource<ce::SGTexture2D>("Diffuse", "Diffuse");
+  
+  auto texRoughDec = sg->Add<ce::SGDecomposeVec4>();
+  auto texDiffuseDec = sg->Add<ce::SGDecomposeVec4>();
+  
+  auto texRoughVec3 = sg->Add<ce::SGVec3>();
+  auto texDiffuseVec3 = sg->Add<ce::SGVec3>();
+  
+  texRoughDec->Bind(0, texRoughness);
+  texDiffuseDec->Bind(0, texDiffuse);
+  
+  texRoughVec3->Bind(0, texRoughDec, 0);
+  texRoughVec3->Bind(1, texRoughDec, 1);
+  texRoughVec3->Bind(2, texRoughDec, 2);
+
+  texDiffuseVec3->Bind(0, texDiffuseDec, 0);
+  texDiffuseVec3->Bind(1, texDiffuseDec, 1);
+  texDiffuseVec3->Bind(2, texDiffuseDec, 2);
+
+  auto add = sg->Add<ce::SGAdd>();
+  add->Bind(0, texDiffuseVec3);
+  add->Bind(1, texRoughVec3);
 
 
-  dVec2->Bind(0, uv);
+  auto decV3 = sg->Add<ce::SGDecomposeVec3>();
+  decV3->Bind(0, add);
 
-  vec2->Bind(0, dVec2, 1);
-  vec2->Bind(1, dVec2, 0);
+  auto resFloat = sg->AddResource<ce::SGResourceFloat>("Alpha", "Alpha");
+
+  auto vec4 = sg->Add<ce::SGVec4>();
+  vec4->Bind(0, decV3, 0);
+  vec4->Bind(1, decV3, 1);
+  vec4->Bind(2, decV3, 2);
+  vec4->Bind(3, resFloat);
 
 
-  texDiffuse->Bind(0, vec2);
 
-  sg->BindDiffuse(texDiffuse);
+  sg->BindDiffuse(vec4);
 
 
   ce::iShaderGraphCompilerFactory *compilerFactory = ce::ObjectRegistry::Get<ce::iShaderGraphCompilerFactory>();

@@ -251,7 +251,7 @@ void GL4ShaderGraphCompiler::GenerateVariable(SGNode *node)
     auto        inputX = GetInputValue(node->GetInput(0));
     auto        inputY = GetInputValue(node->GetInput(1));
 
-    if (inputX.Name == inputY.Name  && inputX.PostFix != "")
+    if (inputX.Name == inputY.Name && inputX.PostFix != "")
     {
       m_nodeVariables[node] = {
           "vec2 " + v + " = " + inputX.Name + "." + inputX.PostFix + inputY.PostFix + ";",
@@ -422,7 +422,22 @@ void GL4ShaderGraphCompiler::GenerateVariable(SGNode *node)
   }
   else if (cls->IsInstanceOf<SGResourceNode>())
   {
-    if (cls->IsInstanceOf<SGTexture2D>())
+    if (cls->IsInstanceOf<SGTexture1D>())
+    {
+      auto        texture1D = node->Query<SGTexture1D>();
+      std::string v         = VarName();
+      std::string uv        = GetInputValue(texture1D->GetInput(0)).FullQualified();
+
+      m_nodeVariables[node] = {
+          "vec4 " + v + " = texture(ce_" + texture1D->GetResourceName() + ", " + uv + ");",
+          v,
+          texture1D->GetOutput(0)->GetValueType(),
+          false
+      };
+
+
+    }
+    else if (cls->IsInstanceOf<SGTexture2D>())
     {
       auto        texture2D = node->Query<SGTexture2D>();
       std::string v         = VarName();
@@ -440,6 +455,23 @@ void GL4ShaderGraphCompiler::GenerateVariable(SGNode *node)
 
 
     }
+
+    else if (cls->IsInstanceOf<SGTexture3D>())
+    {
+      auto        texture3D = node->Query<SGTexture3D>();
+      std::string v         = VarName();
+      std::string uv        = GetInputValue(texture3D->GetInput(0)).FullQualified();
+
+      m_nodeVariables[node] = {
+          "vec4 " + v + " = texture(ce_" + texture3D->GetResourceName() + ", " + uv + ");",
+          v,
+          texture3D->GetOutput(0)->GetValueType(),
+          false
+      };
+
+
+    }
+
     else
     {
       auto resource = node->Query<SGResourceNode>();

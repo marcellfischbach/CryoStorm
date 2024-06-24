@@ -355,9 +355,22 @@ public:
 
 
 CE_CLASS()
-class CE_CORE_API SGTexture2D : public CE_SUPER(SGResourceNode)
+class CE_CORE_API SGTexture1D : public CE_SUPER(SGResourceNode)
 {
   CE_CLASS_GEN;
+public:
+  SGTexture1D();
+  ~SGTexture1D() override = default;
+
+  void CalcIOTypes() override;
+
+};
+
+
+CE_CLASS()
+class CE_CORE_API SGTexture2D : public CE_SUPER(SGResourceNode)
+{
+CE_CLASS_GEN;
 public:
   SGTexture2D();
   ~SGTexture2D() override = default;
@@ -365,6 +378,20 @@ public:
   void CalcIOTypes() override;
 
 };
+
+
+CE_CLASS()
+class CE_CORE_API SGTexture3D : public CE_SUPER(SGResourceNode)
+{
+CE_CLASS_GEN;
+public:
+  SGTexture3D();
+  ~SGTexture3D() override = default;
+
+  void CalcIOTypes() override;
+
+};
+
 
 
 } // ce

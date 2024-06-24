@@ -194,6 +194,15 @@ bool GL4ShaderGraphCompiler::VerifyNodeType(SGNode* node)
         }
       }
     }
+    else
+    {
+      if (node->IsInstanceOf<SGTexture1D>() || node->IsInstanceOf<SGTexture3D>())
+      {
+        m_errorString = "Invalid input. No default texture coordinates for " + node->GetName() + " existing. Assign texture coordinates";
+        return false;
+      }
+    }
+
   }
 
   return true;

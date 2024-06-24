@@ -221,9 +221,6 @@ SGVec3::SGVec3()
 void SGVec3::CalcIOTypes()
 {
   GetOutput(0)->SetValueType(eSGValueType::Vector3);
-  GetOutput(1)->SetValueType(eSGValueType::Float);
-  GetOutput(2)->SetValueType(eSGValueType::Float);
-  GetOutput(3)->SetValueType(eSGValueType::Float);
 }
 
 
@@ -246,7 +243,7 @@ SGVec4::SGVec4()
   DefineInput(IN_Y, eSGValueType::Float);
   DefineInput(IN_Z, eSGValueType::Float);
   DefineInput(IN_W, eSGValueType::Float);
-  DefineOutput(OUT_V, eSGValueType::Vector3);
+  DefineOutput(OUT_V, eSGValueType::Vector4);
 }
 
 void SGVec4::CalcIOTypes()
@@ -289,7 +286,7 @@ const std::string SGDecomposeVec3::OUT_Z = "Z";
 SGDecomposeVec3::SGDecomposeVec3()
     : SGNode("Decompose Vec3")
 {
-  DefineInput(IN_V, eSGValueType::Vector2);
+  DefineInput(IN_V, eSGValueType::Vector3);
   DefineOutput(OUT_X, eSGValueType::Float);
   DefineOutput(OUT_Y, eSGValueType::Float);
   DefineOutput(OUT_Z, eSGValueType::Float);
@@ -316,7 +313,7 @@ const std::string SGDecomposeVec4::OUT_W = "W";
 SGDecomposeVec4::SGDecomposeVec4()
     : SGNode("Decompose Vec4")
 {
-  DefineInput(IN_V, eSGValueType::Vector2);
+  DefineInput(IN_V, eSGValueType::Vector4);
   DefineOutput(OUT_X, eSGValueType::Float);
   DefineOutput(OUT_Y, eSGValueType::Float);
   DefineOutput(OUT_Z, eSGValueType::Float);
@@ -454,6 +451,19 @@ void SGResourceFloat::CalcIOTypes()
   GetOutput(0)->SetValueType(eSGValueType::Float);
 }
 
+SGTexture1D::SGTexture1D()
+    : SGResourceNode("Texture1D", eMAT_Texture)
+{
+  DefineInput("UV", eSGValueType::Float);
+  DefineOutput("Color", eSGValueType::Vector4);
+}
+
+
+void SGTexture1D::CalcIOTypes()
+{
+  GetOutput(0)->SetValueType(eSGValueType::Vector4);
+}
+
 SGTexture2D::SGTexture2D()
     : SGResourceNode("Texture2D", eMAT_Texture)
 {
@@ -463,6 +473,19 @@ SGTexture2D::SGTexture2D()
 
 
 void SGTexture2D::CalcIOTypes()
+{
+  GetOutput(0)->SetValueType(eSGValueType::Vector4);
+}
+
+SGTexture3D::SGTexture3D()
+    : SGResourceNode("Texture3D", eMAT_Texture)
+{
+  DefineInput("UV", eSGValueType::Vector3);
+  DefineOutput("Color", eSGValueType::Vector4);
+}
+
+
+void SGTexture3D::CalcIOTypes()
 {
   GetOutput(0)->SetValueType(eSGValueType::Vector4);
 }
