@@ -3,9 +3,11 @@
 #include <ceCore/objectregistry.hh>
 #include <ceCore/graphics/defaultframerenderer.hh>
 #include <ceCore/resource/assetmanager.hh>
+#include <ceCore/resource/textfile.hh>
 #include <ceCore/loaders/materialloader.hh>
 #include <ceCore/loaders/samplerloader.hh>
 #include <ceCore/loaders/terrainlayerloader.hh>
+#include <ceCore/loaders/textfileloader.hh>
 #include <ceCore/loaders/textureloader.hh>
 #include <ceCore/resource/vfs.hh>
 
@@ -29,6 +31,7 @@ bool CoreModule::Register(const std::vector<std::string> &args, Engine *engine)
   assetMan->RegisterLoader(new MaterialLoader());
   assetMan->RegisterLoader(new TerrainLayerLoader());
   assetMan->RegisterLoader(new TerrainLayerMaskLoader());
+  assetMan->RegisterLoader(new TextFileLoader());
   assetMan->RegisterLoader(new TextureLoader());
 
   return true;

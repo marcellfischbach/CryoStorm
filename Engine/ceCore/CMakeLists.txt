@@ -192,6 +192,8 @@ set(SOURCES
         loaders/samplerloader.hh
         loaders/terrainlayerloader.cc
         loaders/terrainlayerloader.hh
+        loaders/textfileloader.cc
+        loaders/textfileloader.hh
         loaders/textureloader.cc
         loaders/textureloader.hh
 
@@ -256,6 +258,8 @@ set(SOURCES
         resource/resourceexceptions.hh
         resource/resourcelocator.cc
         resource/resourcelocator.hh
+        resource/textfile.cc
+        resource/textfile.hh
         resource/vfs.cc
         resource/vfs.hh
         resource/vfsconfigreader.cc
