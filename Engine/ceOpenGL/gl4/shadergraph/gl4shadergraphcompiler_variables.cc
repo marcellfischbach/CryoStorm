@@ -178,7 +178,7 @@ void GL4ShaderGraphCompiler::GenerateVariable(SGNode *node)
   {
     std::string v = VarName();
     m_nodeVariables[node] = {
-        "float" + v + " = " + std::to_string(node->GetInput(0)->GetScalar()) + ");",
+        "float " + v + " = " + std::to_string(node->GetInput(0)->GetScalar()) + ";",
         v,
         eSGValueType::Float,
         false

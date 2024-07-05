@@ -776,12 +776,56 @@ ce::LightState *add_point_light(ce::World *world,
   return lightState;
 }
 
+
+ce::iMaterial *generate_color_material (const ce::Color4f &color)
+{
+  auto sg = new ce::ShaderGraph();
+
+
+  auto roughness = sg->Add<ce::SGConstFloat>("Roughness");
+  auto diffuse = sg->Add<ce::SGConstColor3>("Diffuse");
+  auto alpha = sg->Add<ce::SGConstFloat>("Alpha");
+  auto normal = sg->Add<ce::SGConstColor3>("Normal");
+
+  roughness->SetValue(1.0f);
+  diffuse->SetValue(color.r, color.g, color.b);
+  alpha->SetValue(1.0f);
+  normal->SetValue(0.5f, 0.5f, 1.0f);
+
+
+
+  sg->BindDiffuse(diffuse);
+  sg->BindAlpha(alpha);
+  sg->BindRoughness(roughness);
+  sg->BindNormal(normal);
+  sg->SetReceiveShadow(false);
+
+
+  auto compilerFactory = ce::ObjectRegistry::Get<ce::iShaderGraphCompilerFactory>();
+  if (compilerFactory)
+  {
+    ce::iShaderGraphCompiler* compiler = compilerFactory->Create();
+    if (compiler)
+    {
+      return compiler->Compile(sg);
+    }
+  }
+
+  return nullptr;
+}
+
+
+
 void generate_axis_grid(ce::World *world)
 {
   auto sphere = create_sphere_mesh(0.25, 16, 12.0f);
   auto matR   = ce::AssetManager::Get()->Get<ce::iMaterial>("/materials/DefaultRed.mat");
   auto matG   = ce::AssetManager::Get()->Get<ce::iMaterial>("/materials/DefaultGreen.mat");
   auto matB   = ce::AssetManager::Get()->Get<ce::iMaterial>("/materials/DefaultBlue.mat");
+
+  matR = generate_color_material(ce::Color4f(0.5f, 0.0f, 0.0f));
+  matG = generate_color_material(ce::Color4f(0.0f, 0.5f, 0.0f));
+  matB = generate_color_material(ce::Color4f(0.0f, 0.0f, 0.5f));
 
   ce::s_material_names[matR] = "DefaultRed";
   ce::s_material_names[matG] = "DefaultGreen";
@@ -952,70 +996,8 @@ ce::iMaterial *create_sg_material ()
 
 bool Game::Initialize(ce::Engine *engine)
 {
-  auto sg = new ce::ShaderGraph();
-  sg->SetAlphaDiscard(0.5f, ce::eCF_Never);
 
 
-
-  auto uv = sg->Add<ce::SGTexCoord>("uv");
-  auto texRoughness = sg->AddResource<ce::SGTexture2D>("Roughness", "Roughness");
-  auto texDiffuse = sg->AddResource<ce::SGTexture2D>("Diffuse", "Diffuse");
-  
-  auto texRoughDec = sg->Add<ce::SGDecomposeVec4>();
-  auto texDiffuseDec = sg->Add<ce::SGDecomposeVec4>();
-  
-  auto texRoughVec3 = sg->Add<ce::SGVec3>();
-  auto texDiffuseVec3 = sg->Add<ce::SGVec3>();
-  
-  texRoughDec->Bind(0, texRoughness);
-  texDiffuseDec->Bind(0, texDiffuse);
-  
-  texRoughVec3->Bind(0, texRoughDec, 0);
-  texRoughVec3->Bind(1, texRoughDec, 1);
-  texRoughVec3->Bind(2, texRoughDec, 2);
-
-  texDiffuseVec3->Bind(0, texDiffuseDec, 0);
-  texDiffuseVec3->Bind(1, texDiffuseDec, 1);
-  texDiffuseVec3->Bind(2, texDiffuseDec, 2);
-
-  auto add = sg->Add<ce::SGAdd>();
-  add->Bind(0, texDiffuseVec3);
-  add->Bind(1, texRoughVec3);
-
-
-  auto decV3 = sg->Add<ce::SGDecomposeVec3>();
-  decV3->Bind(0, add);
-
-  auto resFloat = sg->AddResource<ce::SGResourceFloat>("Alpha", "Alpha");
-
-  auto vec4 = sg->Add<ce::SGVec4>();
-  vec4->Bind(0, decV3, 0);
-  vec4->Bind(1, decV3, 1);
-  vec4->Bind(2, decV3, 2);
-  vec4->Bind(3, resFloat);
-
-
-
-  sg->BindDiffuse(vec4);
-
-
-  ce::iShaderGraphCompilerFactory *compilerFactory = ce::ObjectRegistry::Get<ce::iShaderGraphCompilerFactory>();
-  if (compilerFactory)
-  {
-    ce::iShaderGraphCompiler* compiler = compilerFactory->Create();
-    if (compiler)
-    {
-      ce::Material* material = compiler->Compile(sg);
-      if (!material)
-      {
-        printf("Unable to compile shader graph\n%s\n", compiler->GetError().c_str());
-      }
-      else
-      {
-        printf("Compiled successfully\n");
-      }
-    }
-  }
 
 
 

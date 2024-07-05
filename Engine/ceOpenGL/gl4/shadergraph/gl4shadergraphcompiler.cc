@@ -5,19 +5,23 @@
 #include <ceOpenGL/gl4/gl4exceptions.hh>
 #include <algorithm>
 #include <ceCore/graphics/shadergraph/sgnodes.hh>
+#include <ceCore/resource/assetmanager.hh>
+#include <ceCore/resource/textfile.hh>
+#include <ceCore/settings.hh>
 
 namespace ce::opengl
 {
 
 
-
-
-
-Material* GL4ShaderGraphCompiler::Compile(ce::ShaderGraph* shaderGraph)
+Material *GL4ShaderGraphCompiler::Compile(ce::ShaderGraph *shaderGraph)
 {
   m_shaderGraph = shaderGraph;
   m_errorString = "Uncompiled";
 
+  if (!GL4ShaderGraphLightData::Get().Valid)
+  {
+    return nullptr;
+  }
   if (CheckForCycle())
   {
     return nullptr;
@@ -40,29 +44,54 @@ Material* GL4ShaderGraphCompiler::Compile(ce::ShaderGraph* shaderGraph)
 
   SourceBundle depth, deferred, forward, shadow, shadowPSSM, shadowPoint;
   GenerateDepth(depth);
+  GenerateForward(forward);
 
   iShader* depthShader = Compile(depth);
+  iShader *forwardShader = Compile(forward);
 
-  Material* material = new Material();
+  Material *material = new Material();
   material->SetShader(eRP_Depth, depthShader);
+  material->SetShader(eRP_Forward, forwardShader);
+
+  for (const auto &attrib: depth.attributes)
+  {
+    if (material->IndexOf(attrib.first) == Material::UndefinedIndex)
+    {
+      material->RegisterAttribute(attrib.first, attrib.second);
+    }
+  }
+  for (const auto &attrib: forward.attributes)
+  {
+    if (material->IndexOf(attrib.first) == Material::UndefinedIndex)
+    {
+      material->RegisterAttribute(attrib.first, attrib.second);
+    }
+  }
+
+  size_t receiveShadowIndex = material->IndexOf("ReceiveShadow");
+  if (receiveShadowIndex != Material::UndefinedIndex)
+  {
+    material->Set(receiveShadowIndex, m_shaderGraph->IsReceiveShadow() ? 1 : 0);
+  }
+  
 
   m_errorString = "Unknown error";
   return material;
 }
 
-const std::string& GL4ShaderGraphCompiler::GetError() const
+const std::string &GL4ShaderGraphCompiler::GetError() const
 {
   return m_errorString;
 }
 
 
-static bool has_cycle(const SGNode* node, const SGNode* referenceNode)
+static bool has_cycle(const SGNode *node, const SGNode *referenceNode)
 {
   for (size_t i = 0, in = node->GetNumberOfInputs(); i < in; i++)
   {
-    const SGNodeInput* input = node->GetInput(i);
-    const SGNodeOutput* source = input->GetSource();
-    const SGNode* sourceNode = source ? source->GetNode() : nullptr;
+    const SGNodeInput  *input      = node->GetInput(i);
+    const SGNodeOutput *source     = input->GetSource();
+    const SGNode       *sourceNode = source ? source->GetNode() : nullptr;
     if (sourceNode)
     {
       if (sourceNode == referenceNode)
@@ -80,7 +109,7 @@ static bool has_cycle(const SGNode* node, const SGNode* referenceNode)
 }
 
 
-static bool has_cycle(const SGNode* node)
+static bool has_cycle(const SGNode *node)
 {
   return has_cycle(node, node);
 }
@@ -89,7 +118,7 @@ bool GL4ShaderGraphCompiler::CheckForCycle()
 {
   for (size_t i = 0, in = m_shaderGraph->GetNumberOfNodes(); i < in; i++)
   {
-    const SGNode* node = m_shaderGraph->GetNode(i);
+    const SGNode *node = m_shaderGraph->GetNode(i);
     if (has_cycle(node))
     {
       m_errorString = "Cycle detected for node " + node->GetName();
@@ -100,7 +129,7 @@ bool GL4ShaderGraphCompiler::CheckForCycle()
 }
 
 
-static void linearize(std::set<SGNode*> &untouched, SGNodeInput* input, std::vector<SGNode*> &linearized)
+static void linearize(std::set<SGNode *> &untouched, SGNodeInput *input, std::vector<SGNode *> &linearized)
 {
   SGNodeOutput *source = input->GetSource();
   if (!source)
@@ -108,7 +137,7 @@ static void linearize(std::set<SGNode*> &untouched, SGNodeInput* input, std::vec
     return;
   }
   SGNode *sourceNode = source->GetNode();
-  auto it = untouched.find(sourceNode);
+  auto   it          = untouched.find(sourceNode);
   if (it == untouched.end())
   {
     return;
@@ -116,9 +145,9 @@ static void linearize(std::set<SGNode*> &untouched, SGNodeInput* input, std::vec
   linearized.push_back(sourceNode);
   untouched.erase(it);
 
-  for (size_t i=0, in=sourceNode->GetNumberOfInputs(); i<in; i++)
+  for (size_t i = 0, in = sourceNode->GetNumberOfInputs(); i < in; i++)
   {
-    linearize (untouched, sourceNode->GetInput(i), linearized);
+    linearize(untouched, sourceNode->GetInput(i), linearized);
   }
 
 }
@@ -126,14 +155,17 @@ static void linearize(std::set<SGNode*> &untouched, SGNodeInput* input, std::vec
 
 void GL4ShaderGraphCompiler::LinearizeNodes()
 {
-  std::set<SGNode*> untouchedNodes;
-  for (size_t i = 0, in = m_shaderGraph->GetNumberOfNodes(); i < in; i++)
+  std::set<SGNode *> untouchedNodes;
+  for (size_t        i = 0, in = m_shaderGraph->GetNumberOfNodes(); i < in; i++)
   {
     untouchedNodes.insert(m_shaderGraph->GetNode(i));
   }
 
   m_linearizedNodes.clear();
-  linearize(untouchedNodes, m_shaderGraph->GetDiffuseInput(), m_linearizedNodes);
+  for (size_t i = 0, in = m_shaderGraph->GetNumberOfInputs(); i < in; i++)
+  {
+    linearize(untouchedNodes, m_shaderGraph->GetInput(i), m_linearizedNodes);
+  }
   std::reverse(m_linearizedNodes.begin(), m_linearizedNodes.end());
 }
 
@@ -146,13 +178,13 @@ static std::string types_string(eSGValueType types)
 
   std::string res = "[";
   TEST(Float)
-    TEST(Vector2)
-    TEST(Vector3)
-    TEST(Vector4)
+  TEST(Vector2)
+  TEST(Vector3)
+  TEST(Vector4)
 #undef FIRST
 #undef TEST
 #undef ELSE_TEST
-    res += "]";
+  res += "]";
   return res;
 }
 
@@ -161,7 +193,7 @@ bool GL4ShaderGraphCompiler::VerifyNodesType()
   // we can calc the io types and check the output to input type in one step 
   // because all output values, that are needed for the inputs,  are check already
   // because the nodes are linearized already
-  for (auto node : m_linearizedNodes)
+  for (auto node: m_linearizedNodes)
   {
     if (!VerifyNodeType(node))
     {
@@ -171,25 +203,27 @@ bool GL4ShaderGraphCompiler::VerifyNodesType()
   return VerifyNodeType(m_shaderGraph);
 }
 
-bool GL4ShaderGraphCompiler::VerifyNodeType(SGNode* node)
+bool GL4ShaderGraphCompiler::VerifyNodeType(SGNode *node)
 {
   node->CalcIOTypes();
 
 
   for (size_t i = 0, in = node->GetNumberOfInputs(); i < in; i++)
   {
-    SGNodeInput* input = node->GetInput(i);
-    SGNodeOutput* source = input->GetSource();
+    SGNodeInput  *input  = node->GetInput(i);
+    SGNodeOutput *source = input->GetSource();
 
     if (source)
     {
       if ((source->GetValueType() & input->GetTypes()) == eSGValueType::Invalid)
       {
-        SGNode* sourceNode = source->GetNode();
+        SGNode *sourceNode = source->GetNode();
         if (sourceNode)
         {
-          m_errorString = "Type mismatch. Output " + sourceNode->GetName() + "::" + source->GetName() + " types " + types_string(source->GetValueType()) +
-            " do not match input " + node->GetName() + "::" + input->GetName() + " types " + types_string(input->GetTypes());
+          m_errorString = "Type mismatch. Output " + sourceNode->GetName() + "::" + source->GetName() + " types " +
+                          types_string(source->GetValueType()) +
+                          " do not match input " + node->GetName() + "::" + input->GetName() + " types " +
+                          types_string(input->GetTypes());
           return false;
         }
       }
@@ -198,7 +232,8 @@ bool GL4ShaderGraphCompiler::VerifyNodeType(SGNode* node)
     {
       if (node->IsInstanceOf<SGTexture1D>() || node->IsInstanceOf<SGTexture3D>())
       {
-        m_errorString = "Invalid input. No default texture coordinates for " + node->GetName() + " existing. Assign texture coordinates";
+        m_errorString = "Invalid input. No default texture coordinates for " + node->GetName() +
+                        " existing. Assign texture coordinates";
         return false;
       }
     }
@@ -210,10 +245,10 @@ bool GL4ShaderGraphCompiler::VerifyNodeType(SGNode* node)
 
 bool GL4ShaderGraphCompiler::VerifyResources()
 {
-  std::map<std::string, SGResourceNode*> resources;
-  for (size_t i = 0, in=m_shaderGraph->GetNumberOfNodes(); i<in; ++i)
+  std::map<std::string, SGResourceNode *> resources;
+  for (size_t                             i = 0, in = m_shaderGraph->GetNumberOfNodes(); i < in; ++i)
   {
-    SGNode *node = m_shaderGraph->GetNode(i);
+    SGNode         *node         = m_shaderGraph->GetNode(i);
     SGResourceNode *resourceNode = node->Query<SGResourceNode>();
     if (resourceNode)
     {
@@ -223,7 +258,7 @@ bool GL4ShaderGraphCompiler::VerifyResources()
         if (it->second->GetClass() != resourceNode->GetClass())
         {
           m_errorString = "Resource [" + resourceNode->GetResourceName() + "] " + resourceNode->GetClass()->GetName()
-              + " previously declared as " + it->second->GetClass()->GetName();
+                          + " previously declared as " + it->second->GetClass()->GetName();
           return false;
         }
       }
@@ -233,41 +268,97 @@ bool GL4ShaderGraphCompiler::VerifyResources()
   return true;
 }
 
-static GL4Shader* Compile(eGL4ShaderType type, const std::string& src)
+std::string line_number(size_t number)
 {
-  try {
-    GL4Shader* shader = new GL4Shader(type);
+  if (number >= 100)
+  {
+    return std::to_string(number);
+  }
+  if (number >= 10)
+  {
+    return "0" + std::to_string(number);
+  }
+
+  return "00" + std::to_string(number);
+}
+
+std::string replace_all(const std::string &input, const std::string &from, const std::string &to)
+{
+  std::string str       = input;
+  size_t      start_pos = 0;
+  while ((start_pos = str.find(from, start_pos)) != std::string::npos)
+  {
+    str.replace(start_pos, from.length(), to);
+    start_pos += to.length(); // Handles case where 'to' is a substring of 'from'
+  }
+  return str;
+}
+
+std::string annotate_with_line_numbers(const std::string &code)
+{
+  std::string result;
+  std::string str = replace_all(code, "\r\n", "\n");
+  str = replace_all(str, "\r", "\n");
+
+  size_t          line_no = 1;
+  bool            newLine = true;
+  bool            hadR    = false;
+  for (const auto &ch: str)
+  {
+    if (newLine)
+    {
+      result += "(" + line_number(line_no) + ") ";
+      newLine = false;
+    }
+    if (ch == '\n')
+    {
+      newLine = true;
+      line_no++;
+    }
+
+    result += ch;
+  }
+  return result;
+}
+
+static GL4Shader *Compile(eGL4ShaderType type, const std::string &src)
+{
+  try
+  {
+    GL4Shader *shader = new GL4Shader(type);
     shader->SetSource(src);
     shader->Compile();
     return shader;
   }
-  catch (GL4ShaderCompileException& exc)
+  catch (GL4ShaderCompileException &exc)
   {
-    printf("Compile error\n%s\n%s\n", src.c_str(), exc.what());
+    printf("Compile error\n%s\n%s\n", annotate_with_line_numbers(src).c_str(), exc.what());
+    fflush(stdout);
   }
   return nullptr;
 }
 
 static std::string ShaderTypeName[] = {
-  "Vertex",
-  "TessEval",
-  "TessControl",
-  "Geometry",
-  "Fragment",
-  "Compute"
+    "Vertex",
+    "TessEval",
+    "TessControl",
+    "Geometry",
+    "Fragment",
+    "Compute"
 };
 
 
-static bool Attach(GL4Program* program, eGL4ShaderType type, const std::string& src)
+static bool Attach(GL4Program *program, eGL4ShaderType type, const std::string &src)
 {
   if (src.empty())
   {
     return true;
   }
 
-  printf("%s:\n%s\n", ShaderTypeName [type].c_str(), src.c_str());
+  printf("%s:\n%s\n\n\n", ShaderTypeName[type].c_str(), src.c_str());
+  fflush(stdout);
 
-  GL4Shader* shader = Compile(type, src);
+  GL4Shader *shader = Compile(type, src);
   if (!shader)
   {
     return false;
@@ -279,38 +370,48 @@ static bool Attach(GL4Program* program, eGL4ShaderType type, const std::string& 
 }
 
 
-iShader* GL4ShaderGraphCompiler::Compile(SourceBundle& bundle)
+iShader *GL4ShaderGraphCompiler::Compile(SourceBundle &bundle)
 {
 
   if (bundle.vert.empty() || bundle.frag.empty())
   {
     return nullptr;
   }
-  GL4Program* program = new GL4Program();
+  GL4Program *program = new GL4Program();
   if (!Attach(program, eST_Vertex, bundle.vert)
-    || !Attach(program, eST_TessEval, bundle.eval)
-    || !Attach(program, eST_TessControl, bundle.ctrl)
-    || !Attach(program, eST_Geometry, bundle.geom)
-    || !Attach(program, eST_Fragment, bundle.frag))
+      || !Attach(program, eST_TessEval, bundle.eval)
+      || !Attach(program, eST_TessControl, bundle.ctrl)
+      || !Attach(program, eST_Geometry, bundle.geom)
+      || !Attach(program, eST_Fragment, bundle.frag))
   {
     program->Release();
     return nullptr;
   }
 
-  try {
+  try
+  {
     program->Link();
+
+    for (const auto &attribute: bundle.attributes)
+    {
+      program->RegisterAttribute(attribute.first);
+    }
     return program;
   }
-  catch (GL4ProgramLinkException& exc)
+  catch (GL4ProgramLinkException &exc)
   {
     printf("Unable to link program:\n%s\n", exc.what());
   }
+
+  
 
   return nullptr;
 }
 
 
-void GL4ShaderGraphCompiler::ScanNeededVariables(std::set<SGNode*>& nodes, SGNodeInput* input)
+
+
+void GL4ShaderGraphCompiler::ScanNeededVariables(std::set<SGNode *> &nodes, SGNodeInput *input)
 {
   auto source = input->GetSource();
   if (!source)
@@ -328,16 +429,20 @@ void GL4ShaderGraphCompiler::ScanNeededVariables(std::set<SGNode*>& nodes, SGNod
   }
 }
 
-std::vector<SGNode*> GL4ShaderGraphCompiler::ScanNeededVariables(std::vector<SGNodeInput*> inputs)
+std::vector<SGNode *> GL4ShaderGraphCompiler::ScanNeededVariables(std::vector<SGNodeInput *> inputs)
 {
-  std::set<SGNode*> needs;
-  for (auto input : inputs)
+  std::vector<SGNode *> result;
+  if (inputs.empty())
+  {
+    return result;
+  }
+  std::set<SGNode *> needs;
+  for (auto          input: inputs)
   {
     ScanNeededVariables(needs, input);
   }
 
-  std::vector<SGNode*> result;
-  for (auto node : m_linearizedNodes)
+  for (auto node: m_linearizedNodes)
   {
     if (needs.contains(node))
     {
@@ -347,8 +452,79 @@ std::vector<SGNode*> GL4ShaderGraphCompiler::ScanNeededVariables(std::vector<SGN
   return result;
 }
 
+const GL4ShaderGraphLightData &GL4ShaderGraphLightData::Get()
+{
+  static GL4ShaderGraphLightData data;
+  return data;
+}
 
-iShaderGraphCompiler* GL4ShaderGraphCompilerFactory::Create() const
+GL4ShaderGraphLightData::GL4ShaderGraphLightData()
+{
+  Valid = false;
+  const SettingsFile &gfxSettings = Settings::Get().Graphics();
+
+  TextFile *txt = AssetManager::Get()->Get<TextFile>("/shaders/gl4/shadergraph/diffuse/diffuse_opaque_lighting.glsl");
+  if (!txt)
+  {
+    return;
+  }
+  DiffuseLightingOpaque = txt->GetContent();
+  txt->Release();
+
+
+  std::string ambientFile = gfxSettings.GetText("ambient", "null");
+  txt = AssetManager::Get()->Get<TextFile>("/shaders/gl4/shadergraph/lighting/ambient_" + ambientFile + ".glsl");
+  if (!txt)
+  {
+    return;
+  }
+  DiffuseLightingAmbient = txt->GetContent();
+
+
+  std::string diffuseFile = gfxSettings.GetText("diffuse", "null");
+  txt = AssetManager::Get()->Get<TextFile>("/shaders/gl4/shadergraph/lighting/diffuse_" + diffuseFile + ".glsl");
+  if (!txt)
+  {
+    return;
+  }
+  DiffuseLightingDiffuse = txt->GetContent();
+
+  std::string specularFile = gfxSettings.GetText("specular", "null");
+  txt = AssetManager::Get()->Get<TextFile>("/shaders/gl4/shadergraph/lighting/specular_" + specularFile + ".glsl");
+  if (!txt)
+  {
+    return;
+  }
+  DiffuseLightingSpecular = txt->GetContent();
+
+  Valid = true;
+}
+
+bool GL4ShaderGraphCompiler::CollectAttributes(std::vector<SGNode *> &nodes, std::map<std::string, eMaterialAttributeType> &attributes)
+{
+  for (const auto &node: nodes)
+  {
+    auto resourceNode = node->Query<SGResourceNode>();
+    if (resourceNode)
+    {
+      auto it = attributes.find(resourceNode->GetResourceName());
+      if (it != attributes.end() && it->second != resourceNode->GetMatType())
+      {
+        m_errorString = "The Attribute [" + resourceNode->GetResourceName() + "] is given with multiples types";
+        return false;
+      }
+      attributes[resourceNode->GetResourceName()] = resourceNode->GetMatType();
+    }
+  }
+  return true;
+}
+
+bool GL4ShaderGraphCompiler::IsNeedingTangent(const std::vector<SGNode *> &nodes) const
+{
+  return false;
+}
+
+iShaderGraphCompiler *GL4ShaderGraphCompilerFactory::Create() const
 {
   return new GL4ShaderGraphCompiler();
 }

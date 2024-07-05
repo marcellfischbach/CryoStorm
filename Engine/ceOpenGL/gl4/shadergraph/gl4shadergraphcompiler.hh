@@ -32,11 +32,12 @@ public:
 private:
   struct SourceBundle
   {
-    std::string vert;
-    std::string eval;
-    std::string ctrl;
-    std::string geom;
-    std::string frag;
+    std::string                                   vert;
+    std::string                                   eval;
+    std::string                                   ctrl;
+    std::string                                   geom;
+    std::string                                   frag;
+    std::map<std::string, eMaterialAttributeType> attributes;
   };
   struct NodeVariable
   {
@@ -68,16 +69,24 @@ private:
 
   struct ResourceInput
   {
-    std::string Name;
-    std::string Type;
+    std::string            Name;
+    std::string            Type;
     eMaterialAttributeType MatType;
   };
 
+  bool IsNeedingTangent(const std::vector<SGNode *> &nodes) const;
+
+  bool CollectAttributes(std::vector<SGNode *> &nodes, std::map<std::string, eMaterialAttributeType> &attributes);
 
   void GenerateDepth(SourceBundle &bundle);
-  std::string GenerateDepth_Vert();
-  std::string GenerateDepth_Geom();
-  std::string GenerateDepth_Frag();
+  std::string GenerateDepth_Vert(std::map<std::string, eMaterialAttributeType> &attributes);
+  std::string GenerateDepth_Geom(std::map<std::string, eMaterialAttributeType> &attributes);
+  std::string GenerateDepth_Frag(std::map<std::string, eMaterialAttributeType> &attributes);
+
+  void GenerateForward(SourceBundle &bundle);
+  std::string GenerateForward_Vert(std::map<std::string, eMaterialAttributeType> &attributes);
+  std::string GenerateForward_Geom(std::map<std::string, eMaterialAttributeType> &attributes);
+  std::string GenerateForward_Frag(std::map<std::string, eMaterialAttributeType> &attributes);
 
   bool CheckForCycle();
   void LinearizeNodes();
@@ -86,9 +95,12 @@ private:
   bool VerifyResources();
   void ScanNeededVariables(std::set<SGNode *> &nodes, SGNodeInput *input);
   std::vector<SGNode *> ScanNeededVariables(std::vector<SGNodeInput *> inputs);
-  void AddStream(std::vector<StreamInput>&streams, eVertexStream stream, eSGValueType type);
+  void AddStream(std::vector<StreamInput> &streams, eVertexStream stream, eSGValueType type);
   std::vector<StreamInput> FindStreams(std::vector<SGNode *> &nodes);
-  void AddResource(std::vector<ResourceInput> &resources, const std::string &resourceName, const std::string &resourceType, eMaterialAttributeType matType);
+  void AddResource(std::vector<ResourceInput> &resources,
+                   const std::string &resourceName,
+                   const std::string &resourceType,
+                   eMaterialAttributeType matType);
   std::vector<ResourceInput> FindResources(std::vector<SGNode *> &nodes);
 
   void GenerateVariables();
@@ -100,6 +112,8 @@ private:
   iShader *Compile(SourceBundle &bundle);
 
 
+
+
   std::string           m_errorString;
   ShaderGraph           *m_shaderGraph;
   std::vector<SGNode *> m_linearizedNodes;
@@ -108,6 +122,24 @@ private:
   std::map<SGNode *, NodeVariable>         m_nodeVariables;
   std::map<SGNodeOutput *, OutputVariable> m_outputVariables;
   std::vector<ResourceInput>               m_resources;
+
+
+};
+
+class GL4ShaderGraphLightData
+{
+public:
+  static const GL4ShaderGraphLightData &Get();
+private:
+  GL4ShaderGraphLightData();
+
+public:
+  bool        Valid;
+  std::string DiffuseLightingOpaque;
+  std::string DiffuseLightingAmbient;
+  std::string DiffuseLightingDiffuse;
+  std::string DiffuseLightingSpecular;
+
 };
 
 

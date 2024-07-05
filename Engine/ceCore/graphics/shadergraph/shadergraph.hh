@@ -21,14 +21,26 @@ public:
   template<typename T>T* Add(const std::string &info = std::string (""));
   template<typename T>T* AddResource(const std::string &resourceName, const std::string &info = std::string (""));
   void BindDiffuse(SGNode * node, size_t outputIdx = 0);
+  void BindAlpha(SGNode * node, size_t outputIdx = 0);
+  void BindRoughness(SGNode * node, size_t outputIdx = 0);
+  void BindNormal(SGNode * node, size_t outputIdx = 0);
+  void BindMetallic(SGNode * node, size_t outputIdx = 0);
 
   SGNodeInput* GetDiffuseInput();
+  SGNodeInput* GetAlphaInput();
+  SGNodeInput* GetRoughnessInput();
+  SGNodeInput* GetNormalInput();
+  SGNodeInput* GetMetallicInput();
 
   void CalcIOTypes() override;
 
   size_t GetNumberOfNodes() const;
   SGNode* GetNode(size_t idx);
   const SGNode* GetNode(size_t idx) const;
+
+  void SetReceiveShadow (bool receiveShadow);
+  bool IsReceiveShadow () const;
+
 
   void SetAlphaDiscard(float threshold, eCompareFunc compreFunc);
   float GetAlphaDiscard_Threshold() const;
@@ -39,6 +51,12 @@ private:
 
 
   SGNodeInput* m_diffuse = nullptr;
+  SGNodeInput* m_alpha = nullptr;
+  SGNodeInput* m_roughness = nullptr;
+  SGNodeInput* m_normal = nullptr;
+  SGNodeInput* m_metallic = nullptr;
+
+  bool m_receiveShadow = true;
   float m_alphaDiscard_Threshold = 0.5f;
   eCompareFunc m_alphaDiscard_Func = eCF_Never;
 

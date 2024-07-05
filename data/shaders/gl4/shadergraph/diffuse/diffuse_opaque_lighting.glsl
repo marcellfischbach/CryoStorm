@@ -42,7 +42,7 @@ light_result_t calc_light(int idx, vec3 light_ambient, vec3 light_color, vec4 li
         float h_dot_v = clamp(dot(H, frag_to_viewer), 0.0, 1.0);
 
         ambient = calculate_ambient_lighting();
-        diffuse = calculate_diffuse_lightinga (n_dot_l, n_dot_v, roughness);
+        diffuse = calculate_diffuse_lighting (n_dot_l, n_dot_v, roughness);
         specular = calculate_specular_lighting(F0, n_dot_l, n_dot_v, n_dot_h, h_dot_v, roughness);
 
         attenuation = clamp(1.0 - distance / light_range, 0.0, 1.0);
@@ -56,14 +56,14 @@ light_result_t calc_light(int idx, vec3 light_ambient, vec3 light_color, vec4 li
         float h_dot_v = clamp(dot(H, frag_to_viewer), 0.0, 1.0);
 
         ambient = calculate_ambient_lighting();
-        diffuse = calculate_diffuse_lightinga (n_dot_l, n_dot_v, roughness);
+        diffuse = calculate_diffuse_lighting (n_dot_l, n_dot_v, roughness);
         specular = calculate_specular_lighting(F0, n_dot_l, n_dot_v, n_dot_h, h_dot_v, roughness);
         attenuation = 1.0;
     }
 
     if (ce_LightCastShadow[idx] > 0 && ce_ReceiveShadow > 0)
     {
-        shadow = texture (ce_LightShadowMap[idx], screen_coord).r;
+        shadow = texture (ce_LightShadowMap[idx], ce_vs_out_ScreenCoordinates).r;
     }
 
     diffuse = clamp(diffuse, 0.0, 1.0);
