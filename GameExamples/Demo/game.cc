@@ -997,7 +997,7 @@ ce::iMaterial *create_sg_material ()
 bool Game::Initialize(ce::Engine *engine)
 {
 
-
+  ce::AssetManager::Get()->Get<ce::ShaderGraph>("/materials/Default.sg");
 
 
 

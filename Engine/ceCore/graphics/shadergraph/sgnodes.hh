@@ -172,7 +172,6 @@ public:
 };
 
 
-
 CE_CLASS()
 class CE_CORE_API SGDecomposeVec3 : public CE_SUPER(SGNode)
 {
@@ -189,7 +188,6 @@ public:
   void CalcIOTypes() override;
 
 };
-
 
 
 CE_CLASS()
@@ -323,21 +321,21 @@ public:
 CE_CLASS()
 class CE_CORE_API SGResourceNode : public CE_SUPER(SGNode)
 {
-  CE_CLASS_GEN;
+CE_CLASS_GEN;
 protected:
   SGResourceNode(const std::string &name, eMaterialAttributeType matType);
 
 public:
   ~SGResourceNode() override = default;
 
-  void SetResourceName (const std::string &name);
-  const std::string &GetResourceName () const;
+  void SetResourceName(const std::string &name);
+  const std::string &GetResourceName() const;
 
-  eMaterialAttributeType GetMatType () const;
+  eMaterialAttributeType GetMatType() const;
 
 private:
   eMaterialAttributeType m_matType;
-  std::string m_resourceName;
+  std::string            m_resourceName;
 
 };
 
@@ -357,7 +355,7 @@ public:
 CE_CLASS()
 class CE_CORE_API SGTexture1D : public CE_SUPER(SGResourceNode)
 {
-  CE_CLASS_GEN;
+CE_CLASS_GEN;
 public:
   SGTexture1D();
   ~SGTexture1D() override = default;
@@ -391,7 +389,6 @@ public:
   void CalcIOTypes() override;
 
 };
-
 
 
 } // ce

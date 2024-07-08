@@ -190,6 +190,8 @@ set(SOURCES
         loaders/materialloader.hh
         loaders/samplerloader.cc
         loaders/samplerloader.hh
+        loaders/shadergraphloader.cc
+        loaders/shadergraphloader.hh
         loaders/terrainlayerloader.cc
         loaders/terrainlayerloader.hh
         loaders/textfileloader.cc

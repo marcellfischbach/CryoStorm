@@ -7,8 +7,14 @@ namespace ce
 
 
 
-SGNode::SGNode(const std::string &name)
+const std::string &SGNode::GetKey () const
+{
+  return m_key;
+}
+
+SGNode::SGNode( const std::string &name, const std::string &key)
     : m_name(name)
+    , m_key(key)
     , m_info("")
 {
 

@@ -18,8 +18,8 @@ public:
   ShaderGraph();
   ~ShaderGraph() override;
 
-  template<typename T>T* Add(const std::string &info = std::string (""));
-  template<typename T>T* AddResource(const std::string &resourceName, const std::string &info = std::string (""));
+  template<typename T>T* Add(const std::string &key);
+  template<typename T>T* AddResource(const std::string &key, const std::string &resourceName);
   void BindDiffuse(SGNode * node, size_t outputIdx = 0);
   void BindAlpha(SGNode * node, size_t outputIdx = 0);
   void BindRoughness(SGNode * node, size_t outputIdx = 0);
@@ -37,6 +37,7 @@ public:
   size_t GetNumberOfNodes() const;
   SGNode* GetNode(size_t idx);
   const SGNode* GetNode(size_t idx) const;
+  SGNode* GetNode (const std::string &key);
 
   void SetReceiveShadow (bool receiveShadow);
   bool IsReceiveShadow () const;

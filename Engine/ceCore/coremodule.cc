@@ -3,13 +3,12 @@
 #include <ceCore/objectregistry.hh>
 #include <ceCore/graphics/defaultframerenderer.hh>
 #include <ceCore/resource/assetmanager.hh>
-#include <ceCore/resource/textfile.hh>
 #include <ceCore/loaders/materialloader.hh>
 #include <ceCore/loaders/samplerloader.hh>
+#include <ceCore/loaders/shadergraphloader.hh>
 #include <ceCore/loaders/terrainlayerloader.hh>
 #include <ceCore/loaders/textfileloader.hh>
 #include <ceCore/loaders/textureloader.hh>
-#include <ceCore/resource/vfs.hh>
 
 
 void initialize_core_module()
@@ -27,8 +26,9 @@ bool CoreModule::Register(const std::vector<std::string> &args, Engine *engine)
 
   ObjectRegistry::Register<iFrameRenderer>(new DefaultFrameRenderer);
   AssetManager* assetMan = AssetManager::Get();
-  assetMan->RegisterLoader(new SamplerLoader());
   assetMan->RegisterLoader(new MaterialLoader());
+  assetMan->RegisterLoader(new SamplerLoader());
+  assetMan->RegisterLoader(new ShaderGraphLoader());
   assetMan->RegisterLoader(new TerrainLayerLoader());
   assetMan->RegisterLoader(new TerrainLayerMaskLoader());
   assetMan->RegisterLoader(new TextFileLoader());

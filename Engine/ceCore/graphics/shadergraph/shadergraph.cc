@@ -11,7 +11,7 @@ static const size_t IDX_NORMAL = 3;
 static const size_t IDX_METALLIC = 4;
 
 ShaderGraph::ShaderGraph()
-  : SGNode("Shader Graph")
+  : SGNode("Shader Graph", "ShaderGraph")
 {
   m_diffuse = DefineInput("Diffuse", eSGValueType::Float | eSGValueType::Vector3 | eSGValueType::Vector4);
   m_alpha = DefineInput("Alpha", eSGValueType::Float);

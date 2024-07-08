@@ -123,6 +123,10 @@ class CE_CORE_API SGNode : public CE_SUPER(iObject)
 
 public:
   ~SGNode() override = default;
+
+  void SetKey(const std::string &key);
+  const std::string &GetKey() const;
+
   void SetInfo(const std::string &info);
   const std::string &GetInfo () const;
 
@@ -150,6 +154,7 @@ protected:
 
 private:
   std::string m_name;
+  std::string m_key;
   std::string m_info;
 
   std::vector<SGNodeInput*>  m_inputs;
