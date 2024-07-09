@@ -351,6 +351,19 @@ public:
 
 };
 
+CE_CLASS()
+class CE_CORE_API SGResourceColor3 : public CE_SUPER(SGResourceNode)
+{
+CE_CLASS_GEN;
+public:
+  SGResourceColor3();
+  ~SGResourceColor3() override = default;
+
+  void CalcIOTypes() override;
+
+};
+
+
 
 CE_CLASS()
 class CE_CORE_API SGTexture1D : public CE_SUPER(SGResourceNode)

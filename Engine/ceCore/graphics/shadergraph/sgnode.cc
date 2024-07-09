@@ -7,27 +7,20 @@ namespace ce
 
 
 
+SGNode::SGNode( const std::string &name)
+    : m_name(name)
+{
+
+}
+
+void SGNode::SetKey(const std::string &key)
+{
+  m_key = key;
+}
+
 const std::string &SGNode::GetKey () const
 {
   return m_key;
-}
-
-SGNode::SGNode( const std::string &name, const std::string &key)
-    : m_name(name)
-    , m_key(key)
-    , m_info("")
-{
-
-}
-
-void SGNode::SetInfo(const std::string &info)
-{
-  m_info = info;
-}
-
-const std::string &SGNode::GetInfo() const
-{
-  return m_info;
 }
 
 const std::string& SGNode::GetName() const

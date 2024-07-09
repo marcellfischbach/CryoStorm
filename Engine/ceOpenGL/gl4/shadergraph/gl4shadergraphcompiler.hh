@@ -24,7 +24,7 @@ public:
   GL4ShaderGraphCompiler() = default;
 
 
-  Material *Compile(ShaderGraph *shaderGraph) override;
+  Material *Compile(ShaderGraph *shaderGraph, const Parameters &parameters) override;
 
   const std::string &GetError() const override;
 
@@ -123,6 +123,7 @@ private:
   std::map<SGNodeOutput *, OutputVariable> m_outputVariables;
   std::vector<ResourceInput>               m_resources;
 
+  Parameters m_parameters;
 
 };
 

@@ -807,7 +807,9 @@ ce::iMaterial *generate_color_material (const ce::Color4f &color)
     ce::iShaderGraphCompiler* compiler = compilerFactory->Create();
     if (compiler)
     {
-      return compiler->Compile(sg);
+      ce::iShaderGraphCompiler::Parameters parameters {};
+      memset (&parameters, 0, sizeof(parameters));
+      return compiler->Compile(sg, parameters);
     }
   }
 
@@ -819,13 +821,13 @@ ce::iMaterial *generate_color_material (const ce::Color4f &color)
 void generate_axis_grid(ce::World *world)
 {
   auto sphere = create_sphere_mesh(0.25, 16, 12.0f);
-  auto matR   = ce::AssetManager::Get()->Get<ce::iMaterial>("/materials/DefaultRed.mat");
-  auto matG   = ce::AssetManager::Get()->Get<ce::iMaterial>("/materials/DefaultGreen.mat");
-  auto matB   = ce::AssetManager::Get()->Get<ce::iMaterial>("/materials/DefaultBlue.mat");
+  auto matR   = ce::AssetManager::Get()->Get<ce::iMaterial>("/materials/DefaultRed.matinstance");
+  auto matG   = ce::AssetManager::Get()->Get<ce::iMaterial>("/materials/DefaultGreen.matinstance");
+  auto matB   = ce::AssetManager::Get()->Get<ce::iMaterial>("/materials/DefaultBlue.matinstance");
 
-  matR = generate_color_material(ce::Color4f(0.5f, 0.0f, 0.0f));
-  matG = generate_color_material(ce::Color4f(0.0f, 0.5f, 0.0f));
-  matB = generate_color_material(ce::Color4f(0.0f, 0.0f, 0.5f));
+//  matR = generate_color_material(ce::Color4f(0.5f, 0.0f, 0.0f));
+//  matG = generate_color_material(ce::Color4f(0.0f, 0.5f, 0.0f));
+//  matB = generate_color_material(ce::Color4f(0.0f, 0.0f, 0.5f));
 
   ce::s_material_names[matR] = "DefaultRed";
   ce::s_material_names[matG] = "DefaultGreen";
@@ -986,7 +988,9 @@ ce::iMaterial *create_sg_material ()
     ce::iShaderGraphCompiler* compiler = compilerFactory->Create();
     if (compiler)
     {
-      ce::Material* material = compiler->Compile(sg);
+      ce::iShaderGraphCompiler::Parameters parameters {};
+      memset (&parameters, 0, sizeof(parameters));
+      ce::Material* material = compiler->Compile(sg, parameters);
       return material;
     }
   }
@@ -997,7 +1001,7 @@ ce::iMaterial *create_sg_material ()
 bool Game::Initialize(ce::Engine *engine)
 {
 
-  ce::AssetManager::Get()->Get<ce::ShaderGraph>("/materials/Default.sg");
+  ce::AssetManager::Get()->Get<ce::Material>("/materials/Default.sg");
 
 
 

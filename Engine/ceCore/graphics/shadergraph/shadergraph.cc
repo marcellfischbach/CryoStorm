@@ -11,7 +11,7 @@ static const size_t IDX_NORMAL = 3;
 static const size_t IDX_METALLIC = 4;
 
 ShaderGraph::ShaderGraph()
-  : SGNode("Shader Graph", "ShaderGraph")
+  : SGNode("Shader Graph")
 {
   m_diffuse = DefineInput("Diffuse", eSGValueType::Float | eSGValueType::Vector3 | eSGValueType::Vector4);
   m_alpha = DefineInput("Alpha", eSGValueType::Float);
@@ -28,6 +28,57 @@ ShaderGraph::ShaderGraph()
 ShaderGraph::~ShaderGraph() noexcept
 {
 
+}
+
+SGNode* ShaderGraph::Add(const ce::Class *nodeClass, const std::string &key)
+{
+  if (!nodeClass->IsInstanceOf<SGNode>())
+  {
+    return nullptr;
+  }
+
+  iObject* obj = nodeClass->CreateInstance();
+  if (!obj)
+  {
+    return nullptr;
+  }
+
+  auto node = obj->Query<SGNode>();
+  if (!node)
+  {
+    obj->Release();
+    return nullptr;
+  }
+  node->SetKey(key);
+  m_nodes.push_back(node);
+  return node;
+
+}
+
+SGResourceNode *ShaderGraph::AddResource(const ce::Class *nodeClass,
+                                         const std::string &key,
+                                         const std::string &resourceName)
+{
+  if (!nodeClass->IsInstanceOf<SGResourceNode>())
+  {
+    return nullptr;
+  }
+  iObject *obj = nodeClass->CreateInstance();
+  if (!obj)
+  {
+    return nullptr;
+  }
+
+  auto node = obj->Query<SGResourceNode>();
+  if (!node)
+  {
+    obj->Release();
+    return nullptr;
+  }
+  node->SetKey(key);
+  node->SetResourceName(resourceName);
+  m_nodes.push_back(node);
+  return node;
 }
 
 void ShaderGraph::BindDiffuse(SGNode* node, size_t outputIdx)
@@ -108,6 +159,32 @@ const SGNode* ShaderGraph::GetNode(size_t idx) const
   }
   return m_nodes[idx];
 }
+
+SGNode* ShaderGraph::GetNode(const std::string &key)
+{
+  for (auto node: m_nodes)
+  {
+    if (node->GetKey() == key)
+    {
+      return node;
+    }
+  }
+  return nullptr;
+}
+
+
+const SGNode* ShaderGraph::GetNode(const std::string &key) const
+{
+  for (const auto node: m_nodes)
+  {
+    if (node->GetKey() == key)
+    {
+      return node;
+    }
+  }
+  return nullptr;
+}
+
 
 void ShaderGraph::SetReceiveShadow(bool receiveShadow)
 {

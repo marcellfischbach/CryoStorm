@@ -1,15 +1,27 @@
 shaderGraph {
+
+    receiveShadow 1,
+
     nodes {
+        resource "ce::SGResourceFloat" roughness "Roughness",
 
-      node "ce::SGConstColor3" diffuse_color {
-        input 0 1.0,
-        input 1 0.5,
-        input 2 0.5,
-      },
+        resource "ce::SGResourceColor3" diffuse "Diffuse",
 
+        node "ce::SGConstFloat" alpha {
+            value 0 1.0,
+        },
 
-      ShaderGraph {
-        bind 0 diffuse_color 0,
-      }
-    },
+        node "ce::SGConstColor3" normal {
+            value 0 0.5,
+            value 1 0.5,
+            value 2 1.0,
+        },
+
+        shaderGraph {
+            binding 0 diffuse 0,
+            binding 1 alpha 0,
+            binding 2 roughness 0,
+            binding 3 normal 0,
+        }
+    }
 },

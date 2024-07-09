@@ -451,6 +451,19 @@ void SGResourceFloat::CalcIOTypes()
   GetOutput(0)->SetValueType(eSGValueType::Float);
 }
 
+
+SGResourceColor3::SGResourceColor3()
+    : SGResourceNode("Resource Color3", eMAT_Vec3)
+{
+  DefineOutput("V", eSGValueType::Vector3);
+}
+
+void SGResourceColor3::CalcIOTypes()
+{
+  GetOutput(0)->SetValueType(eSGValueType::Vector3);
+}
+
+
 SGTexture1D::SGTexture1D()
     : SGResourceNode("Texture1D", eMAT_Texture)
 {

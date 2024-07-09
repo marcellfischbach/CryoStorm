@@ -13,10 +13,11 @@ namespace ce::opengl
 {
 
 
-Material *GL4ShaderGraphCompiler::Compile(ce::ShaderGraph *shaderGraph)
+Material *GL4ShaderGraphCompiler::Compile(ce::ShaderGraph *shaderGraph, const Parameters &parameters)
 {
   m_shaderGraph = shaderGraph;
   m_errorString = "Uncompiled";
+  m_parameters = parameters;
 
   if (!GL4ShaderGraphLightData::Get().Valid)
   {
@@ -348,15 +349,18 @@ static std::string ShaderTypeName[] = {
 };
 
 
-static bool Attach(GL4Program *program, eGL4ShaderType type, const std::string &src)
+static bool Attach(GL4Program *program, eGL4ShaderType type, const std::string &src, bool debugSources)
 {
   if (src.empty())
   {
     return true;
   }
 
-  printf("%s:\n%s\n\n\n", ShaderTypeName[type].c_str(), src.c_str());
-  fflush(stdout);
+  if (debugSources)
+  {
+    printf("%s:\n%s\n\n\n", ShaderTypeName[type].c_str(), src.c_str());
+    fflush(stdout);
+  }
 
   GL4Shader *shader = Compile(type, src);
   if (!shader)
@@ -378,11 +382,11 @@ iShader *GL4ShaderGraphCompiler::Compile(SourceBundle &bundle)
     return nullptr;
   }
   GL4Program *program = new GL4Program();
-  if (!Attach(program, eST_Vertex, bundle.vert)
-      || !Attach(program, eST_TessEval, bundle.eval)
-      || !Attach(program, eST_TessControl, bundle.ctrl)
-      || !Attach(program, eST_Geometry, bundle.geom)
-      || !Attach(program, eST_Fragment, bundle.frag))
+  if (!Attach(program, eST_Vertex, bundle.vert, m_parameters.DebugSources)
+      || !Attach(program, eST_TessEval, bundle.eval, m_parameters.DebugSources)
+      || !Attach(program, eST_TessControl, bundle.ctrl, m_parameters.DebugSources)
+      || !Attach(program, eST_Geometry, bundle.geom, m_parameters.DebugSources)
+      || !Attach(program, eST_Fragment, bundle.frag, m_parameters.DebugSources))
   {
     program->Release();
     return nullptr;

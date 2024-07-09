@@ -127,9 +127,6 @@ public:
   void SetKey(const std::string &key);
   const std::string &GetKey() const;
 
-  void SetInfo(const std::string &info);
-  const std::string &GetInfo () const;
-
   const std::string& GetName() const;
 
   virtual void CalcIOTypes() = 0;
@@ -155,7 +152,6 @@ protected:
 private:
   std::string m_name;
   std::string m_key;
-  std::string m_info;
 
   std::vector<SGNodeInput*>  m_inputs;
   std::vector<SGNodeOutput*> m_outputs;
