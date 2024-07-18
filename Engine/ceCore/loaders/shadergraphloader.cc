@@ -9,22 +9,22 @@
 #include <ceCore/graphics/shadergraph/shadergraph.hh>
 #include <ceCore/graphics/shadergraph/ishadergraphcompiler.hh>
 #include <ceCore/classregistry.hh>
-
+#include <ceCore/resource/assetmanager.hh>
 
 namespace ce
 {
 
 ShaderGraphLoader::ShaderGraphLoader()
-: BaseCEFAssetLoader()
+    : BaseCEFAssetLoader()
 {
   AddValidFile<Material>("SG");
   AddValidFile<Material>("SHADERGRAPH");
 }
 
 
-iObject *ShaderGraphLoader::Load(const CrimsonFile* file, const Class* cls, const ResourceLocator& locator) const
+iObject *ShaderGraphLoader::Load(const CrimsonFile *file, const Class *cls, const ResourceLocator &locator) const
 {
-  const CrimsonFileElement *root               = file->Root();
+  const CrimsonFileElement *root = file->Root();
   const CrimsonFileElement *shaderGraphElement = root->GetChild("shaderGraph");
   auto sg = new ShaderGraph();
   AutoRelease autoRelSG(sg);
@@ -32,7 +32,7 @@ iObject *ShaderGraphLoader::Load(const CrimsonFile* file, const Class* cls, cons
 
   if (!shaderGraphElement)
   {
-    fprintf (stderr, "Invalid shader graph. Root element must be 'shaderGraph'\n");
+    fprintf(stderr, "Invalid shader graph. Root element must be 'shaderGraph'\n");
     return nullptr;
   }
 
@@ -41,7 +41,7 @@ iObject *ShaderGraphLoader::Load(const CrimsonFile* file, const Class* cls, cons
   {
     sg->SetReceiveShadow(receiveShadowElement->GetAttribute(0, 1));
   }
-  
+
 
   const CrimsonFileElement *nodesElements = shaderGraphElement->GetChild("nodes");
   if (!nodesElements)
@@ -50,7 +50,7 @@ iObject *ShaderGraphLoader::Load(const CrimsonFile* file, const Class* cls, cons
     return nullptr;
   }
 
-  for (size_t i   = 0, in = nodesElements->GetNumberOfChildren(); i < in; ++i)
+  for (size_t i = 0, in = nodesElements->GetNumberOfChildren(); i < in; ++i)
   {
     const CrimsonFileElement *childElement = nodesElements->GetChild(i);
     if (!childElement)
@@ -58,7 +58,7 @@ iObject *ShaderGraphLoader::Load(const CrimsonFile* file, const Class* cls, cons
       continue;
     }
 
-    SGNode            *node    = nullptr;
+    SGNode *node = nullptr;
     const std::string &tagName = childElement->GetTagName();
     if (tagName == "node")
     {
@@ -85,6 +85,13 @@ iObject *ShaderGraphLoader::Load(const CrimsonFile* file, const Class* cls, cons
 
   }
 
+  const CrimsonFileElement *attributesElements = shaderGraphElement->GetChild("attributes");
+  if (attributesElements)
+  {
+    LoadAttributes(attributesElements, sg, locator);
+  }
+
+
   //
   // Now compile the shader graph to a material
 
@@ -94,8 +101,8 @@ iObject *ShaderGraphLoader::Load(const CrimsonFile* file, const Class* cls, cons
     auto compiler = compilerFactory->Create();
     if (compiler)
     {
-      iShaderGraphCompiler::Parameters parameters {};
-      memset (&parameters, 0, sizeof(parameters));
+      iShaderGraphCompiler::Parameters parameters{};
+      memset(&parameters, 0, sizeof(parameters));
       parameters.DebugSources = true;
       return compiler->Compile(sg, parameters);
     }
@@ -266,6 +273,78 @@ bool ShaderGraphLoader::LoadBinding(const CrimsonFileElement *valueElement,
 
   node->Bind(idx, bindingInputNode, bindingInputOutputIdx);
   return true;
+}
+
+
+void ShaderGraphLoader::LoadAttributes(const ce::CrimsonFileElement *attributesElement, ce::ShaderGraph *sg, const ResourceLocator &locator) const
+{
+  if (!attributesElement)
+  {
+    return;
+  }
+  for (size_t i = 0, in = attributesElement->GetNumberOfChildren(); i<in; ++i)
+  {
+    const CrimsonFileElement *attributeElement = attributesElement->GetChild(i);
+    if (attributeElement->GetTagName() == std::string("attribute"))
+    {
+      LoadAttribute (attributeElement, sg, locator);
+    }
+  }
+}
+
+void ShaderGraphLoader::LoadAttribute(const ce::CrimsonFileElement *attributeElement, ce::ShaderGraph *sg, const ResourceLocator &locator) const
+{
+  if (attributeElement->GetNumberOfAttributes() < 2)
+  {
+    return;
+  }
+  std::string type = attributeElement->GetAttribute(0, "");
+  std::string name = attributeElement->GetAttribute(1, "");
+  if (type.empty() || name.empty())
+  {
+    return;
+  }
+
+
+  if (type == "Float")
+  {
+    float v = attributeElement->GetAttribute(2, 0.0f);
+    sg->SetDefault(name, 1, &v);
+  }
+  else if (type == "Vec2")
+  {
+    Vector2f v {};
+    v.x = attributeElement->GetAttribute(2, 0.0f);
+    v.y = attributeElement->GetAttribute(3, 0.0f);
+    sg->SetDefault(name, 2, &v.x);
+  }
+  else if (type == "Vec3")
+  {
+    Vector3f v {};
+    v.x = attributeElement->GetAttribute(2, 0.0f);
+    v.y = attributeElement->GetAttribute(3, 0.0f);
+    v.z = attributeElement->GetAttribute(4, 0.0f);
+    sg->SetDefault(name, 3, &v.x);
+  }
+  else if (type == "Vec4" || type == "Color4")
+  {
+    Vector4f v {};
+    v.x = attributeElement->GetAttribute(2, 0.0f);
+    v.y = attributeElement->GetAttribute(3, 0.0f);
+    v.z = attributeElement->GetAttribute(4, 0.0f);
+    v.w = attributeElement->GetAttribute(5, 0.0f);
+    sg->SetDefault(name, 4, &v.x);
+  }
+  else if (type == "Texture")
+  {
+    std::string locatorStr = attributeElement->GetAttribute(2, "");
+    if (!locatorStr.empty())
+    {
+      ResourceLocator txtLocator (locator, locatorStr);
+      auto texture = AssetManager::Get()->Get<iTexture>(txtLocator);
+      sg->SetDefault(name, texture);
+    }
+  }
 }
 
 } // ce

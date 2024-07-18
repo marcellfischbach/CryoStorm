@@ -1,5 +1,5 @@
 #include <ceCore/graphics/shadergraph/shadergraph.hh>
-
+#include <cmath>
 
 namespace ce
 {
@@ -11,7 +11,7 @@ static const size_t IDX_NORMAL = 3;
 static const size_t IDX_METALLIC = 4;
 
 ShaderGraph::ShaderGraph()
-  : SGNode("Shader Graph")
+    : SGNode("Shader Graph")
 {
   m_diffuse = DefineInput("Diffuse", eSGValueType::Float | eSGValueType::Vector3 | eSGValueType::Vector4);
   m_alpha = DefineInput("Alpha", eSGValueType::Float);
@@ -30,14 +30,14 @@ ShaderGraph::~ShaderGraph() noexcept
 
 }
 
-SGNode* ShaderGraph::Add(const ce::Class *nodeClass, const std::string &key)
+SGNode *ShaderGraph::Add(const ce::Class *nodeClass, const std::string &key)
 {
   if (!nodeClass->IsInstanceOf<SGNode>())
   {
     return nullptr;
   }
 
-  iObject* obj = nodeClass->CreateInstance();
+  iObject *obj = nodeClass->CreateInstance();
   if (!obj)
   {
     return nullptr;
@@ -81,23 +81,23 @@ SGResourceNode *ShaderGraph::AddResource(const ce::Class *nodeClass,
   return node;
 }
 
-void ShaderGraph::BindDiffuse(SGNode* node, size_t outputIdx)
+void ShaderGraph::BindDiffuse(SGNode *node, size_t outputIdx)
 {
   Bind(IDX_DIFFUSE, node, outputIdx);
 }
 
-SGNodeInput* ShaderGraph::GetDiffuseInput()
+SGNodeInput *ShaderGraph::GetDiffuseInput()
 {
   return m_diffuse;
 }
 
 
-void ShaderGraph::BindAlpha(SGNode* node, size_t outputIdx)
+void ShaderGraph::BindAlpha(SGNode *node, size_t outputIdx)
 {
   Bind(IDX_ALPHA, node, outputIdx);
 }
 
-SGNodeInput* ShaderGraph::GetAlphaInput()
+SGNodeInput *ShaderGraph::GetAlphaInput()
 {
   return m_alpha;
 }
@@ -107,7 +107,7 @@ void ShaderGraph::BindRoughness(ce::SGNode *node, size_t outputIdx)
   Bind(IDX_ROUGHNESS, node, outputIdx);
 }
 
-SGNodeInput* ShaderGraph::GetRoughnessInput()
+SGNodeInput *ShaderGraph::GetRoughnessInput()
 {
   return m_roughness;
 }
@@ -117,7 +117,7 @@ void ShaderGraph::BindNormal(ce::SGNode *node, size_t outputIdx)
   Bind(IDX_NORMAL, node, outputIdx);
 }
 
-SGNodeInput* ShaderGraph::GetNormalInput()
+SGNodeInput *ShaderGraph::GetNormalInput()
 {
   return m_normal;
 }
@@ -127,7 +127,7 @@ void ShaderGraph::BindMetallic(ce::SGNode *node, size_t outputIdx)
   Bind(IDX_METALLIC, node, outputIdx);
 }
 
-SGNodeInput* ShaderGraph::GetMetallicInput()
+SGNodeInput *ShaderGraph::GetMetallicInput()
 {
   return m_metallic;
 }
@@ -142,7 +142,7 @@ size_t ShaderGraph::GetNumberOfNodes() const
   return m_nodes.size();
 }
 
-SGNode* ShaderGraph::GetNode(size_t idx)
+SGNode *ShaderGraph::GetNode(size_t idx)
 {
   if (idx >= m_nodes.size())
   {
@@ -151,7 +151,7 @@ SGNode* ShaderGraph::GetNode(size_t idx)
   return m_nodes[idx];
 }
 
-const SGNode* ShaderGraph::GetNode(size_t idx) const
+const SGNode *ShaderGraph::GetNode(size_t idx) const
 {
   if (idx >= m_nodes.size())
   {
@@ -160,7 +160,7 @@ const SGNode* ShaderGraph::GetNode(size_t idx) const
   return m_nodes[idx];
 }
 
-SGNode* ShaderGraph::GetNode(const std::string &key)
+SGNode *ShaderGraph::GetNode(const std::string &key)
 {
   for (auto node: m_nodes)
   {
@@ -173,7 +173,7 @@ SGNode* ShaderGraph::GetNode(const std::string &key)
 }
 
 
-const SGNode* ShaderGraph::GetNode(const std::string &key) const
+const SGNode *ShaderGraph::GetNode(const std::string &key) const
 {
   for (const auto node: m_nodes)
   {
@@ -210,6 +210,49 @@ float ShaderGraph::GetAlphaDiscard_Threshold() const
 eCompareFunc ShaderGraph::GetAlphaDiscard_Func() const
 {
   return m_alphaDiscard_Func;
+}
+
+
+void ShaderGraph::SetDefault(const std::string &attribute, size_t count, float *floats)
+{
+  Default def{};
+  def.name = attribute;
+  count = std::min(static_cast<size_t>(16), count);
+  memcpy(def.floats.data(), floats, sizeof(float) * count);
+
+  m_defaults.push_back(def);
+}
+
+void ShaderGraph::SetDefault(const std::string &attribute, size_t count, int *ints)
+{
+  Default def{};
+  def.name = attribute;
+  count = std::min(static_cast<size_t>(4), count);
+  memcpy(def.ints.data(), ints, sizeof(int) * count);
+
+  m_defaults.push_back(def);
+}
+
+void ShaderGraph::SetDefault(const std::string &attribute, ce::iTexture *texture)
+{
+  Default def{};
+  def.name = attribute;
+  CE_SET(def.texture, texture);
+
+  m_defaults.push_back(def);
+}
+
+
+const ShaderGraph::Default *ShaderGraph::GetDefault(const std::string &name) const
+{
+  for (auto &def : m_defaults)
+  {
+    if (def.name == name)
+    {
+      return &def;
+    }
+  }
+  return nullptr;
 }
 
 

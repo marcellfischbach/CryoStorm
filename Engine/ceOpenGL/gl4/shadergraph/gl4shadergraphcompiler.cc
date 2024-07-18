@@ -47,7 +47,7 @@ Material *GL4ShaderGraphCompiler::Compile(ce::ShaderGraph *shaderGraph, const Pa
   GenerateDepth(depth);
   GenerateForward(forward);
 
-  iShader* depthShader = Compile(depth);
+  iShader *depthShader = Compile(depth);
   iShader *forwardShader = Compile(forward);
 
   Material *material = new Material();
@@ -74,8 +74,9 @@ Material *GL4ShaderGraphCompiler::Compile(ce::ShaderGraph *shaderGraph, const Pa
   {
     material->Set(receiveShadowIndex, m_shaderGraph->IsReceiveShadow() ? 1 : 0);
   }
-  
 
+
+  SetMaterialDefaults(material);
   m_errorString = "Unknown error";
   return material;
 }
@@ -90,9 +91,9 @@ static bool has_cycle(const SGNode *node, const SGNode *referenceNode)
 {
   for (size_t i = 0, in = node->GetNumberOfInputs(); i < in; i++)
   {
-    const SGNodeInput  *input      = node->GetInput(i);
-    const SGNodeOutput *source     = input->GetSource();
-    const SGNode       *sourceNode = source ? source->GetNode() : nullptr;
+    const SGNodeInput *input = node->GetInput(i);
+    const SGNodeOutput *source = input->GetSource();
+    const SGNode *sourceNode = source ? source->GetNode() : nullptr;
     if (sourceNode)
     {
       if (sourceNode == referenceNode)
@@ -138,7 +139,7 @@ static void linearize(std::set<SGNode *> &untouched, SGNodeInput *input, std::ve
     return;
   }
   SGNode *sourceNode = source->GetNode();
-  auto   it          = untouched.find(sourceNode);
+  auto it = untouched.find(sourceNode);
   if (it == untouched.end())
   {
     return;
@@ -157,7 +158,7 @@ static void linearize(std::set<SGNode *> &untouched, SGNodeInput *input, std::ve
 void GL4ShaderGraphCompiler::LinearizeNodes()
 {
   std::set<SGNode *> untouchedNodes;
-  for (size_t        i = 0, in = m_shaderGraph->GetNumberOfNodes(); i < in; i++)
+  for (size_t i = 0, in = m_shaderGraph->GetNumberOfNodes(); i < in; i++)
   {
     untouchedNodes.insert(m_shaderGraph->GetNode(i));
   }
@@ -191,7 +192,7 @@ static std::string types_string(eSGValueType types)
 
 bool GL4ShaderGraphCompiler::VerifyNodesType()
 {
-  // we can calc the io types and check the output to input type in one step 
+  // we can calc the io types and check the output to input type in one step
   // because all output values, that are needed for the inputs,  are check already
   // because the nodes are linearized already
   for (auto node: m_linearizedNodes)
@@ -211,7 +212,7 @@ bool GL4ShaderGraphCompiler::VerifyNodeType(SGNode *node)
 
   for (size_t i = 0, in = node->GetNumberOfInputs(); i < in; i++)
   {
-    SGNodeInput  *input  = node->GetInput(i);
+    SGNodeInput *input = node->GetInput(i);
     SGNodeOutput *source = input->GetSource();
 
     if (source)
@@ -247,9 +248,9 @@ bool GL4ShaderGraphCompiler::VerifyNodeType(SGNode *node)
 bool GL4ShaderGraphCompiler::VerifyResources()
 {
   std::map<std::string, SGResourceNode *> resources;
-  for (size_t                             i = 0, in = m_shaderGraph->GetNumberOfNodes(); i < in; ++i)
+  for (size_t i = 0, in = m_shaderGraph->GetNumberOfNodes(); i < in; ++i)
   {
-    SGNode         *node         = m_shaderGraph->GetNode(i);
+    SGNode *node = m_shaderGraph->GetNode(i);
     SGResourceNode *resourceNode = node->Query<SGResourceNode>();
     if (resourceNode)
     {
@@ -285,8 +286,8 @@ std::string line_number(size_t number)
 
 std::string replace_all(const std::string &input, const std::string &from, const std::string &to)
 {
-  std::string str       = input;
-  size_t      start_pos = 0;
+  std::string str = input;
+  size_t start_pos = 0;
   while ((start_pos = str.find(from, start_pos)) != std::string::npos)
   {
     str.replace(start_pos, from.length(), to);
@@ -301,9 +302,9 @@ std::string annotate_with_line_numbers(const std::string &code)
   std::string str = replace_all(code, "\r\n", "\n");
   str = replace_all(str, "\r", "\n");
 
-  size_t          line_no = 1;
-  bool            newLine = true;
-  bool            hadR    = false;
+  size_t line_no = 1;
+  bool newLine = true;
+  bool hadR = false;
   for (const auto &ch: str)
   {
     if (newLine)
@@ -407,12 +408,9 @@ iShader *GL4ShaderGraphCompiler::Compile(SourceBundle &bundle)
     printf("Unable to link program:\n%s\n", exc.what());
   }
 
-  
 
   return nullptr;
 }
-
-
 
 
 void GL4ShaderGraphCompiler::ScanNeededVariables(std::set<SGNode *> &nodes, SGNodeInput *input)
@@ -441,7 +439,7 @@ std::vector<SGNode *> GL4ShaderGraphCompiler::ScanNeededVariables(std::vector<SG
     return result;
   }
   std::set<SGNode *> needs;
-  for (auto          input: inputs)
+  for (auto input: inputs)
   {
     ScanNeededVariables(needs, input);
   }
@@ -504,7 +502,8 @@ GL4ShaderGraphLightData::GL4ShaderGraphLightData()
   Valid = true;
 }
 
-bool GL4ShaderGraphCompiler::CollectAttributes(std::vector<SGNode *> &nodes, std::map<std::string, eMaterialAttributeType> &attributes)
+bool GL4ShaderGraphCompiler::CollectAttributes(std::vector<SGNode *> &nodes,
+                                               std::map<std::string, eMaterialAttributeType> &attributes)
 {
   for (const auto &node: nodes)
   {
@@ -526,6 +525,68 @@ bool GL4ShaderGraphCompiler::CollectAttributes(std::vector<SGNode *> &nodes, std
 bool GL4ShaderGraphCompiler::IsNeedingTangent(const std::vector<SGNode *> &nodes) const
 {
   return false;
+}
+
+
+void GL4ShaderGraphCompiler::SetMaterialDefaults(ce::Material *material)
+{
+  std::vector<SGNode*> nodes;
+  for (int i = 0; i < m_shaderGraph->GetNumberOfNodes(); ++i)
+  {
+    nodes.push_back(m_shaderGraph->GetNode(i));
+  }
+
+  const std::vector<ResourceInput> &resources = FindResources(nodes);
+
+  for (const auto &resource: resources)
+  {
+
+    const ShaderGraph::Default *def = m_shaderGraph->GetDefault(resource.Name);
+    if (!def)
+    {
+      continue;
+    }
+
+    size_t idx = material->IndexOf(resource.Name);
+    if (idx == Material::UndefinedIndex)
+    {
+      continue;
+    }
+
+    switch (resource.MatType)
+    {
+      case eMAT_Float:
+        material->Set(idx, def->floats[0]);
+        break;
+      case eMAT_Vec2:
+        material->Set(idx, Vector2f(def->floats[0], def->floats[1]));
+        break;
+      case eMAT_Vec3:
+        material->Set(idx, Vector3f(def->floats[0], def->floats[1], def->floats[2]));
+        break;
+      case eMAT_Vec4:
+        material->Set(idx, Vector4f(def->floats[0], def->floats[1], def->floats[2], def->floats[3]));
+        break;
+
+      case eMAT_Matrix3:
+        material->Set(idx, Matrix3f(def->floats.data()));
+        break;
+      case eMAT_Matrix4:
+        material->Set(idx, Matrix4f(def->floats.data()));
+        break;
+
+      case eMAT_Int:
+        material->Set(idx, def->ints[0]);
+        break;
+
+      case eMAT_Texture:
+        material->Set(idx, def->texture);
+        break;
+
+      default:
+        break;
+    }
+  }
 }
 
 iShaderGraphCompiler *GL4ShaderGraphCompilerFactory::Create() const

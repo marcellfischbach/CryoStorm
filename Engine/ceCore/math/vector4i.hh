@@ -19,10 +19,10 @@ public:
 
 public:
   CE_FORCEINLINE Vector4i()
-      : x(0.0f)
-        , y(0.0f)
-        , z(0.0f)
-        , w(1.0f)
+      : x(0)
+      , y(0)
+      , z(0)
+      , w(1)
   {
 
   }
@@ -31,17 +31,17 @@ public:
 
   CE_FORCEINLINE explicit Vector4i(const int *f)
       : x(f[0])
-        , y(f[1])
-        , z(f[2])
-        , w(f[3])
+      , y(f[1])
+      , z(f[2])
+      , w(f[3])
   {
   }
 
   CE_FORCEINLINE Vector4i(int x, int y, int z, int w)
       : x(x)
-        , y(y)
-        , z(z)
-        , w(w)
+      , y(y)
+      , z(z)
+      , w(w)
   {
   }
 

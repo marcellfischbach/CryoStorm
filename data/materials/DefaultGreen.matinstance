@@ -2,6 +2,5 @@ materialinstance {
     material "/materials/Default.sg",
     attributes {
         attribute Color4 "Diffuse" 0.5 1.0 0.0 1,
-        attribute Float "Roughness" 0.8,
     }
 }

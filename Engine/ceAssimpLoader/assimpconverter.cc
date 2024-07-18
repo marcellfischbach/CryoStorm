@@ -76,7 +76,7 @@ Weight get_weight(aiMesh *mesh, unsigned vertexID, Skeleton *skeleton)
   } customLess;
 
   std::vector<TempWeight> weights;
-  for (int                i = 0; i < mesh->mNumBones; ++i)
+  for (unsigned int                i = 0; i < mesh->mNumBones; ++i)
   {
     aiBone   *bone = mesh->mBones[i];
     for (int w     = 0; w < bone->mNumWeights; ++w)
@@ -195,7 +195,7 @@ iRenderMesh *ConvertRenderMesh(aiMesh *mesh, const Matrix4f &matrix2, Skeleton* 
     {
       colors.emplace_back(1, 1, 1, 1);
     }
-    
+
     if (skeleton)
     {
       const Weight &weight = get_weight(mesh, i, skeleton);

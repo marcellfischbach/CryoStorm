@@ -26,8 +26,8 @@ void BaseTestHandler::Update(float tpf)
     Vector3f position = m_basePosition + Vector3f(
         ceCos(m_animationValue) * m_distance,
         0.0f,
-        ceSin(m_animationValue*1.3) * m_distance
-        );
+        ceSin(m_animationValue*1.3f) * m_distance
+    );
     root->SetTransform(root->GetTransform().SetTranslation(position));
   }
 }

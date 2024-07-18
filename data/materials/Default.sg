@@ -23,5 +23,11 @@ shaderGraph {
             binding 2 roughness 0,
             binding 3 normal 0,
         }
+    },
+
+    attributes {
+        attribute Float "Roughness" 0.0,
     }
+
+
 },

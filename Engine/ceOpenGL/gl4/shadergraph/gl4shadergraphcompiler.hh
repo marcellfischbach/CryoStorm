@@ -110,7 +110,7 @@ private:
   OutputVariable GetInputValue(SGNodeInput *input);
 
   iShader *Compile(SourceBundle &bundle);
-
+  void SetMaterialDefaults (Material* material);
 
 
 

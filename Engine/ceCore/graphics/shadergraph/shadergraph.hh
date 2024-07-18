@@ -5,6 +5,8 @@
 #include <ceCore/graphics/shadergraph/sgnode.hh>
 #include <ceCore/graphics/shadergraph/sgnodes.hh>
 #include <ceCore/graphics/ecomparefunc.hh>
+#include <ceCore/graphics/itexture.hh>
+#include <array>
 
 namespace ce
 {
@@ -54,19 +56,37 @@ public:
   float GetAlphaDiscard_Threshold() const;
   eCompareFunc GetAlphaDiscard_Func() const;
 
+  void SetDefault (const std::string &attribute, size_t count, float* floats);
+  void SetDefault (const std::string &attribute, size_t count, int* ints);
+  void SetDefault (const std::string &attribute, iTexture *texture);
+
+  struct Default
+  {
+    std::string name;
+    std::array<float, 16> floats;
+    std::array<int, 4> ints;
+    iTexture* texture;
+  };
+
+  const Default* GetDefault(const std::string &name) const;
+
+
 private:
+
+
+  std::vector<Default> m_defaults;
   std::vector<SGNode *> m_nodes;
 
 
-  SGNodeInput *m_diffuse   = nullptr;
-  SGNodeInput *m_alpha     = nullptr;
+  SGNodeInput *m_diffuse = nullptr;
+  SGNodeInput *m_alpha = nullptr;
   SGNodeInput *m_roughness = nullptr;
-  SGNodeInput *m_normal    = nullptr;
-  SGNodeInput *m_metallic  = nullptr;
+  SGNodeInput *m_normal = nullptr;
+  SGNodeInput *m_metallic = nullptr;
 
-  bool         m_receiveShadow          = true;
-  float        m_alphaDiscard_Threshold = 0.5f;
-  eCompareFunc m_alphaDiscard_Func      = eCF_Never;
+  bool m_receiveShadow = true;
+  float m_alphaDiscard_Threshold = 0.5f;
+  eCompareFunc m_alphaDiscard_Func = eCF_Never;
 
 
 };
@@ -74,11 +94,11 @@ private:
 template<typename T>
 T *ShaderGraph::Add(const std::string &key)
 {
-  const Class* nodeClass = T::GetStaticClass();
+  const Class *nodeClass = T::GetStaticClass();
 
-  SGNode* node = Add(nodeClass, key);
+  SGNode *node = Add(nodeClass, key);
 
-  return static_cast<T*>(node);
+  return static_cast<T *>(node);
 
 }
 
@@ -86,11 +106,11 @@ T *ShaderGraph::Add(const std::string &key)
 template<typename T>
 T *ShaderGraph::AddResource(const std::string &key, const std::string &resourceName)
 {
-  const Class* nodeClass = T::GetStaticClass();
+  const Class *nodeClass = T::GetStaticClass();
 
-  SGNode* node = AddResource(nodeClass, key, resourceName);
+  SGNode *node = AddResource(nodeClass, key, resourceName);
 
-  return static_cast<T*>(node);
+  return static_cast<T *>(node);
 }
 
 

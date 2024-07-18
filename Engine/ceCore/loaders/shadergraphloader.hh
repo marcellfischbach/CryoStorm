@@ -6,6 +6,7 @@
 
 #include <ceCore/coreexport.hh>
 #include <ceCore/resource/basecefassetloader.hh>
+
 namespace ce
 {
 
@@ -21,16 +22,18 @@ public:
   ShaderGraphLoader();
   ~ShaderGraphLoader() override = default;
 
-  iObject* Load(const CrimsonFile* file, const Class* cls, const ResourceLocator& locator) const override;
+  iObject *Load(const CrimsonFile *file, const Class *cls, const ResourceLocator &locator) const override;
 
 private:
 
-  SGNode* CreateNode (const CrimsonFileElement* nodeElement, ShaderGraph *sg) const;
-  SGResourceNode* CreateResourceNode (const CrimsonFileElement* nodeElement, ShaderGraph *sg) const;
+  SGNode *CreateNode(const CrimsonFileElement *nodeElement, ShaderGraph *sg) const;
+  SGResourceNode *CreateResourceNode(const CrimsonFileElement *nodeElement, ShaderGraph *sg) const;
   bool LoadNodeBindingsAndValues(const CrimsonFileElement *nodeElement, SGNode *node, ShaderGraph *sg) const;
-  bool  LoadValue (const CrimsonFileElement *valueElement, SGNode *node, ShaderGraph* sg) const;
-  bool  LoadBinding  (const CrimsonFileElement *valueElement, SGNode *node, ShaderGraph* sg) const;
+  bool LoadValue(const CrimsonFileElement *valueElement, SGNode *node, ShaderGraph *sg) const;
+  bool LoadBinding(const CrimsonFileElement *valueElement, SGNode *node, ShaderGraph *sg) const;
 
+  void LoadAttributes (const CrimsonFileElement *attributesElement, ShaderGraph *sg, const ResourceLocator &locator) const;
+  void LoadAttribute (const CrimsonFileElement *attributeElement, ShaderGraph *sg, const ResourceLocator &locator) const;
 };
 
 } // ce
