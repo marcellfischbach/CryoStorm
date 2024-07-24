@@ -35,6 +35,7 @@ bool SDLWindow::Initialize()
   std::string  title    = settings.GetText("title");
   ce::Vector2i res      = settings.GetVector2i("resolution");
   ce::Vector2i pos      = settings.GetVector2i("pos");
+
   std::string  viewMode = settings.GetText("viewmode", "windowed");
   if (viewMode == "fullscreen")
   {

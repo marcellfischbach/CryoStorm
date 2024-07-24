@@ -24,14 +24,14 @@
 #include <ceCore/graphics/itexture2darray.hh>
 #include <ceCore/graphics/itexturecube.hh>
 #include <ceCore/graphics/material/imaterial.hh>
-
+#include <array>
 
 namespace ce
 {
 
 struct iShader;
 
-CE_CLASS(jclass="org.crimsonedge.core.graphics.IDevice")
+CE_CLASS(jclass = "org.crimsonedge.core.graphics.IDevice")
 struct CE_CORE_API iDevice : public CE_SUPER(iObject)
 {
 CE_CLASS_GEN;
@@ -40,12 +40,12 @@ CE_CLASS_GEN;
   {}
 
   virtual void SetViewport(int16_t x, int16_t y, uint16_t width, uint16_t height) = 0;
-  virtual void  Clear(bool clearColor,
-                      const Color4f &color,
-                      bool clearDepth,
-                      float depth,
-                      bool clearStencil,
-                      uint8_t stencil) = 0;
+  virtual void Clear(bool clearColor,
+                     const Color4f &color,
+                     bool clearDepth,
+                     float depth,
+                     bool clearStencil,
+                     uint8_t stencil) = 0;
 
   virtual void SetColorWrite(bool redMask, bool greenMask, bool blueMask, bool alphaMask) = 0;
   virtual void SetDepthWrite(bool depthMask) = 0;
@@ -71,7 +71,7 @@ CE_CLASS_GEN;
   virtual void SetShadowMapViewMatrices(const Matrix4f *viewMatrices, Size numMatrices) = 0;
   virtual void SetShadowMapProjectionMatrices(const Matrix4f *projectionMatrices, Size numMatrices) = 0;
 
-  virtual void SetSkeletonMatrices (const Matrix4f *skeletonMatrices, Size numMatrices) = 0;
+  virtual void SetSkeletonMatrices(const Matrix4f *skeletonMatrices, Size numMatrices) = 0;
 
   virtual const Matrix4f &GetViewMatrix() const = 0;
   virtual const Matrix4f &GetViewMatrixInv() const = 0;
@@ -96,12 +96,21 @@ CE_CLASS_GEN;
   virtual bool MoreShadowMapsPossible() const = 0;
   virtual void AddShadowMap(iTexture2D *shadowMap) = 0;
   virtual iTexture2D *GetShadowMap(unsigned idx) = 0;
-  virtual void SetPointLightShadowMap(iLight *light,
-                                      iTextureCube *colorMap,
-                                      iTextureCube *depthMap,
+  virtual void SetPointLightShadowMap(size_t lightIdx,
+                                      iPointLight *light,
+                                      iTextureCube *shadowBufferDepth,
+                                      iTextureCube *shadowBufferColor,
                                       float near,
                                       float far,
                                       float bias) = 0;
+
+  virtual void SetDirectionalLightShadowMap(size_t lightIdx,
+                                            iDirectionalLight *light,
+                                            std::array<iTexture2D *, 4> shadowBuffersDepth,
+                                            std::array<iTexture2D *, 4> shadowBuffersColor,
+                                            float near,
+                                            float far,
+                                            float bias) = 0;
   virtual void SetLightShadowMap(iLight *light, iTexture2D *shadowMap) = 0;
 
   virtual iSampler *CreateSampler() = 0;
@@ -115,7 +124,7 @@ CE_CLASS_GEN;
   virtual iPointLight *CreatePointLight() = 0;
 
 
-  virtual void ClearTextureCache () = 0;
+  virtual void ClearTextureCache() = 0;
   virtual void ResetTextures() = 0;
   virtual void MarkTexture() = 0;
   virtual void ResetTexturesToMark() = 0;
@@ -136,10 +145,10 @@ CE_CLASS_GEN;
 
 
 #if _DEBUG
-  virtual void ResetDebug () = 0;
+  virtual void ResetDebug() = 0;
   CE_NODISCARD virtual Size GetNumberOfDrawCalls() const = 0;
-  CE_NODISCARD virtual Size GetNumberOfTriangles () const = 0;
-  CE_NODISCARD virtual Size GetNumberOfShaderStateChanges () const = 0;
+  CE_NODISCARD virtual Size GetNumberOfTriangles() const = 0;
+  CE_NODISCARD virtual Size GetNumberOfShaderStateChanges() const = 0;
 #endif
 
 

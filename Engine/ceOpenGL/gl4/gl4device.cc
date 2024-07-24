@@ -59,7 +59,7 @@ GL4Device::GL4Device()
     , m_fullscreenBlitProgram(nullptr)
     , m_fullscreenBlitMSProgram(nullptr)
     , m_fullscreenBlitRenderMesh(nullptr)
-    , m_pixelRenderMesh (nullptr)
+    , m_pixelRenderMesh(nullptr)
     , m_fullscreenBlitArrayProgram(nullptr)
     , m_fullscreenBlitCubeProgram(nullptr)
     , m_fullscreenBlitCubePosXRenderMesh(nullptr)
@@ -137,7 +137,7 @@ bool GL4Device::Initialize()
     m_samplers[i] = nullptr;
   }
 
-  for (Size i=0; i<256; i++)
+  for (Size i = 0; i < 256; i++)
   {
     m_skeletonMatrices[i].SetIdentity();
   }
@@ -402,7 +402,7 @@ void GL4Device::SetShadowMapProjectionMatrices(const Matrix4f *matrices, Size nu
 
 void GL4Device::SetSkeletonMatrices(const ce::Matrix4f *skeletonMatrices, Size numMatrices)
 {
-  Size cappedNumMatrices = ceMin(numMatrices, (Size)256);
+  Size cappedNumMatrices = ceMin(numMatrices, (Size) 256);
   memcpy(m_skeletonMatrices, skeletonMatrices, cappedNumMatrices * sizeof(Matrix4f));
   m_skeletonMatrixCount = cappedNumMatrices;
 }
@@ -660,7 +660,6 @@ void GL4Device::SetRenderBuffer(const std::vector<uint32_t> &buffer)
 void GL4Device::ClearShadowMaps()
 {
   m_shadowMapTextures.clear();
-  m_pointLightShadowData.clear();
   m_lightShadowMaps.clear();
 }
 
@@ -683,20 +682,50 @@ iTexture2D *GL4Device::GetShadowMap(unsigned int idx)
   return m_shadowMapTextures[idx];
 }
 
-void GL4Device::SetPointLightShadowMap(iLight *light,
-                                       iTextureCube *colorMap,
-                                       iTextureCube *depthMap,
+void GL4Device::SetPointLightShadowMap(size_t lightIdx,
+                                       iPointLight *light,
+                                       iTextureCube *shadowBufferDepth,
+                                       iTextureCube *shadowBufferColor,
                                        float near,
                                        float far,
                                        float bias
                                       )
 {
-  PointLightShadowData data {};
-  data.Light   = light;
-  data.Color   = colorMap;
-  data.Depth   = depthMap;
-  data.Mapping = Vector3f(near, far, bias);
-  m_pointLightShadowData[light] = data;
+  LightShadowData lsd {};
+  lsd.LightType                    = eLT_Point;
+  lsd.PointLight.Light             = light;
+  lsd.PointLight.ShadowBufferDepth = shadowBufferDepth;
+  lsd.PointLight.ShadowBufferColor = shadowBufferColor;
+  lsd.PointLight.Near              = near;
+  lsd.PointLight.Far               = far;
+  lsd.PointLight.Bias              = bias;
+  m_lightShadowData[lightIdx] = lsd;
+}
+
+void GL4Device::SetDirectionalLightShadowMap(size_t lightIdx,
+                                             iDirectionalLight *light,
+                                             std::array<iTexture2D *, 4> shadowBuffersDepth,
+                                             std::array<iTexture2D *, 4> shadowBuffersColor,
+                                             float near,
+                                             float far,
+                                             float bias)
+{
+
+  LightShadowData lsd {};
+  lsd.LightType              = eLT_Directional;
+  lsd.DirectionalLight.Light = light;
+  lsd.DirectionalLight.ShadowBufferDepth[0] = shadowBuffersDepth[0];
+  lsd.DirectionalLight.ShadowBufferDepth[1] = shadowBuffersDepth[1];
+  lsd.DirectionalLight.ShadowBufferDepth[2] = shadowBuffersDepth[2];
+  lsd.DirectionalLight.ShadowBufferDepth[3] = shadowBuffersDepth[3];
+  lsd.DirectionalLight.ShadowBufferColor[0] = shadowBuffersColor[0];
+  lsd.DirectionalLight.ShadowBufferColor[1] = shadowBuffersColor[1];
+  lsd.DirectionalLight.ShadowBufferColor[2] = shadowBuffersColor[2];
+  lsd.DirectionalLight.ShadowBufferColor[3] = shadowBuffersColor[3];
+  lsd.DirectionalLight.Near = near;
+  lsd.DirectionalLight.Far  = far;
+  lsd.DirectionalLight.Bias = bias;
+  m_lightShadowData[lightIdx] = lsd;
 }
 
 void GL4Device::SetLightShadowMap(iLight *light, iTexture2D *shadowMap)
@@ -803,7 +832,7 @@ iDirectionalLight *GL4Device::CreateDirectionalLight()
 
 void GL4Device::ClearTextureCache()
 {
-  for (size_t i=0; i<eTU_COUNT; i++)
+  for (size_t i = 0; i < eTU_COUNT; i++)
   {
     m_textures[i] = nullptr;
   }
@@ -854,7 +883,6 @@ void GL4Device::SetSampler(eTextureUnit unit, iSampler *sampler)
   }
   CE_GL_ERROR()
 }
-
 
 
 void GL4Device::BindUnsafe(iTexture *texture)
@@ -1710,8 +1738,8 @@ void GL4Device::IncTriangles(Size num)
 
 void GL4Device::ResetDebug()
 {
-  m_numDrawCalls = 0;
-  m_numTriangles = 0;
+  m_numDrawCalls           = 0;
+  m_numTriangles           = 0;
   m_numShaderStatesChanges = 0;
 }
 

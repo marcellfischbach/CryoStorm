@@ -75,6 +75,7 @@ void GL4DeferredDirectionalLightRenderer::Render(const Camera *camera,
     m_pssmRenderer.SetScene(m_scene);
     m_pssmRenderer.SetDepthBuffer(gBuffer->GetDepth());
     m_pssmRenderer.SetShadowMap(GetShadowMap());
+    m_pssmRenderer.SetShadowBuffer(GetShadowBuffer());
     m_pssmRenderer.RenderShadow(light, *camera, *projector);
     lrs = &m_shadow;
   }
@@ -150,5 +151,14 @@ GL4RenderTarget2D *GL4DeferredDirectionalLightRenderer::GetShadowMap()
   return target;
 }
 
+GL4PSSMShadowBufferObject &GL4DeferredDirectionalLightRenderer::GetShadowBuffer()
+{
+  if (!m_pssmRenderer.IsShadowBufferValid(m_shadowBuffer))
+  {
+    m_shadowBuffer = m_pssmRenderer.CreateDirectionalLightShadowBuffer();
+  }
+
+  return m_shadowBuffer;
+}
 
 }

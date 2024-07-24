@@ -80,7 +80,8 @@ void GL4ForwardDirectionalLightRenderer::SortLights()
 {
 
   std::sort(m_shadowDirectionalLights.begin(), m_shadowDirectionalLights.end(),
-            [](GL4DirectionalLight *light0, GL4DirectionalLight *light1) {
+            [](GL4DirectionalLight *light0, GL4DirectionalLight *light1)
+            {
               return light0->GetIntensity() > light1->GetIntensity();
             });
 }
@@ -91,9 +92,12 @@ void GL4ForwardDirectionalLightRenderer::RenderShadow(GL4DirectionalLight *direc
                                                       size_t lightIdx)
 {
   GL4RenderTarget2D *target = GetDirectionalLightShadowMap(lightIdx);
-  if (target)
+  GL4PSSMShadowBufferObject *sbo = GetDirectionalLightShadowBuffer(lightIdx);
+
+  if (target && sbo)
   {
     m_pssmRenderer.SetShadowMap(target);
+    m_pssmRenderer.SetShadowBuffer(*sbo);
     m_pssmRenderer.RenderShadow(directionalLight, camera, projector);
 
     ApplyShadowMapToDevice(directionalLight, lightIdx);
@@ -125,7 +129,7 @@ GL4RenderTarget2D *GL4ForwardDirectionalLightRenderer::GetDirectionalLightShadow
   }
 
   GL4RenderTarget2D *target = m_directionalLightShadowMap[lightIdx];
-  if (m_pssmRenderer.IsShadowMapValid (target))
+  if (m_pssmRenderer.IsShadowMapValid(target))
   {
     return target;
   }
@@ -133,6 +137,22 @@ GL4RenderTarget2D *GL4ForwardDirectionalLightRenderer::GetDirectionalLightShadow
   target = m_pssmRenderer.CreateDirectionalLightShadowMap();
   CE_SET(m_directionalLightShadowMap[lightIdx], target);
   return target;
+}
+
+GL4PSSMShadowBufferObject *GL4ForwardDirectionalLightRenderer::GetDirectionalLightShadowBuffer(size_t lightIdx)
+{
+  if (lightIdx >= MaxLights)
+  {
+    return nullptr;
+  }
+
+  GL4PSSMShadowBufferObject &shadowBuffer = m_directionalLightShadowBuffer[lightIdx];
+  if (!m_pssmRenderer.IsShadowBufferValid(shadowBuffer))
+  {
+    m_directionalLightShadowBuffer[lightIdx] = m_pssmRenderer.CreateDirectionalLightShadowBuffer();
+  }
+
+  return &m_directionalLightShadowBuffer[lightIdx];
 }
 
 
@@ -148,7 +168,7 @@ void GL4ForwardDirectionalLightRenderer::SetScene(iGfxScene *scene)
 
 void GL4ForwardDirectionalLightRenderer::SetDepthBuffer(iTexture2D *depthBuffer)
 {
-  m_depthBuffer                     = depthBuffer;
+  m_depthBuffer = depthBuffer;
 }
 
 

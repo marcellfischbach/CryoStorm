@@ -42,6 +42,7 @@ public:
 
 private:
   GL4RenderTarget2D *GetShadowMap();
+  GL4PSSMShadowBufferObject &GetShadowBuffer();
 
   GL4Device *m_device = nullptr;
   iGfxScene *m_scene = nullptr;
@@ -65,6 +66,7 @@ private:
   GL4PSSMRenderer m_pssmRenderer;
 
   GL4RenderTarget2D *m_shadowMap = nullptr;
+  GL4PSSMShadowBufferObject m_shadowBuffer;
 
 };
 

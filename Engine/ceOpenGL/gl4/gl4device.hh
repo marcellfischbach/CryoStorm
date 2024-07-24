@@ -2,10 +2,12 @@
 #pragma once
 
 #include <ceOpenGL/openglexport.hh>
+#include <ceOpenGL/openglconstants.hh>
 #include <ceCore/class.hh>
 #include <ceCore/graphics/idevice.hh>
 #include <ceCore/graphics/etextureunit.hh>
 #include <map>
+#include <array>
 
 namespace ce
 {
@@ -56,7 +58,7 @@ public:
   void SetShadowMapViewMatrices(const Matrix4f *viewMatrices, Size numMatrices) override;
   void SetShadowMapProjectionMatrices(const Matrix4f *projectionMatrices, Size numMatrices) override;
 
-  void SetSkeletonMatrices (const Matrix4f *skeletonMatrices, Size numMatrices) override;
+  void SetSkeletonMatrices(const Matrix4f *skeletonMatrices, Size numMatrices) override;
 
   const Matrix4f &GetViewMatrix() const override;
   const Matrix4f &GetViewMatrixInv() const override;
@@ -81,12 +83,20 @@ public:
   bool MoreShadowMapsPossible() const override;
   void AddShadowMap(iTexture2D *shadowMap) override;
   iTexture2D *GetShadowMap(unsigned idx) override;
-  void SetPointLightShadowMap(iLight *light,
-                              iTextureCube *colorMap,
-                              iTextureCube *depthMap,
+  void SetPointLightShadowMap(size_t lightIdx,
+                              iPointLight *light,
+                              iTextureCube *shadowBufferDepth,
+                              iTextureCube *shadowBufferColor,
                               float near,
                               float far,
                               float bias) override;
+  void SetDirectionalLightShadowMap(size_t lightIdx,
+                                    iDirectionalLight *light,
+                                    std::array<iTexture2D *, 4> shadowBuffersDepth,
+                                    std::array<iTexture2D *, 4> shadowBuffersColor,
+                                    float near,
+                                    float far,
+                                    float bias) override;
   void SetLightShadowMap(iLight *light, iTexture2D *shadowMap);
 
   iSampler *CreateSampler() override;
@@ -99,7 +109,7 @@ public:
   iDirectionalLight *CreateDirectionalLight() override;
   iPointLight *CreatePointLight() override;
 
-  void ClearTextureCache () override;
+  void ClearTextureCache() override;
   void ResetTextures() override;
   void MarkTexture() override;
   void ResetTexturesToMark() override;
@@ -131,8 +141,8 @@ public:
 
   void ResetDebug() override;
   CE_NODISCARD Size GetNumberOfDrawCalls() const override;
-  CE_NODISCARD Size GetNumberOfTriangles () const override;
-  CE_NODISCARD Size GetNumberOfShaderStateChanges () const override;
+  CE_NODISCARD Size GetNumberOfTriangles() const override;
+  CE_NODISCARD Size GetNumberOfShaderStateChanges() const override;
 #endif
 
 private:
@@ -215,7 +225,7 @@ private:
   Matrix4f m_shadowMapViewProjectionMatrices[6];
   bool     m_shadowMapViewProjectionMatrixDirty;
 
-  Size m_skeletonMatrixCount;
+  Size     m_skeletonMatrixCount;
   Matrix4f m_skeletonMatrices[256];
 
   float    m_clearColorR;
@@ -226,15 +236,36 @@ private:
   int      m_clearStencil;
   uint32_t m_activeTexture;
 
-  struct PointLightShadowData
+
+  struct LightShadowData
   {
-    iLight       *Light;
-    iTextureCube *Color;
-    iTextureCube *Depth;
-    Vector3f     Mapping;
+    eLightType LightType;
+
+    union
+    {
+      struct PointLightShadowData
+      {
+        iPointLight  *Light;
+        iTextureCube *ShadowBufferDepth;
+        iTextureCube *ShadowBufferColor;
+        float        Near;
+        float        Far;
+        float        Bias;
+      } PointLight;
+
+      struct DirectionalLightShadowData
+      {
+        iDirectionalLight *Light;
+        iTexture2D        *ShadowBufferDepth[4];
+        iTexture2D        *ShadowBufferColor[4];
+        float             Near;
+        float             Far;
+        float             Bias;
+      } DirectionalLight;
+    };
   };
 
-  std::map<const iLight *, PointLightShadowData> m_pointLightShadowData;
+  LightShadowData m_lightShadowData[MaxLights];
 
   std::map<const iLight *, iTexture2D *> m_lightShadowMaps;
 

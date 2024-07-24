@@ -62,6 +62,7 @@ public:
 private:
   void SortLights();
   GL4RenderTarget2D *GetDirectionalLightShadowMap(size_t lightIdx);
+  GL4PSSMShadowBufferObject *GetDirectionalLightShadowBuffer(size_t lightIdx);
 
   void RenderShadow(GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector, size_t lightIdx);
   void ApplyShadowMapToDevice(GL4DirectionalLight* directionalLight, size_t lightIdx);
@@ -76,6 +77,7 @@ private:
   iTexture2D* m_depthBuffer = nullptr;
 
   std::array<GL4RenderTarget2D *, MaxLights> m_directionalLightShadowMap;
+  std::array<GL4PSSMShadowBufferObject, MaxLights> m_directionalLightShadowBuffer;
 
   GL4PSSMRenderer m_pssmRenderer;
 };

@@ -378,6 +378,7 @@ void GL4ForwardPipeline::RenderTransparentMeshes()
   m_device->SetDepthWrite(false);
   m_device->SetDepthFunc(eCF_LessOrEqual);
 
+
   std::vector<GfxMesh *> &transparentMeshes = m_collector.GetMeshes(eRenderQueue::Transparency);
   for (auto              &mesh: transparentMeshes)
   {

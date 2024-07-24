@@ -30,6 +30,20 @@ class GL4RenderTarget2DArray;
 class GL4RenderTarget2D;
 class GL4Texture2DArray;
 
+
+struct GL4PSSMShadowBufferObject
+{
+  std::array<GL4RenderTarget2D *, 4> ShadowBuffers;
+
+  GL4PSSMShadowBufferObject();
+  GL4PSSMShadowBufferObject(const GL4PSSMShadowBufferObject &sbo);
+  GL4PSSMShadowBufferObject(GL4PSSMShadowBufferObject &&sbo);
+  ~GL4PSSMShadowBufferObject();
+
+  GL4PSSMShadowBufferObject &operator =(const GL4PSSMShadowBufferObject &sbo);
+
+};
+
 class GL4PSSMRenderer
 {
 public:
@@ -39,23 +53,34 @@ public:
   void Initialize();
 
   void SetDepthBuffer(iTexture2D *depthBuffer);
-  void SetDevice (GL4Device *device);
-  void SetScene (iGfxScene *scene);
+  void SetDevice(GL4Device *device);
+  void SetScene(iGfxScene *scene);
   GL4RenderTarget2D *CreateDirectionalLightShadowMap();
-  void SetShadowMap (GL4RenderTarget2D *shadowMap);
-  GL4RenderTarget2D *GetShadowMap ();
+
+  void SetShadowMap(GL4RenderTarget2D *shadowMap);
+  GL4RenderTarget2D *GetShadowMap();
+
+
+  GL4PSSMShadowBufferObject CreateDirectionalLightShadowBuffer();
+
+  void SetShadowBuffer(const GL4PSSMShadowBufferObject &shadowBuffer);
+  const GL4PSSMShadowBufferObject &GetShadowBuffer();
+  GL4RenderTarget2D *GetShadowBuffer(size_t splitLayer);
 
   void RenderShadow(const GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector);
 
-  bool IsShadowMapValid (GL4RenderTarget2D *shadowMap) const;
+  bool IsShadowMapValid(GL4RenderTarget2D *shadowMap) const;
+  bool IsShadowBufferValid(GL4PSSMShadowBufferObject &shadowMap) const;
+
+
 private:
-  void RenderShadowBuffer(const GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector);
+  void
+  RenderShadowBuffer(const GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector);
   void RenderShadowMap(const GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector);
   void FilterShadowMap();
 
 
   GL4RenderTarget2D *GetDirectionalLightShadowMapTemp();
-  GL4RenderTarget2D *GetDirectionalLightShadowBuffer(size_t split);
   static float GetSplitSize(const Vector3f *near, const Vector3f *far);
   iSampler *GetShadowMapColorSampler();
   iSampler *GetShadowBufferColorSampler();
@@ -68,13 +93,13 @@ private:
 
   iTexture2D *m_depthBuffer = nullptr;
 
-  std::array<GL4RenderTarget2D*, 4> m_directionalLightShadowBuffers;
-  size_t                 m_directionalLightShadowBufferSize = 0;
+  GL4PSSMShadowBufferObject m_directionalLightShadowBuffers;
+  size_t             m_directionalLightShadowBufferSize = 0;
 
 
-  GL4RenderTarget2D *m_directionalLightShadowMapTemp = nullptr;
-  GL4RenderTarget2D *m_directionalLightShadowMap = nullptr;
-  size_t            m_directionalLightShadowMapWidth = 0;
+  GL4RenderTarget2D *m_directionalLightShadowMapTemp  = nullptr;
+  GL4RenderTarget2D *m_directionalLightShadowMap      = nullptr;
+  size_t            m_directionalLightShadowMapWidth  = 0;
   size_t            m_directionalLightShadowMapHeight = 0;
 
   enum class ShadowSamplingMode
@@ -95,14 +120,14 @@ private:
 
   iShader          *m_shadowMappingShader = nullptr;
   iShaderAttribute *m_attrLayersDepth     = nullptr;
-  iShaderAttribute *m_attrLayersBias    = nullptr;
-  iShaderAttribute *m_attrShadowBuffers = nullptr;
-  iShaderAttribute *m_attrDepthBuffer   = nullptr;
+  iShaderAttribute *m_attrLayersBias      = nullptr;
+  iShaderAttribute *m_attrShadowBuffers   = nullptr;
+  iShaderAttribute *m_attrDepthBuffer     = nullptr;
 
 
   GL4PSSMFilter m_shadowMapFilter;
 
-  GfxSceneCollector m_collector;
+  GfxSceneCollector      m_collector;
   std::vector<GfxMesh *> m_meshesCache;
 };
 

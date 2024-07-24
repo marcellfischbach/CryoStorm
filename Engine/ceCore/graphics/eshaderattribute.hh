@@ -42,14 +42,16 @@ enum eShaderAttribute
   eSA_PointLightShadowMapColor,
   eSA_PointLightShadowMapDepth,
 
+
+
+  eSA_DirectionalLightShadowMapLayersBias,
+  eSA_DirectionalLightShadowMapMatrices,
+  eSA_DirectionalLightShadowMapColor,
+  eSA_DirectionalLightShadowMapDepth,
+
+
   /* Skeleton rendering */
   eSA_SkeletonMatrices,
-
-//  eSA_DirectionalLightShadowMapLayersBias,
-//  eSA_DirectionalLightShadowMapMatrices,
-//  eSA_DirectionalLightShadowMapColor,
-//  eSA_DirectionalLightShadowMapDepth,
-
 };
 
 }
