@@ -54,11 +54,50 @@ Material *GL4ShaderGraphCompiler::Compile(ce::ShaderGraph *shaderGraph, const Pa
   material->SetShader(eRP_Depth, depthShader);
   material->SetShader(eRP_Forward, forwardShader);
   material->SetRenderQueue(shaderGraph->GetQueue());
-  material->SetBlending(shaderGraph->IsBlending());
-  material->SetBlendFactor(shaderGraph->GetSrcFactorColor(),
-                           shaderGraph->GetSrcFactorAlpha(),
-                           shaderGraph->GetDstFactorColor(),
-                           shaderGraph->GetDstFactorAlpha());
+
+
+  switch (m_shaderGraph->GetLightingMode())
+  {
+    case ShaderGraph::eLM_Default:
+      material->SetShadingMode(eShadingMode::Shaded);
+      material->SetBlending(false);
+      break;
+
+    case ShaderGraph::eLM_Attenuated:
+      material->SetShadingMode(eShadingMode::Shaded);
+      material->SetBlending(true);
+      break;
+
+    case ShaderGraph::eLM_Unlit:
+      material->SetShadingMode(eShadingMode::Unshaded);
+      material->SetBlending(true);
+      break;
+
+  }
+  switch (m_shaderGraph->GetBlendingMode())
+  {
+    case ShaderGraph::eBM_Default:
+      material->SetBlending(false);
+      material->SetBlendFactor(eBlendFactor::One, eBlendFactor::Zero);
+      material->SetDepthWrite(true);
+      break;
+
+    case ShaderGraph::eBM_Blend:
+      material->SetBlending(true);
+      material->SetBlendFactor(eBlendFactor::SrcAlpha, eBlendFactor::OneMinusSrcAlpha);
+      material->SetDepthWrite(false);
+      break;
+
+    case ShaderGraph::eBM_Add:
+      material->SetBlending(true);
+      material->SetBlendFactor(eBlendFactor::SrcAlpha, eBlendFactor::One);
+      material->SetDepthWrite(false);
+      break;
+  }
+  if (!m_errorString.empty())
+  {
+    return nullptr;
+  }
 
   for (const auto &attrib: depth.attributes)
   {
@@ -477,6 +516,14 @@ GL4ShaderGraphLightData::GL4ShaderGraphLightData()
     return;
   }
   DiffuseLightingDefault = txt->GetContent();
+  txt->Release();
+
+  txt = AssetManager::Get()->Get<TextFile>("/shaders/gl4/shadergraph/diffuse/diffuse_attenuated_lighting.glsl");
+  if (!txt)
+  {
+    return;
+  }
+  DiffuseLightingAttenuated = txt->GetContent();
   txt->Release();
 
 

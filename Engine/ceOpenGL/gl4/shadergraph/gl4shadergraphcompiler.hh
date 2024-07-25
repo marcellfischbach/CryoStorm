@@ -137,8 +137,7 @@ private:
 public:
   bool        Valid;
   std::string DiffuseLightingDefault;
-  std::string DiffuseLightingBlend;
-  std::string DiffuseLightingAdd;
+  std::string DiffuseLightingAttenuated;
 
   std::string DiffuseLightingAmbient;
   std::string DiffuseLightingDiffuse;

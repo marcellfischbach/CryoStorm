@@ -267,6 +267,18 @@ ShaderGraph::eLightingMode ShaderGraph::GetLightingMode() const
   return m_lightingMode;
 }
 
+void ShaderGraph::SetBlendingMode(eBlendingMode blendingMode)
+{
+  m_blendingMode = blendingMode;
+}
+
+
+ShaderGraph::eBlendingMode ShaderGraph::GetBlendingMode() const
+{
+  return m_blendingMode;
+}
+
+
 void ShaderGraph::SetQueue(eRenderQueue queue)
 {
   m_queue = queue;

@@ -210,10 +210,18 @@ in vec2 ce_vs_out_ScreenCoordinates;
   }
 
 
-  src += GL4ShaderGraphLightData::Get().DiffuseLightingDefault;
-  src += GL4ShaderGraphLightData::Get().DiffuseLightingAmbient;
-  src += GL4ShaderGraphLightData::Get().DiffuseLightingDiffuse;
-  src += GL4ShaderGraphLightData::Get().DiffuseLightingSpecular;
+  if (m_shaderGraph->GetLightingMode() == ShaderGraph::eLM_Default)
+  {
+    src += GL4ShaderGraphLightData::Get().DiffuseLightingDefault;
+    src += GL4ShaderGraphLightData::Get().DiffuseLightingAmbient;
+    src += GL4ShaderGraphLightData::Get().DiffuseLightingDiffuse;
+    src += GL4ShaderGraphLightData::Get().DiffuseLightingSpecular;
+  }
+  else if(m_shaderGraph->GetLightingMode() == ShaderGraph::eLM_Attenuated)
+  {
+    src += GL4ShaderGraphLightData::Get().DiffuseLightingAttenuated;
+  }
+
   if (m_shaderGraph->GetQueue() == eRenderQueue::Transparency)
   {
     src += GL4ShaderGraphLightData::Get().DiffuseLightingShadowInline;
@@ -263,18 +271,21 @@ in vec2 ce_vs_out_ScreenCoordinates;
     src += "  }\n";
   }
 
-  src += R"(
-  vec3 norm = normalize (ce_vs_out_WorldNormal);
-)";
-  if (tangentsNeeded || hasNormalInput)
+  if (m_shaderGraph->GetLightingMode() == ShaderGraph::eLM_Default)
   {
     src += R"(
+  vec3 norm = normalize (ce_vs_out_WorldNormal);
+)";
+    if (tangentsNeeded || hasNormalInput)
+    {
+      src += R"(
   vec3 tang = normalize (ce_vs_out_WorldTangent);
   vec3 binormal = normalize (cross(norm, tang));
   tang = cross(binormal, norm);
 
   mat3 normalMatrix = mat3(tang, binormal, norm);
 )";
+    }
   }
 
   for (auto node: nodes)
@@ -290,7 +301,6 @@ in vec2 ce_vs_out_ScreenCoordinates;
       src += "  " + decl + "\n";
     }
   }
-
   if (hasNormalInput)
   {
     auto normal = GetInputValue(m_shaderGraph->GetNormalInput());
@@ -307,28 +317,50 @@ in vec2 ce_vs_out_ScreenCoordinates;
   }
 
   auto diffuse   = GetInputValue(m_shaderGraph->GetDiffuseInput());
-  auto roughness = GetInputValue(m_shaderGraph->GetRoughnessInput());
-  auto alpha     = GetInputValue(m_shaderGraph->GetAlphaInput());
-  auto metallic     = GetInputValue(m_shaderGraph->GetMetallicInput());
+  if (m_shaderGraph->GetLightingMode() == ShaderGraph::eLM_Default)
+  {
+    auto roughness = GetInputValue(m_shaderGraph->GetRoughnessInput());
+    auto alpha     = GetInputValue(m_shaderGraph->GetAlphaInput());
+    auto metallic  = GetInputValue(m_shaderGraph->GetMetallicInput());
 
 
-  src += "  \n";
-  src += "  float roughness = " + roughness.FullQualified() + ";\n";
-  src += "  vec3 diffuse = " + diffuse.FullQualified() + ";\n";
-  src += "  float alpha = " + alpha.FullQualified() + ";\n";
-  src += "  float metallic = " + metallic.FullQualified() + ";\n";
+    src += "  \n";
+    src += "  float roughness = " + roughness.FullQualified() + ";\n";
+    src += "  vec3 diffuse = " + diffuse.FullQualified() + ";\n";
+    src += "  float alpha = " + alpha.FullQualified() + ";\n";
+    src += "  float metallic = " + metallic.FullQualified() + ";\n";
 
-  src += R"(
+    src += R"(
 
   light_result_t light = calc_lights(ce_vs_out_WorldPosition, normal, ce_vs_out_CameraSpacePosition, ce_vs_out_CameraWorldPosition, 0.8, roughness);
   vec3 dielectric_light = light.diffuse  * diffuse + light.specular;
   vec3 metallic_light = light.specular * diffuse;
 
   ce_FragColor = vec4(mix(dielectric_light, metallic_light, metallic), alpha);
+)";
+  }
+  else if (m_shaderGraph->GetLightingMode() == ShaderGraph::eLM_Attenuated)
+  {
+    src += "  vec3 diffuse = " + diffuse.FullQualified() + ";\n";
+    src += R"(
+
+  light_result_t light = calc_lights(ce_vs_out_WorldPosition, vec3(0, 0, 0), ce_vs_out_CameraSpacePosition, ce_vs_out_CameraWorldPosition, 0.0, 0.0);
+  vec3 dielectric_light = light.diffuse  * diffuse;
+
+  ce_FragColor = vec4(dielectric_light, alpha);
+)";
+
+  }
+  else
+  {
+    src += "  vec3 diffuse = " + diffuse.FullQualified() + ";\n";
+    src += "  ce_FragColor = vec4(diffuse, alpha);\n";
+  }
+
+  src += R"(
 }
 
 )";
-
 
 
   return src;
@@ -339,11 +371,14 @@ in vec2 ce_vs_out_ScreenCoordinates;
 void GL4ShaderGraphCompiler::GenerateForward(GL4ShaderGraphCompiler::SourceBundle &bundle)
 {
   bundle.vert = GenerateForward_Vert(bundle.attributes);
-  if (m_errorString.empty())return;
+  if (m_errorString.empty())
+  { return; }
   bundle.geom = GenerateForward_Geom(bundle.attributes);
-  if (m_errorString.empty())return;
+  if (m_errorString.empty())
+  { return; }
   bundle.frag = GenerateForward_Frag(bundle.attributes);
-  if (m_errorString.empty())return;
+  if (m_errorString.empty())
+  { return; }
   bundle.attributes["ReceiveShadow"] = eMAT_Int;
 }
 

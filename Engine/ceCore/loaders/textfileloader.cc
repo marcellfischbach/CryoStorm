@@ -18,7 +18,7 @@ bool TextFileLoader::CanLoad(const ce::Class *cls, const ce::ResourceLocator &lo
 
 iObject *TextFileLoader::Load(const ce::Class *cls, const ce::ResourceLocator &locator) const
 {
-  iFile *file = VFS::Get()->Open(locator, eAM_Read, eOM_Text);
+  iFile *file = VFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (!file)
   {
     return nullptr;

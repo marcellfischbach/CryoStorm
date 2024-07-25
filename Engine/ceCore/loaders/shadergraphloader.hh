@@ -27,6 +27,7 @@ public:
 private:
   void LoadQueue (const CrimsonFileElement *shaderGraphElement, ShaderGraph *sg) const;
   void LoadLightingMode (const CrimsonFileElement *shaderGraphElement, ShaderGraph *sg) const;
+  void LoadBlendingMode (const CrimsonFileElement *shaderGraphElement, ShaderGraph *sg) const;
 
   SGNode *CreateNode(const CrimsonFileElement *nodeElement, ShaderGraph *sg) const;
   SGResourceNode *CreateResourceNode(const CrimsonFileElement *nodeElement, ShaderGraph *sg) const;

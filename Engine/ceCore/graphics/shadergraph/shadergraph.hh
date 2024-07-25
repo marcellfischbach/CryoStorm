@@ -72,15 +72,25 @@ public:
 
   const Default *GetDefault(const std::string &name) const;
 
+  enum eBlendingMode
+  {
+    eBM_Default,
+    eBM_Blend,
+    eBM_Add,
+  };
+
   enum eLightingMode
   {
     eLM_Default,
-    eLM_Blend,
-    eLM_Add,
+    eLM_Attenuated,
+    eLM_Unlit
   };
 
-  void SetLightingMode (eLightingMode lightingMode);
-  eLightingMode GetLightingMode () const;
+  void SetLightingMode(eLightingMode lightingMode);
+  eLightingMode GetLightingMode() const;
+
+  void SetBlendingMode(eBlendingMode blendingMode);
+  eBlendingMode GetBlendingMode() const;
 
 
   void SetQueue(eRenderQueue queue);
@@ -93,8 +103,9 @@ private:
   std::vector<Default>  m_defaults;
   std::vector<SGNode *> m_nodes;
 
-  eRenderQueue m_queue          = eRenderQueue::Default;
+  eRenderQueue  m_queue        = eRenderQueue::Default;
   eLightingMode m_lightingMode = eLM_Default;
+  eBlendingMode m_blendingMode = eBM_Default;
 
 
   SGNodeInput *m_diffuse   = nullptr;

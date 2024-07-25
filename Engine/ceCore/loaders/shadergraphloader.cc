@@ -44,7 +44,8 @@ iObject *ShaderGraphLoader::Load(const CrimsonFile *file, const Class *cls, cons
   }
 
   LoadQueue(shaderGraphElement, sg);
-  LoadBlend(shaderGraphElement, sg);
+  LoadLightingMode(shaderGraphElement, sg);
+  LoadBlendingMode(shaderGraphElement, sg);
 
 
   const CrimsonFileElement *nodesElements = shaderGraphElement->GetChild("nodes");
@@ -137,15 +138,34 @@ void ShaderGraphLoader::LoadLightingMode(const CrimsonFileElement *shaderGraphEl
   {
     ShaderGraph::eLightingMode lighting       = ShaderGraph::eLM_Default;
     std::string                lightingString = lightingElement->GetAttribute(0, "Default");
-    if (lightingString == "Blend")
+    if (lightingString == "Attenuated")
     {
-      lighting = ShaderGraph::eLM_Blend;
+      lighting = ShaderGraph::eLM_Attenuated;
     }
-    else if (lightingString == "Add")
+    else if (lightingString == "Unlit")
     {
-      lighting = ShaderGraph::eLM_Add;
+      lighting = ShaderGraph::eLM_Unlit;
     }
     sg->SetLightingMode(lighting);
+  }
+}
+
+void ShaderGraphLoader::LoadBlendingMode(const CrimsonFileElement *shaderGraphElement, ShaderGraph *sg) const
+{
+  auto blendingElement = shaderGraphElement->GetChild("blending");
+  if (blendingElement)
+  {
+    ShaderGraph::eBlendingMode blending       = ShaderGraph::eBM_Default;
+    std::string                blendingString = blendingElement->GetAttribute(0, "Default");
+    if (blendingString == "Blend")
+    {
+      blending = ShaderGraph::eBM_Blend;
+    }
+    else if (blendingString == "Add")
+    {
+      blending = ShaderGraph::eBM_Add;
+    }
+    sg->SetBlendingMode(blending);
   }
 }
 

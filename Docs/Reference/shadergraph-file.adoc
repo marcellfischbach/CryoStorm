@@ -1,0 +1,35 @@
+= ShaderGraph Fileformat
+
+
+== Attributes
+
+
+=== `receiveShadows`
+
+Determines whether a material receives shadows. This is only working in `forward` shading mode.
+
+* 0 - This material does not receive shadows
+* 1 - This material receives shadows
+
+
+=== `queue`
+
+In what render queue should meshes be rendered
+
+* `Default` Standard rendering queue for solid meshes
+* `Transparency` Render in transparency pass. Meshes are rendered back to front with blending enabled
+
+
+=== `lighting`
+
+How should the lighting be handled.
+
+* `Default` or `Lighting` Standard lighting is applied. Ambient, Diffuse and specular
+* `Attenuated` Only distance to light (point light) is calculated.
+* `Unlit` No lighting is applied.
+
+=== `blending`
+
+* `Default` or `Opaque` Standard opaque rendering. No blending
+* `Blend` Alpha blended transparent mesh. (no depth write applied)
+* `Add` Values are added not blended. (no depth write applied)
