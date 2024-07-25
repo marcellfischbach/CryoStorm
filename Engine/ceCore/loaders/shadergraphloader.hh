@@ -25,6 +25,8 @@ public:
   iObject *Load(const CrimsonFile *file, const Class *cls, const ResourceLocator &locator) const override;
 
 private:
+  void LoadQueue (const CrimsonFileElement *shaderGraphElement, ShaderGraph *sg) const;
+  void LoadLightingMode (const CrimsonFileElement *shaderGraphElement, ShaderGraph *sg) const;
 
   SGNode *CreateNode(const CrimsonFileElement *nodeElement, ShaderGraph *sg) const;
   SGResourceNode *CreateResourceNode(const CrimsonFileElement *nodeElement, ShaderGraph *sg) const;
@@ -34,6 +36,8 @@ private:
 
   void LoadAttributes (const CrimsonFileElement *attributesElement, ShaderGraph *sg, const ResourceLocator &locator) const;
   void LoadAttribute (const CrimsonFileElement *attributeElement, ShaderGraph *sg, const ResourceLocator &locator) const;
+
+
 };
 
 } // ce

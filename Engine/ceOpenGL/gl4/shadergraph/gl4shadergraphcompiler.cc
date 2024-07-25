@@ -53,6 +53,12 @@ Material *GL4ShaderGraphCompiler::Compile(ce::ShaderGraph *shaderGraph, const Pa
   Material *material = new Material();
   material->SetShader(eRP_Depth, depthShader);
   material->SetShader(eRP_Forward, forwardShader);
+  material->SetRenderQueue(shaderGraph->GetQueue());
+  material->SetBlending(shaderGraph->IsBlending());
+  material->SetBlendFactor(shaderGraph->GetSrcFactorColor(),
+                           shaderGraph->GetSrcFactorAlpha(),
+                           shaderGraph->GetDstFactorColor(),
+                           shaderGraph->GetDstFactorAlpha());
 
   for (const auto &attrib: depth.attributes)
   {
@@ -465,12 +471,12 @@ GL4ShaderGraphLightData::GL4ShaderGraphLightData()
   Valid = false;
   const SettingsFile &gfxSettings = Settings::Get().Graphics();
 
-  TextFile *txt = AssetManager::Get()->Get<TextFile>("/shaders/gl4/shadergraph/diffuse/diffuse_opaque_lighting.glsl");
+  TextFile *txt = AssetManager::Get()->Get<TextFile>("/shaders/gl4/shadergraph/diffuse/diffuse_default_lighting.glsl");
   if (!txt)
   {
     return;
   }
-  DiffuseLightingOpaque = txt->GetContent();
+  DiffuseLightingDefault = txt->GetContent();
   txt->Release();
 
 
@@ -498,6 +504,20 @@ GL4ShaderGraphLightData::GL4ShaderGraphLightData()
     return;
   }
   DiffuseLightingSpecular = txt->GetContent();
+
+  txt = AssetManager::Get()->Get<TextFile>("/shaders/gl4/shadergraph/lighting/shadow_map.glsl");
+  if (!txt)
+  {
+    return;
+  }
+  DiffuseLightingShadowMap = txt->GetContent();
+
+  txt = AssetManager::Get()->Get<TextFile>("/shaders/gl4/shadergraph/lighting/shadow_inline.glsl");
+  if (!txt)
+  {
+    return;
+  }
+  DiffuseLightingShadowInline = txt->GetContent();
 
   Valid = true;
 }

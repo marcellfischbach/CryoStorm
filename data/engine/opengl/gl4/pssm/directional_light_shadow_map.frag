@@ -5,7 +5,7 @@ uniform vec4 ce_LayersDepth;
 uniform float ce_LayersBias;
 uniform mat4 ce_MappingMatrices[4];
 uniform mat4 ce_ShadowMapViewProjectionMatrix[4];
-uniform sampler2DShadow ce_ShadowBuffers[4];
+uniform sampler2DArrayShadow ce_ShadowBuffers;
 uniform sampler2D ce_DepthBuffer;
 
 
@@ -56,7 +56,7 @@ float calc_directional_shadow(vec3 world_position, float distance_to_camera)
     camSpace = camSpace * 0.5 + 0.5;
     camSpace.z -= ce_LayersBias;
 
-    float shadow_value = texture(ce_ShadowBuffers[layer], vec3(camSpace.xy, camSpace.z));
+    float shadow_value = texture(ce_ShadowBuffers, vec4(camSpace.xy, layer , camSpace.z));
     return mix(shadow_value, 1.0, fadeOut);
 }
 

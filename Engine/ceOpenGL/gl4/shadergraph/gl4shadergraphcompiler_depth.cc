@@ -183,6 +183,12 @@ std::string GL4ShaderGraphCompiler::GenerateDepth_Frag(std::map<std::string, eMa
 
 void GL4ShaderGraphCompiler::GenerateDepth(GL4ShaderGraphCompiler::SourceBundle &bundle)
 {
+  if (m_shaderGraph->GetQueue() == eRenderQueue::Transparency)
+  {
+    // no depth rendering in transparent queue
+    return;
+  }
+
   bundle.vert = GenerateDepth_Vert(bundle.attributes);
   if (m_errorString.empty())return;
   bundle.geom = GenerateDepth_Geom(bundle.attributes);

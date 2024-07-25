@@ -12,7 +12,9 @@ static const size_t IDX_METALLIC = 4;
 
 ShaderGraph::ShaderGraph()
     : SGNode("Shader Graph")
+
 {
+  SetKey("Shader Graph");
   m_diffuse = DefineInput("Diffuse", eSGValueType::Float | eSGValueType::Vector3 | eSGValueType::Vector4);
   m_alpha = DefineInput("Alpha", eSGValueType::Float);
   m_roughness = DefineInput("Roughness", eSGValueType::Float);
@@ -255,5 +257,24 @@ const ShaderGraph::Default *ShaderGraph::GetDefault(const std::string &name) con
   return nullptr;
 }
 
-
+void ShaderGraph::SetLightingMode(eLightingMode lightingMode)
+{
+  m_lightingMode = lightingMode;
 }
+
+ShaderGraph::eLightingMode ShaderGraph::GetLightingMode() const
+{
+  return m_lightingMode;
+}
+
+void ShaderGraph::SetQueue(eRenderQueue queue)
+{
+  m_queue = queue;
+}
+
+eRenderQueue ShaderGraph::GetQueue() const
+{
+  return m_queue;
+}
+}
+

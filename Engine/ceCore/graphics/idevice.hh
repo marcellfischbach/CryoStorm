@@ -106,8 +106,8 @@ CE_CLASS_GEN;
 
   virtual void AddDirectionalLightShadow(iDirectionalLight *light,
                                          iTexture2D *shadowMap,
-                                         const std::array<iTexture2D *, 4> &shadowBuffersDepth,
-                                         const std::array<iTexture2D *, 4> &shadowBuffersColor,
+                                         iTexture2DArray *shadowBuffersDepth,
+                                         iTexture2DArray *shadowBuffersColor,
                                          const std::array<float, 4> &layers,
                                          const std::array<Matrix4f, 4> &matrices) = 0;
 //  virtual void SetLightShadowMap(iLight *light, iTexture2D *shadowMap) = 0;

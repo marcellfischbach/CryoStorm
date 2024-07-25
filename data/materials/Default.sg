@@ -1,6 +1,8 @@
 shaderGraph {
 
     receiveShadow 1,
+    queue Default,
+    blend Blend,
 
     nodes {
         resource "ce::SGResourceFloat" roughness "Roughness",
@@ -18,10 +20,10 @@ shaderGraph {
         },
 
         shaderGraph {
-            binding 0 diffuse 0,
-            binding 1 alpha 0,
-            binding 2 roughness 0,
-            binding 3 normal 0,
+            binding "Diffuse" diffuse,
+            binding "Alpha" alpha,
+            binding "Roughness" roughness,
+            binding "Normal" normal,
         }
     },
 

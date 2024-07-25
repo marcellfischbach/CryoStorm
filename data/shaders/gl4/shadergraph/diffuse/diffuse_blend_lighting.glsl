@@ -4,13 +4,13 @@ uniform vec4 ce_LightColor[4];
 uniform vec4 ce_LightVector[4];
 uniform float ce_LightRange[4];
 uniform int ce_LightCastShadow[4];
-uniform sampler2D ce_LightShadowMap[4];
 
 uniform int ce_ReceiveShadow;
 
-float calculate_ambient_lighting ();
-float calculate_diffuse_lighting (float n_dot_l, float n_dot_v, float roughness);
-float calculate_specular_lighting(float F0, float n_dot_l, float n_dot_v, float n_dot_h, float h_dot_v, float roughness);
+
+
+float calculate_directional_shadow(int lightIdx, vec2 screen_coordinates, vec3 world_position, float distance_to_camera);
+float calculate_point_shadow(int lightIdx, vec2 screen_coordinates, vec3 world_position);
 
 
 
@@ -31,40 +31,31 @@ light_result_t calc_light(int idx, vec3 light_ambient, vec3 light_color, vec4 li
 
     if (light_vector.w == 1.0)
     {
-        vec3 frag_to_light = light_vector.xyz - frag_position;
-
-        float distance = length(frag_to_light);
-        frag_to_light /= distance;
-
-        vec3 H = normalize(frag_to_light + frag_to_viewer);
-        float n_dot_l = clamp(dot(frag_normal, frag_to_light), 0.0, 1.0);
-        float n_dot_h = clamp(dot(frag_normal, H), 0.0, 1.0);
-        float h_dot_v = clamp(dot(H, frag_to_viewer), 0.0, 1.0);
-
-        ambient = calculate_ambient_lighting();
-        diffuse = calculate_diffuse_lighting (n_dot_l, n_dot_v, roughness);
-        specular = calculate_specular_lighting(F0, n_dot_l, n_dot_v, n_dot_h, h_dot_v, roughness);
+        ambient = 0.0;
+        diffuse = 1.0;
+        specular = 0.0;
 
         attenuation = clamp(1.0 - distance / light_range, 0.0, 1.0);
 
+        if (ce_LightCastShadow[idx] > 0 && ce_ReceiveShadow > 0)
+        {
+            shadow = calculate_point_shadow(idx, ce_vs_out_ScreenCoordinates, frag_position);
+        }
     }
     else
     {
-        vec3 H = normalize(light_vector.xyz + frag_to_viewer);
-        float n_dot_l = clamp(dot(frag_normal, light_vector.xyz), 0.0, 1.0);
-        float n_dot_h = clamp(dot(frag_normal, H), 0.0, 1.0);
-        float h_dot_v = clamp(dot(H, frag_to_viewer), 0.0, 1.0);
-
-        ambient = calculate_ambient_lighting();
-        diffuse = calculate_diffuse_lighting (n_dot_l, n_dot_v, roughness);
-        specular = calculate_specular_lighting(F0, n_dot_l, n_dot_v, n_dot_h, h_dot_v, roughness);
+        ambient = 0.0;
+        diffuse = 1.0;
+        specular = 0.0;
         attenuation = 1.0;
+
+        if (ce_LightCastShadow[idx] > 0 && ce_ReceiveShadow > 0)
+        {
+            shadow = calculate_directional_shadow(idx, ce_vs_out_ScreenCoordinates, frag_position, camera_space_position.z);
+        }
     }
 
-    if (ce_LightCastShadow[idx] > 0 && ce_ReceiveShadow > 0)
-    {
-        shadow = texture (ce_LightShadowMap[idx], ce_vs_out_ScreenCoordinates).r;
-    }
+
 
     diffuse = clamp(diffuse, 0.0, 1.0);
     specular = clamp(specular, 0.0, 1.0);

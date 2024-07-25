@@ -5,6 +5,7 @@
 #include <ceCore/loaders/shadergraphloader.hh>
 #include <ceCore/objectregistry.hh>
 #include <ceCore/resource/vfs.hh>
+#include <ceCore/graphics/eblendfactor.hh>
 #include <ceCore/graphics/material/material.hh>
 #include <ceCore/graphics/shadergraph/shadergraph.hh>
 #include <ceCore/graphics/shadergraph/ishadergraphcompiler.hh>
@@ -24,10 +25,10 @@ ShaderGraphLoader::ShaderGraphLoader()
 
 iObject *ShaderGraphLoader::Load(const CrimsonFile *file, const Class *cls, const ResourceLocator &locator) const
 {
-  const CrimsonFileElement *root = file->Root();
+  const CrimsonFileElement *root               = file->Root();
   const CrimsonFileElement *shaderGraphElement = root->GetChild("shaderGraph");
-  auto sg = new ShaderGraph();
-  AutoRelease autoRelSG(sg);
+  auto                     sg                  = new ShaderGraph();
+  AutoRelease              autoRelSG(sg);
 
 
   if (!shaderGraphElement)
@@ -41,6 +42,9 @@ iObject *ShaderGraphLoader::Load(const CrimsonFile *file, const Class *cls, cons
   {
     sg->SetReceiveShadow(receiveShadowElement->GetAttribute(0, 1));
   }
+
+  LoadQueue(shaderGraphElement, sg);
+  LoadBlend(shaderGraphElement, sg);
 
 
   const CrimsonFileElement *nodesElements = shaderGraphElement->GetChild("nodes");
@@ -58,7 +62,7 @@ iObject *ShaderGraphLoader::Load(const CrimsonFile *file, const Class *cls, cons
       continue;
     }
 
-    SGNode *node = nullptr;
+    SGNode            *node    = nullptr;
     const std::string &tagName = childElement->GetTagName();
     if (tagName == "node")
     {
@@ -101,15 +105,50 @@ iObject *ShaderGraphLoader::Load(const CrimsonFile *file, const Class *cls, cons
     auto compiler = compilerFactory->Create();
     if (compiler)
     {
-      iShaderGraphCompiler::Parameters parameters{};
+      iShaderGraphCompiler::Parameters parameters {};
       memset(&parameters, 0, sizeof(parameters));
-      parameters.DebugSources = true;
+      parameters.DebugSources = false;
       return compiler->Compile(sg, parameters);
     }
   }
 
   return nullptr;
 }
+
+void ShaderGraphLoader::LoadQueue(const ce::CrimsonFileElement *shaderGraphElement, ShaderGraph *sg) const
+{
+  auto queueElement = shaderGraphElement->GetChild("queue");
+  if (queueElement)
+  {
+    eRenderQueue queue       = eRenderQueue::Default;
+    std::string  queueString = queueElement->GetAttribute(0, "Default");
+    if (queueString == "Transparency")
+    {
+      queue = eRenderQueue::Transparency;
+    }
+    sg->SetQueue(queue);
+  }
+}
+
+void ShaderGraphLoader::LoadLightingMode(const CrimsonFileElement *shaderGraphElement, ShaderGraph *sg) const
+{
+  auto lightingElement = shaderGraphElement->GetChild("lighting");
+  if (lightingElement)
+  {
+    ShaderGraph::eLightingMode lighting       = ShaderGraph::eLM_Default;
+    std::string                lightingString = lightingElement->GetAttribute(0, "Default");
+    if (lightingString == "Blend")
+    {
+      lighting = ShaderGraph::eLM_Blend;
+    }
+    else if (lightingString == "Add")
+    {
+      lighting = ShaderGraph::eLM_Add;
+    }
+    sg->SetLightingMode(lighting);
+  }
+}
+
 
 SGNode *ShaderGraphLoader::CreateNode(const ce::CrimsonFileElement *nodeElement, ce::ShaderGraph *sg) const
 {
@@ -227,22 +266,50 @@ bool ShaderGraphLoader::LoadValue(const CrimsonFileElement *valueElement,
 }
 
 
+static bool is_uint(const std::string &str)
+{
+  if (str.empty())
+  {
+    return false;
+  }
+  for (auto ch: str)
+  {
+    if (ch < '0' || ch > '9')
+    {
+      return false;
+    }
+  }
+  return true;
+}
+
 bool ShaderGraphLoader::LoadBinding(const CrimsonFileElement *valueElement,
                                     SGNode *node,
                                     ShaderGraph *sg) const
 {
-  size_t idx = valueElement->GetAttribute(0, 0xffff);
-  if (idx == 0xffff)
+  size_t      idx;
+  std::string idxName = valueElement->GetAttribute(0, "");
+  if (is_uint(idxName))
   {
-    fprintf(stderr, "Invalid value index of '%s'\n", node->GetKey().c_str());
-    return false;
+    idx = atoi(idxName.c_str());
+  }
+  else
+  {
+    int idxNameIdx = node->IndexOfInput(idxName);
+    if (idxNameIdx == -1)
+    {
+      idx = 0xffff;
+    }
+    else
+    {
+      idx = idxNameIdx;
+    }
   }
 
 
   SGNodeInput *input = node->GetInput(idx);
   if (!input)
   {
-    fprintf(stderr, "The index %zu is no valid input index of '%s'\n", idx, node->GetKey().c_str());
+    fprintf(stderr, "The index '%s' is no valid input index of '%s'\n", idxName.c_str(), node->GetKey().c_str());
     return false;
   }
 
@@ -263,10 +330,33 @@ bool ShaderGraphLoader::LoadBinding(const CrimsonFileElement *valueElement,
     return false;
   }
 
-  size_t bindingInputOutputIdx = valueElement->GetAttribute(2, 0xffff);
-  if (bindingInputOutputIdx == 0xffff)
+
+  size_t bindingInputOutputIdx = 0;
+  idxName = valueElement->GetAttribute(2, "0");
+  if (is_uint(idxName))
   {
-    fprintf(stderr, "Invalid value index of '%s'\n", node->GetKey().c_str());
+    bindingInputOutputIdx = atoi(idxName.c_str());
+  }
+  else
+  {
+    int idxNameIdx = bindingInputNode->IndexOfOutput(idxName);
+    if (idxNameIdx == -1)
+    {
+      bindingInputOutputIdx = 0xffff;
+    }
+    else
+    {
+      bindingInputOutputIdx = idxNameIdx;
+    }
+  }
+
+  SGNodeOutput *output = bindingInputNode->GetOutput(bindingInputOutputIdx);
+  if (!output)
+  {
+    fprintf(stderr,
+            "The index '%s' is no valid output index of '%s'\n",
+            idxName.c_str(),
+            bindingInputNode->GetKey().c_str());
     return false;
   }
 
@@ -276,23 +366,27 @@ bool ShaderGraphLoader::LoadBinding(const CrimsonFileElement *valueElement,
 }
 
 
-void ShaderGraphLoader::LoadAttributes(const ce::CrimsonFileElement *attributesElement, ce::ShaderGraph *sg, const ResourceLocator &locator) const
+void ShaderGraphLoader::LoadAttributes(const ce::CrimsonFileElement *attributesElement,
+                                       ce::ShaderGraph *sg,
+                                       const ResourceLocator &locator) const
 {
   if (!attributesElement)
   {
     return;
   }
-  for (size_t i = 0, in = attributesElement->GetNumberOfChildren(); i<in; ++i)
+  for (size_t i = 0, in = attributesElement->GetNumberOfChildren(); i < in; ++i)
   {
     const CrimsonFileElement *attributeElement = attributesElement->GetChild(i);
     if (attributeElement->GetTagName() == std::string("attribute"))
     {
-      LoadAttribute (attributeElement, sg, locator);
+      LoadAttribute(attributeElement, sg, locator);
     }
   }
 }
 
-void ShaderGraphLoader::LoadAttribute(const ce::CrimsonFileElement *attributeElement, ce::ShaderGraph *sg, const ResourceLocator &locator) const
+void ShaderGraphLoader::LoadAttribute(const ce::CrimsonFileElement *attributeElement,
+                                      ce::ShaderGraph *sg,
+                                      const ResourceLocator &locator) const
 {
   if (attributeElement->GetNumberOfAttributes() < 2)
   {
@@ -340,11 +434,12 @@ void ShaderGraphLoader::LoadAttribute(const ce::CrimsonFileElement *attributeEle
     std::string locatorStr = attributeElement->GetAttribute(2, "");
     if (!locatorStr.empty())
     {
-      ResourceLocator txtLocator (locator, locatorStr);
-      auto texture = AssetManager::Get()->Get<iTexture>(txtLocator);
+      ResourceLocator txtLocator(locator, locatorStr);
+      auto            texture = AssetManager::Get()->Get<iTexture>(txtLocator);
       sg->SetDefault(name, texture);
     }
   }
 }
+
 
 } // ce

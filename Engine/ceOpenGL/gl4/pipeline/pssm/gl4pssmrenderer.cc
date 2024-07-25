@@ -5,6 +5,7 @@
 #include <ceOpenGL/gl4/gl4directionallight.hh>
 #include <ceOpenGL/gl4/gl4rendertarget2d.hh>
 #include <ceOpenGL/gl4/gl4rendertarget2darray.hh>
+#include <ceOpenGL/gl4/gl4texture2darray.hh>
 #include <ceCore/settings.hh>
 #include <ceCore/resource/assetmanager.hh>
 #include <ceCore/graphics/camera.hh>
@@ -116,6 +117,8 @@ GL4RenderTarget2D *GL4PSSMRenderer::GetShadowMap()
 
 void GL4PSSMRenderer::SetShadowBuffer(const GL4PSSMShadowBufferObject &shadowBufferObject)
 {
+  m_directionalLightShadowBuffers.ShadowDepth = shadowBufferObject.ShadowDepth;
+  m_directionalLightShadowBuffers.ShadowColor = shadowBufferObject.ShadowColor;
   for (size_t i = 0; i < m_directionalLightShadowBuffers.ShadowBuffers.size(); ++i)
   {
     CE_SET(m_directionalLightShadowBuffers.ShadowBuffers[i], shadowBufferObject.ShadowBuffers[i]);
@@ -381,10 +384,10 @@ void GL4PSSMRenderer::RenderShadowMap(const GL4DirectionalLight *directionalLigh
 
   if (m_attrShadowBuffers)
   {
-    for (size_t i = 0; i < 4; i++)
+//    for (size_t i = 0; i < 4; i++)
     {
-      eTextureUnit unit = m_device->BindTexture(GetShadowBuffer(i)->GetDepthTexture());
-      m_attrShadowBuffers->SetArrayIndex(i);
+      eTextureUnit unit = m_device->BindTexture(GetShadowBuffer().ShadowDepth);
+      m_attrShadowBuffers->SetArrayIndex(0);
       m_attrShadowBuffers->Bind(unit);
     }
   }
@@ -415,8 +418,31 @@ void GL4PSSMRenderer::FilterShadowMap()
 
 GL4PSSMShadowBufferObject GL4PSSMRenderer::CreateDirectionalLightShadowBuffer()
 {
-  GL4PSSMShadowBufferObject sbo;
-  for (size_t               i = 0, in = sbo.ShadowBuffers.size(); i < in; i++)
+  GL4PSSMShadowBufferObject sbo {};
+
+  if (m_shadowSamplingMode == ShadowSamplingMode::VSM)
+  {
+    iTexture2DArray::Descriptor colorDesc {};
+    colorDesc.Width   = m_directionalLightShadowBufferSize;
+    colorDesc.Height  = m_directionalLightShadowBufferSize;
+    colorDesc.Layers  = 4;
+    colorDesc.Format  = ePF_RGBA;
+    colorDesc.MipMaps = false;
+    sbo.ShadowColor = QueryClass<GL4Texture2DArray>(m_device->CreateTexture(colorDesc));
+    sbo.ShadowColor->SetSampler(GetShadowBufferColorSampler());
+  }
+
+  iTexture2DArray::Descriptor depthDesc {};
+  depthDesc.Width   = m_directionalLightShadowBufferSize;
+  depthDesc.Height  = m_directionalLightShadowBufferSize;
+  depthDesc.Layers  = 4;
+  depthDesc.Format  = ePF_Depth;
+  depthDesc.MipMaps = false;
+  sbo.ShadowDepth = QueryClass<GL4Texture2DArray>(m_device->CreateTexture(depthDesc));
+  sbo.ShadowDepth->SetSampler(GetShadowBufferDepthSampler());
+
+
+  for (size_t i = 0, in = sbo.ShadowBuffers.size(); i < in; i++)
   {
     iRenderTarget2D::Descriptor desc {};
     desc.Width  = (uint16_t) m_directionalLightShadowBufferSize;
@@ -424,28 +450,14 @@ GL4PSSMShadowBufferObject GL4PSSMRenderer::CreateDirectionalLightShadowBuffer()
     auto shadowRenderTarget = QueryClass<GL4RenderTarget2D>(m_device->CreateRenderTarget(desc));
 
 
-    if (m_shadowSamplingMode == ShadowSamplingMode::VSM)
+    if (sbo.ShadowColor)
     {
-      iTexture2D::Descriptor colorDesc {};
-      colorDesc.Width   = desc.Width;
-      colorDesc.Height  = desc.Height;
-      colorDesc.Format  = ePF_RGBA;
-      colorDesc.MipMaps = false;
-      iTexture2D *colorTexture = m_device->CreateTexture(colorDesc);
-      colorTexture->SetSampler(GetShadowBufferColorSampler());
-      shadowRenderTarget->AddColorTexture(colorTexture);
-      colorTexture->Release();
+      shadowRenderTarget->AddColorTexture(sbo.ShadowColor, i);
     }
-
-    iTexture2D::Descriptor depthDesc {};
-    depthDesc.Width   = desc.Width;
-    depthDesc.Height  = desc.Height;
-    depthDesc.Format  = ePF_Depth;
-    depthDesc.MipMaps = false;
-    iTexture2D *depthTexture = m_device->CreateTexture(depthDesc);
-    depthTexture->SetSampler(GetShadowBufferDepthSampler());
-    shadowRenderTarget->SetDepthTexture(depthTexture);
-    depthTexture->Release();
+    if (sbo.ShadowDepth)
+    {
+      shadowRenderTarget->SetDepthTexture(sbo.ShadowDepth, i);
+    }
 
     if (!shadowRenderTarget->Compile())
     {
@@ -600,6 +612,8 @@ iSampler *GL4PSSMRenderer::GetShadowBufferDepthSampler()
 
 GL4PSSMShadowBufferObject::GL4PSSMShadowBufferObject()
 {
+  ShadowDepth = nullptr;
+  ShadowColor = nullptr;
   ShadowBuffers[0] = nullptr;
   ShadowBuffers[1] = nullptr;
   ShadowBuffers[2] = nullptr;
@@ -608,6 +622,8 @@ GL4PSSMShadowBufferObject::GL4PSSMShadowBufferObject()
 
 GL4PSSMShadowBufferObject::GL4PSSMShadowBufferObject(const GL4PSSMShadowBufferObject &sbo)
 {
+  CE_SET(ShadowDepth, sbo.ShadowDepth);
+  CE_SET(ShadowColor, sbo.ShadowColor);
   CE_SET(ShadowBuffers[0], sbo.ShadowBuffers[0]);
   CE_SET(ShadowBuffers[1], sbo.ShadowBuffers[1]);
   CE_SET(ShadowBuffers[2], sbo.ShadowBuffers[2]);
@@ -616,6 +632,8 @@ GL4PSSMShadowBufferObject::GL4PSSMShadowBufferObject(const GL4PSSMShadowBufferOb
 
 GL4PSSMShadowBufferObject::GL4PSSMShadowBufferObject(GL4PSSMShadowBufferObject &&sbo)
 {
+  ShadowDepth = sbo.ShadowDepth;
+  ShadowColor = sbo.ShadowColor;
   ShadowBuffers[0]     = sbo.ShadowBuffers[0];
   ShadowBuffers[1]     = sbo.ShadowBuffers[1];
   ShadowBuffers[2]     = sbo.ShadowBuffers[2];
@@ -628,6 +646,8 @@ GL4PSSMShadowBufferObject::GL4PSSMShadowBufferObject(GL4PSSMShadowBufferObject &
 
 GL4PSSMShadowBufferObject::~GL4PSSMShadowBufferObject()
 {
+  CE_RELEASE(ShadowDepth);
+  CE_RELEASE(ShadowColor);
   CE_RELEASE(ShadowBuffers[0]);
   CE_RELEASE(ShadowBuffers[1]);
   CE_RELEASE(ShadowBuffers[2]);
@@ -636,6 +656,8 @@ GL4PSSMShadowBufferObject::~GL4PSSMShadowBufferObject()
 
 GL4PSSMShadowBufferObject &GL4PSSMShadowBufferObject::operator=(const GL4PSSMShadowBufferObject &sbo)
 {
+  CE_SET(ShadowDepth, sbo.ShadowDepth);
+  CE_SET(ShadowColor, sbo.ShadowColor);
   CE_SET(ShadowBuffers[0], sbo.ShadowBuffers[0]);
   CE_SET(ShadowBuffers[1], sbo.ShadowBuffers[1]);
   CE_SET(ShadowBuffers[2], sbo.ShadowBuffers[2]);

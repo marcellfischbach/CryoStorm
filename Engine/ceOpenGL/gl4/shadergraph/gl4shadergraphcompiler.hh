@@ -136,10 +136,15 @@ private:
 
 public:
   bool        Valid;
-  std::string DiffuseLightingOpaque;
+  std::string DiffuseLightingDefault;
+  std::string DiffuseLightingBlend;
+  std::string DiffuseLightingAdd;
+
   std::string DiffuseLightingAmbient;
   std::string DiffuseLightingDiffuse;
   std::string DiffuseLightingSpecular;
+  std::string DiffuseLightingShadowMap;
+  std::string DiffuseLightingShadowInline;
 
 };
 

@@ -106,6 +106,18 @@ const SGNodeInput* SGNode::GetInput(size_t idx) const
   return m_inputs[idx];
 }
 
+int SGNode::IndexOfInput(const std::string &inputName) const
+{
+  for (int i=0, in=m_inputs.size(); i<in; i++)
+  {
+    if (m_inputs[i]->GetName() == inputName)
+    {
+      return i;
+    }
+  }
+  return -1;
+}
+
 SGNodeOutput* SGNode::GetOutput(size_t idx)
 {
   if (idx >= m_outputs.size())
@@ -130,6 +142,17 @@ const SGNodeOutput* SGNode::GetOutput(size_t idx) const
   return m_outputs[idx];
 }
 
+int SGNode::IndexOfOutput(const std::string &inputName) const
+{
+  for (int i=0, in=m_outputs.size(); i<in; i++)
+  {
+    if (m_outputs[i]->GetName() == inputName)
+    {
+      return i;
+    }
+  }
+  return -1;
+}
 
 eSGValueType SGNodeInput::GetInputValueType() const
 {

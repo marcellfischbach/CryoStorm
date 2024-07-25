@@ -210,10 +210,18 @@ in vec2 ce_vs_out_ScreenCoordinates;
   }
 
 
-  src += GL4ShaderGraphLightData::Get().DiffuseLightingOpaque;
+  src += GL4ShaderGraphLightData::Get().DiffuseLightingDefault;
   src += GL4ShaderGraphLightData::Get().DiffuseLightingAmbient;
   src += GL4ShaderGraphLightData::Get().DiffuseLightingDiffuse;
   src += GL4ShaderGraphLightData::Get().DiffuseLightingSpecular;
+  if (m_shaderGraph->GetQueue() == eRenderQueue::Transparency)
+  {
+    src += GL4ShaderGraphLightData::Get().DiffuseLightingShadowInline;
+  }
+  else
+  {
+    src += GL4ShaderGraphLightData::Get().DiffuseLightingShadowMap;
+  }
 
 
   src += "\n";

@@ -92,8 +92,8 @@ public:
                               float bias) override;
   void AddDirectionalLightShadow(iDirectionalLight *light,
                                  iTexture2D *shadowMap,
-                                 const std::array<iTexture2D *, 4> &shadowBuffersDepth,
-                                 const std::array<iTexture2D *, 4> &shadowBuffersColor,
+                                 iTexture2DArray *shadowBuffersDepth,
+                                 iTexture2DArray *shadowBuffersColor,
                                  const std::array<float, 4> &layers,
                                  const std::array<Matrix4f, 4> &matrices) override;
 //  void SetLightShadowMap(iLight *light, iTexture2D *shadowMap);
@@ -255,8 +255,8 @@ private:
 
       struct DirectionalLightShadowData
       {
-        iTexture2D        *ShadowBufferDepth[4];
-        iTexture2D        *ShadowBufferColor[4];
+        iTexture2DArray        *ShadowBufferDepth;
+        iTexture2DArray        *ShadowBufferColor;
         float             Matrices[64];
         float             Layers[4];
       } DirectionalLight;

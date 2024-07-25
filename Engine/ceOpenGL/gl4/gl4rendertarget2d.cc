@@ -1,6 +1,7 @@
 
 #include <ceOpenGL/gl4/gl4rendertarget2d.hh>
 #include <ceOpenGL/gl4/gl4texture2d.hh>
+#include <ceOpenGL/gl4/gl4texture2darray.hh>
 #include <ceOpenGL/gl4/gl4texturecube.hh>
 #include <GL/glew.h>
 
@@ -73,7 +74,11 @@ void GL4RenderTarget2D::SetDepthTexture(iTexture2D *depthTexture)
   }
 
 
-  GL4Texture2D *txt = depthTexture->Query<GL4Texture2D>();
+  auto txt = depthTexture->Query<GL4Texture2D>();
+  if (!txt)
+  {
+    return;
+  }
 
 
   GLenum attachment;
@@ -91,6 +96,7 @@ void GL4RenderTarget2D::SetDepthTexture(iTexture2D *depthTexture)
 
 
   CE_SET(m_depthTexture.texture, txt);
+  CE_RELEASE(m_depthTexture.textureArray);
   CE_RELEASE(m_depthTexture.textureCube);
 
 
@@ -98,6 +104,49 @@ void GL4RenderTarget2D::SetDepthTexture(iTexture2D *depthTexture)
                        attachment,
                        txt->GetName(),
                        0);
+
+}
+
+void GL4RenderTarget2D::SetDepthTexture(iTexture2DArray *depthTexture, size_t layer)
+{
+  if (!depthTexture)
+  {
+    return;
+  }
+
+
+  auto txt = depthTexture->Query<GL4Texture2DArray>();
+  if (!txt)
+  {
+    return;
+  }
+
+
+  GLenum attachment;
+  switch (depthTexture->GetFormat())
+  {
+    case ePF_Depth:
+      attachment = GL_DEPTH_ATTACHMENT;
+      break;
+    case ePF_DepthStencil:
+      attachment = GL_DEPTH_STENCIL_ATTACHMENT;
+      break;
+    default:
+      return;
+  }
+
+
+  CE_SET(m_depthTexture.textureArray, txt);
+  CE_RELEASE(m_depthTexture.texture);
+  CE_RELEASE(m_depthTexture.textureCube);
+
+
+  m_depthTexture.textureArrayLayer = layer;
+  glFramebufferTextureLayer(GL_FRAMEBUFFER,
+                            attachment,
+                            txt->GetName(),
+                            0,
+                            static_cast<GLint>(layer));
 
 }
 
@@ -110,8 +159,11 @@ void GL4RenderTarget2D::SetDepthTexture(iTextureCube *depthTexture, eCubeFace fa
   }
 
 
-  GL4TextureCube *txt = depthTexture->Query<GL4TextureCube>();
-
+  auto txt = depthTexture->Query<GL4TextureCube>();
+  if (!txt)
+  {
+    return;
+  }
 
   GLenum attachment;
   switch (depthTexture->GetFormat())
@@ -129,6 +181,7 @@ void GL4RenderTarget2D::SetDepthTexture(iTextureCube *depthTexture, eCubeFace fa
 
   m_depthTexture.textureCubeFace = face;
   CE_SET(m_depthTexture.textureCube, txt);
+  CE_RELEASE(m_depthTexture.textureArray);
   CE_RELEASE(m_depthTexture.texture);
 
 
@@ -177,11 +230,15 @@ void GL4RenderTarget2D::AddColorTexture(iTexture2D *colorTexture)
   }
 
 
-  GL4Texture2D *txt = colorTexture->Query<GL4Texture2D>();
+  auto txt = colorTexture->Query<GL4Texture2D>();
+  if (!txt)
+  {
+    return;
+  }
+
   CE_ADDREF(txt);
 
 
-  GLenum attachment = GL_DEPTH_ATTACHMENT;
   if (colorTexture->GetFormat() == ePF_DepthStencil)
   {
     return;
@@ -195,10 +252,51 @@ void GL4RenderTarget2D::AddColorTexture(iTexture2D *colorTexture)
   TextureBind textureBind {
       txt,
       nullptr,
+      nullptr,
+      0,
       eCF_PosX
   };
   m_colorTextures.push_back(textureBind);
 }
+
+void GL4RenderTarget2D::AddColorTexture(iTexture2DArray *colorTexture, size_t layer)
+{
+  if (!colorTexture)
+  {
+    return;
+  }
+
+
+  auto txt = colorTexture->Query<GL4Texture2DArray>();
+  if (!txt)
+  {
+    return;
+  }
+
+  CE_ADDREF(txt);
+
+
+  if (colorTexture->GetFormat() == ePF_DepthStencil)
+  {
+    return;
+  }
+
+
+  glFramebufferTextureLayer(GL_FRAMEBUFFER,
+                            (GLenum) (GL_COLOR_ATTACHMENT0 + m_colorTextures.size()),
+                            txt->GetName(),
+                            0,
+                            static_cast<GLint>(layer));
+  TextureBind textureBind {
+      nullptr,
+      txt,
+      nullptr,
+      layer,
+      eCF_PosX
+  };
+  m_colorTextures.push_back(textureBind);
+}
+
 
 void GL4RenderTarget2D::AddColorTexture(iTextureCube *colorTexture, eCubeFace face)
 {
@@ -208,11 +306,14 @@ void GL4RenderTarget2D::AddColorTexture(iTextureCube *colorTexture, eCubeFace fa
   }
 
 
-  GL4TextureCube *txt = colorTexture->Query<GL4TextureCube>();
+  auto txt = colorTexture->Query<GL4TextureCube>();
+  if (!txt)
+  {
+    return;
+  }
   CE_ADDREF(txt);
 
 
-  GLenum attachment = GL_DEPTH_ATTACHMENT;
   if (colorTexture->GetFormat() == ePF_DepthStencil)
   {
     return;
@@ -226,7 +327,9 @@ void GL4RenderTarget2D::AddColorTexture(iTextureCube *colorTexture, eCubeFace fa
                          0);
   TextureBind textureBind {
       nullptr,
+      nullptr,
       txt,
+      0,
       face
   };
   m_colorTextures.push_back(textureBind);

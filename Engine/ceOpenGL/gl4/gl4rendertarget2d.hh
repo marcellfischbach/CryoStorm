@@ -26,10 +26,12 @@ public:
   uint16_t GetHeight() const override;
 
   void SetDepthTexture(iTexture2D* depthTexture) override;
+  void SetDepthTexture(iTexture2DArray* depthTexture, size_t layer) override;
   void SetDepthTexture(iTextureCube* depthTexture, eCubeFace face) override;
   void SetDepthBuffer(ePixelFormat format) override;
 
   void AddColorTexture(iTexture2D* colorTexture) override;
+  void AddColorTexture(iTexture2DArray *colorTexture, size_t layer) override;
   void AddColorTexture(iTextureCube* colorTexture, eCubeFace face) override;
 
   CE_NODISCARD  eTextureType GetType() const override;
@@ -61,7 +63,9 @@ private:
   struct TextureBind
   {
     iTexture2D *texture = nullptr;
+    iTexture2DArray *textureArray = nullptr;
     iTextureCube *textureCube = nullptr;
+    size_t textureArrayLayer = 0;
     eCubeFace textureCubeFace = eCubeFace::eCF_PosX;
 
   };

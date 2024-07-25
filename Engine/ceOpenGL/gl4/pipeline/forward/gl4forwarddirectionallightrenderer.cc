@@ -6,6 +6,7 @@
 #include <ceOpenGL/gl4/gl4directionallight.hh>
 #include <ceOpenGL/gl4/gl4rendertarget2d.hh>
 #include <ceOpenGL/gl4/gl4rendertarget2darray.hh>
+#include <ceOpenGL/gl4/gl4texture2darray.hh>
 
 #include <ceCore/settings.hh>
 #include <ceCore/graphics/camera.hh>
@@ -116,8 +117,8 @@ void GL4ForwardDirectionalLightRenderer::RenderShadow(GL4DirectionalLight *direc
 
     m_device->AddDirectionalLightShadow(directionalLight,
                                         target->GetColorTexture(0),
-                                        sboDepths,
-                                        sboColors,
+                                        sbo->ShadowDepth,
+                                        sbo->ShadowColor,
                                         m_pssmRenderer.GetSplits(),
                                         m_pssmRenderer.GetMatrices());
 //    m_device->SetLightShadowMap(directionalLight, target->GetColorTexture(0));

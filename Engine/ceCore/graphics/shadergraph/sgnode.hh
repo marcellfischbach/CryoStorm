@@ -136,10 +136,12 @@ public:
   size_t GetNumberOfInputs() const;
   SGNodeInput* GetInput(size_t idx);
   const SGNodeInput* GetInput(size_t idx) const;
+  int IndexOfInput (const std::string &inputName) const;
 
   size_t GetNumberOfOutputs() const;
   SGNodeOutput* GetOutput(size_t idx = 0);
   const SGNodeOutput* GetOutput(size_t idx = 0) const;
+  int IndexOfOutput (const std::string &inputName) const;
 
 protected:
   explicit SGNode(const std::string &name);

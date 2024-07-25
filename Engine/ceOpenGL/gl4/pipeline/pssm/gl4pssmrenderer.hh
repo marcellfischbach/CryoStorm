@@ -12,7 +12,6 @@
 #include <vector>
 
 
-
 namespace ce
 {
 
@@ -38,14 +37,16 @@ class GL4Texture2DArray;
 
 struct GL4PSSMShadowBufferObject
 {
-  std::array<GL4RenderTarget2D *, 4> ShadowBuffers;
+  GL4Texture2DArray                  *ShadowDepth = nullptr;
+  GL4Texture2DArray                  *ShadowColor = nullptr;
+  std::array<GL4RenderTarget2D *, 4> ShadowBuffers = { nullptr, nullptr, nullptr, nullptr };
 
   GL4PSSMShadowBufferObject();
   GL4PSSMShadowBufferObject(const GL4PSSMShadowBufferObject &sbo);
   GL4PSSMShadowBufferObject(GL4PSSMShadowBufferObject &&sbo);
   ~GL4PSSMShadowBufferObject();
 
-  GL4PSSMShadowBufferObject &operator =(const GL4PSSMShadowBufferObject &sbo);
+  GL4PSSMShadowBufferObject &operator=(const GL4PSSMShadowBufferObject &sbo);
 
 };
 
@@ -77,8 +78,8 @@ public:
   bool IsShadowMapValid(GL4RenderTarget2D *shadowMap) const;
   bool IsShadowBufferValid(GL4PSSMShadowBufferObject &shadowMap) const;
 
-  CE_NODISCARD const std::array<Matrix4f, 4> &GetMatrices () const;
-  CE_NODISCARD const std::array<float, 4> &GetSplits () const;
+  CE_NODISCARD const std::array<Matrix4f, 4> &GetMatrices() const;
+  CE_NODISCARD const std::array<float, 4> &GetSplits() const;
 
 private:
   void
@@ -102,7 +103,7 @@ private:
   iTexture2D *m_depthBuffer = nullptr;
 
   GL4PSSMShadowBufferObject m_directionalLightShadowBuffers;
-  size_t             m_directionalLightShadowBufferSize = 0;
+  size_t                    m_directionalLightShadowBufferSize = 0;
 
 
   GL4RenderTarget2D *m_directionalLightShadowMapTemp  = nullptr;
@@ -117,8 +118,8 @@ private:
     VSM
   };
 
-  float m_shadowNear;
-  float m_shadowFar;
+  float                m_shadowNear;
+  float                m_shadowFar;
   std::array<float, 4> m_splits;
 
   std::array<Matrix4f, 4> m_shadowMatrices;

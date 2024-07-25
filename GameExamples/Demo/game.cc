@@ -882,7 +882,12 @@ void generate_cube_fbx(ce::World *world)
 {
 
   ce::Mesh *mesh = ce::AssetManager::Get()->Get<ce::Mesh>("/cube2.fbx");
-  ce::iMaterial *dustMaterial = ce::AssetManager::Get()->Get<ce::iMaterial>("/materials/Dust.mat");
+
+  mesh = new ce::Mesh();
+  mesh->AddSubMesh(create_sphere_mesh(3.0f, 32, 1.0f), 0);
+  mesh->AddMaterialSlot("Default");
+  ce::iMaterial *dustMaterial = ce::AssetManager::Get()->Get<ce::iMaterial>("/materials/Dust.sg");
+//  ce::iMaterial *dustMaterial = ce::AssetManager::Get()->Get<ce::iMaterial>("/materials/Dust.mat");
   ce::s_material_names[dustMaterial] = "Dust";
 
   for (int i = 0; i < mesh->GetNumberOfMaterialSlots(); ++i)
