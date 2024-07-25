@@ -659,28 +659,29 @@ void GL4Device::SetRenderBuffer(const std::vector<uint32_t> &buffer)
 
 void GL4Device::ClearShadowMaps()
 {
-  m_shadowMapTextures.clear();
-  m_lightShadowMaps.clear();
+  m_shadowDataSize = 0;
+//  m_shadowMapTextures.clear();
+//  m_lightShadowMaps.clear();
 }
 
 bool GL4Device::MoreShadowMapsPossible() const
 {
-  return m_shadowMapTextures.size() < 4;
+  return m_shadowDataSize < 4;
 }
 
-void GL4Device::AddShadowMap(iTexture2D *shadowMap)
-{
-  m_shadowMapTextures.push_back(shadowMap);
-}
-
-iTexture2D *GL4Device::GetShadowMap(unsigned int idx)
-{
-  if (idx >= m_shadowMapTextures.size())
-  {
-    return nullptr;
-  }
-  return m_shadowMapTextures[idx];
-}
+//void GL4Device::AddShadowMap(iTexture2D *shadowMap)
+//{
+//  m_shadowMapTextures.push_back(shadowMap);
+//}
+//
+//iTexture2D *GL4Device::GetShadowMap(unsigned int idx)
+//{
+//  if (idx >= m_shadowMapTextures.size())
+//  {
+//    return nullptr;
+//  }
+//  return m_shadowMapTextures[idx];
+//}
 
 void GL4Device::SetPointLightShadowMap(size_t lightIdx,
                                        iPointLight *light,
@@ -691,47 +692,58 @@ void GL4Device::SetPointLightShadowMap(size_t lightIdx,
                                        float bias
                                       )
 {
-  LightShadowData lsd {};
+  if (m_shadowDataSize >= 4)
+  {
+    return;
+  }
+  LightShadowData &lsd = m_lightShadowData[m_shadowDataSize++];
   lsd.LightType                    = eLT_Point;
-  lsd.PointLight.Light             = light;
+  lsd.Light                        = light;
   lsd.PointLight.ShadowBufferDepth = shadowBufferDepth;
   lsd.PointLight.ShadowBufferColor = shadowBufferColor;
   lsd.PointLight.Near              = near;
   lsd.PointLight.Far               = far;
   lsd.PointLight.Bias              = bias;
-  m_lightShadowData[lightIdx] = lsd;
 }
 
-void GL4Device::SetDirectionalLightShadowMap(size_t lightIdx,
-                                             iDirectionalLight *light,
-                                             std::array<iTexture2D *, 4> shadowBuffersDepth,
-                                             std::array<iTexture2D *, 4> shadowBuffersColor,
-                                             float near,
-                                             float far,
-                                             float bias)
+void GL4Device::AddDirectionalLightShadow(iDirectionalLight *light,
+                                          iTexture2D *shadowMap,
+                                          const std::array<iTexture2D *, 4> &shadowBuffersDepth,
+                                          const std::array<iTexture2D *, 4> &shadowBuffersColor,
+                                          const std::array<float, 4> &layers,
+                                          const std::array<Matrix4f, 4> &matrices)
 {
-
-  LightShadowData lsd {};
-  lsd.LightType              = eLT_Directional;
-  lsd.DirectionalLight.Light = light;
-  lsd.DirectionalLight.ShadowBufferDepth[0] = shadowBuffersDepth[0];
-  lsd.DirectionalLight.ShadowBufferDepth[1] = shadowBuffersDepth[1];
-  lsd.DirectionalLight.ShadowBufferDepth[2] = shadowBuffersDepth[2];
-  lsd.DirectionalLight.ShadowBufferDepth[3] = shadowBuffersDepth[3];
-  lsd.DirectionalLight.ShadowBufferColor[0] = shadowBuffersColor[0];
-  lsd.DirectionalLight.ShadowBufferColor[1] = shadowBuffersColor[1];
-  lsd.DirectionalLight.ShadowBufferColor[2] = shadowBuffersColor[2];
-  lsd.DirectionalLight.ShadowBufferColor[3] = shadowBuffersColor[3];
-  lsd.DirectionalLight.Near = near;
-  lsd.DirectionalLight.Far  = far;
-  lsd.DirectionalLight.Bias = bias;
-  m_lightShadowData[lightIdx] = lsd;
+  if (m_shadowDataSize >= 4)
+  {
+    return;
+  }
+  LightShadowData &lsd = m_lightShadowData[m_shadowDataSize++];
+  lsd.LightType = eLT_Directional;
+  lsd.Light     = light;
+  lsd.ShadowMap = shadowMap;
+  memcpy(lsd.DirectionalLight.ShadowBufferColor, shadowBuffersColor.data(), sizeof(iTexture2D *) * 4);
+  memcpy(lsd.DirectionalLight.ShadowBufferDepth, shadowBuffersDepth.data(), sizeof(iTexture2D *) * 4);
+  memcpy(lsd.DirectionalLight.Matrices, matrices.data(), sizeof(Matrix4f) * 4);
+  memcpy(lsd.DirectionalLight.Layers, layers.data(), sizeof(float) * 4);
 }
 
-void GL4Device::SetLightShadowMap(iLight *light, iTexture2D *shadowMap)
+GL4Device::LightShadowData *GL4Device::FindLightShadowData(const iLight *light)
 {
-  m_lightShadowMaps[light] = shadowMap;
+  for (size_t i = 0; i < 4; i++)
+  {
+    LightShadowData &lsd = m_lightShadowData[i];
+    if (lsd.Light == light)
+    {
+      return &lsd;
+    }
+  }
+  return nullptr;
 }
+
+//void GL4Device::SetLightShadowMap(iLight *light, iTexture2D *shadowMap)
+//{
+//  m_lightShadowMaps[light] = shadowMap;
+//}
 
 iSampler *GL4Device::CreateSampler()
 {
@@ -1149,6 +1161,14 @@ void GL4Device::BindForwardLight(const iLight *light, Size idx)
   iShaderAttribute *lightRange      = m_shader->GetShaderAttribute(eSA_LightRange);
   iShaderAttribute *lightCastShadow = m_shader->GetShaderAttribute(eSA_LightCastShadow);
   iShaderAttribute *lightShadowMap  = m_shader->GetShaderAttribute(eSA_LightShadowMap);
+
+
+  iShaderAttribute *dlsSplitLayers = m_shader->GetShaderAttribute(eSA_DirectionalLightShadowMapSplitLayers);
+  iShaderAttribute *dlsViewProj    = m_shader->GetShaderAttribute(eSA_DirectionalLightShadowMapViewProjectionMatrix);
+  iShaderAttribute *dlsDepth       = m_shader->GetShaderAttribute(eSA_DirectionalLightShadowMapDepth);
+  iShaderAttribute *dlsColor       = m_shader->GetShaderAttribute(eSA_DirectionalLightShadowMapColor);
+  iShaderAttribute *dlsLayersBias  = m_shader->GetShaderAttribute(eSA_DirectionalLightShadowMapLayersBias);
+
   CE_GL_ERROR();
 
 
@@ -1173,11 +1193,16 @@ void GL4Device::BindForwardLight(const iLight *light, Size idx)
     lightShadowMap->SetArrayIndex(idx);
   }
 
+
   CE_GL_ERROR();
 
 
   if (light)
   {
+    LightShadowData *lsd = FindLightShadowData(light);
+    bool haveShadowMap = lsd != nullptr;
+
+
     if (lightColor)
     {
       lightColor->Bind(light->GetColor());
@@ -1187,12 +1212,10 @@ void GL4Device::BindForwardLight(const iLight *light, Size idx)
     int lightCastShadowValue = 0;
     if (light->IsCastShadow())
     {
-      auto it            = m_lightShadowMaps.find(light);
-      bool haveShadowMap = it != m_lightShadowMaps.end();
       if (haveShadowMap)
       {
         lightCastShadowValue         = 1;
-        iTexture2D *shadowMapTexture = it->second;
+        iTexture2D *shadowMapTexture = lsd->ShadowMap;
         if (lightShadowMap)
         {
           eTextureUnit shadowMapUnit = BindTexture(shadowMapTexture);
@@ -1231,6 +1254,51 @@ void GL4Device::BindForwardLight(const iLight *light, Size idx)
         if (lightVector)
         {
           lightVector->Bind(Vector4f(-directionalLight->GetDirection(), 0.0f));
+        }
+        if (haveShadowMap)
+        {
+          if (dlsSplitLayers)
+          {
+            dlsSplitLayers->SetArrayIndex(idx);
+            dlsSplitLayers->Bind(lsd->DirectionalLight.Layers[0],
+                                 lsd->DirectionalLight.Layers[1],
+                                 lsd->DirectionalLight.Layers[2],
+                                 lsd->DirectionalLight.Layers[3]);
+          }
+          if (dlsViewProj)
+          {
+            dlsViewProj->SetArrayIndex(idx * 4);
+            dlsViewProj->Bind(reinterpret_cast<Matrix4f *>(lsd->DirectionalLight.Matrices), 4);
+          }
+          if (dlsDepth)
+          {
+            for (size_t i = 0; i < 4; i++)
+            {
+              eTextureUnit unit = BindTexture(lsd->DirectionalLight.ShadowBufferDepth[i]);
+              if (unit != eTU_Invalid)
+              {
+                dlsDepth->SetArrayIndex(idx * 4 + i);
+                dlsDepth->Bind(unit);
+              }
+            }
+          }
+          if (dlsColor)
+          {
+            for (size_t i = 0; i < 4; i++)
+            {
+              eTextureUnit unit = BindTexture(lsd->DirectionalLight.ShadowBufferColor[i]);
+              if (unit != eTU_Invalid)
+              {
+                dlsColor->SetArrayIndex(idx * 4 + i);
+                dlsColor->Bind(unit);
+              }
+            }
+          }
+          if (dlsLayersBias)
+          {
+            dlsLayersBias->SetArrayIndex(idx * 4);
+            dlsLayersBias->Bind(directionalLight->GetShadowMapBias());
+          }
         }
         break;
       }

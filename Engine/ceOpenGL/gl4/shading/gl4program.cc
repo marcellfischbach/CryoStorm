@@ -124,6 +124,12 @@ void GL4Program::RegisterRenderAttributes()
   RegisterAttribute("PointLightShadowMapColor");
   RegisterAttribute("PointLightShadowMapDepth");
 
+  RegisterAttribute("DirectionalLightShadowMapSplitLayers");
+  RegisterAttribute("DirectionalLightShadowMapViewProjectionMatrix");
+  RegisterAttribute("DirectionalLightShadowMapDepth");
+  RegisterAttribute("DirectionalLightShadowMapColor");
+  RegisterAttribute("DirectionalLightShadowMapLayersBias");
+
   RegisterAttribute("SkeletonMatrices");
 
 

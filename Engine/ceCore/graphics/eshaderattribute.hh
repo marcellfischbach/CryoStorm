@@ -44,10 +44,11 @@ enum eShaderAttribute
 
 
 
-  eSA_DirectionalLightShadowMapLayersBias,
-  eSA_DirectionalLightShadowMapMatrices,
-  eSA_DirectionalLightShadowMapColor,
+  eSA_DirectionalLightShadowMapSplitLayers,
+  eSA_DirectionalLightShadowMapViewProjectionMatrix,
   eSA_DirectionalLightShadowMapDepth,
+  eSA_DirectionalLightShadowMapColor,
+  eSA_DirectionalLightShadowMapLayersBias,
 
 
   /* Skeleton rendering */

@@ -100,25 +100,45 @@ void GL4ForwardDirectionalLightRenderer::RenderShadow(GL4DirectionalLight *direc
     m_pssmRenderer.SetShadowBuffer(*sbo);
     m_pssmRenderer.RenderShadow(directionalLight, camera, projector);
 
-    ApplyShadowMapToDevice(directionalLight, lightIdx);
+
+    std::array<iTexture2D*, 4> sboColors = {
+        sbo->ShadowBuffers[0]->GetColorTexture(0),
+        sbo->ShadowBuffers[1]->GetColorTexture(0),
+        sbo->ShadowBuffers[2]->GetColorTexture(0),
+        sbo->ShadowBuffers[3]->GetColorTexture(0)
+    };
+    std::array<iTexture2D*, 4> sboDepths = {
+        sbo->ShadowBuffers[0]->GetDepthTexture(),
+        sbo->ShadowBuffers[1]->GetDepthTexture(),
+        sbo->ShadowBuffers[2]->GetDepthTexture(),
+        sbo->ShadowBuffers[3]->GetDepthTexture()
+    };
+
+    m_device->AddDirectionalLightShadow(directionalLight,
+                                        target->GetColorTexture(0),
+                                        sboDepths,
+                                        sboColors,
+                                        m_pssmRenderer.GetSplits(),
+                                        m_pssmRenderer.GetMatrices());
+//    m_device->SetLightShadowMap(directionalLight, target->GetColorTexture(0));
   }
 }
 
 
 void GL4ForwardDirectionalLightRenderer::ApplyShadowMapToDevice(GL4DirectionalLight *directionalLight, size_t lightIdx)
 {
-  if (lightIdx >= MaxLights)
-  {
-    return;
-  }
-
-  GL4RenderTarget2D *target = m_directionalLightShadowMap[lightIdx];
-  if (!target)
-  {
-    return;
-  }
-
-  m_device->SetLightShadowMap(directionalLight, target->GetColorTexture(0));
+//  if (lightIdx >= MaxLights)
+//  {
+//    return;
+//  }
+//
+//  GL4RenderTarget2D *target = m_directionalLightShadowMap[lightIdx];
+//  if (!target)
+//  {
+//    return;
+//  }
+//
+//  m_device->SetLightShadowMap(directionalLight, target->GetColorTexture(0));
 }
 
 GL4RenderTarget2D *GL4ForwardDirectionalLightRenderer::GetDirectionalLightShadowMap(size_t lightIdx)

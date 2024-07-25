@@ -311,6 +311,8 @@ void GL4PSSMRenderer::RenderShadowBuffer(const GL4DirectionalLight *directionalL
     shadowMapView[i]       = view;
     shadowMapProjection[i] = proj;
 
+    m_shadowMatrices[i] = proj * view;
+
     m_device->ResetTextures();
     m_device->SetRenderTarget(GetShadowBuffer(i));
     m_device->SetRenderBuffer(0);
@@ -641,5 +643,14 @@ GL4PSSMShadowBufferObject &GL4PSSMShadowBufferObject::operator=(const GL4PSSMSha
   return *this;
 }
 
+const std::array<Matrix4f, 4> &GL4PSSMRenderer::GetMatrices() const
+{
+  return m_shadowMatrices;
+}
+
+const std::array<float, 4> &GL4PSSMRenderer::GetSplits() const
+{
+  return m_splits;
+}
 
 }

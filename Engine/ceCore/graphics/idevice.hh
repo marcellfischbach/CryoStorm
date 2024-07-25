@@ -94,8 +94,8 @@ CE_CLASS_GEN;
 
   virtual void ClearShadowMaps() = 0;
   virtual bool MoreShadowMapsPossible() const = 0;
-  virtual void AddShadowMap(iTexture2D *shadowMap) = 0;
-  virtual iTexture2D *GetShadowMap(unsigned idx) = 0;
+//  virtual void AddShadowMap(iTexture2D *shadowMap) = 0;
+//  virtual iTexture2D *GetShadowMap(unsigned idx) = 0;
   virtual void SetPointLightShadowMap(size_t lightIdx,
                                       iPointLight *light,
                                       iTextureCube *shadowBufferDepth,
@@ -104,14 +104,13 @@ CE_CLASS_GEN;
                                       float far,
                                       float bias) = 0;
 
-  virtual void SetDirectionalLightShadowMap(size_t lightIdx,
-                                            iDirectionalLight *light,
-                                            std::array<iTexture2D *, 4> shadowBuffersDepth,
-                                            std::array<iTexture2D *, 4> shadowBuffersColor,
-                                            float near,
-                                            float far,
-                                            float bias) = 0;
-  virtual void SetLightShadowMap(iLight *light, iTexture2D *shadowMap) = 0;
+  virtual void AddDirectionalLightShadow(iDirectionalLight *light,
+                                         iTexture2D *shadowMap,
+                                         const std::array<iTexture2D *, 4> &shadowBuffersDepth,
+                                         const std::array<iTexture2D *, 4> &shadowBuffersColor,
+                                         const std::array<float, 4> &layers,
+                                         const std::array<Matrix4f, 4> &matrices) = 0;
+//  virtual void SetLightShadowMap(iLight *light, iTexture2D *shadowMap) = 0;
 
   virtual iSampler *CreateSampler() = 0;
   virtual iTexture2D *CreateTexture(const iTexture2D::Descriptor &descriptor) = 0;

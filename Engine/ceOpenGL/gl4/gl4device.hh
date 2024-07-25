@@ -81,8 +81,8 @@ public:
 
   void ClearShadowMaps() override;
   bool MoreShadowMapsPossible() const override;
-  void AddShadowMap(iTexture2D *shadowMap) override;
-  iTexture2D *GetShadowMap(unsigned idx) override;
+//  void AddShadowMap(iTexture2D *shadowMap) override;
+//  iTexture2D *GetShadowMap(unsigned idx) override;
   void SetPointLightShadowMap(size_t lightIdx,
                               iPointLight *light,
                               iTextureCube *shadowBufferDepth,
@@ -90,14 +90,13 @@ public:
                               float near,
                               float far,
                               float bias) override;
-  void SetDirectionalLightShadowMap(size_t lightIdx,
-                                    iDirectionalLight *light,
-                                    std::array<iTexture2D *, 4> shadowBuffersDepth,
-                                    std::array<iTexture2D *, 4> shadowBuffersColor,
-                                    float near,
-                                    float far,
-                                    float bias) override;
-  void SetLightShadowMap(iLight *light, iTexture2D *shadowMap);
+  void AddDirectionalLightShadow(iDirectionalLight *light,
+                                 iTexture2D *shadowMap,
+                                 const std::array<iTexture2D *, 4> &shadowBuffersDepth,
+                                 const std::array<iTexture2D *, 4> &shadowBuffersColor,
+                                 const std::array<float, 4> &layers,
+                                 const std::array<Matrix4f, 4> &matrices) override;
+//  void SetLightShadowMap(iLight *light, iTexture2D *shadowMap);
 
   iSampler *CreateSampler() override;
   iTexture2D *CreateTexture(const iTexture2D::Descriptor &descriptor) override;
@@ -240,12 +239,13 @@ private:
   struct LightShadowData
   {
     eLightType LightType;
+    iLight  *Light;
+    iTexture2D *ShadowMap;
 
     union
     {
       struct PointLightShadowData
       {
-        iPointLight  *Light;
         iTextureCube *ShadowBufferDepth;
         iTextureCube *ShadowBufferColor;
         float        Near;
@@ -255,21 +255,23 @@ private:
 
       struct DirectionalLightShadowData
       {
-        iDirectionalLight *Light;
         iTexture2D        *ShadowBufferDepth[4];
         iTexture2D        *ShadowBufferColor[4];
-        float             Near;
-        float             Far;
-        float             Bias;
+        float             Matrices[64];
+        float             Layers[4];
       } DirectionalLight;
     };
   };
 
-  LightShadowData m_lightShadowData[MaxLights];
 
-  std::map<const iLight *, iTexture2D *> m_lightShadowMaps;
+  LightShadowData *FindLightShadowData (const iLight* light);
 
-  std::vector<iTexture2D *> m_shadowMapTextures;
+  uint8_t                        m_shadowDataSize;
+  std::array<LightShadowData, 4> m_lightShadowData;
+
+//  std::map<const iLight *, iTexture2D *> m_lightShadowMaps;
+//
+//  std::vector<iTexture2D *> m_shadowMapTextures;
 
   int8_t           m_renderLayer;
 

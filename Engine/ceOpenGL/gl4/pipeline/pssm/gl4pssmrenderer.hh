@@ -4,9 +4,14 @@
 
 #pragma once
 
-#include <vector>
 #include <ceOpenGL/gl4/pipeline/pssm/gl4pssmfilter.hh>
 #include <ceCore/graphics/scene/gfxscenecollector.hh>
+#include <ceCore/math/matrix4f.hh>
+
+#include <array>
+#include <vector>
+
+
 
 namespace ce
 {
@@ -72,6 +77,8 @@ public:
   bool IsShadowMapValid(GL4RenderTarget2D *shadowMap) const;
   bool IsShadowBufferValid(GL4PSSMShadowBufferObject &shadowMap) const;
 
+  CE_NODISCARD const std::array<Matrix4f, 4> &GetMatrices () const;
+  CE_NODISCARD const std::array<float, 4> &GetSplits () const;
 
 private:
   void
@@ -85,6 +92,7 @@ private:
   iSampler *GetShadowMapColorSampler();
   iSampler *GetShadowBufferColorSampler();
   iSampler *GetShadowBufferDepthSampler();
+
 
 private:
   GL4Device *m_device = nullptr;
@@ -111,7 +119,9 @@ private:
 
   float m_shadowNear;
   float m_shadowFar;
-  float m_splits[4];
+  std::array<float, 4> m_splits;
+
+  std::array<Matrix4f, 4> m_shadowMatrices;
 
   ShadowSamplingMode m_shadowSamplingMode;
   iSampler           *m_shadowMapColorSampler    = nullptr;

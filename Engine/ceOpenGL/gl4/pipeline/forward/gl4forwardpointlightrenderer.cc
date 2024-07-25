@@ -105,18 +105,18 @@ void GL4ForwardPointLightRenderer::RenderShadow(GL4PointLight *pointLight,
 
 void GL4ForwardPointLightRenderer::ApplyShadowMapToDevice(GL4PointLight *pointLight, size_t lightIdx)
 {
-    if (lightIdx >= MaxLights)
-    {
-        return;
-    }
+//    if (lightIdx >= MaxLights)
+//    {
+//        return;
+//    }
+//
+//    GL4RenderTarget2D* target = m_pointLightShadowMap[lightIdx];
+//    if (!target)
+//    {
+//        return;
+//    }
 
-    GL4RenderTarget2D* target = m_pointLightShadowMap[lightIdx];
-    if (!target)
-    {
-        return;
-    }
-
-    m_device->SetLightShadowMap(pointLight, target->GetColorTexture(0));
+//    m_device->SetLightShadowMap(pointLight, target->GetColorTexture(0));
 }
 
 

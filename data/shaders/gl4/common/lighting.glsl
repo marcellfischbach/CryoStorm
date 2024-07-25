@@ -8,7 +8,7 @@ uniform sampler2D ce_LightShadowMap[4];
 
 uniform int ce_ReceiveShadow;
 
-
+#include <directionallight_shadow.glsl>
 #include <oren-nayar.glsl>
 #include <lambert.glsl>
 #include <cook-torrance.glsl>
@@ -58,6 +58,11 @@ light_result_t calc_light(int idx, vec3 light_ambient, vec3 light_color, vec4 li
 
         attenuation = clamp(1.0 - distance / light_range, 0.0, 1.0);
 
+        if (ce_LightCastShadow[idx] > 0 && ce_ReceiveShadow > 0)
+        {
+            shadow = texture (ce_LightShadowMap[idx], screen_coord).r;
+        }
+
     }
     else
     {
@@ -72,12 +77,14 @@ light_result_t calc_light(int idx, vec3 light_ambient, vec3 light_color, vec4 li
         diffuse = lighting_result.diffuse;
         specular = lighting_result.specular;
         attenuation = 1.0;
+
+        if (ce_LightCastShadow[idx] > 0 && ce_ReceiveShadow > 0)
+        {
+            shadow = calc_directional_shadow (idx, frag_position, camera_space_position.z);
+        }
     }
 
-    if (ce_LightCastShadow[idx] > 0 && ce_ReceiveShadow > 0)
-    {
-        shadow = texture (ce_LightShadowMap[idx], screen_coord).r;
-    }
+
 
     diffuse = clamp(diffuse, 0.0, 1.0);
     specular = clamp(specular, 0.0, 1.0);
