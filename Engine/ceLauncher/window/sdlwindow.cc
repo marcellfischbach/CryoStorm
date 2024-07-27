@@ -140,7 +140,7 @@ void SDLWindow::SetWindowIcon(const ce::ResourceLocator &locator)
   if (m_window)
   {
 
-    auto image = ce::AssetManager::Get()->Load<ce::Image>("file:///icons/ce24.png");
+    auto image = ce::AssetManager::Get()->Load<ce::Image>("file:///icons/cryo-stasis_64.png");
     if (!image)
     {
       return;
@@ -150,10 +150,10 @@ void SDLWindow::SetWindowIcon(const ce::ResourceLocator &locator)
                                              image->GetWidth(),
                                              image->GetHeight(),
                                              32,
-                                             0xff000000,
-                                             0x00ff0000,
+                                             0x000000ff,
                                              0x0000ff00,
-                                             0x000000ff);
+                                             0x00ff0000,
+                                             0xff000000);
     SDL_LockSurface(surf);
     SDL_memcpy(surf->pixels, image->GetData(), image->GetWidth() * image->GetHeight() * 4);
     SDL_UnlockSurface(surf);
