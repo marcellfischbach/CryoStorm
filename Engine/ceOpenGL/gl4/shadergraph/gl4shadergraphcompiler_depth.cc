@@ -190,11 +190,11 @@ void GL4ShaderGraphCompiler::GenerateDepth(GL4ShaderGraphCompiler::SourceBundle 
   }
 
   bundle.vert = GenerateDepth_Vert(bundle.attributes);
-  if (m_errorString.empty())return;
+  if (!m_errorString.empty())return;
   bundle.geom = GenerateDepth_Geom(bundle.attributes);
-  if (m_errorString.empty())return;
+  if (!m_errorString.empty())return;
   bundle.frag = GenerateDepth_Frag(bundle.attributes);
-  if (m_errorString.empty())return;
+  if (!m_errorString.empty())return;
 }
 
 

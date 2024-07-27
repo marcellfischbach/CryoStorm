@@ -75,7 +75,7 @@ public:
   enum eBlendingMode
   {
     eBM_Default,
-    eBM_Blend,
+    eBM_Alpha,
     eBM_Add,
   };
 

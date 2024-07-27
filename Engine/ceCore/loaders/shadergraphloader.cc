@@ -108,8 +108,17 @@ iObject *ShaderGraphLoader::Load(const CrimsonFile *file, const Class *cls, cons
     {
       iShaderGraphCompiler::Parameters parameters {};
       memset(&parameters, 0, sizeof(parameters));
-      parameters.DebugSources = false;
-      return compiler->Compile(sg, parameters);
+      parameters.DebugName = locator.Encoded();
+      parameters.DebugSources = true;
+
+      auto shader = compiler->Compile(sg, parameters);
+      if (!shader)
+      {
+        printf ("Unable to compiler '%s'\n", locator.Encoded().c_str());
+        printf ("%s\n", compiler->GetError().c_str());
+      }
+
+      return shader;
     }
   }
 
@@ -157,9 +166,9 @@ void ShaderGraphLoader::LoadBlendingMode(const CrimsonFileElement *shaderGraphEl
   {
     ShaderGraph::eBlendingMode blending       = ShaderGraph::eBM_Default;
     std::string                blendingString = blendingElement->GetAttribute(0, "Default");
-    if (blendingString == "Blend")
+    if (blendingString == "Alpha")
     {
-      blending = ShaderGraph::eBM_Blend;
+      blending = ShaderGraph::eBM_Alpha;
     }
     else if (blendingString == "Add")
     {

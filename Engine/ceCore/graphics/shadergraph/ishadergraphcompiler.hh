@@ -15,6 +15,7 @@ CE_CLASS_GEN;
 
   struct Parameters
   {
+    std::string DebugName;
     bool DebugSources;
   };
 

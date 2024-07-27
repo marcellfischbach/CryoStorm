@@ -35,6 +35,9 @@ light_result_t calc_light(int idx, vec3 light_ambient, vec3 light_color, vec4 li
         diffuse = 1.0;
         specular = 0.0;
 
+        vec3 frag_to_light = light_vector.xyz - frag_position;
+
+        float distance = length(frag_to_light);
         attenuation = clamp(1.0 - distance / light_range, 0.0, 1.0);
 
         if (ce_LightCastShadow[idx] > 0 && ce_ReceiveShadow > 0)
