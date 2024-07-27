@@ -77,7 +77,7 @@ const CameraState *World::GetMainCamera() const
 
 bool World::Attach(Entity *entity)
 {
-  if (std::find(m_entities.begin(), m_entities.end(), entity) != m_entities.end()
+  if (std::ranges::find(m_entities.begin(), m_entities.end(), entity) != m_entities.end()
       || entity->GetWorld())
   {
     return false;
@@ -91,7 +91,7 @@ bool World::Attach(Entity *entity)
 
 bool World::Detach(Entity *entity)
 {
-  auto it = std::find(m_entities.begin(), m_entities.end(), entity);
+  auto it = std::ranges::find(m_entities.begin(), m_entities.end(), entity);
   if (it == m_entities.end() || entity->GetWorld() != this)
   {
     return false;
@@ -110,7 +110,7 @@ bool World::AttachUpdateState(EntityState *updateState)
     return false;
   }
 
-  auto it = std::find(m_updateStates.begin(), m_updateStates.end(), updateState);
+  auto it = std::ranges::find(m_updateStates.begin(), m_updateStates.end(), updateState);
   if (it != m_updateStates.end())
   {
     return false;
@@ -128,7 +128,7 @@ bool World::DetachUpdateState(EntityState *updateState)
   {
     return false;
   }
-  auto it = std::find(m_updateStates.begin(), m_updateStates.end(), updateState);
+  auto it = std::ranges::find(m_updateStates.begin(), m_updateStates.end(), updateState);
   if (it == m_updateStates.end())
   {
     return false;

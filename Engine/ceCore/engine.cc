@@ -96,6 +96,28 @@ struct OpenModule
   iGame   *game;
 };
 
+static HMODULE load_library (const std::string &libraryName)
+{
+  HMODULE handle = GetModuleHandle(libraryName.c_str());
+  if (!handle)
+  {
+    handle = LoadLibraryEx(libraryName.c_str(), nullptr, 0);
+  }
+
+  return handle;
+}
+
+
+static HMODULE load_module (const std::string &libraryName)
+{
+  HMODULE  handle = load_library(libraryName);
+  if (!handle)
+  {
+    handle = load_library(std::string("lib") + libraryName);
+  }
+  return handle;
+}
+
 OpenModule open_module(const std::string &moduleName)
 {
 #ifdef  CE_WIN32
@@ -103,14 +125,10 @@ OpenModule open_module(const std::string &moduleName)
   std::string load_library_name    = moduleName + "_load_library";
   std::string create_game_instance = "create_game_instance";
 
-  HMODULE handle = GetModuleHandle(dll_name.c_str());
+  HMODULE handle = load_module(dll_name);
   if (!handle)
   {
-    handle = LoadLibraryEx(dll_name.c_str(), nullptr, 0);
-    if (!handle)
-    {
-      return OpenModule {nullptr, nullptr};
-    }
+    return OpenModule {nullptr, nullptr};
   }
 
 

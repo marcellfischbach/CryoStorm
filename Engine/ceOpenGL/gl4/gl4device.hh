@@ -244,7 +244,7 @@ private:
 
     union
     {
-      struct PointLightShadowData
+      struct
       {
         iTextureCube *ShadowBufferDepth;
         iTextureCube *ShadowBufferColor;
@@ -253,7 +253,7 @@ private:
         float        Bias;
       } PointLight;
 
-      struct DirectionalLightShadowData
+      struct
       {
         iTexture2DArray        *ShadowBufferDepth;
         iTexture2DArray        *ShadowBufferColor;

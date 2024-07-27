@@ -37,7 +37,7 @@ void GL4Program::AttachShader(GL4Shader *shader)
   {
     return;
   }
-  if (std::find(m_shaders.begin(), m_shaders.end(), shader) != m_shaders.end())
+  if (std::ranges::find(m_shaders.begin(), m_shaders.end(), shader) != m_shaders.end())
   {
     return;
   }
@@ -54,7 +54,7 @@ void GL4Program::DetachShader(GL4Shader *shader)
   {
     return;
   }
-  auto it = std::find(m_shaders.begin(), m_shaders.end(), shader);
+  auto it = std::ranges::find(m_shaders.begin(), m_shaders.end(), shader);
   if (it == m_shaders.end())
   {
     return;

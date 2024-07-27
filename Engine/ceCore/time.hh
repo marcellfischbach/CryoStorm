@@ -2,6 +2,7 @@
 #pragma once
 #include <ceCore/coreexport.hh>
 #include <ceCore/types.hh>
+#include <stdint.h>
 
 namespace ce
 {

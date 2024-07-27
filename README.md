@@ -19,7 +19,7 @@ consists of
 
 At the moment there is only one rendering implementations in OpenGLv4 (**ceOpenGL** located at *Engine/ceOpenGL*) and
 one physics implementation using BulletPhysics (**ceBullet** located at *Engine/ceBullet*). But the engine is designed to
-include any other API (e.g. D3D, Vulcan, PhysX, ...).
+include any other API (e.g. D3D, Vulkan, PhysX, ...).
 
 The entire engine is written the C++ and GLSL for OpenGL-Shading. The build process is managed by CMake.
 The engine comes with a MOC (MetaObjectCompiler) that is used to generate a basic form of reflection on top of C++-Classes.

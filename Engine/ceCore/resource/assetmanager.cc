@@ -22,7 +22,7 @@ void AssetManager::RegisterLoader(iAssetLoader* loader)
   {
     return;
   }
-  if (std::find(m_loaders.begin(), m_loaders.end(), loader) != m_loaders.end())
+  if (std::ranges::find(m_loaders.begin(), m_loaders.end(), loader) != m_loaders.end())
   {
     return;
   }

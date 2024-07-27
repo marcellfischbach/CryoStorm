@@ -53,7 +53,7 @@ ASTNode* ASTNode::FindPrevSibling(ASTNodeType type)
     return nullptr;
   }
 
-  std::vector<ASTNode*>::iterator it = std::find(m_parent->m_children.begin(), m_parent->m_children.end(), this);
+  std::vector<ASTNode*>::iterator it = std::ranges::find(m_parent->m_children.begin(), m_parent->m_children.end(), this);
   if (it != m_parent->m_children.begin())
   {
     --it;
@@ -81,7 +81,7 @@ ASTNode* ASTNode::FindNextSibling(ASTNodeType type)
     return nullptr;
   }
 
-  std::vector<ASTNode*>::iterator it = std::find(m_parent->m_children.begin(), m_parent->m_children.end(), this);
+  std::vector<ASTNode*>::iterator it = std::ranges::find(m_parent->m_children.begin(), m_parent->m_children.end(), this);
   if (it != m_parent->m_children.end())
   {
     for (++it; it != m_parent->m_children.end(); it++)
@@ -106,7 +106,7 @@ ASTNode* ASTNode::FindPrevSibling()
     return nullptr;
   }
 
-  std::vector<ASTNode*>::iterator it = std::find(m_parent->m_children.begin(), m_parent->m_children.end(), this);
+  std::vector<ASTNode*>::iterator it = std::ranges::find(m_parent->m_children.begin(), m_parent->m_children.end(), this);
   if (it == m_parent->m_children.end() || it == m_parent->m_children.begin())
   {
     return nullptr;
@@ -123,7 +123,7 @@ ASTNode* ASTNode::FindNextSibling()
     return nullptr;
   }
 
-  std::vector<ASTNode*>::iterator it = std::find(m_parent->m_children.begin(), m_parent->m_children.end(), this);
+  std::vector<ASTNode*>::iterator it = std::ranges::find(m_parent->m_children.begin(), m_parent->m_children.end(), this);
   if (it == m_parent->m_children.end())
   {
     return nullptr;

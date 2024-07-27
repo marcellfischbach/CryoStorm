@@ -2,7 +2,9 @@
 #pragma once
 
 #include <exception>
+#include <stdint.h>
 #include <string>
+
 
 namespace ce::moc
 {

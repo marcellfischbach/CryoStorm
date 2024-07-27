@@ -185,7 +185,7 @@ void GfxQuadtreeScene::Add(GfxLight *light)
 
 void GfxQuadtreeScene::Add(GfxLight *light, std::vector<GfxLight *> &lights)
 {
-  if (std::find(lights.begin(), lights.end(), light) != lights.end())
+  if (std::ranges::find(lights.begin(), lights.end(), light) != lights.end())
   {
     return;
   }
@@ -220,7 +220,7 @@ void GfxQuadtreeScene::Remove(GfxLight *light)
 
 void GfxQuadtreeScene::Remove(GfxLight *light, std::vector<GfxLight *> &lights)
 {
-  auto it = std::find(lights.begin(), lights.end(), light);
+  auto it = std::ranges::find(lights.begin(), lights.end(), light);
   if (it == lights.end())
   {
     return;

@@ -290,7 +290,7 @@ in vec2 ce_vs_out_ScreenCoordinates;
 
   for (auto node: nodes)
   {
-    if (std::find(alphaNodes.begin(), alphaNodes.end(), node) != alphaNodes.end())
+    if (std::ranges::find(alphaNodes.begin(), alphaNodes.end(), node) != alphaNodes.end())
     {
       // this node is already processed
       continue;

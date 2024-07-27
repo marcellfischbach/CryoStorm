@@ -5,7 +5,7 @@
 
 #define CE_ENABLE_BITMASK(x)         \
 ;template<>                           \
-struct ce::EnableBitMaskOperators<x> \
+struct EnableBitMaskOperators<x> \
 {                                    \
     static const bool enable = true; \
 }

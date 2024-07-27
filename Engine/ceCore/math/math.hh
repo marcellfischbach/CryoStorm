@@ -2,6 +2,7 @@
 #pragma once
 
 #include <cmath>
+#include <cfloat>
 #include <ceCore/defs.hh>
 #include <ceCore/types.hh>
 

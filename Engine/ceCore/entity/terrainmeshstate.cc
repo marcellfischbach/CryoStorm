@@ -144,7 +144,7 @@ void TerrainMeshState::SetLayerMask(TerrainLayerMask* mask)
 
 void TerrainMeshState::AddLayer(TerrainLayer* layer)
 {
-  auto it = std::find(m_layers.begin(), m_layers.end(), layer);
+  auto it = std::ranges::find(m_layers.begin(), m_layers.end(), layer);
   if (it != m_layers.end())
   {
     return;

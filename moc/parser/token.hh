@@ -2,6 +2,7 @@
 
 
 #include <string>
+#include <stdint.h>
 
 namespace ce::moc
 {

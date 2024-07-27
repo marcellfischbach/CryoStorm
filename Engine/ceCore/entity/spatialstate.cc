@@ -38,7 +38,7 @@ bool SpatialState::Attach(SpatialState* child)
   {
     return false;
   }
-  if (std::find(m_children.begin(), m_children.end(), child) != m_children.end())
+  if (std::ranges::find(m_children.begin(), m_children.end(), child) != m_children.end())
   {
     return false;
   }
@@ -68,7 +68,7 @@ bool SpatialState::Detach(SpatialState* child)
   {
     return false;
   }
-  auto it = std::find(m_children.begin(), m_children.end(), child);
+  auto it = std::ranges::find(m_children.begin(), m_children.end(), child);
   if (it == m_children.end())
   {
     return false;
