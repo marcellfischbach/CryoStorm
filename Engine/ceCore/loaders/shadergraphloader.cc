@@ -164,8 +164,8 @@ void ShaderGraphLoader::LoadBlendingMode(const CrimsonFileElement *shaderGraphEl
   auto blendingElement = shaderGraphElement->GetChild("blending");
   if (blendingElement)
   {
-    ShaderGraph::eBlendingMode blending       = ShaderGraph::eBM_Default;
-    std::string                blendingString = blendingElement->GetAttribute(0, "Default");
+    ShaderGraph::eBlendingMode blending       = ShaderGraph::eBM_Off;
+    std::string                blendingString = blendingElement->GetAttribute(0, "Off");
     if (blendingString == "Alpha")
     {
       blending = ShaderGraph::eBM_Alpha;

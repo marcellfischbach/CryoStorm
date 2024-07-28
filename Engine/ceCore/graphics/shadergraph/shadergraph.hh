@@ -74,7 +74,7 @@ public:
 
   enum eBlendingMode
   {
-    eBM_Default,
+    eBM_Off,
     eBM_Alpha,
     eBM_Add,
   };
@@ -105,7 +105,7 @@ private:
 
   eRenderQueue  m_queue        = eRenderQueue::Default;
   eLightingMode m_lightingMode = eLM_Default;
-  eBlendingMode m_blendingMode = eBM_Default;
+  eBlendingMode m_blendingMode = eBM_Off;
 
 
   SGNodeInput *m_diffuse   = nullptr;

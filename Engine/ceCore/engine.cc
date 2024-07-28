@@ -359,8 +359,8 @@ void Engine::ProcessFrame()
       m_lastFPS = currentFPS;
 
       std::string title = std::string("CrimsonEdge ") + std::to_string(currentFPS) + std::string(" FPS");
-//      printf("%s\n", title.c_str());
-//      fflush(stdout);
+      printf("%s\n", title.c_str());
+      fflush(stdout);
       m_window->SetTitle(title);
     }
 

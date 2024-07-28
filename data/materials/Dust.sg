@@ -3,7 +3,7 @@ shaderGraph {
     receiveShadow 1,
     queue Transparency,
     lighting Attenuated,
-    blending Add,
+    blending Off,
 
     nodes {
         resource "ce::SGResourceFloat" roughness "Roughness",

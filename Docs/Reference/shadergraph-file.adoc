@@ -30,6 +30,6 @@ How should the lighting be handled.
 
 === `blending`
 
-* `Default` or `Opaque` Standard opaque rendering. No blending
+* `Off` or `Opaque` Standard opaque rendering. No blending
 * `Alpha` Alpha blended transparent mesh. (no depth write applied)
 * `Add` Values are added not blended. (no depth write applied)

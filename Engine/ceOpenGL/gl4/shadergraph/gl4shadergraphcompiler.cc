@@ -76,7 +76,7 @@ Material *GL4ShaderGraphCompiler::Compile(ce::ShaderGraph *shaderGraph, const Pa
   }
   switch (m_shaderGraph->GetBlendingMode())
   {
-    case ShaderGraph::eBM_Default:
+    case ShaderGraph::eBM_Off:
       material->SetBlending(false);
       material->SetBlendFactor(eBlendFactor::One, eBlendFactor::Zero);
       material->SetDepthWrite(true);
