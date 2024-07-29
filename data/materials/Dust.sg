@@ -2,7 +2,7 @@ shaderGraph {
 
     receiveShadow 1,
     queue Transparency,
-    lighting Attenuated,
+    lighting Shaded,
     blending Alpha,
 
     nodes {

@@ -1,6 +1,8 @@
 #include <ceOpenGL/gl4/pipeline/deferred/gl4deferredpipeline.hh>
+#include <ceOpenGL/gl4/pipeline/gl4meshsorter.hh>
 #include <ceOpenGL/gl4/gl4directionallight.hh>
 #include <ceOpenGL/gl4/gl4pointlight.hh>
+#include <ceOpenGL/glerror.hh>
 #include <ceCore/settings.hh>
 #include <ceCore/engine.hh>
 #include <ceCore/math/iclipper.hh>
@@ -16,11 +18,13 @@
 #include <ceCore/graphics/scene/gfxcamera.hh>
 #include <ceCore/graphics/scene/gfxmesh.hh>
 #include <algorithm>
+#include <GL/glew.h>
 
 
 namespace ce::opengl
 {
 
+const float MinLightInfluence = 0.0f;
 
 GL4DeferredPipeline::GL4DeferredPipeline()
     : iRenderPipeline()
@@ -53,12 +57,19 @@ void GL4DeferredPipeline::Initialize()
 
 void GL4DeferredPipeline::Render(iRenderTarget2D *target, const GfxCamera *camera, iDevice *device, iGfxScene *scene)
 {
+  m_frame++;
   if (SetupVariables(target, camera, device, scene))
   {
+    CameraClipper clppr(*m_camera, *m_projector);
+    ScanVisibleMeshes(&clppr);
+    ScanLightsAndShadows(&clppr);
+
+
     RenderGBuffer(target->GetWidth(), target->GetHeight());
     RenderBackground();
+
     RenderLighting();
-    RenderTransparent ();
+    RenderTransparent();
     RenderPostProcessing(target);
     Cleanup();
   }
@@ -68,11 +79,9 @@ void GL4DeferredPipeline::Render(iRenderTarget2D *target, const GfxCamera *camer
 void GL4DeferredPipeline::RenderGBuffer(uint16_t width,
                                         uint16_t height)
 {
-  m_gBuffer->Update(m_device, width, height);
-  CameraClipper clppr(*m_camera, *m_projector);
-  ScanVisibleMeshes(&clppr);
   BindCamera();
 
+  m_gBuffer->Update(m_device, width, height);
   m_device->SetRenderTarget(m_gBuffer->GetGBuffer());
   m_device->SetRenderBuffer(m_gBuffer->GetBufferIDs());
   m_device->SetDepthTest(true);
@@ -126,7 +135,7 @@ void GL4DeferredPipeline::RenderBackground()
 }
 
 
-static bool  skyboxPrepared = false;
+static bool skyboxPrepared = false;
 void GL4DeferredPipeline::PrepareSkybox(iSkyboxRenderer *skyboxRenderer)
 {
   if (!skyboxPrepared)
@@ -161,6 +170,52 @@ void GL4DeferredPipeline::RenderBackMask()
 }
 
 
+void GL4DeferredPipeline::ScanLightsAndShadows(iClipper *clipper)
+{
+  m_globalLights.clear();
+  m_staticLights.clear();
+  m_dynamicLights.clear();
+  m_staticLightsNew.clear();
+  size_t lightOffset = 0;
+  m_scene->ScanLights(clipper, iGfxScene::eSM_Global,
+                      [this, &lightOffset](GfxLight *light) {
+
+                        if (lightOffset >= MaxLights)
+                        {
+                          return false;
+                        }
+                        m_renderLights[lightOffset] = light;
+                        m_globalLights.push_back(light);
+                        lightOffset++;
+                        return true;
+                      }
+  );
+
+
+  m_scene->ScanLights(clipper, iGfxScene::eSM_Dynamic | iGfxScene::eSM_Static, [this](GfxLight *light) -> bool {
+    if (light->IsStatic())
+    {
+      m_staticLights.push_back(light);
+      if (light->GetFrame() == 0)
+      {
+        m_staticLightsNew.push_back(light);
+        light->SetFrame(m_frame);
+      }
+    }
+    else
+    {
+      m_dynamicLights.push_back(light);
+    }
+    return true;
+  });
+
+  for (size_t i = lightOffset; i < MaxLights; i++)
+  {
+    m_renderLights[i] = nullptr;
+  }
+  m_numberOfFixedLights = lightOffset;
+}
+
 void GL4DeferredPipeline::RenderLighting()
 {
   switch (m_renderMode)
@@ -182,27 +237,232 @@ void GL4DeferredPipeline::RenderLighting()
 
 void GL4DeferredPipeline::RenderLights()
 {
-  CameraClipper clppr(*m_camera, *m_projector);
-  m_scene->ScanLights(&clppr, ~0x00, [this](GfxLight *light) {
-    switch (light->GetLight()->GetType())
-    {
-      case eLT_Directional:
-        RenderDirectionalLight(ce::QueryClass<GL4DirectionalLight>(light->GetLight()));
-        break;
-      case eLT_Point:
-        RenderPointLight(ce::QueryClass<GL4PointLight>(light->GetLight()));
-        break;
-      default:
-        break;
-    }
-    return true;
-  });
+  for (const auto &gfxLight: m_globalLights)
+  {
+    RenderLight(gfxLight);
+  }
+  for (const auto &gfxLight: m_staticLights)
+  {
+    RenderLight(gfxLight);
+  }
+  for (const auto &gfxLight: m_dynamicLights)
+  {
+    RenderLight(gfxLight);
+  }
+}
+
+void GL4DeferredPipeline::RenderLight(ce::GfxLight *light)
+{
+  switch (light->GetLight()->GetType())
+  {
+    case eLT_Directional:
+      RenderDirectionalLight(ce::QueryClass<GL4DirectionalLight>(light->GetLight()));
+      break;
+    case eLT_Point:
+      RenderPointLight(ce::QueryClass<GL4PointLight>(light->GetLight()));
+      break;
+    default:
+      break;
+  }
 }
 
 void GL4DeferredPipeline::RenderTransparent()
 {
+  UpdateTransparentTarget();
+
+  m_device->SetRenderTarget(m_transparentTarget);
+
+  BindCamera();
+
+
+  std::vector<GfxMesh *> &transparentMeshes = m_collector.GetMeshes(eRenderQueue::Transparency);
+  for (auto              &mesh: transparentMeshes)
+  {
+    auto material = mesh->GetMaterial();
+    if (material->GetShadingMode() == eShadingMode::Shaded)
+    {
+      RenderForwardMeshShaded(mesh, m_renderLights, m_numberOfFixedLights);
+    }
+    else
+    {
+      RenderForwardMeshUnlit(mesh);
+    }
+  }
+  m_device->SetRenderTarget(nullptr);
+}
+
+
+void GL4DeferredPipeline::RenderForwardMeshShaded(GfxMesh *mesh,
+                                                  std::array<const GfxLight *, MaxLights> &lights,
+                                                  Size offset)
+{
+  if (mesh->IsStatic())
+  {
+    if (mesh->IsLightingDirty())
+    {
+      mesh->ClearLights();
+      AppendLights(mesh, m_staticLights);
+      mesh->SetLightingDirty(false);
+    }
+    else
+    {
+      AppendLights(mesh, m_staticLightsNew);
+    }
+
+    auto dynamicLights = CalcMeshLightInfluences(mesh, m_dynamicLights, true);
+    Size numLights     = AssignLights(
+        mesh->GetLights(),
+        dynamicLights,
+        lights,
+        offset
+    );
+    CE_GL_ERROR();
+    mesh->RenderForward(m_device, eRP_Forward, lights.data(), numLights);
+    CE_GL_ERROR();
+  }
+  else
+  {
+    auto staticLights  = CalcMeshLightInfluences(mesh, m_staticLights, true);
+    auto dynamicLights = CalcMeshLightInfluences(mesh, m_dynamicLights, true);
+    Size numLights     = AssignLights(
+        staticLights,
+        dynamicLights,
+        lights,
+        offset
+    );
+    CE_GL_ERROR();
+    mesh->RenderForward(m_device, eRP_Forward, lights.data(), numLights);
+    CE_GL_ERROR();
+  }
+
 
 }
+
+
+size_t GL4DeferredPipeline::AssignLights(
+    const std::vector<GfxMesh::Light> &static_lights,
+    const std::vector<GfxMesh::Light> &dynamic_lights,
+    std::array<const GfxLight *, MaxLights> &lights,
+    size_t offset)
+{
+  for (Size s = 0, d = 0, sn = static_lights.size(), dn = dynamic_lights.size();
+       offset < MaxLights && (s < sn || d < dn); offset++)
+  {
+    if (s < sn && d < dn)
+    {
+      if (static_lights[s].Influence >= dynamic_lights[d].Influence)
+      {
+        lights[offset] = static_lights[s++].Light;
+      }
+      else
+      {
+        lights[offset] = dynamic_lights[d++].Light;
+      }
+    }
+    else if (s < sn)
+    {
+      lights[offset] = static_lights[s++].Light;
+    }
+    else if (d < dn)
+    {
+      lights[offset] = dynamic_lights[d++].Light;
+    }
+    else
+    {
+      break;
+    }
+  }
+
+  return offset;
+}
+
+
+void GL4DeferredPipeline::AppendLights(GfxMesh *mesh, const std::vector<GfxLight *> &lights) const
+{
+  if (lights.empty())
+  {
+    return;
+  }
+
+  auto      meshLights = CalcMeshLightInfluences(mesh, lights, false);
+  for (auto &meshLight: meshLights)
+  {
+    mesh->AddLight(meshLight.Light, meshLight.Influence);
+  }
+  mesh->SortAndLimitLights(MaxLights);
+}
+
+void GL4DeferredPipeline::RenderForwardMeshUnlit(GfxMesh *mesh)
+{
+  mesh->RenderUnlit(m_device, eRP_Forward);
+}
+
+
+float GL4DeferredPipeline::CalcMeshLightInfluence(const GfxLight *light, const GfxMesh *mesh) const
+{
+  if (!light || !mesh)
+  {
+    return 0.0f;
+  }
+
+
+  // TODO: Take the power of the light from the light ... currently there is no power in the light
+  float lightPower          = 1.0f;
+  float lightDistanceFactor = 0.0f;
+  switch (light->GetLight()->GetType())
+  {
+    case eLT_Directional:
+      lightDistanceFactor = 1.0f;
+      break;
+    case eLT_Point:
+      auto     pointLight = light->GetLight()->Query<iPointLight>();
+      Vector3f lightPos   = pointLight->GetPosition();
+      Vector3f meshPos    = mesh->GetModelMatrix().GetTranslation();
+      Vector3f delta      = lightPos - meshPos;
+      float    halfSize   = mesh->GetMesh()->GetBoundingBox().GetDiagonal() / 2.0f;
+      float    distance   = delta.Length();
+      float    overlap    = pointLight->GetRange() + halfSize - distance;
+      if (overlap > 0.0f)
+      {
+        lightDistanceFactor = overlap / pointLight->GetRange();
+      }
+      break;
+
+  }
+  return lightPower * lightDistanceFactor;
+}
+
+std::vector<GfxMesh::Light> GL4DeferredPipeline::CalcMeshLightInfluences(const GfxMesh *mesh,
+                                                                         const std::vector<GfxLight *> &lights,
+                                                                         bool sorted
+                                                                        ) const
+{
+  std::vector<GfxMesh::Light> influences;
+  for (GfxLight               *light: lights)
+  {
+    float influence = CalcMeshLightInfluence(light, mesh);
+    if (influence <= MinLightInfluence)
+    {
+      continue;
+    }
+    GfxMesh::Light l {};
+    l.Light     = light;
+    l.Influence = influence;
+    influences.push_back(l);
+  }
+
+  if (sorted)
+  {
+    std::sort(influences.begin(),
+              influences.end(),
+              [](GfxMesh::Light &l0, GfxMesh::Light &l1) { return l0.Influence > l1.Influence; }
+    );
+  }
+
+
+  return influences;
+}
+
 
 void GL4DeferredPipeline::RenderPostProcessing(iRenderTarget2D *target)
 {
@@ -263,7 +523,6 @@ bool GL4DeferredPipeline::SetupVariables(iRenderTarget2D *target,
   m_pointLightRenderer.SetScene(scene);
   m_directionalLightRenderer.SetDevice(device);
   m_directionalLightRenderer.SetScene(scene);
-
 
 
   return m_target;
@@ -365,6 +624,24 @@ void GL4DeferredPipeline::UpdateIntermediate()
   }
 }
 
+void GL4DeferredPipeline::UpdateTransparentTarget()
+{
+  if (!m_transparentTarget
+      || m_transparentTarget->GetWidth() != m_target->GetWidth()
+      || m_transparentTarget->GetHeight() != m_target->GetHeight())
+  {
+    CE_RELEASE(m_transparentTarget);
+
+    iRenderTarget2D::Descriptor interDesc {};
+    interDesc.Width  = m_target->GetWidth();
+    interDesc.Height = m_target->GetHeight();
+    m_transparentTarget = m_device->CreateRenderTarget(interDesc);
+    m_transparentTarget->AddColorTexture(m_target->GetColorTexture(0));
+    m_transparentTarget->SetDepthTexture(m_gBuffer->GetDepth());
+
+  }
+}
+
 
 void GL4DeferredPipeline::BindCamera()
 {
@@ -383,6 +660,14 @@ void GL4DeferredPipeline::ScanVisibleMeshes(iClipper *clipper)
 {
   m_collector.Clear();
   m_scene->ScanMeshes(clipper, m_collector);
+
+  std::vector<GfxMesh *> &defaultMeshes     = m_collector.GetMeshes(eRenderQueue::Default);
+  std::vector<GfxMesh *> &transparentMeshes = m_collector.GetMeshes(eRenderQueue::Transparency);
+
+
+  std::sort(defaultMeshes.begin(), defaultMeshes.end(), material_shader_compare_less_gbuffer);
+  std::sort(transparentMeshes.begin(), transparentMeshes.end(), transparent_mesh_compare_less);
+
 }
 
 

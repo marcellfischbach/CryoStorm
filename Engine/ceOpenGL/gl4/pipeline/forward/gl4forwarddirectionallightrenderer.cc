@@ -1,7 +1,7 @@
 
 
 #include <ceOpenGL/gl4/pipeline/forward/gl4forwarddirectionallightrenderer.hh>
-#include <ceOpenGL/gl4/pipeline/forward/gl4forwardmeshsorter.hh>
+#include "ceOpenGL/gl4/pipeline/gl4meshsorter.hh"
 #include <ceOpenGL/gl4/gl4device.hh>
 #include <ceOpenGL/gl4/gl4directionallight.hh>
 #include <ceOpenGL/gl4/gl4rendertarget2d.hh>

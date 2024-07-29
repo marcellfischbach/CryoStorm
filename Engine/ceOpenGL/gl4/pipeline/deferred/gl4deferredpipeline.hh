@@ -60,27 +60,46 @@ public:
 private:
 
   void RenderGBuffer(uint16_t width, uint16_t height);
-  void RenderBackground ();
-  void PrepareSkybox(iSkyboxRenderer* skyboxRenderer);
-  void RenderSkybox(iSkyboxRenderer* skyboxRenderer);
+  void RenderBackground();
+  void PrepareSkybox(iSkyboxRenderer *skyboxRenderer);
+  void RenderSkybox(iSkyboxRenderer *skyboxRenderer);
   void RenderBackMask();
-  void RenderLighting ();
+
+  void ScanLightsAndShadows(iClipper *clipper);
+
+  void RenderLighting();
   void RenderLights();
+  void RenderLight(GfxLight *light);
   void RenderDirectionalLight(const GL4DirectionalLight *directionalLight);
   void RenderPointLight(const GL4PointLight *pointLight);
-  void RenderTransparent ();
-  void RenderPostProcessing (iRenderTarget2D *target);
+  void RenderTransparent();
+  void RenderForwardMeshShaded(GfxMesh *mesh, std::array<const GfxLight *, MaxLights> &lights, Size offset);
+  void RenderForwardMeshUnlit(GfxMesh *mesh);
+  void AppendLights(GfxMesh *mesh, const std::vector<GfxLight *> &lights) const;
+  size_t AssignLights(const std::vector<GfxMesh::Light> &static_lights,
+                      const std::vector<GfxMesh::Light> &dynamic_lights,
+                      std::array<const GfxLight *, MaxLights> &lights,
+                      size_t offset);
+
+  float CalcMeshLightInfluence(const GfxLight *light, const GfxMesh *mesh) const;
+  std::vector<GfxMesh::Light> CalcMeshLightInfluences(const GfxMesh *mesh,
+                                                      const std::vector<GfxLight *> &lights,
+                                                      bool sorted) const;
+
+  void RenderPostProcessing(iRenderTarget2D *target);
   void Cleanup();
 
 
   bool SetupVariables(iRenderTarget2D *target, const GfxCamera *camera, iDevice *device, iGfxScene *scene);
-  iRenderTarget2D *UpdateRenderTarget (iDevice* device, iRenderTarget2D* target);
+  iRenderTarget2D *UpdateRenderTarget(iDevice *device, iRenderTarget2D *target);
   void UpdateIntermediate();
+  void UpdateTransparentTarget();
   void ScanVisibleMeshes(iClipper *clipper);
   void BindCamera();
 
   GBuffer *m_gBuffer;
 
+  uint64_t        m_frame   = 0;
   iDevice         *m_device;
   const GfxCamera *m_gfxCamera;
   const Camera    *m_camera;
@@ -88,6 +107,16 @@ private:
   iGfxScene       *m_scene;
   iRenderTarget2D *m_intermediate;
   iRenderTarget2D *m_target = nullptr;
+  iRenderTarget2D *m_transparentTarget = nullptr;
+
+
+  std::vector<GfxLight *>                 m_globalLights;
+  std::vector<GfxLight *>                 m_dynamicLights;
+  std::vector<GfxLight *>                 m_staticLights;
+  std::vector<GfxLight *>                 m_staticLightsNew;
+  std::array<const GfxLight *, MaxLights> m_renderLights = {};
+  size_t                                  m_numberOfFixedLights;
+
 
   GfxSceneCollector      m_collector;
   std::vector<GfxMesh *> m_shadedMeshes;
@@ -95,12 +124,12 @@ private:
   std::vector<GfxMesh *> m_unshadedMeshes;
 
   GL4DeferredDirectionalLightRenderer m_directionalLightRenderer;
-  GL4DeferredPointLightRenderer m_pointLightRenderer;
+  GL4DeferredPointLightRenderer       m_pointLightRenderer;
 
-  iShader *m_backMaskShader;
+  iShader          *m_backMaskShader;
   iShaderAttribute *m_attrBackMaskDepth;
-  int m_renderMode;
-  SkyboxMesh m_skyboxMesh;
+  int              m_renderMode;
+  SkyboxMesh       m_skyboxMesh;
 };
 
 

@@ -50,6 +50,10 @@ set(SOURCES
 		gl4/loading/gl4shaderloader.cc
 		gl4/loading/gl4shaderloader.hh
 
+
+		gl4/pipeline/gl4meshsorter.cc
+		gl4/pipeline/gl4meshsorter.hh
+
 		gl4/pipeline/deferred/gl4deferreddirectionallightrenderer.cc
 		gl4/pipeline/deferred/gl4deferreddirectionallightrenderer.hh
 		gl4/pipeline/deferred/gl4deferredpipeline.cc
@@ -59,8 +63,6 @@ set(SOURCES
 
 		gl4/pipeline/forward/gl4forwarddirectionallightrenderer.cc
 		gl4/pipeline/forward/gl4forwarddirectionallightrenderer.hh
-		gl4/pipeline/forward/gl4forwardmeshsorter.cc
-		gl4/pipeline/forward/gl4forwardmeshsorter.hh
 		gl4/pipeline/forward/gl4forwardpipeline.cc
 		gl4/pipeline/forward/gl4forwardpipeline.hh
 		gl4/pipeline/forward/gl4forwardpointlightrenderer.cc
