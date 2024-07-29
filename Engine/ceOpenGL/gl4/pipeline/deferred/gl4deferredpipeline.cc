@@ -254,6 +254,8 @@ bool GL4DeferredPipeline::SetupVariables(iRenderTarget2D *target,
   m_projector = camera->GetProjector();
   m_scene     = scene;
   m_target    = camera->GetPostProcessing() ? UpdateRenderTarget(device, target) : target;
+  m_device->BindMaterial(nullptr, eRP_COUNT);
+  m_device->ClearTextureCache();
 
   UpdateIntermediate();
 
@@ -261,6 +263,8 @@ bool GL4DeferredPipeline::SetupVariables(iRenderTarget2D *target,
   m_pointLightRenderer.SetScene(scene);
   m_directionalLightRenderer.SetDevice(device);
   m_directionalLightRenderer.SetScene(scene);
+
+
 
   return m_target;
 }

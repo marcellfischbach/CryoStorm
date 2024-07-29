@@ -133,6 +133,7 @@ bool GL4Device::Initialize()
 
   for (Size i = 0; i < eTU_COUNT; i++)
   {
+    m_texturesUsed[i] = false;
     m_textures[i] = nullptr;
     m_samplers[i] = nullptr;
   }
@@ -753,7 +754,7 @@ iSampler *GL4Device::CreateSampler()
 iTexture2D *GL4Device::CreateTexture(const iTexture2D::Descriptor &descriptor)
 {
   CE_GL_ERROR();
-  SetActiveTexture(GL_TEXTURE0 + eTU_COUNT + 1);
+  SetActiveTexture(eTU_COUNT + 1);
   UnbindUnsafe(m_tempTexture);
   CE_GL_ERROR();
 
@@ -773,7 +774,7 @@ iTexture2D *GL4Device::CreateTexture(const iTexture2D::Descriptor &descriptor)
 iTexture2DArray *GL4Device::CreateTexture(const iTexture2DArray::Descriptor &descriptor)
 {
   CE_GL_ERROR();
-  SetActiveTexture(GL_TEXTURE0 + eTU_COUNT + 1);
+  SetActiveTexture(eTU_COUNT + 1);
   UnbindUnsafe(m_tempTexture);
   CE_GL_ERROR();
 
@@ -793,7 +794,7 @@ iTexture2DArray *GL4Device::CreateTexture(const iTexture2DArray::Descriptor &des
 iTextureCube *GL4Device::CreateTexture(const iTextureCube::Descriptor &descriptor)
 {
   CE_GL_ERROR();
-  SetActiveTexture(GL_TEXTURE0 + eTU_COUNT + 1);
+  SetActiveTexture(eTU_COUNT + 1);
   UnbindUnsafe(m_tempTexture);
   CE_GL_ERROR();
 
@@ -846,7 +847,9 @@ void GL4Device::ClearTextureCache()
 {
   for (size_t i = 0; i < eTU_COUNT; i++)
   {
+    m_texturesUsed[i] = false;
     m_textures[i] = nullptr;
+    m_samplers[i] = nullptr;
   }
   ResetTextures();
 }
@@ -855,6 +858,7 @@ void GL4Device::ResetTextures()
 {
   m_nextTextureUnit = eTU_Unit0;
   m_markTextureUnit = eTU_Unit0;
+  memset(m_texturesUsed, 0, sizeof(bool) * eTU_COUNT);
 }
 
 void GL4Device::MarkTexture()
@@ -865,6 +869,10 @@ void GL4Device::MarkTexture()
 void GL4Device::ResetTexturesToMark()
 {
   m_nextTextureUnit = m_markTextureUnit;
+  for (size_t i=m_nextTextureUnit; i<eTU_COUNT; i++)
+  {
+    m_texturesUsed[i] = false;
+  }
 }
 
 eTextureUnit GL4Device::ShiftTextureUnit()
@@ -873,8 +881,15 @@ eTextureUnit GL4Device::ShiftTextureUnit()
   {
     return eTU_Invalid;
   }
+
   eTextureUnit unit = m_nextTextureUnit;
   m_nextTextureUnit = static_cast<eTextureUnit>(m_nextTextureUnit + 1);
+  while(m_texturesUsed[unit] && unit < eTU_COUNT)
+  {
+    unit = m_nextTextureUnit;
+    m_nextTextureUnit = static_cast<eTextureUnit>(m_nextTextureUnit + 1);
+  }
+
   return unit;
 }
 
@@ -958,39 +973,45 @@ eTextureUnit GL4Device::BindTexture(iTexture *texture)
 {
 #ifndef CE_DISABLE_RENDERING
   CE_GL_ERROR()
-
-  if (!texture || m_nextTextureUnit == eTU_Invalid)
+  if (!texture)
   {
     return eTU_Invalid;
   }
 
 
-  static unsigned prebound = 0;
-  static unsigned bound    = 0;
-  bound++;
-  eTextureUnit unit = ShiftTextureUnit();
-  if (m_textures[unit] != texture)
+  for (size_t i=0; i<eTU_COUNT; i++)
   {
-    iTexture *oldTexture = m_textures[unit];
-    m_textures[unit] = texture;
+    if (m_textures[i] == texture)
+    {
+      m_texturesUsed[i] = true;
+      auto unit = static_cast<eTextureUnit>(i);
+      SetActiveTexture(unit);
+      SetSampler(unit, texture->GetSampler());
+      return unit;
+    }
+  }
+
+  if (m_nextTextureUnit == eTU_Invalid)
+  {
+    return eTU_Invalid;
+  }
+
+
+  eTextureUnit unit        = ShiftTextureUnit();
+  iTexture     *oldTexture = m_textures[unit];
+  m_textures[unit] = texture;
+  m_texturesUsed[unit] = true;
 //    CE_ADDREF(texture);
 
-    CE_GL_ERROR()
-    SetActiveTexture(GL_TEXTURE0 + unit);
-    UnbindUnsafe(oldTexture);
-    BindUnsafe(texture);
-    CE_GL_ERROR()
+  CE_GL_ERROR()
+  SetActiveTexture(unit);
+  UnbindUnsafe(oldTexture);
+  BindUnsafe(texture);
+  CE_GL_ERROR()
 
 
-    SetSampler(unit, texture->GetSampler());
-    CE_GL_ERROR()
-//    CE_RELEASE(oldTexture);
-  }
-  else
-  {
-    prebound++;
-  }
-
+  SetSampler(unit, texture->GetSampler());
+  CE_GL_ERROR()
 
   return unit;
 #else
@@ -1002,7 +1023,7 @@ void GL4Device::SetActiveTexture(ce::uint32_t activeTexture)
 {
   if (m_activeTexture != activeTexture)
   {
-    glActiveTexture(activeTexture);
+    glActiveTexture(GL_TEXTURE0 + activeTexture);
     m_activeTexture = activeTexture;
   }
 }
@@ -1010,17 +1031,26 @@ void GL4Device::SetActiveTexture(ce::uint32_t activeTexture)
 bool GL4Device::BindMaterial(iMaterial *material, eRenderPass pass)
 {
 #ifndef CE_DISABLE_RENDERING
+  if (!material && pass == eRP_COUNT)
+  {
+    m_material     = nullptr;
+    m_materialPass = pass;
+    ResetTextures();
+    return false;
+  }
+
   CE_GL_ERROR()
   if (m_material == material && m_materialPass == pass)
   {
     ResetTexturesToMark();
-    return true;
+    return m_materialSuccessfull;
   }
+
   m_material     = material;
   m_materialPass = pass;
-  bool res = material && material->Bind(this, pass);
+  m_materialSuccessfull = material && material->Bind(this, pass);
   CE_GL_ERROR()
-  return res;
+  return m_materialSuccessfull;
 #else
   return true;
 #endif

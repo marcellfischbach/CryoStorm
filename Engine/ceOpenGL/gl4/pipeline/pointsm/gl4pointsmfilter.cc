@@ -63,6 +63,7 @@ void GL4PointSMFilter::Render(GL4Device *device,
   device->SetColorWrite(true, true, true, true);
 
   device->SetShader(m_shadowMapFilterShader);
+  device->ResetTextures();
   if (m_attrFilterShadowMap)
   {
     eTextureUnit unit = device->BindTexture(shadowMap);

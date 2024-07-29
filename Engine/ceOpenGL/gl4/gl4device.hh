@@ -152,11 +152,13 @@ private:
 private:
   iRenderTarget *m_renderTarget;
   iShader       *m_shader;
+  bool          m_materialSuccessfull;
   iMaterial     *m_material;
   eRenderPass   m_materialPass;
   eTextureUnit ShiftTextureUnit();
   eTextureUnit  m_nextTextureUnit;
   eTextureUnit  m_markTextureUnit;
+  bool          m_texturesUsed[eTU_COUNT];
   iTexture      *m_textures[eTU_COUNT];
   iSampler      *m_samplers[eTU_COUNT];
   iTexture      *m_tempTexture = nullptr;
@@ -239,7 +241,7 @@ private:
   struct LightShadowData
   {
     eLightType LightType;
-    iLight  *Light;
+    iLight     *Light;
     iTexture2D *ShadowMap;
 
     union
@@ -255,16 +257,16 @@ private:
 
       struct
       {
-        iTexture2DArray        *ShadowBufferDepth;
-        iTexture2DArray        *ShadowBufferColor;
-        float             Matrices[64];
-        float             Layers[4];
+        iTexture2DArray *ShadowBufferDepth;
+        iTexture2DArray *ShadowBufferColor;
+        float           Matrices[64];
+        float           Layers[4];
       } DirectionalLight;
     };
   };
 
 
-  LightShadowData *FindLightShadowData (const iLight* light);
+  LightShadowData *FindLightShadowData(const iLight *light);
 
   uint8_t                        m_shadowDataSize;
   std::array<LightShadowData, 4> m_lightShadowData;

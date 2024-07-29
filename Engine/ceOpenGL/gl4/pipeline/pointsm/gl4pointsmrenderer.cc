@@ -165,7 +165,6 @@ void GL4PointSMRenderer::RenderShadowMap(const GL4PointLight *pointLight,
                                          const Camera &camera,
                                          const Projector &projector)
 {
-  m_device->ResetTextures();
   GL4RenderTarget2D *target = GetShadowMapTemp();
   m_device->SetRenderTarget(target);
   m_device->SetRenderBuffer(0);
@@ -175,6 +174,7 @@ void GL4PointSMRenderer::RenderShadowMap(const GL4PointLight *pointLight,
   m_device->Clear(true, Color4f(0.0, 0.0f, 0.0f, 0.0f), true, 1.0f, true, 0);
 
   m_device->SetShader(m_shadowMappingShader);
+  m_device->ResetTextures();
   camera.Bind(m_device);
   projector.Bind(m_device);
 
