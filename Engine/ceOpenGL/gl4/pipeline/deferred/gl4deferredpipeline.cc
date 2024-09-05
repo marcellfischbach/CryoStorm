@@ -237,6 +237,11 @@ void GL4DeferredPipeline::RenderLighting()
 
 void GL4DeferredPipeline::RenderLights()
 {
+  if (m_gfxCamera->IsRenderShadows())
+  {
+    m_device->ClearShadowMaps();
+    m_directionalLightRenderer.ResetShadowBuffer();
+  }
   for (const auto &gfxLight: m_globalLights)
   {
     RenderLight(gfxLight);
@@ -493,7 +498,7 @@ void GL4DeferredPipeline::Cleanup()
 
 }
 
-void GL4DeferredPipeline::RenderDirectionalLight(const GL4DirectionalLight *directionalLight)
+void GL4DeferredPipeline::RenderDirectionalLight( GL4DirectionalLight *directionalLight)
 {
   m_directionalLightRenderer.Render(m_camera, m_projector, m_gBuffer, directionalLight, m_target);
 }

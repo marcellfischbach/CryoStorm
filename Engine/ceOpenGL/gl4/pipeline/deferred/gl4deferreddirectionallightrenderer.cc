@@ -3,6 +3,7 @@
 #include <ceOpenGL/gl4/gl4device.hh>
 #include <ceOpenGL/gl4/gl4directionallight.hh>
 #include <ceOpenGL/gl4/gl4rendertarget2d.hh>
+#include <ceOpenGL/gl4/gl4texture2darray.hh>
 #include <ceCore/resource/assetmanager.hh>
 #include <ceCore/graphics/camera.hh>
 #include <ceCore/graphics/idevice.hh>
@@ -65,18 +66,35 @@ void GL4DeferredDirectionalLightRenderer::SetScene(ce::iGfxScene *scene)
 void GL4DeferredDirectionalLightRenderer::Render(const Camera *camera,
                                                  const Projector *projector,
                                                  const GBuffer *gBuffer,
-                                                 const GL4DirectionalLight *light,
+                                                 GL4DirectionalLight *light,
                                                  iRenderTarget2D *target)
 {
-  LightRenderShader *lrs = &m_nonShadow;
+  LightRenderShader *lrs       = &m_nonShadow;
+  GL4RenderTarget2D *shadowMap = nullptr;
   if (light->IsCastShadow())
   {
+
     m_pssmRenderer.SetDevice(m_device);
     m_pssmRenderer.SetScene(m_scene);
     m_pssmRenderer.SetDepthBuffer(gBuffer->GetDepth());
-    m_pssmRenderer.SetShadowMap(GetShadowMap());
-    m_pssmRenderer.SetShadowBuffer(GetShadowBuffer());
+    shadowMap = GetShadowMap();
+    m_pssmRenderer.SetShadowMap(shadowMap);
+
+    GL4PSSMShadowBufferObject &sbo = GetShadowBuffer();
+    m_pssmRenderer.SetShadowBuffer(sbo);
     m_pssmRenderer.RenderShadow(light, *camera, *projector);
+
+    if (m_device->MoreShadowMapsPossible())
+    {
+      m_device->AddDirectionalLightShadow(light,
+                                          shadowMap->GetColorTexture(0),
+                                          sbo.ShadowDepth,
+                                          sbo.ShadowColor,
+                                          m_pssmRenderer.GetSplits(),
+                                          m_pssmRenderer.GetMatrices());
+    }
+
+    m_lightIdx++;
     lrs = &m_shadow;
   }
 
@@ -107,7 +125,7 @@ void GL4DeferredDirectionalLightRenderer::Render(const Camera *camera,
   }
   if (lrs->m_attrShadowMap)
   {
-    eTextureUnit unit = m_device->BindTexture(GetShadowMap()->GetColorTexture(0));
+    eTextureUnit unit = m_device->BindTexture(shadowMap->GetColorTexture(0));
     lrs->m_attrShadowMap->Bind(unit);
   }
 
@@ -138,27 +156,59 @@ void GL4DeferredDirectionalLightRenderer::Render(const Camera *camera,
 
 }
 
+void GL4DeferredDirectionalLightRenderer::ResetShadowBuffer()
+{
+  m_lightIdx = 0;
+}
+
 GL4RenderTarget2D *GL4DeferredDirectionalLightRenderer::GetShadowMap()
 {
-
-  if (m_pssmRenderer.IsShadowMapValid(m_shadowMap))
+  if (m_device->MoreShadowMapsPossible() && m_lightIdx < m_shadowMaps.size())
   {
-    return m_shadowMap;
-  }
+    GL4RenderTarget2D *target = m_shadowMaps[m_lightIdx];
+    if (m_pssmRenderer.IsShadowMapValid(target))
+    {
+      return target;
+    }
 
-  GL4RenderTarget2D *target = m_pssmRenderer.CreateDirectionalLightShadowMap();
-  CE_SET(m_shadowMap, target);
-  return target;
+    target = m_pssmRenderer.CreateDirectionalLightShadowMap();
+    CE_SET(m_shadowMaps[m_lightIdx], target);
+    return target;
+  }
+  else
+  {
+
+    if (m_pssmRenderer.IsShadowMapValid(m_shadowMap))
+    {
+      return m_shadowMap;
+    }
+
+    GL4RenderTarget2D *target = m_pssmRenderer.CreateDirectionalLightShadowMap();
+    CE_SET(m_shadowMap, target);
+    return target;
+  }
 }
 
 GL4PSSMShadowBufferObject &GL4DeferredDirectionalLightRenderer::GetShadowBuffer()
 {
-  if (!m_pssmRenderer.IsShadowBufferValid(m_shadowBuffer))
+  if (m_device->MoreShadowMapsPossible() && m_lightIdx < m_shadowBuffers.size())
   {
-    m_shadowBuffer = m_pssmRenderer.CreateDirectionalLightShadowBuffer();
-  }
+    if (!m_pssmRenderer.IsShadowBufferValid(m_shadowBuffers[m_lightIdx]))
+    {
+      m_shadowBuffers[m_lightIdx] = m_pssmRenderer.CreateDirectionalLightShadowBuffer();
+    }
 
-  return m_shadowBuffer;
+    return m_shadowBuffers[m_lightIdx];
+  }
+  else
+  {
+    if (!m_pssmRenderer.IsShadowBufferValid(m_shadowBuffer))
+    {
+      m_shadowBuffer = m_pssmRenderer.CreateDirectionalLightShadowBuffer();
+    }
+
+    return m_shadowBuffer;
+  }
 }
 
 }

@@ -70,7 +70,7 @@ private:
   void RenderLighting();
   void RenderLights();
   void RenderLight(GfxLight *light);
-  void RenderDirectionalLight(const GL4DirectionalLight *directionalLight);
+  void RenderDirectionalLight( GL4DirectionalLight *directionalLight);
   void RenderPointLight(const GL4PointLight *pointLight);
   void RenderTransparent();
   void RenderForwardMeshShaded(GfxMesh *mesh, std::array<const GfxLight *, MaxLights> &lights, Size offset);

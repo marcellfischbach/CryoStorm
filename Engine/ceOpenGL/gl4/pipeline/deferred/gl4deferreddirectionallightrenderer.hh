@@ -32,17 +32,20 @@ public:
 
   void SetDevice (iDevice* device);
   void SetScene(iGfxScene *scene);
+  void ResetShadowBuffer();
 
   void Render(const Camera *camera,
               const Projector *projector,
               const GBuffer *gBuffer,
-              const GL4DirectionalLight *light,
+              GL4DirectionalLight *light,
               iRenderTarget2D *target);
 
 
 private:
   GL4RenderTarget2D *GetShadowMap();
   GL4PSSMShadowBufferObject &GetShadowBuffer();
+
+
 
   GL4Device *m_device = nullptr;
   iGfxScene *m_scene = nullptr;
@@ -67,6 +70,9 @@ private:
 
   GL4RenderTarget2D *m_shadowMap = nullptr;
   GL4PSSMShadowBufferObject m_shadowBuffer;
+  size_t m_lightIdx = 0;
+  std::array<GL4RenderTarget2D *, 4> m_shadowMaps = { nullptr, nullptr, nullptr, nullptr};
+  std::array<GL4PSSMShadowBufferObject, 4> m_shadowBuffers;
 
 };
 

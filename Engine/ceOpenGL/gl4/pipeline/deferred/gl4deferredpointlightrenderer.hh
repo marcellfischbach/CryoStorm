@@ -37,6 +37,7 @@ public:
 
   void SetDevice(iDevice *device);
   void SetScene(iGfxScene *scene);
+  void ResetShadowMaps ();
 
   void Render(const Camera *camera,
               const Projector *projector,

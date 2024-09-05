@@ -101,20 +101,6 @@ void GL4ForwardDirectionalLightRenderer::RenderShadow(GL4DirectionalLight *direc
     m_pssmRenderer.SetShadowBuffer(*sbo);
     m_pssmRenderer.RenderShadow(directionalLight, camera, projector);
 
-
-    std::array<iTexture2D*, 4> sboColors = {
-        sbo->ShadowBuffers[0]->GetColorTexture(0),
-        sbo->ShadowBuffers[1]->GetColorTexture(0),
-        sbo->ShadowBuffers[2]->GetColorTexture(0),
-        sbo->ShadowBuffers[3]->GetColorTexture(0)
-    };
-    std::array<iTexture2D*, 4> sboDepths = {
-        sbo->ShadowBuffers[0]->GetDepthTexture(),
-        sbo->ShadowBuffers[1]->GetDepthTexture(),
-        sbo->ShadowBuffers[2]->GetDepthTexture(),
-        sbo->ShadowBuffers[3]->GetDepthTexture()
-    };
-
     m_device->AddDirectionalLightShadow(directionalLight,
                                         target->GetColorTexture(0),
                                         sbo->ShadowDepth,
