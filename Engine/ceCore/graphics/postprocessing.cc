@@ -1,6 +1,4 @@
 
-#pragma once
-
 #include <ceCore/graphics/postprocessing.hh>
 #include <ceCore/graphics/itexture2d.hh>
 #include <ceCore/graphics/irendertarget2d.hh>

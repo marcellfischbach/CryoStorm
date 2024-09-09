@@ -210,7 +210,7 @@ public:
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), sig.c_str()) : nullptr;
   }
 
-  jlong call(JNIEnv *env, T0 arg0, T1 arg1, T2  arg2)
+  void call(JNIEnv *env, T0 arg0, T1 arg1, T2  arg2)
   {
     if (methodId)
     {

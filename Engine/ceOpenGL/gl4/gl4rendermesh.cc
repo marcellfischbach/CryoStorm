@@ -304,21 +304,21 @@ iRenderMesh *GL4RenderMeshGenerator::Generate()
   Size                                      vertexCount = 0;
   if (!m_vertices2.empty())
   {
-    attributes.emplace_back(VertexDeclaration::Attribute(0, eVS_Vertices, 2, eDT_Float, 0, 0));
+    attributes.emplace_back(0, eVS_Vertices, 2, eDT_Float, 0, 0);
     offset += 2 * sizeof(float);
     count += 2;
     vertexCount = m_vertices2.size();
   }
   else if (!m_vertices3.empty())
   {
-    attributes.emplace_back(VertexDeclaration::Attribute(0, eVS_Vertices, 3, eDT_Float, 0, 0));
+    attributes.emplace_back(0, eVS_Vertices, 3, eDT_Float, 0, 0);
     offset += 3 * sizeof(float);
     count += 3;
     vertexCount = m_vertices3.size();
   }
   else if (!m_vertices4.empty())
   {
-    attributes.emplace_back(VertexDeclaration::Attribute(0, eVS_Vertices, 4, eDT_Float, 0, 0));
+    attributes.emplace_back(0, eVS_Vertices, 4, eDT_Float, 0, 0);
     offset += 4 * sizeof(float);
     count += 4;
     vertexCount = m_vertices4.size();
@@ -329,7 +329,7 @@ iRenderMesh *GL4RenderMeshGenerator::Generate()
     {
       return nullptr;
     }
-    attributes.emplace_back(VertexDeclaration::Attribute(0, eVS_Normals, 3, eDT_Float, 0, offset));
+    attributes.emplace_back(0, eVS_Normals, 3, eDT_Float, 0, offset);
     count += 3;
     offset += 3 * sizeof(float);
   }
@@ -340,7 +340,7 @@ iRenderMesh *GL4RenderMeshGenerator::Generate()
     {
       return nullptr;
     }
-    attributes.emplace_back(VertexDeclaration::Attribute(0, eVS_Tangents, 3, eDT_Float, 0, offset));
+    attributes.emplace_back(0, eVS_Tangents, 3, eDT_Float, 0, offset);
     count += 3;
     offset += 3 * sizeof(float);
   }
@@ -350,7 +350,7 @@ iRenderMesh *GL4RenderMeshGenerator::Generate()
     {
       return nullptr;
     }
-    attributes.emplace_back(VertexDeclaration::Attribute(0, eVS_UV0, 2, eDT_Float, 0, offset));
+    attributes.emplace_back(0, eVS_UV0, 2, eDT_Float, 0, offset);
     count += 2;
     offset += 2 * sizeof(float);
   }
@@ -360,7 +360,7 @@ iRenderMesh *GL4RenderMeshGenerator::Generate()
     {
       return nullptr;
     }
-    attributes.emplace_back(VertexDeclaration::Attribute(0, eVS_UV0, 3, eDT_Float, 0, offset));
+    attributes.emplace_back(0, eVS_UV0, 3, eDT_Float, 0, offset);
     count += 3;
     offset += 3 * sizeof(float);
   }
@@ -370,7 +370,7 @@ iRenderMesh *GL4RenderMeshGenerator::Generate()
     {
       return nullptr;
     }
-    attributes.emplace_back(VertexDeclaration::Attribute(0, eVS_UV1, 2, eDT_Float, 0, offset));
+    attributes.emplace_back(0, eVS_UV1, 2, eDT_Float, 0, offset);
     count += 2;
     offset += 2 * sizeof(float);
   }
@@ -380,7 +380,7 @@ iRenderMesh *GL4RenderMeshGenerator::Generate()
     {
       return nullptr;
     }
-    attributes.emplace_back(VertexDeclaration::Attribute(0, eVS_UV2, 2, eDT_Float, 0, offset));
+    attributes.emplace_back(0, eVS_UV2, 2, eDT_Float, 0, offset);
     count += 2;
     offset += 2 * sizeof(float);
   }
@@ -390,7 +390,7 @@ iRenderMesh *GL4RenderMeshGenerator::Generate()
     {
       return nullptr;
     }
-    attributes.emplace_back(VertexDeclaration::Attribute(0, eVS_UV3, 2, eDT_Float, 0, offset));
+    attributes.emplace_back(0, eVS_UV3, 2, eDT_Float, 0, offset);
     count += 2;
     offset += 2 * sizeof(float);
   }
@@ -400,7 +400,7 @@ iRenderMesh *GL4RenderMeshGenerator::Generate()
     {
       return nullptr;
     }
-    attributes.emplace_back(VertexDeclaration::Attribute(0, eVS_Colors, 4, eDT_Float, 0, offset));
+    attributes.emplace_back(0, eVS_Colors, 4, eDT_Float, 0, offset);
     count += 4;
     offset += 4 * sizeof(float);
   }
@@ -410,7 +410,7 @@ iRenderMesh *GL4RenderMeshGenerator::Generate()
     {
       return nullptr;
     }
-    attributes.emplace_back(VertexDeclaration::Attribute(0, eVS_BoneIndices, 4, eDT_Float, 0, offset));
+    attributes.emplace_back(0, eVS_BoneIndices, 4, eDT_Float, 0, offset);
     count += 4;
     offset += 4 * sizeof(float);
   }
@@ -420,7 +420,7 @@ iRenderMesh *GL4RenderMeshGenerator::Generate()
     {
       return nullptr;
     }
-    attributes.emplace_back(VertexDeclaration::Attribute(0, eVS_BoneWeights, 4, eDT_Float, 0, offset));
+    attributes.emplace_back(0, eVS_BoneWeights, 4, eDT_Float, 0, offset);
     count += 4;
     offset += 4 * sizeof(float);
   }
