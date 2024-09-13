@@ -98,12 +98,6 @@ void GL4RenderMesh::Render(iDevice *graphics, eRenderPass pass)
   glBindVertexArray(m_vao);
   CE_GL_ERROR();
   glDrawElements(m_primType, (GLsizei) m_count, m_indexType, nullptr);
-  GLenum error = glGetError();
-  if (error != GL_NO_ERROR) {
-    printf ("Error\n");
-  }
-  CE_GL_ERROR();
-//  glBindVertexArray(0);
   CE_GL_ERROR();
 
 #if _DEBUG
