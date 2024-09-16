@@ -88,6 +88,12 @@ private:
   std::string GenerateForward_Geom(std::map<std::string, eMaterialAttributeType> &attributes);
   std::string GenerateForward_Frag(std::map<std::string, eMaterialAttributeType> &attributes);
 
+  void GenerateGBuffer(SourceBundle &bundle);
+  std::string GenerateGBuffer_Vert(std::map<std::string, eMaterialAttributeType> &attributes);
+  std::string GenerateGBuffer_Geom(std::map<std::string, eMaterialAttributeType> &attributes);
+  std::string GenerateGBuffer_Frag(std::map<std::string, eMaterialAttributeType> &attributes);
+
+
   bool CheckForCycle();
   void LinearizeNodes();
   bool VerifyNodesType();

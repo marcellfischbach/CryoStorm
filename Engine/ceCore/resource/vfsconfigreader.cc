@@ -59,21 +59,23 @@ void VFSConfigReader::ReadArchive(const ce::CrimsonFileElement *archiveElement)
 {
   if (archiveElement->GetTagName() == "filesystem" || archiveElement->GetTagName() == "fs")
   {
-    int priority = archiveElement->GetAttribute(0, 0);
-    std::string path = archiveElement->GetAttribute(1, "");
+    std::string name = archiveElement->GetAttribute(0, "Root");
+    int priority = archiveElement->GetAttribute(1, 0);
+    std::string path = archiveElement->GetAttribute(2, "");
     if (!path.empty())
     {
-      VFS::Get()->AddArchive (new FileSystemArchive(path, priority));
+      VFS::Get()->AddArchive (new FileSystemArchive(name, path, priority));
     }
   }
 #ifdef CE_JAVA
   else if (archiveElement->GetTagName() == "java")
   {
-    int priority = archiveElement->GetAttribute(0, 0);
-    std::string path = archiveElement->GetAttribute(1, "");
+    std::string name = archiveElement->GetAttribute(0, "Java");
+    int priority = archiveElement->GetAttribute(1, 0);
+    std::string path = archiveElement->GetAttribute(2, "");
     if (!path.empty())
     {
-      VFS::Get()->AddArchive (new JavaArchive(path, priority));
+      VFS::Get()->AddArchive (new JavaArchive(name, path, priority));
     }
   }
 #endif

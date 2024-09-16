@@ -26,6 +26,8 @@ public:
   void AddArchive (iArchive* archive);
   void InsertAlias(const std::string &alias, const std::string &replacement);
 
+  const std::vector<const iArchive*> &GetArchives () const;
+
   CE_NODISCARD iFile *Open(const ResourceLocator &resourceLocator, eAccessMode accessMode, eOpenMode openMode) const;
 
 private:

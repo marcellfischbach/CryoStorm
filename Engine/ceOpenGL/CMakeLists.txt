@@ -80,7 +80,8 @@ set(SOURCES
 
 		gl4/shadergraph/gl4shadergraphcompiler.cc
 		gl4/shadergraph/gl4shadergraphcompiler_depth.cc
-		gl4/shadergraph/gl4shadergraphcompiler_diffuse.cc
+		gl4/shadergraph/gl4shadergraphcompiler_forward.cc
+		gl4/shadergraph/gl4shadergraphcompiler_gbuffer.cc
 		gl4/shadergraph/gl4shadergraphcompiler_variables.cc
 		gl4/shadergraph/gl4shadergraphcompiler.hh
 

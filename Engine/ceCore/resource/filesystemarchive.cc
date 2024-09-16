@@ -9,13 +9,23 @@
 namespace ce
 {
 
-FileSystemArchive::FileSystemArchive(const std::string &rootPath, int priority)
-    : m_rootPath(Resolve(rootPath))
+FileSystemArchive::FileSystemArchive(const std::string &name, const std::string &rootPath, int priority)
+    : m_name(name)
+    , m_rootPath(Resolve(rootPath))
     , m_priority(priority)
 {
 
 }
 
+const std::string& FileSystemArchive::GetName() const
+{
+  return m_name;
+}
+
+const const std::string &FileSystemArchive::GetRootPath() const
+{
+  return m_rootPath;
+}
 
 std::string FileSystemArchive::Resolve(const std::string &rootPath)
 {

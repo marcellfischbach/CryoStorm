@@ -2,12 +2,14 @@ shaderGraph {
 
     receiveShadow 1,
     queue Default,
-    blend Blend,
+    blend Off,
 
     nodes {
         resource "ce::SGResourceFloat" roughness "Roughness",
 
         resource "ce::SGResourceColor3" diffuse "Diffuse",
+
+        resource "ce::SGTexture2D" normal2 "Normal",
 
         node "ce::SGConstFloat" alpha {
             value 0 1.0,
@@ -19,16 +21,27 @@ shaderGraph {
             value 2 1.0,
         },
 
+        node "ce::SGDecomposeVec4" normalDec {
+            binding "V" normal2,
+        }
+
+        node "ce::SGVec3" normalRec {
+            binding "X" normalDec 0,
+            binding "Y" normalDec 1,
+            binding "Z" normalDec 2,
+        }
+
         shaderGraph {
             binding "Diffuse" diffuse,
             binding "Alpha" alpha,
             binding "Roughness" roughness,
-            binding "Normal" normal,
+            binding "Normal" normalRec,
         }
     },
 
     attributes {
         attribute Float "Roughness" 0.0,
+        attribute Texture "Normal" "/textures/fieldstone_normal.tex2d",
     }
 
 

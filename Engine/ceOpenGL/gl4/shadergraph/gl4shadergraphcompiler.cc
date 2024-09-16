@@ -17,7 +17,7 @@ Material *GL4ShaderGraphCompiler::Compile(ce::ShaderGraph *shaderGraph, const Pa
 {
   m_shaderGraph = shaderGraph;
   m_errorString = "";
-  m_parameters = parameters;
+  m_parameters  = parameters;
 
   if (!GL4ShaderGraphLightData::Get().Valid)
   {
@@ -43,16 +43,26 @@ Material *GL4ShaderGraphCompiler::Compile(ce::ShaderGraph *shaderGraph, const Pa
 
   GenerateVariables();
 
-  SourceBundle depth, deferred, forward, shadow, shadowPSSM, shadowPoint;
+  SourceBundle depth, forward, shadow, shadowPSSM, shadowPoint;
   GenerateDepth(depth);
   GenerateForward(forward);
 
-  iShader *depthShader = Compile(depth);
+  iShader *depthShader   = Compile(depth);
   iShader *forwardShader = Compile(forward);
 
   Material *material = new Material();
   material->SetShader(eRP_Depth, depthShader);
   material->SetShader(eRP_Forward, forwardShader);
+
+  if (m_shaderGraph->GetLightingMode() == ShaderGraph::eLM_Default
+      && m_shaderGraph->GetBlendingMode() == ShaderGraph::eBM_Off)
+  {
+    SourceBundle gbuffer;
+    GenerateGBuffer(gbuffer);
+    iShader *gbufferShader = Compile(gbuffer);
+    material->SetShader(eRP_GBuffer, gbufferShader);
+  }
+
   material->SetRenderQueue(shaderGraph->GetQueue());
 
 
@@ -136,9 +146,9 @@ static bool has_cycle(const SGNode *node, const SGNode *referenceNode)
 {
   for (size_t i = 0, in = node->GetNumberOfInputs(); i < in; i++)
   {
-    const SGNodeInput *input = node->GetInput(i);
-    const SGNodeOutput *source = input->GetSource();
-    const SGNode *sourceNode = source ? source->GetNode() : nullptr;
+    const SGNodeInput  *input      = node->GetInput(i);
+    const SGNodeOutput *source     = input->GetSource();
+    const SGNode       *sourceNode = source ? source->GetNode() : nullptr;
     if (sourceNode)
     {
       if (sourceNode == referenceNode)
@@ -184,7 +194,7 @@ static void linearize(std::set<SGNode *> &untouched, SGNodeInput *input, std::ve
     return;
   }
   SGNode *sourceNode = source->GetNode();
-  auto it = untouched.find(sourceNode);
+  auto   it          = untouched.find(sourceNode);
   if (it == untouched.end())
   {
     return;
@@ -203,7 +213,7 @@ static void linearize(std::set<SGNode *> &untouched, SGNodeInput *input, std::ve
 void GL4ShaderGraphCompiler::LinearizeNodes()
 {
   std::set<SGNode *> untouchedNodes;
-  for (size_t i = 0, in = m_shaderGraph->GetNumberOfNodes(); i < in; i++)
+  for (size_t        i = 0, in = m_shaderGraph->GetNumberOfNodes(); i < in; i++)
   {
     untouchedNodes.insert(m_shaderGraph->GetNode(i));
   }
@@ -257,7 +267,7 @@ bool GL4ShaderGraphCompiler::VerifyNodeType(SGNode *node)
 
   for (size_t i = 0, in = node->GetNumberOfInputs(); i < in; i++)
   {
-    SGNodeInput *input = node->GetInput(i);
+    SGNodeInput  *input  = node->GetInput(i);
     SGNodeOutput *source = input->GetSource();
 
     if (source)
@@ -293,9 +303,9 @@ bool GL4ShaderGraphCompiler::VerifyNodeType(SGNode *node)
 bool GL4ShaderGraphCompiler::VerifyResources()
 {
   std::map<std::string, SGResourceNode *> resources;
-  for (size_t i = 0, in = m_shaderGraph->GetNumberOfNodes(); i < in; ++i)
+  for (size_t                             i = 0, in = m_shaderGraph->GetNumberOfNodes(); i < in; ++i)
   {
-    SGNode *node = m_shaderGraph->GetNode(i);
+    SGNode         *node         = m_shaderGraph->GetNode(i);
     SGResourceNode *resourceNode = node->Query<SGResourceNode>();
     if (resourceNode)
     {
@@ -331,8 +341,8 @@ std::string line_number(size_t number)
 
 std::string replace_all(const std::string &input, const std::string &from, const std::string &to)
 {
-  std::string str = input;
-  size_t start_pos = 0;
+  std::string str       = input;
+  size_t      start_pos = 0;
   while ((start_pos = str.find(from, start_pos)) != std::string::npos)
   {
     str.replace(start_pos, from.length(), to);
@@ -347,9 +357,9 @@ std::string annotate_with_line_numbers(const std::string &code)
   std::string str = replace_all(code, "\r\n", "\n");
   str = replace_all(str, "\r", "\n");
 
-  size_t line_no = 1;
-  bool newLine = true;
-  bool hadR = false;
+  size_t          line_no = 1;
+  bool            newLine = true;
+  bool            hadR    = false;
   for (const auto &ch: str)
   {
     if (newLine)
@@ -395,7 +405,11 @@ static std::string ShaderTypeName[] = {
 };
 
 
-static bool Attach(GL4Program *program, eGL4ShaderType type, const std::string &src, bool debugSources, const std::string &debugName)
+static bool Attach(GL4Program *program,
+                   eGL4ShaderType type,
+                   const std::string &src,
+                   bool debugSources,
+                   const std::string &debugName)
 {
   if (src.empty())
   {
@@ -484,7 +498,7 @@ std::vector<SGNode *> GL4ShaderGraphCompiler::ScanNeededVariables(std::vector<SG
     return result;
   }
   std::set<SGNode *> needs;
-  for (auto input: inputs)
+  for (auto          input: inputs)
   {
     ScanNeededVariables(needs, input);
   }
@@ -597,8 +611,8 @@ bool GL4ShaderGraphCompiler::IsNeedingTangent(const std::vector<SGNode *> &nodes
 
 void GL4ShaderGraphCompiler::SetMaterialDefaults(ce::Material *material)
 {
-  std::vector<SGNode*> nodes;
-  for (int i = 0; i < m_shaderGraph->GetNumberOfNodes(); ++i)
+  std::vector<SGNode *> nodes;
+  for (int              i = 0; i < m_shaderGraph->GetNumberOfNodes(); ++i)
   {
     nodes.push_back(m_shaderGraph->GetNode(i));
   }

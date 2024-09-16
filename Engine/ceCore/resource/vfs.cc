@@ -48,6 +48,12 @@ void VFS::AddArchive(ce::iArchive *archive)
   }
 }
 
+const std::vector<const iArchive*> &VFS::GetArchives() const
+{
+  return reinterpret_cast<const std::vector<const iArchive*> &>(m_archives);
+
+}
+
 void VFS::InsertAlias(const std::string& alias, const std::string& replacement)
 {
   m_aliases[alias] = replacement;

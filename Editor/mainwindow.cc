@@ -6,13 +6,16 @@
 
 #include "mainwindow.hh"
 #include "ui_MainWindow.h"
+#include <assetbrowser/assetbrowserwidget.hh>
 
 MainWindow::MainWindow(QWidget* parent)
-        :
-        QMainWindow(parent)
-        , ui(new Ui::MainWindow)
+  : QMainWindow(parent)
+  , ui(new Ui::MainWindow)
 {
   ui->setupUi(this);
+
+  auto assetBrowser = new AssetBrowserWidget();
+  setCentralWidget(assetBrowser);
 }
 
 MainWindow::~MainWindow()

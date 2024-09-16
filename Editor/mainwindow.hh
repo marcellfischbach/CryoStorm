@@ -1,9 +1,7 @@
 //
 // Created by MCEL on 22.02.2021.
 //
-
-#ifndef SPICEENGINE_MAINWINDOW_HH
-#define SPICEENGINE_MAINWINDOW_HH
+#pragma once
 
 #include <QMainWindow>
 
@@ -13,6 +11,8 @@ namespace Ui
 class MainWindow;
 }
 QT_END_NAMESPACE
+
+
 
 class MainWindow : public QMainWindow
 {
@@ -26,4 +26,4 @@ private:
   Ui::MainWindow* ui;
 };
 
-#endif //SPICEENGINE_MAINWINDOW_HH
+

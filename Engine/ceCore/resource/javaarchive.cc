@@ -12,10 +12,16 @@ namespace ce
 {
 
 
-JavaArchive::JavaArchive(const std::string &rootPath, int priority)
+JavaArchive::JavaArchive(const std::string &name, const std::string &rootPath, int priority)
 {
+  m_name = name;
   SetRootPath(rootPath);
   SetPriority(priority);
+}
+
+const std::string& JavaArchive::GetName() const
+{
+  return m_name;
 }
 
 void JavaArchive::SetRootPath(const std::string &rootPath)
