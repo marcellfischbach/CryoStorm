@@ -15,6 +15,10 @@ class AssetBrowserWidget;
 }
 QT_END_NAMESPACE
 
+
+class AssetBrowserTreeModel;
+class AssetBrowserFolderModel;
+
 class AssetBrowserWidget : public QWidget
 {
 Q_OBJECT
@@ -25,6 +29,13 @@ public:
 
 private:
   Ui::AssetBrowserWidget *ui;
+
+  AssetBrowserTreeModel *m_treeModel;
+  AssetBrowserFolderModel *m_folderModel;
+
+private slots:
+  void on_treeView_activated(const QModelIndex &index);
+  void on_treeView_clicked(const QModelIndex &index);
 };
 
 

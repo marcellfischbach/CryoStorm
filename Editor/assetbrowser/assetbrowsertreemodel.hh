@@ -8,9 +8,11 @@
 class AssetBrowserTreeModel : public QAbstractItemModel
 {
 public:
-  AssetBrowserTreeModel() = default;
+  AssetBrowserTreeModel(QObject *parent);
 
   void Reload();
+
+  std::string GetPath (const QModelIndex &index) const;
 
 public:
 
@@ -29,6 +31,7 @@ private:
     Item* Parent;
     std::vector<PathItem*> Children;
     std::string Name;
+    std::string FullPath;
 
     virtual ~Item()
     {

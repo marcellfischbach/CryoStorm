@@ -16,6 +16,10 @@ set(ALL_SOURCES
         mainwindow.hh
         mainwindow.ui
 
+        assetbrowser/assetbrowserdockwidget.cc
+        assetbrowser/assetbrowserdockwidget.hh
+        assetbrowser/assetbrowserfoldermodel.cc
+        assetbrowser/assetbrowserfoldermodel.hh
         assetbrowser/assetbrowsertreemodel.cc
         assetbrowser/assetbrowsertreemodel.hh
         assetbrowser/assetbrowserwidget.cc

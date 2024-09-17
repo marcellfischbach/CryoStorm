@@ -6,7 +6,7 @@
 
 #include "mainwindow.hh"
 #include "ui_MainWindow.h"
-#include <assetbrowser/assetbrowserwidget.hh>
+#include <assetbrowser/assetbrowserdockwidget.hh>
 
 MainWindow::MainWindow(QWidget* parent)
   : QMainWindow(parent)
@@ -14,8 +14,10 @@ MainWindow::MainWindow(QWidget* parent)
 {
   ui->setupUi(this);
 
-  auto assetBrowser = new AssetBrowserWidget();
-  setCentralWidget(assetBrowser);
+  m_assetBrowser = new AssetBrowserDockWidget(this);
+
+  addDockWidget(Qt::DockWidgetArea::BottomDockWidgetArea, m_assetBrowser);
+
 }
 
 MainWindow::~MainWindow()

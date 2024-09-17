@@ -13,7 +13,7 @@ class MainWindow;
 QT_END_NAMESPACE
 
 
-
+class AssetBrowserDockWidget;
 class MainWindow : public QMainWindow
 {
 Q_OBJECT
@@ -24,6 +24,8 @@ public:
 
 private:
   Ui::MainWindow* ui;
+
+  AssetBrowserDockWidget *m_assetBrowser;
 };
 
 
