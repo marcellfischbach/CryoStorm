@@ -7,6 +7,7 @@
 #include "mainwindow.hh"
 #include "ui_MainWindow.h"
 #include <assetbrowser/assetbrowserdockwidget.hh>
+#include <sceneview/sceneviewwidget.hh>
 
 MainWindow::MainWindow(QWidget* parent)
   : QMainWindow(parent)
@@ -15,9 +16,11 @@ MainWindow::MainWindow(QWidget* parent)
   ui->setupUi(this);
 
   m_assetBrowser = new AssetBrowserDockWidget(this);
+  m_sceneViewWidget = new SceneViewWidget(this);
 
   addDockWidget(Qt::DockWidgetArea::BottomDockWidgetArea, m_assetBrowser);
 
+  setCentralWidget(m_sceneViewWidget);
 }
 
 MainWindow::~MainWindow()
