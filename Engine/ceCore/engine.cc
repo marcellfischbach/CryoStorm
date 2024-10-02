@@ -56,7 +56,7 @@ void Engine::SetSkyboxRenderer(ce::iSkyboxRenderer *skyboxRenderer)
   CE_SET(m_skyboxRenderer, skyboxRenderer);
 }
 
-iSkyboxRenderer* Engine::GetSkyboxRenderer()
+iSkyboxRenderer *Engine::GetSkyboxRenderer()
 {
   return m_skyboxRenderer;
 }
@@ -96,7 +96,7 @@ struct OpenModule
   iGame   *game;
 };
 
-static HMODULE load_library (const std::string &libraryName)
+static HMODULE load_library(const std::string &libraryName)
 {
   HMODULE handle = GetModuleHandle(libraryName.c_str());
   if (!handle)
@@ -108,56 +108,73 @@ static HMODULE load_library (const std::string &libraryName)
 }
 
 
-static HMODULE load_module (const std::string &libraryName)
+static HMODULE load_module(const std::string &libraryName)
 {
-  HMODULE  handle = load_library(libraryName);
+  HMODULE handle = load_library(libraryName);
   if (!handle)
   {
     handle = load_library(std::string("lib") + libraryName);
   }
+
+  printf("ceEngine::Module [%s]: %p\n", libraryName.c_str(), handle);
+
   return handle;
 }
 
-OpenModule open_module(const std::string &moduleName)
+iModule *open_module(const std::string &moduleName)
 {
 #ifdef  CE_WIN32
-  std::string dll_name             = moduleName + std::string(".dll");
-  std::string load_library_name    = moduleName + "_load_library";
-  std::string create_game_instance = "create_game_instance";
+  std::string dll_name          = moduleName + std::string(".dll");
+  std::string load_library_name = moduleName + "_load_library";
 
   HMODULE handle = load_module(dll_name);
   if (!handle)
   {
-    return OpenModule {nullptr, nullptr};
+    return nullptr;
   }
 
 
   load_library_func_ptr load_library_func = (load_library_func_ptr) GetProcAddress(handle, load_library_name.c_str());
   if (!load_library_func)
   {
-    return OpenModule {nullptr, nullptr};
+    return nullptr;
   }
 
-  iModule *module                   = load_library_func();
-  iGame   *game                     = nullptr;
-  create_game_instance_func_ptr
-          create_game_instance_func =
-              (create_game_instance_func_ptr) GetProcAddress(handle, create_game_instance.c_str());
-  if (create_game_instance_func)
-  {
-    game = create_game_instance_func();
-  }
+  iModule *module = load_library_func();
 
-  return OpenModule {module, game};
+  return module;
 #else
   return nullptr;
 #endif
 }
 
-OpenModule open_module(CrimsonFileElement *moduleElement)
+
+iGame *open_game(const std::string &moduleName)
 {
-  return open_module(moduleElement->GetTagName());
+#ifdef  CE_WIN32
+  std::string dll_name             = moduleName + std::string(".dll");
+  std::string create_game_instance = "create_game_instance";
+
+  HMODULE handle = load_module(dll_name);
+  if (!handle)
+  {
+    return nullptr;
+  }
+
+  create_game_instance_func_ptr create_game_instance_func = (create_game_instance_func_ptr) GetProcAddress(handle,
+                                                                                                           create_game_instance
+                                                                                                               .c_str());
+  if (!create_game_instance_func)
+  {
+    return nullptr;
+  }
+
+  return create_game_instance_func();
+#else
+  return nullptr;
+#endif
 }
+
 
 ce::iRenderTarget2D *create_render_target(ce::iDevice *device, uint32_t width, uint32_t height, uint16_t multiSamples)
 {
@@ -205,15 +222,8 @@ ce::iRenderTarget2D *create_render_target(ce::iDevice *device, uint32_t width, u
 }
 
 
-bool Engine::Initialize(const std::vector<std::string> &args, iModule *externalModule, iGame *externalGame)
+bool Engine::InitializeEngine(const std::vector<std::string> &args, iModule *externalModule)
 {
-
-
-  if (!AssetManager::Get())
-  {
-    AssetManager::Set(new AssetManager());
-  }
-
   iFile *modulesConfig = VFS::Get()->Open(ResourceLocator("/modules.config"), eAM_Read, eOM_Binary);
   if (!modulesConfig)
   {
@@ -227,6 +237,31 @@ bool Engine::Initialize(const std::vector<std::string> &args, iModule *externalM
     return false;
   }
 
+  std::vector<std::string> moduleNames;
+  for (size_t              i = 0, in = file.Root()->GetNumberOfChildren(); i < in; i++)
+  {
+    CrimsonFileElement *moduleElement = file.Root()->GetChild(i);
+    if (moduleElement)
+    {
+      moduleNames.emplace_back(moduleElement->GetTagName());
+    }
+  }
+  CE_RELEASE(modulesConfig);
+
+
+  return InitializeEngine(args, moduleNames, externalModule);
+}
+
+bool Engine::InitializeEngine(const std::vector<std::string> &args,
+                              const std::vector<std::string> &moduleNames,
+                              ce::iModule *externalModule)
+{
+
+  if (!AssetManager::Get())
+  {
+    AssetManager::Set(new AssetManager());
+  }
+
   std::vector<iModule *> modules;
   modules.push_back(new CoreModule());
   if (externalModule)
@@ -234,36 +269,22 @@ bool Engine::Initialize(const std::vector<std::string> &args, iModule *externalM
     modules.push_back(externalModule);
   }
 
-  std::vector<iGame *> games;
-  for (size_t          i = 0, in = file.Root()->GetNumberOfChildren(); i < in; i++)
+  for (auto &moduleName: moduleNames)
   {
-    CrimsonFileElement *moduleElement = file.Root()->GetChild(i);
-    if (moduleElement)
+    iModule *module = open_module(moduleName);
+    if (module)
     {
-      OpenModule openMod = open_module(moduleElement);
-      if (openMod.module)
-      {
-        modules.push_back(openMod.module);
-      }
-      if (openMod.game)
-      {
-        games.push_back(openMod.game);
-      }
+      modules.emplace_back(module);
     }
   }
 
-  OpenModule gameModule = open_module("ceGame");
-  if (gameModule.module)
+  if (std::find(moduleNames.begin(), moduleNames.end(), "ceGame") == moduleNames.end())
   {
-    modules.push_back(gameModule.module);
-  }
-  if (gameModule.game)
-  {
-    games.push_back(gameModule.game);
-  }
-  if (externalGame)
-  {
-    games.push_back(externalGame);
+    iModule *gameModule = open_module("ceGame");
+    if (gameModule)
+    {
+      modules.emplace_back(gameModule);
+    }
   }
 
   for (auto module: modules)
@@ -282,26 +303,22 @@ bool Engine::Initialize(const std::vector<std::string> &args, iModule *externalM
     }
   }
 
+  ce::ObjectRegistry::Register<ce::DebugCache>(new ce::DebugCache());
+  m_multiSamples = Settings::Get().Graphics().GetInt("multisamples", 1);
 
-  CE_RELEASE(modulesConfig);
+  return true;
+}
+
+bool Engine::InitializeGame()
+{
 
   if (!m_world)
   {
     m_world = new World();
   }
 
-  printf("Create render target: %p\n", m_window);
-  fflush(stdout);
-  m_multiSamples = Settings::Get().Display().GetInt("multisamples", 1);
-  m_renderTarget = create_render_target(m_device, m_window->GetWidth(), m_window->GetHeight(), m_multiSamples);
-  if (m_renderTarget == nullptr)
-  {
-    return false;
-  }
-
-  ce::ObjectRegistry::Register<ce::DebugCache>(new ce::DebugCache());
-
-  for (auto game: games)
+  iGame* game = open_game("ceGame");
+  if (game)
   {
     game->Initialize(this);
   }
@@ -324,7 +341,12 @@ int Engine::Run()
 #endif
 
     m_window->ProcessUpdates();
-    ProcessFrame();
+    if (!ProcessFrame())
+    {
+      m_active = false;
+      m_exitValue = -1;
+      break;
+    }
     m_window->Present();
 
 #if _DEBUG
@@ -337,16 +359,15 @@ int Engine::Run()
   return m_exitValue;
 }
 
-void Engine::ProcessFrame()
+bool Engine::ProcessFrame()
 {
-  if (m_renderTarget &&
-      (m_renderTarget->GetWidth() != m_window->GetWidth() || m_renderTarget->GetHeight() != m_window->GetHeight()))
+  if (!m_renderTarget || m_renderTarget->GetWidth() != m_window->GetWidth() || m_renderTarget->GetHeight() != m_window->GetHeight())
   {
-    m_renderTarget->Release();
+    CE_RELEASE(m_renderTarget);
     m_renderTarget = create_render_target(m_device, m_window->GetWidth(), m_window->GetHeight(), m_multiSamples);
     if (m_renderTarget == nullptr)
     {
-      return;
+      return false;
     }
   }
 
@@ -381,6 +402,7 @@ void Engine::ProcessFrame()
   m_device->RenderFullscreen(finalColor);
   m_device->SetDepthTest(true);
 
+  return true;
 }
 
 

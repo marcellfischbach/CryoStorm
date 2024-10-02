@@ -40,10 +40,13 @@ public:
   World *GetWorld();
 
 
-  bool Initialize(const std::vector<std::string> &args, iModule *externalModule, ce::iGame *externalGame);
+  bool InitializeEngine(const std::vector<std::string> &args, iModule *externalModule);
+  bool InitializeEngine (const std::vector<std::string> &args, const std::vector<std::string> &moduleNames, iModule *externalModule);
+
+  bool InitializeGame();
 
   int Run();
-  void ProcessFrame();
+  bool ProcessFrame();
   void Exit(int returnValue = 0);
 
 private:

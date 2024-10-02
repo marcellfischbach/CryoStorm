@@ -56,7 +56,7 @@ JNICALL Java_org_crimsonedge_core_Engine_nInitialize(JNIEnv *env, jclass cls, jo
 
   auto externalModule = reinterpret_cast<ce::iModule*>(externalModuleRef);
 
-  bool result = ce::Engine::Get()->Initialize(args, externalModule, game);
+  bool result = ce::Engine::Get()->InitializeEngine(args, externalModule);
   fflush(stdout);
   return result;
 }

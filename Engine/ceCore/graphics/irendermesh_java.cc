@@ -13,6 +13,7 @@ JNICALL Java_org_crimsonedge_core_graphics_IRenderMeshGenerator_nSetVertices2f(J
   jsize length   = env->GetArrayLength(buffer) / 2;
   auto values = (ce::Vector2f*)env->GetFloatArrayElements(buffer, 0);
   std::vector<ce::Vector2f> vector;
+  vector.reserve(length);
   for (size_t i=0; i<length; i++) {
     vector.push_back(values[i]);
   }
