@@ -14,6 +14,7 @@ QT_END_NAMESPACE
 
 
 class AssetBrowserDockWidget;
+class SceneViewWidget;
 class MainWindow : public QMainWindow
 {
 Q_OBJECT
@@ -26,6 +27,7 @@ private:
   Ui::MainWindow* ui;
 
   AssetBrowserDockWidget *m_assetBrowser;
+  SceneViewWidget *m_sceneViewWidget;
 };
 
 
