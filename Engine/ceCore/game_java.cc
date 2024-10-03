@@ -6,7 +6,7 @@
 #include <ceCore/java.hh>
 
 
-namespace ce
+namespace cryo
 {
 
 GameJava::GameJava(jobject gameObject)
@@ -16,7 +16,7 @@ GameJava::GameJava(jobject gameObject)
 }
 
 
-bool GameJava::Initialize(ce::Engine *engine)
+bool GameJava::Initialize(cryo::Engine *engine)
 {
   static jclass cls = Java::Get()->FindClass("org/crimsonedge/core/IGame");
   if (cls)

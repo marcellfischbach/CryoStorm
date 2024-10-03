@@ -5,7 +5,7 @@
 #include <ceLauncher/window/sdlmouse.hh>
 #include <ceLauncher/window/sdlwindow.hh>
 
-namespace ce::launcher
+namespace cryo::launcher
 {
 
 CS_CLASS()

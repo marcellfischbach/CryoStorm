@@ -8,10 +8,10 @@
 #include <ceCore/imodule.hh>
 
 
-namespace ce::java
+namespace cryo::java
 {
 
-class JavaBindingModule : public ce::iModule
+class JavaBindingModule : public cryo::iModule
 {
 public:
   bool Register(const std::vector<std::string> &args, Engine *engine);

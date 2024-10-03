@@ -4,7 +4,7 @@
 #include <ceCore/class.hh>
 #include <ceCore/math/vector3f.hh>
 
-namespace ce
+namespace cryo
 {
 
 

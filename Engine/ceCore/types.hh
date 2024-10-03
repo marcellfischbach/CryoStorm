@@ -4,7 +4,7 @@
 
 
 
-namespace ce {
+namespace cryo {
 
 
 #ifdef CS_WIN32

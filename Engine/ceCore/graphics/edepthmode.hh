@@ -1,6 +1,6 @@
 #pragma once
 
-namespace ce
+namespace cryo
 {
 
 enum class eDepthMode

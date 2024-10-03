@@ -13,7 +13,7 @@ class btCollisionDispatcher;
 class btDiscreteDynamicsWorld;
 class btSequentialImpulseConstraintSolver;
 
-namespace ce::bullet
+namespace cryo::bullet
 {
 
 

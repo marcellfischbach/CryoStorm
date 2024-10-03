@@ -3,7 +3,7 @@ package org.crimsonedge.core.entity;
 import org.crimsonedge.core.CeClass;
 import org.crimsonedge.core.math.Matrix4f;
 
-@CeClass("ce::SpatialState")
+@CeClass("cryo::SpatialState")
 public class SpatialState extends EntityState {
 
     public SpatialState() {

@@ -4,7 +4,7 @@
 #include <ceOpenGL/openglexport.hh>
 #include <ceCore/resource/iassetloader.hh>
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 
 

@@ -11,7 +11,7 @@
 #include <ceCore/graphics/scene/igfxscene.hh>
 #include <ceCore/resource/assetmanager.hh>
 
-namespace ce
+namespace cryo
 {
 
 
@@ -279,7 +279,7 @@ void TerrainMeshState::UpdateMaterial()
   if (!m_material)
   {
     m_material = AssetManager::Get()->Get<iMaterial>(ResourceLocator("/materials/terrain/terrain4.mat"));
-    ce::s_material_names[m_material] = "Terrain4";
+    cryo::s_material_names[m_material] = "Terrain4";
     if (!m_material)
     {
       return;

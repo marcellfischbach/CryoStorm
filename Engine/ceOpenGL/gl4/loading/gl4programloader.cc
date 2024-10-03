@@ -12,7 +12,7 @@
 
 using namespace tinyxml2;
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 GL4ProgramLoader::GL4ProgramLoader()
   : BaseCEFAssetLoader()

@@ -5,7 +5,7 @@
 #include <ceCore/graphics/shading/ishader.hh>
 #include <ceCore/resource/assetmanager.hh>
 
-namespace ce
+namespace cryo
 {
 
 #define IF(prefix, name, text) if (std::string(#name) == (text)) return prefix##name

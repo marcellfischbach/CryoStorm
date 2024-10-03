@@ -3,7 +3,7 @@
 #include <ceOpenGL/gl4/gl4texture2darray.hh>
 #include <GL/glew.h>
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 
 GL4RenderTarget2DArray::GL4RenderTarget2DArray()

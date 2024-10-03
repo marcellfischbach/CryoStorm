@@ -5,7 +5,7 @@
 #include <ceCore/resource/vfs.hh>
 #include <algorithm>
 
-namespace ce
+namespace cryo
 {
 
 AssetManager* AssetManager::s_assetManager = nullptr;

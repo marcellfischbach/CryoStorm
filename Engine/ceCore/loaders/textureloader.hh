@@ -7,7 +7,7 @@
 #include <ceCore/resource/iassetloader.hh>
 #include <ceCore/resource/basecefassetloader.hh>
 
-namespace ce
+namespace cryo
 {
 
 class Image;

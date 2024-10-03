@@ -7,7 +7,7 @@
 #include "ceOpenGL/gl4/gl4rendertarget2d.hh"
 #include "ceCore/resource/assetmanager.hh"
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 
 

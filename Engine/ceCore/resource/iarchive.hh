@@ -4,7 +4,7 @@
 #include <ceCore/class.hh>
 #include <ceCore/resource/ifile.hh>
 
-namespace ce
+namespace cryo
 {
 
 class ResourceLocator;

@@ -13,7 +13,7 @@
 #include <thread>
 
 
-namespace ce
+namespace cryo
 {
 
 
@@ -218,7 +218,7 @@ void World::Update(float tpf)
   }
 
 
-  const std::vector<ce::iPhysicsWorld::DynamicResult> &result = m_physicsWorld->SwapResult();
+  const std::vector<cryo::iPhysicsWorld::DynamicResult> &result = m_physicsWorld->SwapResult();
   for (auto &res: result)
   {
     res.Collider->GetUserData()->SetLocalMatrix(res.Matrix);

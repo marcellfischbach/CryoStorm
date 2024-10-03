@@ -6,7 +6,7 @@
 #include <array>
 #include <thread>
 
-namespace ce
+namespace cryo
 {
 
 class Entity;

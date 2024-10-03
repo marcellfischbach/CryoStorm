@@ -7,7 +7,7 @@
 #define PUSH_CH(tkn, ch) PUSH(tkn); tkn += ch; PUSH(tkn)
 
 
-namespace ce::moc
+namespace cryo::moc
 {
 
 static std::string TokenTypeNames[] = {

@@ -5,7 +5,7 @@
 #include <map>
 #include <ceCore/class.hh>
 
-namespace ce
+namespace cryo
 {
 
 CS_CLASS()

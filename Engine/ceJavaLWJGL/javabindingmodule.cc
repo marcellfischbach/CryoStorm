@@ -14,7 +14,7 @@
 
 
 
-namespace ce::java
+namespace cryo::java
 {
 
 bool JavaBindingModule::Register(const std::vector<std::string> &args, Engine *engine)
@@ -58,7 +58,7 @@ extern "C"
 JNIEXPORT jlong
 JNICALL Java_org_crimsonedge_lwjgl_LwjglModule_nCreateLwjglModule(JNIEnv *env, jclass cls)
 {
-  return reinterpret_cast<jlong>(new ce::java::JavaBindingModule());
+  return reinterpret_cast<jlong>(new cryo::java::JavaBindingModule());
 }
 
 

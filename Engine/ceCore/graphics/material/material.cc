@@ -4,7 +4,7 @@
 #include <ceCore/graphics/shading/ishaderattribute.hh>
 #include <bit>
 
-namespace ce
+namespace cryo
 {
 std::map<iMaterial *, std::string> s_material_names;
 

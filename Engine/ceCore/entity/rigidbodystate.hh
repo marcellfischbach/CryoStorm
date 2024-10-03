@@ -4,7 +4,7 @@
 #include <ceCore/coreexport.hh>
 #include <ceCore/entity/spatialstate.hh>
 
-namespace ce
+namespace cryo
 {
 struct iCollisionShape;
 struct iDynamicCollider;

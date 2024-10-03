@@ -7,7 +7,7 @@
 #include <ceBullet/bulletutils.hh>
 #include <algorithm>
 
-namespace ce::bullet
+namespace cryo::bullet
 {
 
 BulletDynamicCollider::BulletDynamicCollider()

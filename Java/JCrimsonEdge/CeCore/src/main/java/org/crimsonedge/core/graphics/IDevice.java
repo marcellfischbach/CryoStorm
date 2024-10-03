@@ -3,7 +3,7 @@ package org.crimsonedge.core.graphics;
 import org.crimsonedge.core.CeClass;
 import org.crimsonedge.core.CoreObject;
 
-@CeClass("ce::iDevice")
+@CeClass("cryo::iDevice")
 public class IDevice extends CoreObject {
 
     public IDevice(long ref) {

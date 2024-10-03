@@ -7,7 +7,7 @@
 #include <ceCore/graphics/scene/gfxmesh.hh>
 
 
-namespace ce
+namespace cryo
 {
 
 
@@ -18,7 +18,7 @@ SkeletonMeshState::SkeletonMeshState()
 }
 
 
-void SkeletonMeshState::SetMesh(ce::Mesh *mesh)
+void SkeletonMeshState::SetMesh(cryo::Mesh *mesh)
 {
   StaticMeshState::SetMesh(mesh);
 

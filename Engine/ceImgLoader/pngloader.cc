@@ -5,7 +5,7 @@
 #include <ceCore/graphics/image.hh>
 #include <png.h>
 
-namespace ce::img
+namespace cryo::img
 {
 
 PngLoader::PngLoader()

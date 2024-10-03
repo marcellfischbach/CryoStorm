@@ -8,7 +8,7 @@
 #include <ceCore/resource/resourcelocator.hh>
 
 #include <string>
-namespace ce
+namespace cryo
 {
 
 class CrimsonFile;

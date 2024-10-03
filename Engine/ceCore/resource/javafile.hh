@@ -9,7 +9,7 @@
 #include <ceCore/resource/ifile.hh>
 
 
-namespace ce
+namespace cryo
 {
 
 

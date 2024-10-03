@@ -8,7 +8,7 @@
 #include <ceCore/math/color4f.hh>
 #include <ceCore/math/vector3f.hh>
 
-namespace ce
+namespace cryo
 {
 
 struct iLight;

@@ -7,7 +7,7 @@
 #include <string>
 #include <parser/token.hh>
 
-namespace ce::moc
+namespace cryo::moc
 {
 
 enum ASTNodeType

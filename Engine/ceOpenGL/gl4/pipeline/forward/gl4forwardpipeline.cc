@@ -26,7 +26,7 @@
 #include <GL/glew.h>
 
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 
 const float MinLightInfluence = 0.0f;
@@ -118,7 +118,7 @@ bool GL4ForwardPipeline::SetupVariables(iRenderTarget2D *target,
 }
 
 
-iRenderTarget2D *GL4ForwardPipeline::UpdateRenderTarget(ce::iDevice *device, ce::iRenderTarget2D *target)
+iRenderTarget2D *GL4ForwardPipeline::UpdateRenderTarget(cryo::iDevice *device, cryo::iRenderTarget2D *target)
 {
   if (!target)
   {

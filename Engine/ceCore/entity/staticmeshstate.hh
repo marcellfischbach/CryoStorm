@@ -7,7 +7,7 @@
 #include <ceCore/entity/spatialstate.hh>
 
 
-namespace ce
+namespace cryo
 {
 
 class Mesh;

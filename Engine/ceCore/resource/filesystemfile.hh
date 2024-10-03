@@ -5,7 +5,7 @@
 #include <string>
 #include <stdio.h>
 
-namespace ce
+namespace cryo
 {
 
 CS_CLASS()

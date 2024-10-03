@@ -1,7 +1,7 @@
 #include <ceCore/objectregistry.hh>
 
 
-namespace ce
+namespace cryo
 {
 
 DebugCache::DebugCache()

@@ -7,7 +7,7 @@
 #include <ceCore/math/vector.hh>
 #include <ceCore/math/matrix.hh>
 
-namespace ce
+namespace cryo
 {
 
 struct iShaderAttribute

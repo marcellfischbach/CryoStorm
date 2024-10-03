@@ -12,7 +12,7 @@
 #include <ceCore/graphics/scene/igfxscene.hh>
 #include <ceCore/entity/world.hh>
 
-namespace ce
+namespace cryo
 {
 
 
@@ -106,7 +106,7 @@ iRenderTarget2D* CameraState::GetRenderTarget()
   return m_renderTarget;
 }
 
-void CameraState::SetSkyboxRenderer(ce::iSkyboxRenderer *skyboxRenderer)
+void CameraState::SetSkyboxRenderer(cryo::iSkyboxRenderer *skyboxRenderer)
 {
   CS_SET(m_skyboxRenderer, skyboxRenderer);
 }
@@ -182,13 +182,13 @@ bool CameraState::IsRenderShadows() const
   return m_renderShadows;
 }
 
-void CameraState::SetPostProcessing(ce::PostProcessing *postProcessing)
+void CameraState::SetPostProcessing(cryo::PostProcessing *postProcessing)
 {
   CS_SET(m_postProcessing, postProcessing);
   UpdateGfxCamera();
 }
 
-ce::PostProcessing* CameraState::GetPostPRocessing() const
+cryo::PostProcessing* CameraState::GetPostPRocessing() const
 {
   return m_postProcessing;
 }

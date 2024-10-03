@@ -2,7 +2,7 @@
 #include <ceOpenGL/gl4/gl4pointlight.hh>
 
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 
 GL4PointLight::GL4PointLight()

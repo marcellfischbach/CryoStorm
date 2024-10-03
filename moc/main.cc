@@ -38,7 +38,7 @@ void print_usage(char* name)
   printf("    --prefix <prefix>      the include prefix where include files are located\n");
 }
 
-class StdOutOutput : public ce::moc::iOutput
+class StdOutOutput : public cryo::moc::iOutput
 {
 public:
   StdOutOutput() { }
@@ -50,7 +50,7 @@ public:
 };
 
 
-class FileOutput : public ce::moc::iOutput
+class FileOutput : public cryo::moc::iOutput
 {
 public:
   FileOutput(const std::string& filename)
@@ -72,13 +72,13 @@ private:
   std::string m_filename;
 };
 
-void put_classes_to_cache(ce::moc::Cache& cache, const std::string& sourceName, ce::moc::ASTNode* root)
+void put_classes_to_cache(cryo::moc::Cache& cache, const std::string& sourceName, cryo::moc::ASTNode* root)
 {
-  std::vector<ce::moc::ClassNode*> classes = ce::moc::Generator::FindAllMajorClasses(root);
+  std::vector<cryo::moc::ClassNode*> classes = cryo::moc::Generator::FindAllMajorClasses(root);
   for (auto cls : classes)
   {
-    std::list<ce::moc::NamespaceNode*> nss = ce::moc::Generator::GetAllNamespaces(cls);
-    std::string nsName = ce::moc::Generator::GetFullNamespaceName(nss);
+    std::list<cryo::moc::NamespaceNode*> nss = cryo::moc::Generator::GetAllNamespaces(cls);
+    std::string nsName = cryo::moc::Generator::GetFullNamespaceName(nss);
     std::cout << "  " << nsName + cls->GetName() << std::endl;
 
     cache.Put(sourceName, nsName + cls->GetName());
@@ -86,18 +86,18 @@ void put_classes_to_cache(ce::moc::Cache& cache, const std::string& sourceName, 
 }
 
 void generate(
-  ce::moc::Cache* cache,
+  cryo::moc::Cache* cache,
   const std::string& input,
   const std::string& outputHeader,
   const std::string& outputSource)
 {
 
-  ce::moc::SourceFile sourceFile;
+  cryo::moc::SourceFile sourceFile;
   sourceFile.Read(input);
-  ce::moc::Tokenizer tokenizer(sourceFile);
+  cryo::moc::Tokenizer tokenizer(sourceFile);
 
-  ce::moc::Parser parser;
-  ce::moc::ASTNode* ns = nullptr;
+  cryo::moc::Parser parser;
+  cryo::moc::ASTNode* ns = nullptr;
   if (cache)
   {
     cache->Clear(input);
@@ -117,7 +117,7 @@ void generate(
     if (!outputHeader.empty())
     {
       FileOutput output(outputHeader);
-      ce::moc::HeaderGenerator hg;
+      cryo::moc::HeaderGenerator hg;
       hg.SetRoot(ns);
       hg.Output(&output);
     }
@@ -125,13 +125,13 @@ void generate(
     if (!outputSource.empty())
     {
       FileOutput output(outputSource);
-      ce::moc::SourceGenerator sg;
+      cryo::moc::SourceGenerator sg;
       sg.SetRoot(ns);
       sg.Output(&output);
     }
     //    ns->DebugNode(0);
   }
-  catch (ce::moc::ParseException& e)
+  catch (cryo::moc::ParseException& e)
   {
     std::cout << "Parse Exception: [" << e.GetFile() << "@" << e.GetLine() << "] '" << e.GetMessage()
               << "' in " << input << "@" << e.getSourceLine() << ":" << e.getSourceColumn() << std::endl;
@@ -225,7 +225,7 @@ std::vector<std::string> scan_directory()
 
 void generate_list(const std::string& path, const std::string &sourcePath)
 {
-  ce::moc::Cache cache;
+  cryo::moc::Cache cache;
   cache.Load(path);
 
   //std::vector<std::string> all_filenames = read_all_filenames(path + "/.spicemoc");
@@ -266,7 +266,7 @@ void generate_list(const std::string& path, const std::string &sourcePath)
           path + "/" + plainFilename + ".refl.cc"
         );
       }
-      catch (ce::moc::BaseException& e)
+      catch (cryo::moc::BaseException& e)
       {
         std::cout << "Exception: [" << e.GetFile() << "@" << e.GetLine() << "] '" << e.GetMessage() << "' @ " << filename << std::endl;
       }
@@ -282,7 +282,7 @@ void generate_list(const std::string& path, const std::string &sourcePath)
   std::filesystem::path masterPath(path + "/master.refl.cc");
   if (neededRevalidation || removed_entries != 0 || !std::filesystem::exists(masterPath))
   {
-    ce::moc::MasterGenerator masterGenerator;
+    cryo::moc::MasterGenerator masterGenerator;
     FileOutput output(path + "/master.refl.cc");
     masterGenerator.Generate(cache, &output, sourcePath);
   }

@@ -5,7 +5,7 @@
 #include <ceCore/math/iclipper.hh>
 #include <ceCore/defs.hh>
 
-namespace ce
+namespace cryo
 {
 
 

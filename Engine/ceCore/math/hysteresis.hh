@@ -3,7 +3,7 @@
 #include <ceCore/coreexport.hh>
 #include <ceCore/defs.hh>
 
-namespace ce
+namespace cryo
 {
 
 template<typename T>

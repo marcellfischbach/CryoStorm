@@ -6,7 +6,7 @@
 #include <ceCore/defs.hh>
 #include <ceCore/math/plane.hh>
 
-namespace ce
+namespace cryo
 {
 
 

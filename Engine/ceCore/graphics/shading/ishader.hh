@@ -7,7 +7,7 @@
 #include <ceCore/graphics/eshaderattribute.hh>
 #include <string>
 
-namespace ce
+namespace cryo
 {
 
 struct iShaderAttribute;

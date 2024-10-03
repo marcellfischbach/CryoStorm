@@ -7,7 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 
-@CeClass("ce::JavaFile")
+@CeClass("cryo::JavaFile")
 public class JavaFile extends CoreObject implements IFile {
 
     private final String name;

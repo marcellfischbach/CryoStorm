@@ -4,7 +4,7 @@ import org.crimsonedge.core.CeClass;
 import org.crimsonedge.core.CoreObject;
 import org.crimsonedge.core.graphics.EShaderAttribute;
 
-@CeClass("ce::iShader")
+@CeClass("cryo::iShader")
 public class IShader extends CoreObject {
 
     public IShader(long ref) {

@@ -27,11 +27,11 @@
 
 #endif
 
-namespace ce
+namespace cryo
 {
 
 
-void Engine::SetDevice(ce::iDevice *device)
+void Engine::SetDevice(cryo::iDevice *device)
 {
   CS_SET(m_device, device);
 }
@@ -41,7 +41,7 @@ iDevice *Engine::GetDevice()
   return m_device;
 }
 
-void Engine::SetFrameRenderer(ce::iFrameRenderer *frameRenderer)
+void Engine::SetFrameRenderer(cryo::iFrameRenderer *frameRenderer)
 {
   CS_SET(m_frameRenderer, frameRenderer);
 }
@@ -51,7 +51,7 @@ iFrameRenderer *Engine::GetFrameRenderer()
   return m_frameRenderer;
 }
 
-void Engine::SetSkyboxRenderer(ce::iSkyboxRenderer *skyboxRenderer)
+void Engine::SetSkyboxRenderer(cryo::iSkyboxRenderer *skyboxRenderer)
 {
   CS_SET(m_skyboxRenderer, skyboxRenderer);
 }
@@ -61,7 +61,7 @@ iSkyboxRenderer *Engine::GetSkyboxRenderer()
   return m_skyboxRenderer;
 }
 
-void Engine::SetWindow(ce::iWindow *window)
+void Engine::SetWindow(cryo::iWindow *window)
 {
   CS_SET(m_window, window);
 }
@@ -71,7 +71,7 @@ iWindow *Engine::GetWindow()
   return m_window;
 }
 
-void Engine::SetWorld(ce::World *world)
+void Engine::SetWorld(cryo::World *world)
 {
   CS_SET(m_world, world);
 }
@@ -176,42 +176,42 @@ iGame *open_game(const std::string &moduleName)
 }
 
 
-ce::iRenderTarget2D *create_render_target(ce::iDevice *device, uint32_t width, uint32_t height, uint16_t multiSamples)
+cryo::iRenderTarget2D *create_render_target(cryo::iDevice *device, uint32_t width, uint32_t height, uint16_t multiSamples)
 {
-  ce::iSampler *colorSampler = device->CreateSampler();
-  colorSampler->SetFilterMode(ce::eFM_MinMagNearest);
+  cryo::iSampler *colorSampler = device->CreateSampler();
+  colorSampler->SetFilterMode(cryo::eFM_MinMagNearest);
 
-  ce::iSampler *depthSampler = device->CreateSampler();
-  depthSampler->SetFilterMode(ce::eFM_MinMagNearest);
-  depthSampler->SetTextureCompareFunc(ce::eCF_LessOrEqual);
-  depthSampler->SetTextureCompareMode(ce::eTCM_None);
+  cryo::iSampler *depthSampler = device->CreateSampler();
+  depthSampler->SetFilterMode(cryo::eFM_MinMagNearest);
+  depthSampler->SetTextureCompareFunc(cryo::eCF_LessOrEqual);
+  depthSampler->SetTextureCompareMode(cryo::eTCM_None);
 
-  ce::iTexture2D::Descriptor rt_col_desc = {};
+  cryo::iTexture2D::Descriptor rt_col_desc = {};
   rt_col_desc.Width        = width;
   rt_col_desc.Height       = height;
-  rt_col_desc.Format       = ce::ePF_RGBA;
+  rt_col_desc.Format       = cryo::ePF_RGBA;
   rt_col_desc.MipMaps      = false;
   rt_col_desc.MultiSamples = multiSamples;
-  ce::iTexture2D *color_texture = device->CreateTexture(rt_col_desc);
+  cryo::iTexture2D *color_texture = device->CreateTexture(rt_col_desc);
   color_texture->SetSampler(colorSampler);
 
-  ce::iTexture2D::Descriptor rt_dpth_desc = {};
+  cryo::iTexture2D::Descriptor rt_dpth_desc = {};
   rt_dpth_desc.Width        = width;
   rt_dpth_desc.Height       = height;
-  rt_dpth_desc.Format       = ce::ePF_DepthStencil;
+  rt_dpth_desc.Format       = cryo::ePF_DepthStencil;
   rt_dpth_desc.MipMaps      = false;
   rt_dpth_desc.MultiSamples = multiSamples;
-  ce::iTexture2D *depth_texture = device->CreateTexture(rt_dpth_desc);
+  cryo::iTexture2D *depth_texture = device->CreateTexture(rt_dpth_desc);
   depth_texture->SetSampler(depthSampler);
 
 
-  ce::iRenderTarget2D::Descriptor rt_desc = {};
+  cryo::iRenderTarget2D::Descriptor rt_desc = {};
   rt_desc.Width  = width;
   rt_desc.Height = height;
 
-  ce::iRenderTarget2D *renderTarget = device->CreateRenderTarget(rt_desc);
+  cryo::iRenderTarget2D *renderTarget = device->CreateRenderTarget(rt_desc);
   renderTarget->AddColorTexture(color_texture);
-//  renderTarget->SetDepthBuffer(ce::ePF_Depth);
+//  renderTarget->SetDepthBuffer(cryo::ePF_Depth);
   renderTarget->SetDepthTexture(depth_texture);
   if (!renderTarget->Compile())
   {
@@ -254,7 +254,7 @@ bool Engine::InitializeEngine(const std::vector<std::string> &args, iModule *ext
 
 bool Engine::InitializeEngine(const std::vector<std::string> &args,
                               const std::vector<std::string> &moduleNames,
-                              ce::iModule *externalModule)
+                              cryo::iModule *externalModule)
 {
 
   if (!AssetManager::Get())
@@ -303,7 +303,7 @@ bool Engine::InitializeEngine(const std::vector<std::string> &args,
     }
   }
 
-  ce::ObjectRegistry::Register<ce::DebugCache>(new ce::DebugCache());
+  cryo::ObjectRegistry::Register<cryo::DebugCache>(new cryo::DebugCache());
   m_multiSamples = Settings::Get().Graphics().GetInt("multisamples", 1);
 
   return true;
@@ -393,7 +393,7 @@ bool Engine::ProcessFrame()
 
   m_frameRenderer->Render(m_renderTarget, m_device, m_world->GetScene());
 
-  ce::iTexture2D *finalColor = m_renderTarget->GetColorTexture(0);
+  cryo::iTexture2D *finalColor = m_renderTarget->GetColorTexture(0);
 
   m_device->SetRenderTarget(nullptr);
   m_device->SetViewport(0, 0, m_window->GetWidth(), m_window->GetHeight());

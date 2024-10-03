@@ -4,7 +4,7 @@
 #include <ceCore/graphics/ilight.hh>
 
 
-namespace ce
+namespace cryo
 {
 
 GfxLight::GfxLight()

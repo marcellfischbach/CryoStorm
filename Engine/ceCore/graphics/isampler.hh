@@ -10,7 +10,7 @@
 #include <ceCore/graphics/etexturecomparemode.hh>
 #include <ceCore/math/color4f.hh>
 
-namespace ce
+namespace cryo
 {
 
 CS_CLASS()

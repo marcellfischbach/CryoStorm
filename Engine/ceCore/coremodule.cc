@@ -16,7 +16,7 @@ void initialize_core_module()
   printf ("initialize_core_module\n");
 }
 
-namespace ce
+namespace cryo
 {
 
 bool CoreModule::Register(const std::vector<std::string> &args, Engine *engine)
@@ -51,5 +51,5 @@ bool CoreModule::Initialize(const std::vector<std::string> &args, Engine *engine
 CS_DEFINE_LIBRARY(ceCore)
 {
   printf ("Load library: ceCore\n");
-  return new ce::CoreModule;
+  return new cryo::CoreModule;
 }

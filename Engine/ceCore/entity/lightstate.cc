@@ -9,7 +9,7 @@
 #include <ceCore/graphics/scene/igfxscene.hh>
 #include <ceCore/objectregistry.hh>
 
-namespace ce
+namespace cryo
 {
 
 

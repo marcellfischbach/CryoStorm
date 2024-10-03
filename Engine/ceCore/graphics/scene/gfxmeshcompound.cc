@@ -6,7 +6,7 @@
 #include <ceCore/objectregistry.hh>
 #include <ceCore/graphics/irendermesh.hh>
 
-namespace ce
+namespace cryo
 {
 
 GfxMeshCompound::GfxMeshCompound()
@@ -20,7 +20,7 @@ GfxMeshCompound::~GfxMeshCompound()
   
 }
 
-void GfxMeshCompound::AddMesh(ce::GfxMesh *mesh)
+void GfxMeshCompound::AddMesh(cryo::GfxMesh *mesh)
 {
   for (auto &internalMesh: m_internalMeshes)
   {
@@ -34,7 +34,7 @@ void GfxMeshCompound::AddMesh(ce::GfxMesh *mesh)
   mesh->AddRef();
 }
 
-void GfxMeshCompound::RemoveMesh(ce::GfxMesh *mesh)
+void GfxMeshCompound::RemoveMesh(cryo::GfxMesh *mesh)
 {
   for (auto it = m_internalMeshes.begin(); it != m_internalMeshes.end(); ++it)
   {
@@ -46,7 +46,7 @@ void GfxMeshCompound::RemoveMesh(ce::GfxMesh *mesh)
   }
 }
 
-bool GfxMeshCompound::ContainsMesh(const ce::GfxMesh *mesh) const
+bool GfxMeshCompound::ContainsMesh(const cryo::GfxMesh *mesh) const
 {
   if (this == mesh)
   {

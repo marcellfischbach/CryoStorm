@@ -4,7 +4,7 @@
 #include <ceCore/math/matrix4f.hh>
 #include <LinearMath/btTransform.h>
 
-namespace ce::bullet
+namespace cryo::bullet
 {
 
 

@@ -15,7 +15,7 @@
 #include <algorithm>
 
 
-namespace ce
+namespace cryo
 {
 
 static const unsigned MAX_ENTRIES_PER_CELL = 20;
@@ -518,7 +518,7 @@ void GfxQuadtreeScene::Cell::Decimate()
   // reduce the cell hierarchy;
 }
 
-MaterialCompound &GfxQuadtreeScene::Cell::GetShadedCompound(ce::iMaterial *material)
+MaterialCompound &GfxQuadtreeScene::Cell::GetShadedCompound(cryo::iMaterial *material)
 {
   for (auto &materialCompound: m_shadedCompound)
   {
@@ -582,7 +582,7 @@ void GfxQuadtreeScene::Cell::FlagOptimizationDirty()
   }
 }
 
-void GfxQuadtreeScene::Cell::AddShadedMesh(ce::GfxMesh *mesh)
+void GfxQuadtreeScene::Cell::AddShadedMesh(cryo::GfxMesh *mesh)
 {
   if (ContainsShaded(mesh))
   {
@@ -630,7 +630,7 @@ void GfxQuadtreeScene::Cell::AddShadedMesh(ce::GfxMesh *mesh)
 }
 
 
-void GfxQuadtreeScene::Cell::AddUnshadedMesh(ce::GfxMesh *mesh)
+void GfxQuadtreeScene::Cell::AddUnshadedMesh(cryo::GfxMesh *mesh)
 {
   if (ContainsUnshaded(mesh))
   {
@@ -646,7 +646,7 @@ void GfxQuadtreeScene::Cell::AddUnshadedMesh(ce::GfxMesh *mesh)
   UpdateBoundingBox();
 }
 
-bool GfxQuadtreeScene::Cell::ContainsShaded(ce::GfxMesh *mesh)
+bool GfxQuadtreeScene::Cell::ContainsShaded(cryo::GfxMesh *mesh)
 {
   for (const auto &compound: m_shadedCompound)
   {
@@ -658,7 +658,7 @@ bool GfxQuadtreeScene::Cell::ContainsShaded(ce::GfxMesh *mesh)
   return std::ranges::find(m_shaded, mesh) != m_shaded.end();
 }
 
-bool GfxQuadtreeScene::Cell::ContainsUnshaded(ce::GfxMesh *mesh)
+bool GfxQuadtreeScene::Cell::ContainsUnshaded(cryo::GfxMesh *mesh)
 {
   for (const auto &compound: m_unshadedCompound)
   {

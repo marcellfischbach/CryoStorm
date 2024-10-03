@@ -4,7 +4,7 @@
 
 #include <ceCore/resource/textfile.hh>
 
-namespace ce
+namespace cryo
 {
 
 

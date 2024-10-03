@@ -7,7 +7,7 @@
 #include <ceCore/coreexport.hh>
 #include <ceCore/class.hh>
 
-namespace ce
+namespace cryo
 {
 
 class Skeleton;

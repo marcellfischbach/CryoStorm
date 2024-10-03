@@ -2,7 +2,7 @@
 
 #include <ceCore/bitmask.hh>
 
-namespace ce
+namespace cryo
 {
 
 enum class eSGValueType

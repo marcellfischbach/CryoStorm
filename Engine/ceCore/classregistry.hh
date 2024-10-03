@@ -5,7 +5,7 @@
 #include <ceCore/class.hh>
 #include <map>
 
-namespace ce
+namespace cryo
 {
 
 class CS_CORE_API ClassRegistry

@@ -5,7 +5,7 @@
 #include <ceCore/graphics/irendertarget.hh>
 #include <ceCore/graphics/itexture2darray.hh>
 
-namespace ce
+namespace cryo
 {
 
 CS_CLASS()

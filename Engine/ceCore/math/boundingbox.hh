@@ -5,7 +5,7 @@
 #include <ceCore/math/matrix4f.hh>
 #include <ceCore/math/vector3f.hh>
 
-namespace ce {
+namespace cryo {
 
 class CS_CORE_API BoundingBox
 {

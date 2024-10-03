@@ -4,7 +4,7 @@
 #include <ceBullet/bulletexport.hh>
 #include <ceCore/physics/iphysicssystem.hh>
 
-namespace ce::bullet
+namespace cryo::bullet
 {
 
 CS_CLASS()

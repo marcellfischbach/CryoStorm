@@ -5,7 +5,7 @@
 #include <ceCore/class.hh>
 #include <vector>
 
-namespace ce
+namespace cryo
 {
 
 class Entity;

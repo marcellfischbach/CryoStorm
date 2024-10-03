@@ -3,7 +3,7 @@
 #include <ceCore/coreexport.hh>
 #include <exception>
 
-namespace ce
+namespace cryo
 {
 
 class FileNotOpenException : public std::exception

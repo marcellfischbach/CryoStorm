@@ -8,7 +8,7 @@
 
 #define THIS_JAVA_CLASS "org/crimsonedge/core/resource/JavaArchive"
 
-namespace ce
+namespace cryo
 {
 
 

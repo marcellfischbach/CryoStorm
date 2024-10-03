@@ -26,7 +26,7 @@
 #include <ceCore/graphics/material/imaterial.hh>
 #include <array>
 
-namespace ce
+namespace cryo
 {
 
 struct iShader;

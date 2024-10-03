@@ -18,7 +18,7 @@
 #include <ceCore/graphics/shading/ishaderattribute.hh>
 
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 
 GL4PointSMRenderer::GL4PointSMRenderer()
@@ -94,9 +94,9 @@ GL4RenderTarget2D *GL4PointSMRenderer::GetShadowMap()
   return m_pointLightShadowMap;
 }
 
-void GL4PointSMRenderer::RenderShadow(const ce::opengl::GL4PointLight *pointLight,
-                                      const ce::Camera &camera,
-                                      const ce::Projector &projector)
+void GL4PointSMRenderer::RenderShadow(const cryo::opengl::GL4PointLight *pointLight,
+                                      const cryo::Camera &camera,
+                                      const cryo::Projector &projector)
 {
   RenderShadowBuffer(pointLight, camera, projector);
   RenderShadowMap(pointLight, camera, projector);

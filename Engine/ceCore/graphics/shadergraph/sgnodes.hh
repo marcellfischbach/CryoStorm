@@ -6,7 +6,7 @@
 #include <ceCore/graphics/material/ematerialattributetype.hh>
 #include <ceCore/graphics/evertexstream.hh>
 
-namespace ce
+namespace cryo
 {
 
 CS_CLASS()

@@ -4,7 +4,7 @@
 #include <ceCore/input/button.hh>
 #include <ceCore/types.hh>
 
-namespace ce::launcher
+namespace cryo::launcher
 {
 
 static eMouseButton Map(uint8_t button)

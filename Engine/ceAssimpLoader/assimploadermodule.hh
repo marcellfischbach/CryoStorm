@@ -4,7 +4,7 @@
 #include <ceAssimpLoader/assimpexport.hh>
 #include <ceCore/imodule.hh>
 
-namespace ce::assimp
+namespace cryo::assimp
 {
 
 class CS_ASSIMP_API AssimpLoaderModule : public iModule

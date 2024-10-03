@@ -4,7 +4,7 @@
 #include <ceCore/entity/spatialstate.hh>
 #include <vector>
 
-namespace ce
+namespace cryo
 {
 
 struct iTerrainMesh;

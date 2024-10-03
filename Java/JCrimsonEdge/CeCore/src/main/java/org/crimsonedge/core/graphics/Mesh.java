@@ -4,7 +4,7 @@ import org.crimsonedge.core.CeClass;
 import org.crimsonedge.core.CoreObject;
 import org.crimsonedge.core.graphics.material.IMaterial;
 
-@CeClass("ce::Mesh")
+@CeClass("cryo::Mesh")
 public class Mesh extends CoreObject {
 
     public Mesh() {

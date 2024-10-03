@@ -4,7 +4,7 @@
 #include <ceCore/coreexport.hh>
 #include <ceCore/entity/entitystate.hh>
 
-namespace ce
+namespace cryo
 {
 
 CS_CLASS(jclass = "org.crimsonedge.core.entity.JavaState")

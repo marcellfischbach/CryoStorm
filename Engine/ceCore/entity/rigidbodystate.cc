@@ -7,7 +7,7 @@
 #include <ceCore/physics/iphysicsworld.hh>
 #include <ceCore/objectregistry.hh>
 
-namespace ce
+namespace cryo
 {
 
 

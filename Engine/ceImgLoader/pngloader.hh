@@ -4,7 +4,7 @@
 #include <ceImgLoader/imgloaderexport.hh>
 #include <ceCore/resource/iassetloader.hh>
 
-namespace ce::img
+namespace cryo::img
 {
 
 

@@ -5,7 +5,7 @@
 #include <ceOpenGL/gl4/gl4texturecube.hh>
 #include <GL/glew.h>
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 
 GL4RenderTarget2D::GL4RenderTarget2D()
@@ -424,7 +424,7 @@ iTexture2D *GL4RenderTarget2D::GetColorTexture(Size idx)
 }
 
 
-iTextureCube *GL4RenderTarget2D::GetColorTextureCube(ce::Size idx)
+iTextureCube *GL4RenderTarget2D::GetColorTextureCube(cryo::Size idx)
 {
   if (idx >= m_colorTextures.size())
   {

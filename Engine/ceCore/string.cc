@@ -2,7 +2,7 @@
 #include <ceCore/string.hh>
 
 
-namespace ce
+namespace cryo
 {
 
 std::string to_lower(const std::string& str)

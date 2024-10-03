@@ -3,7 +3,7 @@
 #include <ceCore/types.hh>
 
 
-namespace ce {
+namespace cryo {
 
 
 struct WndDesc

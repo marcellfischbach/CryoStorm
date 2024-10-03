@@ -7,7 +7,7 @@
 #include <cstdio>
 
 
-namespace ce
+namespace cryo
 {
 
 

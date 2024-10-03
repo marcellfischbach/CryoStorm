@@ -12,7 +12,7 @@
 #include <ceCore/graphics/shading/ishaderattribute.hh>
 #include <ceCore/math/math.hh>
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 
 
@@ -64,7 +64,7 @@ void GL4DeferredPointLightRenderer::SetDevice(iDevice *device)
   m_device = QueryClass<GL4Device>(device);
 }
 
-void GL4DeferredPointLightRenderer::SetScene(ce::iGfxScene *scene)
+void GL4DeferredPointLightRenderer::SetScene(cryo::iGfxScene *scene)
 {
   m_scene = scene;
 }

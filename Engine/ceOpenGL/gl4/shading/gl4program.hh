@@ -5,7 +5,7 @@
 #include <ceCore/types.hh>
 #include <vector>
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 
 class GL4Shader;

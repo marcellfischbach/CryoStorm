@@ -4,7 +4,7 @@
 #include <gl/glew.h>
 
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 
 GLint GL4BlendFactorMap[] = {

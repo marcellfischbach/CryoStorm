@@ -2,7 +2,7 @@
 #include <ceCore/graphics/shadergraph/sgnode.hh>
 
 
-namespace ce
+namespace cryo
 {
 
 
@@ -44,7 +44,7 @@ SGNodeOutput *SGNode::DefineOutput(const std::string &name, eSGValueType types)
   return output;
 }
 
-void SGNode::Bind(size_t inputIdx, ce::SGNode *node, size_t outputIdx)
+void SGNode::Bind(size_t inputIdx, cryo::SGNode *node, size_t outputIdx)
 {
   if (inputIdx >= m_inputs.size())
   {

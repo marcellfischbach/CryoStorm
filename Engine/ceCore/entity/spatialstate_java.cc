@@ -1,7 +1,7 @@
 
 #include <ceCore/entity/spatialstate.hh>
 
-#define CS_SPATIAL_STATE(ref) reinterpret_cast<ce::SpatialState*>(ref)
+#define CS_SPATIAL_STATE(ref) reinterpret_cast<cryo::SpatialState*>(ref)
 
 extern "C"
 {
@@ -50,7 +50,7 @@ JNIEXPORT jobject
 JNICALL Java_org_crimsonedge_core_entity_SpatialState_nGetParent(JNIEnv *env, jclass cls, jlong ref)
 {
   auto             spatialState = CS_SPATIAL_STATE(ref);
-  ce::SpatialState *pState      = spatialState->GetParent();
+  cryo::SpatialState *pState      = spatialState->GetParent();
   return pState ? pState->CreateJObject() : nullptr;
 }
 
@@ -65,7 +65,7 @@ JNIEXPORT jobject
 JNICALL Java_org_crimsonedge_core_entity_SpatialState_nGetChild(JNIEnv *env, jclass cls, jlong ref, jint idx)
 {
   auto             spatialState = CS_SPATIAL_STATE(ref);
-  ce::SpatialState *pState      = spatialState->GetChild(idx);
+  cryo::SpatialState *pState      = spatialState->GetChild(idx);
   return pState ? pState->GetJObject() : nullptr;
 
 }
@@ -78,8 +78,8 @@ JNICALL Java_org_crimsonedge_core_entity_SpatialState_nGetGlobalMatrix(JNIEnv *e
 {
   jfloat *m = env->GetFloatArrayElements(mArray, 0);
   auto spatialState = CS_SPATIAL_STATE(ref);
-  const ce::Matrix4f &f = spatialState->GetGlobalMatrix();
-  memcpy (m, &f, sizeof(ce::Matrix4f));
+  const cryo::Matrix4f &f = spatialState->GetGlobalMatrix();
+  memcpy (m, &f, sizeof(cryo::Matrix4f));
   env->ReleaseFloatArrayElements(mArray, m, 0);
 }
 
@@ -92,8 +92,8 @@ JNICALL Java_org_crimsonedge_core_entity_SpatialState_nGetLocalMatrix(JNIEnv *en
 {
   jfloat *m = env->GetFloatArrayElements(mArray, 0);
   auto spatialState = CS_SPATIAL_STATE(ref);
-  const ce::Matrix4f &f = spatialState->GetLocalMatrix();
-  memcpy (m, &f, sizeof(ce::Matrix4f));
+  const cryo::Matrix4f &f = spatialState->GetLocalMatrix();
+  memcpy (m, &f, sizeof(cryo::Matrix4f));
   env->ReleaseFloatArrayElements(mArray, m, 0);
 }
 
@@ -108,7 +108,7 @@ JNICALL Java_org_crimsonedge_core_entity_SpatialState_nSetLocalMatrix(JNIEnv *en
   jfloat *m = env->GetFloatArrayElements(mArray, 0);
 
   auto spatialState = CS_SPATIAL_STATE(ref);
-  spatialState->SetLocalMatrix(*reinterpret_cast<const ce::Matrix4f *>(m));
+  spatialState->SetLocalMatrix(*reinterpret_cast<const cryo::Matrix4f *>(m));
   env->ReleaseFloatArrayElements(mArray, m, 0);
 }
 

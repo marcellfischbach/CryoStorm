@@ -8,7 +8,7 @@
 #include <algorithm>
 
 
-namespace ce
+namespace cryo
 {
 
 GfxMesh::GfxMesh()
@@ -268,7 +268,7 @@ bool GfxMesh::IsLightingDirty() const
   return m_lightingDirty;
 }
 
-void GfxMesh::SetSkeleton(ce::Skeleton *skeleton)
+void GfxMesh::SetSkeleton(cryo::Skeleton *skeleton)
 {
   CS_SET(m_skeleton, skeleton);
 }

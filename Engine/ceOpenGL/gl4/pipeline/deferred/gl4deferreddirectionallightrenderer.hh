@@ -3,7 +3,7 @@
 #include <ceOpenGL/gl4/pipeline/pssm/gl4pssmrenderer.hh>
 
 
-namespace ce
+namespace cryo
 {
 
 class Camera;

@@ -3,7 +3,7 @@
 #include <ceCore/resource/filesystemfile.hh>
 #include <ceCore/resource/resourceexceptions.hh>
 
-namespace ce
+namespace cryo
 {
 FileSystemFile::FileSystemFile(const std::string& path)
   : iFile()

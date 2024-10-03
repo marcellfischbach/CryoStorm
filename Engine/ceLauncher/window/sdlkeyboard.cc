@@ -1,7 +1,7 @@
 #include <ceLauncher/window/sdlkeyboard.hh>
 #include <ceLauncher/window/sdlkey_map.hh>
 
-namespace ce::launcher
+namespace cryo::launcher
 {
 
 SDLKeyboard::SDLKeyboard()

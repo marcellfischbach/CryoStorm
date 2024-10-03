@@ -3,7 +3,7 @@
 
 #include <ceCore/math/vector.hh>
 
-namespace ce
+namespace cryo
 {
 
 struct iShader;

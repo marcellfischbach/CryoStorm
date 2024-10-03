@@ -3,7 +3,7 @@
 #include <ceCore/graphics/scene/gfxscenecollector.hh>
 #include <ceCore/graphics/material/imaterial.hh>
 
-namespace ce
+namespace cryo
 {
 
 GfxSceneCollector::GfxSceneCollector()

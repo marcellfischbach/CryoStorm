@@ -4,7 +4,7 @@
 #include <ceCore/types.hh>
 #include <ceCore/coreexport.hh>
 
-namespace ce
+namespace cryo
 {
 
 class CS_CORE_API Ticker

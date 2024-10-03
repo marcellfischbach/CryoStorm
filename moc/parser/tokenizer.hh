@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-namespace ce::moc
+namespace cryo::moc
 {
 
 

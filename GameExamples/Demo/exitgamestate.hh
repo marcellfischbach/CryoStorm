@@ -7,7 +7,7 @@
 #include <ceCore/entity/entitystate.hh>
 
 CS_CLASS()
-class ExitGameState : public CS_SUPER(ce::EntityState)
+class ExitGameState : public CS_SUPER(cryo::EntityState)
 {
   CS_CLASS_GEN;
 public:

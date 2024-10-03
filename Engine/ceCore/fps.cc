@@ -5,7 +5,7 @@
 #include <ceCore/fps.hh>
 #include <ceCore/ticker.hh>
 
-namespace ce
+namespace cryo
 {
 FPS::FPS()
     : m_nextFrame(Ticker::Tick() + 1000)

@@ -7,7 +7,7 @@
 
 #define THIS_CLASS "org/crimsonedge/lwjgl/LwjglMouse"
 
-namespace ce::java
+namespace cryo::java
 {
 
 LwjglMouse::LwjglMouse()

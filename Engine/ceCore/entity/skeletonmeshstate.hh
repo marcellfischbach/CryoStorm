@@ -5,7 +5,7 @@
 #include <ceCore/entity/staticmeshstate.hh>
 #include <ceCore/graphics/skeleton.hh>
 
-namespace ce
+namespace cryo
 {
 
 class SkeletonMesh;

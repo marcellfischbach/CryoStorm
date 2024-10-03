@@ -9,7 +9,7 @@
 #include <ceCore/graphics/scene/gfxlight.hh>
 #include <vector>
 
-namespace ce
+namespace cryo
 {
 
 struct iDevice;

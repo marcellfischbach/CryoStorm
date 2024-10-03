@@ -11,7 +11,7 @@
 #include <vector>
 #include <functional>
 
-namespace ce
+namespace cryo
 {
 
 struct iDevice;

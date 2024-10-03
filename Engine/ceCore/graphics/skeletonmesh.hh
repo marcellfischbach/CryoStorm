@@ -4,7 +4,7 @@
 #include <ceCore/graphics/mesh.hh>
 #include <ceCore/graphics/skeleton.hh>
 
-namespace ce
+namespace cryo
 {
 
 CS_CLASS()

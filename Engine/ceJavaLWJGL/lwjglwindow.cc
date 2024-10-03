@@ -13,8 +13,8 @@ extern "C"
 
 JNIEXPORT jlong JNICALL Java_org_crimsonedge_lwjgl_LwjglWindow_nCreate(JNIEnv *env, jclass cls)
 {
-  ce::Java::Set(env);
-  auto lwjgWindow = new ce::java::LwjglWindow();
+  cryo::Java::Set(env);
+  auto lwjgWindow = new cryo::java::LwjglWindow();
   return reinterpret_cast<jlong>(lwjgWindow);
 }
 
@@ -23,27 +23,27 @@ JNIEXPORT void JNICALL Java_org_crimsonedge_lwjgl_LwjglWindow_nSetJObject(JNIEnv
 {
   object = env->NewGlobalRef(object);
 
-  auto window = reinterpret_cast<ce::java::LwjglWindow*>(ref);
+  auto window = reinterpret_cast<cryo::java::LwjglWindow*>(ref);
   window->SetJObject(object);
 
 }
 
 JNIEXPORT jobject JNICALL Java_org_crimsonedge_lwjgl_LwjglWindow_nGetMouse(JNIEnv *env, jclass cls, jlong ref)
 {
-  auto window = reinterpret_cast<ce::java::LwjglWindow*>(ref);
+  auto window = reinterpret_cast<cryo::java::LwjglWindow*>(ref);
   return window->GetMouse()->GetJObject();
 }
 
 
 JNIEXPORT jobject JNICALL Java_org_crimsonedge_lwjgl_LwjglWindow_nGetKeyboard(JNIEnv *env, jclass cls, jlong ref)
 {
-  auto window = reinterpret_cast<ce::java::LwjglWindow*>(ref);
+  auto window = reinterpret_cast<cryo::java::LwjglWindow*>(ref);
   return window->GetKeyboard()->GetJObject();
 }
 
 }
 
-namespace ce::java
+namespace cryo::java
 {
 
 LwjglWindow *LwjglWindow::s_instance = nullptr;

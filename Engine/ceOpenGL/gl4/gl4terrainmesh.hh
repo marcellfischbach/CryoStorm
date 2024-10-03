@@ -4,7 +4,7 @@
 #include <ceOpenGL/openglexport.hh>
 #include <ceCore/graphics/iterrainmesh.hh>
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 
 

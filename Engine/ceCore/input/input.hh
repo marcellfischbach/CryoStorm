@@ -7,7 +7,7 @@
 #include "ikeyboard.hh"
 #include "imouse.hh"
 
-namespace ce
+namespace cryo
 {
 
 struct iInputSystem;

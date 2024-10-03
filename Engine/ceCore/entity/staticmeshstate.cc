@@ -7,7 +7,7 @@
 #include <ceCore/graphics/scene/gfxmesh.hh>
 
 
-namespace ce
+namespace cryo
 {
 
 

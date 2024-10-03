@@ -1,7 +1,7 @@
 #include <ceCore/graphics/shadergraph/shadergraph.hh>
 #include <cmath>
 
-namespace ce
+namespace cryo
 {
 
 static const size_t IDX_DIFFUSE = 0;
@@ -32,7 +32,7 @@ ShaderGraph::~ShaderGraph() noexcept
 
 }
 
-SGNode *ShaderGraph::Add(const ce::Class *nodeClass, const std::string &key)
+SGNode *ShaderGraph::Add(const cryo::Class *nodeClass, const std::string &key)
 {
   if (!nodeClass->IsInstanceOf<SGNode>())
   {
@@ -57,7 +57,7 @@ SGNode *ShaderGraph::Add(const ce::Class *nodeClass, const std::string &key)
 
 }
 
-SGResourceNode *ShaderGraph::AddResource(const ce::Class *nodeClass,
+SGResourceNode *ShaderGraph::AddResource(const cryo::Class *nodeClass,
                                          const std::string &key,
                                          const std::string &resourceName)
 {
@@ -104,7 +104,7 @@ SGNodeInput *ShaderGraph::GetAlphaInput()
   return m_alpha;
 }
 
-void ShaderGraph::BindRoughness(ce::SGNode *node, size_t outputIdx)
+void ShaderGraph::BindRoughness(cryo::SGNode *node, size_t outputIdx)
 {
   Bind(IDX_ROUGHNESS, node, outputIdx);
 }
@@ -114,7 +114,7 @@ SGNodeInput *ShaderGraph::GetRoughnessInput()
   return m_roughness;
 }
 
-void ShaderGraph::BindNormal(ce::SGNode *node, size_t outputIdx)
+void ShaderGraph::BindNormal(cryo::SGNode *node, size_t outputIdx)
 {
   Bind(IDX_NORMAL, node, outputIdx);
 }
@@ -124,7 +124,7 @@ SGNodeInput *ShaderGraph::GetNormalInput()
   return m_normal;
 }
 
-void ShaderGraph::BindMetallic(ce::SGNode *node, size_t outputIdx)
+void ShaderGraph::BindMetallic(cryo::SGNode *node, size_t outputIdx)
 {
   Bind(IDX_METALLIC, node, outputIdx);
 }
@@ -235,7 +235,7 @@ void ShaderGraph::SetDefault(const std::string &attribute, size_t count, int *in
   m_defaults.push_back(def);
 }
 
-void ShaderGraph::SetDefault(const std::string &attribute, ce::iTexture *texture)
+void ShaderGraph::SetDefault(const std::string &attribute, cryo::iTexture *texture)
 {
   Default def{};
   def.name = attribute;

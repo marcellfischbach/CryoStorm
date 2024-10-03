@@ -4,7 +4,7 @@
 #include <ceCore/input/imouse.hh>
 #include <SDL.h>
 
-namespace ce::launcher
+namespace cryo::launcher
 {
 
 

@@ -5,7 +5,7 @@
 #include <ceCore/graphics/scene/igfxscene.hh>
 
 
-namespace ce
+namespace cryo
 {
 
 

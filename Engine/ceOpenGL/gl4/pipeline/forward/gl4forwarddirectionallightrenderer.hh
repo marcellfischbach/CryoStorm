@@ -12,7 +12,7 @@
 #include <array>
 #include <vector>
 
-namespace ce
+namespace cryo
 {
 
 struct iDevice;
@@ -29,7 +29,7 @@ class Settings;
 
 }
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 
 class GL4Device;

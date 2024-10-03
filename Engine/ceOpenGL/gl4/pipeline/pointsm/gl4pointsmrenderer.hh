@@ -10,7 +10,7 @@
 #include <array>
 #include <vector>
 
-namespace ce
+namespace cryo
 {
 
 class Camera;

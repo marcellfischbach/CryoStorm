@@ -2,7 +2,7 @@
 #include <ceCore/java.hh>
 #include <ceCore/java_methods.hh>
 
-namespace ce
+namespace cryo
 {
 
 static std::string s_name = "";

@@ -20,17 +20,17 @@
 #define CS_FUNCTION(...)
 #ifdef CS_JAVA
 #define CS_CLASS_GEN public: \
-    const ce::Class *GetClass () const override; \
-    static const ce::Class *GetStaticClass (); \
-    void *QueryClass(const ce::Class *clazz) override; \
-    const void *QueryClass(const ce::Class *clazz) const override; \
+    const cryo::Class *GetClass () const override; \
+    static const cryo::Class *GetStaticClass (); \
+    void *QueryClass(const cryo::Class *clazz) override; \
+    const void *QueryClass(const cryo::Class *clazz) const override; \
     jobject CreateJObject () const
 #else
 #define CS_CLASS_GEN public: \
-    const ce::Class *GetClass () const override; \
-    static const ce::Class *GetStaticClass (); \
-    void *QueryClass(const ce::Class *clazz) override; \
-    const void *QueryClass(const ce::Class *clazz) const override;
+    const cryo::Class *GetClass () const override; \
+    static const cryo::Class *GetStaticClass (); \
+    void *QueryClass(const cryo::Class *clazz) override; \
+    const void *QueryClass(const cryo::Class *clazz) const override;
 #endif
 
 #ifdef CS_JAVA
@@ -47,7 +47,7 @@
       {                     \
         if (m_jobject)        \
         {                     \
-          ce::Java::Get()->DeleteGlobalRef(m_jobject);          \
+          cryo::Java::Get()->DeleteGlobalRef(m_jobject);          \
           m_jobject = nullptr; \
         }                   \
         delete this;\
@@ -85,16 +85,16 @@ public:                                \
     {                       \
       if (!m_jobject && !m_jobjectChecked)       \
       {                                \
-          static jclass cls = ce::Java::Get() ? ce::Java::Get()->FindClass (fqcn) : nullptr; \
+          static jclass cls = cryo::Java::Get() ? cryo::Java::Get()->FindClass (fqcn) : nullptr; \
           if (cls) \
           { \
-            static jmethodID ctor = ce::Java::Get()->GetMethodID(cls, "<init>", "(J)V"); \
+            static jmethodID ctor = cryo::Java::Get()->GetMethodID(cls, "<init>", "(J)V"); \
             if (ctor) \
             { \
-              jobject obj = ce::Java::Get()->NewObject(cls, ctor, reinterpret_cast<jlong>(this)); \
+              jobject obj = cryo::Java::Get()->NewObject(cls, ctor, reinterpret_cast<jlong>(this)); \
               if (obj) \
               { \
-                m_jobject = ce::Java::Get()->NewGlobalRef(obj);                              \
+                m_jobject = cryo::Java::Get()->NewGlobalRef(obj);                              \
                 if (!m_jobject)        \
                 {                      \
                   return nullptr;\
@@ -152,7 +152,7 @@ public:                                \
 #include <ceCore/coreexport.hh>
 #include <exception>
 
-namespace ce
+namespace cryo
 {
 
 
@@ -274,7 +274,7 @@ public:
 
 
 template<typename T>
-T *QueryClass(ce::iObject *object)
+T *QueryClass(cryo::iObject *object)
 {
   if (!object)
   {
@@ -284,7 +284,7 @@ T *QueryClass(ce::iObject *object)
 }
 
 template<typename T>
-const T *QueryClass(const ce::iObject *object)
+const T *QueryClass(const cryo::iObject *object)
 {
   if (!object)
   {
@@ -344,7 +344,7 @@ public:
   const std::string &GetName() const;
 
   template<typename T>
-  void Set(ce::iObject *object, T &t) const
+  void Set(cryo::iObject *object, T &t) const
   {
     const void *const_value = reinterpret_cast<const void *>(&t);
     SetValue(object, const_cast<void *>(const_value));
@@ -352,14 +352,14 @@ public:
 
 
   template<typename T>
-  T Get(ce::iObject *object) const
+  T Get(cryo::iObject *object) const
   {
     void *data = GetValue(object);
     return *reinterpret_cast<T *>(data);
   }
 
   template<typename T>
-  T Get(const ce::iObject *object) const
+  T Get(const cryo::iObject *object) const
   {
     const void *data = GetValue(object);
     return *reinterpret_cast<const T *>(data);
@@ -375,9 +375,9 @@ protected:
   Property(const ValueDeclaration &containerDecl, const std::string &name, const ValueDeclaration &decl);
 
   void SetProperty(const std::string &key, const std::string &value = "");
-  virtual void SetValue(ce::iObject *object, void *data) const = 0;
-  virtual const void *GetValue(const ce::iObject *object) const = 0;
-  virtual void *GetValue(ce::iObject *object) const = 0;
+  virtual void SetValue(cryo::iObject *object, void *data) const = 0;
+  virtual const void *GetValue(const cryo::iObject *object) const = 0;
+  virtual void *GetValue(cryo::iObject *object) const = 0;
 
 
 private:
@@ -419,24 +419,24 @@ public:
   //
   // Invoke void 
   template<typename ... Type>
-  void InvokeVoid(ce::iObject *obj, Type ... args) const
+  void InvokeVoid(cryo::iObject *obj, Type ... args) const
   { InvokeVoidImpl(obj, &args...); }
   template<typename ... Type>
-  void InvokeVoid(const ce::iObject *obj, Type ... args) const
+  void InvokeVoid(const cryo::iObject *obj, Type ... args) const
   { InvokeVoidImpl(obj, &args...); }
 
 
   //
   // Invoke value
   template<typename R, typename ... Type>
-  R InvokeValue(ce::iObject *obj, Type ... args) const
+  R InvokeValue(cryo::iObject *obj, Type ... args) const
   {
     R r;
     InvokeValueImpl(obj, &args...);
     return r;
   }
   template<typename R, typename ... Type>
-  R InvokeValue(const ce::iObject *obj, Type ... args) const
+  R InvokeValue(const cryo::iObject *obj, Type ... args) const
   {
     R r;
     InvokeValueImpl(obj, &args...);
@@ -447,38 +447,38 @@ public:
   //
   // Invoke reference 
   template<typename R, typename ... Types>
-  R &InvokeReference(ce::iObject *obj, Types ... args) const
+  R &InvokeReference(cryo::iObject *obj, Types ... args) const
   { return *reinterpret_cast<R *>(InvokeReferenceImpl(obj, &args...)); }
   template<typename R, typename ... Types>
-  R &InvokeReference(const ce::iObject *obj, Types ... args) const
+  R &InvokeReference(const cryo::iObject *obj, Types ... args) const
   { return *reinterpret_cast<R *>(InvokeReferenceImpl(obj, &args...)); }
 
   //
   // Invoke const-reference 
   template<typename R, typename ... Types>
-  const R &InvokeConstReference(ce::iObject *obj, Types ... args) const
+  const R &InvokeConstReference(cryo::iObject *obj, Types ... args) const
   { return *reinterpret_cast<const R *>(InvokeConstReferenceImpl(obj, &args...)); }
   template<typename R, typename ... Types>
-  const R &InvokeConstReference(const ce::iObject *obj, Types ... args) const
+  const R &InvokeConstReference(const cryo::iObject *obj, Types ... args) const
   { return *reinterpret_cast<const R *>(InvokeConstReferenceImpl(obj, &args...)); }
 
 
   //
   // Invoke pointer 
   template<typename R, typename ... Types>
-  R *InvokePointer(ce::iObject *obj, Types ... args) const
+  R *InvokePointer(cryo::iObject *obj, Types ... args) const
   { return reinterpret_cast<R *>(InvokePointerImpl(obj, &args...)); }
   template<typename R, typename ... Types>
-  R *InvokePointer(const ce::iObject *obj, Types ... args) const
+  R *InvokePointer(const cryo::iObject *obj, Types ... args) const
   { return reinterpret_cast<R *>(InvokePointerImpl(obj, &args...)); }
 
   //
   // Invoke const-pointer 
   template<typename R, typename ... Types>
-  const R *InvokeConstPointer(ce::iObject *obj, Types ... args) const
+  const R *InvokeConstPointer(cryo::iObject *obj, Types ... args) const
   { return reinterpret_cast<const R *>(InvokeConstPointerImpl(obj, &args...)); }
   template<typename R, typename ... Types>
-  const R *InvokeConstPointer(const ce::iObject *obj, Types ... args) const
+  const R *InvokeConstPointer(const cryo::iObject *obj, Types ... args) const
   { return reinterpret_cast<const R *>(InvokeConstPointerImpl(obj, &args...)); }
 
 
@@ -490,18 +490,18 @@ protected:
 
   void AddAttribute(const FunctionAttribute &attribute);
 
-  virtual void InvokeVoidImpl(ce::iObject *obj, ...) const = 0;
-  virtual void InvokeVoidImpl(const ce::iObject *obj, ...) const = 0;
-  virtual void InvokeValueImpl(ce::iObject *obj, ...) const = 0;
-  virtual void InvokeValueImpl(const ce::iObject *obj, ...) const = 0;
-  virtual void *InvokeReferenceImpl(ce::iObject *obj, ...) const = 0;
-  virtual void *InvokeReferenceImpl(const ce::iObject *obj, ...) const = 0;
-  virtual const void *InvokeConstReferenceImpl(ce::iObject *obj, ...) const = 0;
-  virtual const void *InvokeConstReferenceImpl(const ce::iObject *obj, ...) const = 0;
-  virtual void *InvokePointerImpl(ce::iObject *obj, ...) const = 0;
-  virtual void *InvokePointerImpl(const ce::iObject *obj, ...) const = 0;
-  virtual const void *InvokeConstPointerImpl(ce::iObject *obj, ...) const = 0;
-  virtual const void *InvokeConstPointerImpl(const ce::iObject *obj, ...) const = 0;
+  virtual void InvokeVoidImpl(cryo::iObject *obj, ...) const = 0;
+  virtual void InvokeVoidImpl(const cryo::iObject *obj, ...) const = 0;
+  virtual void InvokeValueImpl(cryo::iObject *obj, ...) const = 0;
+  virtual void InvokeValueImpl(const cryo::iObject *obj, ...) const = 0;
+  virtual void *InvokeReferenceImpl(cryo::iObject *obj, ...) const = 0;
+  virtual void *InvokeReferenceImpl(const cryo::iObject *obj, ...) const = 0;
+  virtual const void *InvokeConstReferenceImpl(cryo::iObject *obj, ...) const = 0;
+  virtual const void *InvokeConstReferenceImpl(const cryo::iObject *obj, ...) const = 0;
+  virtual void *InvokePointerImpl(cryo::iObject *obj, ...) const = 0;
+  virtual void *InvokePointerImpl(const cryo::iObject *obj, ...) const = 0;
+  virtual const void *InvokeConstPointerImpl(cryo::iObject *obj, ...) const = 0;
+  virtual const void *InvokeConstPointerImpl(const cryo::iObject *obj, ...) const = 0;
 
 private:
   eFunctionVirtuality m_virtuality;
@@ -518,17 +518,17 @@ class CS_CORE_API Class
 {
 public:
   virtual ~Class();
-  virtual ce::iObject *CreateInstance() const = 0;
+  virtual cryo::iObject *CreateInstance() const = 0;
   template<typename T>
   T *CreateInstance() const
   {
-    ce::iObject *obj = CreateInstance();
+    cryo::iObject *obj = CreateInstance();
     if (!obj)
     {
       return 0;
     }
 
-    T *t = ce::QueryClass<T>(obj);
+    T *t = cryo::QueryClass<T>(obj);
     if (!t)
     {
       obj->Release();
@@ -610,7 +610,7 @@ public:
 
   static iObjectClass *Get();
 
-  virtual ce::iObject *CreateInstance() const;
+  virtual cryo::iObject *CreateInstance() const;
 
 };
 
@@ -627,7 +627,7 @@ bool iObject::IsInstanceOf() const
 
 #include <ceCore/java.hh>
 
-namespace ce
+namespace cryo
 {
 #endif
 

@@ -3,7 +3,7 @@
 #include <ceCore/graphics/mesh.hh>
 #include <ceCore/outofboundsexception.hh>
 
-namespace ce
+namespace cryo
 {
 
 Mesh::Mesh()

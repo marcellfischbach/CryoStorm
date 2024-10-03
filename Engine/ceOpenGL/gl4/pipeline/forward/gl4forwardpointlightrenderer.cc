@@ -26,7 +26,7 @@
 
 
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 
 GL4ForwardPointLightRenderer::GL4ForwardPointLightRenderer()

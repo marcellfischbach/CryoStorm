@@ -3,7 +3,7 @@ package org.crimsonedge.core.input;
 import org.crimsonedge.core.CeClass;
 import org.crimsonedge.core.CoreObject;
 
-@CeClass("ce::iInputSystem")
+@CeClass("cryo::iInputSystem")
 public class IInputSystem extends CoreObject {
 
 

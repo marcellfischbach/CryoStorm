@@ -7,7 +7,7 @@
 #include <ceCore/graphics/itexture2darray.hh>
 #include <ceCore/graphics/itexturecube.hh>
 
-namespace ce
+namespace cryo
 {
 
 CS_CLASS()

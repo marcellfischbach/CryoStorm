@@ -7,7 +7,7 @@
 
 struct aiAnimation;
 
-namespace ce
+namespace cryo
 {
 
 class SkeletonAnimation;

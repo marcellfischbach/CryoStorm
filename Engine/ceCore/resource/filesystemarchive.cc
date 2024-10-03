@@ -6,7 +6,7 @@
 #include <ceCore/resource/filesystemfile.hh>
 #include <ceCore/resource/vfs.hh>
 
-namespace ce
+namespace cryo
 {
 
 FileSystemArchive::FileSystemArchive(const std::string &name, const std::string &rootPath, int priority)
@@ -43,7 +43,7 @@ int FileSystemArchive::GetPriority() const
   return m_priority;
 }
 
-iFile* FileSystemArchive::Open(const std::string &locator, ce::eAccessMode accessMode, ce::eOpenMode openMode)
+iFile* FileSystemArchive::Open(const std::string &locator, cryo::eAccessMode accessMode, cryo::eOpenMode openMode)
 {
   FileSystemFile *file = new FileSystemFile(m_rootPath + locator);
   if (!file->Open(accessMode, openMode))

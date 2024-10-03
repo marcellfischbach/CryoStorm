@@ -4,7 +4,7 @@
 #include <ceCore/graphics/irendertarget2d.hh>
 #include <ceCore/graphics/idevice.hh>
 
-namespace ce
+namespace cryo
 {
 
 
@@ -50,7 +50,7 @@ void PostProcessing::AddProcess(iPostProcess *process)
   m_planDirty = true;
 }
 
-void PostProcessing::Bind(const ce::PPBind &bind)
+void PostProcessing::Bind(const cryo::PPBind &bind)
 {
   if (bind.DstPP)
   {
@@ -176,7 +176,7 @@ std::vector<PPBind> PostProcessing::GetBindingsForProcess(const iPostProcess *pr
 }
 
 
-void BasePostProcess::SetInput(size_t idx, ce::iTexture2D *texture)
+void BasePostProcess::SetInput(size_t idx, cryo::iTexture2D *texture)
 {
   if (idx >= m_inputs.size())
   {
@@ -219,13 +219,13 @@ const std::vector<PPOutputDefinition> &BasePostProcess::GetOutputDefinitions() c
 }
 
 
-void BasePostProcess::DeclareInput(ce::PPImageType type, const std::string &name)
+void BasePostProcess::DeclareInput(cryo::PPImageType type, const std::string &name)
 {
   m_inputs.push_back(nullptr);
   m_inputDefinitions.push_back({m_inputs.size(), type, name});
 }
 
-void BasePostProcess::DeclareOutput(ce::PPImageType type, const std::string &name)
+void BasePostProcess::DeclareOutput(cryo::PPImageType type, const std::string &name)
 {
   m_outputs.push_back(nullptr);
   m_outputDefinitions.push_back({m_outputs.size(), type, name});
@@ -242,10 +242,10 @@ bool SimplePostProcess::UpdateRenderTarget(iDevice *device,
                                            uint32_t height,
                                            bool color,
                                            size_t colorIdx,
-                                           ce::ePixelFormat colorFormat,
+                                           cryo::ePixelFormat colorFormat,
                                            bool depth,
                                            size_t depthIdx,
-                                           ce::ePixelFormat depthFormat)
+                                           cryo::ePixelFormat depthFormat)
 {
   if (m_renderTarget != nullptr)
   {
@@ -270,7 +270,7 @@ bool SimplePostProcess::UpdateRenderTarget(iDevice *device,
   }
 
 
-  ce::iRenderTarget2D::Descriptor desc {(uint16_t) width, (uint16_t) height};
+  cryo::iRenderTarget2D::Descriptor desc {(uint16_t) width, (uint16_t) height};
   m_renderTarget = device->CreateRenderTarget(desc);
   if (!m_renderTarget)
   {
@@ -279,14 +279,14 @@ bool SimplePostProcess::UpdateRenderTarget(iDevice *device,
 
   if (color)
   {
-    ce::iTexture2D::Descriptor colorDesc {
+    cryo::iTexture2D::Descriptor colorDesc {
         colorFormat,
         (uint16_t) width,
         (uint16_t) height,
         false,
         1
     };
-    ce::iTexture2D             *colorTexture = device->CreateTexture(colorDesc);
+    cryo::iTexture2D             *colorTexture = device->CreateTexture(colorDesc);
 
     iSampler *sampler = device->CreateSampler();
     sampler->SetAddressU(eTAM_Clamp);
@@ -306,14 +306,14 @@ bool SimplePostProcess::UpdateRenderTarget(iDevice *device,
 
   if (depth)
   {
-    ce::iTexture2D::Descriptor depthDesc {
+    cryo::iTexture2D::Descriptor depthDesc {
         depthFormat,
         (uint16_t) width,
         (uint16_t) height,
         false,
         1
     };
-    ce::iTexture2D             *depthTexture = device->CreateTexture(depthDesc);
+    cryo::iTexture2D             *depthTexture = device->CreateTexture(depthDesc);
 
 
     m_renderTarget->SetDepthTexture(depthTexture);

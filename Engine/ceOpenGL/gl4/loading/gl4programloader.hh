@@ -2,7 +2,7 @@
 #include <ceOpenGL/openglexport.hh>
 #include <ceCore/resource/basecefassetloader.hh>
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 
 

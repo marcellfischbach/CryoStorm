@@ -34,11 +34,11 @@ int main(int argc, char** argv)
 
 
   printf("Starting with data-path: '%s'\n", dataPath.c_str()); fflush(stdout);
-  ce::VFS::Get()->SetRootPath(dataPath);
-  ce::VFSConfigReader::Read(dataPath, configFilename);
+  cryo::VFS::Get()->SetRootPath(dataPath);
+  cryo::VFSConfigReader::Read(dataPath, configFilename);
 
-  ce::Engine *engine = ce::Engine::Get();
-  if (!engine->InitializeEngine(args, new ce::launcher::LauncherModule()))
+  cryo::Engine *engine = cryo::Engine::Get();
+  if (!engine->InitializeEngine(args, new cryo::launcher::LauncherModule()))
   {
     printf ("Unable to initialize engine\n");
     return -1;

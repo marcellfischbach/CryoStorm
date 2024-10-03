@@ -6,12 +6,12 @@
 #include <string>
 #include <vector>
 
-namespace ce
+namespace cryo
 {
 struct iFile;
 }
 
-namespace ce
+namespace cryo
 {
 
 

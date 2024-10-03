@@ -7,7 +7,7 @@
 #include <exception>
 #include <map>
 
-namespace ce
+namespace cryo
 {
 
 

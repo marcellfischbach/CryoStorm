@@ -7,7 +7,7 @@
 #include <ceCore/input/ikeyboard.hh>
 
 
-namespace ce::java
+namespace cryo::java
 {
 
 class LwjglKeyboard : public iKeyboard

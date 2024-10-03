@@ -1,7 +1,7 @@
 
 #include <ceCore/math/clipper/boxclipper.hh>
 
-namespace ce
+namespace cryo
 {
 
 

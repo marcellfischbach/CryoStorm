@@ -4,7 +4,7 @@
 #include <ceCore/resource/vfs.hh>
 #
 
-namespace ce
+namespace cryo
 {
 
 SettingsFile::SettingsFile(const std::string& locator)

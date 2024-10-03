@@ -6,7 +6,7 @@
 #include <ceCore/math/math.hh>
 #include <GL/glew.h>
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 GL4TextureCube::GL4TextureCube()
         : iTextureCube()

@@ -4,7 +4,7 @@
 #include <ceCore/math/vector3f.hh>
 #include <string.h>
 
-namespace ce
+namespace cryo
 {
 
 
@@ -221,7 +221,7 @@ void Image::GenerateMipMapsNormal()
 }
 
 
-void Image::ColorCorrection(ce::Image::eColorCorrection correctionMode)
+void Image::ColorCorrection(cryo::Image::eColorCorrection correctionMode)
 {
   if (m_numberOfLayers == 0 || !m_layers[0].buffer)
   {

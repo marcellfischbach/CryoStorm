@@ -15,7 +15,7 @@
 #include <ceCore/math/vector.hh>
 #include <string>
 
-namespace ce
+namespace cryo
 {
 
 class Material;

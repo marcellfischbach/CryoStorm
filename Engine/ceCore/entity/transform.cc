@@ -2,7 +2,7 @@
 #include <ceCore/entity/transform.hh>
 #include <ceCore/entity/spatialstate.hh>
 
-namespace ce
+namespace cryo
 {
 
 

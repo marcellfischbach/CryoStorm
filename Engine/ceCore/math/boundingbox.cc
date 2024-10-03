@@ -3,7 +3,7 @@
 #include <ceCore/math/boundingbox.hh>
 #include <cfloat>
 
-namespace ce {
+namespace cryo {
 
 
 BoundingBox::BoundingBox()

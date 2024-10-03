@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 
-namespace ce
+namespace cryo
 {
 
 enum class TokenType
@@ -771,7 +771,7 @@ void Debug(const CrimsonFileElement *element, int indent)
 
 void CrimsonFile::Debug() const
 {
-  ce::Debug(&m_root, 0);
+  cryo::Debug(&m_root, 0);
 }
 
 std::string Print(const CrimsonFileElement *element, bool format, int ind, const std::string &indent, bool &endWithCurly)
@@ -854,7 +854,7 @@ std::string CrimsonFile::Print(bool format, int indent)
   for (size_t i = 0, in = m_root.GetNumberOfChildren(); i < in; i++)
   {
     bool ewc = false;
-    print += ce::Print(m_root.GetChild(i), format, 0, indentStr, ewc);
+    print += cryo::Print(m_root.GetChild(i), format, 0, indentStr, ewc);
     if (!ewc && i + 1 < in)
     {
       print += ",";

@@ -7,7 +7,7 @@
 #include <ceCore/resource/eopenmode.hh>
 #include <ceCore/resource/eseekmode.hh>
 
-namespace ce
+namespace cryo
 {
 
 

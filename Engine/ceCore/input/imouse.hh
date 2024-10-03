@@ -6,7 +6,7 @@
 #include "button.hh"
 #include "ecursormode.hh"
 
-namespace ce
+namespace cryo
 {
 
 

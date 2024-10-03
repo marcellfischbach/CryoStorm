@@ -6,7 +6,7 @@
 #include <ceCore/math/quaternion.hh>
 #include <ceCore/math/vector3f.hh>
 
-namespace ce
+namespace cryo
 {
 
 class SpatialState;

@@ -5,7 +5,7 @@
 #include <ceCore/graphics/eclearmode.hh>
 #include <ceCore/math/color4f.hh>
 
-namespace ce
+namespace cryo
 {
 
 class Camera;

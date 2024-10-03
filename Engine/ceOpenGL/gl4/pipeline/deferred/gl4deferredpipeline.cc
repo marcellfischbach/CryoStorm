@@ -21,7 +21,7 @@
 #include <GL/glew.h>
 
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 
 const float MinLightInfluence = 0.0f;
@@ -256,15 +256,15 @@ void GL4DeferredPipeline::RenderLights()
   }
 }
 
-void GL4DeferredPipeline::RenderLight(ce::GfxLight *light)
+void GL4DeferredPipeline::RenderLight(cryo::GfxLight *light)
 {
   switch (light->GetLight()->GetType())
   {
     case eLT_Directional:
-      RenderDirectionalLight(ce::QueryClass<GL4DirectionalLight>(light->GetLight()));
+      RenderDirectionalLight(cryo::QueryClass<GL4DirectionalLight>(light->GetLight()));
       break;
     case eLT_Point:
-      RenderPointLight(ce::QueryClass<GL4PointLight>(light->GetLight()));
+      RenderPointLight(cryo::QueryClass<GL4PointLight>(light->GetLight()));
       break;
     default:
       break;
@@ -533,7 +533,7 @@ bool GL4DeferredPipeline::SetupVariables(iRenderTarget2D *target,
   return m_target;
 }
 
-iRenderTarget2D *GL4DeferredPipeline::UpdateRenderTarget(ce::iDevice *device, ce::iRenderTarget2D *target)
+iRenderTarget2D *GL4DeferredPipeline::UpdateRenderTarget(cryo::iDevice *device, cryo::iRenderTarget2D *target)
 {
   if (!target)
   {

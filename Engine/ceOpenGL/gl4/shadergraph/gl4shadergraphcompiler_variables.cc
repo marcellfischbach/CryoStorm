@@ -3,7 +3,7 @@
 #include <ceCore/graphics/shadergraph/sgnodes.hh>
 #include <algorithm>
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 
 void GL4ShaderGraphCompiler::GenerateVariables()
@@ -86,8 +86,8 @@ std::string stream_name(eVertexStream stream)
 }
 
 void GL4ShaderGraphCompiler::AddStream(std::vector<StreamInput> &streams,
-                                       ce::eVertexStream stream,
-                                       ce::eSGValueType type)
+                                       cryo::eVertexStream stream,
+                                       cryo::eSGValueType type)
 {
   for (auto it = streams.begin(); it != streams.end(); it++)
   {
@@ -130,7 +130,7 @@ std::vector<GL4ShaderGraphCompiler::StreamInput> GL4ShaderGraphCompiler::FindStr
 void GL4ShaderGraphCompiler::AddResource(std::vector<ResourceInput> &resources,
                                          const std::string &resourceName,
                                          const std::string &resourceType,
-                                         ce::eMaterialAttributeType matType)
+                                         cryo::eMaterialAttributeType matType)
 {
   for (auto it = resources.begin(); it != resources.end(); it++)
   {

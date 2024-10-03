@@ -2,7 +2,7 @@
 #include <ceCore/graphics/samplers.hh>
 #include <ceCore/resource/assetmanager.hh>
 
-namespace ce
+namespace cryo
 {
 
 

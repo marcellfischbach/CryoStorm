@@ -23,7 +23,7 @@
 
 #include <algorithm>
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 
 GL4ForwardDirectionalLightRenderer::GL4ForwardDirectionalLightRenderer()

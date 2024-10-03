@@ -1,7 +1,7 @@
 #include <ceOpenGL/gl4/shading/GL4ShaderAttributeNull.hh>
 
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 
 GL4ShaderAttributeNull::GL4ShaderAttributeNull( const std::string& name)

@@ -5,7 +5,7 @@
 #include <ceOpenGL/openglexport.hh>
 #include <ceOpenGL/gl4/pipeline/pointsm/gl4pointsmrenderer.hh>
 
-namespace ce
+namespace cryo
 {
 
 class Camera;

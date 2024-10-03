@@ -3,7 +3,7 @@
 #include "ceCore/graphics/scene/gfxmesh.hh"
 #include "ceCore/graphics/material/imaterial.hh"
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 
 

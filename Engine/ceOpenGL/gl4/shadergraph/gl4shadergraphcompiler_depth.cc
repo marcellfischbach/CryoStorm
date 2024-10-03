@@ -6,7 +6,7 @@
 #include <ceCore/graphics/evertexstream.hh>
 #include <ceCore/graphics/shadergraph/sgnodes.hh>
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 std::string stream_name(eVertexStream stream);
 std::string get_gl_type(eSGValueType type);

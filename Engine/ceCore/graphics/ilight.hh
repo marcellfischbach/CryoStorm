@@ -8,7 +8,7 @@
 #include <ceCore/graphics/elightchangemode.hh>
 #include <ceCore/graphics/elighttype.hh>
 
-namespace ce
+namespace cryo
 {
 
 

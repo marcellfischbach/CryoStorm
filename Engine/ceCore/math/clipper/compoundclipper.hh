@@ -6,7 +6,7 @@
 #include <ceCore/defs.hh>
 #include <vector>
 
-namespace ce
+namespace cryo
 {
 
 

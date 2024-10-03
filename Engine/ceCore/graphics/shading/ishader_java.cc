@@ -13,9 +13,9 @@ JNICALL Java_org_crimsonedge_core_graphics_shading_IShader_nRegisterAttribute(JN
                                                                               jlong ref,
                                                                               jstring attributeNameString)
 {
-  ce::iShader *shader        = reinterpret_cast<ce::iShader *>(ref);
+  cryo::iShader *shader        = reinterpret_cast<cryo::iShader *>(ref);
   const char  *attributeName = env->GetStringUTFChars(attributeNameString, 0);
-  ce::Size    idx            = shader->RegisterAttribute(attributeName);
+  cryo::Size    idx            = shader->RegisterAttribute(attributeName);
   env->ReleaseStringUTFChars(attributeNameString, attributeName);
   return (jint) idx;
 }
@@ -26,9 +26,9 @@ JNICALL Java_org_crimsonedge_core_graphics_shading_IShader_nGetAttributeId(JNIEn
                                                                            jlong ref,
                                                                            jstring attributeNameString)
 {
-  ce::iShader *shader        = reinterpret_cast<ce::iShader *>(ref);
+  cryo::iShader *shader        = reinterpret_cast<cryo::iShader *>(ref);
   const char  *attributeName = env->GetStringUTFChars(attributeNameString, 0);
-  ce::Size    idx            = shader->GetAttributeId(attributeName);
+  cryo::Size    idx            = shader->GetAttributeId(attributeName);
   env->ReleaseStringUTFChars(attributeNameString, attributeName);
   return (jint) idx;
 }
@@ -39,9 +39,9 @@ JNICALL Java_org_crimsonedge_core_graphics_shading_IShader_nGetShaderAttributeNa
                                                                                    jlong ref,
                                                                                    jstring attributeNameString)
 {
-  ce::iShader          *shader        = reinterpret_cast<ce::iShader *>(ref);
+  cryo::iShader          *shader        = reinterpret_cast<cryo::iShader *>(ref);
   const char           *attributeName = env->GetStringUTFChars(attributeNameString, 0);
-  ce::iShaderAttribute *pAttribute    = shader->GetShaderAttribute(attributeName);
+  cryo::iShaderAttribute *pAttribute    = shader->GetShaderAttribute(attributeName);
   env->ReleaseStringUTFChars(attributeNameString, attributeName);
   return pAttribute ? pAttribute->GetJObject() : nullptr;
 }
@@ -53,8 +53,8 @@ JNICALL Java_org_crimsonedge_core_graphics_shading_IShader_nGetShaderAttributeId
                                                                                  jlong ref,
                                                                                  jint id)
 {
-  ce::iShader          *shader     = reinterpret_cast<ce::iShader *>(ref);
-  ce::iShaderAttribute *pAttribute = shader->GetShaderAttribute(id);
+  cryo::iShader          *shader     = reinterpret_cast<cryo::iShader *>(ref);
+  cryo::iShaderAttribute *pAttribute = shader->GetShaderAttribute(id);
   return pAttribute ? pAttribute->GetJObject() : nullptr;
 }
 

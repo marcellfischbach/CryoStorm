@@ -8,7 +8,7 @@
 #include <jni.h>
 
 
-namespace ce
+namespace cryo
 {
 
 

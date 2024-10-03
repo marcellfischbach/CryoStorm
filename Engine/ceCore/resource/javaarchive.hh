@@ -4,7 +4,7 @@
 #include <ceCore/coreexport.hh>
 #include <ceCore/resource/iarchive.hh>
 
-namespace ce
+namespace cryo
 {
 
 CS_CLASS(jclass="org.crimsonedge.core.resource.JavaArchive")

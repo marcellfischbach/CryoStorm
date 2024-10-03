@@ -6,7 +6,7 @@
 #include <btBulletCollisionCommon.h>
 
 
-namespace ce::bullet
+namespace cryo::bullet
 {
 
 BulletSystem::BulletSystem()

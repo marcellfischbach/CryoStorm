@@ -12,7 +12,7 @@
 #include <ceCore/graphics/evertexstream.hh>
 
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 
 

@@ -22,7 +22,7 @@ void AssetBrowserTreeModel::Reload()
   }
   m_archives.clear();
 
-  for (auto archive: ce::VFS::Get()->GetArchives())
+  for (auto archive: cryo::VFS::Get()->GetArchives())
   {
 
 
@@ -30,9 +30,9 @@ void AssetBrowserTreeModel::Reload()
   }
 }
 
-void AssetBrowserTreeModel::LoadArchive(const ce::iArchive *archive)
+void AssetBrowserTreeModel::LoadArchive(const cryo::iArchive *archive)
 {
-  const ce::FileSystemArchive *fsArchive = archive->Query<ce::FileSystemArchive>();
+  const cryo::FileSystemArchive *fsArchive = archive->Query<cryo::FileSystemArchive>();
   if (!fsArchive)
   {
     return;

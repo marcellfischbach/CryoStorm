@@ -4,7 +4,7 @@
 #include <algorithm>
 
 
-namespace ce::moc
+namespace cryo::moc
 {
 
 ASTNode::ASTNode(ASTNodeType type)

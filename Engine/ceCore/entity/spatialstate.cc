@@ -5,7 +5,7 @@
 //#define CS_UNSET_TRANSFORM_FLAG(f)  m_transformationState &= ~(f)
 
 
-namespace ce
+namespace cryo
 {
 SpatialState::SpatialState(const std::string& name)
   : EntityState(name), m_parent(nullptr), m_static(false)

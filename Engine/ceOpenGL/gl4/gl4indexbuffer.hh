@@ -5,7 +5,7 @@
 #include <ceOpenGL/openglexport.hh>
 #include <ceCore/graphics/iindexbuffer.hh>
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 CS_CLASS()
 class CS_OGL_API GL4IndexBuffer : public CS_SUPER(iIndexBuffer)

@@ -4,7 +4,7 @@
 #include <gl/glew.h>
 
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 
 static GLint GL4CompareFunc[] = {

@@ -5,7 +5,7 @@
 #include <ceCore/resource/iassetloader.hh>
 #include <png.h>
 
-namespace ce::img
+namespace cryo::img
 {
 
 

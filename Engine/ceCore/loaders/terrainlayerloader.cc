@@ -8,7 +8,7 @@
 #include <ceCore/graphics/itexture2d.hh>
 
 
-namespace ce
+namespace cryo
 {
 
 bool TerrainLayerLoader::CanLoad(const Class* cls, const ResourceLocator& locator) const

@@ -12,7 +12,7 @@
 #include <ceCore/resource/assetmanager.hh>
 
 
-namespace ce
+namespace cryo
 {
 
 TextureLoader::TextureLoader()

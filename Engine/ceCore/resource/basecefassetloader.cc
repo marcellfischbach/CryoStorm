@@ -5,7 +5,7 @@
 #include <ceCore/resource/basecefassetloader.hh>
 #include <ceCore/resource/vfs.hh>
 
-namespace ce
+namespace cryo
 {
 
 void BaseCEFAssetLoader::AddValidFile(const Class* cls, const std::string& fileExtension)
@@ -18,7 +18,7 @@ void BaseCEFAssetLoader::AddValidFile(const Class* cls, const std::string& fileE
 
 bool BaseCEFAssetLoader::Open(const ResourceLocator& locator, CrimsonFile &file)
 {
-  iFile* fd = ce::VFS::Get()->Open(locator, eAM_Read, eOM_Binary);
+  iFile* fd = cryo::VFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   AutoRelease arFD(fd);
 
   return file.Parse(fd);

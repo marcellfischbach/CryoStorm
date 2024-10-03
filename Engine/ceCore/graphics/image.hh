@@ -9,7 +9,7 @@
 #include <ceCore/graphics/epixelformat.hh>
 
 
-namespace ce
+namespace cryo
 {
 
 CS_CLASS()

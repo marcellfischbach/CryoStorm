@@ -9,7 +9,7 @@
 #include <ceCore/graphics/scene/gfxscenecollector.hh>
 #include <ceCore/graphics/skybox/skyboxmesh.hh>
 
-namespace ce
+namespace cryo
 {
 
 class Camera;

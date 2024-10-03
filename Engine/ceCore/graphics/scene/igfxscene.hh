@@ -5,7 +5,7 @@
 #include <ceCore/defs.hh>
 #include <functional>
 
-namespace ce
+namespace cryo
 {
 
 class GfxCamera;

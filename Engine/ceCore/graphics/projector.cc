@@ -2,7 +2,7 @@
 #include <ceCore/graphics/projector.hh>
 #include <ceCore/graphics/idevice.hh>
 
-namespace ce
+namespace cryo
 {
 
 Projector::Projector()

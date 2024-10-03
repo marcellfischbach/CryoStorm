@@ -6,7 +6,7 @@
 #include <vector>
 
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 
 CS_CLASS()

@@ -9,11 +9,11 @@
 #include <ceCore/resource/textfile.hh>
 #include <ceCore/settings.hh>
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 
 
-Material *GL4ShaderGraphCompiler::Compile(ce::ShaderGraph *shaderGraph, const Parameters &parameters)
+Material *GL4ShaderGraphCompiler::Compile(cryo::ShaderGraph *shaderGraph, const Parameters &parameters)
 {
   m_shaderGraph = shaderGraph;
   m_errorString = "";
@@ -609,7 +609,7 @@ bool GL4ShaderGraphCompiler::IsNeedingTangent(const std::vector<SGNode *> &nodes
 }
 
 
-void GL4ShaderGraphCompiler::SetMaterialDefaults(ce::Material *material)
+void GL4ShaderGraphCompiler::SetMaterialDefaults(cryo::Material *material)
 {
   std::vector<SGNode *> nodes;
   for (int              i = 0; i < m_shaderGraph->GetNumberOfNodes(); ++i)

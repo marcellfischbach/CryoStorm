@@ -3,7 +3,7 @@
 #include <ceCore/graphics/graphicsexceptions.hh>
 #include <ceCore/math/math.hh>
 
-namespace ce
+namespace cryo
 {
 
 VertexDeclaration::VertexDeclaration(const std::vector<VertexDeclaration::Attribute>& attributes)

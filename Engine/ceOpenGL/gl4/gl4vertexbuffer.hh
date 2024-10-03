@@ -6,7 +6,7 @@
 #include <ceCore/graphics/ivertexbuffer.hh>
 
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 CS_CLASS()
 class CS_OGL_API GL4VertexBuffer : public CS_SUPER(iVertexBuffer)

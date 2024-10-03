@@ -1,7 +1,7 @@
 #include <ceLauncher/window/sdlinputsystem.hh>
 
 
-namespace ce::launcher
+namespace cryo::launcher
 {
 
 SDLInputSystem::SDLInputSystem(SDLKeyboard* keyboard, SDLMouse* mouse)

@@ -9,7 +9,7 @@
 class btRigidBody;
 class btCompoundShape;
 
-namespace ce::bullet
+namespace cryo::bullet
 {
 
 class BulletCollisionShape;

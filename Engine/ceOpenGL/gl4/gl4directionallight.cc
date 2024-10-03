@@ -2,7 +2,7 @@
 #include <ceOpenGL/gl4/gl4directionallight.hh>
 
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 
 GL4DirectionalLight::GL4DirectionalLight()

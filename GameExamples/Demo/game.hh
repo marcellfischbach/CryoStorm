@@ -6,13 +6,13 @@
 
 #include <ceCore/igame.hh>
 
-class Game : public ce::iGame
+class Game : public cryo::iGame
 {
 public:
   ~Game() override = default;
 
 
-  bool Initialize(ce::Engine *engine) override;
+  bool Initialize(cryo::Engine *engine) override;
 
 };
 

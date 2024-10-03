@@ -9,7 +9,7 @@
 #include <ceCore/resource/assetmanager.hh>
 
 
-namespace ce::assimp
+namespace cryo::assimp
 {
 
 bool AssimpLoaderModule::Register(const std::vector<std::string> &args, Engine *engine)
@@ -35,5 +35,5 @@ bool AssimpLoaderModule::Initialize(const std::vector<std::string> &args, Engine
 CS_DEFINE_LIBRARY(ceAssimpLoader)
 {
   printf ("Load library: ceAssimpLoader\n");
-  return new ce::assimp::AssimpLoaderModule;
+  return new cryo::assimp::AssimpLoaderModule;
 }

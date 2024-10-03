@@ -5,7 +5,7 @@
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 
-namespace ce::assimp
+namespace cryo::assimp
 {
 
 AssimpSkeletonAnimationLoader::AssimpSkeletonAnimationLoader()
@@ -14,7 +14,7 @@ AssimpSkeletonAnimationLoader::AssimpSkeletonAnimationLoader()
 }
 
 
-bool AssimpSkeletonAnimationLoader::CanLoad(const ce::Class *cls, const ce::ResourceLocator &locator) const
+bool AssimpSkeletonAnimationLoader::CanLoad(const cryo::Class *cls, const cryo::ResourceLocator &locator) const
 {
   const std::string &ext = locator.GetExtension();
   return cls == SkeletonAnimationPack::GetStaticClass()
@@ -22,9 +22,9 @@ bool AssimpSkeletonAnimationLoader::CanLoad(const ce::Class *cls, const ce::Reso
 }
 
 
-iObject *AssimpSkeletonAnimationLoader::Load(const ce::Class *cls, const ce::ResourceLocator &locator) const
+iObject *AssimpSkeletonAnimationLoader::Load(const cryo::Class *cls, const cryo::ResourceLocator &locator) const
 {
-  iFile *file = ce::VFS::Get()->Open(locator, eAM_Read, eOM_Binary);
+  iFile *file = cryo::VFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (!file)
   {
     return nullptr;

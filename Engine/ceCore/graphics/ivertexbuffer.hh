@@ -7,7 +7,7 @@
 #include <ceCore/graphics/ebufferusage.hh>
 
 
-namespace ce
+namespace cryo
 {
 
 CS_CLASS()

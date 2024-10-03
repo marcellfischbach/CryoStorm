@@ -3,7 +3,7 @@
 #include "iinputsystem.hh"
 #include "ceCore/objectregistry.hh"
 
-namespace ce
+namespace cryo
 {
 
 

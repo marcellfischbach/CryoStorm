@@ -12,7 +12,7 @@
 #include <ceCore/classregistry.hh>
 #include <ceCore/resource/assetmanager.hh>
 
-namespace ce
+namespace cryo
 {
 
 ShaderGraphLoader::ShaderGraphLoader()
@@ -100,7 +100,7 @@ iObject *ShaderGraphLoader::Load(const CrimsonFile *file, const Class *cls, cons
   //
   // Now compile the shader graph to a material
 
-  auto compilerFactory = ce::ObjectRegistry::Get<ce::iShaderGraphCompilerFactory>();
+  auto compilerFactory = cryo::ObjectRegistry::Get<cryo::iShaderGraphCompilerFactory>();
   if (compilerFactory)
   {
     auto compiler = compilerFactory->Create();
@@ -125,7 +125,7 @@ iObject *ShaderGraphLoader::Load(const CrimsonFile *file, const Class *cls, cons
   return nullptr;
 }
 
-void ShaderGraphLoader::LoadQueue(const ce::CrimsonFileElement *shaderGraphElement, ShaderGraph *sg) const
+void ShaderGraphLoader::LoadQueue(const cryo::CrimsonFileElement *shaderGraphElement, ShaderGraph *sg) const
 {
   auto queueElement = shaderGraphElement->GetChild("queue");
   if (queueElement)
@@ -179,7 +179,7 @@ void ShaderGraphLoader::LoadBlendingMode(const CrimsonFileElement *shaderGraphEl
 }
 
 
-SGNode *ShaderGraphLoader::CreateNode(const ce::CrimsonFileElement *nodeElement, ce::ShaderGraph *sg) const
+SGNode *ShaderGraphLoader::CreateNode(const cryo::CrimsonFileElement *nodeElement, cryo::ShaderGraph *sg) const
 {
   const std::string &nodeTypeName = nodeElement->GetAttribute(0, "");
   if (nodeTypeName.empty())
@@ -205,7 +205,7 @@ SGNode *ShaderGraphLoader::CreateNode(const ce::CrimsonFileElement *nodeElement,
 
 
 SGResourceNode *
-ShaderGraphLoader::CreateResourceNode(const ce::CrimsonFileElement *nodeElement, ce::ShaderGraph *sg) const
+ShaderGraphLoader::CreateResourceNode(const cryo::CrimsonFileElement *nodeElement, cryo::ShaderGraph *sg) const
 {
   const std::string &nodeTypeName = nodeElement->GetAttribute(0, "");
   if (nodeTypeName.empty())
@@ -395,8 +395,8 @@ bool ShaderGraphLoader::LoadBinding(const CrimsonFileElement *valueElement,
 }
 
 
-void ShaderGraphLoader::LoadAttributes(const ce::CrimsonFileElement *attributesElement,
-                                       ce::ShaderGraph *sg,
+void ShaderGraphLoader::LoadAttributes(const cryo::CrimsonFileElement *attributesElement,
+                                       cryo::ShaderGraph *sg,
                                        const ResourceLocator &locator) const
 {
   if (!attributesElement)
@@ -413,8 +413,8 @@ void ShaderGraphLoader::LoadAttributes(const ce::CrimsonFileElement *attributesE
   }
 }
 
-void ShaderGraphLoader::LoadAttribute(const ce::CrimsonFileElement *attributeElement,
-                                      ce::ShaderGraph *sg,
+void ShaderGraphLoader::LoadAttribute(const cryo::CrimsonFileElement *attributeElement,
+                                      cryo::ShaderGraph *sg,
                                       const ResourceLocator &locator) const
 {
   if (attributeElement->GetNumberOfAttributes() < 2)

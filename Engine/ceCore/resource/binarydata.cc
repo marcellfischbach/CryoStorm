@@ -2,7 +2,7 @@
 
 #include <ceCore/resource/binarydata.hh>
 
-namespace ce
+namespace cryo
 {
     
  

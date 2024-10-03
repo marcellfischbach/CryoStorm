@@ -7,7 +7,7 @@
 #include <ceCore/coreexport.hh>
 #include <ceCore/types.hh>
 
-namespace ce
+namespace cryo
 {
 
 class CS_CORE_API FPS

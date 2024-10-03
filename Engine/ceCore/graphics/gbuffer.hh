@@ -4,7 +4,7 @@
 #include <ceCore/types.hh>
 #include <vector>
 
-namespace ce
+namespace cryo
 {
 
 struct iDevice;

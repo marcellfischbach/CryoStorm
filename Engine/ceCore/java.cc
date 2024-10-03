@@ -5,7 +5,7 @@
 #include <ceCore/java.hh>
 #include <ceCore/classregistry.hh>
 
-namespace ce
+namespace cryo
 {
 
 JNIEnv *Java::s_env = nullptr;
@@ -33,14 +33,14 @@ JNICALL Java_org_crimsonedge_core_CoreObject_nCreateClass(JNIEnv *env, jobject c
   try
   {
     const char      *classNameChars = env->GetStringUTFChars(classNameStr, 0);
-    const ce::Class *pClass = ce::ClassRegistry::Get()->GetClass(classNameChars);
+    const cryo::Class *pClass = cryo::ClassRegistry::Get()->GetClass(classNameChars);
     env->ReleaseStringUTFChars(classNameStr, classNameChars);
 
     if (!pClass)
     {
       return 0;
     }
-    ce::iObject *obj = pClass->CreateInstance();
+    cryo::iObject *obj = pClass->CreateInstance();
     if (!obj)
     {
       return 0;

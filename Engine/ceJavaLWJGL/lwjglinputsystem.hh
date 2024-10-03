@@ -5,7 +5,7 @@
 #include <ceJavaLWJGL/lwjglmouse.hh>
 #include <ceJavaLWJGL/lwjglwindow.hh>
 
-namespace ce::java
+namespace cryo::java
 {
 
 CS_CLASS(jclass="org.crimsonedge.lwjgl.LwjglInputSystem")

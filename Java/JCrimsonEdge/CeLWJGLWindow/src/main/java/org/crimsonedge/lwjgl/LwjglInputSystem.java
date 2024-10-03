@@ -3,7 +3,7 @@ package org.crimsonedge.lwjgl;
 import org.crimsonedge.core.CeClass;
 import org.crimsonedge.core.CoreObject;
 
-@CeClass("ce::java::LwjglInputSystem")
+@CeClass("cryo::java::LwjglInputSystem")
 public class LwjglInputSystem extends CoreObject {
 
     public LwjglInputSystem() {

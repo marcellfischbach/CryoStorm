@@ -4,7 +4,7 @@
 #include <ceBullet/bulletstaticcollider.hh>
 #include <btBulletDynamicsCommon.h>
 
-namespace ce::bullet
+namespace cryo::bullet
 {
 
 

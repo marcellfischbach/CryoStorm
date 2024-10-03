@@ -57,7 +57,7 @@ private:
     ~PathItem() override = default;
   };
 
-  void LoadArchive (const ce::iArchive *archive);
+  void LoadArchive (const cryo::iArchive *archive);
   void LoadPath(Item* parent, QDir dir, QString path);
 
   std::vector<ArchiveItem*> m_archives;

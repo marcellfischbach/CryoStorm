@@ -6,7 +6,7 @@
 #include <ceCore/class.hh>
 #include <ceCore/graphics/isampler.hh>
 
-namespace ce
+namespace cryo
 {
 
 CS_CLASS()

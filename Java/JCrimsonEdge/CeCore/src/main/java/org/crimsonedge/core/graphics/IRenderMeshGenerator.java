@@ -6,7 +6,7 @@ import org.crimsonedge.core.math.*;
 
 import java.util.List;
 
-@CeClass("ce::iRenderMeshGenerator")
+@CeClass("cryo::iRenderMeshGenerator")
 public class IRenderMeshGenerator extends CoreObject {
 
     public IRenderMeshGenerator(long ref) {

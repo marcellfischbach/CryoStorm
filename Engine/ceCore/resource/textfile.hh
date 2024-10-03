@@ -6,7 +6,7 @@
 #include <ceCore/resource/iassetloader.hh>
 #include <string>
 
-namespace ce
+namespace cryo
 {
 
 

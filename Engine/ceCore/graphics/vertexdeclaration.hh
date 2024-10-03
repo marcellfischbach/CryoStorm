@@ -9,7 +9,7 @@
 #include <vector>
 #include <ceCore/defs.hh>
 
-namespace ce
+namespace cryo
 {
 
 

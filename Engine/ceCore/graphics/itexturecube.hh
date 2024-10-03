@@ -8,7 +8,7 @@
 #include <ceCore/types.hh>
 #include <ceCore/graphics/ecubeface.hh>
 
-namespace ce
+namespace cryo
 {
 
 class Image;

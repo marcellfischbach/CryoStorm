@@ -1,7 +1,7 @@
 
 #include <ceCore/graphics/skeleton.hh>
 
-namespace ce
+namespace cryo
 {
 
 
@@ -32,7 +32,7 @@ void Skeleton::Clear()
   m_rootBones.clear();
 }
 
-void Skeleton::InitializeFrom(const ce::Skeleton &skeleton)
+void Skeleton::InitializeFrom(const cryo::Skeleton &skeleton)
 {
   Clear();
 
@@ -49,7 +49,7 @@ void Skeleton::InitializeFrom(const ce::Skeleton &skeleton)
   UpdateBones();
 }
 
-Skeleton &Skeleton::operator=(const ce::Skeleton &skeleton)
+Skeleton &Skeleton::operator=(const cryo::Skeleton &skeleton)
 {
   Clear();
 
@@ -105,7 +105,7 @@ size_t Skeleton::AddChild(const std::string &name, size_t parent)
   return idx;
 }
 
-void Skeleton::SetBase(const ce::Matrix4f &base)
+void Skeleton::SetBase(const cryo::Matrix4f &base)
 {
   m_base = base;
 }
@@ -161,7 +161,7 @@ void Skeleton::UpdateBones()
   }
 }
 
-void Skeleton::UpdateBone(size_t idx, const ce::Matrix4f &parent)
+void Skeleton::UpdateBone(size_t idx, const cryo::Matrix4f &parent)
 {
   Bone &bone = m_bones[idx];
 

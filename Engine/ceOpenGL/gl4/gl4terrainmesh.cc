@@ -3,7 +3,7 @@
 #include <ceOpenGL/gl4/gl4terrainmesh_cpu.hh>
 
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 
 

@@ -6,7 +6,7 @@
 #include <ceCore/math/vector3f.hh>
 #include <ceCore/math/quaternion.hh>
 
-namespace ce
+namespace cryo
 {
 
 class Skeleton;
@@ -62,7 +62,7 @@ public:
   float GetDuration() const;
 
 
-  void PushSkeleton(ce::Skeleton *skeleton, float frame, float blendFactor) const;
+  void PushSkeleton(cryo::Skeleton *skeleton, float frame, float blendFactor) const;
 
   void AddRotationFrame(const std::string &channelName,
                         float frame,

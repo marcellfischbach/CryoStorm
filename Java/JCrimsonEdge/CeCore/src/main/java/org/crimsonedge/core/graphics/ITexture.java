@@ -3,7 +3,7 @@ package org.crimsonedge.core.graphics;
 import org.crimsonedge.core.CeClass;
 import org.crimsonedge.core.CoreObject;
 
-@CeClass("ce::iTexture")
+@CeClass("cryo::iTexture")
 public class ITexture extends CoreObject  {
 
     public ITexture(long ref) {

@@ -2,7 +2,7 @@
 #include <ceCore/resource/resourcelocator.hh>
 #include <ceCore/string.hh>
 
-namespace ce
+namespace cryo
 {
 
 
@@ -52,7 +52,7 @@ std::string extract_extension(const std::string& locator)
   size_t idx = locator.rfind(".");
   if (idx != -1)
   {
-    return ce::to_upper(locator.substr(idx + 1));
+    return cryo::to_upper(locator.substr(idx + 1));
   }
   return "";
 }

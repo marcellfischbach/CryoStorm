@@ -5,7 +5,7 @@
 #include <ceCore/graphics/idevice.hh>
 
 
-namespace ce
+namespace cryo
 {
 
 GBuffer::GBuffer()
@@ -23,7 +23,7 @@ GBuffer::GBuffer()
 }
 
 
-bool GBuffer::Update(ce::iDevice *device, uint16_t width, uint16_t height)
+bool GBuffer::Update(cryo::iDevice *device, uint16_t width, uint16_t height)
 {
   if (m_diffuseRoughness)
   {
@@ -87,7 +87,7 @@ bool GBuffer::Update(ce::iDevice *device, uint16_t width, uint16_t height)
 }
 
 
-void GBuffer::UpdateSamplers(ce::iDevice *device)
+void GBuffer::UpdateSamplers(cryo::iDevice *device)
 {
   if (m_diffuseRoughnessSampler != nullptr)
   {

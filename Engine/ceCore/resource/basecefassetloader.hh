@@ -9,7 +9,7 @@
 #include <ceCore/resource/iassetloader.hh>
 #include <vector>
 
-namespace ce
+namespace cryo
 {
 
 

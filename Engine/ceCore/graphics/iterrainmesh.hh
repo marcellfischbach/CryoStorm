@@ -6,7 +6,7 @@
 #include <ceCore/graphics/irendermesh.hh>
 #include <ceCore/types.hh>
 
-namespace ce
+namespace cryo
 {
 
 

@@ -11,7 +11,7 @@
 #include <ceCore/graphics/erenderpass.hh>
 #include <vector>
 
-namespace ce
+namespace cryo
 {
 
 struct iDevice;

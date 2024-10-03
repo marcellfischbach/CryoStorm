@@ -1,7 +1,7 @@
 
 #include <ceCore/graphics/skeletonmesh.hh>
 
-namespace ce
+namespace cryo
 {
 
 SkeletonMesh::SkeletonMesh()

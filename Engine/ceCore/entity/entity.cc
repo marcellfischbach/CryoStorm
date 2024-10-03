@@ -3,7 +3,7 @@
 #include <ceCore/entity/spatialstate.hh>
 #include <ceCore/entity/world.hh>
 
-namespace ce
+namespace cryo
 {
 
 Entity::Entity(const std::string &name)

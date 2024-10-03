@@ -4,7 +4,7 @@
 #include <ceCore/graphics/material/material.hh>
 #include <ceCore/graphics/shadergraph/shadergraph.hh>
 
-namespace ce
+namespace cryo
 {
 
 

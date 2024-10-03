@@ -2,7 +2,7 @@
 
 #pragma once 
 
-namespace ce::moc
+namespace cryo::moc
 {
 
 

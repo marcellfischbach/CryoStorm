@@ -7,7 +7,7 @@
 #include <ceCore/math/vector3f.hh>
 #include <ceCore/types.hh>
 
-namespace ce
+namespace cryo
 {
 
 struct iLight;

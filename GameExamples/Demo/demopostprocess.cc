@@ -11,15 +11,15 @@
 DemoPostProcess::DemoPostProcess()
     : SimplePostProcess()
 {
-  DeclareInput(ce::PPImageType::Color, "Color");
-  DeclareOutput(ce::PPImageType::Color, "Color");
+  DeclareInput(cryo::PPImageType::Color, "Color");
+  DeclareOutput(cryo::PPImageType::Color, "Color");
 
-  m_shader      = ce::AssetManager::Get()->Get<ce::iShader>("${shaders}/pp/demo.shader");
+  m_shader      = cryo::AssetManager::Get()->Get<cryo::iShader>("${shaders}/pp/demo.shader");
   m_attribColor = m_shader ? m_shader->GetShaderAttribute("Color") : nullptr;
 }
 
 
-bool DemoPostProcess::RefreshOutputTexture(ce::iDevice *device)
+bool DemoPostProcess::RefreshOutputTexture(cryo::iDevice *device)
 {
   if (!m_inputs[0])
   {
@@ -34,20 +34,20 @@ bool DemoPostProcess::RefreshOutputTexture(ce::iDevice *device)
                             m_inputs[0]->GetFormat(),
                             false,
                             0,
-                            ce::ePF_Depth);
+                            cryo::ePF_Depth);
 }
 
-void DemoPostProcess::Process(ce::iDevice *device, ce::iRenderTarget2D *finalTarget)
+void DemoPostProcess::Process(cryo::iDevice *device, cryo::iRenderTarget2D *finalTarget)
 {
   if (m_shader && m_attribColor && RefreshOutputTexture(device))
   {
     device->SetRenderTarget(m_renderTarget);
-    device->Clear(false, ce::Color4f(0, 0, 0, 0), false, 1.0f, false, 0);
+    device->Clear(false, cryo::Color4f(0, 0, 0, 0), false, 1.0f, false, 0);
     device->SetBlending(false);
     device->SetDepthTest(false);
     device->SetShader(m_shader);
     device->ResetTextures();
-    ce::eTextureUnit unit = device->BindTexture(m_inputs[0]);
+    cryo::eTextureUnit unit = device->BindTexture(m_inputs[0]);
     m_attribColor->Bind(unit);
     device->RenderFullscreen();
   }

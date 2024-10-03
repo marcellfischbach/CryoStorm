@@ -7,7 +7,7 @@
 
 #include <master.refl.cc>
 
-namespace ce::launcher
+namespace cryo::launcher
 {
 
 bool LauncherModule::Register(const std::vector<std::string> &args, Engine *engine)

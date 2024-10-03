@@ -7,7 +7,7 @@
 #include <ceCore/math/sphere.hh>
 #include <ceCore/math/vector3f.hh>
 
-namespace ce
+namespace cryo
 {
 
 

@@ -4,7 +4,7 @@
 #include <ceCore/class.hh>
 #include <ceCore/graphics/etexturetype.hh>
 
-namespace ce
+namespace cryo
 {
 
 struct iTexture;

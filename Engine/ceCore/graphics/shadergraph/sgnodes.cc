@@ -1,7 +1,7 @@
 
 #include <ceCore/graphics/shadergraph/sgnodes.hh>
 
-namespace ce
+namespace cryo
 {
 
 

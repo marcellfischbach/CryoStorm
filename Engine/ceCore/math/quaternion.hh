@@ -6,7 +6,7 @@
 #include <ceCore/math/math.hh>
 #include <ceCore/math/matrix.hh>
 
-namespace ce
+namespace cryo
 {
 
 struct CS_CORE_API Quaternion

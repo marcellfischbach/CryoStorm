@@ -11,7 +11,7 @@
 #include <ceCore/math/vector4f.hh>
 
 
-namespace ce
+namespace cryo
 {
 
 
@@ -674,11 +674,11 @@ public:
   {
     if (message)
     {
-      printf("ce::Matrix4f: %s\n", message);
+      printf("cryo::Matrix4f: %s\n", message);
     }
     else
     {
-      printf("ce::Matrix4f:\n");
+      printf("cryo::Matrix4f:\n");
     }
 
     printf("  %.2f %.2f %.2f %.2f\n", m00, m01, m02, m03);

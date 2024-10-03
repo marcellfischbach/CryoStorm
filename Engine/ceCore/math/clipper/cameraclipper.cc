@@ -3,7 +3,7 @@
 #include <ceCore/graphics/camera.hh>
 #include <ceCore/graphics/projector.hh>
 
-namespace ce
+namespace cryo
 {
 
 

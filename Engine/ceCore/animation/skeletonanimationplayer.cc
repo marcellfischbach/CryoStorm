@@ -3,7 +3,7 @@
 #include <ceCore/animation/skeletonanimation.hh>
 #include <ceCore/graphics/skeleton.hh>
 
-namespace ce
+namespace cryo
 {
 
 SkeletonAnimationPlayer::SkeletonAnimationPlayer()
@@ -25,12 +25,12 @@ SkeletonAnimationPlayer::~SkeletonAnimationPlayer()
   m_animation = nullptr;
 }
 
-void SkeletonAnimationPlayer::SetSkeleton(ce::Skeleton *skeleton)
+void SkeletonAnimationPlayer::SetSkeleton(cryo::Skeleton *skeleton)
 {
   CS_SET(m_skeleton, skeleton);
 }
 
-void SkeletonAnimationPlayer::SetAnimation(ce::SkeletonAnimation *animation)
+void SkeletonAnimationPlayer::SetAnimation(cryo::SkeletonAnimation *animation)
 {
   CS_SET(m_animation, animation);
 }

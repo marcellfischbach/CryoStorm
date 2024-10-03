@@ -2,7 +2,7 @@
 #include <ceLauncher/window/sdlmouse.hh>
 #include <ceLauncher/window/sdlbutton_map.hh>
 
-namespace ce::launcher
+namespace cryo::launcher
 {
 
 SDLMouse::SDLMouse()

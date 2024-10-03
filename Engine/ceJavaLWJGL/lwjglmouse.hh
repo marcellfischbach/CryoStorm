@@ -7,7 +7,7 @@
 #include <ceCore/input/imouse.hh>
 #include <ceCore/java.hh>
 
-namespace ce::java
+namespace cryo::java
 {
 
 class LwjglMouse : public iMouse

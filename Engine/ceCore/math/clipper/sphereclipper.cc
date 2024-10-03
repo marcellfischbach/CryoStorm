@@ -1,7 +1,7 @@
 
 #include <ceCore/math/clipper/sphereclipper.hh>
 
-namespace ce
+namespace cryo
 {
 
 

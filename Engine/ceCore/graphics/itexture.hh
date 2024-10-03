@@ -7,7 +7,7 @@
 #include <ceCore/graphics/etexturetype.hh>
 #include <ceCore/graphics/epixelformat.hh>
 
-namespace ce
+namespace cryo
 {
 
 struct iSampler;

@@ -8,7 +8,7 @@
 
 #include <Windows.h>
 
-namespace ce::moc
+namespace cryo::moc
 {
 
 

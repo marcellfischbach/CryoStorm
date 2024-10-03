@@ -8,7 +8,7 @@
 #include <ceCore/class.hh>
 #include <ceCore/resource/iassetloader.hh>
 
-namespace ce
+namespace cryo
 {
 
 

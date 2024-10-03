@@ -4,7 +4,7 @@
 #include <ceBullet/bulletexport.hh>
 #include <ceCore/imodule.hh>
 
-namespace ce::bullet
+namespace cryo::bullet
 {
 
 class CS_BULLET_API BulletModule : public iModule

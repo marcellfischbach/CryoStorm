@@ -9,7 +9,7 @@
 #include <ceCore/window/iwindow.hh>
 #include <SDL.h>
 
-namespace ce::launcher
+namespace cryo::launcher
 {
 
 

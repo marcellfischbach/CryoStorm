@@ -8,7 +8,7 @@
 #include <ceCore/resource/assetmanager.hh>
 #include <ceCore/graphics/image.hh>
 
-namespace ce::img
+namespace cryo::img
 {
 
 bool ImgLoaderModule::Register(const std::vector<std::string> &args, Engine *engine)
@@ -33,5 +33,5 @@ bool ImgLoaderModule::Initialize(const std::vector<std::string> &args, Engine *e
 CS_DEFINE_LIBRARY(ceImgLoader)
 {
   printf ("Load library: ceImgLoader\n");
-  return new ce::img::ImgLoaderModule;
+  return new cryo::img::ImgLoaderModule;
 }

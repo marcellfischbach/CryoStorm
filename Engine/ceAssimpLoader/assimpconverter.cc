@@ -11,7 +11,7 @@
 
 #include <vector>
 
-namespace ce::assimp
+namespace cryo::assimp
 {
 
 

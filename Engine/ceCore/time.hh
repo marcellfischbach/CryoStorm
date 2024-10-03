@@ -4,7 +4,7 @@
 #include <ceCore/types.hh>
 #include <stdint.h>
 
-namespace ce
+namespace cryo
 {
 
 class CS_CORE_API Time

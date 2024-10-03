@@ -3,7 +3,7 @@
 #include <ceCore/classregistry.hh>
 
 
-namespace ce
+namespace cryo
 {
 
 

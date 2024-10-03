@@ -12,7 +12,7 @@
 #include <ceCore/graphics/vertexdeclaration.hh>
 #include <vector>
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 
 class GL4VertexBuffer;

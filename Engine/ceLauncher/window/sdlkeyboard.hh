@@ -4,7 +4,7 @@
 #include <ceCore/input/ikeyboard.hh>
 #include <SDL.h>
 
-namespace ce::launcher
+namespace cryo::launcher
 {
 
 class SDLKeyboard : public iKeyboard

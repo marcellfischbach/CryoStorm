@@ -3,7 +3,7 @@
 #include <ceCore/entity/world.hh>
 #include <entity/entitystate.refl.hh>
 
-namespace ce
+namespace cryo
 {
 
 EntityState::EntityState(const std::string &name)

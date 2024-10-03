@@ -13,7 +13,7 @@
 #include <ceCore/graphics/shading/ishaderattribute.hh>
 
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 
 
@@ -58,7 +58,7 @@ void GL4DeferredDirectionalLightRenderer::SetDevice(iDevice *device)
   m_device = QueryClass<GL4Device>(device);
 }
 
-void GL4DeferredDirectionalLightRenderer::SetScene(ce::iGfxScene *scene)
+void GL4DeferredDirectionalLightRenderer::SetScene(cryo::iGfxScene *scene)
 {
   m_scene = scene;
 }

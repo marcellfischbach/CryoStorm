@@ -4,10 +4,10 @@
 #include <ceCore/imodule.hh>
 
 
-namespace ce::launcher
+namespace cryo::launcher
 {
 
-class LauncherModule : public ce::iModule
+class LauncherModule : public cryo::iModule
 {
 public:
   bool Register(const std::vector<std::string> &args, Engine *engine);

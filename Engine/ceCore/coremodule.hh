@@ -4,7 +4,7 @@
 #include <ceCore/coreexport.hh>
 #include <cecore/imodule.hh>
 
-namespace ce
+namespace cryo
 {
 class CS_CORE_API CoreModule : public iModule
 {

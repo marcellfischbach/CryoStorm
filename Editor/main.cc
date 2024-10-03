@@ -36,8 +36,8 @@ int main(int argc, char** argv)
 
 
   printf("Starting with data-path: '%s'\n", dataPath.c_str()); fflush(stdout);
-  ce::VFS::Get()->SetRootPath(dataPath);
-  ce::VFSConfigReader::Read(dataPath, configFilename);
+  cryo::VFS::Get()->SetRootPath(dataPath);
+  cryo::VFSConfigReader::Read(dataPath, configFilename);
 
   MainWindow wnd;
   wnd.resize(1024, 768);

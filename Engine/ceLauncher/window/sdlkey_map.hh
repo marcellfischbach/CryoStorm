@@ -4,7 +4,7 @@
 #include <ceCore/input/key.hh>
 #include <SDL.h>
 
-namespace ce::launcher
+namespace cryo::launcher
 {
 
 static Key Map(SDL_Scancode scanCode)

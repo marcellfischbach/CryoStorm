@@ -16,7 +16,7 @@
 #include <ceOpenGL/gl4/pipeline/deferred/gl4deferredpipeline.hh>
 #include <ceOpenGL/gl4/shadergraph/gl4shadergraphcompiler.hh>
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 
 bool OpenGLModule::Register(const std::vector<std::string> &args, Engine *engine)
@@ -80,5 +80,5 @@ bool OpenGLModule::Initialize(const std::vector<std::string> &args, Engine *engi
 CS_DEFINE_LIBRARY(ceOpenGL)
 {
   printf ("Load library: ceOpenGL\n");
-  return new ce::opengl::OpenGLModule;
+  return new cryo::opengl::OpenGLModule;
 }

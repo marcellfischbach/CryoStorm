@@ -1,7 +1,7 @@
 #include <ceJavaLWJGL/lwjglinputsystem.hh>
 
 
-namespace ce::java
+namespace cryo::java
 {
 
 LwjglInputSystem::LwjglInputSystem(LwjglKeyboard* keyboard, LwjglMouse* mouse)

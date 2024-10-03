@@ -5,7 +5,7 @@
 #include <ceCore/graphics/irendertarget2d.hh>
 #include <ceCore/graphics/ecubeface.hh>
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 
 class GL4Texture2D;

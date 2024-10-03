@@ -4,7 +4,7 @@
 #include <ceOpenGL/openglexport.hh>
 #include <ceCore/graphics/irendertargetcube.hh>
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 
 class GL4TextureCube;

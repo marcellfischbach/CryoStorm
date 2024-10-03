@@ -1,7 +1,7 @@
 
 #include <ceCore/math/clipper/planeclipper.hh>
 
-namespace ce
+namespace cryo
 {
 
 

@@ -6,7 +6,7 @@
 #include "ceCore/class.hh"
 
 
-namespace ce
+namespace cryo
 {
 
 struct iKeyboard

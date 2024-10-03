@@ -5,9 +5,9 @@
 #include <deque>
 #include <list>
 
-#define CHECK_IDX(tokens, idx) if ((idx) >= tokens.size()) throw ce::moc::ParseException(__FILE__, __LINE__, "Index out of bounds " + std::to_string(idx) + " >= " + std::to_string(tokens.size()), 0, 0)
+#define CHECK_IDX(tokens, idx) if ((idx) >= tokens.size()) throw cryo::moc::ParseException(__FILE__, __LINE__, "Index out of bounds " + std::to_string(idx) + " >= " + std::to_string(tokens.size()), 0, 0)
 
-namespace ce::moc
+namespace cryo::moc
 {
 
 Parser::Parser()

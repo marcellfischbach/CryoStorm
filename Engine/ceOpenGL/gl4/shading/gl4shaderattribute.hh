@@ -4,7 +4,7 @@
 #include <ceCore/graphics/shading/ishaderattribute.hh>
 #include <GL/glew.h>
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 
 

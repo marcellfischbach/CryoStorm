@@ -4,7 +4,7 @@
 #include <ceCore/graphics/material/ematerialattributetype.hh>
 #include <ceCore/resource/basecefassetloader.hh>
 
-namespace ce
+namespace cryo
 {
 
 struct iMaterial;

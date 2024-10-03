@@ -9,7 +9,7 @@
 #include <gl/glew.h>
 
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 
 
@@ -124,7 +124,7 @@ GL4RenderMeshGenerator::GL4RenderMeshGenerator()
 GL4RenderMeshGenerator::~GL4RenderMeshGenerator() = default;
 
 
-void GL4RenderMeshGenerator::SetPrimitiveType(ce::ePrimitiveType primitiveType)
+void GL4RenderMeshGenerator::SetPrimitiveType(cryo::ePrimitiveType primitiveType)
 {
   m_primitiveType = primitiveType;
 }

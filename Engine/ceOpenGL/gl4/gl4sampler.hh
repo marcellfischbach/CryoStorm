@@ -6,7 +6,7 @@
 #include <ceCore/graphics/isampler.hh>
 
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 
 

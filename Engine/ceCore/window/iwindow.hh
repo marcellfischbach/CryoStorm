@@ -7,7 +7,7 @@
 #include <string>
 
 
-namespace ce
+namespace cryo
 {
 
 class ResourceLocator;

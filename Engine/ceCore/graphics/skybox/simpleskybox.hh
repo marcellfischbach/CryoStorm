@@ -9,7 +9,7 @@
 #include <ceCore/graphics/irendertargetcube.hh>
 #include <ceCore/graphics/iskyboxrenderer.hh>
 
-namespace ce
+namespace cryo
 {
 
 struct iShader;
@@ -29,7 +29,7 @@ public:
 private:
   bool Prep(iDevice *device);
   bool PrepShader();
-  bool PrepRenderTarget(ce::iDevice *device);
+  bool PrepRenderTarget(cryo::iDevice *device);
 
 private:
   iShader           *m_prepShader    = nullptr;

@@ -3,7 +3,7 @@ package org.crimsonedge.core.entity;
 import org.crimsonedge.core.CeClass;
 import org.crimsonedge.core.CoreObject;
 
-@CeClass("ce::World")
+@CeClass("cryo::World")
 public class World extends CoreObject {
 
     public World() {

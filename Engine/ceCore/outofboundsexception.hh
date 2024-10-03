@@ -4,7 +4,7 @@
 #include <ceCore/coreexport.hh>
 #include <exception>
 
-namespace ce
+namespace cryo
 {
 
 class OutOfBoundsException : public std::exception

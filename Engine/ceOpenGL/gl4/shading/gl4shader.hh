@@ -7,7 +7,7 @@
 #include <string>
 #include <stdexcept>
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 
 CS_CLASS()

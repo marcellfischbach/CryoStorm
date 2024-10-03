@@ -4,7 +4,7 @@
 #include <ceCore/coreexport.hh>
 #include <ceCore/graphics/postprocessing.hh>
 
-namespace ce
+namespace cryo
 {
 
 
@@ -19,11 +19,11 @@ public:
   void Process(iDevice *device, iRenderTarget2D *finalTarget) override;
 
 private:
-  bool RefreshOutputTexture(ce::iDevice *device, iRenderTarget2D *finalTarget);
+  bool RefreshOutputTexture(cryo::iDevice *device, iRenderTarget2D *finalTarget);
 
-  ce::iShader *m_shader;
-  ce::iShaderAttribute *m_attribColor0;
-  ce::iShaderAttribute *m_attribColor1;
+  cryo::iShader *m_shader;
+  cryo::iShaderAttribute *m_attribColor0;
+  cryo::iShaderAttribute *m_attribColor1;
 };
 
 } // ce

@@ -5,7 +5,7 @@
 #include <vector>
 #include <ceCore/graphics/erenderqueue.hh>
 
-namespace ce
+namespace cryo
 {
 
 class GfxMesh;

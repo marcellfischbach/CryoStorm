@@ -6,7 +6,7 @@
 
 
 
-namespace ce::bullet
+namespace cryo::bullet
 {
 
 bool BulletModule::Register(const std::vector<std::string> &args, Engine *engine)
@@ -30,5 +30,5 @@ bool BulletModule::Initialize(const std::vector<std::string> &args, Engine *engi
 CS_DEFINE_LIBRARY(ceBullet)
 {
   printf ("Load library: ceBullet\n");
-  return new ce::bullet::BulletModule;
+  return new cryo::bullet::BulletModule;
 }

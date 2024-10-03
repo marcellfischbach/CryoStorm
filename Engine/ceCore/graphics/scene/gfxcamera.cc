@@ -8,7 +8,7 @@
 #include <ceCore/graphics/itexturecube.hh>
 
 
-namespace ce
+namespace cryo
 {
 
 
@@ -95,7 +95,7 @@ iRenderTarget2D *GfxCamera::GetRenderTarget()
   return m_renderTarget;
 }
 
-void GfxCamera::SetSkyboxRenderer(ce::iSkyboxRenderer *skyboxRenderer)
+void GfxCamera::SetSkyboxRenderer(cryo::iSkyboxRenderer *skyboxRenderer)
 {
   CS_SET(m_skyboxRenderer, skyboxRenderer);
 }

@@ -11,7 +11,7 @@
 #include <ceCore/graphics/itexture.hh>
 #include <array>
 
-namespace ce
+namespace cryo
 {
 
 

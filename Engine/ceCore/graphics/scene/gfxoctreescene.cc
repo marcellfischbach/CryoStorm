@@ -2,7 +2,7 @@
 #include <ceCore/graphics/scene/gfxoctreescene.hh>
 
 
-namespace ce
+namespace cryo
 {
 
 GfxOctreeScene::GfxOctreeScene()

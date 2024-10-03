@@ -17,7 +17,7 @@
 #include <ceCore/graphics/eshadingmode.hh>
 
 
-namespace ce
+namespace cryo
 {
 
 struct iDevice;

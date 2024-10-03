@@ -7,7 +7,7 @@
 #include <ceCore/math/plane.hh>
 #include <vector>
 
-namespace ce
+namespace cryo
 {
 
 class Camera;

@@ -5,7 +5,7 @@
 #include <ceCore/graphics/shading/ishaderattribute.hh>
 #include <ceCore/resource/assetmanager.hh>
 
-namespace ce
+namespace cryo
 {
 
 void SimpleSkybox::Render(iDevice *device)
@@ -47,7 +47,7 @@ bool SimpleSkybox::PrepShader()
   return m_prepShader;
 }
 
-bool SimpleSkybox::PrepRenderTarget(ce::iDevice *device)
+bool SimpleSkybox::PrepRenderTarget(cryo::iDevice *device)
 {
   if (m_skyboxTexture && m_skyboxTarget)
   {

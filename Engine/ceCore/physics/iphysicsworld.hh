@@ -5,7 +5,7 @@
 #include <ceCore/math/matrix4f.hh>
 #include <vector>
 
-namespace ce
+namespace cryo
 {
 
 

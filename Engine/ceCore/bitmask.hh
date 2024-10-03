@@ -10,7 +10,7 @@ struct EnableBitMaskOperators<x> \
     static const bool enable = true; \
 }
 
-namespace ce
+namespace cryo
 {
 
 

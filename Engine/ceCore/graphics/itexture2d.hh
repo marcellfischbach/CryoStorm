@@ -7,7 +7,7 @@
 #include <ceCore/graphics/itexture.hh>
 #include <ceCore/types.hh>
 
-namespace ce
+namespace cryo
 {
 
 class Image;

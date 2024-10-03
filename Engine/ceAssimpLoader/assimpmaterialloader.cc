@@ -7,7 +7,7 @@
 #include <ceCore/graphics/material/materialinstance.hh>
 #include <assimp/scene.h>
 
-namespace ce::assimp
+namespace cryo::assimp
 {
 
 iMaterial *AssimpMaterialLoader::Read(aiMaterial *material)

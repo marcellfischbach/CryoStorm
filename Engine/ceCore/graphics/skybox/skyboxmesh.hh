@@ -2,7 +2,7 @@
 
 #include <ceCore/coreexport.hh>
 
-namespace ce
+namespace cryo
 {
 
 class Camera;

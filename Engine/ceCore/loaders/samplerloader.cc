@@ -6,7 +6,7 @@
 #include <ceCore/objectregistry.hh>
 
 
-namespace ce
+namespace cryo
 {
 
 SamplerLoader::SamplerLoader()

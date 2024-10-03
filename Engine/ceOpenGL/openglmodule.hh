@@ -4,7 +4,7 @@
 #include <ceOpenGL/openglexport.hh>
 #include <ceCore/imodule.hh>
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 
 class CS_OGL_API OpenGLModule : public iModule

@@ -3,7 +3,7 @@
 #include <parser/token.hh>
 
 
-namespace ce::moc
+namespace cryo::moc
 {
 
 #define CHECK_TKN(tkn, tknEnum) if (m_token == tkn)  m_type = tknEnum

@@ -7,7 +7,7 @@
 #include <ceCore/resource/file.hh>
 #include <ceCore/resource/resourcelocator.hh>
 
-namespace ce
+namespace cryo
 {
 
 const int16_t DefaultPriority = 0;

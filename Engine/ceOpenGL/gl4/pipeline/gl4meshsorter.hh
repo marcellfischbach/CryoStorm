@@ -2,7 +2,7 @@
 
 #include "ceCore/graphics/erenderpass.hh"
 
-namespace ce
+namespace cryo
 {
 
 class GfxMesh;

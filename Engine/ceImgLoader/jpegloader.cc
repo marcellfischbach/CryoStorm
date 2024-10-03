@@ -12,7 +12,7 @@ extern "C" {
 #include <jpeglib.h>
 }
 
-namespace ce::img
+namespace cryo::img
 {
 
 
@@ -40,7 +40,7 @@ bool JpegLoader::CanLoad(const Class* cls, const ResourceLocator& locator) const
 
 iObject* JpegLoader::Load(const Class* cls, const ResourceLocator& locator) const
 {
-  iFile* ifile = ce::VFS::Get()->Open(locator, eAM_Read, eOM_Binary);
+  iFile* ifile = cryo::VFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   FILE* infile = ifile->Query<FileSystemFile>()->GetHandle();
 
 

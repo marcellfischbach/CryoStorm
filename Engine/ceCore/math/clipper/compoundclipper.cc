@@ -1,7 +1,7 @@
 
 #include <ceCore/math/clipper/compoundclipper.hh>
 
-namespace ce
+namespace cryo
 {
 
 

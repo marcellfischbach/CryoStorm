@@ -7,7 +7,7 @@
 #include <ceCore/math/math.hh>
 #include <GL/glew.h>
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 GL4Texture2D::GL4Texture2D()
   : iTexture2D(), m_target(GL_TEXTURE_2D), m_name(0), m_width(0), m_height(0), m_sampler(nullptr),

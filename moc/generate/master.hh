@@ -4,7 +4,7 @@
 
 #include <string>
 
-namespace ce::moc
+namespace cryo::moc
 {
 
 class Cache;

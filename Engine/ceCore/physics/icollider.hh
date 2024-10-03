@@ -5,7 +5,7 @@
 #include <ceCore/math/matrix4f.hh>
 #include <ceCore/entity/spatialstate.hh>
 
-namespace ce
+namespace cryo
 {
 
 struct iCollisionShape;

@@ -13,7 +13,7 @@
 #include <ceCore/objectregistry.hh>
 #include <ceCore/resource/assetmanager.hh>
 
-namespace ce
+namespace cryo
 {
 
 void SkyboxMesh::Render(iDevice *device, float size, iTextureCube *texture, iTexture2D *depth)
@@ -33,7 +33,7 @@ void SkyboxMesh::Render(iDevice *device, float size, iTextureCube *texture, iTex
   }
 }
 
-void SkyboxMesh::RenderDeferred(ce::iDevice *device, float size, ce::iTextureCube *texture, ce::iTexture2D *depth)
+void SkyboxMesh::RenderDeferred(cryo::iDevice *device, float size, cryo::iTextureCube *texture, cryo::iTexture2D *depth)
 {
   iRenderMesh *renderMesh = RenderMesh(device);
   iShader     *shader     = ShaderDeferred(device);
@@ -61,7 +61,7 @@ void SkyboxMesh::RenderDeferred(ce::iDevice *device, float size, ce::iTextureCub
   }
 }
 
-void SkyboxMesh::RenderForward(ce::iDevice *device, float size, ce::iTextureCube *texture)
+void SkyboxMesh::RenderForward(cryo::iDevice *device, float size, cryo::iTextureCube *texture)
 {
   iRenderMesh *renderMesh = RenderMesh(device);
   iShader     *shader     = ShaderForward(device);
@@ -85,7 +85,7 @@ void SkyboxMesh::RenderForward(ce::iDevice *device, float size, ce::iTextureCube
 }
 
 
-iRenderMesh *SkyboxMesh::RenderMesh(ce::iDevice *device)
+iRenderMesh *SkyboxMesh::RenderMesh(cryo::iDevice *device)
 {
   if (!m_renderMesh)
   {

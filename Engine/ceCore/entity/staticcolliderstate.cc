@@ -7,7 +7,7 @@
 #include <ceCore/physics/icollider.hh>
 #include <ceCore/objectregistry.hh>
 
-namespace ce
+namespace cryo
 {
 
 

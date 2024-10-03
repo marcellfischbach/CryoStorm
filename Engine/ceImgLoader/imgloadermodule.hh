@@ -4,7 +4,7 @@
 #include <ceImgLoader/imgloaderexport.hh>
 #include <ceCore/imodule.hh>
 
-namespace ce::img
+namespace cryo::img
 {
 
 class CS_IMGLOADER_API ImgLoaderModule : public iModule

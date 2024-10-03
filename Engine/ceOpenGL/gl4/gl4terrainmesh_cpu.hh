@@ -4,13 +4,13 @@
 #include <ceCore/graphics/iterrainmesh.hh>
 #include <ceCore/graphics/vertexdeclaration.hh>
 
-namespace ce
+namespace cryo
 {
 struct iVertexBuffer;
 struct iIndexBuffer;
 }
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 
 

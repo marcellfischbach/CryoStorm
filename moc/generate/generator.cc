@@ -4,7 +4,7 @@
 
 
 
-namespace ce::moc
+namespace cryo::moc
 {
 
 

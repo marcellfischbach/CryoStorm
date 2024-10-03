@@ -5,7 +5,7 @@
 #include <ceOpenGL/openglexport.hh>
 #include <ceCore/graphics/idirectionallight.hh>
 
-namespace ce::opengl
+namespace cryo::opengl
 {
 
 
