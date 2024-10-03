@@ -14,7 +14,7 @@ namespace ce
 
 
 
-class CE_CORE_API VertexDeclaration
+class CS_CORE_API VertexDeclaration
 {
 public:
   struct Attribute 
@@ -41,7 +41,7 @@ public:
   VertexDeclaration(const Attribute* attributes, Size count);
   explicit VertexDeclaration(const std::vector<Attribute>& attributes);
 
-  CE_NODISCARD const std::vector<Attribute>& GetAttributes(uint8_t streamID) const;
+  CS_NODISCARD const std::vector<Attribute>& GetAttributes(uint8_t streamID) const;
 
 private:
   void Init(const Attribute* attributes, Size count);

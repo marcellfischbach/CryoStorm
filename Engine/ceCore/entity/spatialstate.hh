@@ -12,10 +12,10 @@ namespace ce
 {
 
 
-CE_CLASS()
-class CE_CORE_API SpatialState : public CE_SUPER(EntityState)
+CS_CLASS()
+class CS_CORE_API SpatialState : public CS_SUPER(EntityState)
 {
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
 public:
   SpatialState(const std::string &name = std::string(""));
   virtual ~SpatialState();

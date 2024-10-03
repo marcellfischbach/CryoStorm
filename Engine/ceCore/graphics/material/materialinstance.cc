@@ -12,7 +12,7 @@ MaterialInstance::MaterialInstance()
   : iMaterial()
   , m_material(nullptr)
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
 }
 
 
@@ -55,7 +55,7 @@ bool MaterialInstance::Bind(iDevice* device, eRenderPass pass)
 
 void MaterialInstance::SetMaterial(Material* material)
 {
-  CE_SET(m_material, material);
+  CS_SET(m_material, material);
   RebuildAttributes();
 }
 
@@ -186,7 +186,7 @@ void MaterialInstance::Set(Size idx, iTexture* texture)
   }
   Attribute& attr = m_attributes[idx];
   attr.Override = true;
-  CE_SET(attr.Texture, texture);
+  CS_SET(attr.Texture, texture);
 
 }
 

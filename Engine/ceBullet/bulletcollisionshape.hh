@@ -9,11 +9,11 @@ class btCollisionShape;
 namespace ce::bullet
 {
 
-CE_CLASS()
+CS_CLASS()
 
-class CE_BULLET_API BulletCollisionShape : public CE_SUPER(iCollisionShape)
+class CS_BULLET_API BulletCollisionShape : public CS_SUPER(iCollisionShape)
 {
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
   BulletCollisionShape(btCollisionShape * shape);
   ~BulletCollisionShape() override;

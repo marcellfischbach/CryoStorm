@@ -7,10 +7,10 @@
 namespace ce
 {
 
-CE_CLASS(jclass="org.crimsonedge.core.resource.JavaArchive")
-class JavaArchive : public CE_SUPER(iArchive)
+CS_CLASS(jclass="org.crimsonedge.core.resource.JavaArchive")
+class JavaArchive : public CS_SUPER(iArchive)
 {
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
   JavaArchive()  = default;
   JavaArchive(const std::string &name, const std::string &rootPath, int priority);

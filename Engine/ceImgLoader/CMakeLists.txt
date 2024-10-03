@@ -1,6 +1,6 @@
 
 
-add_definitions(-DCE_IMGLOADER_EXPORT)
+add_definitions(-DCS_IMGLOADER_EXPORT)
 add_definitions(-D_USE_MATH_DEFINES)
 
 set(SOURCES
@@ -26,7 +26,7 @@ target_link_libraries(ceImgLoader
         )
 
 add_dependencies(ceImgLoader ceMOC)
-CE_MOC(ceImgLoader)
+CS_MOC(ceImgLoader)
 
 
 install(TARGETS ceImgLoader

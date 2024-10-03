@@ -21,7 +21,7 @@
 #include <ceCore/imodule.hh>
 #include <ceCore/igame.hh>
 
-#ifdef CE_WIN32
+#ifdef CS_WIN32
 
 #include <Windows.h>
 
@@ -33,7 +33,7 @@ namespace ce
 
 void Engine::SetDevice(ce::iDevice *device)
 {
-  CE_SET(m_device, device);
+  CS_SET(m_device, device);
 }
 
 iDevice *Engine::GetDevice()
@@ -43,7 +43,7 @@ iDevice *Engine::GetDevice()
 
 void Engine::SetFrameRenderer(ce::iFrameRenderer *frameRenderer)
 {
-  CE_SET(m_frameRenderer, frameRenderer);
+  CS_SET(m_frameRenderer, frameRenderer);
 }
 
 iFrameRenderer *Engine::GetFrameRenderer()
@@ -53,7 +53,7 @@ iFrameRenderer *Engine::GetFrameRenderer()
 
 void Engine::SetSkyboxRenderer(ce::iSkyboxRenderer *skyboxRenderer)
 {
-  CE_SET(m_skyboxRenderer, skyboxRenderer);
+  CS_SET(m_skyboxRenderer, skyboxRenderer);
 }
 
 iSkyboxRenderer *Engine::GetSkyboxRenderer()
@@ -63,7 +63,7 @@ iSkyboxRenderer *Engine::GetSkyboxRenderer()
 
 void Engine::SetWindow(ce::iWindow *window)
 {
-  CE_SET(m_window, window);
+  CS_SET(m_window, window);
 }
 
 iWindow *Engine::GetWindow()
@@ -73,7 +73,7 @@ iWindow *Engine::GetWindow()
 
 void Engine::SetWorld(ce::World *world)
 {
-  CE_SET(m_world, world);
+  CS_SET(m_world, world);
 }
 
 World *Engine::GetWorld()
@@ -123,7 +123,7 @@ static HMODULE load_module(const std::string &libraryName)
 
 iModule *open_module(const std::string &moduleName)
 {
-#ifdef  CE_WIN32
+#ifdef  CS_WIN32
   std::string dll_name          = moduleName + std::string(".dll");
   std::string load_library_name = moduleName + "_load_library";
 
@@ -151,7 +151,7 @@ iModule *open_module(const std::string &moduleName)
 
 iGame *open_game(const std::string &moduleName)
 {
-#ifdef  CE_WIN32
+#ifdef  CS_WIN32
   std::string dll_name             = moduleName + std::string(".dll");
   std::string create_game_instance = "create_game_instance";
 
@@ -233,7 +233,7 @@ bool Engine::InitializeEngine(const std::vector<std::string> &args, iModule *ext
   CrimsonFile file;
   if (!file.Parse(modulesConfig))
   {
-    CE_RELEASE(modulesConfig);
+    CS_RELEASE(modulesConfig);
     return false;
   }
 
@@ -246,7 +246,7 @@ bool Engine::InitializeEngine(const std::vector<std::string> &args, iModule *ext
       moduleNames.emplace_back(moduleElement->GetTagName());
     }
   }
-  CE_RELEASE(modulesConfig);
+  CS_RELEASE(modulesConfig);
 
 
   return InitializeEngine(args, moduleNames, externalModule);
@@ -363,7 +363,7 @@ bool Engine::ProcessFrame()
 {
   if (!m_renderTarget || m_renderTarget->GetWidth() != m_window->GetWidth() || m_renderTarget->GetHeight() != m_window->GetHeight())
   {
-    CE_RELEASE(m_renderTarget);
+    CS_RELEASE(m_renderTarget);
     m_renderTarget = create_render_target(m_device, m_window->GetWidth(), m_window->GetHeight(), m_multiSamples);
     if (m_renderTarget == nullptr)
     {

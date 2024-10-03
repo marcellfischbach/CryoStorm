@@ -15,14 +15,14 @@ GfxMesh::GfxMesh()
   : iObject()
   , m_skeleton(nullptr)
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
 }
 
 
 GfxMesh::~GfxMesh()
 {
-  CE_RELEASE(m_material);
-  CE_RELEASE(m_mesh);
+  CS_RELEASE(m_material);
+  CS_RELEASE(m_mesh);
   ClearLights();
 }
 
@@ -140,7 +140,7 @@ bool GfxMesh::IsCastShadow() const
 
 void GfxMesh::SetMaterial(iMaterial* material)
 {
-  CE_SET(m_material, material);
+  CS_SET(m_material, material);
 }
 
 iMaterial* GfxMesh::GetMaterial()
@@ -156,7 +156,7 @@ const iMaterial* GfxMesh::GetMaterial() const
 
 void GfxMesh::SetMesh(iRenderMesh* mesh)
 {
-  CE_SET(m_mesh, mesh);
+  CS_SET(m_mesh, mesh);
   UpdateBoundingBox();
 }
 
@@ -270,7 +270,7 @@ bool GfxMesh::IsLightingDirty() const
 
 void GfxMesh::SetSkeleton(ce::Skeleton *skeleton)
 {
-  CE_SET(m_skeleton, skeleton);
+  CS_SET(m_skeleton, skeleton);
 }
 
 Skeleton* GfxMesh::GetSkeleton()

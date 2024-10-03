@@ -121,7 +121,7 @@ CameraClipper::CameraClipper(const Matrix4f &camera, const Matrix4f &projector, 
   }
 }
 
-CE_FORCEINLINE eClippingResult test_plane(const Plane &plane, const Vector3f *pos)
+CS_FORCEINLINE eClippingResult test_plane(const Plane &plane, const Vector3f *pos)
 {
   size_t      out = 0;
   for (size_t i   = 0; i < 8; ++i)

@@ -33,7 +33,7 @@ class GL4PointLight;
 class GL4RenderTarget2D;
 class GL4RenderTargetCube;
 
-class CE_OGL_API GL4PointSMRenderer
+class CS_OGL_API GL4PointSMRenderer
 {
 
 public:

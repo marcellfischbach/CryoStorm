@@ -12,7 +12,7 @@ namespace ce
 
 struct iInputSystem;
 
-class CE_CORE_API Input
+class CS_CORE_API Input
 {
 public:
 

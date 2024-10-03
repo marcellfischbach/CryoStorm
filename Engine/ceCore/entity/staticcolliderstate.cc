@@ -86,7 +86,7 @@ void StaticColliderState::OnDetachedFromWorld(World *world)
     iPhysicsWorld* physWorld = world->GetPhysicsWorld();
     DetachCurrentShapes();
     physWorld->RemoveCollider(m_collider);
-    CE_RELEASE(m_collider);
+    CS_RELEASE(m_collider);
     m_collider = nullptr;
   }
 }

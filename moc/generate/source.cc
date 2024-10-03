@@ -844,7 +844,7 @@ std::string ClassGenerator::GenerateCreateJObject(ce::moc::ClassNode *classNode,
   std::string fns       = Generator::GetFullNamespaceName(nss);
   std::string className = classNode->GetName();
   std::string getter;
-  getter += "#ifdef CE_JAVA\n";
+  getter += "#ifdef CS_JAVA\n";
   getter += "jobject " + fns + className + "::CreateJObject() const\n";
   getter += "{\n";
 

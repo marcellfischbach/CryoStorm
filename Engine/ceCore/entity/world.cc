@@ -24,14 +24,14 @@ World::World()
     , m_physicsUpdateCounter(0.0f)
     , m_rootState(new SpatialState())
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
   SetScene(new GfxQuadtreeScene());
   SetPhysicsWorld(ObjectRegistry::Get<iPhysicsSystem>()->CreateWorld());
 }
 
 void World::SetScene(iGfxScene *scene)
 {
-  CE_SET(m_scene, scene);
+  CS_SET(m_scene, scene);
 }
 
 iGfxScene *World::GetScene()
@@ -46,7 +46,7 @@ const iGfxScene *World::GetScene() const
 
 void World::SetPhysicsWorld(iPhysicsWorld *world)
 {
-  CE_SET(m_physicsWorld, world);
+  CS_SET(m_physicsWorld, world);
 }
 
 iPhysicsWorld *World::GetPhysicsWorld()
@@ -62,7 +62,7 @@ const iPhysicsWorld *World::GetPhysicsWorld() const
 
 void World::SetMainCamera(CameraState *mainCamera)
 {
-  CE_SET(m_mainCamera, mainCamera);
+  CS_SET(m_mainCamera, mainCamera);
 }
 
 CameraState *World::GetMainCamera()

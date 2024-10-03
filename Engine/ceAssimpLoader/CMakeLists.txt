@@ -1,6 +1,6 @@
 
 
-add_definitions(-DCE_ASSIMP_EXPORT)
+add_definitions(-DCS_ASSIMP_EXPORT)
 add_definitions(-D_USE_MATH_DEFINES)
 
 set(SOURCES
@@ -29,7 +29,7 @@ target_link_libraries(ceAssimpLoader
         )
 
 add_dependencies(ceAssimpLoader ceMOC)
-CE_MOC(ceAssimpLoader)
+CS_MOC(ceAssimpLoader)
 
 
 install(TARGETS ceAssimpLoader

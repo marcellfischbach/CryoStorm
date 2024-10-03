@@ -263,7 +263,7 @@ ClassSuperDefinition Parser::ParseSuperDefinition(Tokenizer & tokenizer, size_t 
 
     case eTT_Identifier:
       CHECK_IDX(tokens, idx + 1);
-      if (token.Get() == std::string("CE_SUPER") && idx + 1 < tokens.size() && tokens[idx + 1].GetType() == eTT_ParenOpen)
+      if (token.Get() == std::string("CS_SUPER") && idx + 1 < tokens.size() && tokens[idx + 1].GetType() == eTT_ParenOpen)
       {
         csSuper = true;
         idx += 2;
@@ -747,7 +747,7 @@ TypeDef Parser::GetType(Tokenizer & tokenizer, size_t & idx)
     }
     if (token.GetType() == eTT_Identifier)
     {
-      if (token.Get() == std::string("CE_FORCEINLINE")
+      if (token.Get() == std::string("CS_FORCEINLINE")
         || token.Get() == std::string("inline")
         || token.Get() == std::string("__forceinline"))
       {
@@ -980,13 +980,13 @@ CSMetaNode* Parser::ParseCSMeta(Tokenizer & tokenizer, size_t & idx, ASTNode * p
 
   if (idx + 2 >= tokens.size())
   {
-    throw ParseException(__FILE__, __LINE__, "Malformed CE_FUNCTION", line, column);
+    throw ParseException(__FILE__, __LINE__, "Malformed CS_FUNCTION", line, column);
   }
 
   CHECK_IDX(tokens, idx + 1);
   if (tokens[idx + 1].GetType() != eTT_ParenOpen)
   {
-    throw ParseException(__FILE__, __LINE__, "Malformed CE_FUNCTION", line, column);
+    throw ParseException(__FILE__, __LINE__, "Malformed CS_FUNCTION", line, column);
   }
   idx++;
 
@@ -1054,7 +1054,7 @@ CSMetaNode* Parser::ParseCSMeta(Tokenizer & tokenizer, size_t & idx, ASTNode * p
       break;
     }
   }
-  throw ParseException(__FILE__, __LINE__, "Malformed CE_FUNCTION", line, column);
+  throw ParseException(__FILE__, __LINE__, "Malformed CS_FUNCTION", line, column);
 
 }
 

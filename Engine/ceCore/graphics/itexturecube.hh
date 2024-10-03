@@ -12,8 +12,8 @@ namespace ce
 {
 
 class Image;
-CE_CLASS()
-struct CE_CORE_API iTextureCube : public CE_SUPER(iTexture)
+CS_CLASS()
+struct CS_CORE_API iTextureCube : public CS_SUPER(iTexture)
 {
 
   struct Descriptor
@@ -24,7 +24,7 @@ struct CE_CORE_API iTextureCube : public CE_SUPER(iTexture)
   };
 
 
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
   virtual ~iTextureCube() = default;
 
   virtual bool Initialize(uint16_t size, ePixelFormat format, bool generateMipMaps) = 0;

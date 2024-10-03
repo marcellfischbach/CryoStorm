@@ -13,12 +13,12 @@ GfxLight::GfxLight()
   , m_light(nullptr)
   , m_frame(0)
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
 }
 
 GfxLight::~GfxLight()
 {
-  CE_RELEASE(m_light);
+  CS_RELEASE(m_light);
   m_light = nullptr;
 }
 
@@ -34,7 +34,7 @@ bool GfxLight::IsStatic() const
 
 void GfxLight::SetLight(iLight* light)
 {
-  CE_SET(m_light, light);
+  CS_SET(m_light, light);
 }
 
 iLight * GfxLight::GetLight()

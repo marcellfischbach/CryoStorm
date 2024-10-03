@@ -15,10 +15,10 @@ struct iTextureCube;
 struct iSkyboxRenderer;
 class PostProcessing;
 
-CE_CLASS()
-class CE_CORE_API GfxCamera : public CE_SUPER(iObject)
+CS_CLASS()
+class CS_CORE_API GfxCamera : public CS_SUPER(iObject)
 {
-CE_CLASS_GEN_OBJECT;
+CS_CLASS_GEN_OBJECT;
 public:
   GfxCamera();
   ~GfxCamera() override;

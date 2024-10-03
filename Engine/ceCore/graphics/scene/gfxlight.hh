@@ -13,23 +13,23 @@ namespace ce
 struct iLight;
 
 
-CE_CLASS()
-class CE_CORE_API GfxLight : public CE_SUPER(iObject)
+CS_CLASS()
+class CS_CORE_API GfxLight : public CS_SUPER(iObject)
 {
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
   GfxLight();
   ~GfxLight() override;
 
   void SetStatic(bool _static);
-  CE_NODISCARD bool IsStatic() const;
+  CS_NODISCARD bool IsStatic() const;
 
   void SetLight(iLight * light);
   iLight* GetLight() ;
-  CE_NODISCARD const iLight* GetLight() const;
+  CS_NODISCARD const iLight* GetLight() const;
 
   void SetFrame(uint64_t frame);
-  CE_NODISCARD uint64_t GetFrame() const;
+  CS_NODISCARD uint64_t GetFrame() const;
 
 
 private:

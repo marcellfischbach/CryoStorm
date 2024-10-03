@@ -13,10 +13,10 @@ namespace ce
 class Skeleton;
 class SkeletonAnimation;
 
-CE_CLASS()
-class CE_CORE_API SkeletonAnimationPlayer : public CE_SUPER(iObject)
+CS_CLASS()
+class CS_CORE_API SkeletonAnimationPlayer : public CS_SUPER(iObject)
 {
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
   SkeletonAnimationPlayer();
   ~SkeletonAnimationPlayer() override;

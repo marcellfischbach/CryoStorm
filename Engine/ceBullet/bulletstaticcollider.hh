@@ -14,10 +14,10 @@ namespace ce::bullet
 
 class BulletCollisionShape;
 
-CE_CLASS()
-class BulletStaticCollider : public CE_SUPER(iStaticCollider)
+CS_CLASS()
+class BulletStaticCollider : public CS_SUPER(iStaticCollider)
 {
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
   BulletStaticCollider();
   ~BulletStaticCollider() override;

@@ -7,10 +7,10 @@
 namespace ce
 {
 
-CE_CLASS(jclass = "org.crimsonedge.core.entity.JavaState")
-class CE_CORE_API JavaState : public CE_SUPER(EntityState)
+CS_CLASS(jclass = "org.crimsonedge.core.entity.JavaState")
+class CS_CORE_API JavaState : public CS_SUPER(EntityState)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 public:
   JavaState();
   ~JavaState() override = default;

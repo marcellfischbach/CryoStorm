@@ -32,7 +32,7 @@ bool AssimpLoaderModule::Initialize(const std::vector<std::string> &args, Engine
 
 }
 
-CE_DEFINE_LIBRARY(ceAssimpLoader)
+CS_DEFINE_LIBRARY(ceAssimpLoader)
 {
   printf ("Load library: ceAssimpLoader\n");
   return new ce::assimp::AssimpLoaderModule;

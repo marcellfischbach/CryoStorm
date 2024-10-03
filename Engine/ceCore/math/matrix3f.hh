@@ -11,7 +11,7 @@ namespace ce
 {
 
 
-struct CE_CORE_API Matrix3f
+struct CS_CORE_API Matrix3f
 {
 public:
   float m00;
@@ -25,43 +25,43 @@ public:
   float m22;
 
 public:
-  CE_FORCEINLINE Matrix3f(const Matrix3f &m) = default;
+  CS_FORCEINLINE Matrix3f(const Matrix3f &m) = default;
 
-  CE_FORCEINLINE explicit Matrix3f(float m00 = 1.0f, float m01 = 0.0f, float m02 = 0.0f, float m10 = 0.0f, float m11 = 1.0f,
+  CS_FORCEINLINE explicit Matrix3f(float m00 = 1.0f, float m01 = 0.0f, float m02 = 0.0f, float m10 = 0.0f, float m11 = 1.0f,
                                     float m12 = 0.0f, float m20 = 0.0f, float m21 = 0.0f, float m22 = 1.0f)
       : m00(m00), m01(m01), m02(m02), m10(m10), m11(m11), m12(m12), m20(m20), m21(m21), m22(m22)
   {
 
   }
 
-  CE_FORCEINLINE explicit Matrix3f(const float *f)
+  CS_FORCEINLINE explicit Matrix3f(const float *f)
       : m00(f[0]), m01(f[1]), m02(f[2]), m10(f[3]), m11(f[4]), m12(f[5]), m20(f[6]), m21(f[7]), m22(f[8])
   {
   }
 
 
-  CE_FORCEINLINE void SetXAxis(float x, float y, float z)
+  CS_FORCEINLINE void SetXAxis(float x, float y, float z)
   {
     m00 = x;
     m01 = y;
     m02 = z;
   }
 
-  CE_FORCEINLINE void SetXAxis(const Vector3f &v)
+  CS_FORCEINLINE void SetXAxis(const Vector3f &v)
   {
     m00 = v.x;
     m01 = v.y;
     m02 = v.z;
   }
 
-  CE_FORCEINLINE void SetYAxis(float x, float y, float z)
+  CS_FORCEINLINE void SetYAxis(float x, float y, float z)
   {
     m10 = x;
     m11 = y;
     m12 = z;
   }
 
-  CE_FORCEINLINE void SetYAxis(const Vector3f &v)
+  CS_FORCEINLINE void SetYAxis(const Vector3f &v)
   {
     m10 = v.x;
     m11 = v.y;
@@ -69,14 +69,14 @@ public:
   }
 
 
-  CE_FORCEINLINE void SetZAxis(float x, float y, float z)
+  CS_FORCEINLINE void SetZAxis(float x, float y, float z)
   {
     m20 = x;
     m21 = y;
     m22 = z;
   }
 
-  CE_FORCEINLINE void SetZAxis(const Vector3f &v)
+  CS_FORCEINLINE void SetZAxis(const Vector3f &v)
   {
     m20 = v.x;
     m21 = v.y;
@@ -85,23 +85,23 @@ public:
 
 
 
-  CE_NODISCARD CE_FORCEINLINE Vector3f GetXAxis() const
+  CS_NODISCARD CS_FORCEINLINE Vector3f GetXAxis() const
   {
     return Vector3f(m00, m01, m02);
   }
 
-  CE_NODISCARD CE_FORCEINLINE Vector3f GetYAxis() const
+  CS_NODISCARD CS_FORCEINLINE Vector3f GetYAxis() const
   {
     return Vector3f(m10, m11, m12);
   }
 
 
-  CE_NODISCARD CE_FORCEINLINE Vector3f GetZAxis() const
+  CS_NODISCARD CS_FORCEINLINE Vector3f GetZAxis() const
   {
     return Vector3f(m20, m21, m22);
   }
 
-  CE_NODISCARD CE_FORCEINLINE Vector3f GetAxis(eAxis axis) const
+  CS_NODISCARD CS_FORCEINLINE Vector3f GetAxis(eAxis axis) const
   {
     switch (axis)
     {
@@ -113,9 +113,9 @@ public:
   }
 
 
-  CE_FORCEINLINE Matrix3f &operator=(const Matrix3f &m) = default;
+  CS_FORCEINLINE Matrix3f &operator=(const Matrix3f &m) = default;
 
-  CE_FORCEINLINE friend Matrix3f operator*(const Matrix3f &m0, const Matrix3f &m1)
+  CS_FORCEINLINE friend Matrix3f operator*(const Matrix3f &m0, const Matrix3f &m1)
   {
     float mm00 = m0.m00 * m1.m00 + m0.m10 * m1.m01 + m0.m20 * m1.m02;
     float mm01 = m0.m01 * m1.m00 + m0.m11 * m1.m01 + m0.m21 * m1.m02;
@@ -136,7 +136,7 @@ public:
   }
 
 
-  CE_FORCEINLINE friend Vector3f operator*(const Matrix3f &m, const Vector3f &v)
+  CS_FORCEINLINE friend Vector3f operator*(const Matrix3f &m, const Vector3f &v)
   {
     float x = m.m00 * v.x + m.m10 * v.y + m.m20 * v.z;
     float y = m.m01 * v.x + m.m11 * v.y + m.m21 * v.z;

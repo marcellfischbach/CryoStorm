@@ -4,7 +4,7 @@
 #include <ceCore/resource/vfsconfigreader.hh>
 #include <ceCore/igame.hh>
 #include <ceLauncher/launchermodule.hh>
-#ifdef CE_WIN32
+#ifdef CS_WIN32
 #include <Windows.h>
 #endif
 

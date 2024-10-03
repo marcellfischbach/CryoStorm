@@ -7,15 +7,15 @@ namespace ce
 {
 
 template<typename T>
-class CE_CORE_API Hysteresis
+class CS_CORE_API Hysteresis
 {
 public:
-  CE_FORCEINLINE Hysteresis()
+  CS_FORCEINLINE Hysteresis()
   {
 
   }
 
-  CE_FORCEINLINE void Setup(const& T low, const& T high, const& T value)
+  CS_FORCEINLINE void Setup(const& T low, const& T high, const& T value)
   {
     m_low = low;
     m_high = high;
@@ -29,7 +29,7 @@ public:
     }
   }
 
-  CE_FORCEINLINE bool UpdateValue(const& T value)
+  CS_FORCEINLINE bool UpdateValue(const& T value)
   {
     m_value = value;
     switch (m_state)
@@ -49,12 +49,12 @@ public:
     }
     return false;
   }
-  CE_NODISCARD CE_FORCEINLINE bool IsLow() const
+  CS_NODISCARD CS_FORCEINLINE bool IsLow() const
   {
     return m_state == Low;
   }
 
-  CE_NODISCARD CE_FORCEINLINE bool IsHigh() const
+  CS_NODISCARD CS_FORCEINLINE bool IsHigh() const
   {
     return m_state == Hight;
   }

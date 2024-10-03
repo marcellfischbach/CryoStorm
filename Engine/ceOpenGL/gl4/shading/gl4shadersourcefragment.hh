@@ -9,16 +9,16 @@ namespace ce::opengl
 {
 
 
-CE_CLASS()
-class GL4ShaderSourceFragment :  public CE_SUPER(iObject)
+CS_CLASS()
+class GL4ShaderSourceFragment :  public CS_SUPER(iObject)
 {
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
   GL4ShaderSourceFragment();
   ~GL4ShaderSourceFragment() override = default;
 
   void SetLines(const std::vector<std::string> &lines);
-  CE_NODISCARD const std::vector<std::string>& GetLines() const;
+  CS_NODISCARD const std::vector<std::string>& GetLines() const;
 
 private:
   std::vector<std::string> m_lines;

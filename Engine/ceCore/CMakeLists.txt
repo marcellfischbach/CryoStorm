@@ -1,5 +1,5 @@
 
-add_definitions(-DCE_CORE_EXPORT)
+add_definitions(-DCS_CORE_EXPORT)
 add_definitions(-D_USE_MATH_DEFINES)
 
 set(SOURCES
@@ -328,7 +328,7 @@ if (${JAVA_BINDINGS})
 endif ()
 
 add_dependencies(ceCore ceMOC)
-CE_MOC(ceCore)
+CS_MOC(ceCore)
 
 
 install(TARGETS ceCore

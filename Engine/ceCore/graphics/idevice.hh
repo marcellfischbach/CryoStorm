@@ -31,10 +31,10 @@ namespace ce
 
 struct iShader;
 
-CE_CLASS(jclass = "org.crimsonedge.core.graphics.IDevice")
-struct CE_CORE_API iDevice : public CE_SUPER(iObject)
+CS_CLASS(jclass = "org.crimsonedge.core.graphics.IDevice")
+struct CS_CORE_API iDevice : public CS_SUPER(iObject)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 
   virtual ~iDevice()
   {}
@@ -145,9 +145,9 @@ CE_CLASS_GEN;
 
 #if _DEBUG
   virtual void ResetDebug() = 0;
-  CE_NODISCARD virtual Size GetNumberOfDrawCalls() const = 0;
-  CE_NODISCARD virtual Size GetNumberOfTriangles() const = 0;
-  CE_NODISCARD virtual Size GetNumberOfShaderStateChanges() const = 0;
+  CS_NODISCARD virtual Size GetNumberOfDrawCalls() const = 0;
+  CS_NODISCARD virtual Size GetNumberOfTriangles() const = 0;
+  CS_NODISCARD virtual Size GetNumberOfShaderStateChanges() const = 0;
 #endif
 
 

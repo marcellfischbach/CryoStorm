@@ -33,7 +33,7 @@ iObject *TextFileLoader::Load(const ce::Class *cls, const ce::ResourceLocator &l
 
   file->Read(sizeof(char), size, buffer);
 
-  CE_RELEASE(file);
+  CS_RELEASE(file);
   auto textFile = new TextFile();
   textFile->SetContent(std::string(buffer));
   return textFile;

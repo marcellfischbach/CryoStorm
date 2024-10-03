@@ -20,10 +20,10 @@ namespace ce
 
 class Material;
 
-CE_CLASS()
-class CE_CORE_API MaterialInstance : public CE_SUPER(iMaterial)
+CS_CLASS()
+class CS_CORE_API MaterialInstance : public CS_SUPER(iMaterial)
 {
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
 
   MaterialInstance();

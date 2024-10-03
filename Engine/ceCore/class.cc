@@ -68,7 +68,7 @@ ce::iObject* iObjectClass::CreateInstance() const
 Object::Object()
   : ce::iObject()
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
 }
 
 Object::~Object()

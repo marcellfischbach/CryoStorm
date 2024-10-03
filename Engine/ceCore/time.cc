@@ -1,6 +1,6 @@
 
 #include <ceCore/time.hh>
-#ifdef CE_WIN32
+#ifdef CS_WIN32
 #include <windows.h>
 static const uint64_t SECS_IN_MS = 1000;
 static const uint64_t MIN_IN_MS = 60 * SECS_IN_MS;
@@ -14,7 +14,7 @@ namespace ce
 
 uint64_t Time::GetTime()
 {
-#ifdef CE_WIN32
+#ifdef CS_WIN32
 
   LARGE_INTEGER ticks, frequency;
 

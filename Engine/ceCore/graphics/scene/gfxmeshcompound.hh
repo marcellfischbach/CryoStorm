@@ -8,10 +8,10 @@
 namespace ce
 {
 
-CE_CLASS()
-class CE_CORE_API GfxMeshCompound : public CE_SUPER(GfxMesh)
+CS_CLASS()
+class CS_CORE_API GfxMeshCompound : public CS_SUPER(GfxMesh)
 {
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
 public:
   GfxMeshCompound();
   ~GfxMeshCompound() override;

@@ -10,10 +10,10 @@ namespace ce
 struct iDevice;
 struct iTextureCube;
 
-CE_CLASS()
-struct CE_CORE_API iSkyboxRenderer : CE_SUPER(iObject)
+CS_CLASS()
+struct CS_CORE_API iSkyboxRenderer : CS_SUPER(iObject)
 {
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
 
   ~iSkyboxRenderer() override = default;
 

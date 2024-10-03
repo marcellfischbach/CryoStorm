@@ -13,10 +13,10 @@ namespace ce
 class ResourceLocator;
 
 struct WndDesc;
-CE_CLASS()
-struct CE_CORE_API iWindow : public iObject
+CS_CLASS()
+struct CS_CORE_API iWindow : public iObject
 {
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
 
   ~iWindow() override {  }
 

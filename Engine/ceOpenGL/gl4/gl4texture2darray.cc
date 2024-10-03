@@ -15,7 +15,7 @@ GL4Texture2DArray::GL4Texture2DArray()
   , m_layer(0)
   , m_sampler(nullptr)
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
   glGenTextures(1, &m_name);
 }
 
@@ -136,7 +136,7 @@ void GL4Texture2DArray::Data(uint16_t layer, uint16_t level, uint16_t x, uint16_
 
 void GL4Texture2DArray::SetSampler(iSampler* sampler)
 {
-  CE_SET(m_sampler, sampler);
+  CS_SET(m_sampler, sampler);
 }
 
 iSampler* GL4Texture2DArray::GetSampler()

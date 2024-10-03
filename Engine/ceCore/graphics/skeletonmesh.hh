@@ -7,17 +7,17 @@
 namespace ce
 {
 
-CE_CLASS()
-class CE_CORE_API SkeletonMesh : public CE_SUPER(Mesh)
+CS_CLASS()
+class CS_CORE_API SkeletonMesh : public CS_SUPER(Mesh)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 public:
   SkeletonMesh();
   ~SkeletonMesh() override = default;
 
 
-  CE_NODISCARD Skeleton &GetSkeleton ();
-  CE_NODISCARD const Skeleton &GetSkeleton () const;
+  CS_NODISCARD Skeleton &GetSkeleton ();
+  CS_NODISCARD const Skeleton &GetSkeleton () const;
 
 
 private:

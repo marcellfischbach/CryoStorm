@@ -10,7 +10,7 @@ namespace ce
 {
 
 class SpatialState;
-class CE_CORE_API Transform
+class CS_CORE_API Transform
 {
 public:
   Transform(SpatialState *state,

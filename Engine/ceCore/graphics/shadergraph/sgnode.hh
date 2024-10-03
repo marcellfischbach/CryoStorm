@@ -18,22 +18,22 @@ class SGNode;
 class SGNodeInput;
 class SGNodeOutput;
 
-CE_CLASS()
-class CE_CORE_API SGNodeIO : public CE_SUPER(iObject)
+CS_CLASS()
+class CS_CORE_API SGNodeIO : public CS_SUPER(iObject)
 {
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
-  CE_NODISCARD const SGNode *GetNode() const
+  CS_NODISCARD const SGNode *GetNode() const
   { return m_node; }
-  CE_NODISCARD SGNode *GetNode()
+  CS_NODISCARD SGNode *GetNode()
   { return m_node; }
 
-  CE_NODISCARD const std::string &GetName() const
+  CS_NODISCARD const std::string &GetName() const
   { return m_name; }
 
   void SetTypes(eSGValueType types)
   { m_types = types; }
-  CE_NODISCARD eSGValueType GetTypes() const
+  CS_NODISCARD eSGValueType GetTypes() const
   { return m_types; }
 
 protected:
@@ -50,10 +50,10 @@ private:
 
 };
 
-CE_CLASS()
-class CE_CORE_API SGNodeOutput : public CE_SUPER(SGNodeIO)
+CS_CLASS()
+class CS_CORE_API SGNodeOutput : public CS_SUPER(SGNodeIO)
 {
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
 public:
   SGNodeOutput(SGNode *node, const std::string &name) : SGNodeIO(node, name)
   {}
@@ -65,10 +65,10 @@ public:
   { m_destinations.insert(input); }
   void Remove(SGNodeInput *input)
   { m_destinations.erase(input); }
-  CE_NODISCARD const std::set<SGNodeInput *> &GetInputs() const
+  CS_NODISCARD const std::set<SGNodeInput *> &GetInputs() const
   { return m_destinations; }
 
-  CE_NODISCARD eSGValueType GetValueType() const
+  CS_NODISCARD eSGValueType GetValueType() const
   {
     return m_valueType;
   }
@@ -83,10 +83,10 @@ private:
   std::set<SGNodeInput *> m_destinations;
 };
 
-CE_CLASS()
-class CE_CORE_API SGNodeInput : public CE_SUPER(SGNodeIO)
+CS_CLASS()
+class CS_CORE_API SGNodeInput : public CS_SUPER(SGNodeIO)
 {
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
 public:
   SGNodeInput(SGNode *node, const std::string &name) : SGNodeIO(node, name)
   {}
@@ -94,11 +94,11 @@ public:
 
   void SetSource(SGNodeOutput *output)
   { m_source = output; }
-  CE_NODISCARD SGNodeOutput *GetSource()
+  CS_NODISCARD SGNodeOutput *GetSource()
   { return m_source; }
-  CE_NODISCARD const SGNodeOutput *GetSource() const
+  CS_NODISCARD const SGNodeOutput *GetSource() const
   { return m_source; }
-  CE_NODISCARD float GetScalar() const
+  CS_NODISCARD float GetScalar() const
   {
     return m_scalar;
   }
@@ -116,10 +116,10 @@ private:
 };
 
 
-CE_CLASS()
-class CE_CORE_API SGNode : public CE_SUPER(iObject)
+CS_CLASS()
+class CS_CORE_API SGNode : public CS_SUPER(iObject)
 {
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 
 public:
   ~SGNode() override = default;

@@ -14,10 +14,10 @@ namespace ce
 
 
 
-CE_CLASS()
-class JavaFile : public CE_SUPER(iFile)
+CS_CLASS()
+class JavaFile : public CS_SUPER(iFile)
 {
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
   const std::string &GetName() const override;
   bool Open(eAccessMode accessMode, eOpenMode openMode) override;

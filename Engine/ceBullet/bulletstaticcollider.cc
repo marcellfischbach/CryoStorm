@@ -16,7 +16,7 @@ BulletStaticCollider::BulletStaticCollider()
   m_collisionObject->setFriction(1.0f);
   m_collisionObject->setRollingFriction(0.1f);
 
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
 }
 
 BulletStaticCollider::~BulletStaticCollider()

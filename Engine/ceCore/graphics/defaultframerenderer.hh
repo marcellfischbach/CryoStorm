@@ -9,10 +9,10 @@ namespace ce
 
 struct iRenderPipeline;
 
-CE_CLASS()
-class DefaultFrameRenderer : public CE_SUPER(iFrameRenderer)
+CS_CLASS()
+class DefaultFrameRenderer : public CS_SUPER(iFrameRenderer)
 {
-CE_CLASS_GEN_OBJECT;
+CS_CLASS_GEN_OBJECT;
 public:
   DefaultFrameRenderer();
   ~DefaultFrameRenderer() override = default;

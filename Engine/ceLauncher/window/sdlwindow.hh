@@ -15,10 +15,10 @@ namespace ce::launcher
 
 
 
-CE_CLASS()
-class SDLWindow : public CE_SUPER(iWindow)
+CS_CLASS()
+class SDLWindow : public CS_SUPER(iWindow)
 {
-CE_CLASS_GEN_OBJECT;
+CS_CLASS_GEN_OBJECT;
 
 public:
   bool Initialize ();

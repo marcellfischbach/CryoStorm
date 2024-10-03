@@ -17,10 +17,10 @@ struct iMaterial;
 struct iRenderMesh;
 class Skeleton;
 
-CE_CLASS()
-class CE_CORE_API GfxMesh : public CE_SUPER(iObject)
+CS_CLASS()
+class CS_CORE_API GfxMesh : public CS_SUPER(iObject)
 {
-CE_CLASS_GEN_OBJECT;
+CS_CLASS_GEN_OBJECT;
 public:
   struct Light
   {
@@ -35,49 +35,49 @@ public:
   ~GfxMesh() override;
 
   void SetBatchable(bool batchable);
-  CE_NODISCARD bool IsBatchable() const;
+  CS_NODISCARD bool IsBatchable() const;
 
   void SetStatic(bool _static);
-  CE_NODISCARD bool IsStatic() const;
+  CS_NODISCARD bool IsStatic() const;
 
   void SetReceiveShadow(bool receiveShadow);
-  CE_NODISCARD bool IsReceiveShadow() const;
+  CS_NODISCARD bool IsReceiveShadow() const;
   void SetCastShadow(bool castShadow);
-  CE_NODISCARD bool IsCastShadow() const;
+  CS_NODISCARD bool IsCastShadow() const;
 
   void SetMaterial(iMaterial *material);
-  CE_NODISCARD iMaterial *GetMaterial();
-  CE_NODISCARD const iMaterial *GetMaterial() const;
+  CS_NODISCARD iMaterial *GetMaterial();
+  CS_NODISCARD const iMaterial *GetMaterial() const;
 
   void SetMesh(iRenderMesh *mesh);
   iRenderMesh *GetMesh();
-  CE_NODISCARD const iRenderMesh *GetMesh() const;
+  CS_NODISCARD const iRenderMesh *GetMesh() const;
 
   void SetModelMatrix(const Matrix4f &modelMatrix);
-  CE_NODISCARD const Matrix4f &GetModelMatrix() const;
+  CS_NODISCARD const Matrix4f &GetModelMatrix() const;
 
   void ClearLights();
   void AddLight(GfxLight *light, float incluence);
   void RemoveLight(GfxLight *light);
   void SortAndLimitLights(Size size);
-  CE_NODISCARD Size GetNumberOfLights() const;
-  CE_NODISCARD const std::vector<Light> &GetLights() const;
+  CS_NODISCARD Size GetNumberOfLights() const;
+  CS_NODISCARD const std::vector<Light> &GetLights() const;
 
-  CE_NODISCARD const BoundingBox &GetBoundingBox() const;
+  CS_NODISCARD const BoundingBox &GetBoundingBox() const;
 
   void Render(iDevice *device, eRenderPass pass);
   void RenderUnlit(iDevice *device, eRenderPass pass);
   void RenderForward(iDevice *device, eRenderPass pass, const GfxLight **lights, Size numberOfLights);
 
   void SetFrame(uint64_t frame);
-  CE_NODISCARD uint64_t GetFrame() const;
+  CS_NODISCARD uint64_t GetFrame() const;
 
   void SetLightingDirty(bool lightingDirty);
-  CE_NODISCARD bool IsLightingDirty() const;
+  CS_NODISCARD bool IsLightingDirty() const;
 
   void SetSkeleton(Skeleton *skeleton);
-  CE_NODISCARD Skeleton *GetSkeleton();
-  CE_NODISCARD const Skeleton *GetSkeleton() const;
+  CS_NODISCARD Skeleton *GetSkeleton();
+  CS_NODISCARD const Skeleton *GetSkeleton() const;
 
 
 private:

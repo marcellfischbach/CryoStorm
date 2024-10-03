@@ -13,7 +13,7 @@ enum class eSGValueType
   Vector3   = 0x0004,
   Vector4   = 0x0008,
   All       = 0xffff,
-} CE_ENABLE_BITMASK(eSGValueType);
+} CS_ENABLE_BITMASK(eSGValueType);
 
 
 }

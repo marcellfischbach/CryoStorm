@@ -86,7 +86,7 @@ void RigidBodyState::OnDetachedFromWorld(World* world)
     DetachCurrentShapes();
     m_dynamicCollider->SetUserData(nullptr);
     physWorld->RemoveCollider(m_dynamicCollider);
-    CE_RELEASE(m_dynamicCollider);
+    CS_RELEASE(m_dynamicCollider);
     m_dynamicCollider = nullptr;
   }
 }

@@ -11,12 +11,12 @@ MirrorHandler::MirrorHandler()
 
 MirrorHandler::~MirrorHandler()
 {
-  CE_RELEASE(m_cameraState);
+  CS_RELEASE(m_cameraState);
 }
 
 void MirrorHandler::SetCameraState(ce::SpatialState *cameraState)
 {
-  CE_SET(m_cameraState, cameraState);
+  CS_SET(m_cameraState, cameraState);
 }
 
 

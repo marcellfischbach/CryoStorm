@@ -13,7 +13,7 @@ Entity::Entity(const std::string &name)
     , m_parent(nullptr)
     , m_world(nullptr)
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
 }
 
 Entity::~Entity()
@@ -42,7 +42,7 @@ void Entity::SetWorld(World *world)
         state->DetachFromWorld(m_world);
       }
     }
-    CE_SET(m_world, world);
+    CS_SET(m_world, world);
     if (m_world)
     {
       for (auto state: m_states)
@@ -312,7 +312,7 @@ void Entity::SetRoot(SpatialState *rootState)
   {
     m_rootState->DetachSelf();
   }
-  CE_SET(m_rootState, rootState);
+  CS_SET(m_rootState, rootState);
   SpatialState *parentRoot = GetAbsolutParentRoot();
   if (parentRoot)
   {

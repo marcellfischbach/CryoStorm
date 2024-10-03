@@ -13,10 +13,10 @@ namespace ce
 
 struct iDevice;
 
-CE_CLASS()
-class CE_CORE_API Projector : public CE_SUPER(iObject)
+CS_CLASS()
+class CS_CORE_API Projector : public CS_SUPER(iObject)
 {
-CE_CLASS_GEN_OBJECT;
+CS_CLASS_GEN_OBJECT;
 public:
   Projector();
   ~Projector() override = default;
@@ -26,12 +26,12 @@ public:
   void UpdateOrtho(float left, float right, float bottom, float top, float near, float far);
 
   void GetPoints(float depth, Vector3f* out) const;
-  CE_NODISCARD float GetLeft () const;
-  CE_NODISCARD float GetRight () const;
-  CE_NODISCARD float GetBottom () const;
-  CE_NODISCARD float GetTop () const;
-  CE_NODISCARD float GetNear() const;
-  CE_NODISCARD float GetFar() const;
+  CS_NODISCARD float GetLeft () const;
+  CS_NODISCARD float GetRight () const;
+  CS_NODISCARD float GetBottom () const;
+  CS_NODISCARD float GetTop () const;
+  CS_NODISCARD float GetNear() const;
+  CS_NODISCARD float GetFar() const;
 
   void Bind(iDevice* device) const;
   Matrix4f GetProjectionMatrix(iDevice *device) const;

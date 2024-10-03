@@ -10,7 +10,7 @@ namespace ce
 {
 
 
-class CE_CORE_API CompoundClipper : public iClipper
+class CS_CORE_API CompoundClipper : public iClipper
 {
 public:
   explicit CompoundClipper();
@@ -19,9 +19,9 @@ public:
   void AddClipper(const iClipper* clipper);
 
 
-  CE_NODISCARD eClippingResult Test(const BoundingBox& bbox) const override;
-  CE_NODISCARD eClippingResult Test(const Sphere& sphere) const override;
-  CE_NODISCARD eClippingResult Test(const Vector3f& p) const override;
+  CS_NODISCARD eClippingResult Test(const BoundingBox& bbox) const override;
+  CS_NODISCARD eClippingResult Test(const Sphere& sphere) const override;
+  CS_NODISCARD eClippingResult Test(const Vector3f& p) const override;
 
 private:
 

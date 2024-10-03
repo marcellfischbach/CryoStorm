@@ -8,10 +8,10 @@
 namespace ce
 {
 
-CE_CLASS()
-class CE_CORE_API FileSystemFile : public CE_SUPER(iFile)
+CS_CLASS()
+class CS_CORE_API FileSystemFile : public CS_SUPER(iFile)
 {
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
   FileSystemFile(const std::string & path);
 

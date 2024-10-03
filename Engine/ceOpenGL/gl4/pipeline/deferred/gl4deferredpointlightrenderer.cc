@@ -228,7 +228,7 @@ GL4RenderTarget2D *GL4DeferredPointLightRenderer::GetShadowMap()
   }
 
   GL4RenderTarget2D *target = m_shadowRenderer.CreateShadowMap();
-  CE_SET(m_shadowMap, target);
+  CS_SET(m_shadowMap, target);
   return m_shadowMap;
 }
 

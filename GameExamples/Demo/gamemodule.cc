@@ -3,7 +3,7 @@
 #include "gamemodule.hh"
 #include "master.refl.cc"
 
-CE_DEFINE_LIBRARY(ceGame)
+CS_DEFINE_LIBRARY(ceGame)
 {
   return new GameModule();
 }

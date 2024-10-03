@@ -8,10 +8,10 @@
 namespace ce
 {
 
-CE_CLASS()
-class CE_CORE_API DebugCache : public CE_SUPER(iObject)
+CS_CLASS()
+class CS_CORE_API DebugCache : public CS_SUPER(iObject)
 {
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
   DebugCache();
   ~DebugCache() override = default;
@@ -31,7 +31,7 @@ private:
 };
 
 
-class CE_CORE_API ObjectRegistry
+class CS_CORE_API ObjectRegistry
 {
 public:
 

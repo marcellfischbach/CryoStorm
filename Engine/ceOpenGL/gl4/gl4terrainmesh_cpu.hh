@@ -14,10 +14,10 @@ namespace ce::opengl
 {
 
 
-CE_CLASS()
-class GL4TerrainMeshCPU : public CE_SUPER(iTerrainMesh)
+CS_CLASS()
+class GL4TerrainMeshCPU : public CS_SUPER(iTerrainMesh)
 {
-CE_CLASS_GEN_OBJECT;
+CS_CLASS_GEN_OBJECT;
 public:
   struct Line
   {
@@ -69,14 +69,14 @@ public:
                     eTerrainSize patchSize);
   ~GL4TerrainMeshCPU() override = default;
 
-  CE_NODISCARD virtual const BoundingBox& GetBoundingBox() const override;
-  CE_NODISCARD virtual const VertexDeclaration& GetVertexDeclaration() const override;
+  CS_NODISCARD virtual const BoundingBox& GetBoundingBox() const override;
+  CS_NODISCARD virtual const VertexDeclaration& GetVertexDeclaration() const override;
   void SetReferencePoint(const Vector3f& refPoint) override;
 
   void Render(iDevice* graphics, eRenderPass pass) override;
 
 #if _DEBUG
-  CE_NODISCARD  Size GetNumberOfTriangles() const override;
+  CS_NODISCARD  Size GetNumberOfTriangles() const override;
 #endif
 
 private:
@@ -98,10 +98,10 @@ private:
   Vector3f                  m_referencePoint;
 };
 
-CE_CLASS()
-class GL4TerrainMeshGeneratorCPU : public CE_SUPER(iTerrainMeshGenerator)
+CS_CLASS()
+class GL4TerrainMeshGeneratorCPU : public CS_SUPER(iTerrainMeshGenerator)
 {
-CE_CLASS_GEN_OBJECT;
+CS_CLASS_GEN_OBJECT;
 public:
   GL4TerrainMeshGeneratorCPU();
   ~GL4TerrainMeshGeneratorCPU() override = default;

@@ -52,9 +52,9 @@ GL4RenderMesh::GL4RenderMesh(uint32_t vao,
     , m_boundingBox(boundingBox)
     , m_vertexCount(vertexCount)
 {
-  CE_CLASS_GEN_CONSTR;
-  CE_SET(m_vertexBuffer, vb);
-  CE_SET(m_indexBuffer, ib);
+  CS_CLASS_GEN_CONSTR;
+  CS_SET(m_vertexBuffer, vb);
+  CS_SET(m_indexBuffer, ib);
 
 }
 
@@ -65,10 +65,10 @@ GL4RenderMesh::~GL4RenderMesh()
     glDeleteVertexArrays(1, &m_vao);
     m_vao = 0;
   }
-  CE_RELEASE(m_vertexBuffer);
+  CS_RELEASE(m_vertexBuffer);
   m_vertexBuffer = nullptr;
 
-  CE_RELEASE(m_indexBuffer);
+  CS_RELEASE(m_indexBuffer);
   m_indexBuffer = nullptr;
 }
 
@@ -94,11 +94,11 @@ const VertexDeclaration &GL4RenderMesh::GetVertexDeclaration() const
 
 void GL4RenderMesh::Render(iDevice *graphics, eRenderPass pass)
 {
-  CE_GL_ERROR();
+  CS_GL_ERROR();
   glBindVertexArray(m_vao);
-  CE_GL_ERROR();
+  CS_GL_ERROR();
   glDrawElements(m_primType, (GLsizei) m_count, m_indexType, nullptr);
-  CE_GL_ERROR();
+  CS_GL_ERROR();
 
 #if _DEBUG
   auto gl4Device = graphics->Query<GL4Device>();
@@ -118,7 +118,7 @@ GL4RenderMeshGenerator::GL4RenderMeshGenerator()
     : iRenderMeshGenerator()
     , m_primitiveType(ePT_Triangles)
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
 }
 
 GL4RenderMeshGenerator::~GL4RenderMeshGenerator() = default;
@@ -601,7 +601,7 @@ GL4RenderMeshGeneratorFactory::GL4RenderMeshGeneratorFactory()
     :
     iRenderMeshGeneratorFactory()
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
 }
 
 iRenderMeshGenerator *GL4RenderMeshGeneratorFactory::Create()
@@ -826,7 +826,7 @@ GL4RenderMeshBatchGeneratorFactory::GL4RenderMeshBatchGeneratorFactory()
     :
     iRenderMeshBatchGeneratorFactory()
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
 }
 
 iRenderMeshBatchGenerator *GL4RenderMeshBatchGeneratorFactory::Create()

@@ -13,7 +13,7 @@ BulletWorld::BulletWorld()
   , m_tmpId(1)
   , m_exportId(2)
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
 
   
 

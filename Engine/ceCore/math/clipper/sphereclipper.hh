@@ -9,15 +9,15 @@ namespace ce
 {
 
 
-class CE_CORE_API SphereClipper : public iClipper
+class CS_CORE_API SphereClipper : public iClipper
 {
 public:
   SphereClipper(const Vector3f &center, float radius);
   ~SphereClipper() override = default;
 
-  CE_NODISCARD eClippingResult Test(const BoundingBox& bbox) const override;
-  CE_NODISCARD eClippingResult Test(const Sphere& sphere) const override;
-  CE_NODISCARD eClippingResult Test(const Vector3f& p) const override;
+  CS_NODISCARD eClippingResult Test(const BoundingBox& bbox) const override;
+  CS_NODISCARD eClippingResult Test(const Sphere& sphere) const override;
+  CS_NODISCARD eClippingResult Test(const Vector3f& p) const override;
 
 private:
 

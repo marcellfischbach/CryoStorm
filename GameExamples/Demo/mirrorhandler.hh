@@ -3,10 +3,10 @@
 
 #include <ceCore/entity/entitysystem.hh>
 
-CE_CLASS()
-class MirrorHandler : public CE_SUPER(ce::EntityState)
+CS_CLASS()
+class MirrorHandler : public CS_SUPER(ce::EntityState)
 {
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
   MirrorHandler();
   ~MirrorHandler() override;

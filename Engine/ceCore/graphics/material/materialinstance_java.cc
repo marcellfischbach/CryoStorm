@@ -5,8 +5,8 @@
 extern "C"
 {
 
-#define CE_MAT(ref) reinterpret_cast<ce::Material*>(ref)
-#define CE_INSTANCE(ref) reinterpret_cast<ce::MaterialInstance*>(ref)
+#define CS_MAT(ref) reinterpret_cast<ce::Material*>(ref)
+#define CS_INSTANCE(ref) reinterpret_cast<ce::MaterialInstance*>(ref)
 
 
 JNIEXPORT void
@@ -15,8 +15,8 @@ JNICALL Java_org_crimsonedge_core_graphics_material_MaterialInstance_nSetMateria
                                                                                   jlong instanceRef,
                                                                                   jlong materialRef)
 {
-  auto instance = CE_INSTANCE(instanceRef);
-  auto material = CE_MAT(materialRef);
+  auto instance = CS_INSTANCE(instanceRef);
+  auto material = CS_MAT(materialRef);
   instance->SetMaterial(material);
 }
 
@@ -25,7 +25,7 @@ JNICALL Java_org_crimsonedge_core_graphics_material_MaterialInstance_nGetMateria
                                                                                   jclass cls,
                                                                                   jlong instanceRef)
 {
-  auto         instance  = CE_INSTANCE(instanceRef);
+  auto         instance  = CS_INSTANCE(instanceRef);
   ce::Material *material = instance->GetMaterial();
   return material ? material->GetJObject() : nullptr;
 }
@@ -36,7 +36,7 @@ JNICALL Java_org_crimsonedge_core_graphics_material_MaterialInstance_nGetFillMod
                                                                                   jclass cls,
                                                                                   jlong instanceRef)
 {
-  auto instance = CE_INSTANCE(instanceRef);
+  auto instance = CS_INSTANCE(instanceRef);
   return (jint) instance->GetFillMode();
 }
 
@@ -46,7 +46,7 @@ JNICALL Java_org_crimsonedge_core_graphics_material_MaterialInstance_nGetRenderQ
                                                                                      jclass cls,
                                                                                      jlong instanceRef)
 {
-  auto instance = CE_INSTANCE(instanceRef);
+  auto instance = CS_INSTANCE(instanceRef);
   return (jint) instance->GetRenderQueue();
 }
 
@@ -56,7 +56,7 @@ JNICALL Java_org_crimsonedge_core_graphics_material_MaterialInstance_nGetShading
                                                                                      jclass cls,
                                                                                      jlong instanceRef)
 {
-  auto instance = CE_INSTANCE(instanceRef);
+  auto instance = CS_INSTANCE(instanceRef);
   return (jint) instance->GetShadingMode();
 }
 
@@ -66,7 +66,7 @@ JNICALL Java_org_crimsonedge_core_graphics_material_MaterialInstance_nIndexOf(JN
                                                                               jlong instanceRef,
                                                                               jstring attributeName)
 {
-  auto       instance = CE_INSTANCE(instanceRef);
+  auto       instance = CS_INSTANCE(instanceRef);
   const char *chars   = env->GetStringUTFChars(attributeName, 0);
   jint       res      = (jint) instance->IndexOf(chars);
   env->ReleaseStringUTFChars(attributeName, chars);
@@ -80,7 +80,7 @@ JNICALL Java_org_crimsonedge_core_graphics_material_MaterialInstance_nSetFloat(J
                                                                                jint idx,
                                                                                float value)
 {
-  auto instance = CE_INSTANCE(instanceRef);
+  auto instance = CS_INSTANCE(instanceRef);
   instance->Set(idx, value);
 }
 
@@ -93,7 +93,7 @@ JNICALL Java_org_crimsonedge_core_graphics_material_MaterialInstance_nSetVec2f(J
                                                                                float x,
                                                                                float y)
 {
-  auto instance = CE_INSTANCE(instanceRef);
+  auto instance = CS_INSTANCE(instanceRef);
   instance->Set(idx, ce::Vector2f(x, y));
 }
 
@@ -107,7 +107,7 @@ JNICALL Java_org_crimsonedge_core_graphics_material_MaterialInstance_nSetVec3f(J
                                                                                float y,
                                                                                float z)
 {
-  auto instance = CE_INSTANCE(instanceRef);
+  auto instance = CS_INSTANCE(instanceRef);
   instance->Set(idx, ce::Vector3f(x, y, z));
 }
 
@@ -122,7 +122,7 @@ JNICALL Java_org_crimsonedge_core_graphics_material_MaterialInstance_nSetVec4f(J
                                                                                float z,
                                                                                float w)
 {
-  auto instance = CE_INSTANCE(instanceRef);
+  auto instance = CS_INSTANCE(instanceRef);
   instance->Set(idx, ce::Vector4f(x, y, z, w));
 }
 
@@ -136,7 +136,7 @@ JNICALL Java_org_crimsonedge_core_graphics_material_MaterialInstance_nSetColor4f
                                                                                  float b,
                                                                                  float a)
 {
-  auto instance = CE_INSTANCE(instanceRef);
+  auto instance = CS_INSTANCE(instanceRef);
   instance->Set(idx, ce::Color4f(r, g, b, a));
 }
 
@@ -148,7 +148,7 @@ JNICALL Java_org_crimsonedge_core_graphics_material_MaterialInstance_nSetInt(JNI
                                                                              jint idx,
                                                                              jint value)
 {
-  auto instance = CE_INSTANCE(instanceRef);
+  auto instance = CS_INSTANCE(instanceRef);
   instance->Set(idx, (int) value);
 }
 
@@ -159,7 +159,7 @@ JNICALL Java_org_crimsonedge_core_graphics_material_MaterialInstance_nSetMatrix3
                                                                                   jint idx,
                                                                                   jfloatArray mArray)
 {
-  auto   instance = CE_INSTANCE(instanceRef);
+  auto   instance = CS_INSTANCE(instanceRef);
   jfloat *m       = env->GetFloatArrayElements(mArray, 0);
 
   instance->Set(idx, *reinterpret_cast<ce::Matrix3f *>(m));
@@ -174,7 +174,7 @@ JNICALL Java_org_crimsonedge_core_graphics_material_MaterialInstance_nSetMatrix4
                                                                                   jint idx,
                                                                                   jfloatArray mArray)
 {
-  auto   instance = CE_INSTANCE(instanceRef);
+  auto   instance = CS_INSTANCE(instanceRef);
   jfloat *m       = env->GetFloatArrayElements(mArray, 0);
 
   instance->Set(idx, *reinterpret_cast<ce::Matrix4f *>(m));
@@ -189,7 +189,7 @@ JNICALL Java_org_crimsonedge_core_graphics_material_MaterialInstance_nSetTexture
                                                                                  jint idx,
                                                                                  jlong textureRef)
 {
-  auto instance = CE_INSTANCE(instanceRef);
+  auto instance = CS_INSTANCE(instanceRef);
   auto texture  = reinterpret_cast<ce::iTexture *>(textureRef);
 
   instance->Set(idx, texture);

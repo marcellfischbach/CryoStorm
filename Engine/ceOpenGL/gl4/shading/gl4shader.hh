@@ -10,10 +10,10 @@
 namespace ce::opengl
 {
 
-CE_CLASS()
-class CE_OGL_API GL4Shader : public CE_SUPER(iObject)
+CS_CLASS()
+class CS_OGL_API GL4Shader : public CS_SUPER(iObject)
 {
-	CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
 	GL4Shader(eGL4ShaderType type);
 	virtual ~GL4Shader();

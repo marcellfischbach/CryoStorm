@@ -77,7 +77,7 @@ bool OpenGLModule::Initialize(const std::vector<std::string> &args, Engine *engi
 
 }
 
-CE_DEFINE_LIBRARY(ceOpenGL)
+CS_DEFINE_LIBRARY(ceOpenGL)
 {
   printf ("Load library: ceOpenGL\n");
   return new ce::opengl::OpenGLModule;

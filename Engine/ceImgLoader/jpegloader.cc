@@ -5,7 +5,7 @@
 #include <ceCore/graphics/image.hh>
 #include <ceCore/resource/filesystemfile.hh>
 extern "C" {
-#ifdef CE_WIN32
+#ifdef CS_WIN32
 //#include <Windows.h>
 #endif
 
@@ -24,7 +24,7 @@ struct my_error_mgr {
 
 JpegLoader::JpegLoader()
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
 
 
 }

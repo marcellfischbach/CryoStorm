@@ -15,10 +15,10 @@ namespace ce::bullet
 class BulletCollisionShape;
 class BulletWorld;
 
-CE_CLASS()
-class BulletDynamicCollider : public CE_SUPER(iDynamicCollider)
+CS_CLASS()
+class BulletDynamicCollider : public CS_SUPER(iDynamicCollider)
 {
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
   BulletDynamicCollider();
   ~BulletDynamicCollider() override;

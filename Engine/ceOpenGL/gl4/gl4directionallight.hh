@@ -9,15 +9,15 @@ namespace ce::opengl
 {
 
 
-CE_CLASS()
-class CE_OGL_API GL4DirectionalLight : public CE_SUPER(iDirectionalLight)
+CS_CLASS()
+class CS_OGL_API GL4DirectionalLight : public CS_SUPER(iDirectionalLight)
 {
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
   GL4DirectionalLight();
   ~GL4DirectionalLight() override = default;
 
-  CE_NODISCARD CE_FORCEINLINE eLightType GetType() const override
+  CS_NODISCARD CS_FORCEINLINE eLightType GetType() const override
   {
     return eLT_Directional;
   }

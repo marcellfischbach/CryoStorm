@@ -11,10 +11,10 @@ namespace  ce
 {
 
 
-CE_CLASS()
-class CE_CORE_API TerrainLayerLoader : public CE_SUPER(BaseCEFAssetLoader)
+CS_CLASS()
+class CS_CORE_API TerrainLayerLoader : public CS_SUPER(BaseCEFAssetLoader)
 {
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
 public:
   TerrainLayerLoader() = default;
   ~TerrainLayerLoader() override = default;
@@ -30,10 +30,10 @@ protected:
 
 
 
-CE_CLASS()
-class CE_CORE_API TerrainLayerMaskLoader : public CE_SUPER(BaseCEFAssetLoader)
+CS_CLASS()
+class CS_CORE_API TerrainLayerMaskLoader : public CS_SUPER(BaseCEFAssetLoader)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 public:
   TerrainLayerMaskLoader() = default;
   ~TerrainLayerMaskLoader() override = default;

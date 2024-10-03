@@ -1,8 +1,8 @@
 #include <ceCore/entity/spatialstate.hh>
 
-//#define CE_IS_TRANSFORM_FLAG(f)  ((m_transformationState & (f)) == (f))
-//#define CE_SET_TRANSFORM_FLAG(f)  m_transformationState |= (f)
-//#define CE_UNSET_TRANSFORM_FLAG(f)  m_transformationState &= ~(f)
+//#define CS_IS_TRANSFORM_FLAG(f)  ((m_transformationState & (f)) == (f))
+//#define CS_SET_TRANSFORM_FLAG(f)  m_transformationState |= (f)
+//#define CS_UNSET_TRANSFORM_FLAG(f)  m_transformationState &= ~(f)
 
 
 namespace ce

@@ -10,7 +10,7 @@ FileSystemFile::FileSystemFile(const std::string& path)
   , m_path(path)
   , m_file(nullptr)
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
 }
 
 const std::string &FileSystemFile::GetName() const

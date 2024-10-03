@@ -9,10 +9,10 @@ namespace ce
 {
 
 
-CE_CLASS()
-class GfxQuadtreeScene : public CE_SUPER(iGfxScene)
+CS_CLASS()
+class GfxQuadtreeScene : public CS_SUPER(iGfxScene)
 {
-CE_CLASS_GEN_OBJECT;
+CS_CLASS_GEN_OBJECT;
 
 public:
   GfxQuadtreeScene();
@@ -27,7 +27,7 @@ public:
   void Add(GfxLight *light) override;
   void Remove(GfxLight *light) override;
 
-  CE_NODISCARD const std::vector<GfxCamera *> &GetCameras() const override;
+  CS_NODISCARD const std::vector<GfxCamera *> &GetCameras() const override;
 
   void Optimize() override;
 

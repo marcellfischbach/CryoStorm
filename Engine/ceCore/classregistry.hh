@@ -8,7 +8,7 @@
 namespace ce
 {
 
-class CE_CORE_API ClassRegistry
+class CS_CORE_API ClassRegistry
 {
 public:
   static ClassRegistry* Get();

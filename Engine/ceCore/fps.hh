@@ -10,7 +10,7 @@
 namespace ce
 {
 
-class CE_CORE_API FPS
+class CS_CORE_API FPS
 {
 public:
   FPS();

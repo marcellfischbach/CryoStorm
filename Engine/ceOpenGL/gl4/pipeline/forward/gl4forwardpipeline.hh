@@ -32,10 +32,10 @@ class GL4DirectionalLight;
 class GL4PointLight;
 class GL4RenderTargetCube;
 
-CE_CLASS()
-class CE_OGL_API GL4ForwardPipeline : public CE_SUPER(iRenderPipeline)
+CS_CLASS()
+class CS_OGL_API GL4ForwardPipeline : public CS_SUPER(iRenderPipeline)
 {
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
   GL4ForwardPipeline();
   ~GL4ForwardPipeline() noexcept override;

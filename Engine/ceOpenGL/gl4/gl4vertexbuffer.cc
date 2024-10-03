@@ -10,7 +10,7 @@ GL4VertexBuffer::GL4VertexBuffer()
   : iVertexBuffer()
   , m_size(0)
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
   glGenBuffers(1, &m_name);
 }
 

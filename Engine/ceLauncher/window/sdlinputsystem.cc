@@ -9,7 +9,7 @@ SDLInputSystem::SDLInputSystem(SDLKeyboard* keyboard, SDLMouse* mouse)
   , m_keyboard(keyboard)
   , m_mouse(mouse)
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
 }
 
 

@@ -44,7 +44,7 @@ iObject* AssetManager::Get(const Class* cls, const ResourceLocator& locator)
     return it->second;
   }
   iObject* obj = Load(cls, locator);
-  CE_ADDREF(obj);
+  CS_ADDREF(obj);
   m_cachedObjects[locator] = obj;
   return obj;
 }

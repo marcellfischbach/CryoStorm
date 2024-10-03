@@ -13,14 +13,14 @@ namespace ce
 {
 
 
-CE_CLASS()
-struct CE_CORE_API iInputSystem : public CE_SUPER(iObject)
+CS_CLASS()
+struct CS_CORE_API iInputSystem : public CS_SUPER(iObject)
 {
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
   ~iInputSystem() override = default;
 
-  CE_NODISCARD virtual iKeyboard* GetKeyboard() const = 0;
-  CE_NODISCARD virtual iMouse* GetMouse() const = 0;
+  CS_NODISCARD virtual iKeyboard* GetKeyboard() const = 0;
+  CS_NODISCARD virtual iMouse* GetMouse() const = 0;
 
 
 };

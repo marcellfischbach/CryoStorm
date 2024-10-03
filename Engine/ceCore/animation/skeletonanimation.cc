@@ -11,7 +11,7 @@ SkeletonAnimation::SkeletonAnimation()
     , m_loop(false)
     , m_channels()
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
 }
 
 SkeletonAnimation::~SkeletonAnimation()
@@ -214,7 +214,7 @@ void SkeletonAnimationPack::AddAnimation(SkeletonAnimation *animation)
 {
   if (animation)
   {
-    CE_ADDREF(animation);
+    CS_ADDREF(animation);
     m_animations.push_back(animation);
   }
 }

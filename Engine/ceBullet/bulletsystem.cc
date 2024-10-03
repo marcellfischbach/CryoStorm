@@ -11,7 +11,7 @@ namespace ce::bullet
 
 BulletSystem::BulletSystem()
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
 }
 
 BulletSystem::~BulletSystem()

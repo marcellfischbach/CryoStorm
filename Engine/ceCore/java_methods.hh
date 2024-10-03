@@ -30,7 +30,7 @@ namespace ce
 #define JAVA_DOUBLE_ARRAY "[D"
 #define JAVA_STRING_ARRAY "[Ljava/lang/String;"
 
-#define CE_JOBJECT !jobj ? (jobj = (obj ? obj->GetJObject() : nullptr)) : jobj
+#define CS_JOBJECT !jobj ? (jobj = (obj ? obj->GetJObject() : nullptr)) : jobj
 
 class JavaCallVoid
 {
@@ -54,7 +54,7 @@ public:
   {
     if (methodId)
     {
-      jobject pJobject = CE_JOBJECT;
+      jobject pJobject = CS_JOBJECT;
       if (pJobject)
       {
         env->CallVoidMethod(pJobject, methodId);
@@ -102,7 +102,7 @@ public:
   {
     if (methodId)
     {
-      jobject pJobject = CE_JOBJECT;
+      jobject pJobject = CS_JOBJECT;
       if (pJobject)
       {
         env->CallVoidMethod(pJobject, methodId, arg0);
@@ -157,7 +157,7 @@ public:
   {
     if (methodId)
     {
-      jobject pJobject = CE_JOBJECT;
+      jobject pJobject = CS_JOBJECT;
       if (pJobject)
       {
         env->CallVoidMethod(pJobject, methodId, arg0, arg1);
@@ -214,7 +214,7 @@ public:
   {
     if (methodId)
     {
-      jobject pJobject = CE_JOBJECT;
+      jobject pJobject = CS_JOBJECT;
       if (pJobject)
       {
         env->CallVoidMethod(pJobject, methodId, arg0, arg1, arg2);
@@ -254,7 +254,7 @@ public:
     jboolean res = def;
     if (methodId)
     {
-      jobject pJobject = CE_JOBJECT;
+      jobject pJobject = CS_JOBJECT;
       if (pJobject)
       {
         res = (jboolean) env->CallBooleanMethod(pJobject, methodId);
@@ -304,7 +304,7 @@ public:
     jboolean res = def;
     if (methodId)
     {
-      jobject pJobject = CE_JOBJECT;
+      jobject pJobject = CS_JOBJECT;
       if (pJobject)
       {
         res = (jboolean) env->CallBooleanMethod(pJobject, methodId, arg0);
@@ -360,7 +360,7 @@ public:
     jboolean res = def;
     if (methodId)
     {
-      jobject pJobject = CE_JOBJECT;
+      jobject pJobject = CS_JOBJECT;
       if (pJobject)
       {
         res = (jboolean) env->CallBooleanMethod(pJobject, methodId, arg0, arg1);
@@ -419,7 +419,7 @@ public:
     jboolean res = def;
     if (methodId)
     {
-      jobject pJobject = CE_JOBJECT;
+      jobject pJobject = CS_JOBJECT;
       if (pJobject)
       {
         res = (jboolean) env->CallBooleanMethod(pJobject, methodId, arg0, arg1, arg2);
@@ -460,7 +460,7 @@ public:
     jbyte res = def;
     if (methodId)
     {
-      jobject pJobject = CE_JOBJECT;
+      jobject pJobject = CS_JOBJECT;
       if (pJobject)
       {
         res = (jbyte) env->CallByteMethod(pJobject, methodId);
@@ -510,7 +510,7 @@ public:
     jbyte res = def;
     if (methodId)
     {
-      jobject pJobject = CE_JOBJECT;
+      jobject pJobject = CS_JOBJECT;
       if (pJobject)
       {
         res = (jbyte) env->CallByteMethod(pJobject, methodId, arg0);
@@ -566,7 +566,7 @@ public:
     jbyte res = def;
     if (methodId)
     {
-      jobject pJobject = CE_JOBJECT;
+      jobject pJobject = CS_JOBJECT;
       if (pJobject)
       {
         res = (jbyte) env->CallByteMethod(pJobject, methodId, arg0, arg1);
@@ -625,7 +625,7 @@ public:
     jbyte res = def;
     if (methodId)
     {
-      jobject pJobject = CE_JOBJECT;
+      jobject pJobject = CS_JOBJECT;
       if (pJobject)
       {
         res = (jbyte) env->CallByteMethod(pJobject, methodId, arg0, arg1, arg2);
@@ -667,7 +667,7 @@ public:
     jshort res = def;
     if (methodId)
     {
-      jobject pJobject = CE_JOBJECT;
+      jobject pJobject = CS_JOBJECT;
       if (pJobject)
       {
         res = (jshort) env->CallShortMethod(pJobject, methodId);
@@ -717,7 +717,7 @@ public:
     jshort res = def;
     if (methodId)
     {
-      jobject pJobject = CE_JOBJECT;
+      jobject pJobject = CS_JOBJECT;
       if (pJobject)
       {
         res = (jshort) env->CallShortMethod(pJobject, methodId, arg0);
@@ -773,7 +773,7 @@ public:
     jshort res = def;
     if (methodId)
     {
-      jobject pJobject = CE_JOBJECT;
+      jobject pJobject = CS_JOBJECT;
       if (pJobject)
       {
         res = (jshort) env->CallShortMethod(pJobject, methodId, arg0, arg1);
@@ -832,7 +832,7 @@ public:
     jshort res = def;
     if (methodId)
     {
-      jobject pJobject = CE_JOBJECT;
+      jobject pJobject = CS_JOBJECT;
       if (pJobject)
       {
         res = (jshort) env->CallShortMethod(pJobject, methodId, arg0, arg1, arg2);
@@ -877,7 +877,7 @@ public:
     jint res = def;
     if (methodId)
     {
-      jobject pJobject = CE_JOBJECT;
+      jobject pJobject = CS_JOBJECT;
       if (pJobject)
       {
         res = (jint) env->CallIntMethod(pJobject, methodId);
@@ -927,7 +927,7 @@ public:
     jint res = def;
     if (methodId)
     {
-      jobject pJobject = CE_JOBJECT;
+      jobject pJobject = CS_JOBJECT;
       if (pJobject)
       {
         res = (jint) env->CallIntMethod(pJobject, methodId, arg0);
@@ -983,7 +983,7 @@ public:
     jint res = def;
     if (methodId)
     {
-      jobject pJobject = CE_JOBJECT;
+      jobject pJobject = CS_JOBJECT;
       if (pJobject)
       {
         res = (jint) env->CallIntMethod(pJobject, methodId, arg0, arg1);
@@ -1042,7 +1042,7 @@ public:
     jint res = def;
     if (methodId)
     {
-      jobject pJobject = CE_JOBJECT;
+      jobject pJobject = CS_JOBJECT;
       if (pJobject)
       {
         res = (jint) env->CallIntMethod(pJobject, methodId, arg0, arg1, arg2);
@@ -1083,7 +1083,7 @@ public:
     jlong res = def;
     if (methodId)
     {
-      jobject pJobject = CE_JOBJECT;
+      jobject pJobject = CS_JOBJECT;
       if (pJobject)
       {
         res = (jlong) env->CallLongMethod(pJobject, methodId);
@@ -1133,7 +1133,7 @@ public:
     jlong res = def;
     if (methodId)
     {
-      jobject pJobject = CE_JOBJECT;
+      jobject pJobject = CS_JOBJECT;
       if (pJobject)
       {
         res = (jlong) env->CallLongMethod(pJobject, methodId, arg0);
@@ -1190,7 +1190,7 @@ public:
     jlong res = def;
     if (methodId)
     {
-      jobject pJobject = CE_JOBJECT;
+      jobject pJobject = CS_JOBJECT;
       if (pJobject)
       {
         res = (jlong) env->CallLongMethod(pJobject, methodId, arg0, arg1);
@@ -1249,7 +1249,7 @@ public:
     jlong res = def;
     if (methodId)
     {
-      jobject pJobject = CE_JOBJECT;
+      jobject pJobject = CS_JOBJECT;
       if (pJobject)
       {
         res = (jlong) env->CallLongMethod(pJobject, methodId, arg0, arg1, arg2);
@@ -1292,7 +1292,7 @@ public:
     jfloat res = def;
     if (methodId)
     {
-      jobject pJobject = CE_JOBJECT;
+      jobject pJobject = CS_JOBJECT;
       if (pJobject)
       {
         res = (jfloat) env->CallFloatMethod(pJobject, methodId);
@@ -1342,7 +1342,7 @@ public:
     jfloat res = def;
     if (methodId)
     {
-      jobject pJobject = CE_JOBJECT;
+      jobject pJobject = CS_JOBJECT;
       if (pJobject)
       {
         res = (jfloat) env->CallFloatMethod(pJobject, methodId, arg0);
@@ -1398,7 +1398,7 @@ public:
     jfloat res = def;
     if (methodId)
     {
-      jobject pJobject = CE_JOBJECT;
+      jobject pJobject = CS_JOBJECT;
       if (pJobject)
       {
         res = (jfloat) env->CallFloatMethod(pJobject, methodId, arg0, arg1);
@@ -1457,7 +1457,7 @@ public:
     jfloat res = def;
     if (methodId)
     {
-      jobject pJobject = CE_JOBJECT;
+      jobject pJobject = CS_JOBJECT;
       if (pJobject)
       {
         res = (jfloat) env->CallFloatMethod(pJobject, methodId, arg0, arg1, arg2);
@@ -1497,7 +1497,7 @@ public:
     jdouble res = def;
     if (methodId)
     {
-      jobject pJobject = CE_JOBJECT;
+      jobject pJobject = CS_JOBJECT;
       if (pJobject)
       {
         res = (jdouble) env->CallDoubleMethod(pJobject, methodId);
@@ -1547,7 +1547,7 @@ public:
     jdouble res = def;
     if (methodId)
     {
-      jobject pJobject = CE_JOBJECT;
+      jobject pJobject = CS_JOBJECT;
       if (pJobject)
       {
         res = (jdouble) env->CallDoubleMethod(pJobject, methodId, arg0);
@@ -1604,7 +1604,7 @@ public:
     jdouble res = def;
     if (methodId)
     {
-      jobject pJobject = CE_JOBJECT;
+      jobject pJobject = CS_JOBJECT;
       if (pJobject)
       {
         res = (jdouble) env->CallDoubleMethod(pJobject, methodId, arg0, arg1);
@@ -1663,7 +1663,7 @@ public:
     jdouble res = def;
     if (methodId)
     {
-      jobject pJobject = CE_JOBJECT;
+      jobject pJobject = CS_JOBJECT;
       if (pJobject)
       {
         res = (jdouble) env->CallDoubleMethod(pJobject, methodId, arg0, arg1, arg2);
@@ -1708,7 +1708,7 @@ public:
     R res = def;
     if (methodId)
     {
-      jobject pJobject = CE_JOBJECT;
+      jobject pJobject = CS_JOBJECT;
       if (pJobject)
       {
         res = (R) env->CallObjectMethod(pJobject, methodId);
@@ -1760,7 +1760,7 @@ public:
     R res = def;
     if (methodId)
     {
-      jobject pJobject = CE_JOBJECT;
+      jobject pJobject = CS_JOBJECT;
       if (pJobject)
       {
         res = (R) env->CallObjectMethod(pJobject, methodId, arg0);
@@ -1818,7 +1818,7 @@ public:
     R res = def;
     if (methodId)
     {
-      jobject pJobject = CE_JOBJECT;
+      jobject pJobject = CS_JOBJECT;
       if (pJobject)
       {
         res = (R) env->CallObjectMethod(pJobject, methodId, arg0, arg1);
@@ -1879,7 +1879,7 @@ public:
     R res = def;
     if (methodId)
     {
-      jobject pJobject = CE_JOBJECT;
+      jobject pJobject = CS_JOBJECT;
       if (pJobject)
       {
         res = (R) env->CallObjectMethod(pJobject, methodId, arg0, arg1, arg2);
@@ -1896,7 +1896,7 @@ private:
 };
 
 
-#undef CE_JOBJECT
+#undef CS_JOBJECT
 
 }
 

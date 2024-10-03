@@ -9,7 +9,7 @@ namespace ce
 {
 
 class GfxMesh;
-class CE_CORE_API  GfxSceneCollector
+class CS_CORE_API  GfxSceneCollector
 {
 
 public:
@@ -20,8 +20,8 @@ public:
 
   void AddMesh (GfxMesh* mesh);
 
-  CE_NODISCARD std::vector<GfxMesh*> &GetMeshes(eRenderQueue renderQueue);
-  CE_NODISCARD const std::vector<GfxMesh*> &GetMeshes(eRenderQueue renderQueue) const;
+  CS_NODISCARD std::vector<GfxMesh*> &GetMeshes(eRenderQueue renderQueue);
+  CS_NODISCARD const std::vector<GfxMesh*> &GetMeshes(eRenderQueue renderQueue) const;
 
 private:
   std::array<std::vector<GfxMesh*>, static_cast<size_t>(eRenderQueue::COUNT)> m_meshes;

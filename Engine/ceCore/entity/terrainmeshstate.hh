@@ -14,42 +14,42 @@ struct iTexture2D;
 
 
 
-CE_CLASS()
-class CE_CORE_API TerrainLayerMask : public CE_SUPER(Object)
+CS_CLASS()
+class CS_CORE_API TerrainLayerMask : public CS_SUPER(Object)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 public:
   TerrainLayerMask() = default;
   ~TerrainLayerMask () override;
 
   void SetLayerTexture (iTexture2D *layerTexture);
-  CE_NODISCARD iTexture2D *GetLayerTexture ();
-  CE_NODISCARD const iTexture2D *GetLayerTexture () const;
+  CS_NODISCARD iTexture2D *GetLayerTexture ();
+  CS_NODISCARD const iTexture2D *GetLayerTexture () const;
 
   void SetMaskTexture (iTexture2D *maskTexture);
-  CE_NODISCARD iTexture2D *GetMaskTexture ();
-  CE_NODISCARD const iTexture2D *GetMaskTexture () const;
+  CS_NODISCARD iTexture2D *GetMaskTexture ();
+  CS_NODISCARD const iTexture2D *GetMaskTexture () const;
 
 private:
   iTexture2D *m_layerTexture = nullptr;
   iTexture2D *m_maskTexture = nullptr;
 };
 
-CE_CLASS()
-class CE_CORE_API TerrainLayer : public CE_SUPER(Object)
+CS_CLASS()
+class CS_CORE_API TerrainLayer : public CS_SUPER(Object)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 public:
   TerrainLayer () = default;
   ~TerrainLayer() override;
 
   void SetDiffuseRoughness (iTexture2D *diffuseRoughness);
-  CE_NODISCARD iTexture2D *GetDiffuseRoughness ();
-  CE_NODISCARD const iTexture2D *GetDiffuseRoughness () const;
+  CS_NODISCARD iTexture2D *GetDiffuseRoughness ();
+  CS_NODISCARD const iTexture2D *GetDiffuseRoughness () const;
 
   void SetNormal (iTexture2D *normal);
-  CE_NODISCARD iTexture2D *GetNormal ();
-  CE_NODISCARD const iTexture2D *GetNormal () const;
+  CS_NODISCARD iTexture2D *GetNormal ();
+  CS_NODISCARD const iTexture2D *GetNormal () const;
 
 private:
   iTexture2D *m_diffuseRoughness = nullptr;
@@ -57,10 +57,10 @@ private:
 };
 
 
-CE_CLASS()
-class CE_CORE_API TerrainMeshState : public CE_SUPER(SpatialState)
+CS_CLASS()
+class CS_CORE_API TerrainMeshState : public CS_SUPER(SpatialState)
 {
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
 
 public:
   TerrainMeshState ();
@@ -68,23 +68,23 @@ public:
 
 
   void SetTerrainMesh (iTerrainMesh *terrainMesh);
-  CE_NODISCARD iTerrainMesh *GetTerrainMesh ();
-  CE_NODISCARD const iTerrainMesh *GetTerrainMesh () const;
+  CS_NODISCARD iTerrainMesh *GetTerrainMesh ();
+  CS_NODISCARD const iTerrainMesh *GetTerrainMesh () const;
 
   virtual void SetLayerMask (TerrainLayerMask *mask);
   virtual void AddLayer (TerrainLayer *layer);
 
 
   void SetReceiveShadow (bool receiveShadow);
-  CE_NODISCARD bool IsReceiveShadow () const;
+  CS_NODISCARD bool IsReceiveShadow () const;
 
   void SetCastShadow (bool castShadow);
-  CE_NODISCARD bool IsCastShadow () const;
+  CS_NODISCARD bool IsCastShadow () const;
 
 
   void SetReference (SpatialState *reference);
-  CE_NODISCARD SpatialState *GetReference ();
-  CE_NODISCARD const SpatialState *GetReference () const;
+  CS_NODISCARD SpatialState *GetReference ();
+  CS_NODISCARD const SpatialState *GetReference () const;
 
   /**
    * @name Livecycle

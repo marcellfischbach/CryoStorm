@@ -48,10 +48,10 @@ struct PPOutputDefinition
 
 
 
-CE_CLASS()
-struct CE_CORE_API iPostProcess : public CE_SUPER(iObject)
+CS_CLASS()
+struct CS_CORE_API iPostProcess : public CS_SUPER(iObject)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 
   ~iPostProcess() override = default;
 
@@ -66,10 +66,10 @@ CE_CLASS_GEN;
 };
 
 
-CE_CLASS()
-class CE_CORE_API BasePostProcess : public CE_SUPER(iPostProcess)
+CS_CLASS()
+class CS_CORE_API BasePostProcess : public CS_SUPER(iPostProcess)
 {
-CE_CLASS_GEN_OBJECT;
+CS_CLASS_GEN_OBJECT;
 public:
   ~BasePostProcess() override;
 
@@ -94,10 +94,10 @@ protected:
   std::vector<iTexture2D *> m_outputs;
 };
 
-CE_CLASS()
-class CE_CORE_API SimplePostProcess : public CE_SUPER(BasePostProcess)
+CS_CLASS()
+class CS_CORE_API SimplePostProcess : public CS_SUPER(BasePostProcess)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 public:
   ~SimplePostProcess() override;
 
@@ -131,10 +131,10 @@ struct PPBind
 
 struct PPPlan;
 
-CE_CLASS()
-class CE_CORE_API PostProcessing : public CE_SUPER(iObject)
+CS_CLASS()
+class CS_CORE_API PostProcessing : public CS_SUPER(iObject)
 {
-CE_CLASS_GEN_OBJECT;
+CS_CLASS_GEN_OBJECT;
 public:
   PostProcessing();
   ~PostProcessing() override;

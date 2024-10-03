@@ -142,7 +142,7 @@ GL4RenderTarget2D *GL4ForwardDirectionalLightRenderer::GetDirectionalLightShadow
   }
 
   target = m_pssmRenderer.CreateDirectionalLightShadowMap();
-  CE_SET(m_directionalLightShadowMap[lightIdx], target);
+  CS_SET(m_directionalLightShadowMap[lightIdx], target);
   return target;
 }
 

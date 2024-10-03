@@ -1,7 +1,7 @@
 
 
 
-function(CE_MOC trgt)
+function(CS_MOC trgt)
 
 	set(MOC_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/__cmake__build__moc__")
 
@@ -34,4 +34,4 @@ function(CE_MOC trgt)
     target_include_directories(${trgt} BEFORE PUBLIC ${MOC_DIRECTORY})
 
 	
-endfunction(CE_MOC)
+endfunction(CS_MOC)

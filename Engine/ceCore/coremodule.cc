@@ -48,7 +48,7 @@ bool CoreModule::Initialize(const std::vector<std::string> &args, Engine *engine
 }
 
 
-CE_DEFINE_LIBRARY(ceCore)
+CS_DEFINE_LIBRARY(ceCore)
 {
   printf ("Load library: ceCore\n");
   return new ce::CoreModule;

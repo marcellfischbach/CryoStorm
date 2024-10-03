@@ -10,7 +10,7 @@ namespace ce::assimp
 
 AssimpSkeletonAnimationLoader::AssimpSkeletonAnimationLoader()
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
 }
 
 
@@ -57,7 +57,7 @@ iObject *AssimpSkeletonAnimationLoader::Load(const ce::Class *cls, const ce::Res
     SkeletonAnimation *animation = Read(assimpAnimation);
     pack->AddAnimation(animation);
 
-    CE_RELEASE(animation);
+    CS_RELEASE(animation);
   }
 
 

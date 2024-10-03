@@ -33,9 +33,9 @@ GL4TerrainMeshCPU::GL4TerrainMeshCPU(uint32_t vao,
     , m_terrainSize(terrainSize)
     , m_patchSize(patchSize)
 {
-  CE_CLASS_GEN_CONSTR;
-  CE_SET(m_vb, vb);
-  CE_SET(m_ib, ib);
+  CS_CLASS_GEN_CONSTR;
+  CS_SET(m_vb, vb);
+  CS_SET(m_ib, ib);
 }
 
 const BoundingBox &GL4TerrainMeshCPU::GetBoundingBox() const
@@ -56,17 +56,17 @@ void GL4TerrainMeshCPU::SetReferencePoint(const Vector3f &refPoint)
 
 void GL4TerrainMeshCPU::Render(iDevice *graphics, eRenderPass pass)
 {
-  CE_GL_ERROR();
+  CS_GL_ERROR();
   Update();
-  CE_GL_ERROR();
+  CS_GL_ERROR();
   glBindVertexArray(m_vao);
-  CE_GL_ERROR();
+  CS_GL_ERROR();
 
   glDrawElements(GL_TRIANGLES, (GLsizei) m_indexBufferSize, GL_UNSIGNED_INT, nullptr);
 
-  CE_GL_ERROR();
+  CS_GL_ERROR();
   glBindVertexArray(0);
-  CE_GL_ERROR();
+  CS_GL_ERROR();
 
 #if _DEBUG
   auto gl4Device = graphics->Query<GL4Device>();
@@ -274,7 +274,7 @@ void GL4TerrainMeshCPU::RebuildIndices()
 GL4TerrainMeshGeneratorCPU::GL4TerrainMeshGeneratorCPU()
     : iTerrainMeshGenerator()
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
 }
 
 void GL4TerrainMeshGeneratorCPU::SetSize(eTerrainSize size)

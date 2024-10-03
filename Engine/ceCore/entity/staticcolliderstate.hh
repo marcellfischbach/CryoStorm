@@ -11,10 +11,10 @@ struct iPhysicsSystem;
 struct iStaticCollider;
 
 
-CE_CLASS()
-class CE_CORE_API StaticColliderState : public CE_SUPER(SpatialState)
+CS_CLASS()
+class CS_CORE_API StaticColliderState : public CS_SUPER(SpatialState)
 {
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
 
 public:
   StaticColliderState(const std::string &name = std::string (""));

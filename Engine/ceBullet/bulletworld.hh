@@ -18,10 +18,10 @@ namespace ce::bullet
 
 
 class BulletDynamicCollider;
-CE_CLASS()
-class CE_BULLET_API BulletWorld : public CE_SUPER(iPhysicsWorld)
+CS_CLASS()
+class CS_BULLET_API BulletWorld : public CS_SUPER(iPhysicsWorld)
 {
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
   BulletWorld();
   ~BulletWorld() override;

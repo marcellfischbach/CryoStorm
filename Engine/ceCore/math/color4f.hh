@@ -11,7 +11,7 @@
 namespace ce {
 
 
-struct CE_CORE_API Color4f
+struct CS_CORE_API Color4f
 {
 public:
   float r;
@@ -20,7 +20,7 @@ public:
   float a;
 
 public:
-  CE_FORCEINLINE Color4f(const float* f)
+  CS_FORCEINLINE Color4f(const float* f)
     : r(f[0])
     , g(f[1])
     , b(f[2])
@@ -29,7 +29,7 @@ public:
 
   }
 
-  CE_FORCEINLINE Color4f(float r = 0.0f, float g = 0.0f, float b = 0.0f, float a = 1.0f)
+  CS_FORCEINLINE Color4f(float r = 0.0f, float g = 0.0f, float b = 0.0f, float a = 1.0f)
     : r(r)
     , g(g)
     , b(b)
@@ -39,17 +39,17 @@ public:
   }
 
 
-  CE_FORCEINLINE bool operator== (const Color4f &o) const
+  CS_FORCEINLINE bool operator== (const Color4f &o) const
   {
-    return CE_FLOAT_IS(r, o.r) && CE_FLOAT_IS(g, o.g) && CE_FLOAT_IS(b, o.b) && CE_FLOAT_IS(a, o.a);
+    return CS_FLOAT_IS(r, o.r) && CS_FLOAT_IS(g, o.g) && CS_FLOAT_IS(b, o.b) && CS_FLOAT_IS(a, o.a);
   }
 
-  CE_FORCEINLINE bool operator!= (const Color4f& o) const
+  CS_FORCEINLINE bool operator!= (const Color4f& o) const
   {
-    return !CE_FLOAT_IS(r, o.r) || !CE_FLOAT_IS(g, o.g) || !CE_FLOAT_IS(b, o.b) || !CE_FLOAT_IS(a, o.a);
+    return !CS_FLOAT_IS(r, o.r) || !CS_FLOAT_IS(g, o.g) || !CS_FLOAT_IS(b, o.b) || !CS_FLOAT_IS(a, o.a);
   }
 
-  CE_FORCEINLINE Color4f operator* (float v) const
+  CS_FORCEINLINE Color4f operator* (float v) const
   {
     return Color4f(r*v, g*v, b*v, a*v);
   }

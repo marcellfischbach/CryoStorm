@@ -17,14 +17,14 @@ Samplers::Samplers()
 
 Samplers::~Samplers()
 {
-  CE_RELEASE(m_default);
-  CE_RELEASE(m_normalMap);
-  CE_RELEASE(m_uiSprite);
+  CS_RELEASE(m_default);
+  CS_RELEASE(m_normalMap);
+  CS_RELEASE(m_uiSprite);
 }
 
 void Samplers::SetDefault(iSampler* sampler)
 {
-  CE_SET(m_default, sampler);
+  CS_SET(m_default, sampler);
 }
 
 iSampler* Samplers::GetDefault()
@@ -34,7 +34,7 @@ iSampler* Samplers::GetDefault()
 
 void Samplers::SetNormalMap(iSampler* sampler)
 {
-  CE_SET(m_normalMap, sampler);
+  CS_SET(m_normalMap, sampler);
 }
 
 iSampler* Samplers::GetNormalMap()
@@ -44,7 +44,7 @@ iSampler* Samplers::GetNormalMap()
 
 void Samplers::SetUISprite(iSampler* sampler)
 {
-  CE_SET(m_uiSprite, sampler);
+  CS_SET(m_uiSprite, sampler);
 }
 
 iSampler* Samplers::GetUISprite()

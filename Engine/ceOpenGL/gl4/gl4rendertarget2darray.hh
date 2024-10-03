@@ -9,10 +9,10 @@ namespace ce::opengl
 
 class GL4Texture2D;
 
-CE_CLASS()
-class CE_OGL_API GL4RenderTarget2DArray : public CE_SUPER(iRenderTarget2DArray)
+CS_CLASS()
+class CS_OGL_API GL4RenderTarget2DArray : public CS_SUPER(iRenderTarget2DArray)
 {
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
   GL4RenderTarget2DArray();
   virtual ~GL4RenderTarget2DArray() override;
@@ -28,7 +28,7 @@ public:
   void SetDepthTexture(iTexture2DArray* depthTexture) override;
   void AddColorTexture(iTexture2DArray* colorTexture) override;
 
-  CE_NODISCARD  eTextureType GetType() const override;
+  CS_NODISCARD  eTextureType GetType() const override;
 
   bool Compile() override;
   std::string GetCompileLog() const override;

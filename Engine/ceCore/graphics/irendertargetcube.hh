@@ -8,8 +8,8 @@
 namespace ce
 {
 
-CE_CLASS()
-struct CE_CORE_API iRenderTargetCube : public CE_SUPER(iRenderTarget)
+CS_CLASS()
+struct CS_CORE_API iRenderTargetCube : public CS_SUPER(iRenderTarget)
 {
   struct Descriptor
   {
@@ -17,7 +17,7 @@ struct CE_CORE_API iRenderTargetCube : public CE_SUPER(iRenderTarget)
 
   };
 
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
   ~iRenderTargetCube() override = default;
 
   virtual uint16_t GetSize() const = 0;

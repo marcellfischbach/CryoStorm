@@ -20,7 +20,7 @@ PPBlurV::PPBlurV(size_t sampleCount, float sampleScale)
 
 PPBlurV::~PPBlurV()
 {
-  CE_RELEASE(m_shader);
+  CS_RELEASE(m_shader);
   m_shader               = nullptr;
   m_attribColor          = nullptr;
   m_attribTextureSizeInv = nullptr;

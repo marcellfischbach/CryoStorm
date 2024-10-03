@@ -7,7 +7,7 @@
 namespace ce
 {
 
-class CE_CORE_API Ticker
+class CS_CORE_API Ticker
 {
 public:
   static int64_t Tick ();

@@ -14,10 +14,10 @@ struct iDynamicCollider;
 
 
 
-CE_CLASS()
-struct CE_CORE_API iPhysicsWorld : public CE_SUPER(iObject)
+CS_CLASS()
+struct CS_CORE_API iPhysicsWorld : public CS_SUPER(iObject)
 {
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
   ~iPhysicsWorld() override = default;
 
   struct DynamicResult

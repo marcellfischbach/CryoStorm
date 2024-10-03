@@ -18,7 +18,7 @@ StaticMeshState::StaticMeshState(const std::string &name)
 
 StaticMeshState::~StaticMeshState()
 {
-  CE_RELEASE(m_mesh);
+  CS_RELEASE(m_mesh);
   Clear();
 }
 
@@ -32,7 +32,7 @@ void StaticMeshState::Clear()
 
   for (auto material: m_materials)
   {
-    CE_RELEASE(material);
+    CS_RELEASE(material);
   }
   m_materials.clear();
 }
@@ -46,7 +46,7 @@ void StaticMeshState::SetMesh(Mesh *mesh)
     RemoveMeshFromScene(world);
   }
   Clear();
-  CE_SET(m_mesh, mesh);
+  CS_SET(m_mesh, mesh);
   if (m_mesh)
   {
     m_materials.resize(m_mesh->GetNumberOfMaterialSlots(), nullptr);
@@ -72,7 +72,7 @@ void StaticMeshState::SetMaterial(Size idx, iMaterial *material)
 {
   if (idx < m_materials.size())
   {
-    CE_SET(m_materials[idx], material);
+    CS_SET(m_materials[idx], material);
   }
 }
 

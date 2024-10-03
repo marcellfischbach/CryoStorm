@@ -12,10 +12,10 @@ namespace ce
 
 struct iShaderAttribute;
 
-CE_CLASS(jclass="org.crimsonedge.core.graphics.shading.IShader")
-struct CE_CORE_API iShader : public CE_SUPER(iObject)
+CS_CLASS(jclass="org.crimsonedge.core.graphics.shading.IShader")
+struct CS_CORE_API iShader : public CS_SUPER(iObject)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 
 	virtual ~iShader()
 	{

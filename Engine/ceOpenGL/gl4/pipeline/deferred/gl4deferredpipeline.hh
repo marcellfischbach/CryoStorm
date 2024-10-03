@@ -24,10 +24,10 @@ namespace opengl
 
 class GL4DeferredDirectionalLightRenderer;
 
-CE_CLASS()
-class CE_OGL_API GL4DeferredPipeline : public CE_SUPER(iRenderPipeline)
+CS_CLASS()
+class CS_OGL_API GL4DeferredPipeline : public CS_SUPER(iRenderPipeline)
 {
-CE_CLASS_GEN_OBJECT;
+CS_CLASS_GEN_OBJECT;
 public:
   GL4DeferredPipeline();
   ~GL4DeferredPipeline() noexcept override;

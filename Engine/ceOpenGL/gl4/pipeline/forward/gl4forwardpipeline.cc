@@ -34,7 +34,7 @@ const float MinLightInfluence = 0.0f;
 GL4ForwardPipeline::GL4ForwardPipeline()
     : m_frame(0), m_device(nullptr), m_scene(nullptr), m_target(nullptr)
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
 
 }
 
@@ -61,7 +61,7 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target,
                                 iGfxScene *scene
                                )
 {
-  CE_GL_ERROR();
+  CS_GL_ERROR();
   ++m_frame;
   if (SetupVariables(target, camera, device, scene))
   {
@@ -122,7 +122,7 @@ iRenderTarget2D *GL4ForwardPipeline::UpdateRenderTarget(ce::iDevice *device, ce:
 {
   if (!target)
   {
-    CE_RELEASE(m_target);
+    CS_RELEASE(m_target);
     return nullptr;
   }
 
@@ -150,7 +150,7 @@ iRenderTarget2D *GL4ForwardPipeline::UpdateRenderTarget(ce::iDevice *device, ce:
 
 
   //  recreate the target
-  CE_RELEASE(renderTarget);
+  CS_RELEASE(renderTarget);
 
   iRenderTarget2D::Descriptor desc {
       target->GetWidth(),
@@ -177,8 +177,8 @@ iRenderTarget2D *GL4ForwardPipeline::UpdateRenderTarget(ce::iDevice *device, ce:
   colorSampler->SetAddressW(eTAM_Clamp);
   colorTexture->SetSampler(colorSampler);
   renderTarget->AddColorTexture(colorTexture);
-  CE_RELEASE(colorTexture);
-  CE_RELEASE(colorSampler);
+  CS_RELEASE(colorTexture);
+  CS_RELEASE(colorSampler);
 
   iTexture2D::Descriptor depthDesc {
       ePF_Depth,
@@ -197,13 +197,13 @@ iRenderTarget2D *GL4ForwardPipeline::UpdateRenderTarget(ce::iDevice *device, ce:
   depthSampler->SetTextureCompareMode(eTCM_None);
   depthTexture->SetSampler(depthSampler);
   renderTarget->SetDepthTexture(depthTexture);
-  CE_RELEASE(depthTexture);
-  CE_RELEASE(depthSampler);
+  CS_RELEASE(depthTexture);
+  CS_RELEASE(depthSampler);
 
   if (!renderTarget->Compile())
   {
     printf ("render target not compiled\n");
-    CE_RELEASE(renderTarget);
+    CS_RELEASE(renderTarget);
     renderTarget = nullptr;
   }
 
@@ -232,7 +232,7 @@ void GL4ForwardPipeline::CollectLightsAndShadows(iClipper *clipper)
                       }
   );
 
-  CE_GL_ERROR();
+  CS_GL_ERROR();
 
   //
   // collect the "normal" static and dynamic lights
@@ -489,9 +489,9 @@ void GL4ForwardPipeline::RenderMesh(GfxMesh *mesh, std::array<const GfxLight *, 
         lights,
         offset
     );
-    CE_GL_ERROR();
+    CS_GL_ERROR();
     mesh->RenderForward(m_device, eRP_Forward, lights.data(), numLights);
-    CE_GL_ERROR();
+    CS_GL_ERROR();
   }
   else
   {
@@ -503,9 +503,9 @@ void GL4ForwardPipeline::RenderMesh(GfxMesh *mesh, std::array<const GfxLight *, 
         lights,
         offset
     );
-    CE_GL_ERROR();
+    CS_GL_ERROR();
     mesh->RenderForward(m_device, eRP_Forward, lights.data(), numLights);
-    CE_GL_ERROR();
+    CS_GL_ERROR();
   }
 
 

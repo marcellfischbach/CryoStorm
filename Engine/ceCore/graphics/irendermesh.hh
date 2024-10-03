@@ -17,28 +17,28 @@ namespace ce
 struct iDevice;
 class VertexDeclaration;
 
-CE_CLASS(jclass="org.crimsonedge.core.graphics.IRenderMesh")
-struct CE_CORE_API iRenderMesh : public CE_SUPER(iObject)
+CS_CLASS(jclass="org.crimsonedge.core.graphics.IRenderMesh")
+struct CS_CORE_API iRenderMesh : public CS_SUPER(iObject)
 {
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
   ~iRenderMesh() override = default;
 
-  CE_NODISCARD virtual const BoundingBox &GetBoundingBox() const = 0;
-  CE_NODISCARD virtual const VertexDeclaration &GetVertexDeclaration () const = 0;
+  CS_NODISCARD virtual const BoundingBox &GetBoundingBox() const = 0;
+  CS_NODISCARD virtual const VertexDeclaration &GetVertexDeclaration () const = 0;
 
   virtual void Render(iDevice * graphics, eRenderPass pass) = 0;
 
 #if _DEBUG
-  CE_NODISCARD virtual Size GetNumberOfTriangles() const = 0;
+  CS_NODISCARD virtual Size GetNumberOfTriangles() const = 0;
 #endif
 
 };
 
 
-CE_CLASS(jclass="org.crimsonedge.core.graphics.IRenderMeshGenerator")
-struct CE_CORE_API iRenderMeshGenerator : CE_SUPER(iObject)
+CS_CLASS(jclass="org.crimsonedge.core.graphics.IRenderMeshGenerator")
+struct CS_CORE_API iRenderMeshGenerator : CS_SUPER(iObject)
 {
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
 
   ~iRenderMeshGenerator() override = default;
 
@@ -57,41 +57,41 @@ struct CE_CORE_API iRenderMeshGenerator : CE_SUPER(iObject)
   virtual void SetBoneIndices(const std::vector<Vector4i> & boneIndices) = 0;
   virtual void SetBoneWeights(const std::vector<Vector4f> & boneWeights) = 0;
   virtual void SetIndices(const std::vector<uint32_t> & indices) = 0;
-  CE_NODISCARD virtual iRenderMesh* Generate() = 0;
+  CS_NODISCARD virtual iRenderMesh* Generate() = 0;
 };
 
 
-CE_CLASS(jclass="org.crimsonedge.core.graphics.IRenderMeshGeneratorFactory")
-struct CE_CORE_API iRenderMeshGeneratorFactory : CE_SUPER(iObject)
+CS_CLASS(jclass="org.crimsonedge.core.graphics.IRenderMeshGeneratorFactory")
+struct CS_CORE_API iRenderMeshGeneratorFactory : CS_SUPER(iObject)
 {
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
   ~iRenderMeshGeneratorFactory() override = default;
 
-  CE_NODISCARD virtual iRenderMeshGenerator* Create() = 0;
+  CS_NODISCARD virtual iRenderMeshGenerator* Create() = 0;
 };
 
 
 
-CE_CLASS()
-struct CE_CORE_API iRenderMeshBatchGenerator : CE_SUPER(iObject)
+CS_CLASS()
+struct CS_CORE_API iRenderMeshBatchGenerator : CS_SUPER(iObject)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 
   ~iRenderMeshBatchGenerator() override = default;
 
   virtual void Add(const iRenderMesh* mesh, const Matrix4f &matrix) = 0;
 
-  CE_NODISCARD virtual iRenderMesh* Generate() = 0;
+  CS_NODISCARD virtual iRenderMesh* Generate() = 0;
 };
 
 
-CE_CLASS()
-struct CE_CORE_API iRenderMeshBatchGeneratorFactory : CE_SUPER(iObject)
+CS_CLASS()
+struct CS_CORE_API iRenderMeshBatchGeneratorFactory : CS_SUPER(iObject)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
   ~iRenderMeshBatchGeneratorFactory() override = default;
 
-  CE_NODISCARD virtual iRenderMeshBatchGenerator* Create() = 0;
+  CS_NODISCARD virtual iRenderMeshBatchGenerator* Create() = 0;
 };
 
 

@@ -28,7 +28,7 @@ target_link_libraries(ceGame
         )
 
 add_dependencies(ceGame ceMOC)
-CE_MOC(ceGame)
+CS_MOC(ceGame)
 
 
 install(TARGETS ceGame

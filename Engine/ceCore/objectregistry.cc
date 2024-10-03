@@ -6,7 +6,7 @@ namespace ce
 
 DebugCache::DebugCache()
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
 }
 
 ObjectRegistry::ObjectRegistry()
@@ -21,11 +21,11 @@ void ObjectRegistry::Register(const Class *cls, iObject *obj)
   auto it = registry.find(cls);
   if (it != registry.end())
   {
-    CE_RELEASE(it->second);
+    CS_RELEASE(it->second);
     registry.erase(it);
   }
 
-  CE_ADDREF(obj);
+  CS_ADDREF(obj);
   registry[cls] = obj;
 }
 

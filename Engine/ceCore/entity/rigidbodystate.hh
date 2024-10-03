@@ -11,10 +11,10 @@ struct iDynamicCollider;
 struct iPhysicsSystem;
 struct iPhysicsWorld;
 
-CE_CLASS()
-class CE_CORE_API RigidBodyState : public CE_SUPER(SpatialState)
+CS_CLASS()
+class CS_CORE_API RigidBodyState : public CS_SUPER(SpatialState)
 {
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
 
 public:
   RigidBodyState(const std::string &name = std::string(""));

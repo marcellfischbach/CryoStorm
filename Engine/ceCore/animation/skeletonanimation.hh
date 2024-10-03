@@ -11,10 +11,10 @@ namespace ce
 
 class Skeleton;
 
-CE_CLASS()
-class CE_CORE_API SkeletonAnimation : public CE_SUPER(iObject)
+CS_CLASS()
+class CS_CORE_API SkeletonAnimation : public CS_SUPER(iObject)
 {
-CE_CLASS_GEN_OBJECT;
+CS_CLASS_GEN_OBJECT;
 
 public:
   struct FrameRotation
@@ -87,10 +87,10 @@ private:
 };
 
 
-CE_CLASS()
-class CE_CORE_API SkeletonAnimationPack : public CE_SUPER(iObject)
+CS_CLASS()
+class CS_CORE_API SkeletonAnimationPack : public CS_SUPER(iObject)
 {
-CE_CLASS_GEN_OBJECT;
+CS_CLASS_GEN_OBJECT;
 public:
   SkeletonAnimationPack() = default;
   ~SkeletonAnimationPack() override = default;

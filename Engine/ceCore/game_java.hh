@@ -12,7 +12,7 @@
 namespace ce
 {
 
-class CE_CORE_API GameJava : public iGame
+class CS_CORE_API GameJava : public iGame
 {
 public:
   GameJava(jobject gameObject);

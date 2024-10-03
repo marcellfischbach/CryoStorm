@@ -12,10 +12,10 @@ namespace ce
 {
 
 
-CE_CLASS()
-class CE_CORE_API TextFileLoader : public CE_SUPER(iAssetLoader)
+CS_CLASS()
+class CS_CORE_API TextFileLoader : public CS_SUPER(iAssetLoader)
 {
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
   TextFileLoader() = default;
   ~TextFileLoader() override = default;

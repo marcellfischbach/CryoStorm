@@ -12,7 +12,7 @@ namespace ce
 
 struct iShaderAttribute
 {
-  CE_DECLARE_JAVA("org/crimsonedge/core/graphics/shading/IShaderAttribute")
+  CS_DECLARE_JAVA("org/crimsonedge/core/graphics/shading/IShaderAttribute")
 
 	virtual ~iShaderAttribute()
 	{

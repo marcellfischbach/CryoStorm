@@ -9,10 +9,10 @@ namespace ce::opengl
 
 class GL4TextureCube;
 
-CE_CLASS()
-class CE_OGL_API GL4RenderTargetCube : public CE_SUPER(iRenderTargetCube)
+CS_CLASS()
+class CS_OGL_API GL4RenderTargetCube : public CS_SUPER(iRenderTargetCube)
 {
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
   GL4RenderTargetCube();
   virtual ~GL4RenderTargetCube() override;
@@ -27,7 +27,7 @@ public:
   void SetDepthTexture(iTextureCube* depthTexture) override;
   void AddColorTexture(iTextureCube* colorTexture) override;
 
-  CE_NODISCARD  eTextureType GetType() const override;
+  CS_NODISCARD  eTextureType GetType() const override;
 
   bool Compile() override;
   std::string GetCompileLog() const override;

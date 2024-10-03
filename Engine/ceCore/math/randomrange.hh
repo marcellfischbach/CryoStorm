@@ -8,7 +8,7 @@ namespace ce {
 
 
 
-class CE_CORE_API RandomRange
+class CS_CORE_API RandomRange
 {
 public:
   RandomRange()

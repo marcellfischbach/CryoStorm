@@ -16,10 +16,10 @@ namespace ce::opengl
 {
 
 
-CE_CLASS()
-class CE_OGL_API GL4ShaderGraphCompiler : public CE_SUPER(iShaderGraphCompiler)
+CS_CLASS()
+class CS_OGL_API GL4ShaderGraphCompiler : public CS_SUPER(iShaderGraphCompiler)
 {
-CE_CLASS_GEN_OBJECT;
+CS_CLASS_GEN_OBJECT;
 public:
   GL4ShaderGraphCompiler() = default;
 
@@ -154,10 +154,10 @@ public:
 };
 
 
-CE_CLASS()
-class CE_OGL_API GL4ShaderGraphCompilerFactory : public CE_SUPER(iShaderGraphCompilerFactory)
+CS_CLASS()
+class CS_OGL_API GL4ShaderGraphCompilerFactory : public CS_SUPER(iShaderGraphCompilerFactory)
 {
-CE_CLASS_GEN_OBJECT;
+CS_CLASS_GEN_OBJECT;
 public:
   GL4ShaderGraphCompilerFactory() = default;
 

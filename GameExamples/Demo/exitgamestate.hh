@@ -6,10 +6,10 @@
 
 #include <ceCore/entity/entitystate.hh>
 
-CE_CLASS()
-class ExitGameState : public CE_SUPER(ce::EntityState)
+CS_CLASS()
+class ExitGameState : public CS_SUPER(ce::EntityState)
 {
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
 public:
   ExitGameState ();
 

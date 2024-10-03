@@ -12,7 +12,7 @@ std::map<iMaterial *, std::string> s_material_names;
 Material::Material()
     : iMaterial()
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
   for (auto &item: m_shader)
   {
     item = nullptr;
@@ -24,13 +24,13 @@ Material::~Material()
 {
   for (Size i = 0; i < eRP_COUNT; i++)
   {
-    CE_RELEASE(m_shader[i]);
+    CS_RELEASE(m_shader[i]);
     m_shader[i] = nullptr;
   }
 
   for (auto attribute: m_attributes)
   {
-    CE_RELEASE(attribute.Texture);
+    CS_RELEASE(attribute.Texture);
   }
 }
 
@@ -276,7 +276,7 @@ bool Material::BindTexture(iDevice *device, iShaderAttribute *attribute, iTextur
 
 void Material::SetShader(eRenderPass pass, iShader *shader)
 {
-  CE_SET(m_shader[pass], shader);
+  CS_SET(m_shader[pass], shader);
 
   UpdateShaderAttributes(pass);
 }
@@ -447,7 +447,7 @@ void Material::Set(Size idx, iTexture *texture)
   }
   Attribute &attr = m_attributes[idx];
   attr.Type = eMAT_Texture;
-  CE_SET(attr.Texture, texture);
+  CS_SET(attr.Texture, texture);
 
 }
 void Material::Debug(Size idx)

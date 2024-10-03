@@ -78,8 +78,8 @@ public:
   bool IsShadowMapValid(GL4RenderTarget2D *shadowMap) const;
   bool IsShadowBufferValid(GL4PSSMShadowBufferObject &shadowMap) const;
 
-  CE_NODISCARD const std::array<Matrix4f, 4> &GetMatrices() const;
-  CE_NODISCARD const std::array<float, 4> &GetSplits() const;
+  CS_NODISCARD const std::array<Matrix4f, 4> &GetMatrices() const;
+  CS_NODISCARD const std::array<float, 4> &GetSplits() const;
 
 private:
   void

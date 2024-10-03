@@ -17,10 +17,10 @@ struct iRenderTarget2D;
 struct iSkyboxRenderer;
 class PostProcessing;
 
-CE_CLASS()
-class CE_CORE_API CameraState : public CE_SUPER(SpatialState)
+CS_CLASS()
+class CS_CORE_API CameraState : public CS_SUPER(SpatialState)
 {
-CE_CLASS_GEN_OBJECT;
+CS_CLASS_GEN_OBJECT;
 public:
   CameraState();
   ~CameraState() override;
@@ -78,36 +78,36 @@ protected:
   void TransformationUpdatedPreChildren() override;
 
 private:
-  CE_PROPERTY()
+  CS_PROPERTY()
   float m_near;
-  CE_PROPERTY()
+  CS_PROPERTY()
   float m_far;
 
-  CE_PROPERTY()
+  CS_PROPERTY()
   float m_angle;
 
-  CE_PROPERTY()
+  CS_PROPERTY()
   float m_angleWidthHeight;
 
-  CE_PROPERTY()
+  CS_PROPERTY()
   int m_order;
 
-  CE_PROPERTY()
+  CS_PROPERTY()
   iRenderTarget2D *m_renderTarget;
 
-  CE_PROPERTY()
+  CS_PROPERTY()
   eClearMode m_clearMode = eClearMode::DepthColor;
 
-  CE_PROPERTY()
+  CS_PROPERTY()
   eClearColorMode m_clearColorMode = eClearColorMode::PlainColor;
 
-  CE_PROPERTY()
+  CS_PROPERTY()
   Color4f m_clearColor = Color4f();
 
-  CE_PROPERTY()
+  CS_PROPERTY()
   float m_clearDepth = 1.0f;
 
-  CE_PROPERTY()
+  CS_PROPERTY()
   bool m_renderShadows = true;
 
 

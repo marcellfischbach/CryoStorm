@@ -21,7 +21,7 @@ struct iWindow;
 
 class World;
 
-class CE_CORE_API  Engine
+class CS_CORE_API  Engine
 {
 public:
   void SetWindow(iWindow *window);

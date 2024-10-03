@@ -16,7 +16,7 @@ GL4RenderTarget2D::GL4RenderTarget2D()
     , m_depthBuffer(0)
     , m_depthTexture(nullptr)
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
   glGenFramebuffers(1, &m_name);
 }
 
@@ -25,8 +25,8 @@ GL4RenderTarget2D::~GL4RenderTarget2D()
   glDeleteFramebuffers(1, &m_name);
   m_name = 0;
 
-  CE_RELEASE(m_depthTexture.texture);
-  CE_RELEASE(m_depthTexture.textureCube);
+  CS_RELEASE(m_depthTexture.texture);
+  CS_RELEASE(m_depthTexture.textureCube);
 
   if (m_depthBuffer)
   {
@@ -35,8 +35,8 @@ GL4RenderTarget2D::~GL4RenderTarget2D()
   }
   for (auto color: m_colorTextures)
   {
-    CE_RELEASE(color.texture);
-    CE_RELEASE(color.textureCube);
+    CS_RELEASE(color.texture);
+    CS_RELEASE(color.textureCube);
   }
   m_colorTextures.clear();
 }
@@ -95,9 +95,9 @@ void GL4RenderTarget2D::SetDepthTexture(iTexture2D *depthTexture)
   }
 
 
-  CE_SET(m_depthTexture.texture, txt);
-  CE_RELEASE(m_depthTexture.textureArray);
-  CE_RELEASE(m_depthTexture.textureCube);
+  CS_SET(m_depthTexture.texture, txt);
+  CS_RELEASE(m_depthTexture.textureArray);
+  CS_RELEASE(m_depthTexture.textureCube);
 
 
   glFramebufferTexture(GL_FRAMEBUFFER,
@@ -136,9 +136,9 @@ void GL4RenderTarget2D::SetDepthTexture(iTexture2DArray *depthTexture, size_t la
   }
 
 
-  CE_SET(m_depthTexture.textureArray, txt);
-  CE_RELEASE(m_depthTexture.texture);
-  CE_RELEASE(m_depthTexture.textureCube);
+  CS_SET(m_depthTexture.textureArray, txt);
+  CS_RELEASE(m_depthTexture.texture);
+  CS_RELEASE(m_depthTexture.textureCube);
 
 
   m_depthTexture.textureArrayLayer = layer;
@@ -180,9 +180,9 @@ void GL4RenderTarget2D::SetDepthTexture(iTextureCube *depthTexture, eCubeFace fa
 
 
   m_depthTexture.textureCubeFace = face;
-  CE_SET(m_depthTexture.textureCube, txt);
-  CE_RELEASE(m_depthTexture.textureArray);
-  CE_RELEASE(m_depthTexture.texture);
+  CS_SET(m_depthTexture.textureCube, txt);
+  CS_RELEASE(m_depthTexture.textureArray);
+  CS_RELEASE(m_depthTexture.texture);
 
 
   glFramebufferTexture2D(GL_FRAMEBUFFER,
@@ -217,8 +217,8 @@ void GL4RenderTarget2D::SetDepthBuffer(ePixelFormat format)
   glRenderbufferStorage(GL_RENDERBUFFER, internalFormat, m_width, m_height);
   glFramebufferRenderbuffer(GL_FRAMEBUFFER, attachment, GL_RENDERBUFFER, m_depthBuffer);
 
-  CE_RELEASE(m_depthTexture.textureCube);
-  CE_RELEASE(m_depthTexture.texture);
+  CS_RELEASE(m_depthTexture.textureCube);
+  CS_RELEASE(m_depthTexture.texture);
 
 }
 
@@ -236,7 +236,7 @@ void GL4RenderTarget2D::AddColorTexture(iTexture2D *colorTexture)
     return;
   }
 
-  CE_ADDREF(txt);
+  CS_ADDREF(txt);
 
 
   if (colorTexture->GetFormat() == ePF_DepthStencil)
@@ -273,7 +273,7 @@ void GL4RenderTarget2D::AddColorTexture(iTexture2DArray *colorTexture, size_t la
     return;
   }
 
-  CE_ADDREF(txt);
+  CS_ADDREF(txt);
 
 
   if (colorTexture->GetFormat() == ePF_DepthStencil)
@@ -311,7 +311,7 @@ void GL4RenderTarget2D::AddColorTexture(iTextureCube *colorTexture, eCubeFace fa
   {
     return;
   }
-  CE_ADDREF(txt);
+  CS_ADDREF(txt);
 
 
   if (colorTexture->GetFormat() == ePF_DepthStencil)

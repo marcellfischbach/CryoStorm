@@ -10,10 +10,10 @@ namespace ce
 {
 
 
-CE_CLASS()
-class CE_CORE_API TextFile : public CE_SUPER(iObject)
+CS_CLASS()
+class CS_CORE_API TextFile : public CS_SUPER(iObject)
 {
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
   TextFile () = default;
   ~TextFile() override = default;

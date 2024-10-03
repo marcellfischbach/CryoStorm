@@ -4,7 +4,7 @@
 namespace ce
 {
 
-#ifdef CE_WIN32
+#ifdef CS_WIN32
 
 #include <Windows.h>
 

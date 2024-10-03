@@ -17,7 +17,7 @@ PPCombine::PPCombine()
 
 PPCombine::~PPCombine()
 {
-  CE_RELEASE(m_shader);
+  CS_RELEASE(m_shader);
   m_shader               = nullptr;
   m_attribColor0          = nullptr;
   m_attribColor1          = nullptr;
@@ -28,7 +28,7 @@ bool PPCombine::RefreshOutputTexture(ce::iDevice *device, iRenderTarget2D *final
 {
   if (finalTarget)
   {
-    CE_SET(m_renderTarget, finalTarget);
+    CS_SET(m_renderTarget, finalTarget);
     return finalTarget;
   }
 

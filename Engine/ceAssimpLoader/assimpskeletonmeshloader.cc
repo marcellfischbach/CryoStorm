@@ -32,7 +32,7 @@ struct SkeletonLoaderData
 
 AssimpSkeletonMeshLoader::AssimpSkeletonMeshLoader()
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
 }
 
 

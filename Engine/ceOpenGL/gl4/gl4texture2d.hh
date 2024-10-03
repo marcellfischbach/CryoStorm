@@ -9,19 +9,19 @@
 namespace ce::opengl
 {
 
-CE_CLASS()
-class CE_OGL_API GL4Texture2D : public CE_SUPER(iTexture2D)
+CS_CLASS()
+class CS_OGL_API GL4Texture2D : public CS_SUPER(iTexture2D)
 {
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
   GL4Texture2D();
   ~GL4Texture2D() override;
-  CE_NODISCARD uint32_t GetName()
+  CS_NODISCARD uint32_t GetName()
   {
     return m_name;
   }
 
-  CE_NODISCARD eTextureType GetType() const
+  CS_NODISCARD eTextureType GetType() const
   {
     return eTextureType::Texture2D;
   }

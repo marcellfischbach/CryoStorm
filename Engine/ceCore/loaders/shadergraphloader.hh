@@ -14,10 +14,10 @@ class SGNode;
 class SGResourceNode;
 class ShaderGraph;
 
-CE_CLASS()
-class CE_CORE_API ShaderGraphLoader : public CE_SUPER(BaseCEFAssetLoader)
+CS_CLASS()
+class CS_CORE_API ShaderGraphLoader : public CS_SUPER(BaseCEFAssetLoader)
 {
-CE_CLASS_GEN_OBJECT;
+CS_CLASS_GEN_OBJECT;
 public:
   ShaderGraphLoader();
   ~ShaderGraphLoader() override = default;

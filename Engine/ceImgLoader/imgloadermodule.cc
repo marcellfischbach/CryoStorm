@@ -30,7 +30,7 @@ bool ImgLoaderModule::Initialize(const std::vector<std::string> &args, Engine *e
 
 }
 
-CE_DEFINE_LIBRARY(ceImgLoader)
+CS_DEFINE_LIBRARY(ceImgLoader)
 {
   printf ("Load library: ceImgLoader\n");
   return new ce::img::ImgLoaderModule;

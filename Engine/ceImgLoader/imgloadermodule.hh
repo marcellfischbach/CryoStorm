@@ -7,7 +7,7 @@
 namespace ce::img
 {
 
-class CE_IMGLOADER_API ImgLoaderModule : public iModule
+class CS_IMGLOADER_API ImgLoaderModule : public iModule
 {
 public:
   bool Register(const std::vector<std::string> &args, Engine *engine);
@@ -17,4 +17,4 @@ public:
 
 }
 
-CE_DECLARE_LIBRARY(ceImgLoader);
+CS_DECLARE_LIBRARY(ceImgLoader);

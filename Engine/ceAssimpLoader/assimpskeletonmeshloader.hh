@@ -13,10 +13,10 @@ namespace ce::assimp
 
 struct SkeletonLoaderData;
 
-CE_CLASS()
-class CE_ASSIMP_API AssimpSkeletonMeshLoader : public CE_SUPER(iAssetLoader)
+CS_CLASS()
+class CS_ASSIMP_API AssimpSkeletonMeshLoader : public CS_SUPER(iAssetLoader)
 {
-CE_CLASS_GEN_OBJECT;
+CS_CLASS_GEN_OBJECT;
 public:
   AssimpSkeletonMeshLoader();
   virtual ~AssimpSkeletonMeshLoader() { }

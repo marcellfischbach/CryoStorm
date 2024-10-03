@@ -7,28 +7,28 @@
 namespace ce::bullet
 {
 
-CE_CLASS()
+CS_CLASS()
 
-class CE_BULLET_API BulletSystem : public CE_SUPER(iPhysicsSystem)
+class CS_BULLET_API BulletSystem : public CS_SUPER(iPhysicsSystem)
 {
-CE_CLASS_GEN_OBJECT;
+CS_CLASS_GEN_OBJECT;
 public:
   BulletSystem();
 
   ~BulletSystem() override;
 
-  CE_NODISCARD iPhysicsWorld *CreateWorld() override;
+  CS_NODISCARD iPhysicsWorld *CreateWorld() override;
 
 
-  CE_NODISCARD iCollisionShape* CreateShape(const SphereShapeDesc & desc) override;
-  CE_NODISCARD iCollisionShape* CreateShape(const BoxShapeDesc & desc) override;
-  CE_NODISCARD iCollisionShape* CreateShape(const CylinderShapeDesc & desc) override;
-  CE_NODISCARD iCollisionShape* CreateShape(const CapsuleShapeDesc & desc) override;
+  CS_NODISCARD iCollisionShape* CreateShape(const SphereShapeDesc & desc) override;
+  CS_NODISCARD iCollisionShape* CreateShape(const BoxShapeDesc & desc) override;
+  CS_NODISCARD iCollisionShape* CreateShape(const CylinderShapeDesc & desc) override;
+  CS_NODISCARD iCollisionShape* CreateShape(const CapsuleShapeDesc & desc) override;
 
 
-  CE_NODISCARD iStaticCollider* CreateStaticCollider() override;
-  CE_NODISCARD iDynamicCollider* CreateDynamicCollider() override;
-  CE_NODISCARD iTriggerCollider* CreateTriggerCollider() override;
+  CS_NODISCARD iStaticCollider* CreateStaticCollider() override;
+  CS_NODISCARD iDynamicCollider* CreateDynamicCollider() override;
+  CS_NODISCARD iTriggerCollider* CreateTriggerCollider() override;
 
 };
 

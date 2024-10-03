@@ -15,7 +15,7 @@ namespace ce
 {
 
 
-struct CE_CORE_API Matrix4f
+struct CS_CORE_API Matrix4f
 {
 public:
   float m00;
@@ -37,7 +37,7 @@ public:
 
 public:
 
-  CE_FORCEINLINE explicit Matrix4f(float m00 = 1.0f, float m01 = 0.0f, float m02 = 0.0f, float m03 = 0.0f, float m10 = 0.0f, float m11 = 1.0f, float m12 = 0.0f, float m13 = 0.0f, float m20 = 0.0f, float m21 = 0.0f, float m22 = 1.0f, float m23 = 0.0f, float m30 = 0.0f, float m31 = 0.0f, float m32 = 0.0f, float m33 = 1.0f)
+  CS_FORCEINLINE explicit Matrix4f(float m00 = 1.0f, float m01 = 0.0f, float m02 = 0.0f, float m03 = 0.0f, float m10 = 0.0f, float m11 = 1.0f, float m12 = 0.0f, float m13 = 0.0f, float m20 = 0.0f, float m21 = 0.0f, float m22 = 1.0f, float m23 = 0.0f, float m30 = 0.0f, float m31 = 0.0f, float m32 = 0.0f, float m33 = 1.0f)
       : m00(m00)
         , m01(m01)
         , m02(m02)
@@ -57,7 +57,7 @@ public:
   {
   }
 
-  CE_FORCEINLINE explicit Matrix4f(const float *f)
+  CS_FORCEINLINE explicit Matrix4f(const float *f)
       : m00(f[0])
         , m01(f[1])
         , m02(f[2])
@@ -77,7 +77,7 @@ public:
   {
   }
   
-  CE_FORCEINLINE void Set(float m00, float m01, float m02, float m03, float m10, float m11, float m12, float m13, float m20, float m21, float m22, float m23, float m30, float m31, float m32, float m33)
+  CS_FORCEINLINE void Set(float m00, float m01, float m02, float m03, float m10, float m11, float m12, float m13, float m20, float m21, float m22, float m23, float m30, float m31, float m32, float m33)
   {
     this->m00 = m00;
     this->m01 = m01;
@@ -100,13 +100,13 @@ public:
     this->m33 = m33;
   }
 
-  CE_FORCEINLINE void SetIdentity()
+  CS_FORCEINLINE void SetIdentity()
   {
     m01 = m02 = m03 = m10 = m12 = m13 = m20 = m21 = m23 = m30 = m31 = m32 = 0.0f;
     m00 = m11 = m22 = m33 = 1.0f;
   }
 
-  CE_FORCEINLINE void SetXAxis(float x, float y, float z, float w = 0.0f)
+  CS_FORCEINLINE void SetXAxis(float x, float y, float z, float w = 0.0f)
   {
     m00 = x;
     m01 = y;
@@ -114,7 +114,7 @@ public:
     m03 = w;
   }
 
-  CE_FORCEINLINE void SetXAxis(const Vector3f &v, float w = 0.0f)
+  CS_FORCEINLINE void SetXAxis(const Vector3f &v, float w = 0.0f)
   {
     m00 = v.x;
     m01 = v.y;
@@ -122,7 +122,7 @@ public:
     m03 = w;
   }
 
-  CE_FORCEINLINE void SetXAxis(const Vector4f &v)
+  CS_FORCEINLINE void SetXAxis(const Vector4f &v)
   {
     m00 = v.x;
     m01 = v.y;
@@ -130,7 +130,7 @@ public:
     m03 = v.w;
   }
 
-  CE_FORCEINLINE void SetYAxis(float x, float y, float z, float w = 0.0f)
+  CS_FORCEINLINE void SetYAxis(float x, float y, float z, float w = 0.0f)
   {
     m10 = x;
     m11 = y;
@@ -138,7 +138,7 @@ public:
     m13 = w;
   }
 
-  CE_FORCEINLINE void SetYAxis(const Vector3f &v, float w = 0.0f)
+  CS_FORCEINLINE void SetYAxis(const Vector3f &v, float w = 0.0f)
   {
     m10 = v.x;
     m11 = v.y;
@@ -147,7 +147,7 @@ public:
   }
 
 
-  CE_FORCEINLINE void SetYAxis(const Vector4f &v)
+  CS_FORCEINLINE void SetYAxis(const Vector4f &v)
   {
     m10 = v.x;
     m11 = v.y;
@@ -156,7 +156,7 @@ public:
   }
 
 
-  CE_FORCEINLINE void SetZAxis(float x, float y, float z, float w = 0.0f)
+  CS_FORCEINLINE void SetZAxis(float x, float y, float z, float w = 0.0f)
   {
     m20 = x;
     m21 = y;
@@ -164,7 +164,7 @@ public:
     m23 = w;
   }
 
-  CE_FORCEINLINE void SetZAxis(const Vector3f &v, float w = 0.0f)
+  CS_FORCEINLINE void SetZAxis(const Vector3f &v, float w = 0.0f)
   {
     m20 = v.x;
     m21 = v.y;
@@ -172,7 +172,7 @@ public:
     m23 = w;
   }
 
-  CE_FORCEINLINE void SetZAxis(const Vector4f &v)
+  CS_FORCEINLINE void SetZAxis(const Vector4f &v)
   {
     m20 = v.x;
     m21 = v.y;
@@ -181,7 +181,7 @@ public:
   }
 
 
-  CE_FORCEINLINE void SetTranslation(float x, float y, float z, float w = 1.0f)
+  CS_FORCEINLINE void SetTranslation(float x, float y, float z, float w = 1.0f)
   {
     m30 = x;
     m31 = y;
@@ -189,7 +189,7 @@ public:
     m33 = w;
   }
 
-  CE_FORCEINLINE void SetTranslation(const Vector3f &tr, float w = 1.0f)
+  CS_FORCEINLINE void SetTranslation(const Vector3f &tr, float w = 1.0f)
   {
     m30 = tr.x;
     m31 = tr.y;
@@ -197,7 +197,7 @@ public:
     m33 = w;
   }
 
-  CE_FORCEINLINE void SetTranslation(const Vector4f &tr)
+  CS_FORCEINLINE void SetTranslation(const Vector4f &tr)
   {
     m30 = tr.x;
     m31 = tr.y;
@@ -206,23 +206,23 @@ public:
   }
 
 
-  CE_NODISCARD CE_FORCEINLINE Vector3f GetXAxis() const
+  CS_NODISCARD CS_FORCEINLINE Vector3f GetXAxis() const
   {
     return Vector3f(m00, m01, m02);
   }
 
-  CE_NODISCARD CE_FORCEINLINE Vector3f GetYAxis() const
+  CS_NODISCARD CS_FORCEINLINE Vector3f GetYAxis() const
   {
     return Vector3f(m10, m11, m12);
   }
 
 
-  CE_NODISCARD CE_FORCEINLINE Vector3f GetZAxis() const
+  CS_NODISCARD CS_FORCEINLINE Vector3f GetZAxis() const
   {
     return Vector3f(m20, m21, m22);
   }
 
-  CE_NODISCARD CE_FORCEINLINE Vector3f GetAxis(eAxis axis) const
+  CS_NODISCARD CS_FORCEINLINE Vector3f GetAxis(eAxis axis) const
   {
     switch (axis)
     {
@@ -237,20 +237,20 @@ public:
   }
 
 
-  CE_NODISCARD CE_FORCEINLINE Vector3f GetTranslation() const
+  CS_NODISCARD CS_FORCEINLINE Vector3f GetTranslation() const
   {
     return Vector3f(m30, m31, m32);
   }
 
 
-  CE_FORCEINLINE void ClearRotation()
+  CS_FORCEINLINE void ClearRotation()
   {
     m00 = m11 = m22 = 1.0f;
     m01 = m02 = m10 = m12 = m20 = m21 = 0.0f;
   }
 
 
-  CE_FORCEINLINE void SetRotationX(float angle)
+  CS_FORCEINLINE void SetRotationX(float angle)
   {
     float c = std::cos(angle);
     float s = std::sin(angle);
@@ -260,7 +260,7 @@ public:
     m22 = c;
   }
 
-  CE_FORCEINLINE void SetRotationY(float angle)
+  CS_FORCEINLINE void SetRotationY(float angle)
   {
     float c = std::cos(angle);
     float s = std::sin(angle);
@@ -270,7 +270,7 @@ public:
     m22 = c;
   }
 
-  CE_FORCEINLINE void SetRotationZ(float angle)
+  CS_FORCEINLINE void SetRotationZ(float angle)
   {
     float c = std::cos(angle);
     float s = std::sin(angle);
@@ -280,28 +280,28 @@ public:
     m11 = c;
   }
 
-  CE_FORCEINLINE void SetScale(float x, float y, float z)
+  CS_FORCEINLINE void SetScale(float x, float y, float z)
   {
     m00 = x;
     m11 = y;
     m22 = z;
   }
 
-  CE_FORCEINLINE void SetScale(const Vector3f &s)
+  CS_FORCEINLINE void SetScale(const Vector3f &s)
   {
     m00 = s.x;
     m11 = s.y;
     m22 = s.z;
   }
 
-  CE_FORCEINLINE void Scale(const Vector3f &s)
+  CS_FORCEINLINE void Scale(const Vector3f &s)
   {
     m00 *= s.x;
     m11 *= s.y;
     m22 *= s.z;
   }
 
-  CE_FORCEINLINE Matrix4f &SetRotation(const Vector3f &axis, float angle)
+  CS_FORCEINLINE Matrix4f &SetRotation(const Vector3f &axis, float angle)
   {
     float c = std::cos(angle);
     float s = std::sin(angle);
@@ -324,7 +324,7 @@ public:
     return *this;
   }
 
-  CE_NODISCARD CE_FORCEINLINE Matrix4f Inverted() const
+  CS_NODISCARD CS_FORCEINLINE Matrix4f Inverted() const
   {
     float v0 = m20 * m31 - m21 * m30;
     float v1 = m20 * m32 - m22 * m30;
@@ -380,7 +380,7 @@ public:
                     lm30, lm31, lm32, lm33);
   }
 
-  CE_FORCEINLINE void Invert()
+  CS_FORCEINLINE void Invert()
   {
     float v0 = m20 * m31 - m21 * m30;
     float v1 = m20 * m32 - m22 * m30;
@@ -451,7 +451,7 @@ public:
     m33 = lm33;
   }
 
-  CE_NODISCARD CE_FORCEINLINE Matrix4f Transposed() const
+  CS_NODISCARD CS_FORCEINLINE Matrix4f Transposed() const
   {
     float mm00 = m00;
     float mm01 = m10;
@@ -478,7 +478,7 @@ public:
   }
 
 
-  CE_FORCEINLINE static Matrix4f Translation(float x, float y, float z)
+  CS_FORCEINLINE static Matrix4f Translation(float x, float y, float z)
   {
     Matrix4f m;
     m.SetIdentity();
@@ -486,7 +486,7 @@ public:
     return m;
   }
 
-  CE_FORCEINLINE static Matrix4f Translation(const Vector3f &tr)
+  CS_FORCEINLINE static Matrix4f Translation(const Vector3f &tr)
   {
     Matrix4f m;
     m.SetIdentity();
@@ -496,7 +496,7 @@ public:
 
 
 
-  CE_FORCEINLINE static Matrix4f Rotation(float ax, float ay, float az, float angle)
+  CS_FORCEINLINE static Matrix4f Rotation(float ax, float ay, float az, float angle)
   {
     Matrix4f m;
     m.SetIdentity();
@@ -504,7 +504,7 @@ public:
     return m;
   }
 
-  CE_FORCEINLINE static Matrix4f Rotation(const Vector3f& axis, float angle)
+  CS_FORCEINLINE static Matrix4f Rotation(const Vector3f& axis, float angle)
   {
     Matrix4f m;
     m.SetIdentity();
@@ -517,7 +517,7 @@ public:
 
 #define SWAP(a, b, s) (s) = (a); (a)=(b); (b)=(s)
 
-  CE_FORCEINLINE void Transpose()
+  CS_FORCEINLINE void Transpose()
   {
     float s;
     SWAP(m01, m10, s);
@@ -530,7 +530,7 @@ public:
 
 #undef SWAP
 
-  CE_FORCEINLINE void SetLookAt(const Vector3f &eye, const Vector3f &spot, const Vector3f &up)
+  CS_FORCEINLINE void SetLookAt(const Vector3f &eye, const Vector3f &spot, const Vector3f &up)
   {
 
     Vector3f zAxis = (spot - eye).Normalized();
@@ -545,7 +545,7 @@ public:
     SetTranslation(-xAxis.Dot(eye), -yAxis.Dot(eye), -zAxis.Dot(eye));
   }
 
-  CE_FORCEINLINE void SetLookAtInv(const Vector3f &eye, const Vector3f &spot, const Vector3f &up)
+  CS_FORCEINLINE void SetLookAtInv(const Vector3f &eye, const Vector3f &spot, const Vector3f &up)
   {
 //    Vector3f xAxis, yAxis, zAxis;
 //    Vector3f::Sub(eye, spot, zAxis).Normalize();
@@ -566,9 +566,9 @@ public:
     SetTranslation(eye);
   }
 
-  CE_FORCEINLINE Matrix4f &operator=(const Matrix4f &other) = default;
+  CS_FORCEINLINE Matrix4f &operator=(const Matrix4f &other) = default;
 
-  CE_FORCEINLINE friend Matrix4f operator*(const Matrix4f &m0, const Matrix4f &m1)
+  CS_FORCEINLINE friend Matrix4f operator*(const Matrix4f &m0, const Matrix4f &m1)
   {
     float mm00 = m0.m00 * m1.m00 + m0.m10 * m1.m01 + m0.m20 * m1.m02 + m0.m30 * m1.m03;
     float mm01 = m0.m01 * m1.m00 + m0.m11 * m1.m01 + m0.m21 * m1.m02 + m0.m31 * m1.m03;
@@ -599,7 +599,7 @@ public:
   }
 
 
-  CE_FORCEINLINE friend Vector3f operator*(const Matrix4f &m, const Vector3f &v)
+  CS_FORCEINLINE friend Vector3f operator*(const Matrix4f &m, const Vector3f &v)
   {
     float x = m.m00 * v.x + m.m10 * v.y + m.m20 * v.z;
     float y = m.m01 * v.x + m.m11 * v.y + m.m21 * v.z;
@@ -608,7 +608,7 @@ public:
   }
 
 
-  CE_NODISCARD CE_FORCEINLINE static Vector3f Mult(const Matrix4f &m, const Vector3f &v)
+  CS_NODISCARD CS_FORCEINLINE static Vector3f Mult(const Matrix4f &m, const Vector3f &v)
   {
     float x = m.m00 * v.x + m.m10 * v.y + m.m20 * v.z;
     float y = m.m01 * v.x + m.m11 * v.y + m.m21 * v.z;
@@ -618,7 +618,7 @@ public:
 
 
 
-  CE_FORCEINLINE friend Vector4f operator*(const Matrix4f &m, const Vector4f &v)
+  CS_FORCEINLINE friend Vector4f operator*(const Matrix4f &m, const Vector4f &v)
   {
     float x = m.m00 * v.x + m.m10 * v.y + m.m20 * v.z + m.m30 * v.w;
     float y = m.m01 * v.x + m.m11 * v.y + m.m21 * v.z + m.m31 * v.w;
@@ -629,7 +629,7 @@ public:
 
 
 
-  CE_NODISCARD CE_FORCEINLINE static Vector4f Mult(const Matrix4f &m, const Vector4f &v)
+  CS_NODISCARD CS_FORCEINLINE static Vector4f Mult(const Matrix4f &m, const Vector4f &v)
   {
     float x = m.m00 * v.x + m.m10 * v.y + m.m20 * v.z + m.m30 * v.w;
     float y = m.m01 * v.x + m.m11 * v.y + m.m21 * v.z + m.m31 * v.w;
@@ -640,7 +640,7 @@ public:
 
 
 
-  CE_NODISCARD CE_FORCEINLINE static Vector3f Transform(const Matrix4f &m, const Vector3f &v)
+  CS_NODISCARD CS_FORCEINLINE static Vector3f Transform(const Matrix4f &m, const Vector3f &v)
   {
     float x = m.m00 * v.x + m.m10 * v.y + m.m20 * v.z + m.m30;
     float y = m.m01 * v.x + m.m11 * v.y + m.m21 * v.z + m.m31;
@@ -648,7 +648,7 @@ public:
     return Vector3f(x, y, z);
   }
 
-  CE_NODISCARD CE_FORCEINLINE static Vector2f TransformXY(const Matrix4f &m, const Vector3f &v)
+  CS_NODISCARD CS_FORCEINLINE static Vector2f TransformXY(const Matrix4f &m, const Vector3f &v)
   {
     float x = m.m00 * v.x + m.m10 * v.y + m.m20 * v.z + m.m30;
     float y = m.m01 * v.x + m.m11 * v.y + m.m21 * v.z + m.m31;
@@ -656,12 +656,12 @@ public:
   }
 
 
-  CE_NODISCARD CE_FORCEINLINE static float TransformZ(const Matrix4f &m, const Vector3f &v)
+  CS_NODISCARD CS_FORCEINLINE static float TransformZ(const Matrix4f &m, const Vector3f &v)
   {
     return m.m02 * v.x + m.m12 * v.y + m.m22 * v.z + m.m32;
   }
 
-  explicit CE_FORCEINLINE operator Matrix3f() const
+  explicit CS_FORCEINLINE operator Matrix3f() const
   {
     return Matrix3f(
         m00, m01, m02,
@@ -670,7 +670,7 @@ public:
         );
   }
 
-  CE_FORCEINLINE void Debug(const char *message = nullptr) const
+  CS_FORCEINLINE void Debug(const char *message = nullptr) const
   {
     if (message)
     {
@@ -689,24 +689,24 @@ public:
   }
 
 
-  CE_NODISCARD CE_FORCEINLINE bool IsIdentity() const
+  CS_NODISCARD CS_FORCEINLINE bool IsIdentity() const
   {
-    return CE_FLOAT_IS_ONE(m00) &&
-           CE_FLOAT_IS_ONE(m11) &&
-           CE_FLOAT_IS_ONE(m22) &&
-           CE_FLOAT_IS_ONE(m33) &&
-           CE_FLOAT_IS_ZERO(m01) &&
-           CE_FLOAT_IS_ZERO(m02) &&
-           CE_FLOAT_IS_ZERO(m03) &&
-           CE_FLOAT_IS_ZERO(m10) &&
-           CE_FLOAT_IS_ZERO(m12) &&
-           CE_FLOAT_IS_ZERO(m13) &&
-           CE_FLOAT_IS_ZERO(m20) &&
-           CE_FLOAT_IS_ZERO(m21) &&
-           CE_FLOAT_IS_ZERO(m23) &&
-           CE_FLOAT_IS_ZERO(m30) &&
-           CE_FLOAT_IS_ZERO(m31) &&
-           CE_FLOAT_IS_ZERO(m32);
+    return CS_FLOAT_IS_ONE(m00) &&
+           CS_FLOAT_IS_ONE(m11) &&
+           CS_FLOAT_IS_ONE(m22) &&
+           CS_FLOAT_IS_ONE(m33) &&
+           CS_FLOAT_IS_ZERO(m01) &&
+           CS_FLOAT_IS_ZERO(m02) &&
+           CS_FLOAT_IS_ZERO(m03) &&
+           CS_FLOAT_IS_ZERO(m10) &&
+           CS_FLOAT_IS_ZERO(m12) &&
+           CS_FLOAT_IS_ZERO(m13) &&
+           CS_FLOAT_IS_ZERO(m20) &&
+           CS_FLOAT_IS_ZERO(m21) &&
+           CS_FLOAT_IS_ZERO(m23) &&
+           CS_FLOAT_IS_ZERO(m30) &&
+           CS_FLOAT_IS_ZERO(m31) &&
+           CS_FLOAT_IS_ZERO(m32);
   }
 
 };

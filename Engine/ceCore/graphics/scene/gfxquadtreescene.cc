@@ -60,7 +60,7 @@ struct GfxQuadtreeScene::Cell
   MaterialCompound& GetShadedCompound(iMaterial* material);
 
 
-  CE_NODISCARD size_t Idx(const Vector3f &v) const;
+  CS_NODISCARD size_t Idx(const Vector3f &v) const;
   void UpdateBoundingBox();
   void RemoveLight(GfxLight *light) const;
   void ScanMeshes(const iClipper *clipper, GfxSceneCollector &collector) const;
@@ -80,7 +80,7 @@ struct GfxQuadtreeScene::Cell
 
 GfxQuadtreeScene::GfxQuadtreeScene()
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
   m_root = new Cell(nullptr, 0, Vector2f(-100.0f, -100.0f), Vector2f(100.0f, 100.0f));
 }
 

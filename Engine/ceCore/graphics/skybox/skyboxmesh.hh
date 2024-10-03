@@ -14,7 +14,7 @@ struct iShaderAttribute;
 struct iTexture2D;
 struct iTextureCube;
 
-class CE_CORE_API SkyboxMesh
+class CS_CORE_API SkyboxMesh
 {
 public:
   SkyboxMesh() = default;

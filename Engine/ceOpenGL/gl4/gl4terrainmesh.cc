@@ -10,7 +10,7 @@ namespace ce::opengl
 GL4TerrainMeshGeneratorFactory::GL4TerrainMeshGeneratorFactory()
   : iTerrainMeshGeneratorFactory()
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
 }
 
 iTerrainMeshGenerator* GL4TerrainMeshGeneratorFactory::Create()

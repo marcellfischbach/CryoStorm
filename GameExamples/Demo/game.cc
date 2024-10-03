@@ -8,7 +8,7 @@
 #include <ceCore/graphics/shadergraph/sgnodes.hh>
 #include <ceCore/objectregistry.hh>
 
-CE_DEFINE_GAME(Game)
+CS_DEFINE_GAME(Game)
 
 
 #include <ceLauncher/launchermodule.hh>

@@ -6,7 +6,7 @@
 
 namespace ce
 {
-class CE_CORE_API CoreModule : public iModule
+class CS_CORE_API CoreModule : public iModule
 {
 public:
   bool Register(const std::vector<std::string> &args, Engine *engine);
@@ -15,7 +15,7 @@ public:
 
 }
 
-CE_DECLARE_LIBRARY(ceCore);
+CS_DECLARE_LIBRARY(ceCore);
 
 
 #endif // COREMODULE_HH

@@ -17,10 +17,10 @@ namespace opengl
 {
 class GL4Program;
 
-CE_CLASS()
-class CE_OGL_API GL4Device : public CE_SUPER(iDevice)
+CS_CLASS()
+class CS_OGL_API GL4Device : public CS_SUPER(iDevice)
 {
-CE_CLASS_GEN_OBJECT;
+CS_CLASS_GEN_OBJECT;
 public:
   GL4Device();
   virtual ~GL4Device();
@@ -139,9 +139,9 @@ public:
   void IncTriangles(Size num);
 
   void ResetDebug() override;
-  CE_NODISCARD Size GetNumberOfDrawCalls() const override;
-  CE_NODISCARD Size GetNumberOfTriangles() const override;
-  CE_NODISCARD Size GetNumberOfShaderStateChanges() const override;
+  CS_NODISCARD Size GetNumberOfDrawCalls() const override;
+  CS_NODISCARD Size GetNumberOfTriangles() const override;
+  CS_NODISCARD Size GetNumberOfShaderStateChanges() const override;
 #endif
 
 private:

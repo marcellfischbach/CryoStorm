@@ -21,7 +21,7 @@
 #include <GL/glew.h>
 #include <iostream>
 
-#define CE_MAX_LIGHTS 4
+#define CS_MAX_LIGHTS 4
 
 namespace ce::opengl
 {
@@ -70,7 +70,7 @@ GL4Device::GL4Device()
     , m_fullscreenBlitCubeNegZRenderMesh(nullptr)
     , m_renderLayer(-1)
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
 
 
 }
@@ -143,7 +143,7 @@ bool GL4Device::Initialize()
     m_skeletonMatrices[i].SetIdentity();
   }
 
-  CE_GL_ERROR();
+  CS_GL_ERROR();
 
   return true;
 }
@@ -266,7 +266,7 @@ void GL4Device::SetDepthFunc(eCompareFunc func)
 
 void GL4Device::SetBlending(bool blending)
 {
-  CE_GL_ERROR()
+  CS_GL_ERROR()
 
   if (m_blending != blending)
   {
@@ -280,14 +280,14 @@ void GL4Device::SetBlending(bool blending)
       glDisable(GL_BLEND);
     }
   }
-  CE_GL_ERROR()
+  CS_GL_ERROR()
 }
 
 void GL4Device::SetBlendFactor(eBlendFactor srcFactor, eBlendFactor dstFactor)
 {
-  CE_GL_ERROR()
+  CS_GL_ERROR()
   SetBlendFactor(srcFactor, srcFactor, dstFactor, dstFactor);
-  CE_GL_ERROR()
+  CS_GL_ERROR()
 }
 
 void GL4Device::SetBlendFactor(eBlendFactor srcFactorColor,
@@ -575,15 +575,15 @@ void GL4Device::SetShader(iShader *shader)
   if (m_shader)
   {
     GL4Program *program = static_cast<GL4Program *>(m_shader);
-    CE_GL_ERROR();
+    CS_GL_ERROR();
     glUseProgram(program->GetName());
-    CE_GL_ERROR();
+    CS_GL_ERROR();
   }
   else
   {
-    CE_GL_ERROR();
+    CS_GL_ERROR();
     glUseProgram(0);
-    CE_GL_ERROR();
+    CS_GL_ERROR();
   }
 
 }
@@ -753,10 +753,10 @@ iSampler *GL4Device::CreateSampler()
 
 iTexture2D *GL4Device::CreateTexture(const iTexture2D::Descriptor &descriptor)
 {
-  CE_GL_ERROR();
+  CS_GL_ERROR();
   SetActiveTexture(eTU_COUNT + 1);
   UnbindUnsafe(m_tempTexture);
-  CE_GL_ERROR();
+  CS_GL_ERROR();
 
   GL4Texture2D *texture = new GL4Texture2D();
   texture->Initialize(
@@ -773,10 +773,10 @@ iTexture2D *GL4Device::CreateTexture(const iTexture2D::Descriptor &descriptor)
 
 iTexture2DArray *GL4Device::CreateTexture(const iTexture2DArray::Descriptor &descriptor)
 {
-  CE_GL_ERROR();
+  CS_GL_ERROR();
   SetActiveTexture(eTU_COUNT + 1);
   UnbindUnsafe(m_tempTexture);
-  CE_GL_ERROR();
+  CS_GL_ERROR();
 
   GL4Texture2DArray *texture = new GL4Texture2DArray();
   texture->Initialize(
@@ -793,10 +793,10 @@ iTexture2DArray *GL4Device::CreateTexture(const iTexture2DArray::Descriptor &des
 
 iTextureCube *GL4Device::CreateTexture(const iTextureCube::Descriptor &descriptor)
 {
-  CE_GL_ERROR();
+  CS_GL_ERROR();
   SetActiveTexture(eTU_COUNT + 1);
   UnbindUnsafe(m_tempTexture);
-  CE_GL_ERROR();
+  CS_GL_ERROR();
 
   GL4TextureCube *texture = new GL4TextureCube();
   texture->Initialize(
@@ -895,7 +895,7 @@ eTextureUnit GL4Device::ShiftTextureUnit()
 
 void GL4Device::SetSampler(eTextureUnit unit, iSampler *sampler)
 {
-  CE_GL_ERROR()
+  CS_GL_ERROR()
   if (m_samplers[unit] != sampler)
   {
     m_samplers[unit] = sampler;
@@ -908,13 +908,13 @@ void GL4Device::SetSampler(eTextureUnit unit, iSampler *sampler)
       glBindSampler(unit, 0);
     }
   }
-  CE_GL_ERROR()
+  CS_GL_ERROR()
 }
 
 
 void GL4Device::BindUnsafe(iTexture *texture)
 {
-  CE_GL_ERROR()
+  CS_GL_ERROR()
   if (!texture)
   {
     return;
@@ -937,12 +937,12 @@ void GL4Device::BindUnsafe(iTexture *texture)
       static_cast<GL4TextureCube *>(texture)->Bind();
       break;
   }
-  CE_GL_ERROR()
+  CS_GL_ERROR()
 }
 
 void GL4Device::UnbindUnsafe(iTexture *texture)
 {
-  CE_GL_ERROR()
+  CS_GL_ERROR()
   if (!texture)
   {
     return;
@@ -965,14 +965,14 @@ void GL4Device::UnbindUnsafe(iTexture *texture)
       static_cast<GL4TextureCube *>(texture)->Unbind();
       break;
   }
-  CE_GL_ERROR()
+  CS_GL_ERROR()
 
 }
 
 eTextureUnit GL4Device::BindTexture(iTexture *texture)
 {
-#ifndef CE_DISABLE_RENDERING
-  CE_GL_ERROR()
+#ifndef CS_DISABLE_RENDERING
+  CS_GL_ERROR()
   if (!texture)
   {
     return eTU_Invalid;
@@ -1001,17 +1001,17 @@ eTextureUnit GL4Device::BindTexture(iTexture *texture)
   iTexture     *oldTexture = m_textures[unit];
   m_textures[unit] = texture;
   m_texturesUsed[unit] = true;
-//    CE_ADDREF(texture);
+//    CS_ADDREF(texture);
 
-  CE_GL_ERROR()
+  CS_GL_ERROR()
   SetActiveTexture(unit);
   UnbindUnsafe(oldTexture);
   BindUnsafe(texture);
-  CE_GL_ERROR()
+  CS_GL_ERROR()
 
 
   SetSampler(unit, texture->GetSampler());
-  CE_GL_ERROR()
+  CS_GL_ERROR()
 
   return unit;
 #else
@@ -1030,7 +1030,7 @@ void GL4Device::SetActiveTexture(ce::uint32_t activeTexture)
 
 bool GL4Device::BindMaterial(iMaterial *material, eRenderPass pass)
 {
-#ifndef CE_DISABLE_RENDERING
+#ifndef CS_DISABLE_RENDERING
   if (!material && pass == eRP_COUNT)
   {
     m_material     = nullptr;
@@ -1039,7 +1039,7 @@ bool GL4Device::BindMaterial(iMaterial *material, eRenderPass pass)
     return false;
   }
 
-  CE_GL_ERROR()
+  CS_GL_ERROR()
   if (m_material == material && m_materialPass == pass)
   {
     ResetTexturesToMark();
@@ -1049,7 +1049,7 @@ bool GL4Device::BindMaterial(iMaterial *material, eRenderPass pass)
   m_material     = material;
   m_materialPass = pass;
   m_materialSuccessfull = material && material->Bind(this, pass);
-  CE_GL_ERROR()
+  CS_GL_ERROR()
   return m_materialSuccessfull;
 #else
   return true;
@@ -1059,22 +1059,22 @@ bool GL4Device::BindMaterial(iMaterial *material, eRenderPass pass)
 
 void GL4Device::Render(iRenderMesh *mesh, eRenderPass pass)
 {
-#ifndef CE_DISABLE_RENDERING
+#ifndef CS_DISABLE_RENDERING
   if (mesh)
   {
-    CE_GL_ERROR();
+    CS_GL_ERROR();
     BindMatrices();
     BindStandardValues();
-    CE_GL_ERROR();
+    CS_GL_ERROR();
     mesh->Render(this, pass);
-    CE_GL_ERROR();
+    CS_GL_ERROR();
   }
 #endif
 }
 
 void GL4Device::RenderPixel()
 {
-#ifndef CE_DISABLE_RENDERING
+#ifndef CS_DISABLE_RENDERING
   iRenderMesh *mesh = PixelRenderMesh();
   mesh->Render(this, eRP_Forward);
 #endif
@@ -1082,7 +1082,7 @@ void GL4Device::RenderPixel()
 
 void GL4Device::RenderFullscreen()
 {
-#ifndef CE_DISABLE_RENDERING
+#ifndef CS_DISABLE_RENDERING
   iRenderMesh *mesh = FullscreenBlitRenderMesh();
   mesh->Render(this, eRP_Forward);
 #endif
@@ -1093,7 +1093,7 @@ void GL4Device::RenderFullscreen(iTexture2D *texture)
 {
   if (!texture)
   { return; }
-#ifndef CE_DISABLE_RENDERING
+#ifndef CS_DISABLE_RENDERING
   SetFillMode(eFillMode::Fill);
   bool     multiSampling = texture->IsMultiSampling();
   uint16_t samples       = texture->GetSamples();
@@ -1120,7 +1120,7 @@ void GL4Device::RenderFullscreen(iTexture2D *texture)
 
 void GL4Device::RenderFullscreen(iTexture2DArray *texture, int layer)
 {
-#ifndef CE_DISABLE_RENDERING
+#ifndef CS_DISABLE_RENDERING
   SetFillMode(eFillMode::Fill);
   GL4Program *prog = FullscreenBlitArrayProgram();
   SetShader(prog);
@@ -1147,7 +1147,7 @@ void GL4Device::RenderFullscreen(iTextureCube
                                  const Vector2f &translation
                                 )
 {
-#ifndef CE_DISABLE_RENDERING
+#ifndef CS_DISABLE_RENDERING
   SetFillMode(eFillMode::Fill);
   SetDepthTest(false);
   SetDepthWrite(false);
@@ -1177,14 +1177,14 @@ void GL4Device::RenderFullscreen(iTextureCube
 
 void GL4Device::BindForwardLight(const iLight *light, Size idx)
 {
-#ifndef CE_DISABLE_RENDERING
+#ifndef CS_DISABLE_RENDERING
 
-  if (!m_shader || idx >= CE_MAX_LIGHTS)
+  if (!m_shader || idx >= CS_MAX_LIGHTS)
   {
     return;
   }
 
-  CE_GL_ERROR();
+  CS_GL_ERROR();
 
   iShaderAttribute *lightColor      = m_shader->GetShaderAttribute(eSA_LightColor);
   iShaderAttribute *lightVector     = m_shader->GetShaderAttribute(eSA_LightVector);
@@ -1337,15 +1337,15 @@ void GL4Device::BindForwardLight(const iLight *light, Size idx)
       lightCastShadow->Bind(0);
     }
   }
-  CE_GL_ERROR();
+  CS_GL_ERROR();
 #endif
 }
 
 void GL4Device::FinishForwardLights(Size numLights)
 {
-#ifndef CE_DISABLE_RENDERING
+#ifndef CS_DISABLE_RENDERING
 
-  CE_GL_ERROR();
+  CS_GL_ERROR();
   if (m_shader)
   {
     iShaderAttribute *count = m_shader->GetShaderAttribute(eSA_LightCount);
@@ -1354,13 +1354,13 @@ void GL4Device::FinishForwardLights(Size numLights)
       count->Bind((int) numLights);
     }
   }
-  CE_GL_ERROR();
+  CS_GL_ERROR();
 #endif
 }
 
 void GL4Device::BindMatrices()
 {
-#ifndef CE_DISABLE_RENDERING
+#ifndef CS_DISABLE_RENDERING
   if (!m_shader)
   {
     return;

@@ -3,10 +3,10 @@
 
 #include <ceCore/entity/entitysystem.hh>
 
-CE_CLASS()
-class CameraHandler : public CE_SUPER(ce::EntityState)
+CS_CLASS()
+class CameraHandler : public CS_SUPER(ce::EntityState)
 {
-CE_CLASS_GEN_OBJECT;
+CS_CLASS_GEN_OBJECT;
 public:
   CameraHandler();
   ~CameraHandler() override = default;
@@ -22,10 +22,10 @@ private:
 
 
 
-CE_CLASS()
-class CameraHandlerMotion : public CE_SUPER(ce::EntityState)
+CS_CLASS()
+class CameraHandlerMotion : public CS_SUPER(ce::EntityState)
 {
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
   CameraHandlerMotion();
   ~CameraHandlerMotion() override = default;

@@ -7,7 +7,7 @@
 namespace ce::bullet
 {
 
-class CE_BULLET_API BulletModule : public iModule
+class CS_BULLET_API BulletModule : public iModule
 {
 public:
   bool Register(const std::vector<std::string> &args, Engine *engine);
@@ -17,4 +17,4 @@ public:
 
 }
 
-CE_DECLARE_LIBRARY(ceBullet);
+CS_DECLARE_LIBRARY(ceBullet);

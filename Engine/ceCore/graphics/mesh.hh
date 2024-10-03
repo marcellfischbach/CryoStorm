@@ -16,17 +16,17 @@ namespace ce
 {
 
 
-CE_CLASS()
-class CE_CORE_API Mesh : public CE_SUPER(iObject)
+CS_CLASS()
+class CS_CORE_API Mesh : public CS_SUPER(iObject)
 {
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
   Mesh();
   ~Mesh() override;
 
 
 
-  class CE_CORE_API SubMesh
+  class CS_CORE_API SubMesh
   {
     friend class Mesh;
   private:
@@ -51,7 +51,7 @@ public:
   };
 
 
-  class CE_CORE_API MaterialSlot
+  class CS_CORE_API MaterialSlot
   {
     friend class Mesh;
   private:

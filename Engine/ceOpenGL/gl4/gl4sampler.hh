@@ -10,10 +10,10 @@ namespace ce::opengl
 {
 
 
-CE_CLASS()
-class CE_OGL_API GL4Sampler : public CE_SUPER(iSampler)
+CS_CLASS()
+class CS_OGL_API GL4Sampler : public CS_SUPER(iSampler)
 {
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
   GL4Sampler();
   virtual ~GL4Sampler();

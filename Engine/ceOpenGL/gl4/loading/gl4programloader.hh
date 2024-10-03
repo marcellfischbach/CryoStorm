@@ -6,10 +6,10 @@ namespace ce::opengl
 {
 
 
-CE_CLASS()
-class CE_OGL_API GL4ProgramLoader : public CE_SUPER(BaseCEFAssetLoader)
+CS_CLASS()
+class CS_OGL_API GL4ProgramLoader : public CS_SUPER(BaseCEFAssetLoader)
 {
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
   GL4ProgramLoader();
 

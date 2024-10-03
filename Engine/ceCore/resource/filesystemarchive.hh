@@ -7,17 +7,17 @@
 namespace ce
 {
 
-CE_CLASS()
-class CE_CORE_API FileSystemArchive : public CE_SUPER(iArchive)
+CS_CLASS()
+class CS_CORE_API FileSystemArchive : public CS_SUPER(iArchive)
 {
-CE_CLASS_GEN_OBJECT;
+CS_CLASS_GEN_OBJECT;
 public:
   FileSystemArchive(const std::string &name, const std::string &rootPath, int priority);
   ~FileSystemArchive() override = default;
 
   const std::string &GetRootPath () const;
 
-  CE_NODISCARD const std::string &GetName () const override;
+  CS_NODISCARD const std::string &GetName () const override;
   int GetPriority() const override;
   iFile *Open(const std::string &locator, eAccessMode accessMode, eOpenMode openMode) override;
 

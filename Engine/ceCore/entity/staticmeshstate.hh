@@ -15,28 +15,28 @@ class GfxMesh;
 class Skeleton;
 struct iMaterial;
 
-CE_CLASS()
-class CE_CORE_API StaticMeshState : public CE_SUPER(SpatialState)
+CS_CLASS()
+class CS_CORE_API StaticMeshState : public CS_SUPER(SpatialState)
 {
-CE_CLASS_GEN ;
+CS_CLASS_GEN ;
 public:
   StaticMeshState(const std::string& name = std::string(""));
   ~StaticMeshState() override;
 
 
   virtual void SetMesh(Mesh* mesh);
-  CE_NODISCARD const Mesh* GetMesh() const;
-  CE_NODISCARD Mesh* GetMesh();
+  CS_NODISCARD const Mesh* GetMesh() const;
+  CS_NODISCARD Mesh* GetMesh();
 
   void SetMaterial (Size idx, iMaterial* material);
-  CE_NODISCARD const iMaterial *GetMaterial (Size idx) const;
-  CE_NODISCARD iMaterial *GetMaterial (Size idx);
+  CS_NODISCARD const iMaterial *GetMaterial (Size idx) const;
+  CS_NODISCARD iMaterial *GetMaterial (Size idx);
 
   void SetReceiveShadow (bool receiveShadow);
-  CE_NODISCARD bool IsReceiveShadow () const;
+  CS_NODISCARD bool IsReceiveShadow () const;
 
   void SetCastShadow (bool castShadow);
-  CE_NODISCARD bool IsCastShadow () const;
+  CS_NODISCARD bool IsCastShadow () const;
 
   /**
    * @name Livecycle

@@ -5,7 +5,7 @@
 
 #ifdef _DEBUG
 
-#define CE_GL_ERROR() \
+#define CS_GL_ERROR() \
   {                   \
   GLenum error = glGetError();\
   switch (error) \
@@ -41,6 +41,6 @@
 
 #else
 
-#define CE_GL_ERROR()
+#define CS_GL_ERROR()
 
 #endif

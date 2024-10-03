@@ -12,7 +12,7 @@ struct iRenderTarget2D;
 struct iSampler;
 struct iTexture2D;
 
-class CE_CORE_API GBuffer
+class CS_CORE_API GBuffer
 {
 public:
   GBuffer ();

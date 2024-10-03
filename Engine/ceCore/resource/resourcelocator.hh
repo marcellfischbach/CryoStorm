@@ -6,7 +6,7 @@
 namespace ce
 {
 
-class CE_CORE_API ResourceLocator
+class CS_CORE_API ResourceLocator
 {
 public:
 	explicit ResourceLocator(const std::string &encoded);

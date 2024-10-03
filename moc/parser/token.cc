@@ -44,9 +44,9 @@ Token::Token(const std::string & token, uint32_t line, uint32_t column)
   E_CHECK_TKN("enum", eTT_Enum);
   E_CHECK_TKN("template", eTT_Template);
   E_CHECK_TKN("friend", eTT_Friend);
-  E_CHECK_TKN("CE_CLASS", eTT_CS_CLASS);
-  E_CHECK_TKN("CE_PROPERTY", eTT_CS_PROPERTY);
-  E_CHECK_TKN("CE_FUNCTION", eTT_CS_FUNCTION);
+  E_CHECK_TKN("CS_CLASS", eTT_CS_CLASS);
+  E_CHECK_TKN("CS_PROPERTY", eTT_CS_PROPERTY);
+  E_CHECK_TKN("CS_FUNCTION", eTT_CS_FUNCTION);
 else if (IsIdentifier())
   {
     m_type = eTT_Identifier;

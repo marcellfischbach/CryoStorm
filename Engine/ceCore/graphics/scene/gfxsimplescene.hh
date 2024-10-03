@@ -20,11 +20,11 @@ class GfxCamera;
 struct LightInfluenceOnMesh;
 
 
-CE_CLASS()
-class CE_CORE_API GfxSimpleScene : public CE_SUPER(iGfxScene)
+CS_CLASS()
+class CS_CORE_API GfxSimpleScene : public CS_SUPER(iGfxScene)
 {
   friend struct iRenderPipeline;
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
 
   GfxSimpleScene();
@@ -36,7 +36,7 @@ public:
   void Add(GfxLight* light) override;
   void Remove(GfxLight* light) override;
 
-  CE_NODISCARD const std::vector<GfxCamera*> &GetCameras () const override;
+  CS_NODISCARD const std::vector<GfxCamera*> &GetCameras () const override;
 
 
   void ScanMeshes(const iClipper *clipper, GfxSceneCollector &collector) const override;

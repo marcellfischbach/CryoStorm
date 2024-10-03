@@ -8,7 +8,7 @@ namespace ce
 {
 
 
-struct CE_CORE_API Plane
+struct CS_CORE_API Plane
 {
 public:
   float x;
@@ -17,7 +17,7 @@ public:
   float d;
 
 public:
-  CE_FORCEINLINE explicit Plane(float x = 0.0f, float y = 0.0f, float z = 0.0f, float d = 0.0f)
+  CS_FORCEINLINE explicit Plane(float x = 0.0f, float y = 0.0f, float z = 0.0f, float d = 0.0f)
           : x(x)
           , y(y)
           , z(z)
@@ -26,7 +26,7 @@ public:
 
   }
 
-  CE_FORCEINLINE void Set(float x = 0.0f, float y = 0.0f, float z = 0.0f, float d = 0.0f)
+  CS_FORCEINLINE void Set(float x = 0.0f, float y = 0.0f, float z = 0.0f, float d = 0.0f)
   {
     this->x = x;
     this->y = y;
@@ -34,7 +34,7 @@ public:
     this->d = d;
   }
 
-  CE_FORCEINLINE Plane(const Vector3f& pos, const Vector3f& norm)
+  CS_FORCEINLINE Plane(const Vector3f& pos, const Vector3f& norm)
   {
     Vector3f nn = norm.Normalized();
     x = nn.x;
@@ -43,7 +43,7 @@ public:
     d = -pos.Dot(nn);
   }
 
-  CE_FORCEINLINE void Set(const Vector3f& pos, const Vector3f& norm)
+  CS_FORCEINLINE void Set(const Vector3f& pos, const Vector3f& norm)
   {
     Vector3f nn = norm.Normalized();
     x = nn.x;
@@ -52,7 +52,7 @@ public:
     d = -pos.Dot(nn);
   }
 
-  CE_FORCEINLINE Plane(const Vector3f& p0, const Vector3f &p1, const Vector3f &p2)
+  CS_FORCEINLINE Plane(const Vector3f& p0, const Vector3f &p1, const Vector3f &p2)
   {
     Vector3f n0 = (p1 - p0).Normalized();
     Vector3f n1 = (p2 - p0).Normalized();
@@ -66,7 +66,7 @@ public:
     d = -p0.Dot(nn);
   }
 
-  CE_FORCEINLINE void Set(const Vector3f& p0, const Vector3f &p1, const Vector3f &p2)
+  CS_FORCEINLINE void Set(const Vector3f& p0, const Vector3f &p1, const Vector3f &p2)
   {
     Vector3f n0 = (p1 - p0).Normalized();
     Vector3f n1 = (p2 - p0).Normalized();
@@ -81,13 +81,13 @@ public:
   }
 
 
-  CE_NODISCARD CE_FORCEINLINE float Distance(const Vector3f& pos) const
+  CS_NODISCARD CS_FORCEINLINE float Distance(const Vector3f& pos) const
   {
     return x * pos.x + y * pos.y + z * pos.z + d;
   }
 
 
-  CE_NODISCARD CE_FORCEINLINE Vector3f ReflectPoint(const Vector3f& p) const
+  CS_NODISCARD CS_FORCEINLINE Vector3f ReflectPoint(const Vector3f& p) const
   {
     Vector3f normal = Vector3f(x, y, z);
     Vector3f origin = normal * -d;
@@ -103,7 +103,7 @@ public:
 //    return Vector3f::Add(r, origin, r);
   }
 
-  CE_NODISCARD CE_FORCEINLINE Vector3f ReflectDirection(const Vector3f& d) const
+  CS_NODISCARD CS_FORCEINLINE Vector3f ReflectDirection(const Vector3f& d) const
   {
     Vector3f normal = Vector3f(x, y, z);
     return d - normal * (2.0f * (d * normal));

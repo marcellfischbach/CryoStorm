@@ -42,7 +42,7 @@ void Mesh::SetDefaultMaterial(Size idx, iMaterial* defaultMaterial)
   {
     throw OutOfBoundsException();
   }
-  CE_SET(m_materialSlots[idx].m_defaultMaterial, defaultMaterial);
+  CS_SET(m_materialSlots[idx].m_defaultMaterial, defaultMaterial);
 }
 
 Size Mesh::GetNumberOfSubMeshes() const
@@ -120,19 +120,19 @@ Mesh::SubMesh::SubMesh(const SubMesh& mesh)
   : m_mesh(nullptr)
   , m_materialSlotIdx(mesh.m_materialSlotIdx)
 {
-  CE_SET(m_mesh, mesh.m_mesh);
+  CS_SET(m_mesh, mesh.m_mesh);
 }
 
 
 Mesh::SubMesh::~SubMesh()
 {
-  CE_RELEASE(m_mesh);
+  CS_RELEASE(m_mesh);
   m_mesh = nullptr;
 }
 
 Mesh::SubMesh &Mesh::SubMesh::operator=(const SubMesh & mesh)
 {
-  CE_SET(m_mesh, mesh.m_mesh);
+  CS_SET(m_mesh, mesh.m_mesh);
   m_materialSlotIdx = mesh.m_materialSlotIdx;
   return *this;
 }
@@ -142,7 +142,7 @@ Mesh::SubMesh &Mesh::SubMesh::operator=(const SubMesh & mesh)
 
 void Mesh::SubMesh::SetMesh(iRenderMesh* mesh)
 {
-  CE_SET(m_mesh, mesh);
+  CS_SET(m_mesh, mesh);
 }
 
 iRenderMesh* Mesh::SubMesh::GetMesh() const
@@ -173,25 +173,25 @@ Mesh::MaterialSlot::MaterialSlot(const std::string& name, iMaterial* defaultMate
   : m_defaultMaterial(nullptr)
   , m_name(name)
 {
-  CE_SET(m_defaultMaterial, defaultMaterial);
+  CS_SET(m_defaultMaterial, defaultMaterial);
 }
 
 Mesh::MaterialSlot::MaterialSlot(const MaterialSlot& slot)
 : m_defaultMaterial(nullptr)
 {
-  CE_SET(m_defaultMaterial, slot.m_defaultMaterial);
+  CS_SET(m_defaultMaterial, slot.m_defaultMaterial);
   m_name = slot.m_name;
 }
 
 Mesh::MaterialSlot::~MaterialSlot()
 {
-  CE_RELEASE(m_defaultMaterial);
+  CS_RELEASE(m_defaultMaterial);
   m_defaultMaterial = nullptr;
 }
 
 Mesh::MaterialSlot& Mesh::MaterialSlot::operator=(const MaterialSlot& slot)
 {
-  CE_SET(m_defaultMaterial, slot.m_defaultMaterial);
+  CS_SET(m_defaultMaterial, slot.m_defaultMaterial);
   m_name = slot.m_name;
   return *this;
 }

@@ -12,7 +12,7 @@ namespace ce::opengl
 
 GL4Program::GL4Program()
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
   m_name = glCreateProgram();
 }
 

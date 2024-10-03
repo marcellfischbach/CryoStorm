@@ -12,10 +12,10 @@ class Entity;
 class World;
 class SpatialState;
 
-CE_CLASS()
-class CE_CORE_API EntityState : public CE_SUPER(iObject)
+CS_CLASS()
+class CS_CORE_API EntityState : public CS_SUPER(iObject)
 {
-CE_CLASS_GEN_OBJECT;
+CS_CLASS_GEN_OBJECT;
 public:
   EntityState(const std::string& name = std::string(""));
   virtual ~EntityState();

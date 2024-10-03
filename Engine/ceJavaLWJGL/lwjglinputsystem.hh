@@ -8,16 +8,16 @@
 namespace ce::java
 {
 
-CE_CLASS(jclass="org.crimsonedge.lwjgl.LwjglInputSystem")
-class  LwjglInputSystem : public CE_SUPER(iInputSystem)
+CS_CLASS(jclass="org.crimsonedge.lwjgl.LwjglInputSystem")
+class  LwjglInputSystem : public CS_SUPER(iInputSystem)
 {
-CE_CLASS_GEN_OBJECT;
+CS_CLASS_GEN_OBJECT;
 public:
   LwjglInputSystem(LwjglKeyboard *keyboard, LwjglMouse *mouse);
   ~LwjglInputSystem() override = default;
 
-  CE_NODISCARD virtual iKeyboard *GetKeyboard() const;
-  CE_NODISCARD virtual iMouse *GetMouse() const;
+  CS_NODISCARD virtual iKeyboard *GetKeyboard() const;
+  CS_NODISCARD virtual iMouse *GetMouse() const;
 
 
 private:

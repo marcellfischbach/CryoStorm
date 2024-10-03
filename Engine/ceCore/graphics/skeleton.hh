@@ -12,10 +12,10 @@ namespace ce
 {
 
 
-CE_CLASS()
-class CE_CORE_API Skeleton : public CE_SUPER(Object)
+CS_CLASS()
+class CS_CORE_API Skeleton : public CS_SUPER(Object)
 {
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
   struct Bone
   {
@@ -37,8 +37,8 @@ public:
   void Clear();
   void InitializeFrom(const Skeleton& skeleton);
 
-  CE_NODISCARD size_t AddRoot(const std::string &name);
-  CE_NODISCARD size_t AddChild(const std::string &name, size_t parent);
+  CS_NODISCARD size_t AddRoot(const std::string &name);
+  CS_NODISCARD size_t AddChild(const std::string &name, size_t parent);
 
   void SetBase(const Matrix4f &base);
   const Matrix4f &GetBase () const;
@@ -47,13 +47,13 @@ public:
 
 
 
-  CE_NODISCARD size_t GetNumberOfBones () const;
-  CE_NODISCARD size_t IndexOf(const std::string & name) const;
+  CS_NODISCARD size_t GetNumberOfBones () const;
+  CS_NODISCARD size_t IndexOf(const std::string & name) const;
 
-  CE_NODISCARD Bone& GetBone(size_t idx);
-  CE_NODISCARD const Bone& GetBone(size_t idx) const;
+  CS_NODISCARD Bone& GetBone(size_t idx);
+  CS_NODISCARD const Bone& GetBone(size_t idx) const;
 
-  CE_NODISCARD const std::vector<Matrix4f> &GetSkeletonBones () const;
+  CS_NODISCARD const std::vector<Matrix4f> &GetSkeletonBones () const;
 
   Skeleton& operator=(const Skeleton& skeleton);
 

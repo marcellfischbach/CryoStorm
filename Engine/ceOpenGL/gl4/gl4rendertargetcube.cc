@@ -12,7 +12,7 @@ GL4RenderTargetCube::GL4RenderTargetCube()
   , m_size(0)
   , m_depthTexture(nullptr)
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
   glGenFramebuffers(1, &m_name);
 }
 
@@ -24,7 +24,7 @@ GL4RenderTargetCube::~GL4RenderTargetCube()
   }
   m_name = 0;
 
-  CE_RELEASE(m_depthTexture);
+  CS_RELEASE(m_depthTexture);
   for (auto color : m_colorTextures)
   {
     color->Release();
@@ -83,7 +83,7 @@ void GL4RenderTargetCube::SetDepthTexture(iTextureCube* depthTexture)
     return;
   }
 
-  CE_SET(m_depthTexture, txt);
+  CS_SET(m_depthTexture, txt);
 
 
   glFramebufferTexture(GL_FRAMEBUFFER,

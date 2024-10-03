@@ -9,18 +9,18 @@
 namespace ce::opengl
 {
 
-CE_CLASS()
-class CE_OGL_API GL4TextureCube : public CE_SUPER(iTextureCube)
+CS_CLASS()
+class CS_OGL_API GL4TextureCube : public CS_SUPER(iTextureCube)
 {
-CE_CLASS_GEN_OBJECT;
+CS_CLASS_GEN_OBJECT;
 public:
   GL4TextureCube();
   ~GL4TextureCube() override;
-  CE_NODISCARD uint32_t GetName()
+  CS_NODISCARD uint32_t GetName()
   {
     return m_name;
   }
-  CE_NODISCARD eTextureType GetType() const override
+  CS_NODISCARD eTextureType GetType() const override
   {
     return eTextureType::TextureCube;
   }
@@ -28,8 +28,8 @@ public:
   ePixelFormat GetFormat() const override;
 
   void SetSampler(iSampler* sampler) override;
-  CE_NODISCARD iSampler* GetSampler() override;
-  CE_NODISCARD const iSampler* GetSampler() const override;
+  CS_NODISCARD iSampler* GetSampler() override;
+  CS_NODISCARD const iSampler* GetSampler() const override;
 
   void Bind();
   void Unbind();

@@ -12,7 +12,7 @@ EntityState::EntityState(const std::string &name)
   , m_needUpdate(false)
   , m_entity(nullptr)
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
 }
 
 EntityState::~EntityState()
@@ -39,8 +39,8 @@ void EntityState::SetEntity(Entity *entity)
     
     UpdateEntity(oldEntity, m_entity);
     
-    CE_ADDREF(m_entity);
-    CE_RELEASE(oldEntity);
+    CS_ADDREF(m_entity);
+    CS_RELEASE(oldEntity);
   }
 }
 

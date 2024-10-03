@@ -8,10 +8,10 @@ namespace ce
 {
 
 
-CE_CLASS()
-class CE_CORE_API PPBlurH : public CE_SUPER(SimplePostProcess)
+CS_CLASS()
+class CS_CORE_API PPBlurH : public CS_SUPER(SimplePostProcess)
 {
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
 public:
   PPBlurH(size_t sampleCount = 10, float sampleScale = 1.0f);
   ~PPBlurH() override;

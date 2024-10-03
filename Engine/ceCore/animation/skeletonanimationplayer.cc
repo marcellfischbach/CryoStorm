@@ -13,26 +13,26 @@ SkeletonAnimationPlayer::SkeletonAnimationPlayer()
     , m_active(false)
     , m_time(0.0f)
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
 }
 
 
 SkeletonAnimationPlayer::~SkeletonAnimationPlayer()
 {
-  CE_RELEASE(m_skeleton);
-  CE_RELEASE(m_animation);
+  CS_RELEASE(m_skeleton);
+  CS_RELEASE(m_animation);
   m_skeleton  = nullptr;
   m_animation = nullptr;
 }
 
 void SkeletonAnimationPlayer::SetSkeleton(ce::Skeleton *skeleton)
 {
-  CE_SET(m_skeleton, skeleton);
+  CS_SET(m_skeleton, skeleton);
 }
 
 void SkeletonAnimationPlayer::SetAnimation(ce::SkeletonAnimation *animation)
 {
-  CE_SET(m_animation, animation);
+  CS_SET(m_animation, animation);
 }
 
 

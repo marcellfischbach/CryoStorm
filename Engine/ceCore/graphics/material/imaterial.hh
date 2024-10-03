@@ -23,18 +23,18 @@ namespace ce
 struct iDevice;
 struct iShader;
 
-CE_CLASS()
-struct CE_CORE_API iMaterial : public CE_SUPER(iObject)
+CS_CLASS()
+struct CS_CORE_API iMaterial : public CS_SUPER(iObject)
 {
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
 
   ~iMaterial() override = default;
 
-  CE_NODISCARD virtual const iShader *GetShader (eRenderPass pass) const = 0;
+  CS_NODISCARD virtual const iShader *GetShader (eRenderPass pass) const = 0;
 
-  CE_NODISCARD virtual eFillMode GetFillMode() const = 0;
-  CE_NODISCARD virtual eRenderQueue GetRenderQueue() const = 0;
-  CE_NODISCARD virtual eShadingMode GetShadingMode () const = 0;
+  CS_NODISCARD virtual eFillMode GetFillMode() const = 0;
+  CS_NODISCARD virtual eRenderQueue GetRenderQueue() const = 0;
+  CS_NODISCARD virtual eShadingMode GetShadingMode () const = 0;
 
   virtual bool Bind(iDevice * device, eRenderPass pass) = 0;
 
@@ -53,6 +53,6 @@ struct CE_CORE_API iMaterial : public CE_SUPER(iObject)
 };
 
 
-CE_CORE_API extern std::map<iMaterial*, std::string> s_material_names;
+CS_CORE_API extern std::map<iMaterial*, std::string> s_material_names;
 
 }

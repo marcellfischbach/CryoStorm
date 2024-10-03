@@ -9,10 +9,10 @@
 namespace ce
 {
 
-CE_CLASS()
-class CE_CORE_API SGConstFloat : public CE_SUPER(SGNode)
+CS_CLASS()
+class CS_CORE_API SGConstFloat : public CS_SUPER(SGNode)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 public:
   const static std::string OUT_V;
 
@@ -25,10 +25,10 @@ public:
 };
 
 
-CE_CLASS()
-class CE_CORE_API SGConstVec2 : public CE_SUPER(SGNode)
+CS_CLASS()
+class CS_CORE_API SGConstVec2 : public CS_SUPER(SGNode)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 public:
   const static std::string OUT_V;
 
@@ -41,10 +41,10 @@ public:
 };
 
 
-CE_CLASS()
-class CE_CORE_API SGConstVec3 : public CE_SUPER(SGNode)
+CS_CLASS()
+class CS_CORE_API SGConstVec3 : public CS_SUPER(SGNode)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 public:
   const static std::string OUT_V;
 
@@ -57,10 +57,10 @@ public:
 };
 
 
-CE_CLASS()
-class CE_CORE_API SGConstVec4 : public CE_SUPER(SGNode)
+CS_CLASS()
+class CS_CORE_API SGConstVec4 : public CS_SUPER(SGNode)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 public:
   const static std::string OUT_V;
 
@@ -73,10 +73,10 @@ public:
 };
 
 
-CE_CLASS()
-class CE_CORE_API SGConstColor3 : public CE_SUPER(SGNode)
+CS_CLASS()
+class CS_CORE_API SGConstColor3 : public CS_SUPER(SGNode)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 public:
   const static std::string OUT_V;
 
@@ -88,10 +88,10 @@ public:
 
 };
 
-CE_CLASS()
-class CE_CORE_API SGConstColor4 : public CE_SUPER(SGNode)
+CS_CLASS()
+class CS_CORE_API SGConstColor4 : public CS_SUPER(SGNode)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 public:
   const static std::string OUT_V;
 
@@ -104,10 +104,10 @@ public:
 };
 
 
-CE_CLASS()
-class CE_CORE_API SGVec2 : public CE_SUPER(SGNode)
+CS_CLASS()
+class CS_CORE_API SGVec2 : public CS_SUPER(SGNode)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 public:
   const static std::string IN_X;
   const static std::string IN_Y;
@@ -120,10 +120,10 @@ public:
 };
 
 
-CE_CLASS()
-class CE_CORE_API SGVec3 : public CE_SUPER(SGNode)
+CS_CLASS()
+class CS_CORE_API SGVec3 : public CS_SUPER(SGNode)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 public:
   const static std::string IN_X;
   const static std::string IN_Y;
@@ -137,10 +137,10 @@ public:
 };
 
 
-CE_CLASS()
-class CE_CORE_API SGVec4 : public CE_SUPER(SGNode)
+CS_CLASS()
+class CS_CORE_API SGVec4 : public CS_SUPER(SGNode)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 public:
   const static std::string IN_X;
   const static std::string IN_Y;
@@ -155,10 +155,10 @@ public:
 };
 
 
-CE_CLASS()
-class CE_CORE_API SGDecomposeVec2 : public CE_SUPER(SGNode)
+CS_CLASS()
+class CS_CORE_API SGDecomposeVec2 : public CS_SUPER(SGNode)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 public:
   const static std::string IN_V;
   const static std::string OUT_X;
@@ -172,10 +172,10 @@ public:
 };
 
 
-CE_CLASS()
-class CE_CORE_API SGDecomposeVec3 : public CE_SUPER(SGNode)
+CS_CLASS()
+class CS_CORE_API SGDecomposeVec3 : public CS_SUPER(SGNode)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 public:
   const static std::string IN_V;
   const static std::string OUT_X;
@@ -190,10 +190,10 @@ public:
 };
 
 
-CE_CLASS()
-class CE_CORE_API SGDecomposeVec4 : public CE_SUPER(SGNode)
+CS_CLASS()
+class CS_CORE_API SGDecomposeVec4 : public CS_SUPER(SGNode)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 public:
   const static std::string IN_V;
   const static std::string OUT_X;
@@ -209,10 +209,10 @@ public:
 };
 
 
-CE_CLASS()
-class CE_CORE_API SGBinaryOperator : public CE_SUPER(SGNode)
+CS_CLASS()
+class CS_CORE_API SGBinaryOperator : public CS_SUPER(SGNode)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 public:
   const static std::string OUT_V;
   enum eOperator
@@ -239,60 +239,60 @@ private:
 };
 
 
-CE_CLASS()
-class CE_CORE_API SGAdd : public CE_SUPER(SGBinaryOperator)
+CS_CLASS()
+class CS_CORE_API SGAdd : public CS_SUPER(SGBinaryOperator)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 public:
   SGAdd();
   ~SGAdd() override = default;
 };
 
 
-CE_CLASS()
-class CE_CORE_API SGSub : public CE_SUPER(SGBinaryOperator)
+CS_CLASS()
+class CS_CORE_API SGSub : public CS_SUPER(SGBinaryOperator)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 public:
   SGSub();
   ~SGSub() override = default;
 };
 
 
-CE_CLASS()
-class CE_CORE_API SGMul : public CE_SUPER(SGBinaryOperator)
+CS_CLASS()
+class CS_CORE_API SGMul : public CS_SUPER(SGBinaryOperator)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 public:
   SGMul();
   ~SGMul() override = default;
 };
 
 
-CE_CLASS()
-class CE_CORE_API SGDiv : public CE_SUPER(SGBinaryOperator)
+CS_CLASS()
+class CS_CORE_API SGDiv : public CS_SUPER(SGBinaryOperator)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 public:
   SGDiv();
   ~SGDiv() override = default;
 };
 
 
-CE_CLASS()
-class CE_CORE_API SGMod : public CE_SUPER(SGBinaryOperator)
+CS_CLASS()
+class CS_CORE_API SGMod : public CS_SUPER(SGBinaryOperator)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 public:
   SGMod();
   ~SGMod() override = default;
 };
 
 
-CE_CLASS()
-class CE_CORE_API SGStreamNode : public CE_SUPER(SGNode)
+CS_CLASS()
+class CS_CORE_API SGStreamNode : public CS_SUPER(SGNode)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 public:
   ~SGStreamNode() override = default;
 
@@ -309,19 +309,19 @@ private:
 
 };
 
-CE_CLASS()
-class CE_CORE_API SGTexCoord : public CE_SUPER(SGStreamNode)
+CS_CLASS()
+class CS_CORE_API SGTexCoord : public CS_SUPER(SGStreamNode)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 public:
   SGTexCoord();
   ~SGTexCoord() override = default;
 };
 
-CE_CLASS()
-class CE_CORE_API SGResourceNode : public CE_SUPER(SGNode)
+CS_CLASS()
+class CS_CORE_API SGResourceNode : public CS_SUPER(SGNode)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 protected:
   SGResourceNode(const std::string &name, eMaterialAttributeType matType);
 
@@ -339,10 +339,10 @@ private:
 
 };
 
-CE_CLASS()
-class CE_CORE_API SGResourceFloat : public CE_SUPER(SGResourceNode)
+CS_CLASS()
+class CS_CORE_API SGResourceFloat : public CS_SUPER(SGResourceNode)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 public:
   SGResourceFloat();
   ~SGResourceFloat() override = default;
@@ -351,10 +351,10 @@ public:
 
 };
 
-CE_CLASS()
-class CE_CORE_API SGResourceColor3 : public CE_SUPER(SGResourceNode)
+CS_CLASS()
+class CS_CORE_API SGResourceColor3 : public CS_SUPER(SGResourceNode)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 public:
   SGResourceColor3();
   ~SGResourceColor3() override = default;
@@ -365,10 +365,10 @@ public:
 
 
 
-CE_CLASS()
-class CE_CORE_API SGTexture1D : public CE_SUPER(SGResourceNode)
+CS_CLASS()
+class CS_CORE_API SGTexture1D : public CS_SUPER(SGResourceNode)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 public:
   SGTexture1D();
   ~SGTexture1D() override = default;
@@ -378,10 +378,10 @@ public:
 };
 
 
-CE_CLASS()
-class CE_CORE_API SGTexture2D : public CE_SUPER(SGResourceNode)
+CS_CLASS()
+class CS_CORE_API SGTexture2D : public CS_SUPER(SGResourceNode)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 public:
   SGTexture2D();
   ~SGTexture2D() override = default;
@@ -391,10 +391,10 @@ public:
 };
 
 
-CE_CLASS()
-class CE_CORE_API SGTexture3D : public CE_SUPER(SGResourceNode)
+CS_CLASS()
+class CS_CORE_API SGTexture3D : public CS_SUPER(SGResourceNode)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 public:
   SGTexture3D();
   ~SGTexture3D() override = default;

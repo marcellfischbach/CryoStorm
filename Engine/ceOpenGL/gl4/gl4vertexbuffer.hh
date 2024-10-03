@@ -8,10 +8,10 @@
 
 namespace ce::opengl
 {
-CE_CLASS()
-class CE_OGL_API GL4VertexBuffer : public CE_SUPER(iVertexBuffer)
+CS_CLASS()
+class CS_OGL_API GL4VertexBuffer : public CS_SUPER(iVertexBuffer)
 {
-	CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
 	GL4VertexBuffer();
 	~GL4VertexBuffer() override;

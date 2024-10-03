@@ -49,13 +49,13 @@ Material *MaterialLoader::LoadMaterial(const Class *, const CrimsonFile *file, c
 
   if (!LoadShaders(material, materialElement, locator))
   {
-    CE_RELEASE(material);
+    CS_RELEASE(material);
     return nullptr;
   }
 
   if (!LoadAttributes(material, materialElement, locator))
   {
-    CE_RELEASE(material);
+    CS_RELEASE(material);
     return nullptr;
   }
 
@@ -77,13 +77,13 @@ iObject *MaterialLoader::LoadMaterialInstance(const Class *, const CrimsonFile *
 
   if (!LoadReferenceMaterial(materialInstance, materialElement, locator))
   {
-    CE_RELEASE(materialInstance);
+    CS_RELEASE(materialInstance);
     return nullptr;
   }
 
   if (!LoadAttributes(materialInstance, materialElement, locator))
   {
-    CE_RELEASE(materialInstance);
+    CS_RELEASE(materialInstance);
     return nullptr;
   }
 

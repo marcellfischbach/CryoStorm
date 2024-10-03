@@ -134,7 +134,7 @@ GL4RenderTarget2D* GL4ForwardPointLightRenderer::GetPointLightShadowMap(Size lig
   }
 
   target = m_shadowRenderer.CreateShadowMap();
-  CE_SET(m_pointLightShadowMap[lightIdx], target);
+  CS_SET(m_pointLightShadowMap[lightIdx], target);
   return target;
 }
 

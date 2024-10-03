@@ -14,7 +14,7 @@ class Camera;
 class Projector;
 struct Matrix4f;
 
-class CE_CORE_API MultiPlaneClipper : public iClipper
+class CS_CORE_API MultiPlaneClipper : public iClipper
 {
 public:
   MultiPlaneClipper();
@@ -24,9 +24,9 @@ public:
 
   MultiPlaneClipper& operator <<(const Plane& plane);
 
-  CE_NODISCARD eClippingResult Test(const BoundingBox& bbox) const override;
-  CE_NODISCARD eClippingResult Test(const Sphere& sphere) const override;
-  CE_NODISCARD eClippingResult Test(const Vector3f& p) const override;
+  CS_NODISCARD eClippingResult Test(const BoundingBox& bbox) const override;
+  CS_NODISCARD eClippingResult Test(const Sphere& sphere) const override;
+  CS_NODISCARD eClippingResult Test(const Vector3f& p) const override;
 
 private:
 

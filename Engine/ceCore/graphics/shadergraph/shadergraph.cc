@@ -239,7 +239,7 @@ void ShaderGraph::SetDefault(const std::string &attribute, ce::iTexture *texture
 {
   Default def{};
   def.name = attribute;
-  CE_SET(def.texture, texture);
+  CS_SET(def.texture, texture);
 
   m_defaults.push_back(def);
 }

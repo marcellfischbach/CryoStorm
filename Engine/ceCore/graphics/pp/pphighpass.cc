@@ -17,7 +17,7 @@ PPHighPass::PPHighPass(float highValue)
 
 PPHighPass::~PPHighPass()
 {
-  CE_RELEASE(m_shader);
+  CS_RELEASE(m_shader);
   m_shader               = nullptr;
   m_attribColor          = nullptr;
 }
@@ -28,7 +28,7 @@ bool PPHighPass::RefreshOutputTexture(ce::iDevice *device, iRenderTarget2D *fina
 {
   if (finalTarget)
   {
-    CE_SET(m_renderTarget, finalTarget);
+    CS_SET(m_renderTarget, finalTarget);
     return finalTarget;
   }
 

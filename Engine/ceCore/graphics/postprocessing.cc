@@ -24,7 +24,7 @@ PostProcessing::PostProcessing()
     : iObject()
     , m_plan(new PPPlan)
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
   for (size_t i = 0; i < (size_t) PPImageType::Count; i++)
   {
     m_inputTextures[i]  = nullptr;
@@ -36,7 +36,7 @@ PostProcessing::~PostProcessing()
 {
   for (auto process: m_processes)
   {
-    CE_RELEASE(process);
+    CS_RELEASE(process);
   }
   m_processes.clear();
   m_bindings.clear();
@@ -45,7 +45,7 @@ PostProcessing::~PostProcessing()
 
 void PostProcessing::AddProcess(iPostProcess *process)
 {
-  CE_ADDREF(process);
+  CS_ADDREF(process);
   m_processes.push_back(process);
   m_planDirty = true;
 }
@@ -182,7 +182,7 @@ void BasePostProcess::SetInput(size_t idx, ce::iTexture2D *texture)
   {
     return;
   }
-  CE_SET(m_inputs[idx], texture);
+  CS_SET(m_inputs[idx], texture);
 }
 
 iTexture2D *BasePostProcess::GetOutput(size_t idx) const
@@ -200,11 +200,11 @@ BasePostProcess::~BasePostProcess()
 {
   for (auto &input: m_inputs)
   {
-    CE_RELEASE(input);
+    CS_RELEASE(input);
   }
   for (auto &output: m_outputs)
   {
-    CE_RELEASE(output);
+    CS_RELEASE(output);
   }
 }
 
@@ -234,7 +234,7 @@ void BasePostProcess::DeclareOutput(ce::PPImageType type, const std::string &nam
 
 SimplePostProcess::~SimplePostProcess()
 {
-  CE_RELEASE(m_renderTarget);
+  CS_RELEASE(m_renderTarget);
 }
 
 bool SimplePostProcess::UpdateRenderTarget(iDevice *device,
@@ -262,10 +262,10 @@ bool SimplePostProcess::UpdateRenderTarget(iDevice *device,
   }
 
   // clear the outputs
-  CE_RELEASE(m_renderTarget);
+  CS_RELEASE(m_renderTarget);
   for (int i = 0 , in = m_outputs.size(); i<in; ++i)
   {
-    CE_RELEASE(m_outputs[i]);
+    CS_RELEASE(m_outputs[i]);
     m_outputs[i] = nullptr;
   }
 
@@ -299,9 +299,9 @@ bool SimplePostProcess::UpdateRenderTarget(iDevice *device,
 
     if (colorIdx < m_outputs.size())
     {
-      CE_SET(m_outputs[colorIdx], colorTexture);
+      CS_SET(m_outputs[colorIdx], colorTexture);
     }
-    CE_RELEASE(colorTexture);
+    CS_RELEASE(colorTexture);
   }
 
   if (depth)
@@ -320,17 +320,17 @@ bool SimplePostProcess::UpdateRenderTarget(iDevice *device,
 
     if (depthIdx < m_outputs.size())
     {
-      CE_SET(m_outputs[depthIdx], depthTexture);
+      CS_SET(m_outputs[depthIdx], depthTexture);
     }
-    CE_RELEASE(depthTexture);
+    CS_RELEASE(depthTexture);
   }
 
   if (!m_renderTarget->Compile())
   {
-    CE_RELEASE(m_renderTarget);
+    CS_RELEASE(m_renderTarget);
     for (const auto &output: m_outputs)
     {
-      CE_RELEASE(output);
+      CS_RELEASE(output);
     }
     return false;
   }

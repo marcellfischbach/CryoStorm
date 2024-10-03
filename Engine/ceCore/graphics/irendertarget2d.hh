@@ -10,8 +10,8 @@
 namespace ce
 {
 
-CE_CLASS()
-struct CE_CORE_API iRenderTarget2D : public CE_SUPER(iRenderTarget)
+CS_CLASS()
+struct CS_CORE_API iRenderTarget2D : public CS_SUPER(iRenderTarget)
 {
   struct Descriptor
   {
@@ -20,7 +20,7 @@ struct CE_CORE_API iRenderTarget2D : public CE_SUPER(iRenderTarget)
 
   };
 
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
   ~iRenderTarget2D() override = default;
 
   virtual uint16_t GetWidth() const = 0;

@@ -8,12 +8,12 @@ namespace ce::bullet
 {
 
 
-CE_FORCEINLINE void btTransformToMatrix4f(const btTransform& tr, Matrix4f& matrix)
+CS_FORCEINLINE void btTransformToMatrix4f(const btTransform& tr, Matrix4f& matrix)
 {
   tr.getOpenGLMatrix(&matrix.m00);
 }
 
-CE_FORCEINLINE void Matrix4fTobtTransform(const Matrix4f& matrix, btTransform& tr)
+CS_FORCEINLINE void Matrix4fTobtTransform(const Matrix4f& matrix, btTransform& tr)
 {
   tr.setFromOpenGLMatrix(&matrix.m00);
 

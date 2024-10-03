@@ -19,10 +19,10 @@ namespace ce::assimp
 
 struct StaticLoaderData;
 
-CE_CLASS()
-class CE_ASSIMP_API AssimpMeshLoader : public CE_SUPER(iAssetLoader)
+CS_CLASS()
+class CS_ASSIMP_API AssimpMeshLoader : public CS_SUPER(iAssetLoader)
 {
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
   AssimpMeshLoader();
   virtual ~AssimpMeshLoader() { }

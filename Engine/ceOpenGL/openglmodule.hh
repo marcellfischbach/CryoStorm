@@ -7,7 +7,7 @@
 namespace ce::opengl
 {
 
-class CE_OGL_API OpenGLModule : public iModule
+class CS_OGL_API OpenGLModule : public iModule
 {
 public:
   bool Register(const std::vector<std::string> &args, Engine *engine) override;
@@ -17,4 +17,4 @@ public:
 
 }
 
-CE_DECLARE_LIBRARY(ceOpenGL);
+CS_DECLARE_LIBRARY(ceOpenGL);

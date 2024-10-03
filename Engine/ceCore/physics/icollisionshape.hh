@@ -8,10 +8,10 @@ namespace ce
 {
 
 
-CE_CLASS(Virtual)
-struct CE_CORE_API iCollisionShape: public CE_SUPER(iObject)
+CS_CLASS(Virtual)
+struct CS_CORE_API iCollisionShape: public CS_SUPER(iObject)
 {
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
   ~iCollisionShape() override = default;
 
 

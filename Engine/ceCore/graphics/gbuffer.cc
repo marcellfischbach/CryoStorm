@@ -31,11 +31,11 @@ bool GBuffer::Update(ce::iDevice *device, uint16_t width, uint16_t height)
     {
       return true;
     }
-    CE_RELEASE(m_gBuffer);
-    CE_RELEASE(m_diffuseRoughness);
-    CE_RELEASE(m_depth);
-    CE_RELEASE(m_normal);
-    CE_RELEASE(m_emissionMetallic);
+    CS_RELEASE(m_gBuffer);
+    CS_RELEASE(m_diffuseRoughness);
+    CS_RELEASE(m_depth);
+    CS_RELEASE(m_normal);
+    CS_RELEASE(m_emissionMetallic);
   }
 
   device->ClearTextureCache();

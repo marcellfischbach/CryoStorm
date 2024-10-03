@@ -26,10 +26,10 @@ enum class eTerrainSize
 
 
 
-CE_CLASS()
-struct CE_CORE_API iTerrainMesh : public CE_SUPER(iRenderMesh)
+CS_CLASS()
+struct CS_CORE_API iTerrainMesh : public CS_SUPER(iRenderMesh)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
   ~iTerrainMesh() override = default;
 
 
@@ -38,10 +38,10 @@ CE_CLASS_GEN;
 };
 
 
-CE_CLASS()
-struct CE_CORE_API iTerrainMeshGenerator : CE_SUPER(iObject)
+CS_CLASS()
+struct CS_CORE_API iTerrainMeshGenerator : CS_SUPER(iObject)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 
   ~iTerrainMeshGenerator() override = default;
 
@@ -52,17 +52,17 @@ CE_CLASS_GEN;
   virtual void SetHeightData (const std::vector<float> &heightData) = 0;
 
 
-  CE_NODISCARD virtual iTerrainMesh* Generate() = 0;
+  CS_NODISCARD virtual iTerrainMesh* Generate() = 0;
 };
 
 
-CE_CLASS()
-struct CE_CORE_API iTerrainMeshGeneratorFactory : CE_SUPER(iObject)
+CS_CLASS()
+struct CS_CORE_API iTerrainMeshGeneratorFactory : CS_SUPER(iObject)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
   ~iTerrainMeshGeneratorFactory() override = default;
 
-  CE_NODISCARD virtual iTerrainMeshGenerator* Create() = 0;
+  CS_NODISCARD virtual iTerrainMeshGenerator* Create() = 0;
 };
 
 

@@ -11,10 +11,10 @@
 namespace ce::java
 {
 
-CE_CLASS(jclass="org.crimsonedge.launcher.LwjglWindow")
-class CE_JAVA_API LwjglWindow : public CE_SUPER(iWindow)
+CS_CLASS(jclass="org.crimsonedge.launcher.LwjglWindow")
+class CS_JAVA_API LwjglWindow : public CS_SUPER(iWindow)
 {
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
   LwjglWindow();
   ~LwjglWindow() override = default;

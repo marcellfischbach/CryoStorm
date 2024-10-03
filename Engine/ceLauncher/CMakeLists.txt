@@ -29,7 +29,7 @@ add_dependencies(ceLauncher
 )
 
 
-CE_MOC(ceLauncher ceLauncher)
+CS_MOC(ceLauncher ceLauncher)
 
 
 target_link_libraries(ceLauncher

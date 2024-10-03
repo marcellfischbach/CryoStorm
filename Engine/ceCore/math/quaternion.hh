@@ -9,14 +9,14 @@
 namespace ce
 {
 
-struct CE_CORE_API Quaternion
+struct CS_CORE_API Quaternion
 {
   float x;
   float y;
   float z;
   float w;
 
-  CE_FORCEINLINE explicit Quaternion(float x = 0.0f, float y = 0.0f, float z = 0.0f, float w = 1.0f)
+  CS_FORCEINLINE explicit Quaternion(float x = 0.0f, float y = 0.0f, float z = 0.0f, float w = 1.0f)
       : x(x)
       , y(y)
       , z(z)
@@ -25,7 +25,7 @@ struct CE_CORE_API Quaternion
 
   }
 
-  CE_FORCEINLINE explicit Quaternion(const Vector3f &v, float w = 0.0f)
+  CS_FORCEINLINE explicit Quaternion(const Vector3f &v, float w = 0.0f)
       : x(v.x)
       , y(v.y)
       , z(v.z)
@@ -34,22 +34,22 @@ struct CE_CORE_API Quaternion
 
   }
 
-  CE_FORCEINLINE Quaternion &operator=(const Quaternion &other) = default;
+  CS_FORCEINLINE Quaternion &operator=(const Quaternion &other) = default;
 
-  CE_FORCEINLINE void Invert()
+  CS_FORCEINLINE void Invert()
   {
     x = -x;
     y = -y;
     z = -z;
   }
 
-  CE_NODISCARD CE_FORCEINLINE Quaternion Inverted() const
+  CS_NODISCARD CS_FORCEINLINE Quaternion Inverted() const
   {
     return Quaternion(-x, -y, -z, w);
   }
 
 
-  CE_FORCEINLINE void Normalize()
+  CS_FORCEINLINE void Normalize()
   {
     float l = sqrtf(x * x + y * y + z * z + w * w);
     x /= l;
@@ -58,7 +58,7 @@ struct CE_CORE_API Quaternion
     w /= l;
   }
 
-  CE_FORCEINLINE void SetAxisAngle(float axisX, float axisY, float axisZ, float angle)
+  CS_FORCEINLINE void SetAxisAngle(float axisX, float axisY, float axisZ, float angle)
   {
     float angle2 = angle / 2.0f;
     float c      = std::cos(angle2);
@@ -70,17 +70,17 @@ struct CE_CORE_API Quaternion
   }
 
 
-  CE_FORCEINLINE void SetAxisAngle(const Vector3f &v, float angle)
+  CS_FORCEINLINE void SetAxisAngle(const Vector3f &v, float angle)
   {
     SetAxisAngle(v.x, v.y, v.z, angle);
   }
 
-  CE_NODISCARD CE_FORCEINLINE static Quaternion FromAxisAngle(const Vector3f &v, float angle)
+  CS_NODISCARD CS_FORCEINLINE static Quaternion FromAxisAngle(const Vector3f &v, float angle)
   {
     return FromAxisAngle(v.x, v.y, v.z, angle);
   }
 
-  CE_NODISCARD CE_FORCEINLINE static Quaternion FromAxisAngle(float x, float y, float z, float angle)
+  CS_NODISCARD CS_FORCEINLINE static Quaternion FromAxisAngle(float x, float y, float z, float angle)
   {
     float angle2 = angle / 2.0f;
     float c      = ceCos(angle2);
@@ -89,7 +89,7 @@ struct CE_CORE_API Quaternion
   }
 
 
-  CE_NODISCARD CE_FORCEINLINE static Quaternion FromMatrix(const Matrix3f &m)
+  CS_NODISCARD CS_FORCEINLINE static Quaternion FromMatrix(const Matrix3f &m)
   {
     float qw  = ceSqrt(1.0f + m.m00 + m.m11 + m.m22) / 2.0f;
     float qw4 = qw * 4.0f;
@@ -102,7 +102,7 @@ struct CE_CORE_API Quaternion
   }
 
 
-  CE_NODISCARD CE_FORCEINLINE static Quaternion FromMatrix(const Matrix4f &m)
+  CS_NODISCARD CS_FORCEINLINE static Quaternion FromMatrix(const Matrix4f &m)
   {
     float qw  = ceSqrt(1.0f + m.m00 + m.m11 + m.m22) / 2.0f;
     float qw4 = qw * 4.0f;
@@ -115,7 +115,7 @@ struct CE_CORE_API Quaternion
   }
 
 
-  CE_NODISCARD CE_FORCEINLINE Matrix3f ToMatrix3() const
+  CS_NODISCARD CS_FORCEINLINE Matrix3f ToMatrix3() const
   {
     float sqx = x * x;
     float sqy = y * y;
@@ -128,7 +128,7 @@ struct CE_CORE_API Quaternion
 
   }
 
-  CE_NODISCARD CE_FORCEINLINE Matrix4f ToMatrix4() const
+  CS_NODISCARD CS_FORCEINLINE Matrix4f ToMatrix4() const
   {
     float sqx = x * x;
     float sqy = y * y;
@@ -142,7 +142,7 @@ struct CE_CORE_API Quaternion
 
   }
 
-  CE_FORCEINLINE Matrix4f &ToMatrix4(Matrix4f &m) const
+  CS_FORCEINLINE Matrix4f &ToMatrix4(Matrix4f &m) const
   {
     float sqx = x * x;
     float sqy = y * y;
@@ -157,7 +157,7 @@ struct CE_CORE_API Quaternion
   }
 
 
-  CE_FORCEINLINE static Quaternion Blend (const Quaternion &q0, const Quaternion &q1, float f)
+  CS_FORCEINLINE static Quaternion Blend (const Quaternion &q0, const Quaternion &q1, float f)
   {
     float f0 = 1.0f - f;
     float f1 = f;
@@ -169,12 +169,12 @@ struct CE_CORE_API Quaternion
         );
   }
 
-  CE_FORCEINLINE friend Quaternion operator*(const Quaternion &q, float f)
+  CS_FORCEINLINE friend Quaternion operator*(const Quaternion &q, float f)
   {
     return Quaternion(q.x * f, q.y * f, q.z * f, q.w * f);
   }
 
-  CE_FORCEINLINE friend Quaternion operator+(const Quaternion &q0, const Quaternion &q1)
+  CS_FORCEINLINE friend Quaternion operator+(const Quaternion &q0, const Quaternion &q1)
   {
     return Quaternion(q0.x + q1.x,
                       q0.y + q1.y,
@@ -183,7 +183,7 @@ struct CE_CORE_API Quaternion
   }
 
 
-  CE_FORCEINLINE friend Quaternion operator-(const Quaternion &q0, const Quaternion &q1)
+  CS_FORCEINLINE friend Quaternion operator-(const Quaternion &q0, const Quaternion &q1)
   {
     return Quaternion(q0.x - q1.x,
                       q0.y - q1.y,
@@ -193,7 +193,7 @@ struct CE_CORE_API Quaternion
 
 
 
-  CE_FORCEINLINE friend Quaternion operator*(const Quaternion &q0, const Quaternion &q1)
+  CS_FORCEINLINE friend Quaternion operator*(const Quaternion &q0, const Quaternion &q1)
   {
     return Quaternion(
         q0.w * q1.x + q0.x * q1.w + q0.y * q1.z - q0.z * q1.y,
@@ -203,14 +203,14 @@ struct CE_CORE_API Quaternion
     );
   }
 
-  CE_NODISCARD CE_FORCEINLINE Vector3f Rotate(const Vector3f &v) const
+  CS_NODISCARD CS_FORCEINLINE Vector3f Rotate(const Vector3f &v) const
   {
     Quaternion pn = *this * (Quaternion(v) * Inverted());
     return Vector3f(pn.x, pn.y, pn.z);
   }
 
 
-  CE_FORCEINLINE void Debug() const
+  CS_FORCEINLINE void Debug() const
   {
     printf("%.2f %.2f %.2f : %.2f", x, y, z, w);
   }

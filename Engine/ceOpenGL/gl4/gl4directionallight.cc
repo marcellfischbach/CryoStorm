@@ -14,7 +14,7 @@ GL4DirectionalLight::GL4DirectionalLight()
   , m_intensity(1.0f)
   , m_direction(0.0f, 0.0f, 1.0f)
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
 }
 
 

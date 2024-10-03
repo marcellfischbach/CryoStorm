@@ -12,10 +12,10 @@ namespace ce
 
 const int16_t DefaultPriority = 0;
 
-CE_CLASS()
-struct CE_CORE_API iAssetLoader : public iObject
+CS_CLASS()
+struct CS_CORE_API iAssetLoader : public iObject
 {
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
   virtual ~iAssetLoader()
   {
 

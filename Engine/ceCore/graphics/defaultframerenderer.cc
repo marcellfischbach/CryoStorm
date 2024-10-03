@@ -17,7 +17,7 @@ namespace ce
 DefaultFrameRenderer::DefaultFrameRenderer()
     : m_renderPipeline(nullptr)
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
 }
 
 bool gfx_camera_sorter(GfxCamera *cam0, GfxCamera *cam1)
@@ -85,7 +85,7 @@ iRenderPipeline *DefaultFrameRenderer::GetRenderPipeline()
 
 void DefaultFrameRenderer::SetRenderPipeline(iRenderPipeline *renderPipeline)
 {
-  CE_SET(m_renderPipeline, renderPipeline);
+  CS_SET(m_renderPipeline, renderPipeline);
 }
 
 

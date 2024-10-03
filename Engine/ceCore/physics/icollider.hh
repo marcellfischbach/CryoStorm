@@ -10,10 +10,10 @@ namespace ce
 
 struct iCollisionShape;
 
-CE_CLASS(Virtual)
-struct CE_CORE_API iCollider : public CE_SUPER(iObject)
+CS_CLASS(Virtual)
+struct CS_CORE_API iCollider : public CS_SUPER(iObject)
 {
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
   ~iCollider() override = default;
 
 
@@ -27,18 +27,18 @@ struct CE_CORE_API iCollider : public CE_SUPER(iObject)
 };
 
 
-CE_CLASS(Virtual)
-struct CE_CORE_API iStaticCollider : public CE_SUPER(iCollider)
+CS_CLASS(Virtual)
+struct CS_CORE_API iStaticCollider : public CS_SUPER(iCollider)
 {
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
   ~iStaticCollider() override = default;
 
 };
 
-CE_CLASS(Virtual)
-struct CE_CORE_API iDynamicCollider : public CE_SUPER(iCollider)
+CS_CLASS(Virtual)
+struct CS_CORE_API iDynamicCollider : public CS_SUPER(iCollider)
 {
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
   ~iDynamicCollider() override = default;
 
   virtual void SetUserData(SpatialState * spatialState) = 0;
@@ -47,10 +47,10 @@ struct CE_CORE_API iDynamicCollider : public CE_SUPER(iCollider)
 };
 
 
-CE_CLASS(Virtual)
-struct CE_CORE_API iTriggerCollider : public CE_SUPER(iCollider)
+CS_CLASS(Virtual)
+struct CS_CORE_API iTriggerCollider : public CS_SUPER(iCollider)
 {
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
   ~iTriggerCollider() override = default;
 
 

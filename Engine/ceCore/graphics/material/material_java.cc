@@ -5,13 +5,13 @@
 extern "C"
 {
 
-#define CE_MAT(ref) reinterpret_cast<ce::Material *>(ref)
+#define CS_MAT(ref) reinterpret_cast<ce::Material *>(ref)
 
 
 JNIEXPORT jint
 JNICALL Java_org_crimsonedge_core_graphics_material_Material_nGetFillMode(JNIEnv *env, jclass cls, jlong materialRef)
 {
-  auto material = CE_MAT(materialRef);
+  auto material = CS_MAT(materialRef);
   return (jint) material->GetFillMode();
 }
 
@@ -19,7 +19,7 @@ JNICALL Java_org_crimsonedge_core_graphics_material_Material_nGetFillMode(JNIEnv
 JNIEXPORT jint
 JNICALL Java_org_crimsonedge_core_graphics_material_Material_nGetRenderQueue(JNIEnv *env, jclass cls, jlong materialRef)
 {
-  auto material = CE_MAT(materialRef);
+  auto material = CS_MAT(materialRef);
   return (jint) material->GetRenderQueue();
 }
 
@@ -27,7 +27,7 @@ JNICALL Java_org_crimsonedge_core_graphics_material_Material_nGetRenderQueue(JNI
 JNIEXPORT jint
 JNICALL Java_org_crimsonedge_core_graphics_material_Material_nGetShadingMode(JNIEnv *env, jclass cls, jlong materialRef)
 {
-  auto material = CE_MAT(materialRef);
+  auto material = CS_MAT(materialRef);
   return (jint) material->GetShadingMode();
 }
 
@@ -37,7 +37,7 @@ JNICALL Java_org_crimsonedge_core_graphics_material_Material_nIndexOf(JNIEnv *en
                                                                       jlong materialRef,
                                                                       jstring attributeName)
 {
-  auto       material = CE_MAT(materialRef);
+  auto       material = CS_MAT(materialRef);
   const char *chars   = env->GetStringUTFChars(attributeName, 0);
   jint       res      = (jint) material->IndexOf(chars);
   env->ReleaseStringUTFChars(attributeName, chars);
@@ -51,7 +51,7 @@ JNICALL Java_org_crimsonedge_core_graphics_material_Material_nSetFloat(JNIEnv *e
                                                                        jint idx,
                                                                        float value)
 {
-  auto material = CE_MAT(materialRef);
+  auto material = CS_MAT(materialRef);
   material->Set(idx, value);
 }
 
@@ -64,7 +64,7 @@ JNICALL Java_org_crimsonedge_core_graphics_material_Material_nSetVec2f(JNIEnv *e
                                                                        float x,
                                                                        float y)
 {
-  auto material = CE_MAT(materialRef);
+  auto material = CS_MAT(materialRef);
   material->Set(idx, ce::Vector2f(x, y));
 }
 
@@ -78,7 +78,7 @@ JNICALL Java_org_crimsonedge_core_graphics_material_Material_nSetVec3f(JNIEnv *e
                                                                        float y,
                                                                        float z)
 {
-  auto material = CE_MAT(materialRef);
+  auto material = CS_MAT(materialRef);
   material->Set(idx, ce::Vector3f(x, y, z));
 }
 
@@ -93,7 +93,7 @@ JNICALL Java_org_crimsonedge_core_graphics_material_Material_nSetVec4f(JNIEnv *e
                                                                        float z,
                                                                        float w)
 {
-  auto material = CE_MAT(materialRef);
+  auto material = CS_MAT(materialRef);
   material->Set(idx, ce::Vector4f(x, y, z, w));
 }
 
@@ -107,7 +107,7 @@ JNICALL Java_org_crimsonedge_core_graphics_material_Material_nSetColor4f(JNIEnv 
                                                                          float b,
                                                                          float a)
 {
-  auto material = CE_MAT(materialRef);
+  auto material = CS_MAT(materialRef);
   material->Set(idx, ce::Color4f(r, g, b, a));
 }
 
@@ -119,7 +119,7 @@ JNICALL Java_org_crimsonedge_core_graphics_material_Material_nSetInt(JNIEnv *env
                                                                      jint idx,
                                                                      jint value)
 {
-  auto material = CE_MAT(materialRef);
+  auto material = CS_MAT(materialRef);
   material->Set(idx, (int) value);
 }
 
@@ -131,7 +131,7 @@ JNICALL Java_org_crimsonedge_core_graphics_material_Material_nSetMatrix3f(JNIEnv
                                                                           jint idx,
                                                                           jfloatArray mArray)
 {
-  auto   material = CE_MAT(materialRef);
+  auto   material = CS_MAT(materialRef);
   jfloat *m       = env->GetFloatArrayElements(mArray, 0);
 
   material->Set(idx, *reinterpret_cast<ce::Matrix3f *>(m));
@@ -146,7 +146,7 @@ JNICALL Java_org_crimsonedge_core_graphics_material_Material_nSetMatrix4f(JNIEnv
                                                                           jint idx,
                                                                           jfloatArray mArray)
 {
-  auto   material = CE_MAT(materialRef);
+  auto   material = CS_MAT(materialRef);
   jfloat *m       = env->GetFloatArrayElements(mArray, 0);
 
   material->Set(idx, *reinterpret_cast<ce::Matrix4f *>(m));
@@ -161,7 +161,7 @@ JNICALL Java_org_crimsonedge_core_graphics_material_Material_nSetTexture(JNIEnv 
                                                                           jint idx,
                                                                           jlong textureRef)
 {
-  auto   material = CE_MAT(materialRef);
+  auto   material = CS_MAT(materialRef);
   auto texture = reinterpret_cast<ce::iTexture*>(textureRef);
 
   material->Set(idx, texture);

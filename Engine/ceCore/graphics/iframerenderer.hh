@@ -18,10 +18,10 @@ class Camera;
 
 class Projector;
 
-CE_CLASS()
-struct CE_CORE_API iFrameRenderer : public CE_SUPER(iObject)
+CS_CLASS()
+struct CS_CORE_API iFrameRenderer : public CS_SUPER(iObject)
 {
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
 
   ~iFrameRenderer() override = default;
 

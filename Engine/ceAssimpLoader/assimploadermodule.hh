@@ -7,7 +7,7 @@
 namespace ce::assimp
 {
 
-class CE_ASSIMP_API AssimpLoaderModule : public iModule
+class CS_ASSIMP_API AssimpLoaderModule : public iModule
 {
 public:
   bool Register(const std::vector<std::string> &args, Engine *engine);
@@ -17,4 +17,4 @@ public:
 
 }
 
-CE_DECLARE_LIBRARY(ceAssimpLoader);
+CS_DECLARE_LIBRARY(ceAssimpLoader);

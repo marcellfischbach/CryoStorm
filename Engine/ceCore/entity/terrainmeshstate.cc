@@ -18,13 +18,13 @@ namespace ce
 
 TerrainLayerMask::~TerrainLayerMask()
 {
-  CE_RELEASE(m_layerTexture);
-  CE_RELEASE(m_maskTexture);
+  CS_RELEASE(m_layerTexture);
+  CS_RELEASE(m_maskTexture);
 }
 
 void TerrainLayerMask::SetLayerTexture(iTexture2D* layerTexture)
 {
-  CE_SET(m_layerTexture, layerTexture);
+  CS_SET(m_layerTexture, layerTexture);
 }
 
 iTexture2D *TerrainLayerMask::GetLayerTexture()
@@ -40,7 +40,7 @@ const iTexture2D *TerrainLayerMask::GetLayerTexture() const
 
 void TerrainLayerMask::SetMaskTexture(iTexture2D* maskTexture)
 {
-  CE_SET(m_maskTexture, maskTexture);
+  CS_SET(m_maskTexture, maskTexture);
 }
 
 iTexture2D *TerrainLayerMask::GetMaskTexture()
@@ -59,13 +59,13 @@ const iTexture2D *TerrainLayerMask::GetMaskTexture() const
 
 TerrainLayer::~TerrainLayer()
 {
-  CE_RELEASE(m_diffuseRoughness);
-  CE_RELEASE(m_normal);
+  CS_RELEASE(m_diffuseRoughness);
+  CS_RELEASE(m_normal);
 }
 
 void TerrainLayer::SetDiffuseRoughness(iTexture2D* diffuseRoughness)
 {
-  CE_SET(m_diffuseRoughness, diffuseRoughness);
+  CS_SET(m_diffuseRoughness, diffuseRoughness);
 }
 
 iTexture2D *TerrainLayer::GetDiffuseRoughness()
@@ -81,7 +81,7 @@ const iTexture2D *TerrainLayer::GetDiffuseRoughness() const
 
 void TerrainLayer::SetNormal(iTexture2D* normal)
 {
-  CE_SET(m_normal, normal);
+  CS_SET(m_normal, normal);
 }
 
 iTexture2D *TerrainLayer::GetNormal()
@@ -105,21 +105,21 @@ TerrainMeshState::TerrainMeshState()
 
 TerrainMeshState::~TerrainMeshState()
 {
-  CE_RELEASE(m_terrainMesh);
-  CE_RELEASE(m_gfxMesh);
-  CE_RELEASE(m_material);
+  CS_RELEASE(m_terrainMesh);
+  CS_RELEASE(m_gfxMesh);
+  CS_RELEASE(m_material);
 }
 
 void TerrainMeshState::SetTerrainMesh(iTerrainMesh* terrainMesh)
 {
-  CE_SET(m_terrainMesh, terrainMesh);
+  CS_SET(m_terrainMesh, terrainMesh);
 
   World* world = GetWorld();
   if (m_terrainMesh && world)
   {
     RemoveMeshFromScene(world);
   }
-  CE_SET(m_terrainMesh, terrainMesh);
+  CS_SET(m_terrainMesh, terrainMesh);
   if (m_terrainMesh && world)
   {
     AddMeshToScene(world);
@@ -138,7 +138,7 @@ const iTerrainMesh* TerrainMeshState::GetTerrainMesh() const
 
 void TerrainMeshState::SetLayerMask(TerrainLayerMask* mask)
 {
-  CE_SET(m_layerMask, mask);
+  CS_SET(m_layerMask, mask);
   UpdateMaterial();
 }
 
@@ -150,7 +150,7 @@ void TerrainMeshState::AddLayer(TerrainLayer* layer)
     return;
   }
 
-  CE_ADDREF(layer);
+  CS_ADDREF(layer);
   m_layers.emplace_back(layer);
 
   UpdateMaterial();
@@ -186,7 +186,7 @@ bool TerrainMeshState::IsReceiveShadow() const
 
 void TerrainMeshState::SetReference(SpatialState* reference)
 {
-  CE_SET(m_reference, reference);
+  CS_SET(m_reference, reference);
 }
 
 SpatialState *TerrainMeshState::GetReference()

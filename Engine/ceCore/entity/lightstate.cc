@@ -25,14 +25,14 @@ LightState::LightState(const std::string& name)
   , m_color(1.0f, 1.0f, 1.0f, 1.0f)
   , m_range (100.0f)
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
 }
 
 LightState::~LightState() noexcept
 {
   RemoveFromScene(GetWorld());
-  CE_RELEASE(m_light);
-  CE_RELEASE(m_gfxLight);
+  CS_RELEASE(m_light);
+  CS_RELEASE(m_gfxLight);
 }
 
 void LightState::SetType(eLightType type)
@@ -140,8 +140,8 @@ void LightState::RemoveFromScene(World* world)
     world->GetScene()->Remove(m_gfxLight);
   }
 
-  CE_RELEASE(m_light);
-  CE_RELEASE(m_gfxLight);
+  CS_RELEASE(m_light);
+  CS_RELEASE(m_gfxLight);
   m_gfxLight = nullptr;
   m_light = nullptr;
   m_pointLight = nullptr;

@@ -9,7 +9,7 @@
 #include <ceCore/autoptr.hh>
 
 
-#define CE_NOT_NULL(e) if (e == nullptr) return
+#define CS_NOT_NULL(e) if (e == nullptr) return
 namespace ce
 {
 
@@ -26,7 +26,7 @@ void VFSConfigReader::Read(const std::string &configPath, const std::string &fil
 
 void VFSConfigReader::ReadConfig(const CrimsonFile* file)
 {
-  CE_NOT_NULL(file);
+  CS_NOT_NULL(file);
 
   const CrimsonFileElement* vfsElement = file->Root()->GetChild("vfs");
   ReadVFS(vfsElement);
@@ -34,7 +34,7 @@ void VFSConfigReader::ReadConfig(const CrimsonFile* file)
 
 void VFSConfigReader::ReadVFS(const CrimsonFileElement* vfsElement)
 {
-  CE_NOT_NULL(vfsElement);
+  CS_NOT_NULL(vfsElement);
 
   const CrimsonFileElement* archivesElement = vfsElement->GetChild("archives");
   ReadArchives(archivesElement);
@@ -47,7 +47,7 @@ void VFSConfigReader::ReadVFS(const CrimsonFileElement* vfsElement)
 
 void VFSConfigReader::ReadArchives(const ce::CrimsonFileElement *archivesElement)
 {
-  CE_NOT_NULL(archivesElement);
+  CS_NOT_NULL(archivesElement);
   for (int i = 0, in=archivesElement->GetNumberOfChildren(); i<in; ++i)
   {
     const CrimsonFileElement *child = archivesElement->GetChild(i);
@@ -67,7 +67,7 @@ void VFSConfigReader::ReadArchive(const ce::CrimsonFileElement *archiveElement)
       VFS::Get()->AddArchive (new FileSystemArchive(name, path, priority));
     }
   }
-#ifdef CE_JAVA
+#ifdef CS_JAVA
   else if (archiveElement->GetTagName() == "java")
   {
     std::string name = archiveElement->GetAttribute(0, "Java");
@@ -83,7 +83,7 @@ void VFSConfigReader::ReadArchive(const ce::CrimsonFileElement *archiveElement)
 
 void VFSConfigReader::ReadAliases(const CrimsonFileElement* aliasesElement)
 {
-  CE_NOT_NULL(aliasesElement);
+  CS_NOT_NULL(aliasesElement);
 
   for (size_t i=0, in=aliasesElement->GetNumberOfChildren(); i<in; i++)
   {
@@ -94,7 +94,7 @@ void VFSConfigReader::ReadAliases(const CrimsonFileElement* aliasesElement)
 
 void VFSConfigReader::ReadAlias(const CrimsonFileElement* aliasElement)
 {
-  CE_NOT_NULL(aliasElement);
+  CS_NOT_NULL(aliasElement);
 
   const std::string& aliasName = aliasElement->GetTagName();
   const std::string &aliasReplacement = aliasElement->GetAttribute(0, "");

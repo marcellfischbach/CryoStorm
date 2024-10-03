@@ -4,38 +4,38 @@
 #include <cstdint>
 #include <ceCore/defs.hh>
 
-#ifdef CE_JAVA
+#ifdef CS_JAVA
 
 #include <jni.h>
 
 #endif
 
 //
-// Meta information for CE_CLASS definitions
+// Meta information for CS_CLASS definitions
 //  Virtual - Prevent the ceMOC from implementing CreateInstance 
 
-#define CE_CLASS(...)
-#define CE_SUPER(Cls) Cls
-#define CE_PROPERTY(...)
-#define CE_FUNCTION(...)
-#ifdef CE_JAVA
-#define CE_CLASS_GEN public: \
+#define CS_CLASS(...)
+#define CS_SUPER(Cls) Cls
+#define CS_PROPERTY(...)
+#define CS_FUNCTION(...)
+#ifdef CS_JAVA
+#define CS_CLASS_GEN public: \
     const ce::Class *GetClass () const override; \
     static const ce::Class *GetStaticClass (); \
     void *QueryClass(const ce::Class *clazz) override; \
     const void *QueryClass(const ce::Class *clazz) const override; \
     jobject CreateJObject () const
 #else
-#define CE_CLASS_GEN public: \
+#define CS_CLASS_GEN public: \
     const ce::Class *GetClass () const override; \
     static const ce::Class *GetStaticClass (); \
     void *QueryClass(const ce::Class *clazz) override; \
     const void *QueryClass(const ce::Class *clazz) const override;
 #endif
 
-#ifdef CE_JAVA
-#define CE_CLASS_GEN_OBJECT \
-    CE_CLASS_GEN; \
+#ifdef CS_JAVA
+#define CS_CLASS_GEN_OBJECT \
+    CS_CLASS_GEN; \
     void AddRef() override \
     { \
       m_refCount++; \
@@ -53,7 +53,7 @@
         delete this;\
       } \
     } \
-    CE_NODISCARD int64_t RefCount () const override \
+    CS_NODISCARD int64_t RefCount () const override \
     { \
       return m_refCount; \
     }                       \
@@ -61,7 +61,7 @@
     {                       \
       m_jobject = object; \
     }                       \
-    CE_NODISCARD jobject GetJObject() const override\
+    CS_NODISCARD jobject GetJObject() const override\
     {                       \
       if (!m_jobject && !m_jobjectChecked)       \
       {                     \
@@ -76,12 +76,12 @@ private: \
       mutable jobject m_jobject = nullptr
 
 
-#define CE_DECLARE_JAVA(fqcn) \
+#define CS_DECLARE_JAVA(fqcn) \
 private: \
       mutable bool m_jobjectChecked = false; \
       mutable jobject m_jobject = nullptr; \
 public:                                \
-    CE_NODISCARD jobject GetJObject() const\
+    CS_NODISCARD jobject GetJObject() const\
     {                       \
       if (!m_jobject && !m_jobjectChecked)       \
       {                                \
@@ -108,8 +108,8 @@ public:                                \
     }
 
 #else
-#define CE_CLASS_GEN_OBJECT \
-    CE_CLASS_GEN; \
+#define CS_CLASS_GEN_OBJECT \
+    CS_CLASS_GEN; \
     void AddRef() override \
     { \
       m_refCount++; \
@@ -122,27 +122,27 @@ public:                                \
           delete this;\
       } \
     } \
-    CE_NODISCARD int64_t RefCount () const override \
+    CS_NODISCARD int64_t RefCount () const override \
     { \
       return m_refCount; \
     } \
     private: \
       int64_t m_refCount = 1
 
-#define CE_DECLARE_JAVA(fqcn)
+#define CS_DECLARE_JAVA(fqcn)
 
 #endif
 
-#define CE_CLASS_GEN_CONSTR m_refCount = 1
+#define CS_CLASS_GEN_CONSTR m_refCount = 1
 
-#define CE_WEAK_OBJECT(Super) \
+#define CS_WEAK_OBJECT(Super) \
   public: void AddRef () { Super::AddRef (); }\
           void Release () { Super::Release (); }
 
 
-#define CE_SET(oo, no) if (no) no->AddRef(); if (oo) oo->Release(); oo = no
-#define CE_ADDREF(o) if (o) o->AddRef()
-#define CE_RELEASE(o) if (o) o->Release()
+#define CS_SET(oo, no) if (no) no->AddRef(); if (oo) oo->Release(); oo = no
+#define CS_ADDREF(o) if (o) o->AddRef()
+#define CS_RELEASE(o) if (o) o->Release()
 
 #include <map>
 #include <set>
@@ -221,7 +221,7 @@ private:
 
 class Class;
 
-struct CE_CORE_API iObject
+struct CS_CORE_API iObject
 {
   iObject();
   virtual ~iObject();
@@ -232,27 +232,27 @@ struct CE_CORE_API iObject
 
   virtual void Release() = 0;
 
-  CE_NODISCARD virtual int64_t RefCount() const = 0;
+  CS_NODISCARD virtual int64_t RefCount() const = 0;
 
-#ifdef CE_JAVA
+#ifdef CS_JAVA
   virtual void SetJObject(jobject object) const = 0;
-  CE_NODISCARD virtual jobject GetJObject() const = 0;
+  CS_NODISCARD virtual jobject GetJObject() const = 0;
 #endif
 
   template<typename T>
-  CE_NODISCARD T *Query()
+  CS_NODISCARD T *Query()
   {
     return reinterpret_cast<T *>(QueryClass(T::GetStaticClass()));
   }
 
-  CE_NODISCARD virtual void *QueryClass(const Class *clazz);
+  CS_NODISCARD virtual void *QueryClass(const Class *clazz);
 
   template<typename T>
-  CE_NODISCARD const T *Query() const
+  CS_NODISCARD const T *Query() const
   {
     return reinterpret_cast<const T *>(QueryClass(T::GetStaticClass()));
   }
-  CE_NODISCARD virtual const void *QueryClass(const Class *clazz) const;
+  CS_NODISCARD virtual const void *QueryClass(const Class *clazz) const;
 
   template<typename T>
   bool IsInstanceOf() const;
@@ -268,7 +268,7 @@ public:
   explicit AutoRelease(iObject *obj) : obj(obj)
   {}
   ~AutoRelease()
-  { CE_RELEASE(obj); }
+  { CS_RELEASE(obj); }
 
 };
 
@@ -315,7 +315,7 @@ enum eFunctionVirtuality
 };
 
 
-class CE_CORE_API ValueDeclaration
+class CS_CORE_API ValueDeclaration
 {
 public:
   ValueDeclaration(eConstness constness = eC_NonConst,
@@ -333,7 +333,7 @@ private:
   eValueMemoryMode m_mode;
 };
 
-class CE_CORE_API Property
+class CS_CORE_API Property
 {
 public:
   virtual ~Property();
@@ -389,7 +389,7 @@ private:
 };
 
 
-class CE_CORE_API FunctionAttribute
+class CS_CORE_API FunctionAttribute
 {
 public:
   FunctionAttribute(const ValueDeclaration &type = ValueDeclaration(), const std::string &name = "");
@@ -402,7 +402,7 @@ private:
   std::string      m_name;
 };
 
-class CE_CORE_API Function
+class CS_CORE_API Function
 {
 public:
   virtual ~Function()
@@ -514,7 +514,7 @@ private:
 };
 
 
-class CE_CORE_API Class
+class CS_CORE_API Class
 {
 public:
   virtual ~Class();
@@ -603,7 +603,7 @@ bool InstanceOf(const iObject *obj)
 }
 
 
-class CE_CORE_API iObjectClass : public Class
+class CS_CORE_API iObjectClass : public Class
 {
 public:
   iObjectClass();
@@ -621,7 +621,7 @@ bool iObject::IsInstanceOf() const
   return GetClass()->IsInstanceOf<T>();
 }
 
-#ifdef CE_JAVA
+#ifdef CS_JAVA
 
 }
 
@@ -631,10 +631,10 @@ namespace ce
 {
 #endif
 
-CE_CLASS()
-class CE_CORE_API Object : public CE_SUPER(iObject)
+CS_CLASS()
+class CS_CORE_API Object : public CS_SUPER(iObject)
 {
-CE_CLASS_GEN_OBJECT;
+CS_CLASS_GEN_OBJECT;
 
 public:
   Object();

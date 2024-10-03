@@ -13,10 +13,10 @@ namespace ce
 {
 
 
-CE_CLASS()
-class CE_CORE_API BaseCEFAssetLoader : public CE_SUPER(iAssetLoader)
+CS_CLASS()
+class CS_CORE_API BaseCEFAssetLoader : public CS_SUPER(iAssetLoader)
 {
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 
 protected:
   BaseCEFAssetLoader() = default;
@@ -34,10 +34,10 @@ public:
   ~BaseCEFAssetLoader() override = default;
 
   bool CanLoad(const Class* cls, const ResourceLocator& locator) const override ;
-  CE_NODISCARD iObject* Load(const Class* cls, const ResourceLocator& locator) const override;
+  CS_NODISCARD iObject* Load(const Class* cls, const ResourceLocator& locator) const override;
 
 private:
-  CE_NODISCARD static bool Open (const ResourceLocator &locator, CrimsonFile &file);
+  CS_NODISCARD static bool Open (const ResourceLocator &locator, CrimsonFile &file);
 
 
   struct ValidFile

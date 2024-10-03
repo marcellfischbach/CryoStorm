@@ -7,7 +7,7 @@
 namespace ce {
 
 
-#ifdef CE_WIN32
+#ifdef CS_WIN32
 
 typedef unsigned __int8  uint8_t;
 typedef unsigned __int16 uint16_t;

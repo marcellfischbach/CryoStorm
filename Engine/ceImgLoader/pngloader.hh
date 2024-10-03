@@ -8,10 +8,10 @@ namespace ce::img
 {
 
 
-CE_CLASS()
-class CE_IMGLOADER_API PngLoader: public CE_SUPER(iAssetLoader)
+CS_CLASS()
+class CS_IMGLOADER_API PngLoader: public CS_SUPER(iAssetLoader)
 {
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
   PngLoader();
   virtual ~PngLoader() { }

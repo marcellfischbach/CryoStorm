@@ -1,6 +1,6 @@
 #pragma once
 
-#ifdef CE_WIN32
+#ifdef CS_WIN32
 
 // disable warning for the implementation via dominance 
 // this is the diamond problem

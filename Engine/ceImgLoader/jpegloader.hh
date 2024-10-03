@@ -9,10 +9,10 @@ namespace ce::img
 {
 
 
-  CE_CLASS()
-    class CE_IMGLOADER_API JpegLoader : public CE_SUPER(iAssetLoader)
+  CS_CLASS()
+    class CS_IMGLOADER_API JpegLoader : public CS_SUPER(iAssetLoader)
   {
-    CE_CLASS_GEN_OBJECT;
+    CS_CLASS_GEN_OBJECT;
   public:
     JpegLoader();
     virtual ~JpegLoader() { }

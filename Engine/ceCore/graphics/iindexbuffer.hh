@@ -10,10 +10,10 @@
 namespace ce
 {
 
-CE_CLASS()
-struct CE_CORE_API iIndexBuffer : public CE_SUPER(iObject)
+CS_CLASS()
+struct CS_CORE_API iIndexBuffer : public CS_SUPER(iObject)
 {
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
 
   virtual void CreateForRendering(Size size, eBufferUsage usage = eBU_Static) = 0;
 

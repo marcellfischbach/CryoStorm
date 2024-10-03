@@ -28,7 +28,7 @@ CameraState::CameraState()
       m_skyboxRenderer(nullptr),
       m_postProcessing(nullptr)
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
   m_gfxCamera->SetCamera(&m_camera);
   m_gfxCamera->SetProjector(&m_projector);
   UpdateGfxCamera();
@@ -97,7 +97,7 @@ int CameraState::GetOrder() const
 
 void CameraState::SetRenderTarget(iRenderTarget2D *renderTarget)
 {
-  CE_SET(m_renderTarget, renderTarget);
+  CS_SET(m_renderTarget, renderTarget);
   UpdateGfxCamera();
 }
 
@@ -108,7 +108,7 @@ iRenderTarget2D* CameraState::GetRenderTarget()
 
 void CameraState::SetSkyboxRenderer(ce::iSkyboxRenderer *skyboxRenderer)
 {
-  CE_SET(m_skyboxRenderer, skyboxRenderer);
+  CS_SET(m_skyboxRenderer, skyboxRenderer);
 }
 
 iSkyboxRenderer* CameraState::GetSkyboxRenderer() const
@@ -184,7 +184,7 @@ bool CameraState::IsRenderShadows() const
 
 void CameraState::SetPostProcessing(ce::PostProcessing *postProcessing)
 {
-  CE_SET(m_postProcessing, postProcessing);
+  CS_SET(m_postProcessing, postProcessing);
   UpdateGfxCamera();
 }
 

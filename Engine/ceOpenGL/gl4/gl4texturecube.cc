@@ -13,7 +13,7 @@ GL4TextureCube::GL4TextureCube()
         , m_size(0)
         , m_sampler(nullptr)
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
   glGenTextures(1, &m_name);
 }
 
@@ -131,7 +131,7 @@ void GL4TextureCube::Data(eCubeFace face, uint16_t level, uint16_t x, uint16_t y
 
 void GL4TextureCube::SetSampler(iSampler* sampler)
 {
-  CE_SET(m_sampler, sampler);
+  CS_SET(m_sampler, sampler);
 }
 
 iSampler* GL4TextureCube::GetSampler()

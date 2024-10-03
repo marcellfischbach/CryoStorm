@@ -8,10 +8,10 @@ namespace ce
 {
 
 
-CE_CLASS()
-class CE_CORE_API PPCombine : public CE_SUPER(SimplePostProcess)
+CS_CLASS()
+class CS_CORE_API PPCombine : public CS_SUPER(SimplePostProcess)
 {
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
 public:
   PPCombine();
   ~PPCombine() override;

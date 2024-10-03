@@ -362,7 +362,7 @@ size_t CrimsonFile::GetDataSize() const
 
 bool CrimsonFile::Parse(const std::string &filename)
 {
-#ifdef CE_WIN32
+#ifdef CS_WIN32
   FILE *file = nullptr;
   if (fopen_s(&file, filename.c_str(), "rb") != 0)
   {

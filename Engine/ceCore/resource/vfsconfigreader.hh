@@ -10,7 +10,7 @@ namespace ce
 class CrimsonFile;
 class CrimsonFileElement;
 
-class CE_CORE_API VFSConfigReader
+class CS_CORE_API VFSConfigReader
 {
 private:
   VFSConfigReader();

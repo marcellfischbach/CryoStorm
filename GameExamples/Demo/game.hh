@@ -17,4 +17,4 @@ public:
 };
 
 
-CE_DECLARE_GAME;
+CS_DECLARE_GAME;

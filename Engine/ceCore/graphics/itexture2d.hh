@@ -11,8 +11,8 @@ namespace ce
 {
 
 class Image;
-CE_CLASS(jclass="org.crimsonedge.core.graphics.ITexture2D")
-struct CE_CORE_API iTexture2D : public CE_SUPER(iTexture)
+CS_CLASS(jclass="org.crimsonedge.core.graphics.ITexture2D")
+struct CS_CORE_API iTexture2D : public CS_SUPER(iTexture)
 {
 
   struct Descriptor
@@ -25,7 +25,7 @@ struct CE_CORE_API iTexture2D : public CE_SUPER(iTexture)
   };
 
 
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
   ~iTexture2D() override { }
 
   bool IsMultiSampling() const

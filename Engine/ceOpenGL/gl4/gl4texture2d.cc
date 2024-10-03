@@ -13,7 +13,7 @@ GL4Texture2D::GL4Texture2D()
   : iTexture2D(), m_target(GL_TEXTURE_2D), m_name(0), m_width(0), m_height(0), m_sampler(nullptr),
     m_multiSampling(false)
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
   glGenTextures(1, &m_name);
 }
 
@@ -57,7 +57,7 @@ bool GL4Texture2D::Initialize(uint16_t width,
                               bool generateMipMaps,
                               uint16_t multiSamples)
 {
-  CE_GL_ERROR()
+  CS_GL_ERROR()
   m_multiSampling = multiSamples > 1;
   m_target        = m_multiSampling ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D;
   m_width         = width;
@@ -92,7 +92,7 @@ bool GL4Texture2D::Initialize(uint16_t width,
     lvlHeight = ceMax(lvlHeight / 2, 1);
   }
 
-  CE_GL_ERROR()
+  CS_GL_ERROR()
   if (m_multiSampling)
   {
     glTexImage2DMultisample(
@@ -110,7 +110,7 @@ bool GL4Texture2D::Initialize(uint16_t width,
                    GL4PixelFormatSizedInternal[format],
                    width, height
     );
-    CE_GL_ERROR()
+    CS_GL_ERROR()
   }
 
 
@@ -183,7 +183,7 @@ void GL4Texture2D::Data(uint16_t level,
 
 void GL4Texture2D::SetSampler(iSampler* sampler)
 {
-  CE_SET(m_sampler, sampler);
+  CS_SET(m_sampler, sampler);
 }
 
 iSampler* GL4Texture2D::GetSampler()

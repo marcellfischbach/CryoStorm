@@ -69,24 +69,24 @@ void GL4PointSMRenderer::Initialize()
 
 void GL4PointSMRenderer::SetDevice(GL4Device *device)
 {
-  CE_SET(m_device, device);
+  CS_SET(m_device, device);
 }
 
 void GL4PointSMRenderer::SetDepthBuffer(iTexture2D *depthBuffer)
 {
-  CE_SET(m_depthBuffer, depthBuffer);
+  CS_SET(m_depthBuffer, depthBuffer);
   m_pointLightShadowMapWidth  = m_depthBuffer->GetWidth();
   m_pointLightShadowMapHeight = m_depthBuffer->GetHeight();
 }
 
 void GL4PointSMRenderer::SetScene(iGfxScene *scene)
 {
-  CE_SET(m_scene, scene);
+  CS_SET(m_scene, scene);
 }
 
 void GL4PointSMRenderer::SetShadowMap(GL4RenderTarget2D *shadowMap)
 {
-  CE_SET(m_pointLightShadowMap, shadowMap);
+  CS_SET(m_pointLightShadowMap, shadowMap);
 }
 
 GL4RenderTarget2D *GL4PointSMRenderer::GetShadowMap()

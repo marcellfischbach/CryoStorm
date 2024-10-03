@@ -12,7 +12,7 @@ namespace ce
 {
 
 
-class CE_CORE_API Java
+class CS_CORE_API Java
 {
 public:
   static void Set(JNIEnv *env);
@@ -27,7 +27,7 @@ private:
 }
 
 
-#define CE_JCALL_VOID(env, cls, method) \
+#define CS_JCALL_VOID(env, cls, method) \
   static jclass jcls = (env)->FindClass(cls); \
   if (!cls) return;                                     \
   static jmethodID jmethod = (env)->GetMethodID(jcls, method, "(I)V"); \
@@ -37,7 +37,7 @@ private:
   (env)->CallVoidMethod(obj, jmethod)
 
 
-#define CE_JCALL_VOID_STRING(env, cls, method, value) \
+#define CS_JCALL_VOID_STRING(env, cls, method, value) \
   static jclass jcls = (env)->FindClass(cls); \
   if (!cls) return;                                     \
   static jmethodID jmethod = (env)->GetMethodID(jcls, method, "(Ljava/lang/String;)V"); \
@@ -47,7 +47,7 @@ private:
   jstring str = (env)->NewStringUTF(value);             \
   (env)->CallVoidMethod(obj, jmethod, str)
 
-#define CE_JCALL_VOID_INT(env, cls, method, value) \
+#define CS_JCALL_VOID_INT(env, cls, method, value) \
   static jclass jcls = (env)->FindClass(cls); \
   if (!cls) return;                                     \
   static jmethodID jmethod = (env)->GetMethodID(jcls, method, "(I)V"); \
@@ -56,7 +56,7 @@ private:
   if (!obj) return;                                     \
   (env)->CallVoidMethod(obj, jmethod, value)
 
-#define CE_JCALL_VOID_INT_LONG(env, cls, method, value0, value1) \
+#define CS_JCALL_VOID_INT_LONG(env, cls, method, value0, value1) \
   static jclass jcls = (env)->FindClass(cls); \
   if (!cls) return;                                     \
   static jmethodID jmethod = (env)->GetMethodID(jcls, method, "(IJ)V"); \
@@ -66,7 +66,7 @@ private:
   (env)->CallVoidMethod(obj, jmethod, value0, value1)
 
 
-#define CE_JCALL_INT(env, cls, method, res, def) \
+#define CS_JCALL_INT(env, cls, method, res, def) \
   static jclass jcls = (env)->FindClass(cls); \
   if (!cls) return def;                                     \
   static jmethodID jmethod = (env)->GetMethodID(jcls, method, "()I"); \
@@ -76,7 +76,7 @@ private:
   res = (env)->CallIntMethod(obj, jmethod)
 
 
-#define CE_JCALL_INT_INT_INT_BYTEARRAY(env, cls, method, value0, value1, value2, res, def) \
+#define CS_JCALL_INT_INT_INT_BYTEARRAY(env, cls, method, value0, value1, value2, res, def) \
   static jclass jcls = (env)->FindClass(cls); \
   if (!cls) return def;                                     \
   static jmethodID jmethod = (env)->GetMethodID(jcls, method, "(II[B)I"); \
@@ -85,7 +85,7 @@ private:
   if (!obj) return def;                                     \
   res = (env)->CallIntMethod(obj, jmethod, value0, value1, value2)
 
-#define CE_JCALL_LONG(env, cls, method, res, def) \
+#define CS_JCALL_LONG(env, cls, method, res, def) \
   static jclass jcls = (env)->FindClass(cls); \
   if (!cls) return def;                                     \
   static jmethodID jmethod = (env)->GetMethodID(jcls, method, "()J"); \
@@ -94,7 +94,7 @@ private:
   if (!obj) return def;                                     \
   res = (env)->CallIntMethod(obj, jmethod)
 
-#define CE_JCALL_STRING(env, cls, method, res, def) \
+#define CS_JCALL_STRING(env, cls, method, res, def) \
   static jclass jcls = (env)->FindClass(cls); \
   if (!cls) return def;                                     \
   static jmethodID jmethod = (env)->GetMethodID(jcls, method, "()Ljava/lang/String;"); \
@@ -103,7 +103,7 @@ private:
   if (!obj) return def;                                     \
   res = static_cast<jstring>((env)->CallObjectMethod(obj, jmethod))
 
-#define CE_JCALL_BOOL(env, cls, method, res, def) \
+#define CS_JCALL_BOOL(env, cls, method, res, def) \
   static jclass jcls = (env)->FindClass(cls); \
   if (!cls) return def;                                     \
   static jmethodID jmethod = (env)->GetMethodID(jcls, method, "()Z"); \
@@ -112,7 +112,7 @@ private:
   if (!obj) return def;                                     \
   res = (env)->CallBooleanMethod(obj, jmethod)
 
-#define CE_JCALL_BOOL_INT_INT(env, cls, method, value0, value1, res, def) \
+#define CS_JCALL_BOOL_INT_INT(env, cls, method, value0, value1, res, def) \
   static jclass jcls = (env)->FindClass(cls); \
   if (!cls) return def;                                     \
   static jmethodID jmethod = (env)->GetMethodID(jcls, method, "(II)Z"); \

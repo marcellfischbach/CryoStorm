@@ -12,7 +12,7 @@ Image::Image(uint16_t width, uint16_t height, ePixelFormat format)
     : m_pixelFormat(format)
     , m_mipmapCreated(false)
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
   GenerateLayers(width, height);
   GenerateLayer(0);
 }

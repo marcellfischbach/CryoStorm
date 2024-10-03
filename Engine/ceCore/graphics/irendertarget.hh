@@ -9,16 +9,16 @@ namespace ce
 
 struct iTexture;
 
-CE_CLASS()
-struct CE_CORE_API iRenderTarget : public CE_SUPER(iObject)
+CS_CLASS()
+struct CS_CORE_API iRenderTarget : public CS_SUPER(iObject)
 {
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
   ~iRenderTarget() override = default;
 
   virtual eTextureType GetType() const = 0;
 
-  CE_NODISCARD virtual bool Compile() = 0;
-  CE_NODISCARD virtual std::string GetCompileLog() const = 0;
+  CS_NODISCARD virtual bool Compile() = 0;
+  CS_NODISCARD virtual std::string GetCompileLog() const = 0;
 };
 
 

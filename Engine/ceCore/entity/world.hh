@@ -16,24 +16,24 @@ class EntityState;
 class SpatialState;
 class CameraState;
 
-CE_CLASS(jclass="org.crimsonedge.core.entity.World")
-class CE_CORE_API World : public CE_SUPER(iObject)
+CS_CLASS(jclass="org.crimsonedge.core.entity.World")
+class CS_CORE_API World : public CS_SUPER(iObject)
 {
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
   World();
   
   void SetScene(iGfxScene * scene);
-  CE_NODISCARD iGfxScene* GetScene();
-  CE_NODISCARD const iGfxScene* GetScene() const;
+  CS_NODISCARD iGfxScene* GetScene();
+  CS_NODISCARD const iGfxScene* GetScene() const;
 
   void SetPhysicsWorld(iPhysicsWorld *world);
-  CE_NODISCARD iPhysicsWorld *GetPhysicsWorld();
-  CE_NODISCARD const iPhysicsWorld *GetPhysicsWorld() const;
+  CS_NODISCARD iPhysicsWorld *GetPhysicsWorld();
+  CS_NODISCARD const iPhysicsWorld *GetPhysicsWorld() const;
 
   void SetMainCamera(CameraState *mainCamera);
-  CE_NODISCARD CameraState *GetMainCamera ();
-  CE_NODISCARD const CameraState *GetMainCamera () const;
+  CS_NODISCARD CameraState *GetMainCamera ();
+  CS_NODISCARD const CameraState *GetMainCamera () const;
 
   bool Attach(Entity * entity);
   bool Detach(Entity * entity);

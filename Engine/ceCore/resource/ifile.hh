@@ -12,10 +12,10 @@ namespace ce
 
 
 
-CE_CLASS()
-struct CE_CORE_API iFile : public CE_SUPER(iObject)
+CS_CLASS()
+struct CS_CORE_API iFile : public CS_SUPER(iObject)
 {
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
   virtual ~iFile() {}
 
   virtual const std::string &GetName() const = 0;

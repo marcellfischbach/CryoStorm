@@ -13,11 +13,11 @@ struct iCollisionShape;
 struct iPhysicsSystem;
 struct iStaticCollider;
 
-CE_CLASS(Virtual)
-class CE_CORE_API CollisionState : public CE_SUPER(EntityState)
+CS_CLASS(Virtual)
+class CS_CORE_API CollisionState : public CS_SUPER(EntityState)
 {
   friend class RigidBodyState;
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
 public:
   CollisionState(const std::string &name = std::string(""));
   ~CollisionState() override;
@@ -32,10 +32,10 @@ private:
 
 };
 
-CE_CLASS()
-class CE_CORE_API SphereColliderState : public CE_SUPER(CollisionState)
+CS_CLASS()
+class CS_CORE_API SphereColliderState : public CS_SUPER(CollisionState)
 {
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
 public:
   SphereColliderState();
   ~SphereColliderState() override;
@@ -51,10 +51,10 @@ private:
   float m_radius;
 };
 
-CE_CLASS()
-class CE_CORE_API BoxColliderState : public CE_SUPER(CollisionState)
+CS_CLASS()
+class CS_CORE_API BoxColliderState : public CS_SUPER(CollisionState)
 {
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
 public:
   BoxColliderState();
   ~BoxColliderState() override;

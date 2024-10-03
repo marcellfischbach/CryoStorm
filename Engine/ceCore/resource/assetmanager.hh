@@ -13,7 +13,7 @@ namespace ce
 {
 
 
-class CE_CORE_API AssetManager
+class CS_CORE_API AssetManager
 {
   friend class Engine;
 public:

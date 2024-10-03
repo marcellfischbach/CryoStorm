@@ -7,7 +7,7 @@
 
 namespace ce {
 
-class CE_CORE_API BoundingBox
+class CS_CORE_API BoundingBox
 {
 public:
   BoundingBox();
@@ -22,31 +22,31 @@ public:
   void Clear();
   void Finish();
 
-  CE_NODISCARD CE_FORCEINLINE bool IsValid() const
+  CS_NODISCARD CS_FORCEINLINE bool IsValid() const
   {
     return m_valid;
   }
 
-  CE_NODISCARD CE_FORCEINLINE const Vector3f& GetMin() const
+  CS_NODISCARD CS_FORCEINLINE const Vector3f& GetMin() const
   {
     return m_min;
   }
 
-  CE_NODISCARD CE_FORCEINLINE const Vector3f& GetMax() const
+  CS_NODISCARD CS_FORCEINLINE const Vector3f& GetMax() const
   {
     return m_max;
   }
-  CE_NODISCARD CE_FORCEINLINE const Vector3f& GetCenter() const
+  CS_NODISCARD CS_FORCEINLINE const Vector3f& GetCenter() const
   {
     return m_center;
   }
 
-  CE_NODISCARD CE_FORCEINLINE const Vector3f* GetPoints() const
+  CS_NODISCARD CS_FORCEINLINE const Vector3f* GetPoints() const
   {
     return m_points;
   }
 
-  CE_NODISCARD CE_FORCEINLINE float GetDiagonal() const
+  CS_NODISCARD CS_FORCEINLINE float GetDiagonal() const
   {
     return m_diagonal;
   }

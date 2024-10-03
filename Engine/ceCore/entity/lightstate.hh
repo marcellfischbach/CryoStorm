@@ -17,29 +17,29 @@ struct iDirectionalLight;
 class GfxLight;
 class World;
 
-CE_CLASS()
-class CE_CORE_API LightState : public CE_SUPER(SpatialState)
+CS_CLASS()
+class CS_CORE_API LightState : public CS_SUPER(SpatialState)
 {
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 
 public:
   LightState(const std::string &name);
   ~LightState() override;
 
   void SetType(eLightType type);
-  CE_NODISCARD eLightType GetType() const;
+  CS_NODISCARD eLightType GetType() const;
 
   void SetCastShadow(bool castShadow);
-  CE_NODISCARD bool IsCastShadow() const;
+  CS_NODISCARD bool IsCastShadow() const;
 
   void SetShadowMapBias(float bias);
-  CE_NODISCARD float GetShadowMapBias() const;
+  CS_NODISCARD float GetShadowMapBias() const;
 
   void SetColor(const Color4f &color);
-  CE_NODISCARD const Color4f &GetColor() const;
+  CS_NODISCARD const Color4f &GetColor() const;
 
   void SetRange(float range);
-  CE_NODISCARD float GetRange() const;
+  CS_NODISCARD float GetRange() const;
 
 
   void OnAttachedToWorld(World * world) override;

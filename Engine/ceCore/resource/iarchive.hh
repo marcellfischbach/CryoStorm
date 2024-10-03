@@ -9,15 +9,15 @@ namespace ce
 
 class ResourceLocator;
 
-CE_CLASS()
-struct CE_CORE_API iArchive : public CE_SUPER(iObject)
+CS_CLASS()
+struct CS_CORE_API iArchive : public CS_SUPER(iObject)
 {
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
   ~iArchive() override = default;
 
-  CE_NODISCARD virtual const std::string &GetName () const = 0;
-  CE_NODISCARD virtual int GetPriority () const = 0;
-  CE_NODISCARD virtual iFile* Open (const std::string &locator, eAccessMode accessMode, eOpenMode openMode) = 0;
+  CS_NODISCARD virtual const std::string &GetName () const = 0;
+  CS_NODISCARD virtual int GetPriority () const = 0;
+  CS_NODISCARD virtual iFile* Open (const std::string &locator, eAccessMode accessMode, eOpenMode openMode) = 0;
 };
 
 

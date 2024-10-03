@@ -20,7 +20,7 @@ PPBlurH::PPBlurH(size_t sampleCount, float sampleScale)
 
 PPBlurH::~PPBlurH()
 {
-  CE_RELEASE(m_shader);
+  CS_RELEASE(m_shader);
   m_shader               = nullptr;
   m_attribColor          = nullptr;
   m_attribTextureSizeInv = nullptr;

@@ -23,7 +23,7 @@ public:
   inline BinaryEntryAlreadyExistsException() : std::exception() { }
 };
 
-class CE_CORE_API BinaryOutputStream
+class CS_CORE_API BinaryOutputStream
 {
 public:
   BinaryOutputStream();
@@ -74,7 +74,7 @@ private:
   Size m_sizeIncrement;
 };
 
-class CE_CORE_API BinaryInputStream
+class CS_CORE_API BinaryInputStream
 {
 public:
   BinaryInputStream(const uint8_t* m_buffer, Size bufferSize);
@@ -112,7 +112,7 @@ private:
 };
 
 
-class CE_CORE_API BinaryDictionary
+class CS_CORE_API BinaryDictionary
 {
 public:
   struct Entry

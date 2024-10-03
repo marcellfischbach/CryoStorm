@@ -25,19 +25,19 @@ GfxCamera::GfxCamera()
     , m_renderShadows(true)
     , m_postProcessing(nullptr)
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
 }
 
 GfxCamera::~GfxCamera()
 {
-  CE_RELEASE(m_camera);
-  CE_RELEASE(m_projector);
+  CS_RELEASE(m_camera);
+  CS_RELEASE(m_projector);
 }
 
 
 void GfxCamera::SetCamera(Camera *camera)
 {
-  CE_SET(m_camera, camera);
+  CS_SET(m_camera, camera);
 }
 
 Camera *GfxCamera::GetCamera()
@@ -52,7 +52,7 @@ const Camera *GfxCamera::GetCamera() const
 
 void GfxCamera::SetProjector(Projector *projector)
 {
-  CE_SET(m_projector, projector);
+  CS_SET(m_projector, projector);
 }
 
 Projector *GfxCamera::GetProjector()
@@ -87,7 +87,7 @@ float GfxCamera::GetClearDepth() const
 
 void GfxCamera::SetRenderTarget(iRenderTarget2D *renderTarget)
 {
-  CE_SET(m_renderTarget, renderTarget);
+  CS_SET(m_renderTarget, renderTarget);
 }
 
 iRenderTarget2D *GfxCamera::GetRenderTarget()
@@ -97,7 +97,7 @@ iRenderTarget2D *GfxCamera::GetRenderTarget()
 
 void GfxCamera::SetSkyboxRenderer(ce::iSkyboxRenderer *skyboxRenderer)
 {
-  CE_SET(m_skyboxRenderer, skyboxRenderer);
+  CS_SET(m_skyboxRenderer, skyboxRenderer);
 }
 
 iSkyboxRenderer *GfxCamera::GetSkyboxRenderer() const
@@ -133,7 +133,7 @@ bool GfxCamera::IsRenderShadows() const
 
 void GfxCamera::SetPostProcessing(PostProcessing *postProcessing)
 {
-  CE_SET(m_postProcessing, postProcessing);
+  CS_SET(m_postProcessing, postProcessing);
 }
 
 PostProcessing *GfxCamera::GetPostProcessing() const
@@ -159,7 +159,7 @@ void GfxCamera::UpdateClear(eClearMode mode,
   m_clearMode      = mode;
   m_clearColorMode = clearColorMode;
   m_clearColor     = color;
-  CE_SET(m_skyboxRenderer, skybox);
+  CS_SET(m_skyboxRenderer, skybox);
   m_clearDepth = depth;
 }
 

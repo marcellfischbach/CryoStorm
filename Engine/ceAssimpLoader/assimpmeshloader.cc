@@ -32,7 +32,7 @@ struct StaticLoaderData
 
 AssimpMeshLoader::AssimpMeshLoader()
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
 }
 
 

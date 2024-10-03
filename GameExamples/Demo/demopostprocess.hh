@@ -11,10 +11,10 @@ struct iShader;
 struct iShaderAttribute;
 }
 
-CE_CLASS()
-class DemoPostProcess : public CE_SUPER(ce::SimplePostProcess)
+CS_CLASS()
+class DemoPostProcess : public CS_SUPER(ce::SimplePostProcess)
 {
-CE_CLASS_GEN_OBJECT;
+CS_CLASS_GEN_OBJECT;
 public:
   DemoPostProcess();
 

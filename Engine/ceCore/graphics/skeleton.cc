@@ -22,7 +22,7 @@ Skeleton::Skeleton()
     : Object()
     , m_base()
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
 }
 
 void Skeleton::Clear()

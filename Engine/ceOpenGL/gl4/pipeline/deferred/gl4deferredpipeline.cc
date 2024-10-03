@@ -32,7 +32,7 @@ GL4DeferredPipeline::GL4DeferredPipeline()
     , m_intermediate(nullptr)
     , m_renderMode(0)
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
 }
 
 GL4DeferredPipeline::~GL4DeferredPipeline()
@@ -321,9 +321,9 @@ void GL4DeferredPipeline::RenderForwardMeshShaded(GfxMesh *mesh,
         lights,
         offset
     );
-    CE_GL_ERROR();
+    CS_GL_ERROR();
     mesh->RenderForward(m_device, eRP_Forward, lights.data(), numLights);
-    CE_GL_ERROR();
+    CS_GL_ERROR();
   }
   else
   {
@@ -335,9 +335,9 @@ void GL4DeferredPipeline::RenderForwardMeshShaded(GfxMesh *mesh,
         lights,
         offset
     );
-    CE_GL_ERROR();
+    CS_GL_ERROR();
     mesh->RenderForward(m_device, eRP_Forward, lights.data(), numLights);
-    CE_GL_ERROR();
+    CS_GL_ERROR();
   }
 
 
@@ -537,7 +537,7 @@ iRenderTarget2D *GL4DeferredPipeline::UpdateRenderTarget(ce::iDevice *device, ce
 {
   if (!target)
   {
-    CE_RELEASE(m_target);
+    CS_RELEASE(m_target);
     return nullptr;
   }
 
@@ -552,7 +552,7 @@ iRenderTarget2D *GL4DeferredPipeline::UpdateRenderTarget(ce::iDevice *device, ce
   }
 
   //  recreate the target
-  CE_RELEASE(renderTarget);
+  CS_RELEASE(renderTarget);
 
   iRenderTarget2D::Descriptor desc {
       target->GetWidth(),
@@ -579,12 +579,12 @@ iRenderTarget2D *GL4DeferredPipeline::UpdateRenderTarget(ce::iDevice *device, ce
   colorSampler->SetAddressW(eTAM_Clamp);
   colorTexture->SetSampler(colorSampler);
   renderTarget->AddColorTexture(colorTexture);
-  CE_RELEASE(colorTexture);
-  CE_RELEASE(colorSampler);
+  CS_RELEASE(colorTexture);
+  CS_RELEASE(colorSampler);
 
   if (!renderTarget->Compile())
   {
-    CE_RELEASE(renderTarget);
+    CS_RELEASE(renderTarget);
     renderTarget = nullptr;
   }
 
@@ -598,7 +598,7 @@ void GL4DeferredPipeline::UpdateIntermediate()
       || m_intermediate->GetWidth() != m_target->GetWidth()
       || m_intermediate->GetHeight() != m_target->GetHeight())
   {
-    CE_RELEASE(m_intermediate);
+    CS_RELEASE(m_intermediate);
 
     iTexture2D::Descriptor colorDesc {};
     colorDesc.Width        = m_target->GetWidth();
@@ -635,7 +635,7 @@ void GL4DeferredPipeline::UpdateTransparentTarget()
       || m_transparentTarget->GetWidth() != m_target->GetWidth()
       || m_transparentTarget->GetHeight() != m_target->GetHeight())
   {
-    CE_RELEASE(m_transparentTarget);
+    CS_RELEASE(m_transparentTarget);
 
     iRenderTarget2D::Descriptor interDesc {};
     interDesc.Width  = m_target->GetWidth();

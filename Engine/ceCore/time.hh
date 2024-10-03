@@ -7,7 +7,7 @@
 namespace ce
 {
 
-class CE_CORE_API Time
+class CS_CORE_API Time
 {
 public:
   static uint64_t GetTime ();

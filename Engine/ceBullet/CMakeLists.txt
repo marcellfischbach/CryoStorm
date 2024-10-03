@@ -1,6 +1,6 @@
 
 
-add_definitions(-DCE_BULLET_EXPORT)
+add_definitions(-DCS_BULLET_EXPORT)
 add_definitions(-D_USE_MATH_DEFINES)
 
 set(SOURCES
@@ -31,7 +31,7 @@ target_link_libraries(ceBullet
         )
 
 add_dependencies(ceBullet ceMOC)
-CE_MOC(ceBullet)
+CS_MOC(ceBullet)
 
 
 install(TARGETS ceBullet

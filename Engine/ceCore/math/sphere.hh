@@ -8,26 +8,26 @@ namespace ce
 {
 
 
-class CE_CORE_API Sphere
+class CS_CORE_API Sphere
 {
 public:
   Vector3f center;
   float radius;
 
 public:
-  CE_FORCEINLINE Sphere(const Vector3f& center, float radius)
+  CS_FORCEINLINE Sphere(const Vector3f& center, float radius)
           : center(center)
           , radius(radius)
   {
 
   }
 
-  CE_NODISCARD CE_FORCEINLINE float DistanceToCenter(const Vector3f &p) const
+  CS_NODISCARD CS_FORCEINLINE float DistanceToCenter(const Vector3f &p) const
   {
     return (p - center).Length();
   }
 
-  CE_NODISCARD CE_FORCEINLINE float DistanceToSurface(const Vector3f &p) const
+  CS_NODISCARD CS_FORCEINLINE float DistanceToSurface(const Vector3f &p) const
   {
     return (p - center).Length() - radius;
   }

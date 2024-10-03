@@ -12,10 +12,10 @@
 namespace ce
 {
 
-CE_CLASS()
-class CE_CORE_API Image : public CE_SUPER(iObject)
+CS_CLASS()
+class CS_CORE_API Image : public CS_SUPER(iObject)
 {
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
   Image(uint16_t width, uint16_t height, ePixelFormat pixelFormat);
 

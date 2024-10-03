@@ -18,7 +18,7 @@ BulletDynamicCollider::BulletDynamicCollider()
   , m_userData(nullptr)
 {
   m_motionState.priv = this;
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
 }
 
 BulletDynamicCollider::~BulletDynamicCollider()
@@ -111,7 +111,7 @@ btRigidBody* BulletDynamicCollider::GetRigidBody()
 
 void BulletDynamicCollider::SetUserData(SpatialState* userData)
 {
-  CE_SET(m_userData, userData);
+  CS_SET(m_userData, userData);
 }
 
 SpatialState* BulletDynamicCollider::GetUserData() const
@@ -121,7 +121,7 @@ SpatialState* BulletDynamicCollider::GetUserData() const
 
 void BulletDynamicCollider::SetWorld(BulletWorld* world)
 {
-  CE_SET(m_world, world);
+  CS_SET(m_world, world);
 }
 
 void BulletDynamicCollider::MotionState::getWorldTransform(btTransform& worldTrans) const

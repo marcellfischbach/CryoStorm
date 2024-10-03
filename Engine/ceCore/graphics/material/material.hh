@@ -28,11 +28,11 @@ struct iShaderAttribute;
 struct iTexture;
 
 
-CE_CLASS(jclass="org.crimsonedge.core.graphics.material.Material")
-class CE_CORE_API Material : public CE_SUPER(iMaterial)
+CS_CLASS(jclass="org.crimsonedge.core.graphics.material.Material")
+class CS_CORE_API Material : public CS_SUPER(iMaterial)
 {
   friend class MaterialInstance;
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
   static const Size UndefinedIndex = ~0x00;
 
@@ -42,38 +42,38 @@ public:
   bool Bind(iDevice * device, eRenderPass pass) override;
 
   void SetFillMode (eFillMode fillMode);
-  CE_NODISCARD eFillMode GetFillMode () const override;
+  CS_NODISCARD eFillMode GetFillMode () const override;
 
   void SetRenderQueue(eRenderQueue queue);
-  CE_NODISCARD eRenderQueue GetRenderQueue() const override;
+  CS_NODISCARD eRenderQueue GetRenderQueue() const override;
 
   void SetBlending(bool  blending);
-  CE_NODISCARD bool IsBlending () const;
+  CS_NODISCARD bool IsBlending () const;
   void SetBlendFactor (eBlendFactor srcFactor, eBlendFactor dstFactor);
   void SetBlendFactor (eBlendFactor srcFactorColor, eBlendFactor srcFactorAlpha, eBlendFactor dstFactorColor, eBlendFactor dstFactorAlpha);
-  CE_NODISCARD eBlendFactor GetBlendFactorSrcColor () const;
-  CE_NODISCARD eBlendFactor GetBlendFactorSrcAlpha () const;
-  CE_NODISCARD eBlendFactor GetBlendFactorDstColor () const;
-  CE_NODISCARD eBlendFactor GetBlendFactorDstAlpha () const;
+  CS_NODISCARD eBlendFactor GetBlendFactorSrcColor () const;
+  CS_NODISCARD eBlendFactor GetBlendFactorSrcAlpha () const;
+  CS_NODISCARD eBlendFactor GetBlendFactorDstColor () const;
+  CS_NODISCARD eBlendFactor GetBlendFactorDstAlpha () const;
 
   void SetDepthWrite (bool depthWrite);
-  CE_NODISCARD bool IsDepthWrite() const;
+  CS_NODISCARD bool IsDepthWrite() const;
   void SetDepthTest (bool depthTest);
-  CE_NODISCARD bool IsDepthTest() const;
+  CS_NODISCARD bool IsDepthTest() const;
   void SetDepthFunc (eCompareFunc depthFun);
-  CE_NODISCARD eCompareFunc GetDepthFunc() const;
+  CS_NODISCARD eCompareFunc GetDepthFunc() const;
   void SetShadingMode (eShadingMode shadingMode);
-  CE_NODISCARD eShadingMode GetShadingMode () const override;
+  CS_NODISCARD eShadingMode GetShadingMode () const override;
 
 
   void SetShader(eRenderPass pass, iShader * shader);
-  CE_NODISCARD iShader* GetShader(eRenderPass pass);
-  CE_NODISCARD const iShader* GetShader(eRenderPass pass) const override;
+  CS_NODISCARD iShader* GetShader(eRenderPass pass);
+  CS_NODISCARD const iShader* GetShader(eRenderPass pass) const override;
 
   void RegisterAttribute(const std::string & attributeName, eMaterialAttributeType attributeType);
-  CE_NODISCARD uint16_t GetNumberOfAttributes() const;
+  CS_NODISCARD uint16_t GetNumberOfAttributes() const;
 
-  CE_NODISCARD std::vector<std::string> GetAttributeNames() const;
+  CS_NODISCARD std::vector<std::string> GetAttributeNames() const;
 
   Size IndexOf(const std::string & attributeName) override;
   void Debug(Size idx) override;

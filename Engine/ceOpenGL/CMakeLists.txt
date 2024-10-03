@@ -1,6 +1,6 @@
 
 
-add_definitions(-DCE_OGL_EXPORT)
+add_definitions(-DCS_OGL_EXPORT)
 add_definitions(-D_USE_MATH_DEFINES)
 
 set(SOURCES
@@ -112,7 +112,7 @@ target_link_libraries(ceOpenGL
         )
 
 add_dependencies(ceOpenGL ceMOC)
-CE_MOC(ceOpenGL)
+CS_MOC(ceOpenGL)
 
 
 install(TARGETS ceOpenGL

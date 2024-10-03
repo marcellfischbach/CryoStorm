@@ -1,7 +1,7 @@
 
 
 add_definitions(-D_USE_MATH_DEFINES)
-add_definitions(-DCE_JAVA_EXPORT)
+add_definitions(-DCS_JAVA_EXPORT)
 
 set(SOURCES
         javabindingmodule.cc
@@ -29,7 +29,7 @@ add_dependencies(ceJavaLWJGL ceBullet)
 add_dependencies(ceJavaLWJGL ceImgLoader)
 add_dependencies(ceJavaLWJGL ceOpenGL)
 
-CE_MOC(ceJavaLWJGL ceJavaLWJGL)
+CS_MOC(ceJavaLWJGL ceJavaLWJGL)
 
 
 target_link_libraries(ceJavaLWJGL

@@ -8,10 +8,10 @@ namespace ce::opengl
 {
 
 
-CE_CLASS()
-class GL4ShaderLoader : public CE_SUPER(iAssetLoader)
+CS_CLASS()
+class GL4ShaderLoader : public CS_SUPER(iAssetLoader)
 {
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
   GL4ShaderLoader();
   virtual ~GL4ShaderLoader() = default;

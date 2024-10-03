@@ -27,7 +27,7 @@ bool BulletModule::Initialize(const std::vector<std::string> &args, Engine *engi
 
 }
 
-CE_DEFINE_LIBRARY(ceBullet)
+CS_DEFINE_LIBRARY(ceBullet)
 {
   printf ("Load library: ceBullet\n");
   return new ce::bullet::BulletModule;

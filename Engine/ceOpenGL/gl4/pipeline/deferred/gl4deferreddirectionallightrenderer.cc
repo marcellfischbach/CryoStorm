@@ -172,7 +172,7 @@ GL4RenderTarget2D *GL4DeferredDirectionalLightRenderer::GetShadowMap()
     }
 
     target = m_pssmRenderer.CreateDirectionalLightShadowMap();
-    CE_SET(m_shadowMaps[m_lightIdx], target);
+    CS_SET(m_shadowMaps[m_lightIdx], target);
     return target;
   }
   else
@@ -184,7 +184,7 @@ GL4RenderTarget2D *GL4DeferredDirectionalLightRenderer::GetShadowMap()
     }
 
     GL4RenderTarget2D *target = m_pssmRenderer.CreateDirectionalLightShadowMap();
-    CE_SET(m_shadowMap, target);
+    CS_SET(m_shadowMap, target);
     return target;
   }
 }

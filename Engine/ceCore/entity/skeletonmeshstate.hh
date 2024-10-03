@@ -10,18 +10,18 @@ namespace ce
 
 class SkeletonMesh;
 
-CE_CLASS()
-class CE_CORE_API SkeletonMeshState : public CE_SUPER(StaticMeshState)
+CS_CLASS()
+class CS_CORE_API SkeletonMeshState : public CS_SUPER(StaticMeshState)
 {
-  CE_CLASS_GEN;
+  CS_CLASS_GEN;
 public:
   SkeletonMeshState();
   ~SkeletonMeshState() override = default;
 
   void SetMesh (Mesh* mesh) override;
 
-  CE_NODISCARD Skeleton &GetSkeleton ();
-  CE_NODISCARD const Skeleton &GetSkeleton () const;
+  CS_NODISCARD Skeleton &GetSkeleton ();
+  CS_NODISCARD const Skeleton &GetSkeleton () const;
 
 protected:
   GfxMesh *CreateGfxMesh() override;

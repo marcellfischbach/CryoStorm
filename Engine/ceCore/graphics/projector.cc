@@ -8,7 +8,7 @@ namespace ce
 Projector::Projector()
   : m_mode(ePM_Perspective), m_left(-1.0f), m_right(1.0f), m_bottom(-1.0f), m_top(1.0f), m_near(1.0f), m_far(1024.0)
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
 }
 
 void Projector::UpdatePerspective(float angleRad, float aspect, float near, float far)

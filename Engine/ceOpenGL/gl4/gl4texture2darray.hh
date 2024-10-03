@@ -9,19 +9,19 @@
 namespace ce::opengl
 {
 
-CE_CLASS()
-class CE_OGL_API GL4Texture2DArray : public CE_SUPER(iTexture2DArray)
+CS_CLASS()
+class CS_OGL_API GL4Texture2DArray : public CS_SUPER(iTexture2DArray)
 {
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
   GL4Texture2DArray();
   ~GL4Texture2DArray();
-  CE_NODISCARD uint32_t GetName()
+  CS_NODISCARD uint32_t GetName()
   {
     return m_name;
   }
 
-  CE_NODISCARD eTextureType GetType() const
+  CS_NODISCARD eTextureType GetType() const
   {
     return eTextureType::Texture2DArray;
   }

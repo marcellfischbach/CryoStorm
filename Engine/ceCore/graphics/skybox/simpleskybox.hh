@@ -15,10 +15,10 @@ namespace ce
 struct iShader;
 struct iShaderAttribute;
 
-CE_CLASS()
-class CE_CORE_API SimpleSkybox : public CE_SUPER(iSkyboxRenderer)
+CS_CLASS()
+class CS_CORE_API SimpleSkybox : public CS_SUPER(iSkyboxRenderer)
 {
-CE_CLASS_GEN_OBJECT;
+CS_CLASS_GEN_OBJECT;
 public:
   SimpleSkybox() = default;
   ~SimpleSkybox() override = default;

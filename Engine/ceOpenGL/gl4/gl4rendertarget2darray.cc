@@ -14,7 +14,7 @@ GL4RenderTarget2DArray::GL4RenderTarget2DArray()
       , m_layer(0)
       , m_depthTexture(nullptr)
 {
-  CE_CLASS_GEN_CONSTR;
+  CS_CLASS_GEN_CONSTR;
   glGenFramebuffers(1, &m_name);
 }
 
@@ -23,7 +23,7 @@ GL4RenderTarget2DArray::~GL4RenderTarget2DArray()
   glDeleteFramebuffers(1, &m_name);
   m_name = 0;
 
-  CE_RELEASE(m_depthTexture);
+  CS_RELEASE(m_depthTexture);
   for (auto color : m_colorTextures) {
     color->Release();
   }
@@ -83,7 +83,7 @@ void GL4RenderTarget2DArray::SetDepthTexture(iTexture2DArray *depthTexture)
       return;
   }
 
-  CE_SET(m_depthTexture, txt);
+  CS_SET(m_depthTexture, txt);
 
 
   glFramebufferTexture(GL_FRAMEBUFFER,

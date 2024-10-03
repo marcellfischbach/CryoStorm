@@ -11,15 +11,15 @@ namespace ce
 {
 
 
-struct CE_CORE_API iClipper
+struct CS_CORE_API iClipper
 {
   virtual ~iClipper() = default;
 
-  CE_NODISCARD virtual eClippingResult Test (const BoundingBox &bbox) const = 0;
+  CS_NODISCARD virtual eClippingResult Test (const BoundingBox &bbox) const = 0;
 
-  CE_NODISCARD virtual eClippingResult Test (const Sphere &sphere) const = 0;
+  CS_NODISCARD virtual eClippingResult Test (const Sphere &sphere) const = 0;
 
-  CE_NODISCARD virtual eClippingResult Test (const Vector3f &p) const = 0;
+  CS_NODISCARD virtual eClippingResult Test (const Vector3f &p) const = 0;
 
 };
 

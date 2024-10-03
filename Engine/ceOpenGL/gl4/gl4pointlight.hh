@@ -9,10 +9,10 @@ namespace ce::opengl
 {
 
 
-CE_CLASS()
-class CE_OGL_API GL4PointLight : public CE_SUPER(iPointLight)
+CS_CLASS()
+class CS_OGL_API GL4PointLight : public CS_SUPER(iPointLight)
 {
-  CE_CLASS_GEN_OBJECT;
+  CS_CLASS_GEN_OBJECT;
 public:
   GL4PointLight();
   virtual ~GL4PointLight();

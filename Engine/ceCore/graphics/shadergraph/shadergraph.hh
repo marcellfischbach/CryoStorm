@@ -15,10 +15,10 @@ namespace ce
 {
 
 
-CE_CLASS()
-class CE_CORE_API ShaderGraph : public CE_SUPER(SGNode)
+CS_CLASS()
+class CS_CORE_API ShaderGraph : public CS_SUPER(SGNode)
 {
-CE_CLASS_GEN;
+CS_CLASS_GEN;
 public:
   ShaderGraph();
   ~ShaderGraph() override;
