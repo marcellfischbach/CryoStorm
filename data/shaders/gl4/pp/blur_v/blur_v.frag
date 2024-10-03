@@ -1,10 +1,10 @@
 #version 330
-layout(location = 0) out vec4 ce_FragColor;
+layout(location = 0) out vec4 cs_FragColor;
 
-uniform sampler2D ce_Color;
-uniform float ce_TextureSizeInv;
-uniform int ce_SampleCount;
-uniform float ce_SampleScale;
+uniform sampler2D cs_Color;
+uniform float cs_TextureSizeInv;
+uniform int cs_SampleCount;
+uniform float cs_SampleScale;
 
 in vec2 texCoord;
 
@@ -14,16 +14,16 @@ void main ()
     float sum = 0.0;
     for (int i=-ce_SampleCount; i<=ce_SampleCount; i++)
     {
-        vec2 coord = texCoord + vec2(0.0, float(i) * ce_TextureSizeInv * ce_SampleScale);
+        vec2 coord = texCoord + vec2(0.0, float(i) * cs_TextureSizeInv * cs_SampleScale);
         if (coord.y >= 0.0 && coord.y <= 1.0)
         {
-            float f = abs(i) / float(ce_SampleCount);
+            float f = abs(i) / float(cs_SampleCount);
             f = 1.0f -  f * f;
             sum += f;
-            c += texture (ce_Color, coord) * f;
+            c += texture (cs_Color, coord) * f;
         }
     }
     c /= sum;
-    ce_FragColor = c;
+    cs_FragColor = c;
 }
 

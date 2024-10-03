@@ -1,13 +1,13 @@
 #version 330
 
-layout(location = 0) out vec4 ce_FragColor;
+layout(location = 0) out vec4 cs_FragColor;
 
-uniform sampler2D ce_Diffuse;
+uniform sampler2D cs_Diffuse;
 
 in vec2 texCoord;
 
 void main()
 {
-	ce_FragColor = texture(ce_Diffuse, texCoord);
+  cs_FragColor = texture(cs_Diffuse, texCoord);
 }
 

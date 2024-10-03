@@ -1,12 +1,12 @@
 #version 330
 
-layout(location = 0) out vec4 ce_FragColor;
+layout(location = 0) out vec4 cs_FragColor;
 
-uniform samplerCube ce_Skybox;
+uniform samplerCube cs_Skybox;
 
 in vec3 uv;
 
 void main ()
 {
-    ce_FragColor = texture(ce_Skybox, uv);
+    cs_FragColor = texture(cs_Skybox, uv);
 }

@@ -1,19 +1,19 @@
 #version 330
 
-layout (location = 0) out vec4 ce_FragColor;
+layout (location = 0) out vec4 cs_FragColor;
 
-uniform sampler2D ce_DiffuseRoughness;
-uniform sampler2D ce_Normal;
-uniform sampler2D ce_Depth;
-uniform sampler2D ce_ShadowMap;
+uniform sampler2D cs_DiffuseRoughness;
+uniform sampler2D cs_Normal;
+uniform sampler2D cs_Depth;
+uniform sampler2D cs_ShadowMap;
 
-uniform mat4 ce_ViewProjectionMatrixInv;
+uniform mat4 cs_ViewProjectionMatrixInv;
 
-uniform vec3 ce_CameraPosition;
-uniform vec4 ce_LightColor;
-uniform vec4 ce_LightAmbientColor;
-uniform vec3 ce_LightPosition;
-uniform float ce_LightRange;
+uniform vec3 cs_CameraPosition;
+uniform vec4 cs_LightColor;
+uniform vec4 cs_LightAmbientColor;
+uniform vec3 cs_LightPosition;
+uniform float cs_LightRange;
 
 in vec2 texCoord;
 
@@ -27,7 +27,7 @@ void main ()
 {
     //
     // decompose the world position
-    float z = texture(ce_Depth, texCoord).r;
+    float z = texture(cs_Depth, texCoord).r;
     if (z == 1.0)
     {
         discard;
@@ -35,24 +35,24 @@ void main ()
     vec4 worldPosition = vec4(texCoord, z, 1.0);
     worldPosition = worldPosition * 2.0 - 1.0;
 
-    worldPosition = ce_ViewProjectionMatrixInv * worldPosition;
+    worldPosition = cs_ViewProjectionMatrixInv * worldPosition;
     worldPosition /= worldPosition.w;
     // coord now holds the world coordinate
 
 
     //
     // decompose the world normal
-    vec3 normal = texture(ce_Normal, texCoord).xyz;
+    vec3 normal = texture(cs_Normal, texCoord).xyz;
     normal = normal * 2.0 - 1.0;
     // normal now holds the world normal
 
-    vec4 diffuseRoughness = texture(ce_DiffuseRoughness, texCoord);
+    vec4 diffuseRoughness = texture(cs_DiffuseRoughness, texCoord);
 
-    vec3 to_viewer = normalize(ce_CameraPosition - worldPosition.xyz);
+    vec3 to_viewer = normalize(cs_CameraPosition - worldPosition.xyz);
 
-    vec3 to_light = ce_LightPosition - worldPosition.xyz;
+    vec3 to_light = cs_LightPosition - worldPosition.xyz;
     float distance_to_light = length(to_light);
-    if (distance_to_light > ce_LightRange)
+    if (distance_to_light > cs_LightRange)
     {
         discard;
     }
@@ -67,13 +67,13 @@ void main ()
     float specular = cook_torrance(0.8, n_dot_l, n_dot_v, n_dot_h, h_dot_l, diffuseRoughness.a);
     float diffuse = oren_nayar(n_dot_l, n_dot_v, diffuseRoughness.a);
     vec3 color = diffuseRoughness.rgb;
-    float shadow = texture(ce_ShadowMap, texCoord).r;
+    float shadow = texture(cs_ShadowMap, texCoord).r;
 
-    float range_factor = clamp(1.0 - (distance_to_light / ce_LightRange), 0.0, 1.0);
-    ce_FragColor = vec4(
-        range_factor * color * diffuse * shadow * ce_LightColor.rgb +
-        range_factor * specular * shadow * ce_LightColor.rgb +
-        ce_LightAmbientColor.rgb,
+    float range_factor = clamp(1.0 - (distance_to_light / cs_LightRange), 0.0, 1.0);
+    cs_FragColor = vec4(
+        range_factor * color * diffuse * shadow * cs_LightColor.rgb +
+        range_factor * specular * shadow * cs_LightColor.rgb +
+        cs_LightAmbientColor.rgb,
         1.0);
 
 

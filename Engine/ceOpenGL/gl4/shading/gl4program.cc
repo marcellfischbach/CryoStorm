@@ -151,7 +151,7 @@ Size GL4Program::RegisterAttribute(const std::string &attributeName)
     }
   }
 
-  std::string      locationName = "ce_" + attributeName;
+  std::string      locationName = "cs_" + attributeName;
   GLint            location     = glGetUniformLocation(m_name, locationName.c_str());
   iShaderAttribute *attribute   = nullptr;
   if (location != -1)

@@ -1,24 +1,24 @@
 #version 330
 
-layout(location = eVS_Vertices) in vec4 ce_Position;
-layout(location = eVS_Normals) in vec3 ce_Normal;
-layout(location = eVS_Colors) in vec4 ce_Color;
-layout(location = eVS_UV) in vec2 ce_UV;
+layout(location = eVS_Vertices) in vec4 cs_Position;
+layout(location = eVS_Normals) in vec3 cs_Normal;
+layout(location = eVS_Colors) in vec4 cs_Color;
+layout(location = eVS_UV) in vec2 cs_UV;
 
 
-uniform mat4 ce_ModelMatrix;
-uniform mat4 ce_ModelViewProjectionMatrix;
+uniform mat4 cs_ModelMatrix;
+uniform mat4 cs_ModelViewProjectionMatrix;
 
 out vec2 texCoord;
 out vec3 world_normal;
 
 void main()
 {
-    world_normal = (ce_ModelMatrix * vec4(ce_Normal, 0.0)).xyz;
+    world_normal = (cs_ModelMatrix * vec4(cs_Normal, 0.0)).xyz;
 
 
-    gl_Position = ce_ModelViewProjectionMatrix * ce_Position;
-    texCoord = ce_UV;
+    gl_Position = cs_ModelViewProjectionMatrix * cs_Position;
+    texCoord = cs_UV;
 
 }
 

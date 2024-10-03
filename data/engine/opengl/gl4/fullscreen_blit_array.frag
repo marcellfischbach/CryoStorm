@@ -1,14 +1,14 @@
 #version 330
-layout(location = 0) out vec4 ce_FragColor;
+layout(location = 0) out vec4 cs_FragColor;
 
-uniform sampler2DArray ce_Diffuse;
-uniform float ce_ArrayIndex;
+uniform sampler2DArray cs_Diffuse;
+uniform float cs_ArrayIndex;
 
 
 in vec2 texCoord;
 
 void main ()
 {
-	ce_FragColor = texture(ce_Diffuse, vec3(texCoord, 1.0));
+  cs_FragColor = texture(cs_Diffuse, vec3(texCoord, 1.0));
 }
 

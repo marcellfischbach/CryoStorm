@@ -429,7 +429,7 @@ void GL4ShaderGraphCompiler::GenerateVariable(SGNode *node)
       std::string uv        = GetInputValue(texture1D->GetInput(0)).FullQualified();
 
       m_nodeVariables[node] = {
-          "vec4 " + v + " = texture(ce_" + texture1D->GetResourceName() + ", " + uv + ");",
+          "vec4 " + v + " = texture(cs_" + texture1D->GetResourceName() + ", " + uv + ");",
           v,
           texture1D->GetOutput(0)->GetValueType(),
           false
@@ -447,7 +447,7 @@ void GL4ShaderGraphCompiler::GenerateVariable(SGNode *node)
                               : ("#STREAM-STAGE#" + stream_name(eVertexStream::eVS_UV));
 
       m_nodeVariables[node] = {
-          "vec4 " + v + " = texture(ce_" + texture2D->GetResourceName() + ", " + uv + ");",
+          "vec4 " + v + " = texture(cs_" + texture2D->GetResourceName() + ", " + uv + ");",
           v,
           texture2D->GetOutput(0)->GetValueType(),
           false
@@ -463,7 +463,7 @@ void GL4ShaderGraphCompiler::GenerateVariable(SGNode *node)
       std::string uv        = GetInputValue(texture3D->GetInput(0)).FullQualified();
 
       m_nodeVariables[node] = {
-          "vec4 " + v + " = texture(ce_" + texture3D->GetResourceName() + ", " + uv + ");",
+          "vec4 " + v + " = texture(cs_" + texture3D->GetResourceName() + ", " + uv + ");",
           v,
           texture3D->GetOutput(0)->GetValueType(),
           false
@@ -477,7 +477,7 @@ void GL4ShaderGraphCompiler::GenerateVariable(SGNode *node)
       auto resource = node->Query<SGResourceNode>();
       m_nodeVariables[node] = {
           "",
-          "ce_" + resource->GetResourceName(),
+          "cs_" + resource->GetResourceName(),
           resource->GetOutput(0)->GetValueType(),
           false
       };

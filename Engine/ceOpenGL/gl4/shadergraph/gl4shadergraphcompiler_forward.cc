@@ -38,13 +38,13 @@ std::string GL4ShaderGraphCompiler::GenerateForward_Vert(std::map<std::string, e
 
   src += R"(
 #version 330
-layout (location = )" + std::to_string(eVS_Vertices) + R"() in vec4 ce_Position;
-layout (location = )" + std::to_string(eVS_Normals) + R"() in vec3 ce_Normal;
+layout (location = )" + std::to_string(eVS_Vertices) + R"() in vec4 cs_Position;
+layout (location = )" + std::to_string(eVS_Normals) + R"() in vec3 cs_Normal;
 )";
 
   if (tangentsNeeded)
   {
-    src += "layout (location = " + std::to_string(eVS_Tangents) + ") in vec3 ce_Tangent;\n";
+    src += "layout (location = " + std::to_string(eVS_Tangents) + ") in vec3 cs_Tangent;\n";
   }
 
 
@@ -53,68 +53,68 @@ layout (location = )" + std::to_string(eVS_Normals) + R"() in vec3 ce_Normal;
     if (stream.Stream != eVS_Vertices && stream.Stream != eVS_Normals && stream.Stream != eVS_Tangents)
     {
       src += "layout (location = " + std::to_string(stream.Stream) + ") " +
-             "in " + get_gl_type(stream.Type) + " ce_" + stream_name(stream.Stream) + ";\n";
+             "in " + get_gl_type(stream.Type) + " cs_" + stream_name(stream.Stream) + ";\n";
     }
   }
   src += R"(
 
-uniform mat4 ce_ModelMatrix;
-uniform mat4 ce_ViewMatrix;
-uniform mat4 ce_ViewMatrixInv;
-uniform mat4 ce_ViewProjectionMatrix;
-uniform mat4 ce_ModelViewProjectionMatrix;
+uniform mat4 cs_ModelMatrix;
+uniform mat4 cs_ViewMatrix;
+uniform mat4 cs_ViewMatrixInv;
+uniform mat4 cs_ViewProjectionMatrix;
+uniform mat4 cs_ModelViewProjectionMatrix;
 )";
   for (const auto &resource: resources)
   {
-    src += "uniform " + resource.Type + " ce_" + resource.Name + ";\n";
+    src += "uniform " + resource.Type + " cs_" + resource.Name + ";\n";
   }
 
   src += R"(
-out vec3 ce_vs_out_WorldPosition;
-out vec3 ce_vs_out_WorldNormal;
+out vec3 cs_vs_out_WorldPosition;
+out vec3 cs_vs_out_WorldNormal;
 )";
   if (tangentsNeeded)
   {
-    src += "out vec3 ce_vs_out_WorldTangent;\n";
+    src += "out vec3 cs_vs_out_WorldTangent;\n";
   }
   src += R"(
-out vec3 ce_vs_out_CameraWorldPosition;
-out vec3 ce_vs_out_CameraSpacePosition;
-out vec2 ce_vs_out_ScreenCoordinates;
+out vec3 cs_vs_out_CameraWorldPosition;
+out vec3 cs_vs_out_CameraSpacePosition;
+out vec2 cs_vs_out_ScreenCoordinates;
 )";
 
   for (const auto &stream: streams)
   {
     if (stream.Stream != eVS_Vertices && stream.Stream != eVS_Normals && stream.Stream != eVS_Tangents)
     {
-      src += "out " + get_gl_type(stream.Type) + " ce_vs_out_" + stream_name(stream.Stream) + ";\n";
+      src += "out " + get_gl_type(stream.Type) + " cs_vs_out_" + stream_name(stream.Stream) + ";\n";
     }
   }
 
   src += R"(
 void main ()
 {
-  vec4 position = ce_ModelMatrix * ce_Position;
-  ce_vs_out_WorldPosition = position.xyz;
-  ce_vs_out_WorldNormal = mat3(ce_ModelMatrix) * ce_Normal;
+  vec4 position = cs_ModelMatrix * cs_Position;
+  cs_vs_out_WorldPosition = position.xyz;
+  cs_vs_out_WorldNormal = mat3(cs_ModelMatrix) * cs_Normal;
 )";
   if (tangentsNeeded)
   {
-    src += "  ce_vs_out_WorldTangent = mat3(ce_ModelMatrix) * ce_Tangent;\n";
+    src += "  cs_vs_out_WorldTangent = mat3(cs_ModelMatrix) * cs_Tangent;\n";
   }
   src += R"(
 
-  ce_vs_out_CameraWorldPosition = (ce_ViewMatrixInv * vec4(0, 0, 0, 1)).xyz;
-  ce_vs_out_CameraSpacePosition = (ce_ViewMatrix * position).xyz;
+  cs_vs_out_CameraWorldPosition = (cs_ViewMatrixInv * vec4(0, 0, 0, 1)).xyz;
+  cs_vs_out_CameraSpacePosition = (cs_ViewMatrix * position).xyz;
 
-  gl_Position = ce_ModelViewProjectionMatrix * ce_Position;
-  ce_vs_out_ScreenCoordinates = (gl_Position.xy / gl_Position.w) * 0.5 + 0.5;
+  gl_Position = cs_ModelViewProjectionMatrix * cs_Position;
+  cs_vs_out_ScreenCoordinates = (gl_Position.xy / gl_Position.w) * 0.5 + 0.5;
   )";
   for (const auto &stream: streams)
   {
     if (stream.Stream != eVS_Vertices && stream.Stream != eVS_Normals && stream.Stream != eVS_Tangents)
     {
-      src += "  ce_vs_out_" + stream_name(stream.Stream) + " = ce_" + stream_name(stream.Stream) + ";\n";
+      src += "  cs_vs_out_" + stream_name(stream.Stream) + " = cs_" + stream_name(stream.Stream) + ";\n";
     }
   }
   src += "}\n\n";
@@ -179,33 +179,33 @@ std::string GL4ShaderGraphCompiler::GenerateForward_Frag(std::map<std::string, e
   src += R"(
 
 #version 330
-layout (location = 0) out vec4 ce_FragColor;
+layout (location = 0) out vec4 cs_FragColor;
 )";
   src += "\n";
   for (const auto &resource: resources)
   {
-    src += "uniform " + resource.Type + " ce_" + resource.Name + ";\n";
+    src += "uniform " + resource.Type + " cs_" + resource.Name + ";\n";
   }
   src += R"(
-in vec3 ce_vs_out_WorldPosition;
-in vec3 ce_vs_out_WorldNormal;
+in vec3 cs_vs_out_WorldPosition;
+in vec3 cs_vs_out_WorldNormal;
 )";
   if (tangentsNeeded)
   {
-    src += "in vec3 ce_vs_out_WorldTangent;\n";
+    src += "in vec3 cs_vs_out_WorldTangent;\n";
   }
 
   src += R"(
-in vec3 ce_vs_out_CameraWorldPosition;
-in vec3 ce_vs_out_CameraSpacePosition;
-in vec2 ce_vs_out_ScreenCoordinates;
+in vec3 cs_vs_out_CameraWorldPosition;
+in vec3 cs_vs_out_CameraSpacePosition;
+in vec2 cs_vs_out_ScreenCoordinates;
 )";
 
   for (const auto &stream: streams)
   {
     if (stream.Stream != eVS_Vertices && stream.Stream != eVS_Normals && stream.Stream != eVS_Tangents)
     {
-      src += "in " + get_gl_type(stream.Type) + " ce_vs_out_" + stream_name(stream.Stream) + ";\n";
+      src += "in " + get_gl_type(stream.Type) + " cs_vs_out_" + stream_name(stream.Stream) + ";\n";
     }
   }
 
@@ -245,7 +245,7 @@ in vec2 ce_vs_out_ScreenCoordinates;
 
   for (auto node: alphaNodes)
   {
-    const std::string &decl = m_nodeVariables[node].StagedDecl("ce_vs_out_");
+    const std::string &decl = m_nodeVariables[node].StagedDecl("cs_vs_out_");
     if (!decl.empty())
     {
       src += "  " + decl + "\n";
@@ -271,14 +271,14 @@ in vec2 ce_vs_out_ScreenCoordinates;
     src += "  }\n";
   }
 
-  src += "  vec3 norm = normalize (ce_vs_out_WorldNormal);\n";
+  src += "  vec3 norm = normalize (cs_vs_out_WorldNormal);\n";
 
   if (m_shaderGraph->GetLightingMode() == ShaderGraph::eLM_Default)
   {
     if (tangentsNeeded || hasNormalInput)
     {
       src += R"(
-  vec3 tang = normalize (ce_vs_out_WorldTangent);
+  vec3 tang = normalize (cs_vs_out_WorldTangent);
   vec3 binormal = normalize (cross(norm, tang));
   tang = cross(binormal, norm);
 
@@ -294,7 +294,7 @@ in vec2 ce_vs_out_ScreenCoordinates;
       // this node is already processed
       continue;
     }
-    const std::string &decl = m_nodeVariables[node].StagedDecl("ce_vs_out_");
+    const std::string &decl = m_nodeVariables[node].StagedDecl("cs_vs_out_");
     if (!decl.empty())
     {
       src += "  " + decl + "\n";
@@ -331,27 +331,27 @@ in vec2 ce_vs_out_ScreenCoordinates;
 
     src += R"(
 
-  light_result_t light = calc_lights(ce_vs_out_WorldPosition, normal, ce_vs_out_CameraSpacePosition, ce_vs_out_CameraWorldPosition, 0.8, roughness);
+  light_result_t light = calc_lights(cs_vs_out_WorldPosition, normal, cs_vs_out_CameraSpacePosition, cs_vs_out_CameraWorldPosition, 0.8, roughness);
   vec3 dielectric_light = light.diffuse  * diffuse + light.specular;
   vec3 metallic_light = light.specular * diffuse;
 
-  ce_FragColor = vec4(mix(dielectric_light, metallic_light, metallic), alpha);
+  cs_FragColor = vec4(mix(dielectric_light, metallic_light, metallic), alpha);
 )";
   }
   else if (m_shaderGraph->GetLightingMode() == ShaderGraph::eLM_Attenuated)
   {
     src += R"(
 
-  light_result_t light = calc_lights(ce_vs_out_WorldPosition, vec3(0, 0, 0), ce_vs_out_CameraSpacePosition, ce_vs_out_CameraWorldPosition, 0.0, 0.0);
+  light_result_t light = calc_lights(cs_vs_out_WorldPosition, vec3(0, 0, 0), cs_vs_out_CameraSpacePosition, cs_vs_out_CameraWorldPosition, 0.0, 0.0);
   vec3 dielectric_light = light.diffuse  * diffuse;
 
-  ce_FragColor = vec4(dielectric_light, alpha);
+  cs_FragColor = vec4(dielectric_light, alpha);
 )";
 
   }
   else
   {
-    src += "  ce_FragColor = vec4(diffuse, alpha);\n";
+    src += "  cs_FragColor = vec4(diffuse, alpha);\n";
   }
 
   src += R"(

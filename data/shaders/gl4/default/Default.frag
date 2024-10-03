@@ -1,13 +1,13 @@
 #version 330
 
-layout(location = 0) out vec4 ce_FragColor;
+layout(location = 0) out vec4 cs_FragColor;
 
-uniform sampler2D ce_Diffuse;
-uniform sampler2D ce_Normal;
-uniform sampler2D ce_RoughnessMap;
-uniform vec4 ce_Color;
-uniform float ce_Roughness;
-uniform float ce_Metallic;
+uniform sampler2D cs_Diffuse;
+uniform sampler2D cs_Normal;
+uniform sampler2D cs_RoughnessMap;
+uniform vec4 cs_Color;
+uniform float cs_Roughness;
+uniform float cs_Metallic;
 
 
 in vec4 color;
@@ -23,8 +23,8 @@ in vec2 screen_coord;
 
 lighting_result_t calc_lighting (float n_dot_l, float n_dot_v, float n_dot_h, float h_dot_l, float h_dot_v)
 {
-    float roughness = texture(ce_RoughnessMap, texCoord).r;
-    roughness = roughness * ce_Roughness;
+    float roughness = texture(cs_RoughnessMap, texCoord).r;
+    roughness = roughness * cs_Roughness;
 
     lighting_result_t res;
     res.ambient = 0.0;
@@ -42,21 +42,21 @@ void main()
     tang = cross(binormal, norm);
 
     mat3 normalMatrix = mat3(tang, binormal, norm);
-    vec3 normal = texture(ce_Normal, texCoord).rgb;
+    vec3 normal = texture(cs_Normal, texCoord).rgb;
     normal = normal * 2.0 - 1.0;
     normal = normalMatrix * normal;
 
 
 
     light_result_t light = calc_lights(world_position, normal, camera_space_position, viewer_world_position);
-    vec4 color = texture(ce_Diffuse, texCoord) * ce_Color;
+    vec4 color = texture(cs_Diffuse, texCoord) * cs_Color;
 
 
     vec3 dielectric = light.diffuse  * color.rgb + light.specular;
     vec3 metallic = light.specular * color.rgb;
 
 
-    ce_FragColor = vec4(mix(dielectric, metallic, ce_Metallic), color.a);
+    cs_FragColor = vec4(mix(dielectric, metallic, cs_Metallic), color.a);
 }
 
 

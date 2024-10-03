@@ -1,14 +1,14 @@
 #version 330
-layout(location = 0) out vec4 ce_FragColor;
+layout(location = 0) out vec4 cs_FragColor;
 
-uniform sampler2D ce_Color0;
-uniform sampler2D ce_Color1;
+uniform sampler2D cs_Color0;
+uniform sampler2D cs_Color1;
 
 
 in vec2 texCoord;
 
 void main ()
 {
-    ce_FragColor = texture(ce_Color0, texCoord) + texture(ce_Color1, texCoord);
+    cs_FragColor = texture(cs_Color0, texCoord) + texture(cs_Color1, texCoord);
 }
 

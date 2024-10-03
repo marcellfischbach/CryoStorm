@@ -1,12 +1,12 @@
-uniform int ce_LightCount;
-uniform vec4 ce_LightAmbient[4];
-uniform vec4 ce_LightColor[4];
-uniform vec4 ce_LightVector[4];
-uniform float ce_LightRange[4];
-uniform int ce_LightCastShadow[4];
-uniform sampler2D ce_LightShadowMap[4];
+uniform int cs_LightCount;
+uniform vec4 cs_LightAmbient[4];
+uniform vec4 cs_LightColor[4];
+uniform vec4 cs_LightVector[4];
+uniform float cs_LightRange[4];
+uniform int cs_LightCastShadow[4];
+uniform sampler2D cs_LightShadowMap[4];
 
-uniform int ce_ReceiveShadow;
+uniform int cs_ReceiveShadow;
 
 #include <directionallight_shadow.glsl>
 #include <oren-nayar.glsl>
@@ -58,9 +58,9 @@ light_result_t calc_light(int idx, vec3 light_ambient, vec3 light_color, vec4 li
 
         attenuation = clamp(1.0 - distance / light_range, 0.0, 1.0);
 
-        if (ce_LightCastShadow[idx] > 0 && ce_ReceiveShadow > 0)
+        if (cs_LightCastShadow[idx] > 0 && cs_ReceiveShadow > 0)
         {
-            shadow = texture (ce_LightShadowMap[idx], screen_coord).r;
+            shadow = texture (cs_LightShadowMap[idx], screen_coord).r;
         }
 
     }
@@ -78,9 +78,9 @@ light_result_t calc_light(int idx, vec3 light_ambient, vec3 light_color, vec4 li
         specular = lighting_result.specular;
         attenuation = 1.0;
 
-        if (ce_LightCastShadow[idx] > 0 && ce_ReceiveShadow > 0)
+        if (cs_LightCastShadow[idx] > 0 && cs_ReceiveShadow > 0)
         {
-            shadow = texture (ce_LightShadowMap[idx], screen_coord).r;
+            shadow = texture (cs_LightShadowMap[idx], screen_coord).r;
         }
     }
 
@@ -93,7 +93,7 @@ light_result_t calc_light(int idx, vec3 light_ambient, vec3 light_color, vec4 li
 
     float attShadow = shadow * attenuation;
     light_result_t res;
-    res.diffuse = light_color * diffuse * attShadow + ambient * ce_LightAmbient[idx].rgb;
+    res.diffuse = light_color * diffuse * attShadow + ambient * cs_LightAmbient[idx].rgb;
     res.specular = light_color * specular * attShadow;
 
     return res;
@@ -110,9 +110,9 @@ light_result_t calc_lights(vec3 frag_position, vec3 frag_normal, vec3 camera_spa
     light_result_t res;
     res.diffuse = vec3(0, 0, 0);
     res.specular = vec3(0, 0, 0);
-    for (int i = 0; i < ce_LightCount; i++)
+    for (int i = 0; i < cs_LightCount; i++)
     {
-        light_result_t lightRes = calc_light(i, ce_LightAmbient[i].rgb, ce_LightColor[i].rgb, ce_LightVector[i], ce_LightRange[i], frag_position, frag_normal, camera_space_position, n_dot_v, frag_to_viewer);
+        light_result_t lightRes = calc_light(i, cs_LightAmbient[i].rgb, cs_LightColor[i].rgb, cs_LightVector[i], cs_LightRange[i], frag_position, frag_normal, camera_space_position, n_dot_v, frag_to_viewer);
         res.diffuse += lightRes.diffuse;
         res.specular += lightRes.specular;
     }

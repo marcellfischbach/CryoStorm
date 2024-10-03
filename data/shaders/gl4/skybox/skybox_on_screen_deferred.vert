@@ -1,20 +1,20 @@
 #version 330
 
-layout(location = eVS_Vertices) in vec4 ce_Position;
-layout(location = eVS_UV) in vec3 ce_UV;
+layout(location = eVS_Vertices) in vec4 cs_Position;
+layout(location = eVS_UV) in vec3 cs_UV;
 
-uniform mat4 ce_ViewMatrix;
-uniform mat4 ce_ProjectionMatrix;
-uniform float ce_RenderPlane;
+uniform mat4 cs_ViewMatrix;
+uniform mat4 cs_ProjectionMatrix;
+uniform float cs_RenderPlane;
 
 out vec3 uv;
 out vec4 fragCoord;
 
 void main ()
 {
-    vec3 pos = mat3(ce_ViewMatrix) * ce_Position.xyz * ce_RenderPlane;
-    gl_Position = ce_ProjectionMatrix * vec4(pos, 1.0);
+    vec3 pos = mat3(cs_ViewMatrix) * cs_Position.xyz * cs_RenderPlane;
+    gl_Position = cs_ProjectionMatrix * vec4(pos, 1.0);
 
     fragCoord = gl_Position;
-    uv = ce_UV;
+    uv = cs_UV;
 }

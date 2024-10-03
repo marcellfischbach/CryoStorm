@@ -1,7 +1,7 @@
 #version 330
-layout(location = 0) out vec4 ce_FragColor;
+layout(location = 0) out vec4 cs_FragColor;
 
-uniform samplerCube ce_Diffuse;
+uniform samplerCube cs_Diffuse;
 
 
 in vec3 texCoord;
@@ -9,6 +9,6 @@ in vec3 texCoord;
 void main ()
 {
 	vec3 tex = normalize(texCoord);
-	ce_FragColor = texture(ce_Diffuse, texCoord);
+  cs_FragColor = texture(cs_Diffuse, texCoord);
 }
 

@@ -36,9 +36,9 @@ std::string GL4ShaderGraphCompiler::GenerateGBuffer_Vert(std::map<std::string, e
 
   src += R"(
 #version 330
-layout (location = )" + std::to_string(eVS_Vertices) + R"() in vec4 ce_Position;
-layout (location = )" + std::to_string(eVS_Normals) + R"() in vec3 ce_Normal;
-layout (location = )" + std::to_string(eVS_Tangents) + R"() in vec3 ce_Tangent;
+layout (location = )" + std::to_string(eVS_Vertices) + R"() in vec4 cs_Position;
+layout (location = )" + std::to_string(eVS_Normals) + R"() in vec3 cs_Normal;
+layout (location = )" + std::to_string(eVS_Tangents) + R"() in vec3 cs_Tangent;
 )";
 
 
@@ -47,44 +47,44 @@ layout (location = )" + std::to_string(eVS_Tangents) + R"() in vec3 ce_Tangent;
     if (stream.Stream != eVS_Vertices && stream.Stream != eVS_Normals && stream.Stream != eVS_Tangents)
     {
       src += "layout (location = " + std::to_string(stream.Stream) + ") " +
-             "in " + get_gl_type(stream.Type) + " ce_" + stream_name(stream.Stream) + ";\n";
+             "in " + get_gl_type(stream.Type) + " cs_" + stream_name(stream.Stream) + ";\n";
     }
   }
   src += R"(
 
-uniform mat4 ce_ModelMatrix;
-uniform mat4 ce_ModelViewProjectionMatrix;
+uniform mat4 cs_ModelMatrix;
+uniform mat4 cs_ModelViewProjectionMatrix;
 )";
   for (const auto &resource: resources)
   {
-    src += "uniform " + resource.Type + " ce_" + resource.Name + ";\n";
+    src += "uniform " + resource.Type + " cs_" + resource.Name + ";\n";
   }
 
   src += R"(
-out vec3 ce_vs_out_WorldNormal;
-out vec3 ce_vs_out_WorldTangent;
+out vec3 cs_vs_out_WorldNormal;
+out vec3 cs_vs_out_WorldTangent;
 )";
 
   for (const auto &stream: streams)
   {
     if (stream.Stream != eVS_Vertices && stream.Stream != eVS_Normals && stream.Stream != eVS_Tangents)
     {
-      src += "out " + get_gl_type(stream.Type) + " ce_vs_out_" + stream_name(stream.Stream) + ";\n";
+      src += "out " + get_gl_type(stream.Type) + " cs_vs_out_" + stream_name(stream.Stream) + ";\n";
     }
   }
 
   src += R"(
 void main ()
 {
-  ce_vs_out_WorldNormal = mat3(ce_ModelMatrix) * ce_Normal;
-  ce_vs_out_WorldTangent = mat3(ce_ModelMatrix) * ce_Tangent;
-  gl_Position = ce_ModelViewProjectionMatrix * ce_Position;
+  cs_vs_out_WorldNormal = mat3(cs_ModelMatrix) * cs_Normal;
+  cs_vs_out_WorldTangent = mat3(cs_ModelMatrix) * cs_Tangent;
+  gl_Position = cs_ModelViewProjectionMatrix * cs_Position;
   )";
   for (const auto &stream: streams)
   {
     if (stream.Stream != eVS_Vertices && stream.Stream != eVS_Normals && stream.Stream != eVS_Tangents)
     {
-      src += "  ce_vs_out_" + stream_name(stream.Stream) + " = ce_" + stream_name(stream.Stream) + ";\n";
+      src += "  cs_vs_out_" + stream_name(stream.Stream) + " = cs_" + stream_name(stream.Stream) + ";\n";
     }
   }
   src += "}\n\n";
@@ -149,26 +149,26 @@ std::string GL4ShaderGraphCompiler::GenerateGBuffer_Frag(std::map<std::string, e
   src += R"(
 
 #version 330
-layout(location = 0) out vec4 ce_FragDiffuseRoughness;
-layout(location = 1) out vec4 ce_FragNormal;
-layout(location = 2) out vec4 ce_FragEmission;
+layout(location = 0) out vec4 cs_FragDiffuseRoughness;
+layout(location = 1) out vec4 cs_FragNormal;
+layout(location = 2) out vec4 cs_FragEmission;
 
 )";
   src += "\n";
   for (const auto &resource: resources)
   {
-    src += "uniform " + resource.Type + " ce_" + resource.Name + ";\n";
+    src += "uniform " + resource.Type + " cs_" + resource.Name + ";\n";
   }
   src += R"(
-in vec3 ce_vs_out_WorldNormal;
-in vec3 ce_vs_out_WorldTangent;
+in vec3 cs_vs_out_WorldNormal;
+in vec3 cs_vs_out_WorldTangent;
 )";
 
   for (const auto &stream: streams)
   {
     if (stream.Stream != eVS_Vertices && stream.Stream != eVS_Normals && stream.Stream != eVS_Tangents)
     {
-      src += "in " + get_gl_type(stream.Type) + " ce_vs_out_" + stream_name(stream.Stream) + ";\n";
+      src += "in " + get_gl_type(stream.Type) + " cs_vs_out_" + stream_name(stream.Stream) + ";\n";
     }
   }
 
@@ -186,7 +186,7 @@ in vec3 ce_vs_out_WorldTangent;
 
   for (auto node: alphaNodes)
   {
-    const std::string &decl = m_nodeVariables[node].StagedDecl("ce_vs_out_");
+    const std::string &decl = m_nodeVariables[node].StagedDecl("cs_vs_out_");
     if (!decl.empty())
     {
       src += "  " + decl + "\n";
@@ -220,7 +220,7 @@ in vec3 ce_vs_out_WorldTangent;
       // this node is already processed
       continue;
     }
-    const std::string &decl = m_nodeVariables[node].StagedDecl("ce_vs_out_");
+    const std::string &decl = m_nodeVariables[node].StagedDecl("cs_vs_out_");
     if (!decl.empty())
     {
       src += "  " + decl + "\n";
@@ -230,8 +230,8 @@ in vec3 ce_vs_out_WorldTangent;
   {
     auto normal = GetInputValue(m_shaderGraph->GetNormalInput());
     src += R"(
-  vec3 norm = normalize (ce_vs_out_WorldNormal);
-  vec3 tang = normalize (ce_vs_out_WorldTangent);
+  vec3 norm = normalize (cs_vs_out_WorldNormal);
+  vec3 tang = normalize (cs_vs_out_WorldTangent);
   vec3 binormal = normalize (cross(norm, tang));
   tang = cross(binormal, norm);
   mat3 normalMatrix = mat3(tang, binormal, norm);
@@ -239,14 +239,14 @@ in vec3 ce_vs_out_WorldTangent;
   vec3 normal = )" + normal.FullQualified() + R"(;
   normal = normal * 2.0 - 1.0;
   normal = normalMatrix * normal;
-  ce_FragNormal = vec4(normal * 0.5 + 0.5, 1.0);
+  cs_FragNormal = vec4(normal * 0.5 + 0.5, 1.0);
 )";
   }
   else
   {
     src += R"(
-  vec3 norm = normalize (ce_vs_out_WorldNormal);
-  ce_FragNormal = vec4(norm * 0.5 + 0.5, 1.0);
+  vec3 norm = normalize (cs_vs_out_WorldNormal);
+  cs_FragNormal = vec4(norm * 0.5 + 0.5, 1.0);
 )";
   }
 
@@ -255,8 +255,8 @@ in vec3 ce_vs_out_WorldTangent;
   auto roughness = GetInputValue(m_shaderGraph->GetRoughnessInput());
   auto metallic  = GetInputValue(m_shaderGraph->GetMetallicInput());
 
-  src += "  ce_FragDiffuseRoughness = vec4(" + diffuse.FullQualified() + ", " + roughness.FullQualified() + ");\n";
-  src += "  ce_FragEmission = vec4(0, 0, 0, 0);\n";
+  src += "  cs_FragDiffuseRoughness = vec4(" + diffuse.FullQualified() + ", " + roughness.FullQualified() + ");\n";
+  src += "  cs_FragEmission = vec4(0, 0, 0, 0);\n";
 
   src += "}\n\n";
 

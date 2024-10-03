@@ -1,12 +1,12 @@
 #version 330
 
-layout(location = eVS_Vertices) in vec4 ce_Position;
+layout(location = eVS_Vertices) in vec4 cs_Position;
 
-uniform mat4 ce_ModelViewProjectionMatrix;
+uniform mat4 cs_ModelViewProjectionMatrix;
 
 
 void main()
 {
-	gl_Position = ce_ModelViewProjectionMatrix * ce_Position;
+	gl_Position = cs_ModelViewProjectionMatrix * cs_Position;
 }
 

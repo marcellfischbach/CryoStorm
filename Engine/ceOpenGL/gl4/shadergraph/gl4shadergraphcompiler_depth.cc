@@ -31,22 +31,22 @@ std::string GL4ShaderGraphCompiler::GenerateDepth_Vert(std::map<std::string, eMa
 
   src += "#version 330\n";
   src += "\n";
-  src += "layout (location = " + std::to_string(eVS_Vertices) + ") in vec4 ce_Position;\n";
+  src += "layout (location = " + std::to_string(eVS_Vertices) + ") in vec4 cs_Position;\n";
 
   for (const auto &stream: streams)
   {
     if (stream.Stream != eVS_Vertices)
     {
       src += "layout (location = " + std::to_string(stream.Stream) + ") " +
-             "in " + get_gl_type(stream.Type) + " ce_" + stream_name(stream.Stream) + ";\n";
+             "in " + get_gl_type(stream.Type) + " cs_" + stream_name(stream.Stream) + ";\n";
     }
   }
   src += "\n";
 
-  src += "uniform mat4 ce_ModelViewProjectionMatrix;\n";
+  src += "uniform mat4 cs_ModelViewProjectionMatrix;\n";
   for (const auto &resource: resources)
   {
-    src += "uniform " + resource.Type + " ce_" + resource.Name + ";\n";
+    src += "uniform " + resource.Type + " cs_" + resource.Name + ";\n";
   }
 
   src += "\n";
@@ -54,19 +54,19 @@ std::string GL4ShaderGraphCompiler::GenerateDepth_Vert(std::map<std::string, eMa
   {
     if (stream.Stream != eVS_Vertices)
     {
-      src += "out " + get_gl_type(stream.Type) + " ce_vs_out_" + stream_name(stream.Stream) + ";\n";
+      src += "out " + get_gl_type(stream.Type) + " cs_vs_out_" + stream_name(stream.Stream) + ";\n";
     }
   }
   src += "\n";
   src += "void main ()\n";
   src += "{\n";
-  src += "  gl_Position = ce_ModelViewProjectionMatrix * ce_Position;\n";
+  src += "  gl_Position = cs_ModelViewProjectionMatrix * cs_Position;\n";
 
   for (const auto &stream: streams)
   {
     if (stream.Stream != eVS_Vertices)
     {
-      src += "  ce_vs_out_" + stream_name(stream.Stream) + " = ce_" + stream_name(stream.Stream) + ";\n";
+      src += "  cs_vs_out_" + stream_name(stream.Stream) + " = cs_" + stream_name(stream.Stream) + ";\n";
     }
   }
   src += "}\n";
@@ -117,18 +117,18 @@ std::string GL4ShaderGraphCompiler::GenerateDepth_Frag(std::map<std::string, eMa
 
 
   src += "#version 330\n";
-  src += "layout (location = 0) out vec4 ce_FragColor;\n";
+  src += "layout (location = 0) out vec4 cs_FragColor;\n";
   src += "\n";
   for (const auto &resource: resources)
   {
-    src += "uniform " + resource.Type + " ce_" + resource.Name + ";\n";
+    src += "uniform " + resource.Type + " cs_" + resource.Name + ";\n";
   }
   src += "\n";
   for (const auto &stream: streams)
   {
     if (stream.Stream != eVS_Vertices)
     {
-      src += "in " + get_gl_type(stream.Type) + " ce_vs_out_" + stream_name(stream.Stream) + ";\n";
+      src += "in " + get_gl_type(stream.Type) + " cs_vs_out_" + stream_name(stream.Stream) + ";\n";
     }
   }
 
@@ -146,7 +146,7 @@ std::string GL4ShaderGraphCompiler::GenerateDepth_Frag(std::map<std::string, eMa
 
   for (auto node: nodes)
   {
-    const std::string &decl = m_nodeVariables[node].StagedDecl("ce_vs_out_");
+    const std::string &decl = m_nodeVariables[node].StagedDecl("cs_vs_out_");
     if (!decl.empty())
     {
       src += "  " + decl + "\n";
@@ -173,7 +173,7 @@ std::string GL4ShaderGraphCompiler::GenerateDepth_Frag(std::map<std::string, eMa
     src += "  }\n";
   }
 
-  src += "  ce_FragColor = vec4(1, 1, 1, 1);\n";
+  src += "  cs_FragColor = vec4(1, 1, 1, 1);\n";
   src += "}\n";
 
   return src;

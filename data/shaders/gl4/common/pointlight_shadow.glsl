@@ -1,6 +1,6 @@
 
-uniform vec3 ce_PointLightShadowMapMappingBias[4];
-uniform samplerCubeShadow ce_PointLightShadowMapDepth[4];
+uniform vec3 cs_PointLightShadowMapMappingBias[4];
+uniform samplerCubeShadow cs_PointLightShadowMapDepth[4];
 
 
 float get_major(vec3 d)
@@ -20,7 +20,7 @@ float get_major(vec3 d)
 
 float calc_point_shadow(int idx, vec3 light_position, float light_range, vec3 frag_position)
 {
-    if (ce_LightCastShadow[idx] == 0)
+    if (cs_LightCastShadow[idx] == 0)
     {
         return 1.0;
     }
@@ -29,7 +29,7 @@ float calc_point_shadow(int idx, vec3 light_position, float light_range, vec3 fr
         vec3 delta = frag_position - light_position;
         delta.z = -delta.z;
 
-        vec3 mapping = ce_PointLightShadowMapMappingBias[idx];
+        vec3 mapping = cs_PointLightShadowMapMappingBias[idx];
         float n = mapping.x;
         float f = mapping.y;
 
@@ -41,7 +41,7 @@ float calc_point_shadow(int idx, vec3 light_position, float light_range, vec3 fr
         fz -= mapping.z;
 
 
-        float v = texture(ce_PointLightShadowMapDepth[idx], vec4(delta, fz));
+        float v = texture(cs_PointLightShadowMapDepth[idx], vec4(delta, fz));
         return v;
     }
 }

@@ -1,26 +1,26 @@
 
 
 #version 330
-layout (location = 0) out vec4 ce_FragColor;
+layout (location = 0) out vec4 cs_FragColor;
 
-uniform vec3 ce_Diffuse;
-uniform float ce_Roughness;
+uniform vec3 cs_Diffuse;
+uniform float cs_Roughness;
 
-in vec3 ce_vs_out_WorldPosition;
-in vec3 ce_vs_out_WorldNormal;
-in vec3 ce_vs_out_WorldTangent;
+in vec3 cs_vs_out_WorldPosition;
+in vec3 cs_vs_out_WorldNormal;
+in vec3 cs_vs_out_WorldTangent;
 
-in vec3 ce_vs_out_CameraWorldPosition;
-in vec3 ce_vs_out_CameraSpacePosition;
-in vec2 ce_vs_out_ScreenCoordinates;
-uniform int ce_LightCount;
-uniform vec4 ce_LightAmbient[4];
-uniform vec4 ce_LightColor[4];
-uniform vec4 ce_LightVector[4];
-uniform float ce_LightRange[4];
-uniform int ce_LightCastShadow[4];
+in vec3 cs_vs_out_CameraWorldPosition;
+in vec3 cs_vs_out_CameraSpacePosition;
+in vec2 cs_vs_out_ScreenCoordinates;
+uniform int cs_LightCount;
+uniform vec4 cs_LightAmbient[4];
+uniform vec4 cs_LightColor[4];
+uniform vec4 cs_LightVector[4];
+uniform float cs_LightRange[4];
+uniform int cs_LightCastShadow[4];
 
-uniform int ce_ReceiveShadow;
+uniform int cs_ReceiveShadow;
 
 float calculate_ambient_lighting ();
 float calculate_diffuse_lighting (float n_dot_l, float n_dot_v, float roughness);
@@ -64,9 +64,9 @@ light_result_t calc_light(int idx, vec3 light_ambient, vec3 light_color, vec4 li
 
         attenuation = clamp(1.0 - distance / light_range, 0.0, 1.0);
 
-        if (ce_LightCastShadow[idx] > 0 && ce_ReceiveShadow > 0)
+        if (cs_LightCastShadow[idx] > 0 && cs_ReceiveShadow > 0)
         {
-            shadow = calculate_point_shadow(idx, ce_vs_out_ScreenCoordinates, frag_position);
+            shadow = calculate_point_shadow(idx, cs_vs_out_ScreenCoordinates, frag_position);
         }
     }
     else
@@ -81,9 +81,9 @@ light_result_t calc_light(int idx, vec3 light_ambient, vec3 light_color, vec4 li
         specular = calculate_specular_lighting(F0, n_dot_l, n_dot_v, n_dot_h, h_dot_v, roughness);
         attenuation = 1.0;
 
-        if (ce_LightCastShadow[idx] > 0 && ce_ReceiveShadow > 0)
+        if (cs_LightCastShadow[idx] > 0 && cs_ReceiveShadow > 0)
         {
-            shadow = calculate_directional_shadow(idx, ce_vs_out_ScreenCoordinates, frag_position, camera_space_position.z);
+            shadow = calculate_directional_shadow(idx, cs_vs_out_ScreenCoordinates, frag_position, camera_space_position.z);
         }
     }
 
@@ -96,7 +96,7 @@ light_result_t calc_light(int idx, vec3 light_ambient, vec3 light_color, vec4 li
 
     float attShadow = shadow * attenuation;
     light_result_t res;
-    res.ambient = ambient * ce_LightAmbient[idx].rgb;
+    res.ambient = ambient * cs_LightAmbient[idx].rgb;
     res.diffuse = light_color * diffuse * attShadow;
     res.specular = light_color * specular * attShadow;
 
@@ -115,9 +115,9 @@ light_result_t calc_lights(vec3 frag_position, vec3 frag_normal, vec3 camera_spa
     res.ambient = vec3(0, 0, 0);
     res.diffuse = vec3(0, 0, 0);
     res.specular = vec3(0, 0, 0);
-    for (int i = 0; i < ce_LightCount; i++)
+    for (int i = 0; i < cs_LightCount; i++)
     {
-        light_result_t lightRes = calc_light(i, ce_LightAmbient[i].rgb, ce_LightColor[i].rgb, ce_LightVector[i], ce_LightRange[i], frag_position, frag_normal, camera_space_position, n_dot_v, frag_to_viewer, F0, roughness);
+        light_result_t lightRes = calc_light(i, cs_LightAmbient[i].rgb, cs_LightColor[i].rgb, cs_LightVector[i], cs_LightRange[i], frag_position, frag_normal, camera_space_position, n_dot_v, frag_to_viewer, F0, roughness);
         res.ambient += lightRes.ambient;
         res.diffuse += lightRes.diffuse;
         res.specular += lightRes.specular;
@@ -181,26 +181,26 @@ float calculate_specular_lighting(float F0, float n_dot_l, float n_dot_v, float 
     return clamp(n_dot_l * (k + Rs * (1.0 - k)), 0.0, 1.0);
 }
 
-uniform sampler2D ce_LightShadowMap[4];
+uniform sampler2D cs_LightShadowMap[4];
 
 
 float calculate_directional_shadow(int lightIdx, vec2 screen_coordinates, vec3 world_position, float distance_to_camera)
 {
-    return texture (ce_LightShadowMap[lightIdx], screen_coordinates).r;
+    return texture (cs_LightShadowMap[lightIdx], screen_coordinates).r;
 }
 
 
 float calculate_point_shadow(int lightIdx, vec2 screen_coordinates, vec3 world_position)
 {
-    return texture (ce_LightShadowMap[lightIdx], screen_coordinates).r;
+    return texture (cs_LightShadowMap[lightIdx], screen_coordinates).r;
 }
 void main ()
 {
   float v_1 = 1.000000;
 
-  vec3 norm = normalize (ce_vs_out_WorldNormal);
+  vec3 norm = normalize (cs_vs_out_WorldNormal);
 
-  vec3 tang = normalize (ce_vs_out_WorldTangent);
+  vec3 tang = normalize (cs_vs_out_WorldTangent);
   vec3 binormal = normalize (cross(norm, tang));
   tang = cross(binormal, norm);
 
@@ -211,16 +211,16 @@ void main ()
   normal = normal * 2.0 - 1.0;
   normal = normalMatrix * normal;
 
-  float roughness = ce_Roughness;
-  vec3 diffuse = ce_Diffuse;
+  float roughness = cs_Roughness;
+  vec3 diffuse = cs_Diffuse;
   float alpha = v_1;
   float metallic = 0.000000;
 
 
-  light_result_t light = calc_lights(ce_vs_out_WorldPosition, normal, ce_vs_out_CameraSpacePosition, ce_vs_out_CameraWorldPosition, 0.8, roughness);
+  light_result_t light = calc_lights(cs_vs_out_WorldPosition, normal, cs_vs_out_CameraSpacePosition, cs_vs_out_CameraWorldPosition, 0.8, roughness);
   vec3 dielectric_light = light.diffuse  * diffuse + light.specular;
   vec3 metallic_light = light.specular * diffuse;
 
-  ce_FragColor = vec4(mix(dielectric_light, metallic_light, metallic), alpha);
+  cs_FragColor = vec4(mix(dielectric_light, metallic_light, metallic), alpha);
 
 }

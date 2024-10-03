@@ -1,15 +1,15 @@
 #version 330
-layout(location = 0) out vec4 ce_FragColor;
+layout(location = 0) out vec4 cs_FragColor;
 
 
-uniform vec3 ce_LightPosition;
-uniform vec3 ce_MappingBias;
-uniform samplerCubeShadow ce_ShadowBuffer;
-uniform sampler2D ce_DepthBuffer;
+uniform vec3 cs_LightPosition;
+uniform vec3 cs_MappingBias;
+uniform samplerCubeShadow cs_ShadowBuffer;
+uniform sampler2D cs_DepthBuffer;
 
 
-uniform mat4 ce_ViewMatrix;
-uniform mat4 ce_ViewProjectionMatrixInv;
+uniform mat4 cs_ViewMatrix;
+uniform mat4 cs_ViewProjectionMatrixInv;
 
 
 in vec2 texCoord;
@@ -26,8 +26,8 @@ float get_major(vec3 d)
 
 float calc_point_shadow(vec3 frag_position)
 {
-    vec3 delta = frag_position - ce_LightPosition;
-    if (dot(delta, delta) > ce_MappingBias.y * ce_MappingBias.y )
+    vec3 delta = frag_position - cs_LightPosition;
+    if (dot(delta, delta) > cs_MappingBias.y * cs_MappingBias.y )
     {
         return 0.0;
     }
@@ -36,20 +36,20 @@ float calc_point_shadow(vec3 frag_position)
     float z = get_major(delta);
 
 
-    float n = ce_MappingBias.x;
-    float f = ce_MappingBias.y;
+    float n = cs_MappingBias.x;
+    float f = cs_MappingBias.y;
 
     float fz = (z * (f+n) - 2.0*n*f)/(f-n);
     float fw = z;
     fz = fz / fw;
     fz = fz * 0.5 + 0.5;
     fz -= 0.0001;//ce_MappingBias.z;
-    return texture(ce_ShadowBuffer, vec4(delta, fz));
+    return texture(cs_ShadowBuffer, vec4(delta, fz));
 }
 
 vec3 calc_direction (vec3 frag_position)
 {
-    vec3 d = frag_position - ce_LightPosition;
+    vec3 d = frag_position - cs_LightPosition;
     d.z = -d.z;
     vec3 a = abs(d);
     if (a.x >= a.y && a.x >= a.z)
@@ -93,22 +93,22 @@ vec3 calc_direction (vec3 frag_position)
 
 void main ()
 {
-    float depth = texture(ce_DepthBuffer, texCoord).r;
+    float depth = texture(cs_DepthBuffer, texCoord).r;
     if (depth == 1.0)
     {
-        ce_FragColor = vec4(1, 1, 1, 1);
+        cs_FragColor = vec4(1, 1, 1, 1);
         return;
     }
 
     vec4 proj_space = vec4(texCoord.xy, depth, 1.0);
     proj_space = proj_space * 2.0 - 1.0;
-    vec4 world_position = ce_ViewProjectionMatrixInv * proj_space;
+    vec4 world_position = cs_ViewProjectionMatrixInv * proj_space;
     world_position /= world_position.w;
 
 
 
     float shadow = calc_point_shadow(world_position.xyz);
-    ce_FragColor = vec4(shadow, shadow, shadow, 1.0);
+    cs_FragColor = vec4(shadow, shadow, shadow, 1.0);
 
     //vec3 dir = calc_direction(world_position.xyz);
     //ce_FragColor = vec4(dir, 1.0);
