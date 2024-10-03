@@ -1,13 +1,13 @@
 
 #include "gl4meshsorter.hh"
-#include "ceCore/graphics/scene/gfxmesh.hh"
-#include "ceCore/graphics/material/imaterial.hh"
+#include "ceCore/graphics/scene/csGfxMesh.hh"
+#include "ceCore/graphics/material/iMaterial.hh"
 
 namespace cryo::opengl
 {
 
 
-bool material_shader_compare_less(const GfxMesh *mesh0, const GfxMesh *mesh1, eRenderPass pass)
+bool material_shader_compare_less(const csGfxMesh *mesh0, const csGfxMesh *mesh1, eRenderPass pass)
 {
   auto mat0 = mesh0->GetMaterial();
   auto mat1 = mesh1->GetMaterial();
@@ -22,12 +22,12 @@ bool material_shader_compare_less(const GfxMesh *mesh0, const GfxMesh *mesh1, eR
   return shader0 < shader1;
 }
 
-bool material_shader_compare_less_forward(const GfxMesh *mesh0, const GfxMesh *mesh1)
+bool material_shader_compare_less_forward(const csGfxMesh *mesh0, const csGfxMesh *mesh1)
 {
   return material_shader_compare_less(mesh0, mesh1, eRenderPass::eRP_Forward);
 }
 
-bool material_shader_compare_less_gbuffer(const GfxMesh *mesh0, const GfxMesh *mesh1)
+bool material_shader_compare_less_gbuffer(const csGfxMesh *mesh0, const csGfxMesh *mesh1)
 {
   return material_shader_compare_less(mesh0, mesh1, eRenderPass::eRP_GBuffer);
 }

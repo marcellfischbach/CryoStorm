@@ -1,13 +1,13 @@
 
 
 #include <ceCore/loaders/textureloader.hh>
-#include <ceCore/graphics/idevice.hh>
-#include <ceCore/graphics/image.hh>
-#include <ceCore/graphics/itexture.hh>
-#include <ceCore/graphics/itexture2d.hh>
-#include <ceCore/graphics/itexture2darray.hh>
-#include <ceCore/graphics/itexturecube.hh>
-#include <ceCore/graphics/samplers.hh>
+#include <ceCore/graphics/iDevice.hh>
+#include <ceCore/graphics/csImage.hh>
+#include <ceCore/graphics/iTexture.hh>
+#include <ceCore/graphics/iTexture2D.hh>
+#include <ceCore/graphics/iTexture2DArray.hh>
+#include <ceCore/graphics/iTextureCube.hh>
+#include <ceCore/graphics/csSamplers.hh>
 #include <ceCore/objectregistry.hh>
 #include <ceCore/resource/assetmanager.hh>
 
@@ -67,7 +67,7 @@ iTexture2D *TextureLoader::LoadTexture2D(const CrimsonFileElement *textureElemen
   if (desc.MipMaps)
   {
     // decide, based on the sampler type the mip mapping procedure
-    image->GenerateMipMaps(Image::eMipMapProcedure::eMMP_Linear4x4);
+    image->GenerateMipMaps(csImage::eMipMapProcedure::eMMP_Linear4x4);
   }
 
   iTexture2D *texture = ObjectRegistry::Get<iDevice>()->CreateTexture(desc);
@@ -92,7 +92,7 @@ iTextureCube *TextureLoader::LoadTextureCube(const CrimsonFileElement *textureEl
 }
 
 
-Image* TextureLoader::LoadImage(const CrimsonFileElement *imageElement, const ResourceLocator & locator)
+csImage* TextureLoader::LoadImage(const CrimsonFileElement *imageElement, const ResourceLocator & locator)
 {
   if (!imageElement || imageElement->GetNumberOfAttributes() != 1)
   {
@@ -101,10 +101,10 @@ Image* TextureLoader::LoadImage(const CrimsonFileElement *imageElement, const Re
 
   auto imageName = imageElement->GetAttribute(0, "");
 
-  return AssetManager::Get()->Get<Image>(ResourceLocator(locator, imageName));
+  return AssetManager::Get()->Get<csImage>(ResourceLocator(locator, imageName));
 }
 
-void TextureLoader::ColorCorrection(const CrimsonFileElement * textureElement, Image *image)
+void TextureLoader::ColorCorrection(const CrimsonFileElement * textureElement, csImage *image)
 {
   const CrimsonFileElement *element = textureElement->GetChild("colorCorrection");
   if (!element)
@@ -112,19 +112,19 @@ void TextureLoader::ColorCorrection(const CrimsonFileElement * textureElement, I
     return;
   }
 
-  Image::eColorCorrection correction = Image::eColorCorrection::eCC_Plain;
-  const std::string &correctionString = element->GetAttribute(0, "Plain");
+  csImage::eColorCorrection correction        = csImage::eColorCorrection::eCC_Plain;
+  const std::string         &correctionString = element->GetAttribute(0, "Plain");
   if (correctionString == "Normalize")
   {
-    correction = Image::eColorCorrection::eCC_Normalize;
+    correction = csImage::eColorCorrection::eCC_Normalize;
   }
   else if (correctionString == "Clamp3")
   {
-    correction = Image::eColorCorrection::eCC_Clamp3;
+    correction = csImage::eColorCorrection::eCC_Clamp3;
   }
   else if (correctionString == "Clamp4")
   {
-    correction = Image::eColorCorrection::eCC_Clamp4;
+    correction = csImage::eColorCorrection::eCC_Clamp4;
   }
 
   image->ColorCorrection(correction);
@@ -142,19 +142,19 @@ iSampler *TextureLoader::LoadSampler(const CrimsonFileElement *samplerElement, c
   auto samplerName = samplerElement->GetAttribute(0, "");
   if(samplerName == std::string("Default"))
   {
-    sampler = ObjectRegistry::Get<Samplers>()->GetDefault();
+    sampler = ObjectRegistry::Get<csSamplers>()->GetDefault();
   }
   else if (samplerName == std::string("Test"))
   {
-    sampler = ObjectRegistry::Get<Samplers>()->GetTest();
+    sampler = ObjectRegistry::Get<csSamplers>()->GetTest();
   }
   else if (samplerName == std::string("NormalMap"))
   {
-    sampler = ObjectRegistry::Get<Samplers>()->GetNormalMap();
+    sampler = ObjectRegistry::Get<csSamplers>()->GetNormalMap();
   }
   else if (samplerName == std::string ("UISprite"))
   {
-    sampler = ObjectRegistry::Get<Samplers>()->GetUISprite();
+    sampler = ObjectRegistry::Get<csSamplers>()->GetUISprite();
   }
   else
   {
@@ -166,7 +166,7 @@ iSampler *TextureLoader::LoadSampler(const CrimsonFileElement *samplerElement, c
 }
 
 
-ePixelFormat TextureLoader::GetPixelFormatFrom(const Image *image)
+ePixelFormat TextureLoader::GetPixelFormatFrom(const csImage *image)
 {
   return image->GetPixelFormat();
 }

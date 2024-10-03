@@ -2,17 +2,17 @@
 #include <vector>
 #include "demopostprocess.hh"
 #include <ceCore/resource/assetmanager.hh>
-#include <ceCore/graphics/idevice.hh>
-#include <ceCore/graphics/itexture2d.hh>
-#include <ceCore/graphics/irendertarget2d.hh>
-#include <ceCore/graphics/shading/ishader.hh>
-#include <ceCore/graphics/shading/ishaderattribute.hh>
+#include <ceCore/graphics/iDevice.hh>
+#include <ceCore/graphics/iTexture2D.hh>
+#include <ceCore/graphics/iRenderTarget2D.hh>
+#include <ceCore/graphics/shading/iShader.hh>
+#include <ceCore/graphics/shading/iShaderAttribute.hh>
 
 DemoPostProcess::DemoPostProcess()
-    : SimplePostProcess()
+    : csSimplePostProcess()
 {
-  DeclareInput(cryo::PPImageType::Color, "Color");
-  DeclareOutput(cryo::PPImageType::Color, "Color");
+  DeclareInput(cryo::ePPImageType::Color, "Color");
+  DeclareOutput(cryo::ePPImageType::Color, "Color");
 
   m_shader      = cryo::AssetManager::Get()->Get<cryo::iShader>("${shaders}/pp/demo.shader");
   m_attribColor = m_shader ? m_shader->GetShaderAttribute("Color") : nullptr;

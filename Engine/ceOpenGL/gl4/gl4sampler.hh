@@ -2,8 +2,8 @@
 #pragma once
 
 #include <ceOpenGL/openglexport.hh>
-#include <ceCore/graphics/etextureunit.hh>
-#include <ceCore/graphics/isampler.hh>
+#include <ceCore/graphics/eTextureUnit.hh>
+#include <ceCore/graphics/iSampler.hh>
 
 
 namespace cryo::opengl

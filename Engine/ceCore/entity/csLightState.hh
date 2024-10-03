@@ -4,7 +4,7 @@
 
 #include <ceCore/coreexport.hh>
 #include <ceCore/entity/csSpatialState.hh>
-#include <ceCore/graphics/elighttype.hh>
+#include <ceCore/graphics/eLightType.hh>
 #include <ceCore/math/color4f.hh>
 #include <ceCore/math/vector3f.hh>
 
@@ -14,7 +14,7 @@ namespace cryo
 struct iLight;
 struct iPointLight;
 struct iDirectionalLight;
-class GfxLight;
+class csGfxLight;
 class csWorld;
 
 CS_CLASS()
@@ -60,7 +60,7 @@ private:
   iPointLight* m_pointLight;
   iDirectionalLight* m_directionalLight;
 
-  GfxLight *m_gfxLight;
+  csGfxLight *m_gfxLight;
 
   eLightType m_lightType;
 

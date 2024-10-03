@@ -5,7 +5,7 @@
 #pragma once
 
 #include <ceOpenGL/gl4/pipeline/pssm/gl4pssmfilter.hh>
-#include <ceCore/graphics/scene/gfxscenecollector.hh>
+#include <ceCore/graphics/scene/csGfxSceneCollector.hh>
 #include <ceCore/math/matrix4f.hh>
 
 #include <array>
@@ -20,9 +20,9 @@ struct iSampler;
 struct iShader;
 struct iShaderAttribute;
 struct iTexture2D;
-class Camera;
-class GfxMesh;
-class Projector;
+class csCamera;
+class csGfxMesh;
+class csProjector;
 class Settings;
 
 namespace opengl
@@ -73,7 +73,7 @@ public:
   const GL4PSSMShadowBufferObject &GetShadowBuffer();
   GL4RenderTarget2D *GetShadowBuffer(size_t splitLayer);
 
-  void RenderShadow(const GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector);
+  void RenderShadow(const GL4DirectionalLight *directionalLight, const csCamera &camera, const csProjector &projector);
 
   bool IsShadowMapValid(GL4RenderTarget2D *shadowMap) const;
   bool IsShadowBufferValid(GL4PSSMShadowBufferObject &shadowMap) const;
@@ -83,8 +83,8 @@ public:
 
 private:
   void
-  RenderShadowBuffer(const GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector);
-  void RenderShadowMap(const GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector);
+  RenderShadowBuffer(const GL4DirectionalLight *directionalLight, const csCamera &camera, const csProjector &projector);
+  void RenderShadowMap(const GL4DirectionalLight *directionalLight, const csCamera &camera, const csProjector &projector);
   void FilterShadowMap();
 
 
@@ -138,8 +138,8 @@ private:
 
   GL4PSSMFilter m_shadowMapFilter;
 
-  GfxSceneCollector      m_collector;
-  std::vector<GfxMesh *> m_meshesCache;
+  csGfxSceneCollector      m_collector;
+  std::vector<csGfxMesh *> m_meshesCache;
 };
 
 

@@ -8,10 +8,10 @@
 namespace cryo
 {
 
-class Camera;
+class csCamera;
 class Matrix4f;
-class Projector;
-class GBuffer;
+class csProjector;
+class csGBuffer;
 class Settings;
 
 struct iDevice;
@@ -39,9 +39,9 @@ public:
   void SetScene(iGfxScene *scene);
   void ResetShadowMaps ();
 
-  void Render(const Camera *camera,
-              const Projector *projector,
-              const GBuffer *gBuffer,
+  void Render(const csCamera *camera,
+              const csProjector *projector,
+              const csGBuffer *gBuffer,
               const GL4PointLight *light,
               iRenderTarget2D *target);
 

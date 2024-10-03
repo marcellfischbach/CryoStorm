@@ -5,27 +5,27 @@ shaderGraph {
     blend Off,
 
     nodes {
-        resource "cryo::SGResourceFloat" roughness "Roughness",
+        resource "cryo::csSGResourceFloat" roughness "Roughness",
 
-        resource "cryo::SGResourceColor3" diffuse "Diffuse",
+        resource "cryo::csSGResourceColor3" diffuse "Diffuse",
 
-        resource "cryo::SGTexture2D" normal2 "Normal",
+        resource "cryo::csSGTexture2D" normal2 "Normal",
 
-        node "cryo::SGConstFloat" alpha {
+        node "cryo::csSGConstFloat" alpha {
             value 0 1.0,
         },
 
-        node "cryo::SGConstColor3" normal {
+        node "cryo::csSGConstColor3" normal {
             value 0 0.5,
             value 1 0.5,
             value 2 1.0,
         },
 
-        node "cryo::SGDecomposeVec4" normalDec {
+        node "cryo::csSGDecomposeVec4" normalDec {
             binding "V" normal2,
         }
 
-        node "cryo::SGVec3" normalRec {
+        node "cryo::csSGVec3" normalRec {
             binding "X" normalDec 0,
             binding "Y" normalDec 1,
             binding "Z" normalDec 2,

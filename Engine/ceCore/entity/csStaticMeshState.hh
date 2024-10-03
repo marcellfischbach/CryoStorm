@@ -10,8 +10,8 @@
 namespace cryo
 {
 
-class Mesh;
-class GfxMesh;
+class csMesh;
+class csGfxMesh;
 class csSkeleton;
 struct iMaterial;
 
@@ -24,9 +24,9 @@ public:
   ~csStaticMeshState() override;
 
 
-  virtual void SetMesh(Mesh* mesh);
-  CS_NODISCARD const Mesh* GetMesh() const;
-  CS_NODISCARD Mesh* GetMesh();
+  virtual void SetMesh(csMesh* mesh);
+  CS_NODISCARD const csMesh* GetMesh() const;
+  CS_NODISCARD csMesh* GetMesh();
 
   void SetMaterial (Size idx, iMaterial* material);
   CS_NODISCARD const iMaterial *GetMaterial (Size idx) const;
@@ -50,7 +50,7 @@ public:
    */
 
 protected:
-  virtual GfxMesh* CreateGfxMesh();
+  virtual csGfxMesh* CreateGfxMesh();
   void TransformationUpdatedPreChildren() override;
 
 private:
@@ -59,10 +59,10 @@ private:
 
   void Clear();
 
-  Mesh* m_mesh;
+  csMesh * m_mesh;
   bool m_receiveShadow = true;
-  bool m_castShadow = true;
-  std::vector<GfxMesh*> m_gfxMeshes;
+  bool                    m_castShadow = true;
+  std::vector<csGfxMesh*> m_gfxMeshes;
   std::vector<iMaterial*> m_materials;
 };
 

@@ -3,7 +3,7 @@
 #include <ceCore/game_java.hh>
 #include <ceCore/java.hh>
 #include <ceCore/entity/csWorld.hh>
-#include <ceCore/graphics/idevice.hh>
+#include <ceCore/graphics/iDevice.hh>
 
 
 extern "C"

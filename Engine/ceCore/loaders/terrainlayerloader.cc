@@ -5,7 +5,7 @@
 #include <ceCore/loaders/terrainlayerloader.hh>
 #include <ceCore/entity/csTerrainMeshState.hh>
 #include <ceCore/resource/assetmanager.hh>
-#include <ceCore/graphics/itexture2d.hh>
+#include <ceCore/graphics/iTexture2D.hh>
 
 
 namespace cryo

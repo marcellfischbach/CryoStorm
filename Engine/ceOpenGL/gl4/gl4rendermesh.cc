@@ -5,7 +5,7 @@
 #include <ceOpenGL/gl4/gl4vertexbuffer.hh>
 #include <ceOpenGL/gl4/gl4indexbuffer.hh>
 #include <ceOpenGL/glerror.hh>
-#include <ceCore/graphics/vertexdeclaration.hh>
+#include <ceCore/graphics/csVertexDeclaration.hh>
 #include <gl/glew.h>
 
 
@@ -32,7 +32,7 @@ static GLenum DataTypeMap[] = {
 
 
 GL4RenderMesh::GL4RenderMesh(uint32_t vao,
-                             const VertexDeclaration &vd,
+                             const csVertexDeclaration &vd,
                              Size vertexCount,
                              GL4VertexBuffer *vb,
                              GL4IndexBuffer *ib,
@@ -87,7 +87,7 @@ const BoundingBox &GL4RenderMesh::GetBoundingBox() const
   return m_boundingBox;
 }
 
-const VertexDeclaration &GL4RenderMesh::GetVertexDeclaration() const
+const csVertexDeclaration &GL4RenderMesh::GetVertexDeclaration() const
 {
   return m_vertexDeclaration;
 }
@@ -292,8 +292,8 @@ iRenderMesh *GL4RenderMeshGenerator::Generate()
     return nullptr;
   }
 
-  std::vector<VertexDeclaration::Attribute> attributes;
-  uint16_t                                  offset      = 0;
+  std::vector<csVertexDeclaration::Attribute> attributes;
+  uint16_t                                    offset      = 0;
   uint16_t                                  count       = 0;
   Size                                      vertexCount = 0;
   if (!m_vertices2.empty())
@@ -419,15 +419,15 @@ iRenderMesh *GL4RenderMeshGenerator::Generate()
     offset += 4 * sizeof(float);
   }
 
-  for (VertexDeclaration::Attribute &attribute: attributes)
+  for (csVertexDeclaration::Attribute &attribute: attributes)
   {
     attribute.Stride = offset;
   }
 
   BoundingBox bbox;
   bbox.Clear();
-  VertexDeclaration vd(attributes);
-  auto              vBuffer = new float[count * vertexCount];
+  csVertexDeclaration vd(attributes);
+  auto                vBuffer = new float[count * vertexCount];
 
   for (Size i = 0, c = 0; i < vertexCount; ++i)
   {
@@ -564,8 +564,8 @@ iRenderMesh *GL4RenderMeshGenerator::Generate()
 
   ib->Bind();
   vb->Bind();
-  const std::vector<VertexDeclaration::Attribute> &vdAttributes = vd.GetAttributes(0);
-  for (const VertexDeclaration::Attribute         &attribute: vdAttributes)
+  const std::vector<csVertexDeclaration::Attribute> &vdAttributes = vd.GetAttributes(0);
+  for (const csVertexDeclaration::Attribute         &attribute: vdAttributes)
   {
     glVertexAttribPointer(
         attribute.Location,

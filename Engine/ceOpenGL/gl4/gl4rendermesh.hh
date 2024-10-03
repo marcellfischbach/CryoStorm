@@ -6,10 +6,10 @@
 #include <ceCore/types.hh>
 #include <ceCore/math/boundingbox.hh>
 #include <ceCore/math/vector.hh>
-#include <ceCore/graphics/irendermesh.hh>
-#include <ceCore/graphics/edatatype.hh>
-#include <ceCore/graphics/eprimitivetype.hh>
-#include <ceCore/graphics/vertexdeclaration.hh>
+#include <ceCore/graphics/iRenderMesh.hh>
+#include <ceCore/graphics/eDataType.hh>
+#include <ceCore/graphics/ePrimitiveType.hh>
+#include <ceCore/graphics/csVertexDeclaration.hh>
 #include <vector>
 
 namespace cryo::opengl
@@ -26,7 +26,7 @@ class CS_OGL_API GL4RenderMesh : public CS_SUPER(iRenderMesh)
   CS_CLASS_GEN_OBJECT;
 public:
   GL4RenderMesh(uint32_t vao,
-                const VertexDeclaration &vd,
+                const csVertexDeclaration &vd,
                 Size vertexCount,
                 GL4VertexBuffer *vb,
                 GL4IndexBuffer *ib,
@@ -40,7 +40,7 @@ public:
   CS_NODISCARD Size GetNumberOfVertices() const;
 
   CS_NODISCARD const BoundingBox &GetBoundingBox() const override;
-  CS_NODISCARD const VertexDeclaration& GetVertexDeclaration() const override;
+  CS_NODISCARD const csVertexDeclaration& GetVertexDeclaration() const override;
 
   void Render(iDevice * graphics, eRenderPass pass) override;
 #if _DEBUG
@@ -49,8 +49,8 @@ public:
 
 private:
 
-  uint32_t m_vao;
-  VertexDeclaration m_vertexDeclaration;
+  uint32_t            m_vao;
+  csVertexDeclaration m_vertexDeclaration;
   GL4VertexBuffer* m_vertexBuffer;
   GL4IndexBuffer* m_indexBuffer;
   BoundingBox m_boundingBox;

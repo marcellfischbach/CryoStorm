@@ -5,7 +5,7 @@
 #include <ceLauncher/window/sdlwindow.hh>
 #include <ceCore/settings.hh>
 #include <ceCore/resource/assetmanager.hh>
-#include <ceCore/graphics/image.hh>
+#include <ceCore/graphics/csImage.hh>
 
 namespace cryo::launcher
 {
@@ -140,7 +140,7 @@ void SDLWindow::SetWindowIcon(const cryo::ResourceLocator &locator)
   if (m_window)
   {
 
-    auto image = cryo::AssetManager::Get()->Load<cryo::Image>("file:///icons/cryo-stasis_64.png");
+    auto image = cryo::AssetManager::Get()->Load<cryo::csImage>("file:///icons/cryo-stasis_64.png");
     if (!image)
     {
       return;

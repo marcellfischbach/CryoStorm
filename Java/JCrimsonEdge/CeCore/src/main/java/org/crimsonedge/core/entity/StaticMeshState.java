@@ -1,9 +1,9 @@
 package org.crimsonedge.core.entity;
 
 import org.crimsonedge.core.CeClass;
-import org.crimsonedge.core.graphics.Mesh;
+import org.crimsonedge.core.graphics.csMesh;
 import org.crimsonedge.core.graphics.material.IMaterial;
-import org.crimsonedge.core.graphics.material.Material;
+import org.crimsonedge.core.graphics.material.csMaterial;
 
 @CeClass("cryo::csStaticMeshState")
 public class csStaticMeshState extends csSpatialState {
@@ -17,7 +17,7 @@ public class csStaticMeshState extends csSpatialState {
 
     private static native void nSetMesh(long ref, long meshRef);
 
-    private static native Mesh nGetMesh(long ref);
+    private static native csMesh nGetMesh(long ref);
 
     private static native void nSetMaterial(long ref, int idx, long materialRef);
 
@@ -32,11 +32,11 @@ public class csStaticMeshState extends csSpatialState {
 
     private static native boolean nIsCastShadow(long ref);
 
-    public void setMesh(Mesh mesh) {
+    public void setMesh(csMesh mesh) {
         nSetMesh(getRef(), mesh != null ? mesh.getRef() : 0);
     }
 
-    public Mesh getMesh() {
+    public csMesh getMesh() {
         return nGetMesh(getRef());
     }
 

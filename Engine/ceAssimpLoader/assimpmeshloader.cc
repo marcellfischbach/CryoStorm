@@ -2,9 +2,9 @@
 #include <ceAssimpLoader/assimpmeshloader.hh>
 #include <ceAssimpLoader/assimpmaterialloader.hh>
 #include <ceAssimpLoader/assimpconverter.hh>
-#include <ceCore/graphics/idevice.hh>
-#include <ceCore/graphics/mesh.hh>
-#include <ceCore/graphics/irendermesh.hh>
+#include <ceCore/graphics/iDevice.hh>
+#include <ceCore/graphics/csMesh.hh>
+#include <ceCore/graphics/iRenderMesh.hh>
 #include <ceCore/resource/ifile.hh>
 #include <ceCore/resource/vfs.hh>
 #include <ceCore/objectregistry.hh>
@@ -26,7 +26,7 @@ struct StaticLoaderData
   const aiScene *scene = nullptr;
   std::map<std::string, Size> materialSlots;
   std::map<std::string, iMaterial*> defaultMaterials;
-  Mesh *mesh = nullptr;
+  csMesh                            *mesh = nullptr;
 
 };
 
@@ -39,7 +39,7 @@ AssimpMeshLoader::AssimpMeshLoader()
 bool AssimpMeshLoader::CanLoad(const Class *cls, const ResourceLocator &locator) const
 {
   const std::string &ext = locator.GetExtension();
-  return cls == Mesh::GetStaticClass()
+  return cls == csMesh::GetStaticClass()
          && ext == std::string("FBX");
 }
 
@@ -93,7 +93,7 @@ iObject *AssimpMeshLoader::Load(const Class *cls, const ResourceLocator &locator
 
   StaticLoaderData d;
   d.scene = scene;
-  d.mesh  = new Mesh();
+  d.mesh  = new csMesh();
   for (unsigned i = 0, in = scene->mNumMeshes; i < in; ++i)
   {
     aiMesh     *mesh     = scene->mMeshes[i];

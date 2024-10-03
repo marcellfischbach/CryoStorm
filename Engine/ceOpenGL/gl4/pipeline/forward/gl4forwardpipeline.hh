@@ -5,12 +5,12 @@
 #include <ceOpenGL/openglconstants.hh>
 #include <ceOpenGL/gl4/pipeline/forward/gl4forwardpointlightrenderer.hh>
 #include <ceOpenGL/gl4/pipeline/forward/gl4forwarddirectionallightrenderer.hh>
-#include <ceCore/graphics/camera.hh>
-#include <ceCore/graphics/irenderpipeline.hh>
-#include <ceCore/graphics/projector.hh>
-#include <ceCore/graphics/skybox/skyboxmesh.hh>
-#include <ceCore/graphics/scene/gfxmesh.hh>
-#include <ceCore/graphics/scene/gfxscenecollector.hh>
+#include <ceCore/graphics/csCamera.hh>
+#include <ceCore/graphics/iRenderPipeline.hh>
+#include <ceCore/graphics/csProjector.hh>
+#include <ceCore/graphics/skybox/csSkyboxMesh.hh>
+#include <ceCore/graphics/scene/csGfxMesh.hh>
+#include <ceCore/graphics/scene/csGfxSceneCollector.hh>
 #include <ceCore/types.hh>
 #include <map>
 #include <vector>
@@ -18,8 +18,8 @@
 namespace cryo
 {
 
-class GfxLight;
-class GfxMesh;
+class csGfxLight;
+class csGfxMesh;
 
 struct iClipper;
 struct iSampler;
@@ -42,7 +42,7 @@ public:
 
   void Initialize() override;
 
-  void Render(iRenderTarget2D * taget, const GfxCamera * camera, iDevice * device, iGfxScene * scene) override;
+  void Render(iRenderTarget2D * taget, const csGfxCamera * camera, iDevice * device, iGfxScene * scene) override;
 
 protected:
   void PrepareSkybox(iSkyboxRenderer *skyboxRenderer);
@@ -51,7 +51,7 @@ protected:
 
 
 private:
-  bool SetupVariables(iRenderTarget2D *target,  const GfxCamera *camera,iDevice *device,iGfxScene *scene);
+  bool SetupVariables(iRenderTarget2D *target, const csGfxCamera *camera, iDevice *device, iGfxScene *scene);
   void CollectLightsAndShadows (iClipper *clipper);
   void ScanVisibleMeshes(iClipper* clipper);
   void BindCamera();
@@ -66,53 +66,53 @@ private:
 
   iRenderTarget2D *UpdateRenderTarget(cryo::iDevice *device, cryo::iRenderTarget2D *target);
 
-  void LightScanned(GfxLight * light);
-  void RenderUnlitDepthMesh(GfxMesh * mesh);
-  void RenderUnlitForwardMesh(GfxMesh * mesh);
-  void RenderMesh(GfxMesh * mesh, std::array<const GfxLight*, MaxLights> &lights, Size offset);
+  void LightScanned(csGfxLight * light);
+  void RenderUnlitDepthMesh(csGfxMesh * mesh);
+  void RenderUnlitForwardMesh(csGfxMesh * mesh);
+  void RenderMesh(csGfxMesh * mesh, std::array<const csGfxLight*, MaxLights> &lights, Size offset);
 
-  void CollectShadowLights(GfxLight * light);
+  void CollectShadowLights(csGfxLight * light);
   void RenderShadowMaps();
 
 
-  Size AssignLights(const std::vector<GfxMesh::Light> &staticLights,
-    const std::vector<GfxMesh::Light> &dynamicLights,
-    std::array<const GfxLight *, MaxLights> &lights,
+  Size AssignLights(const std::vector<csGfxMesh::Light> &staticLights,
+    const std::vector<csGfxMesh::Light> &dynamicLights,
+    std::array<const csGfxLight *, MaxLights> &lights,
     Size offset);
 
 
-  float CalcMeshLightInfluence(const GfxLight * light, const GfxMesh * mesh) const;
-  std::vector<GfxMesh::Light> CalcMeshLightInfluences(const GfxMesh * mesh, const std::vector<GfxLight*> &lights, bool sorted) const;
-  void AppendLights(GfxMesh * mesh, const std::vector<GfxLight*> &lights) const;
+  float CalcMeshLightInfluence(const csGfxLight * light, const csGfxMesh * mesh) const;
+  std::vector<csGfxMesh::Light> CalcMeshLightInfluences(const csGfxMesh * mesh, const std::vector<csGfxLight*> &lights, bool sorted) const;
+  void AppendLights(csGfxMesh * mesh, const std::vector<csGfxLight*> &lights) const;
 
 
 protected:
   uint64_t m_frame;
   iDevice* m_device;
-  const GfxCamera *m_gfxCamera;
-  const Camera *m_camera;
-  const Projector *m_projector;
+  const csGfxCamera *m_gfxCamera;
+  const csCamera    *m_camera;
+  const csProjector *m_projector;
   iGfxScene  * m_scene;
   iRenderTarget2D * m_target;
 private:
-  std::array<const GfxLight *, MaxLights> m_renderLights = {};
-  size_t m_numberOfFixedLights;
+  std::array<const csGfxLight *, MaxLights> m_renderLights = {};
+  size_t                                    m_numberOfFixedLights;
 
 
 
-  std::vector<GfxLight*> m_dynamicLights;
-  std::vector<GfxLight*> m_staticLights;
-  std::vector<GfxLight*> m_staticLightsNew;
+  std::vector<csGfxLight*> m_dynamicLights;
+  std::vector<csGfxLight*> m_staticLights;
+  std::vector<csGfxLight*> m_staticLightsNew;
 
-  GfxSceneCollector m_collector;
-  std::vector<GfxMesh*> m_shadedMeshes;
-  std::vector<GfxMesh*> m_transparentMeshes;
-  std::vector<GfxMesh*> m_unshadedMeshes;
+  csGfxSceneCollector     m_collector;
+  std::vector<csGfxMesh*> m_shadedMeshes;
+  std::vector<csGfxMesh*> m_transparentMeshes;
+  std::vector<csGfxMesh*> m_unshadedMeshes;
 
 
   GL4ForwardPointLightRenderer m_pointLightRenderer;
   GL4ForwardDirectionalLightRenderer m_directionalLightRenderer;
-  SkyboxMesh m_skyboxMesh;
+  csSkyboxMesh                       m_skyboxMesh;
 
 
 };

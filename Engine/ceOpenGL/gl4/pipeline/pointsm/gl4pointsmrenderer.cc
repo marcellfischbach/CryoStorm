@@ -10,12 +10,12 @@
 #include <ceCore/settings.hh>
 #include <ceCore/math/clipper/cameraclipper.hh>
 #include <ceCore/resource/assetmanager.hh>
-#include <ceCore/graphics/camera.hh>
-#include <ceCore/graphics/projector.hh>
-#include <ceCore/graphics/scene/igfxscene.hh>
-#include <ceCore/graphics/scene/gfxmesh.hh>
-#include <ceCore/graphics/shading/ishader.hh>
-#include <ceCore/graphics/shading/ishaderattribute.hh>
+#include <ceCore/graphics/csCamera.hh>
+#include <ceCore/graphics/csProjector.hh>
+#include <ceCore/graphics/scene/iGfxScene.hh>
+#include <ceCore/graphics/scene/csGfxMesh.hh>
+#include <ceCore/graphics/shading/iShader.hh>
+#include <ceCore/graphics/shading/iShaderAttribute.hh>
 
 
 namespace cryo::opengl
@@ -95,8 +95,8 @@ GL4RenderTarget2D *GL4PointSMRenderer::GetShadowMap()
 }
 
 void GL4PointSMRenderer::RenderShadow(const cryo::opengl::GL4PointLight *pointLight,
-                                      const cryo::Camera &camera,
-                                      const cryo::Projector &projector)
+                                      const cryo::csCamera &camera,
+                                      const cryo::csProjector &projector)
 {
   RenderShadowBuffer(pointLight, camera, projector);
   RenderShadowMap(pointLight, camera, projector);
@@ -104,8 +104,8 @@ void GL4PointSMRenderer::RenderShadow(const cryo::opengl::GL4PointLight *pointLi
 }
 
 void GL4PointSMRenderer::RenderShadowBuffer(const GL4PointLight *pointLight,
-                                            const Camera &camera,
-                                            const Projector &projector)
+                                            const csCamera &camera,
+                                            const csProjector &projector)
 {
 
   float    near = pointLight->GetRange() * 0.001f;
@@ -151,7 +151,7 @@ void GL4PointSMRenderer::RenderShadowBuffer(const GL4PointLight *pointLight,
 
     size_t count = 0;
     m_scene->ScanMeshes(&clipper, iGfxScene::eSM_Dynamic | iGfxScene::eSM_Static,
-                        [this, &count](GfxMesh *mesh)
+                        [this, &count](csGfxMesh *mesh)
                         {
                           mesh->RenderUnlit(m_device, eRP_Shadow);
                           count++;
@@ -162,8 +162,8 @@ void GL4PointSMRenderer::RenderShadowBuffer(const GL4PointLight *pointLight,
 
 
 void GL4PointSMRenderer::RenderShadowMap(const GL4PointLight *pointLight,
-                                         const Camera &camera,
-                                         const Projector &projector)
+                                         const csCamera &camera,
+                                         const csProjector &projector)
 {
   GL4RenderTarget2D *target = GetShadowMapTemp();
   m_device->SetRenderTarget(target);

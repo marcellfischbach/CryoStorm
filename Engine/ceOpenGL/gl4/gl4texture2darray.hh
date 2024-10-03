@@ -2,7 +2,7 @@
 #pragma once
 
 #include <ceOpenGL/openglexport.hh>
-#include <ceCore/graphics/itexture2darray.hh>
+#include <ceCore/graphics/iTexture2DArray.hh>
 #include <vector>
 
 
@@ -42,8 +42,8 @@ public:
   uint32_t GetHeight() const { return m_height; }
   uint32_t GetLayer() const { return m_layer; }
 
-  void Data(uint16_t layer, const Image * image) override;
-  void Data(uint16_t layer, uint16_t level, const Image * image) override;
+  void Data(uint16_t layer, const csImage * image) override;
+  void Data(uint16_t layer, uint16_t level, const csImage * image) override;
   void Data(uint16_t layer, uint16_t level, ePixelFormat format, const void* data) override;
   void Data(uint16_t layer, uint16_t level, uint16_t x, uint16_t y, uint16_t width, uint16_t height, ePixelFormat format, const void* data) override;
 private:

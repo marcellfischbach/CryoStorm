@@ -2,7 +2,7 @@
 #pragma once
 
 #include <ceOpenGL/openglexport.hh>
-#include <ceCore/graphics/irendertargetcube.hh>
+#include <ceCore/graphics/iRenderTargetCube.hh>
 
 namespace cryo::opengl
 {

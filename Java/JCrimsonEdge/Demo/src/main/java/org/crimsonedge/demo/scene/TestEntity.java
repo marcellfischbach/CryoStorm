@@ -51,7 +51,7 @@ public class TestEntity extends csEntity {
         planeMaterial.set(diffuseIdx, txt2d);
 
         IRenderMesh plane = generatePlane();
-        Mesh mesh = new Mesh();
+        csMesh mesh = new csMesh();
         int slot = mesh.addMaterialSlot("Default", planeMaterial);
         mesh.addSubMesh(plane, slot);
 

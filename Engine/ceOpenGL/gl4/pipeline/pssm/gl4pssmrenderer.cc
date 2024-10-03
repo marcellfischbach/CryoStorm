@@ -8,13 +8,13 @@
 #include <ceOpenGL/gl4/gl4texture2darray.hh>
 #include <ceCore/settings.hh>
 #include <ceCore/resource/assetmanager.hh>
-#include <ceCore/graphics/camera.hh>
-#include <ceCore/graphics/isampler.hh>
-#include <ceCore/graphics/projector.hh>
-#include <ceCore/graphics/shading/ishader.hh>
-#include <ceCore/graphics/shading/ishaderattribute.hh>
-#include <ceCore/graphics/scene/igfxscene.hh>
-#include <ceCore/graphics/scene/gfxmesh.hh>
+#include <ceCore/graphics/csCamera.hh>
+#include <ceCore/graphics/iSampler.hh>
+#include <ceCore/graphics/csProjector.hh>
+#include <ceCore/graphics/shading/iShader.hh>
+#include <ceCore/graphics/shading/iShaderAttribute.hh>
+#include <ceCore/graphics/scene/iGfxScene.hh>
+#include <ceCore/graphics/scene/csGfxMesh.hh>
 #include <ceCore/math/clipper/cameraclipper.hh>
 
 #include <algorithm>
@@ -137,8 +137,8 @@ GL4RenderTarget2D *GL4PSSMRenderer::GetShadowBuffer(size_t splitLayer)
 
 
 void GL4PSSMRenderer::RenderShadow(const GL4DirectionalLight *directionalLight,
-                                   const cryo::Camera &camera,
-                                   const cryo::Projector &projector)
+                                   const cryo::csCamera &camera,
+                                   const cryo::csProjector &projector)
 {
 
   RenderShadowBuffer(directionalLight, camera, projector);
@@ -221,8 +221,8 @@ static void calc_center_position(Vector3f near[4], Vector3f far[4], Vector3f &ou
 
 
 void GL4PSSMRenderer::RenderShadowBuffer(const GL4DirectionalLight *directionalLight,
-                                         const cryo::Camera &camera,
-                                         const cryo::Projector &projector)
+                                         const cryo::csCamera &camera,
+                                         const cryo::csProjector &projector)
 {
 
   Vector3f splitPoints[5][4];
@@ -281,7 +281,7 @@ void GL4PSSMRenderer::RenderShadowBuffer(const GL4DirectionalLight *directionalL
     float far  = -FLT_MAX;
     m_collector.Clear();
     m_scene->ScanMeshes(&clipper, iGfxScene::eSM_Dynamic | iGfxScene::eSM_Static, m_collector);
-    std::vector<GfxMesh *> &meshes = m_collector.GetMeshes(eRenderQueue::Default);
+    std::vector<csGfxMesh *> &meshes = m_collector.GetMeshes(eRenderQueue::Default);
 
     for (const auto &mesh: meshes)
     {
@@ -354,8 +354,8 @@ void GL4PSSMRenderer::RenderShadowBuffer(const GL4DirectionalLight *directionalL
 
 
 void GL4PSSMRenderer::RenderShadowMap(const GL4DirectionalLight *directionalLight,
-                                      const cryo::Camera &camera,
-                                      const cryo::Projector &projector)
+                                      const cryo::csCamera &camera,
+                                      const cryo::csProjector &projector)
 {
   m_device->ResetTextures();
   GL4RenderTarget2D *target = GetDirectionalLightShadowMapTemp();// m_directionalLightShadowMap;

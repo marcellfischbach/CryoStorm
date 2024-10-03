@@ -7,16 +7,16 @@
 #include <ceCore/engine.hh>
 #include <ceCore/math/iclipper.hh>
 #include <ceCore/math/clipper/cameraclipper.hh>
-#include <ceCore/graphics/camera.hh>
-#include <ceCore/graphics/projector.hh>
-#include <ceCore/graphics/idevice.hh>
-#include <ceCore/graphics/iskyboxrenderer.hh>
-#include <ceCore/graphics/irendertarget2d.hh>
-#include <ceCore/graphics/gbuffer.hh>
-#include <ceCore/graphics/postprocessing.hh>
-#include <ceCore/graphics/scene/igfxscene.hh>
-#include <ceCore/graphics/scene/gfxcamera.hh>
-#include <ceCore/graphics/scene/gfxmesh.hh>
+#include <ceCore/graphics/csCamera.hh>
+#include <ceCore/graphics/csProjector.hh>
+#include <ceCore/graphics/iDevice.hh>
+#include <ceCore/graphics/iSkyboxRenderer.hh>
+#include <ceCore/graphics/iRenderTarget2D.hh>
+#include <ceCore/graphics/csGBuffer.hh>
+#include <ceCore/graphics/csPostProcessing.hh>
+#include <ceCore/graphics/scene/iGfxScene.hh>
+#include <ceCore/graphics/scene/csGfxCamera.hh>
+#include <ceCore/graphics/scene/csGfxMesh.hh>
 #include <algorithm>
 #include <GL/glew.h>
 
@@ -28,7 +28,7 @@ const float MinLightInfluence = 0.0f;
 
 GL4DeferredPipeline::GL4DeferredPipeline()
     : iRenderPipeline()
-    , m_gBuffer(new GBuffer())
+    , m_gBuffer(new csGBuffer())
     , m_intermediate(nullptr)
     , m_renderMode(0)
 {
@@ -55,7 +55,7 @@ void GL4DeferredPipeline::Initialize()
 }
 
 
-void GL4DeferredPipeline::Render(iRenderTarget2D *target, const GfxCamera *camera, iDevice *device, iGfxScene *scene)
+void GL4DeferredPipeline::Render(iRenderTarget2D *target, const csGfxCamera *camera, iDevice *device, iGfxScene *scene)
 {
   m_frame++;
   if (SetupVariables(target, camera, device, scene))
@@ -92,7 +92,7 @@ void GL4DeferredPipeline::RenderGBuffer(uint16_t width,
                   m_gfxCamera->GetClearMode() == eClearMode::DepthColor,
                   1.0f, true, 0);
   m_device->BindMaterial(nullptr, eRP_GBuffer);
-  std::vector<GfxMesh *> &meshes = m_collector.GetMeshes(eRenderQueue::Default);
+  std::vector<csGfxMesh *> &meshes = m_collector.GetMeshes(eRenderQueue::Default);
 
 
   for (const auto mesh: meshes)
@@ -178,7 +178,7 @@ void GL4DeferredPipeline::ScanLightsAndShadows(iClipper *clipper)
   m_staticLightsNew.clear();
   size_t lightOffset = 0;
   m_scene->ScanLights(clipper, iGfxScene::eSM_Global,
-                      [this, &lightOffset](GfxLight *light) {
+                      [this, &lightOffset](csGfxLight *light) {
 
                         if (lightOffset >= MaxLights)
                         {
@@ -192,7 +192,7 @@ void GL4DeferredPipeline::ScanLightsAndShadows(iClipper *clipper)
   );
 
 
-  m_scene->ScanLights(clipper, iGfxScene::eSM_Dynamic | iGfxScene::eSM_Static, [this](GfxLight *light) -> bool {
+  m_scene->ScanLights(clipper, iGfxScene::eSM_Dynamic | iGfxScene::eSM_Static, [this](csGfxLight *light) -> bool {
     if (light->IsStatic())
     {
       m_staticLights.push_back(light);
@@ -256,7 +256,7 @@ void GL4DeferredPipeline::RenderLights()
   }
 }
 
-void GL4DeferredPipeline::RenderLight(cryo::GfxLight *light)
+void GL4DeferredPipeline::RenderLight(cryo::csGfxLight *light)
 {
   switch (light->GetLight()->GetType())
   {
@@ -280,7 +280,7 @@ void GL4DeferredPipeline::RenderTransparent()
   BindCamera();
 
 
-  std::vector<GfxMesh *> &transparentMeshes = m_collector.GetMeshes(eRenderQueue::Transparency);
+  std::vector<csGfxMesh *> &transparentMeshes = m_collector.GetMeshes(eRenderQueue::Transparency);
   for (auto              &mesh: transparentMeshes)
   {
     auto material = mesh->GetMaterial();
@@ -297,8 +297,8 @@ void GL4DeferredPipeline::RenderTransparent()
 }
 
 
-void GL4DeferredPipeline::RenderForwardMeshShaded(GfxMesh *mesh,
-                                                  std::array<const GfxLight *, MaxLights> &lights,
+void GL4DeferredPipeline::RenderForwardMeshShaded(csGfxMesh *mesh,
+                                                  std::array<const csGfxLight *, MaxLights> &lights,
                                                   Size offset)
 {
   if (mesh->IsStatic())
@@ -345,9 +345,9 @@ void GL4DeferredPipeline::RenderForwardMeshShaded(GfxMesh *mesh,
 
 
 size_t GL4DeferredPipeline::AssignLights(
-    const std::vector<GfxMesh::Light> &static_lights,
-    const std::vector<GfxMesh::Light> &dynamic_lights,
-    std::array<const GfxLight *, MaxLights> &lights,
+    const std::vector<csGfxMesh::Light> &static_lights,
+    const std::vector<csGfxMesh::Light> &dynamic_lights,
+    std::array<const csGfxLight *, MaxLights> &lights,
     size_t offset)
 {
   for (Size s = 0, d = 0, sn = static_lights.size(), dn = dynamic_lights.size();
@@ -382,7 +382,7 @@ size_t GL4DeferredPipeline::AssignLights(
 }
 
 
-void GL4DeferredPipeline::AppendLights(GfxMesh *mesh, const std::vector<GfxLight *> &lights) const
+void GL4DeferredPipeline::AppendLights(csGfxMesh *mesh, const std::vector<csGfxLight *> &lights) const
 {
   if (lights.empty())
   {
@@ -397,13 +397,13 @@ void GL4DeferredPipeline::AppendLights(GfxMesh *mesh, const std::vector<GfxLight
   mesh->SortAndLimitLights(MaxLights);
 }
 
-void GL4DeferredPipeline::RenderForwardMeshUnlit(GfxMesh *mesh)
+void GL4DeferredPipeline::RenderForwardMeshUnlit(csGfxMesh *mesh)
 {
   mesh->RenderUnlit(m_device, eRP_Forward);
 }
 
 
-float GL4DeferredPipeline::CalcMeshLightInfluence(const GfxLight *light, const GfxMesh *mesh) const
+float GL4DeferredPipeline::CalcMeshLightInfluence(const csGfxLight *light, const csGfxMesh *mesh) const
 {
   if (!light || !mesh)
   {
@@ -437,20 +437,20 @@ float GL4DeferredPipeline::CalcMeshLightInfluence(const GfxLight *light, const G
   return lightPower * lightDistanceFactor;
 }
 
-std::vector<GfxMesh::Light> GL4DeferredPipeline::CalcMeshLightInfluences(const GfxMesh *mesh,
-                                                                         const std::vector<GfxLight *> &lights,
-                                                                         bool sorted
-                                                                        ) const
+std::vector<csGfxMesh::Light> GL4DeferredPipeline::CalcMeshLightInfluences(const csGfxMesh *mesh,
+                                                                           const std::vector<csGfxLight *> &lights,
+                                                                           bool sorted
+                                                                          ) const
 {
-  std::vector<GfxMesh::Light> influences;
-  for (GfxLight               *light: lights)
+  std::vector<csGfxMesh::Light> influences;
+  for (csGfxLight               *light: lights)
   {
     float influence = CalcMeshLightInfluence(light, mesh);
     if (influence <= MinLightInfluence)
     {
       continue;
     }
-    GfxMesh::Light l {};
+    csGfxMesh::Light l {};
     l.Light     = light;
     l.Influence = influence;
     influences.push_back(l);
@@ -460,7 +460,7 @@ std::vector<GfxMesh::Light> GL4DeferredPipeline::CalcMeshLightInfluences(const G
   {
     std::sort(influences.begin(),
               influences.end(),
-              [](GfxMesh::Light &l0, GfxMesh::Light &l1) { return l0.Influence > l1.Influence; }
+              [](csGfxMesh::Light &l0, csGfxMesh::Light &l1) { return l0.Influence > l1.Influence; }
     );
   }
 
@@ -471,12 +471,12 @@ std::vector<GfxMesh::Light> GL4DeferredPipeline::CalcMeshLightInfluences(const G
 
 void GL4DeferredPipeline::RenderPostProcessing(iRenderTarget2D *target)
 {
-  PostProcessing *pp = m_gfxCamera->GetPostProcessing();
+  csPostProcessing *pp = m_gfxCamera->GetPostProcessing();
   if (pp)
   {
-    pp->SetInput(PPImageType::Color, m_target->GetColorTexture(0));
-    pp->SetInput(PPImageType::Depth, m_target->GetDepthTexture());
-    pp->SetInput(PPImageType::Normal, nullptr);
+    pp->SetInput(ePPImageType::Color, m_target->GetColorTexture(0));
+    pp->SetInput(ePPImageType::Depth, m_target->GetDepthTexture());
+    pp->SetInput(ePPImageType::Normal, nullptr);
     pp->Process(m_device, target);
   }
 
@@ -509,7 +509,7 @@ void GL4DeferredPipeline::RenderPointLight(const GL4PointLight *pointLight)
 }
 
 bool GL4DeferredPipeline::SetupVariables(iRenderTarget2D *target,
-                                         const GfxCamera *camera,
+                                         const csGfxCamera *camera,
                                          iDevice *device,
                                          iGfxScene *scene)
 {
@@ -656,7 +656,7 @@ void GL4DeferredPipeline::BindCamera()
 }
 
 
-static bool transparent_mesh_compare_less(const GfxMesh *mesh0, const GfxMesh *mesh1)
+static bool transparent_mesh_compare_less(const csGfxMesh *mesh0, const csGfxMesh *mesh1)
 {
   return false;
 }
@@ -666,8 +666,8 @@ void GL4DeferredPipeline::ScanVisibleMeshes(iClipper *clipper)
   m_collector.Clear();
   m_scene->ScanMeshes(clipper, m_collector);
 
-  std::vector<GfxMesh *> &defaultMeshes     = m_collector.GetMeshes(eRenderQueue::Default);
-  std::vector<GfxMesh *> &transparentMeshes = m_collector.GetMeshes(eRenderQueue::Transparency);
+  std::vector<csGfxMesh *> &defaultMeshes     = m_collector.GetMeshes(eRenderQueue::Default);
+  std::vector<csGfxMesh *> &transparentMeshes = m_collector.GetMeshes(eRenderQueue::Transparency);
 
 
   std::sort(defaultMeshes.begin(), defaultMeshes.end(), material_shader_compare_less_gbuffer);

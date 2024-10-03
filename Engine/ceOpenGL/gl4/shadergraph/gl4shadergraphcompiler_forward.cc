@@ -3,8 +3,8 @@
 #include <ceOpenGL/gl4/shadergraph/gl4shadergraphcompiler.hh>
 #include <ceCore/resource/assetmanager.hh>
 #include <ceCore/resource/textfile.hh>
-#include <ceCore/graphics/evertexstream.hh>
-#include <ceCore/graphics/shadergraph/sgnodes.hh>
+#include <ceCore/graphics/eVertexStream.hh>
+#include <ceCore/graphics/shadergraph/csSGNodes.hh>
 
 namespace cryo::opengl
 {
@@ -15,12 +15,12 @@ std::string GL4ShaderGraphCompiler::GenerateForward_Vert(std::map<std::string, e
 {
   std::string src;
 
-  std::vector<SGNodeInput *> inputs;
+  std::vector<csSGNodeInput *> inputs;
   inputs.push_back(m_shaderGraph->GetDiffuseInput());
   inputs.push_back(m_shaderGraph->GetAlphaInput());
   inputs.push_back(m_shaderGraph->GetRoughnessInput());
   inputs.push_back(m_shaderGraph->GetNormalInput());
-  std::vector<SGNode *>    nodes   = ScanNeededVariables(inputs);
+  std::vector<csSGNode *>  nodes   = ScanNeededVariables(inputs);
   std::vector<StreamInput> streams = FindStreams(nodes);
 
   if (!CollectAttributes(nodes, attributes))
@@ -33,7 +33,7 @@ std::string GL4ShaderGraphCompiler::GenerateForward_Vert(std::map<std::string, e
   bool tangentsNeeded = hasNormalInput || IsNeedingTangent(nodes);
 
 
-  std::vector<SGNode *>      noInput;
+  std::vector<csSGNode *>    noInput;
   std::vector<ResourceInput> resources = FindResources(noInput);
 
   src += R"(
@@ -147,12 +147,12 @@ std::string GL4ShaderGraphCompiler::GenerateForward_Frag(std::map<std::string, e
 {
   std::string src;
 
-  std::vector<SGNodeInput *> inputs;
+  std::vector<csSGNodeInput *> inputs;
   inputs.push_back(m_shaderGraph->GetDiffuseInput());
   inputs.push_back(m_shaderGraph->GetAlphaInput());
   inputs.push_back(m_shaderGraph->GetRoughnessInput());
   inputs.push_back(m_shaderGraph->GetNormalInput());
-  std::vector<SGNode *> nodes = ScanNeededVariables(inputs);
+  std::vector<csSGNode *> nodes = ScanNeededVariables(inputs);
   if (!CollectAttributes(nodes, attributes))
   {
     return "";
@@ -161,7 +161,7 @@ std::string GL4ShaderGraphCompiler::GenerateForward_Frag(std::map<std::string, e
   // collect the alpha nodes separately, because we might make an early discard
   inputs.clear();
   inputs.push_back(m_shaderGraph->GetAlphaInput());
-  std::vector<SGNode *> alphaNodes = ScanNeededVariables(inputs);
+  std::vector<csSGNode *> alphaNodes = ScanNeededVariables(inputs);
 
   std::vector<StreamInput> streams = FindStreams(nodes);
 
@@ -174,7 +174,7 @@ std::string GL4ShaderGraphCompiler::GenerateForward_Frag(std::map<std::string, e
                           m_shaderGraph->GetAlphaDiscard_Func() != eCF_Never;
 
 
-  std::vector<SGNode *>      noInput;
+  std::vector<csSGNode *>    noInput;
   std::vector<ResourceInput> resources = FindResources(nodes);
   src += R"(
 
@@ -210,14 +210,14 @@ in vec2 cs_vs_out_ScreenCoordinates;
   }
 
 
-  if (m_shaderGraph->GetLightingMode() == ShaderGraph::eLM_Default)
+  if (m_shaderGraph->GetLightingMode() == csShaderGraph::eLM_Default)
   {
     src += GL4ShaderGraphLightData::Get().DiffuseLightingDefault;
     src += GL4ShaderGraphLightData::Get().DiffuseLightingAmbient;
     src += GL4ShaderGraphLightData::Get().DiffuseLightingDiffuse;
     src += GL4ShaderGraphLightData::Get().DiffuseLightingSpecular;
   }
-  else if(m_shaderGraph->GetLightingMode() == ShaderGraph::eLM_Attenuated)
+  else if(m_shaderGraph->GetLightingMode() == csShaderGraph::eLM_Attenuated)
   {
     src += GL4ShaderGraphLightData::Get().DiffuseLightingAttenuated;
   }
@@ -273,7 +273,7 @@ in vec2 cs_vs_out_ScreenCoordinates;
 
   src += "  vec3 norm = normalize (cs_vs_out_WorldNormal);\n";
 
-  if (m_shaderGraph->GetLightingMode() == ShaderGraph::eLM_Default)
+  if (m_shaderGraph->GetLightingMode() == csShaderGraph::eLM_Default)
   {
     if (tangentsNeeded || hasNormalInput)
     {
@@ -300,7 +300,7 @@ in vec2 cs_vs_out_ScreenCoordinates;
       src += "  " + decl + "\n";
     }
   }
-  if (hasNormalInput && m_shaderGraph->GetLightingMode() == ShaderGraph::eLM_Default)
+  if (hasNormalInput && m_shaderGraph->GetLightingMode() == csShaderGraph::eLM_Default)
   {
     auto normal = GetInputValue(m_shaderGraph->GetNormalInput());
     src += R"(
@@ -319,7 +319,7 @@ in vec2 cs_vs_out_ScreenCoordinates;
   auto alpha     = GetInputValue(m_shaderGraph->GetAlphaInput());
   src += "  vec3 diffuse = " + diffuse.FullQualified() + ";\n";
   src += "  float alpha = " + alpha.FullQualified() + ";\n";
-  if (m_shaderGraph->GetLightingMode() == ShaderGraph::eLM_Default)
+  if (m_shaderGraph->GetLightingMode() == csShaderGraph::eLM_Default)
   {
     auto roughness = GetInputValue(m_shaderGraph->GetRoughnessInput());
     auto metallic  = GetInputValue(m_shaderGraph->GetMetallicInput());
@@ -338,7 +338,7 @@ in vec2 cs_vs_out_ScreenCoordinates;
   cs_FragColor = vec4(mix(dielectric_light, metallic_light, metallic), alpha);
 )";
   }
-  else if (m_shaderGraph->GetLightingMode() == ShaderGraph::eLM_Attenuated)
+  else if (m_shaderGraph->GetLightingMode() == csShaderGraph::eLM_Attenuated)
   {
     src += R"(
 

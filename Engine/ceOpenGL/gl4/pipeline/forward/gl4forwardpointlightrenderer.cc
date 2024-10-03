@@ -8,14 +8,14 @@
 #include <ceOpenGL/gl4/gl4texturecube.hh>
 
 #include <ceCore/settings.hh>
-#include <ceCore/graphics/camera.hh>
-#include <ceCore/graphics/projector.hh>
-#include <ceCore/graphics/idevice.hh>
-#include <ceCore/graphics/isampler.hh>
-#include <ceCore/graphics/shading/ishader.hh>
-#include <ceCore/graphics/shading/ishaderattribute.hh>
-#include <ceCore/graphics/scene/gfxmesh.hh>
-#include <ceCore/graphics/scene/igfxscene.hh>
+#include <ceCore/graphics/csCamera.hh>
+#include <ceCore/graphics/csProjector.hh>
+#include <ceCore/graphics/iDevice.hh>
+#include <ceCore/graphics/iSampler.hh>
+#include <ceCore/graphics/shading/iShader.hh>
+#include <ceCore/graphics/shading/iShaderAttribute.hh>
+#include <ceCore/graphics/scene/csGfxMesh.hh>
+#include <ceCore/graphics/scene/iGfxScene.hh>
 #include <ceCore/math/clipper/cameraclipper.hh>
 #include <ceCore/math/clipper/multiplaneclipper.hh>
 #include <ceCore/math/clipper/sphereclipper.hh>
@@ -59,8 +59,8 @@ void GL4ForwardPointLightRenderer::Add(GL4PointLight* pointLight)
   }
 }
 
-void GL4ForwardPointLightRenderer::RenderShadowMaps(const Camera &camera,
-                                                    const Projector &projector)
+void GL4ForwardPointLightRenderer::RenderShadowMaps(const csCamera &camera,
+                                                    const csProjector &projector)
 {
   size_t lightIdx = 0;
   SortLights();
@@ -87,8 +87,8 @@ void GL4ForwardPointLightRenderer::SortLights()
 
 
 void GL4ForwardPointLightRenderer::RenderShadow(GL4PointLight *pointLight,
-                                                      const Camera &camera,
-                                                      const Projector &projector,
+                                                      const csCamera &camera,
+                                                      const csProjector &projector,
                                                       size_t lightIdx)
 {
   GL4RenderTarget2D *target = GetPointLightShadowMap(lightIdx);

@@ -2,7 +2,7 @@
 #pragma once
 
 #include <ceOpenGL/openglexport.hh>
-#include <ceCore/graphics/irendertarget2darray.hh>
+#include <ceCore/graphics/iRenderTarget2DArray.hh>
 
 namespace cryo::opengl
 {

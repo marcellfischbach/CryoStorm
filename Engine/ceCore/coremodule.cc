@@ -1,7 +1,7 @@
 #include <ceCore/coremodule.hh>
 #include <master.refl.cc>
 #include <ceCore/objectregistry.hh>
-#include <ceCore/graphics/defaultframerenderer.hh>
+#include <ceCore/graphics/csDefaultFrameRenderer.hh>
 #include <ceCore/resource/assetmanager.hh>
 #include <ceCore/loaders/materialloader.hh>
 #include <ceCore/loaders/samplerloader.hh>
@@ -24,7 +24,7 @@ bool CoreModule::Register(const std::vector<std::string> &args, Engine *engine)
   register_classes();
 
 
-  ObjectRegistry::Register<iFrameRenderer>(new DefaultFrameRenderer);
+  ObjectRegistry::Register<iFrameRenderer>(new csDefaultFrameRenderer);
   AssetManager* assetMan = AssetManager::Get();
   assetMan->RegisterLoader(new MaterialLoader());
   assetMan->RegisterLoader(new SamplerLoader());

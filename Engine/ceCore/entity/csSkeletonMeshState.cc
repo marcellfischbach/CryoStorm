@@ -3,8 +3,8 @@
 //
 
 #include <ceCore/entity/csSkeletonMeshState.hh>
-#include <ceCore/graphics/skeletonmesh.hh>
-#include <ceCore/graphics/scene/gfxmesh.hh>
+#include <ceCore/graphics/csSkeletonMesh.hh>
+#include <ceCore/graphics/scene/csGfxMesh.hh>
 
 
 namespace cryo
@@ -18,12 +18,12 @@ csSkeletonMeshState::csSkeletonMeshState()
 }
 
 
-void csSkeletonMeshState::SetMesh(cryo::Mesh *mesh)
+void csSkeletonMeshState::SetMesh(cryo::csMesh *mesh)
 {
   csStaticMeshState::SetMesh(mesh);
 
 //  auto skeletonMesh = mesh->Query<SkeletonMesh>();
-  if (auto skeletonMesh = mesh->Query<SkeletonMesh>())
+  if (auto skeletonMesh = mesh->Query<csSkeletonMesh>())
   {
     // crete the duplicate of the origin skeleton of the SkeletonMesh
     m_skeleton = skeletonMesh->GetSkeleton();
@@ -41,7 +41,7 @@ const csSkeleton& csSkeletonMeshState::GetSkeleton() const
   return m_skeleton;
 }
 
-GfxMesh *csSkeletonMeshState::CreateGfxMesh()
+csGfxMesh *csSkeletonMeshState::CreateGfxMesh()
 {
   auto gfxMesh = csStaticMeshState::CreateGfxMesh();
   gfxMesh->SetSkeleton(&m_skeleton);

@@ -5,10 +5,10 @@
 #include <ceCore/loaders/shadergraphloader.hh>
 #include <ceCore/objectregistry.hh>
 #include <ceCore/resource/vfs.hh>
-#include <ceCore/graphics/eblendfactor.hh>
-#include <ceCore/graphics/material/material.hh>
-#include <ceCore/graphics/shadergraph/shadergraph.hh>
-#include <ceCore/graphics/shadergraph/ishadergraphcompiler.hh>
+#include <ceCore/graphics/eBlendFactor.hh>
+#include "ceCore/graphics/material/csMaterial.hh"
+#include "ceCore/graphics/shadergraph/csShaderGraph.hh"
+#include <ceCore/graphics/shadergraph/iShaderGraphCompiler.hh>
 #include <ceCore/classregistry.hh>
 #include <ceCore/resource/assetmanager.hh>
 
@@ -18,8 +18,8 @@ namespace cryo
 ShaderGraphLoader::ShaderGraphLoader()
     : BaseCEFAssetLoader()
 {
-  AddValidFile<Material>("SG");
-  AddValidFile<Material>("SHADERGRAPH");
+  AddValidFile<csMaterial>("SG");
+  AddValidFile<csMaterial>("SHADERGRAPH");
 }
 
 
@@ -27,7 +27,7 @@ iObject *ShaderGraphLoader::Load(const CrimsonFile *file, const Class *cls, cons
 {
   const CrimsonFileElement *root               = file->Root();
   const CrimsonFileElement *shaderGraphElement = root->GetChild("shaderGraph");
-  auto                     sg                  = new ShaderGraph();
+  auto                     sg                  = new csShaderGraph();
   AutoRelease              autoRelSG(sg);
 
 
@@ -63,7 +63,7 @@ iObject *ShaderGraphLoader::Load(const CrimsonFile *file, const Class *cls, cons
       continue;
     }
 
-    SGNode            *node    = nullptr;
+    csSGNode          *node    = nullptr;
     const std::string &tagName = childElement->GetTagName();
     if (tagName == "node")
     {
@@ -125,7 +125,7 @@ iObject *ShaderGraphLoader::Load(const CrimsonFile *file, const Class *cls, cons
   return nullptr;
 }
 
-void ShaderGraphLoader::LoadQueue(const cryo::CrimsonFileElement *shaderGraphElement, ShaderGraph *sg) const
+void ShaderGraphLoader::LoadQueue(const cryo::CrimsonFileElement *shaderGraphElement, csShaderGraph *sg) const
 {
   auto queueElement = shaderGraphElement->GetChild("queue");
   if (queueElement)
@@ -140,46 +140,46 @@ void ShaderGraphLoader::LoadQueue(const cryo::CrimsonFileElement *shaderGraphEle
   }
 }
 
-void ShaderGraphLoader::LoadLightingMode(const CrimsonFileElement *shaderGraphElement, ShaderGraph *sg) const
+void ShaderGraphLoader::LoadLightingMode(const CrimsonFileElement *shaderGraphElement, csShaderGraph *sg) const
 {
   auto lightingElement = shaderGraphElement->GetChild("lighting");
   if (lightingElement)
   {
-    ShaderGraph::eLightingMode lighting       = ShaderGraph::eLM_Default;
-    std::string                lightingString = lightingElement->GetAttribute(0, "Default");
+    csShaderGraph::eLightingMode lighting       = csShaderGraph::eLM_Default;
+    std::string                  lightingString = lightingElement->GetAttribute(0, "Default");
     if (lightingString == "Attenuated")
     {
-      lighting = ShaderGraph::eLM_Attenuated;
+      lighting = csShaderGraph::eLM_Attenuated;
     }
     else if (lightingString == "Unlit")
     {
-      lighting = ShaderGraph::eLM_Unlit;
+      lighting = csShaderGraph::eLM_Unlit;
     }
     sg->SetLightingMode(lighting);
   }
 }
 
-void ShaderGraphLoader::LoadBlendingMode(const CrimsonFileElement *shaderGraphElement, ShaderGraph *sg) const
+void ShaderGraphLoader::LoadBlendingMode(const CrimsonFileElement *shaderGraphElement, csShaderGraph *sg) const
 {
   auto blendingElement = shaderGraphElement->GetChild("blending");
   if (blendingElement)
   {
-    ShaderGraph::eBlendingMode blending       = ShaderGraph::eBM_Off;
-    std::string                blendingString = blendingElement->GetAttribute(0, "Off");
+    csShaderGraph::eBlendingMode blending       = csShaderGraph::eBM_Off;
+    std::string                  blendingString = blendingElement->GetAttribute(0, "Off");
     if (blendingString == "Alpha")
     {
-      blending = ShaderGraph::eBM_Alpha;
+      blending = csShaderGraph::eBM_Alpha;
     }
     else if (blendingString == "Add")
     {
-      blending = ShaderGraph::eBM_Add;
+      blending = csShaderGraph::eBM_Add;
     }
     sg->SetBlendingMode(blending);
   }
 }
 
 
-SGNode *ShaderGraphLoader::CreateNode(const cryo::CrimsonFileElement *nodeElement, cryo::ShaderGraph *sg) const
+csSGNode *ShaderGraphLoader::CreateNode(const cryo::CrimsonFileElement *nodeElement, cryo::csShaderGraph *sg) const
 {
   const std::string &nodeTypeName = nodeElement->GetAttribute(0, "");
   if (nodeTypeName.empty())
@@ -204,8 +204,8 @@ SGNode *ShaderGraphLoader::CreateNode(const cryo::CrimsonFileElement *nodeElemen
 }
 
 
-SGResourceNode *
-ShaderGraphLoader::CreateResourceNode(const cryo::CrimsonFileElement *nodeElement, cryo::ShaderGraph *sg) const
+csSGResourceNode *
+ShaderGraphLoader::CreateResourceNode(const cryo::CrimsonFileElement *nodeElement, cryo::csShaderGraph *sg) const
 {
   const std::string &nodeTypeName = nodeElement->GetAttribute(0, "");
   if (nodeTypeName.empty())
@@ -240,8 +240,8 @@ ShaderGraphLoader::CreateResourceNode(const cryo::CrimsonFileElement *nodeElemen
 }
 
 bool ShaderGraphLoader::LoadNodeBindingsAndValues(const CrimsonFileElement *nodeElement,
-                                                  SGNode *node,
-                                                  ShaderGraph *sg) const
+                                                  csSGNode *node,
+                                                  csShaderGraph *sg) const
 {
   for (size_t i = 0, in = nodeElement->GetNumberOfChildren(); i < in; i++)
   {
@@ -271,8 +271,8 @@ bool ShaderGraphLoader::LoadNodeBindingsAndValues(const CrimsonFileElement *node
 }
 
 bool ShaderGraphLoader::LoadValue(const CrimsonFileElement *valueElement,
-                                  SGNode *node,
-                                  ShaderGraph *sg) const
+                                  csSGNode *node,
+                                  csShaderGraph *sg) const
 {
   size_t idx = valueElement->GetAttribute(0, 0xffff);
   if (idx == 0xffff)
@@ -282,7 +282,7 @@ bool ShaderGraphLoader::LoadValue(const CrimsonFileElement *valueElement,
   }
 
 
-  SGNodeInput *input = node->GetInput(idx);
+  csSGNodeInput *input = node->GetInput(idx);
   if (!input)
   {
     fprintf(stderr, "The index %zu is no valid input index of '%s'\n", idx, node->GetKey().c_str());
@@ -312,8 +312,8 @@ static bool is_uint(const std::string &str)
 }
 
 bool ShaderGraphLoader::LoadBinding(const CrimsonFileElement *valueElement,
-                                    SGNode *node,
-                                    ShaderGraph *sg) const
+                                    csSGNode *node,
+                                    csShaderGraph *sg) const
 {
   size_t      idx;
   std::string idxName = valueElement->GetAttribute(0, "");
@@ -335,7 +335,7 @@ bool ShaderGraphLoader::LoadBinding(const CrimsonFileElement *valueElement,
   }
 
 
-  SGNodeInput *input = node->GetInput(idx);
+  csSGNodeInput *input = node->GetInput(idx);
   if (!input)
   {
     fprintf(stderr, "The index '%s' is no valid input index of '%s'\n", idxName.c_str(), node->GetKey().c_str());
@@ -349,7 +349,7 @@ bool ShaderGraphLoader::LoadBinding(const CrimsonFileElement *valueElement,
     return false;
   }
 
-  SGNode *bindingInputNode = sg->GetNode(bindingInputKey);
+  csSGNode *bindingInputNode = sg->GetNode(bindingInputKey);
   if (!bindingInputNode)
   {
     fprintf(stderr,
@@ -379,7 +379,7 @@ bool ShaderGraphLoader::LoadBinding(const CrimsonFileElement *valueElement,
     }
   }
 
-  SGNodeOutput *output = bindingInputNode->GetOutput(bindingInputOutputIdx);
+  csSGNodeOutput *output = bindingInputNode->GetOutput(bindingInputOutputIdx);
   if (!output)
   {
     fprintf(stderr,
@@ -396,7 +396,7 @@ bool ShaderGraphLoader::LoadBinding(const CrimsonFileElement *valueElement,
 
 
 void ShaderGraphLoader::LoadAttributes(const cryo::CrimsonFileElement *attributesElement,
-                                       cryo::ShaderGraph *sg,
+                                       cryo::csShaderGraph *sg,
                                        const ResourceLocator &locator) const
 {
   if (!attributesElement)
@@ -414,7 +414,7 @@ void ShaderGraphLoader::LoadAttributes(const cryo::CrimsonFileElement *attribute
 }
 
 void ShaderGraphLoader::LoadAttribute(const cryo::CrimsonFileElement *attributeElement,
-                                      cryo::ShaderGraph *sg,
+                                      cryo::csShaderGraph *sg,
                                       const ResourceLocator &locator) const
 {
   if (attributeElement->GetNumberOfAttributes() < 2)

@@ -3,7 +3,7 @@
 #pragma once
 
 #include <ceOpenGL/openglexport.hh>
-#include <ceCore/graphics/iindexbuffer.hh>
+#include <ceCore/graphics/iIndexBuffer.hh>
 
 namespace cryo::opengl
 {

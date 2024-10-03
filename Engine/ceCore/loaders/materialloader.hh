@@ -1,15 +1,15 @@
 #pragma  once
 
 #include <ceCore/coreexport.hh>
-#include <ceCore/graphics/material/ematerialattributetype.hh>
+#include <ceCore/graphics/material/eMaterialAttributeType.hh>
 #include <ceCore/resource/basecefassetloader.hh>
 
 namespace cryo
 {
 
 struct iMaterial;
-class Material;
-class MaterialInstance;
+class csMaterial;
+class csMaterialInstance;
 
 CS_CLASS()
 class CS_CORE_API MaterialLoader : public CS_SUPER(BaseCEFAssetLoader)
@@ -25,26 +25,26 @@ public:
   iObject* Load(const CrimsonFile* file, const Class* cls, const ResourceLocator& locator) const override;
 
 private:
-  static Material* LoadMaterial(const Class* cls, const CrimsonFile* file, const ResourceLocator& locator);
+  static csMaterial* LoadMaterial(const Class* cls, const CrimsonFile* file, const ResourceLocator& locator);
   static iObject* LoadMaterialInstance(const Class* cls, const CrimsonFile* file, const ResourceLocator& locator);
 
-  static void LoadShading(Material* material, const CrimsonFileElement* materialElement, const ResourceLocator& locator);
-  static void LoadQueue(Material* material, const CrimsonFileElement* materialElement, const ResourceLocator& locator);
-  static void LoadBlending(Material* material, const CrimsonFileElement* materialElement, const ResourceLocator& locator);
-  static void LoadDepth(Material* material, const CrimsonFileElement* materialElement, const ResourceLocator& locator);
+  static void LoadShading(csMaterial* material, const CrimsonFileElement* materialElement, const ResourceLocator& locator);
+  static void LoadQueue(csMaterial* material, const CrimsonFileElement* materialElement, const ResourceLocator& locator);
+  static void LoadBlending(csMaterial* material, const CrimsonFileElement* materialElement, const ResourceLocator& locator);
+  static void LoadDepth(csMaterial* material, const CrimsonFileElement* materialElement, const ResourceLocator& locator);
 
-  static bool LoadShaders(Material* material, const CrimsonFileElement* materialElement, const ResourceLocator& locator);
-  static bool LoadShader(Material* material, const CrimsonFileElement* shaderElement, const ResourceLocator& locator);
-  static bool LoadAttributes(Material* material, const CrimsonFileElement* materialElement, const ResourceLocator& locator);
-  static bool LoadAttribute(Material* material, const CrimsonFileElement* attributeElement, const ResourceLocator& locator);
+  static bool LoadShaders(csMaterial* material, const CrimsonFileElement* materialElement, const ResourceLocator& locator);
+  static bool LoadShader(csMaterial* material, const CrimsonFileElement* shaderElement, const ResourceLocator& locator);
+  static bool LoadAttributes(csMaterial* material, const CrimsonFileElement* materialElement, const ResourceLocator& locator);
+  static bool LoadAttribute(csMaterial* material, const CrimsonFileElement* attributeElement, const ResourceLocator& locator);
 
-  static bool LoadReferenceMaterial(MaterialInstance* materialInstance,
+  static bool LoadReferenceMaterial(csMaterialInstance* materialInstance,
                                     const CrimsonFileElement* materialInstanceElement,
                                     const ResourceLocator& locator);
-  static bool LoadAttributes(MaterialInstance* materialInstance,
+  static bool LoadAttributes(csMaterialInstance* materialInstance,
                              const CrimsonFileElement* materialInstanceElement,
                              const ResourceLocator& locator);
-  static bool LoadAttribute(MaterialInstance* materialInstance,
+  static bool LoadAttribute(csMaterialInstance* materialInstance,
                             const CrimsonFileElement* attributeElement,
                             const ResourceLocator& locator);
 

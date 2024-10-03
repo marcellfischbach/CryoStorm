@@ -3,8 +3,8 @@
 #include <ceOpenGL/gl4/shadergraph/gl4shadergraphcompiler.hh>
 #include <ceCore/resource/assetmanager.hh>
 #include <ceCore/resource/textfile.hh>
-#include <ceCore/graphics/evertexstream.hh>
-#include <ceCore/graphics/shadergraph/sgnodes.hh>
+#include <ceCore/graphics/eVertexStream.hh>
+#include <ceCore/graphics/shadergraph/csSGNodes.hh>
 
 namespace cryo::opengl
 {
@@ -15,12 +15,12 @@ std::string GL4ShaderGraphCompiler::GenerateGBuffer_Vert(std::map<std::string, e
 {
   std::string src;
 
-  std::vector<SGNodeInput *> inputs;
+  std::vector<csSGNodeInput *> inputs;
   inputs.push_back(m_shaderGraph->GetDiffuseInput());
   inputs.push_back(m_shaderGraph->GetAlphaInput());
   inputs.push_back(m_shaderGraph->GetRoughnessInput());
   inputs.push_back(m_shaderGraph->GetNormalInput());
-  std::vector<SGNode *>    nodes   = ScanNeededVariables(inputs);
+  std::vector<csSGNode *>  nodes   = ScanNeededVariables(inputs);
   std::vector<StreamInput> streams = FindStreams(nodes);
 
   if (!CollectAttributes(nodes, attributes))
@@ -31,7 +31,7 @@ std::string GL4ShaderGraphCompiler::GenerateGBuffer_Vert(std::map<std::string, e
   bool hasNormalInput = m_shaderGraph->GetNormalInput()->GetSource() != nullptr;
 
 
-  std::vector<SGNode *>      noInput;
+  std::vector<csSGNode *>    noInput;
   std::vector<ResourceInput> resources = FindResources(noInput);
 
   src += R"(
@@ -117,12 +117,12 @@ std::string GL4ShaderGraphCompiler::GenerateGBuffer_Frag(std::map<std::string, e
 {
   std::string src;
 
-  std::vector<SGNodeInput *> inputs;
+  std::vector<csSGNodeInput *> inputs;
   inputs.push_back(m_shaderGraph->GetDiffuseInput());
   inputs.push_back(m_shaderGraph->GetAlphaInput());
   inputs.push_back(m_shaderGraph->GetRoughnessInput());
   inputs.push_back(m_shaderGraph->GetNormalInput());
-  std::vector<SGNode *> nodes = ScanNeededVariables(inputs);
+  std::vector<csSGNode *> nodes = ScanNeededVariables(inputs);
   if (!CollectAttributes(nodes, attributes))
   {
     return "";
@@ -131,7 +131,7 @@ std::string GL4ShaderGraphCompiler::GenerateGBuffer_Frag(std::map<std::string, e
   // collect the alpha nodes separately, because we might make an early discard
   inputs.clear();
   inputs.push_back(m_shaderGraph->GetAlphaInput());
-  std::vector<SGNode *> alphaNodes = ScanNeededVariables(inputs);
+  std::vector<csSGNode *> alphaNodes = ScanNeededVariables(inputs);
 
   std::vector<StreamInput> streams = FindStreams(nodes);
 
@@ -144,7 +144,7 @@ std::string GL4ShaderGraphCompiler::GenerateGBuffer_Frag(std::map<std::string, e
                           m_shaderGraph->GetAlphaDiscard_Func() != eCF_Never;
 
 
-  std::vector<SGNode *>      noInput;
+  std::vector<csSGNode *>    noInput;
   std::vector<ResourceInput> resources = FindResources(nodes);
   src += R"(
 

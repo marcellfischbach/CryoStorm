@@ -2,7 +2,7 @@
 #pragma once
 
 #include <ceOpenGL/openglexport.hh>
-#include <ceCore/graphics/itexturecube.hh>
+#include <ceCore/graphics/iTextureCube.hh>
 #include <vector>
 
 
@@ -35,8 +35,8 @@ public:
   void Unbind();
 
   bool Initialize(uint16_t size, ePixelFormat format, bool generateMipMaps) override;
-  void Data(eCubeFace face, const Image * image) override;
-  void Data(eCubeFace face, uint16_t level, const Image * image) override;
+  void Data(eCubeFace face, const csImage * image) override;
+  void Data(eCubeFace face, uint16_t level, const csImage * image) override;
   void Data(eCubeFace face, uint16_t level, ePixelFormat format, const void* data) override;
   void Data(eCubeFace face, uint16_t level, uint16_t x, uint16_t y, uint16_t width, uint16_t height, ePixelFormat format, const void* data) override;
 private:

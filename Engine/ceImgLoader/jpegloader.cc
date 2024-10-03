@@ -2,7 +2,7 @@
 #include <ceImgLoader/jpegloader.hh>
 #include <iostream>
 #include <ceCore/resource/vfs.hh>
-#include <ceCore/graphics/image.hh>
+#include <ceCore/graphics/csImage.hh>
 #include <ceCore/resource/filesystemfile.hh>
 extern "C" {
 #ifdef CS_WIN32
@@ -32,8 +32,8 @@ JpegLoader::JpegLoader()
 
 bool JpegLoader::CanLoad(const Class* cls, const ResourceLocator& locator) const
 {
-  return cls->IsAssignableFrom<Image>() &&
-    (locator.GetExtension() == "JPEG"
+  return cls->IsAssignableFrom<csImage>() &&
+         (locator.GetExtension() == "JPEG"
       || locator.GetExtension() == "JPG");
 }
 
@@ -97,7 +97,7 @@ iObject* JpegLoader::Load(const Class* cls, const ResourceLocator& locator) cons
     break;
   }
 
-  Image* img = new Image(cinfo.output_width, cinfo.output_height, imageFormat);
+  csImage * img = new csImage(cinfo.output_width, cinfo.output_height, imageFormat);
   img->Copy(0, image_buffer);
 
   jpeg_finish_decompress(&cinfo);

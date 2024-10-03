@@ -4,13 +4,13 @@ import org.crimsonedge.core.CeClass;
 import org.crimsonedge.core.CoreObject;
 import org.crimsonedge.core.graphics.material.IMaterial;
 
-@CeClass("cryo::Mesh")
-public class Mesh extends CoreObject {
+@CeClass("cryo::csMesh")
+public class csMesh extends CoreObject {
 
-    public Mesh() {
+    public csMesh() {
     }
 
-    public Mesh(long ref) {
+    public csMesh(long ref) {
         super(ref);
     }
 

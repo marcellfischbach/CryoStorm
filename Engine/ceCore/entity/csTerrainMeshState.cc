@@ -2,13 +2,13 @@
 #include <ceCore/entity/csTerrainMeshState.hh>
 #include <ceCore/entity/csCameraState.hh>
 #include <ceCore/entity//csWorld.hh>
-#include <ceCore/graphics/iterrainmesh.hh>
-#include <ceCore/graphics/itexture2d.hh>
-#include <ceCore/graphics/material/imaterial.hh>
-#include <ceCore/graphics/material/material.hh>
-#include <ceCore/graphics/shading/ishader.hh>
-#include <ceCore/graphics/scene/gfxmesh.hh>
-#include <ceCore/graphics/scene/igfxscene.hh>
+#include <ceCore/graphics/iTerrainMesh.hh>
+#include <ceCore/graphics/iTexture2D.hh>
+#include <ceCore/graphics/material/iMaterial.hh>
+#include "ceCore/graphics/material/csMaterial.hh"
+#include <ceCore/graphics/shading/iShader.hh>
+#include <ceCore/graphics/scene/csGfxMesh.hh>
+#include <ceCore/graphics/scene/iGfxScene.hh>
 #include <ceCore/resource/assetmanager.hh>
 
 namespace cryo
@@ -243,7 +243,7 @@ void csTerrainMeshState::AddMeshToScene(csWorld* world)
   {
     iGfxScene* scene = world->GetScene();
 
-    m_gfxMesh = new GfxMesh();
+    m_gfxMesh = new csGfxMesh();
     m_gfxMesh->SetStatic(IsStatic());
     m_gfxMesh->SetReceiveShadow(m_receiveShadow);
     m_gfxMesh->SetCastShadow(m_castShadow);;

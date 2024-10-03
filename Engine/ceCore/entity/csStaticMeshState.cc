@@ -2,9 +2,9 @@
 #include <ceCore/entity/csStaticMeshState.hh>
 #include "csEntity.hh"
 #include <ceCore/entity/csWorld.hh>
-#include <ceCore/graphics/mesh.hh>
-#include <ceCore/graphics/scene/igfxscene.hh>
-#include <ceCore/graphics/scene/gfxmesh.hh>
+#include <ceCore/graphics/csMesh.hh>
+#include <ceCore/graphics/scene/iGfxScene.hh>
+#include <ceCore/graphics/scene/csGfxMesh.hh>
 
 
 namespace cryo
@@ -38,7 +38,7 @@ void csStaticMeshState::Clear()
 }
 
 
-void csStaticMeshState::SetMesh(Mesh *mesh)
+void csStaticMeshState::SetMesh(csMesh *mesh)
 {
   csWorld *world = GetWorld();
   if (m_mesh && world)
@@ -58,12 +58,12 @@ void csStaticMeshState::SetMesh(Mesh *mesh)
 
 }
 
-const Mesh *csStaticMeshState::GetMesh() const
+const csMesh *csStaticMeshState::GetMesh() const
 {
   return m_mesh;
 }
 
-Mesh *csStaticMeshState::GetMesh()
+csMesh *csStaticMeshState::GetMesh()
 {
   return m_mesh;
 }
@@ -144,8 +144,8 @@ void csStaticMeshState::AddMeshToScene(csWorld *world)
     iGfxScene *scene = world->GetScene();
     for (Size i = 0, in = m_mesh->GetNumberOfSubMeshes(); i < in; i++)
     {
-      const Mesh::SubMesh &subMesh = m_mesh->GetSubMesh(i);
-      Size materialSlotIdx = subMesh.GetMaterialSlotIdx();
+      const csMesh::SubMesh &subMesh        = m_mesh->GetSubMesh(i);
+      Size                  materialSlotIdx = subMesh.GetMaterialSlotIdx();
       iMaterial *material = nullptr;
       if (materialSlotIdx < m_materials.size())
       {
@@ -153,7 +153,7 @@ void csStaticMeshState::AddMeshToScene(csWorld *world)
       }
       if (!material)
       {
-        const Mesh::MaterialSlot &matSlot = m_mesh->GetMaterialSlot(materialSlotIdx);
+        const csMesh::MaterialSlot &matSlot = m_mesh->GetMaterialSlot(materialSlotIdx);
         material                          = matSlot.GetDefaultMaterial();
       }
 
@@ -168,9 +168,9 @@ void csStaticMeshState::AddMeshToScene(csWorld *world)
 }
 
 
-GfxMesh* csStaticMeshState::CreateGfxMesh()
+csGfxMesh* csStaticMeshState::CreateGfxMesh()
 {
-  auto gfxMesh = new GfxMesh();
+  auto gfxMesh = new csGfxMesh();
   gfxMesh->SetBatchable(true);
   gfxMesh->SetStatic(IsStatic());
   gfxMesh->SetReceiveShadow(m_receiveShadow);

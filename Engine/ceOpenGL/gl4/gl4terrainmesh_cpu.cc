@@ -16,7 +16,7 @@ namespace cryo::opengl
 
 
 GL4TerrainMeshCPU::GL4TerrainMeshCPU(uint32_t vao,
-                                     const VertexDeclaration &vd,
+                                     const csVertexDeclaration &vd,
                                      iVertexBuffer *vb,
                                      iIndexBuffer *ib,
                                      const BoundingBox &bbox,
@@ -43,7 +43,7 @@ const BoundingBox &GL4TerrainMeshCPU::GetBoundingBox() const
   return m_bbox;
 }
 
-const VertexDeclaration &GL4TerrainMeshCPU::GetVertexDeclaration() const
+const csVertexDeclaration &GL4TerrainMeshCPU::GetVertexDeclaration() const
 {
   return m_vd;
 }
@@ -486,11 +486,11 @@ iTerrainMesh *GL4TerrainMeshGeneratorCPU::Generate()
 
 
   // generate the vertex declaration
-  std::vector<VertexDeclaration::Attribute> attributes;
-  attributes.emplace_back(VertexDeclaration::Attribute(0, eVS_Vertices, 3, eDT_Float, vertexSize, 0));
-  attributes.emplace_back(VertexDeclaration::Attribute(0, eVS_Normals, 3, eDT_Float, vertexSize, sizeof(float) * 3));
-  attributes.emplace_back(VertexDeclaration::Attribute(0, eVS_UV, 2, eDT_Float, vertexSize, sizeof(float) * 6));
-  VertexDeclaration vd(attributes);
+  std::vector<csVertexDeclaration::Attribute> attributes;
+  attributes.emplace_back(csVertexDeclaration::Attribute(0, eVS_Vertices, 3, eDT_Float, vertexSize, 0));
+  attributes.emplace_back(csVertexDeclaration::Attribute(0, eVS_Normals, 3, eDT_Float, vertexSize, sizeof(float) * 3));
+  attributes.emplace_back(csVertexDeclaration::Attribute(0, eVS_UV, 2, eDT_Float, vertexSize, sizeof(float) * 6));
+  csVertexDeclaration vd(attributes);
 
   // generate the bounding box
   BoundingBox bbox;

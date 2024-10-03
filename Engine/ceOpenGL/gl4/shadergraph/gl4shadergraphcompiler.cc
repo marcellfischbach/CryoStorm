@@ -4,7 +4,7 @@
 #include <ceOpenGL/gl4/shading/gl4shader.hh>
 #include <ceOpenGL/gl4/gl4exceptions.hh>
 #include <algorithm>
-#include <ceCore/graphics/shadergraph/sgnodes.hh>
+#include <ceCore/graphics/shadergraph/csSGNodes.hh>
 #include <ceCore/resource/assetmanager.hh>
 #include <ceCore/resource/textfile.hh>
 #include <ceCore/settings.hh>
@@ -13,7 +13,7 @@ namespace cryo::opengl
 {
 
 
-Material *GL4ShaderGraphCompiler::Compile(cryo::ShaderGraph *shaderGraph, const Parameters &parameters)
+csMaterial *GL4ShaderGraphCompiler::Compile(cryo::csShaderGraph *shaderGraph, const Parameters &parameters)
 {
   m_shaderGraph = shaderGraph;
   m_errorString = "";
@@ -50,12 +50,12 @@ Material *GL4ShaderGraphCompiler::Compile(cryo::ShaderGraph *shaderGraph, const 
   iShader *depthShader   = Compile(depth);
   iShader *forwardShader = Compile(forward);
 
-  Material *material = new Material();
+  csMaterial *material = new csMaterial();
   material->SetShader(eRP_Depth, depthShader);
   material->SetShader(eRP_Forward, forwardShader);
 
-  if (m_shaderGraph->GetLightingMode() == ShaderGraph::eLM_Default
-      && m_shaderGraph->GetBlendingMode() == ShaderGraph::eBM_Off)
+  if (m_shaderGraph->GetLightingMode() == csShaderGraph::eLM_Default
+      && m_shaderGraph->GetBlendingMode() == csShaderGraph::eBM_Off)
   {
     SourceBundle gbuffer;
     GenerateGBuffer(gbuffer);
@@ -68,17 +68,17 @@ Material *GL4ShaderGraphCompiler::Compile(cryo::ShaderGraph *shaderGraph, const 
 
   switch (m_shaderGraph->GetLightingMode())
   {
-    case ShaderGraph::eLM_Default:
+    case csShaderGraph::eLM_Default:
       material->SetShadingMode(eShadingMode::Shaded);
       material->SetBlending(false);
       break;
 
-    case ShaderGraph::eLM_Attenuated:
+    case csShaderGraph::eLM_Attenuated:
       material->SetShadingMode(eShadingMode::Shaded);
       material->SetBlending(true);
       break;
 
-    case ShaderGraph::eLM_Unlit:
+    case csShaderGraph::eLM_Unlit:
       material->SetShadingMode(eShadingMode::Unshaded);
       material->SetBlending(true);
       break;
@@ -86,19 +86,19 @@ Material *GL4ShaderGraphCompiler::Compile(cryo::ShaderGraph *shaderGraph, const 
   }
   switch (m_shaderGraph->GetBlendingMode())
   {
-    case ShaderGraph::eBM_Off:
+    case csShaderGraph::eBM_Off:
       material->SetBlending(false);
       material->SetBlendFactor(eBlendFactor::One, eBlendFactor::Zero);
       material->SetDepthWrite(true);
       break;
 
-    case ShaderGraph::eBM_Alpha:
+    case csShaderGraph::eBM_Alpha:
       material->SetBlending(true);
       material->SetBlendFactor(eBlendFactor::SrcAlpha, eBlendFactor::OneMinusSrcAlpha);
       material->SetDepthWrite(false);
       break;
 
-    case ShaderGraph::eBM_Add:
+    case csShaderGraph::eBM_Add:
       material->SetBlending(true);
       material->SetBlendFactor(eBlendFactor::SrcAlpha, eBlendFactor::One);
       material->SetDepthWrite(false);
@@ -111,21 +111,21 @@ Material *GL4ShaderGraphCompiler::Compile(cryo::ShaderGraph *shaderGraph, const 
 
   for (const auto &attrib: depth.attributes)
   {
-    if (material->IndexOf(attrib.first) == Material::UndefinedIndex)
+    if (material->IndexOf(attrib.first) == csMaterial::UndefinedIndex)
     {
       material->RegisterAttribute(attrib.first, attrib.second);
     }
   }
   for (const auto &attrib: forward.attributes)
   {
-    if (material->IndexOf(attrib.first) == Material::UndefinedIndex)
+    if (material->IndexOf(attrib.first) == csMaterial::UndefinedIndex)
     {
       material->RegisterAttribute(attrib.first, attrib.second);
     }
   }
 
   size_t receiveShadowIndex = material->IndexOf("ReceiveShadow");
-  if (receiveShadowIndex != Material::UndefinedIndex)
+  if (receiveShadowIndex != csMaterial::UndefinedIndex)
   {
     material->Set(receiveShadowIndex, m_shaderGraph->IsReceiveShadow() ? 1 : 0);
   }
@@ -142,13 +142,13 @@ const std::string &GL4ShaderGraphCompiler::GetError() const
 }
 
 
-static bool has_cycle(const SGNode *node, const SGNode *referenceNode)
+static bool has_cycle(const csSGNode *node, const csSGNode *referenceNode)
 {
   for (size_t i = 0, in = node->GetNumberOfInputs(); i < in; i++)
   {
-    const SGNodeInput  *input      = node->GetInput(i);
-    const SGNodeOutput *source     = input->GetSource();
-    const SGNode       *sourceNode = source ? source->GetNode() : nullptr;
+    const csSGNodeInput  *input      = node->GetInput(i);
+    const csSGNodeOutput *source     = input->GetSource();
+    const csSGNode       *sourceNode = source ? source->GetNode() : nullptr;
     if (sourceNode)
     {
       if (sourceNode == referenceNode)
@@ -166,7 +166,7 @@ static bool has_cycle(const SGNode *node, const SGNode *referenceNode)
 }
 
 
-static bool has_cycle(const SGNode *node)
+static bool has_cycle(const csSGNode *node)
 {
   return has_cycle(node, node);
 }
@@ -175,7 +175,7 @@ bool GL4ShaderGraphCompiler::CheckForCycle()
 {
   for (size_t i = 0, in = m_shaderGraph->GetNumberOfNodes(); i < in; i++)
   {
-    const SGNode *node = m_shaderGraph->GetNode(i);
+    const csSGNode *node = m_shaderGraph->GetNode(i);
     if (has_cycle(node))
     {
       m_errorString = "Cycle detected for node " + node->GetName();
@@ -186,15 +186,15 @@ bool GL4ShaderGraphCompiler::CheckForCycle()
 }
 
 
-static void linearize(std::set<SGNode *> &untouched, SGNodeInput *input, std::vector<SGNode *> &linearized)
+static void linearize(std::set<csSGNode *> &untouched, csSGNodeInput *input, std::vector<csSGNode *> &linearized)
 {
-  SGNodeOutput *source = input->GetSource();
+  csSGNodeOutput *source = input->GetSource();
   if (!source)
   {
     return;
   }
-  SGNode *sourceNode = source->GetNode();
-  auto   it          = untouched.find(sourceNode);
+  csSGNode *sourceNode = source->GetNode();
+  auto     it          = untouched.find(sourceNode);
   if (it == untouched.end())
   {
     return;
@@ -212,7 +212,7 @@ static void linearize(std::set<SGNode *> &untouched, SGNodeInput *input, std::ve
 
 void GL4ShaderGraphCompiler::LinearizeNodes()
 {
-  std::set<SGNode *> untouchedNodes;
+  std::set<csSGNode *> untouchedNodes;
   for (size_t        i = 0, in = m_shaderGraph->GetNumberOfNodes(); i < in; i++)
   {
     untouchedNodes.insert(m_shaderGraph->GetNode(i));
@@ -260,21 +260,21 @@ bool GL4ShaderGraphCompiler::VerifyNodesType()
   return VerifyNodeType(m_shaderGraph);
 }
 
-bool GL4ShaderGraphCompiler::VerifyNodeType(SGNode *node)
+bool GL4ShaderGraphCompiler::VerifyNodeType(csSGNode *node)
 {
   node->CalcIOTypes();
 
 
   for (size_t i = 0, in = node->GetNumberOfInputs(); i < in; i++)
   {
-    SGNodeInput  *input  = node->GetInput(i);
-    SGNodeOutput *source = input->GetSource();
+    csSGNodeInput  *input  = node->GetInput(i);
+    csSGNodeOutput *source = input->GetSource();
 
     if (source)
     {
       if ((source->GetValueType() & input->GetTypes()) == eSGValueType::Invalid)
       {
-        SGNode *sourceNode = source->GetNode();
+        csSGNode *sourceNode = source->GetNode();
         if (sourceNode)
         {
           m_errorString = "Type mismatch. Output " + sourceNode->GetName() + "::" + source->GetName() + " types " +
@@ -287,7 +287,7 @@ bool GL4ShaderGraphCompiler::VerifyNodeType(SGNode *node)
     }
     else
     {
-      if (node->IsInstanceOf<SGTexture1D>() || node->IsInstanceOf<SGTexture3D>())
+      if (node->IsInstanceOf<csSGTexture1D>() || node->IsInstanceOf<csSGTexture3D>())
       {
         m_errorString = "Invalid input. No default texture coordinates for " + node->GetName() +
                         " existing. Assign texture coordinates";
@@ -302,11 +302,11 @@ bool GL4ShaderGraphCompiler::VerifyNodeType(SGNode *node)
 
 bool GL4ShaderGraphCompiler::VerifyResources()
 {
-  std::map<std::string, SGResourceNode *> resources;
+  std::map<std::string, csSGResourceNode *> resources;
   for (size_t                             i = 0, in = m_shaderGraph->GetNumberOfNodes(); i < in; ++i)
   {
-    SGNode         *node         = m_shaderGraph->GetNode(i);
-    SGResourceNode *resourceNode = node->Query<SGResourceNode>();
+    csSGNode         *node         = m_shaderGraph->GetNode(i);
+    csSGResourceNode *resourceNode = node->Query<csSGResourceNode>();
     if (resourceNode)
     {
       auto it = resources.find(resourceNode->GetResourceName());
@@ -472,7 +472,7 @@ iShader *GL4ShaderGraphCompiler::Compile(SourceBundle &bundle)
 }
 
 
-void GL4ShaderGraphCompiler::ScanNeededVariables(std::set<SGNode *> &nodes, SGNodeInput *input)
+void GL4ShaderGraphCompiler::ScanNeededVariables(std::set<csSGNode *> &nodes, csSGNodeInput *input)
 {
   auto source = input->GetSource();
   if (!source)
@@ -490,15 +490,15 @@ void GL4ShaderGraphCompiler::ScanNeededVariables(std::set<SGNode *> &nodes, SGNo
   }
 }
 
-std::vector<SGNode *> GL4ShaderGraphCompiler::ScanNeededVariables(std::vector<SGNodeInput *> inputs)
+std::vector<csSGNode *> GL4ShaderGraphCompiler::ScanNeededVariables(std::vector<csSGNodeInput *> inputs)
 {
-  std::vector<SGNode *> result;
+  std::vector<csSGNode *> result;
   if (inputs.empty())
   {
     return result;
   }
-  std::set<SGNode *> needs;
-  for (auto          input: inputs)
+  std::set<csSGNode *> needs;
+  for (auto            input: inputs)
   {
     ScanNeededVariables(needs, input);
   }
@@ -583,12 +583,12 @@ GL4ShaderGraphLightData::GL4ShaderGraphLightData()
   Valid = true;
 }
 
-bool GL4ShaderGraphCompiler::CollectAttributes(std::vector<SGNode *> &nodes,
+bool GL4ShaderGraphCompiler::CollectAttributes(std::vector<csSGNode *> &nodes,
                                                std::map<std::string, eMaterialAttributeType> &attributes)
 {
   for (const auto &node: nodes)
   {
-    auto resourceNode = node->Query<SGResourceNode>();
+    auto resourceNode = node->Query<csSGResourceNode>();
     if (resourceNode)
     {
       auto it = attributes.find(resourceNode->GetResourceName());
@@ -603,15 +603,15 @@ bool GL4ShaderGraphCompiler::CollectAttributes(std::vector<SGNode *> &nodes,
   return true;
 }
 
-bool GL4ShaderGraphCompiler::IsNeedingTangent(const std::vector<SGNode *> &nodes) const
+bool GL4ShaderGraphCompiler::IsNeedingTangent(const std::vector<csSGNode *> &nodes) const
 {
   return false;
 }
 
 
-void GL4ShaderGraphCompiler::SetMaterialDefaults(cryo::Material *material)
+void GL4ShaderGraphCompiler::SetMaterialDefaults(cryo::csMaterial *material)
 {
-  std::vector<SGNode *> nodes;
+  std::vector<csSGNode *> nodes;
   for (int              i = 0; i < m_shaderGraph->GetNumberOfNodes(); ++i)
   {
     nodes.push_back(m_shaderGraph->GetNode(i));
@@ -622,14 +622,14 @@ void GL4ShaderGraphCompiler::SetMaterialDefaults(cryo::Material *material)
   for (const auto &resource: resources)
   {
 
-    const ShaderGraph::Default *def = m_shaderGraph->GetDefault(resource.Name);
+    const csShaderGraph::Default *def = m_shaderGraph->GetDefault(resource.Name);
     if (!def)
     {
       continue;
     }
 
     size_t idx = material->IndexOf(resource.Name);
-    if (idx == Material::UndefinedIndex)
+    if (idx == csMaterial::UndefinedIndex)
     {
       continue;
     }

@@ -1,7 +1,7 @@
 
 #include <ceCore/math/clipper/multiplaneclipper.hh>
-#include <ceCore/graphics/camera.hh>
-#include <ceCore/graphics/projector.hh>
+#include <ceCore/graphics/csCamera.hh>
+#include <ceCore/graphics/csProjector.hh>
 
 namespace cryo
 {
@@ -23,7 +23,7 @@ MultiPlaneClipper::MultiPlaneClipper()
  *     +----------+
  *    0             2
  */
-MultiPlaneClipper::MultiPlaneClipper(const Camera &camera, const Projector &projector, bool near, bool far)
+MultiPlaneClipper::MultiPlaneClipper(const csCamera &camera, const csProjector &projector, bool near, bool far)
     : iClipper()
 {
   Matrix4f viewMatrixInv;

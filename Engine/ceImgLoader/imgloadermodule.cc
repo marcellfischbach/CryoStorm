@@ -6,7 +6,7 @@
 
 #include <ceCore/objectregistry.hh>
 #include <ceCore/resource/assetmanager.hh>
-#include <ceCore/graphics/image.hh>
+#include <ceCore/graphics/csImage.hh>
 
 namespace cryo::img
 {

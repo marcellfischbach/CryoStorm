@@ -6,16 +6,16 @@
 #include <ceOpenGL/openglexport.hh>
 
 #include <ceOpenGL/gl4/pipeline/pointsm/gl4pointsmfilter.hh>
-#include <ceCore/graphics/ecubeface.hh>
+#include <ceCore/graphics/eCubeFace.hh>
 #include <array>
 #include <vector>
 
 namespace cryo
 {
 
-class Camera;
-class GfxMesh;
-class Projector;
+class csCamera;
+class csGfxMesh;
+class csProjector;
 class Settings;
 
 struct iGfxScene;
@@ -48,14 +48,14 @@ public:
   GL4RenderTarget2D *CreateShadowMap();
   void SetShadowMap(GL4RenderTarget2D *shadowMap);
   GL4RenderTarget2D *GetShadowMap();
-  void RenderShadow(const GL4PointLight *pointLight, const Camera &camera, const Projector &projector);
+  void RenderShadow(const GL4PointLight *pointLight, const csCamera &camera, const csProjector &projector);
 
   bool IsShadowMapValid(GL4RenderTarget2D *shadowMap) const;
   iTextureCube *GetShadowBufferColor();
   iTextureCube *GetShadowBufferDepth();
 private:
-  void RenderShadowBuffer(const GL4PointLight *pointLight, const Camera &camera, const Projector &projector);
-  void RenderShadowMap(const GL4PointLight *pointLight, const Camera &camera, const Projector &projector);
+  void RenderShadowBuffer(const GL4PointLight *pointLight, const csCamera &camera, const csProjector &projector);
+  void RenderShadowMap(const GL4PointLight *pointLight, const csCamera &camera, const csProjector &projector);
   void FilterShadowMap();
 
   GL4RenderTarget2D *GetShadowBuffer(eCubeFace face);
@@ -105,7 +105,7 @@ private:
 
   GL4PointSMFilter m_shadowMapFilter;
 
-  std::vector<GfxMesh *> m_meshesCache;
+  std::vector<csGfxMesh *> m_meshesCache;
 };
 
 } // ce

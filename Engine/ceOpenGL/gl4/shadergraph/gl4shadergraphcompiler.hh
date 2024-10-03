@@ -6,10 +6,10 @@
 
 #include <ceOpenGL/openglexport.hh>
 
-#include <ceCore/graphics/shadergraph/ishadergraphcompiler.hh>
-#include <ceCore/graphics/shadergraph/sgnode.hh>
-#include <ceCore/graphics/shadergraph/sgnodes.hh>
-#include <ceCore/graphics/evertexstream.hh>
+#include <ceCore/graphics/shadergraph/iShaderGraphCompiler.hh>
+#include <ceCore/graphics/shadergraph/csSGNode.hh>
+#include <ceCore/graphics/shadergraph/csSGNodes.hh>
+#include <ceCore/graphics/eVertexStream.hh>
 
 
 namespace cryo::opengl
@@ -24,7 +24,7 @@ public:
   GL4ShaderGraphCompiler() = default;
 
 
-  Material *Compile(ShaderGraph *shaderGraph, const Parameters &parameters) override;
+  csMaterial *Compile(csShaderGraph *shaderGraph, const Parameters &parameters) override;
 
   const std::string &GetError() const override;
 
@@ -74,9 +74,9 @@ private:
     eMaterialAttributeType MatType;
   };
 
-  bool IsNeedingTangent(const std::vector<SGNode *> &nodes) const;
+  bool IsNeedingTangent(const std::vector<csSGNode *> &nodes) const;
 
-  bool CollectAttributes(std::vector<SGNode *> &nodes, std::map<std::string, eMaterialAttributeType> &attributes);
+  bool CollectAttributes(std::vector<csSGNode *> &nodes, std::map<std::string, eMaterialAttributeType> &attributes);
 
   void GenerateDepth(SourceBundle &bundle);
   std::string GenerateDepth_Vert(std::map<std::string, eMaterialAttributeType> &attributes);
@@ -97,37 +97,37 @@ private:
   bool CheckForCycle();
   void LinearizeNodes();
   bool VerifyNodesType();
-  bool VerifyNodeType(SGNode *node);
+  bool VerifyNodeType(csSGNode *node);
   bool VerifyResources();
-  void ScanNeededVariables(std::set<SGNode *> &nodes, SGNodeInput *input);
-  std::vector<SGNode *> ScanNeededVariables(std::vector<SGNodeInput *> inputs);
+  void ScanNeededVariables(std::set<csSGNode *> &nodes, csSGNodeInput *input);
+  std::vector<csSGNode *> ScanNeededVariables(std::vector<csSGNodeInput *> inputs);
   void AddStream(std::vector<StreamInput> &streams, eVertexStream stream, eSGValueType type);
-  std::vector<StreamInput> FindStreams(std::vector<SGNode *> &nodes);
+  std::vector<StreamInput> FindStreams(std::vector<csSGNode *> &nodes);
   void AddResource(std::vector<ResourceInput> &resources,
                    const std::string &resourceName,
                    const std::string &resourceType,
                    eMaterialAttributeType matType);
-  std::vector<ResourceInput> FindResources(std::vector<SGNode *> &nodes);
+  std::vector<ResourceInput> FindResources(std::vector<csSGNode *> &nodes);
 
   void GenerateVariables();
-  void GenerateVariable(SGNode *node);
-  void GenerateVariable(SGNodeOutput *output);
+  void GenerateVariable(csSGNode *node);
+  void GenerateVariable(csSGNodeOutput *output);
   std::string VarName();
-  OutputVariable GetInputValue(SGNodeInput *input);
+  OutputVariable GetInputValue(csSGNodeInput *input);
 
   iShader *Compile(SourceBundle &bundle);
-  void SetMaterialDefaults (Material* material);
+  void SetMaterialDefaults(csMaterial* material);
 
 
 
-  std::string           m_errorString;
-  ShaderGraph           *m_shaderGraph;
-  std::vector<SGNode *> m_linearizedNodes;
+  std::string             m_errorString;
+  csShaderGraph           *m_shaderGraph;
+  std::vector<csSGNode *> m_linearizedNodes;
 
-  size_t                                   m_nextVariableName;
-  std::map<SGNode *, NodeVariable>         m_nodeVariables;
-  std::map<SGNodeOutput *, OutputVariable> m_outputVariables;
-  std::vector<ResourceInput>               m_resources;
+  size_t                                     m_nextVariableName;
+  std::map<csSGNode *, NodeVariable>         m_nodeVariables;
+  std::map<csSGNodeOutput *, OutputVariable> m_outputVariables;
+  std::vector<ResourceInput>                 m_resources;
 
   Parameters m_parameters;
 

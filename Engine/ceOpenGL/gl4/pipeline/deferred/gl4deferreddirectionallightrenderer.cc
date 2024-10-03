@@ -5,12 +5,12 @@
 #include <ceOpenGL/gl4/gl4rendertarget2d.hh>
 #include <ceOpenGL/gl4/gl4texture2darray.hh>
 #include <ceCore/resource/assetmanager.hh>
-#include <ceCore/graphics/camera.hh>
-#include <ceCore/graphics/idevice.hh>
-#include <ceCore/graphics/gbuffer.hh>
-#include <ceCore/graphics/projector.hh>
-#include <ceCore/graphics/shading/ishader.hh>
-#include <ceCore/graphics/shading/ishaderattribute.hh>
+#include <ceCore/graphics/csCamera.hh>
+#include <ceCore/graphics/iDevice.hh>
+#include <ceCore/graphics/csGBuffer.hh>
+#include <ceCore/graphics/csProjector.hh>
+#include <ceCore/graphics/shading/iShader.hh>
+#include <ceCore/graphics/shading/iShaderAttribute.hh>
 
 
 namespace cryo::opengl
@@ -63,9 +63,9 @@ void GL4DeferredDirectionalLightRenderer::SetScene(cryo::iGfxScene *scene)
   m_scene = scene;
 }
 
-void GL4DeferredDirectionalLightRenderer::Render(const Camera *camera,
-                                                 const Projector *projector,
-                                                 const GBuffer *gBuffer,
+void GL4DeferredDirectionalLightRenderer::Render(const csCamera *camera,
+                                                 const csProjector *projector,
+                                                 const csGBuffer *gBuffer,
                                                  GL4DirectionalLight *light,
                                                  iRenderTarget2D *target)
 {

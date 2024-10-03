@@ -21,10 +21,10 @@ struct iShader;
 struct iShaderAttribute;
 struct iTexture2D;
 struct iTexture2DArray;
-class Camera;
-class GfxMesh;
+class csCamera;
+class csGfxMesh;
 struct iGfxScene;
-class Projector;
+class csProjector;
 class Settings;
 
 }
@@ -52,7 +52,7 @@ public:
   void Clear();
   void Add(GL4DirectionalLight *directionalLight);
 
-  void RenderShadowMaps(const Camera &camera, const Projector &projector);
+  void RenderShadowMaps(const csCamera &camera, const csProjector &projector);
 
   iTexture2D *GetColorTexture();
   iTexture2D *GetDepthTexture();
@@ -64,7 +64,7 @@ private:
   GL4RenderTarget2D *GetDirectionalLightShadowMap(size_t lightIdx);
   GL4PSSMShadowBufferObject *GetDirectionalLightShadowBuffer(size_t lightIdx);
 
-  void RenderShadow(GL4DirectionalLight *directionalLight, const Camera &camera, const Projector &projector, size_t lightIdx);
+  void RenderShadow(GL4DirectionalLight *directionalLight, const csCamera &camera, const csProjector &projector, size_t lightIdx);
   void ApplyShadowMapToDevice(GL4DirectionalLight* directionalLight, size_t lightIdx);
 
 

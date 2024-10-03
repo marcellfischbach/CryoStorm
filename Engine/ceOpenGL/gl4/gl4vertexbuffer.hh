@@ -3,7 +3,7 @@
 #pragma once
 
 #include <ceOpenGL/openglexport.hh>
-#include <ceCore/graphics/ivertexbuffer.hh>
+#include <ceCore/graphics/iVertexBuffer.hh>
 
 
 namespace cryo::opengl

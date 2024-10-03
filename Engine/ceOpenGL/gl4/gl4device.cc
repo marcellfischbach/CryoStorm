@@ -15,8 +15,8 @@
 #include <ceOpenGL/gl4/shading/gl4program.hh>
 #include <ceOpenGL/glerror.hh>
 #include <ceCore/objectregistry.hh>
-#include <ceCore/graphics/samplers.hh>
-#include <ceCore/graphics/shading/ishaderattribute.hh>
+#include <ceCore/graphics/csSamplers.hh>
+#include <ceCore/graphics/shading/iShaderAttribute.hh>
 #include <ceCore/resource/assetmanager.hh>
 #include <GL/glew.h>
 #include <iostream>
@@ -766,7 +766,7 @@ iTexture2D *GL4Device::CreateTexture(const iTexture2D::Descriptor &descriptor)
       descriptor.MipMaps,
       descriptor.MultiSamples
   );
-  texture->SetSampler(ObjectRegistry::Get<Samplers>()->GetDefault());
+  texture->SetSampler(ObjectRegistry::Get<csSamplers>()->GetDefault());
   m_tempTexture = texture;
   return texture;
 }
@@ -786,7 +786,7 @@ iTexture2DArray *GL4Device::CreateTexture(const iTexture2DArray::Descriptor &des
       descriptor.Format,
       descriptor.MipMaps
   );
-  texture->SetSampler(ObjectRegistry::Get<Samplers>()->GetDefault());
+  texture->SetSampler(ObjectRegistry::Get<csSamplers>()->GetDefault());
   m_tempTexture = texture;
   return texture;
 }
@@ -804,7 +804,7 @@ iTextureCube *GL4Device::CreateTexture(const iTextureCube::Descriptor &descripto
       descriptor.Format,
       descriptor.MipMaps
   );
-  texture->SetSampler(ObjectRegistry::Get<Samplers>()->GetDefault());
+  texture->SetSampler(ObjectRegistry::Get<csSamplers>()->GetDefault());
   m_tempTexture = texture;
   return texture;
 }

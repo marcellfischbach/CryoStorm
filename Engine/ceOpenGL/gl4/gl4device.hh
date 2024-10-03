@@ -4,8 +4,8 @@
 #include <ceOpenGL/openglexport.hh>
 #include <ceOpenGL/openglconstants.hh>
 #include <ceCore/class.hh>
-#include <ceCore/graphics/idevice.hh>
-#include <ceCore/graphics/etextureunit.hh>
+#include <ceCore/graphics/iDevice.hh>
+#include <ceCore/graphics/eTextureUnit.hh>
 #include <map>
 #include <array>
 

@@ -1,12 +1,12 @@
 
 #include <ceCore/entity/csLightState.hh>
 #include <ceCore/entity/csWorld.hh>
-#include <ceCore/graphics/ilight.hh>
-#include <ceCore/graphics/ipointlight.hh>
-#include <ceCore/graphics/idirectionallight.hh>
-#include <ceCore/graphics/idevice.hh>
-#include <ceCore/graphics/scene/gfxlight.hh>
-#include <ceCore/graphics/scene/igfxscene.hh>
+#include <ceCore/graphics/iLight.hh>
+#include <ceCore/graphics/iPointLight.hh>
+#include <ceCore/graphics/iDirectionalLight.hh>
+#include <ceCore/graphics/iDevice.hh>
+#include <ceCore/graphics/scene/csGfxLight.hh>
+#include <ceCore/graphics/scene/iGfxScene.hh>
 #include <ceCore/objectregistry.hh>
 
 namespace cryo
@@ -124,7 +124,7 @@ void csLightState::AddToScene(csWorld* world)
     {
       m_gfxLight->Release();
     }
-    m_gfxLight = new GfxLight();
+    m_gfxLight = new csGfxLight();
     m_gfxLight->SetStatic(IsStatic());
     m_gfxLight->SetLight(m_light);
 

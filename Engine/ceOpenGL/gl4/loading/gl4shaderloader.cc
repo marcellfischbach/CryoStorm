@@ -4,7 +4,7 @@
 #include <ceOpenGL/gl4/shading/gl4shader.hh>
 #include <ceOpenGL/gl4/gl4exceptions.hh>
 #include <ceCore/resource/vfs.hh>
-#include <ceCore/graphics/evertexstream.hh>
+#include <ceCore/graphics/eVertexStream.hh>
 #include <ceCore/math/math.hh>
 #include <ceCore/resource/file.hh>
 #include <regex>

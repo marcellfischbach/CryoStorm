@@ -1,8 +1,8 @@
 
 #include <ceOpenGL/gl4/gl4texturecube.hh>
 #include <ceOpenGL/gl4/gl4pixelformatmap.hh>
-#include <ceCore/graphics/image.hh>
-#include <ceCore/graphics/isampler.hh>
+#include <ceCore/graphics/csImage.hh>
+#include <ceCore/graphics/iSampler.hh>
 #include <ceCore/math/math.hh>
 #include <GL/glew.h>
 
@@ -77,7 +77,7 @@ bool GL4TextureCube::Initialize(uint16_t size, ePixelFormat format, bool generat
   return true;
 }
 
-void GL4TextureCube::Data(eCubeFace face, const Image* image)
+void GL4TextureCube::Data(eCubeFace face, const csImage* image)
 {
   for (uint16_t l=0; l<image->GetNumberOfLayers(); l++)
   {
@@ -85,7 +85,7 @@ void GL4TextureCube::Data(eCubeFace face, const Image* image)
   }
 }
 
-void GL4TextureCube::Data(eCubeFace face, uint16_t level, const Image* image)
+void GL4TextureCube::Data(eCubeFace face, uint16_t level, const csImage* image)
 {
   Data(face, level, image->GetPixelFormat(), image->GetData(level));
 }

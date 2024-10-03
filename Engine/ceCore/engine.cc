@@ -8,11 +8,11 @@
 #include <ceCore/settings.hh>
 #include <ceCore/coremodule.hh>
 #include <ceCore/entity/csWorld.hh>
-#include <ceCore/graphics/idevice.hh>
-#include <ceCore/graphics/iframerenderer.hh>
-#include <ceCore/graphics/defaultframerenderer.hh>
-#include <ceCore/graphics/irendertarget2d.hh>
-#include <ceCore/graphics/iskyboxrenderer.hh>
+#include <ceCore/graphics/iDevice.hh>
+#include <ceCore/graphics/iFrameRenderer.hh>
+#include <ceCore/graphics/csDefaultFrameRenderer.hh>
+#include <ceCore/graphics/iRenderTarget2D.hh>
+#include <ceCore/graphics/iSkyboxRenderer.hh>
 #include <ceCore/window/iwindow.hh>
 #include <ceCore/resource/assetmanager.hh>
 #include <ceCore/resource/file.hh>
@@ -409,7 +409,7 @@ bool Engine::ProcessFrame()
 Engine *Engine::s_instance = nullptr;
 
 Engine::Engine()
-    : m_frameRenderer(new DefaultFrameRenderer())
+    : m_frameRenderer(new csDefaultFrameRenderer())
     , m_world(nullptr)
 {
 

@@ -8,7 +8,7 @@ namespace cryo
 {
 
 struct iTerrainMesh;
-class GfxMesh;
+class csGfxMesh;
 struct iMaterial;
 struct iTexture2D;
 
@@ -112,8 +112,8 @@ private:
   bool m_castShadow = true;
 
   iTerrainMesh *m_terrainMesh = nullptr;
-  GfxMesh* m_gfxMesh    = nullptr;
-  iMaterial* m_material = nullptr;
+  csGfxMesh * m_gfxMesh  = nullptr;
+  iMaterial * m_material = nullptr;
 
   csTerrainLayerMask           *m_layerMask = nullptr;
   std::vector<csTerrainLayer*> m_layers;

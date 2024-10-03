@@ -10,9 +10,9 @@
 namespace cryo
 {
 
-class SGNode;
-class SGResourceNode;
-class ShaderGraph;
+class csSGNode;
+class csSGResourceNode;
+class csShaderGraph;
 
 CS_CLASS()
 class CS_CORE_API ShaderGraphLoader : public CS_SUPER(BaseCEFAssetLoader)
@@ -25,18 +25,18 @@ public:
   iObject *Load(const CrimsonFile *file, const Class *cls, const ResourceLocator &locator) const override;
 
 private:
-  void LoadQueue (const CrimsonFileElement *shaderGraphElement, ShaderGraph *sg) const;
-  void LoadLightingMode (const CrimsonFileElement *shaderGraphElement, ShaderGraph *sg) const;
-  void LoadBlendingMode (const CrimsonFileElement *shaderGraphElement, ShaderGraph *sg) const;
+  void LoadQueue(const CrimsonFileElement *shaderGraphElement, csShaderGraph *sg) const;
+  void LoadLightingMode(const CrimsonFileElement *shaderGraphElement, csShaderGraph *sg) const;
+  void LoadBlendingMode(const CrimsonFileElement *shaderGraphElement, csShaderGraph *sg) const;
 
-  SGNode *CreateNode(const CrimsonFileElement *nodeElement, ShaderGraph *sg) const;
-  SGResourceNode *CreateResourceNode(const CrimsonFileElement *nodeElement, ShaderGraph *sg) const;
-  bool LoadNodeBindingsAndValues(const CrimsonFileElement *nodeElement, SGNode *node, ShaderGraph *sg) const;
-  bool LoadValue(const CrimsonFileElement *valueElement, SGNode *node, ShaderGraph *sg) const;
-  bool LoadBinding(const CrimsonFileElement *valueElement, SGNode *node, ShaderGraph *sg) const;
+  csSGNode *CreateNode(const CrimsonFileElement *nodeElement, csShaderGraph *sg) const;
+  csSGResourceNode *CreateResourceNode(const CrimsonFileElement *nodeElement, csShaderGraph *sg) const;
+  bool LoadNodeBindingsAndValues(const CrimsonFileElement *nodeElement, csSGNode *node, csShaderGraph *sg) const;
+  bool LoadValue(const CrimsonFileElement *valueElement, csSGNode *node, csShaderGraph *sg) const;
+  bool LoadBinding(const CrimsonFileElement *valueElement, csSGNode *node, csShaderGraph *sg) const;
 
-  void LoadAttributes (const CrimsonFileElement *attributesElement, ShaderGraph *sg, const ResourceLocator &locator) const;
-  void LoadAttribute (const CrimsonFileElement *attributeElement, ShaderGraph *sg, const ResourceLocator &locator) const;
+  void LoadAttributes(const CrimsonFileElement *attributesElement, csShaderGraph *sg, const ResourceLocator &locator) const;
+  void LoadAttribute(const CrimsonFileElement *attributeElement, csShaderGraph *sg, const ResourceLocator &locator) const;
 
 
 };

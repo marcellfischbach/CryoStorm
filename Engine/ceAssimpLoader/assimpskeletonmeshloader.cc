@@ -2,10 +2,10 @@
 #include <ceAssimpLoader/assimpskeletonmeshloader.hh>
 #include <ceAssimpLoader/assimpmaterialloader.hh>
 #include <ceAssimpLoader/assimpconverter.hh>
-#include <ceCore/graphics/idevice.hh>
-#include <ceCore/graphics/irendermesh.hh>
+#include <ceCore/graphics/iDevice.hh>
+#include <ceCore/graphics/iRenderMesh.hh>
 #include <ceCore/resource/ifile.hh>
-#include <ceCore/graphics/skeletonmesh.hh>
+#include <ceCore/graphics/csSkeletonMesh.hh>
 #include <ceCore/resource/vfs.hh>
 #include <ceCore/objectregistry.hh>
 #include <ceCore/types.hh>
@@ -26,7 +26,7 @@ struct SkeletonLoaderData
   const aiScene *scene = nullptr;
   std::map<std::string, Size> materialSlots;
   std::map<std::string, iMaterial*> defaultMaterials;
-  SkeletonMesh *mesh = nullptr;
+  csSkeletonMesh                    *mesh = nullptr;
 
 };
 
@@ -39,7 +39,7 @@ AssimpSkeletonMeshLoader::AssimpSkeletonMeshLoader()
 bool AssimpSkeletonMeshLoader::CanLoad(const Class *cls, const ResourceLocator &locator) const
 {
   const std::string &ext = locator.GetExtension();
-  return cls == SkeletonMesh::GetStaticClass()
+  return cls == csSkeletonMesh::GetStaticClass()
          && ext == std::string("FBX");
 }
 
@@ -94,7 +94,7 @@ iObject *AssimpSkeletonMeshLoader::Load(const Class *cls, const ResourceLocator 
 
   SkeletonLoaderData d;
   d.scene = scene;
-  d.mesh  = new SkeletonMesh();
+  d.mesh  = new csSkeletonMesh();
   for (unsigned i = 0, in = scene->mNumMeshes; i < in; ++i)
   {
     aiMesh     *mesh     = scene->mMeshes[i];

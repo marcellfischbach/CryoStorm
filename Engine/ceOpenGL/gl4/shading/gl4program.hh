@@ -1,7 +1,7 @@
 #pragma once
 
 #include <ceOpenGL/openglexport.hh>
-#include <ceCore/graphics/shading/ishader.hh>
+#include <ceCore/graphics/shading/iShader.hh>
 #include <ceCore/types.hh>
 #include <vector>
 

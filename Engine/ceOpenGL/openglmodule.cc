@@ -5,7 +5,7 @@
 #include <ceCore/engine.hh>
 #include <ceCore/objectregistry.hh>
 #include <ceCore/settings.hh>
-#include <ceCore/graphics/samplers.hh>
+#include <ceCore/graphics/csSamplers.hh>
 #include <ceCore/resource/assetmanager.hh>
 #include <ceOpenGL/gl4/gl4device.hh>
 #include <ceOpenGL/gl4/gl4rendermesh.hh>
@@ -57,10 +57,10 @@ bool OpenGLModule::Initialize(const std::vector<std::string> &args, Engine *engi
   bool initialized = gl4Graphics->Initialize();
   if (initialized) 
   {
-    Samplers* samplers = new Samplers();
+    csSamplers * samplers = new csSamplers();
     samplers->Load();
 
-    ObjectRegistry::Register<Samplers>(samplers);
+    ObjectRegistry::Register<csSamplers>(samplers);
 
   }
 

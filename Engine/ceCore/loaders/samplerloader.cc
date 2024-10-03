@@ -1,8 +1,8 @@
 
 
 #include <ceCore/loaders/samplerloader.hh>
-#include <ceCore/graphics/isampler.hh>
-#include <ceCore/graphics/idevice.hh>
+#include <ceCore/graphics/iSampler.hh>
+#include <ceCore/graphics/iDevice.hh>
 #include <ceCore/objectregistry.hh>
 
 

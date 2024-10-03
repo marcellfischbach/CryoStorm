@@ -4,18 +4,18 @@
 #include <ceCore/coreexport.hh>
 #include <ceCore/entity/csSpatialState.hh>
 
-#include <ceCore/graphics/camera.hh>
-#include <ceCore/graphics/projector.hh>
-#include <ceCore/graphics/eclearmode.hh>
+#include <ceCore/graphics/csCamera.hh>
+#include <ceCore/graphics/csProjector.hh>
+#include <ceCore/graphics/eClearMode.hh>
 #include <ceCore/math/color4f.hh>
 
 namespace cryo
 {
 
-class GfxCamera;
+class csGfxCamera;
 struct iRenderTarget2D;
 struct iSkyboxRenderer;
-class PostProcessing;
+class csPostProcessing;
 
 CS_CLASS()
 class CS_CORE_API csCameraState : public CS_SUPER(csSpatialState)
@@ -60,14 +60,14 @@ public:
   void SetRenderShadows(bool renderShadows);
   bool IsRenderShadows() const;
 
-  void SetPostProcessing(PostProcessing *postProcessing);
-  PostProcessing *GetPostPRocessing() const;
+  void SetPostProcessing(csPostProcessing *postProcessing);
+  csPostProcessing *GetPostPRocessing() const;
 
   void SetSkyboxRenderer(iSkyboxRenderer *skyboxRenderer);
   iSkyboxRenderer *GetSkyboxRenderer() const;
 
-  const Camera &GetCamera() const;
-  const Projector &GetProjector() const;
+  const csCamera &GetCamera() const;
+  const csProjector &GetProjector() const;
 
   void Update(u32 width, u32 height);
 
@@ -111,13 +111,13 @@ private:
   bool m_renderShadows = true;
 
 
-  Camera          m_camera;
-  Projector       m_projector;
-  PostProcessing  *m_postProcessing;
-  iSkyboxRenderer *m_skyboxRenderer;
+  csCamera         m_camera;
+  csProjector      m_projector;
+  csPostProcessing *m_postProcessing;
+  iSkyboxRenderer  *m_skyboxRenderer;
 
   void UpdateGfxCamera();
-  GfxCamera       *m_gfxCamera;
+  csGfxCamera *m_gfxCamera;
 
 
 };

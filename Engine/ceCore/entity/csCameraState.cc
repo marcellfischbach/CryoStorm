@@ -5,11 +5,11 @@
 #include <ceCore/math/vector3f.hh>
 #include <ceCore/math/vector4f.hh>
 #include <math.h>
-#include <ceCore/graphics/irendertarget2d.hh>
-#include <ceCore/graphics/iskyboxrenderer.hh>
-#include <ceCore/graphics/postprocessing.hh>
-#include <ceCore/graphics/scene/gfxcamera.hh>
-#include <ceCore/graphics/scene/igfxscene.hh>
+#include <ceCore/graphics/iRenderTarget2D.hh>
+#include <ceCore/graphics/iSkyboxRenderer.hh>
+#include <ceCore/graphics/csPostProcessing.hh>
+#include <ceCore/graphics/scene/csGfxCamera.hh>
+#include <ceCore/graphics/scene/iGfxScene.hh>
 #include <ceCore/entity/csWorld.hh>
 
 namespace cryo
@@ -22,7 +22,7 @@ csCameraState::csCameraState()
       m_far(1024.0f),
       m_angle((float) M_PI / 4.0f),
       m_angleWidthHeight(0.0f),
-      m_gfxCamera(new GfxCamera()),
+      m_gfxCamera(new csGfxCamera()),
       m_order(0),
       m_renderTarget(nullptr),
       m_skyboxRenderer(nullptr),
@@ -182,23 +182,23 @@ bool csCameraState::IsRenderShadows() const
   return m_renderShadows;
 }
 
-void csCameraState::SetPostProcessing(cryo::PostProcessing *postProcessing)
+void csCameraState::SetPostProcessing(cryo::csPostProcessing *postProcessing)
 {
   CS_SET(m_postProcessing, postProcessing);
   UpdateGfxCamera();
 }
 
-cryo::PostProcessing* csCameraState::GetPostPRocessing() const
+cryo::csPostProcessing* csCameraState::GetPostPRocessing() const
 {
   return m_postProcessing;
 }
 
-const Camera &csCameraState::GetCamera() const
+const csCamera &csCameraState::GetCamera() const
 {
   return m_camera;
 }
 
-const Projector &csCameraState::GetProjector() const
+const csProjector &csCameraState::GetProjector() const
 {
   return m_projector;
 }

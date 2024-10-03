@@ -1,7 +1,7 @@
 #include <ceAssimpLoader/assimpconverter.hh>
 #include <ceCore/math/vector4i.hh>
-#include <ceCore/graphics/irendermesh.hh>
-#include <ceCore/graphics/skeleton.hh>
+#include <ceCore/graphics/iRenderMesh.hh>
+#include <ceCore/graphics/csSkeleton.hh>
 #include <ceCore/objectregistry.hh>
 
 #include <assimp/scene.h>

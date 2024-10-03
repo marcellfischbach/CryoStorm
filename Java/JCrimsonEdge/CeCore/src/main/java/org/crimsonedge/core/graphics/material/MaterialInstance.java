@@ -8,18 +8,18 @@ import org.crimsonedge.core.graphics.EShadingMode;
 import org.crimsonedge.core.graphics.ITexture;
 import org.crimsonedge.core.math.*;
 
-@CeClass("cryo::MaterialInstance")
-public class MaterialInstance extends CoreObject implements IMaterial {
+@CeClass("cryo::csMaterialInstance")
+public class csMaterialInstance extends CoreObject implements IMaterial {
 
-    public MaterialInstance() {
+    public csMaterialInstance() {
     }
 
-    public MaterialInstance(long ref) {
+    public csMaterialInstance(long ref) {
         super(ref);
     }
 
     private static native void nSetMaterial(long ref, long materialRef);
-    private static native Material nGetMaterial(long ref);
+    private static native csMaterial nGetMaterial(long ref);
 
     private static native int nGetFillMode(long ref);
 
@@ -45,10 +45,10 @@ public class MaterialInstance extends CoreObject implements IMaterial {
     private static native void nSetMatrix4f(long ref, int idx, float[] m);
     private static native void nSetTexture(long ref, int idx, long textureRef);
 
-    public void setMaterial(Material material) {
+    public void setMaterial(csMaterial material) {
         nSetMaterial(getRef(), material != null ? material.getRef() : 0);
     }
-    public Material getMaterial() {
+    public csMaterial getMaterial() {
         return nGetMaterial(getRef());
     }
 

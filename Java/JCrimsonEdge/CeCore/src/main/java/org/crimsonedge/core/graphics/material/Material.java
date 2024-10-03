@@ -8,13 +8,13 @@ import org.crimsonedge.core.graphics.EShadingMode;
 import org.crimsonedge.core.graphics.ITexture;
 import org.crimsonedge.core.math.*;
 
-@CeClass("cryo::Material")
-public class Material extends CoreObject implements IMaterial {
+@CeClass("cryo::csMaterial")
+public class csMaterial extends CoreObject implements IMaterial {
 
-    public Material() {
+    public csMaterial() {
     }
 
-    public Material(long ref) {
+    public csMaterial(long ref) {
         super(ref);
     }
 

@@ -94,13 +94,13 @@ But this has a serious impact on the rendering performance.
 
 Ideas on how implementation is integrated into the engine exists for the following features
 
-- PostProcessing
+- csPostProcessing
   - Bloom
   - ScreenSpaceAmbientOcclusion
   - ScreenSpaceReflection
   - Vignette 
 - Audio processing
 - More physics (character controller, trigger, ropes/chains, ...)
-- ShaderGraph as an alternative to GLSL
+- csShaderGraph as an alternative to GLSL
 - SceneLoading
 - Editor - a complete editor for creating scenes and setup for a game

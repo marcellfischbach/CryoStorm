@@ -2,8 +2,8 @@
 #pragma once
 
 #include <ceOpenGL/openglexport.hh>
-#include <ceCore/graphics/irendertarget2d.hh>
-#include <ceCore/graphics/ecubeface.hh>
+#include <ceCore/graphics/iRenderTarget2D.hh>
+#include <ceCore/graphics/eCubeFace.hh>
 
 namespace cryo::opengl
 {

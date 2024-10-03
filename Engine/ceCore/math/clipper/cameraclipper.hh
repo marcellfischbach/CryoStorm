@@ -10,14 +10,14 @@
 namespace cryo
 {
 
-class Camera;
-class Projector;
+class csCamera;
+class csProjector;
 struct Matrix4f;
 
 class CS_CORE_API CameraClipper : public iClipper
 {
 public:
-  CameraClipper(const Camera &camera, const Projector &projector, bool near = true, bool far = true);
+  CameraClipper(const csCamera &camera, const csProjector &projector, bool near = true, bool far = true);
   CameraClipper(const Matrix4f &camera, const Matrix4f &projector, bool near = true, bool far = true);
   ~CameraClipper() override = default;
 

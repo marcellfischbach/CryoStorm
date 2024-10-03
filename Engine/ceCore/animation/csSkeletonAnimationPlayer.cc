@@ -1,7 +1,7 @@
 
 #include <ceCore/animation/csSkeletonAnimationPlayer.hh>
 #include <ceCore/animation/csSkeletonAnimation.hh>
-#include <ceCore/graphics/skeleton.hh>
+#include <ceCore/graphics/csSkeleton.hh>
 
 namespace cryo
 {

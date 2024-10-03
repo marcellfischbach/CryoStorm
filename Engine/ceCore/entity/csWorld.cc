@@ -3,9 +3,9 @@
 #include <ceCore/entity/csCameraState.hh>
 #include "csEntity.hh"
 #include <ceCore/entity/csSpatialState.hh>
-#include <ceCore/graphics/scene/igfxscene.hh>
-#include <ceCore/graphics/scene/gfxsimplescene.hh>
-#include <ceCore/graphics/scene/gfxquadtreescene.hh>
+#include <ceCore/graphics/scene/iGfxScene.hh>
+#include <ceCore/graphics/scene/csGfxSimpleScene.hh>
+#include <ceCore/graphics/scene/csGfxQuadtreeScene.hh>
 #include <ceCore/physics/physics.hh>
 #include <ceCore/objectregistry.hh>
 
@@ -25,7 +25,7 @@ csWorld::csWorld()
     , m_rootState(new csSpatialState())
 {
   CS_CLASS_GEN_CONSTR;
-  SetScene(new GfxQuadtreeScene());
+  SetScene(new csGfxQuadtreeScene());
   SetPhysicsWorld(ObjectRegistry::Get<iPhysicsSystem>()->CreateWorld());
 }
 

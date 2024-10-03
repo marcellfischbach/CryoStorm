@@ -2,8 +2,8 @@
 #include <ceOpenGL/gl4/gl4texture2d.hh>
 #include <ceOpenGL/gl4/gl4pixelformatmap.hh>
 #include <ceOpenGL/glerror.hh>
-#include <ceCore/graphics/image.hh>
-#include <ceCore/graphics/isampler.hh>
+#include <ceCore/graphics/csImage.hh>
+#include <ceCore/graphics/iSampler.hh>
 #include <ceCore/math/math.hh>
 #include <GL/glew.h>
 
@@ -123,7 +123,7 @@ uint16_t GL4Texture2D::GetSamples() const
 }
 
 
-void GL4Texture2D::Data(const Image* image)
+void GL4Texture2D::Data(const csImage* image)
 {
 
   for (uint16_t l = 0; l < image->GetNumberOfLayers(); l++)
@@ -132,7 +132,7 @@ void GL4Texture2D::Data(const Image* image)
   }
 }
 
-void GL4Texture2D::Data(uint16_t level, const Image* image)
+void GL4Texture2D::Data(uint16_t level, const csImage* image)
 {
   Data(level, image->GetPixelFormat(), image->GetData(level));
 }

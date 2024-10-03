@@ -1,7 +1,7 @@
 #pragma once
 
 #include <ceOpenGL/openglexport.hh>
-#include <ceCore/graphics/shading/ishaderattribute.hh>
+#include <ceCore/graphics/shading/iShaderAttribute.hh>
 #include <GL/glew.h>
 
 namespace cryo::opengl

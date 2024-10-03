@@ -2,7 +2,7 @@
 #pragma once
 
 #include <ceOpenGL/openglexport.hh>
-#include <ceCore/graphics/iterrainmesh.hh>
+#include <ceCore/graphics/iTerrainMesh.hh>
 
 namespace cryo::opengl
 {

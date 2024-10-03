@@ -3,12 +3,12 @@
 
 #include <ceCore/coreexport.hh>
 #include <ceCore/entity/csStaticMeshState.hh>
-#include <ceCore/graphics/skeleton.hh>
+#include <ceCore/graphics/csSkeleton.hh>
 
 namespace cryo
 {
 
-class SkeletonMesh;
+class csSkeletonMesh;
 
 CS_CLASS()
 class CS_CORE_API csSkeletonMeshState : public CS_SUPER(csStaticMeshState)
@@ -18,13 +18,13 @@ public:
   csSkeletonMeshState();
   ~csSkeletonMeshState() override = default;
 
-  void SetMesh (Mesh* mesh) override;
+  void SetMesh(csMesh* mesh) override;
 
   CS_NODISCARD csSkeleton &GetSkeleton();
   CS_NODISCARD const csSkeleton &GetSkeleton() const;
 
 protected:
-  GfxMesh *CreateGfxMesh() override;
+  csGfxMesh *CreateGfxMesh() override;
 
 private:
   csSkeleton m_skeleton;

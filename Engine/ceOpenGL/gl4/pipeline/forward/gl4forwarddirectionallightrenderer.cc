@@ -9,14 +9,14 @@
 #include <ceOpenGL/gl4/gl4texture2darray.hh>
 
 #include <ceCore/settings.hh>
-#include <ceCore/graphics/camera.hh>
-#include <ceCore/graphics/idevice.hh>
-#include <ceCore/graphics/isampler.hh>
-#include <ceCore/graphics/projector.hh>
-#include <ceCore/graphics/scene/gfxmesh.hh>
-#include <ceCore/graphics/scene/igfxscene.hh>
-#include <ceCore/graphics/shading/ishader.hh>
-#include <ceCore/graphics/shading/ishaderattribute.hh>
+#include <ceCore/graphics/csCamera.hh>
+#include <ceCore/graphics/iDevice.hh>
+#include <ceCore/graphics/iSampler.hh>
+#include <ceCore/graphics/csProjector.hh>
+#include <ceCore/graphics/scene/csGfxMesh.hh>
+#include <ceCore/graphics/scene/iGfxScene.hh>
+#include <ceCore/graphics/shading/iShader.hh>
+#include <ceCore/graphics/shading/iShaderAttribute.hh>
 #include <ceCore/math/math.hh>
 #include <ceCore/math/clipper/cameraclipper.hh>
 #include <ceCore/resource/assetmanager.hh>
@@ -56,8 +56,8 @@ void GL4ForwardDirectionalLightRenderer::Add(GL4DirectionalLight *directionalLig
   }
 }
 
-void GL4ForwardDirectionalLightRenderer::RenderShadowMaps(const Camera &camera,
-                                                          const Projector &projector)
+void GL4ForwardDirectionalLightRenderer::RenderShadowMaps(const csCamera &camera,
+                                                          const csProjector &projector)
 {
   m_pssmRenderer.SetDevice(m_device);
   m_pssmRenderer.SetScene(m_scene);
@@ -88,8 +88,8 @@ void GL4ForwardDirectionalLightRenderer::SortLights()
 }
 
 void GL4ForwardDirectionalLightRenderer::RenderShadow(GL4DirectionalLight *directionalLight,
-                                                      const Camera &camera,
-                                                      const Projector &projector,
+                                                      const csCamera &camera,
+                                                      const csProjector &projector,
                                                       size_t lightIdx)
 {
   GL4RenderTarget2D *target = GetDirectionalLightShadowMap(lightIdx);

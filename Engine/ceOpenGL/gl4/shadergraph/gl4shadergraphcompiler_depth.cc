@@ -3,8 +3,8 @@
 #include <ceOpenGL/gl4/shadergraph/gl4shadergraphcompiler.hh>
 #include <ceCore/resource/assetmanager.hh>
 #include <ceCore/resource/textfile.hh>
-#include <ceCore/graphics/evertexstream.hh>
-#include <ceCore/graphics/shadergraph/sgnodes.hh>
+#include <ceCore/graphics/eVertexStream.hh>
+#include <ceCore/graphics/shadergraph/csSGNodes.hh>
 
 namespace cryo::opengl
 {
@@ -14,13 +14,13 @@ std::string get_gl_type(eSGValueType type);
 
 std::string GL4ShaderGraphCompiler::GenerateDepth_Vert(std::map<std::string, eMaterialAttributeType> &attributes)
 {
-  std::string                src;
-  std::vector<SGNodeInput *> inputs;
+  std::string                  src;
+  std::vector<csSGNodeInput *> inputs;
   inputs.push_back(m_shaderGraph->GetDiffuseInput());
-  std::vector<SGNode *>    nodes   = ScanNeededVariables(inputs);
+  std::vector<csSGNode *>  nodes   = ScanNeededVariables(inputs);
   std::vector<StreamInput> streams = FindStreams(nodes);
 
-  std::vector<SGNode *>      noInput;
+  std::vector<csSGNode *>    noInput;
   std::vector<ResourceInput> resources = FindResources(noInput);
 
   if (!CollectAttributes(nodes, attributes))
@@ -97,15 +97,15 @@ static std::string CompareOperator[] = {
 
 std::string GL4ShaderGraphCompiler::GenerateDepth_Frag(std::map<std::string, eMaterialAttributeType> &attributes)
 {
-  std::vector<SGNodeInput *> inputs;
-  bool                       needAlphaDiscard = m_shaderGraph->GetAlphaDiscard_Func() != eCF_Always &&
+  std::vector<csSGNodeInput *> inputs;
+  bool                         needAlphaDiscard = m_shaderGraph->GetAlphaDiscard_Func() != eCF_Always &&
                                                 m_shaderGraph->GetAlphaDiscard_Func() != eCF_Never;
   if (needAlphaDiscard)
   {
     inputs.push_back(m_shaderGraph->GetAlphaInput());
   }
-  std::vector<SGNode *>      nodes     = ScanNeededVariables(inputs);
-  std::vector<StreamInput>   streams   = FindStreams(nodes);
+  std::vector<csSGNode *>  nodes   = ScanNeededVariables(inputs);
+  std::vector<StreamInput> streams = FindStreams(nodes);
   std::vector<ResourceInput> resources = FindResources(nodes);
 
   if (!CollectAttributes(nodes, attributes))

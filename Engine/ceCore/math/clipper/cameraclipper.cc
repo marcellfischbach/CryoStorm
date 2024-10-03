@@ -1,7 +1,7 @@
 
 #include <ceCore/math/clipper/cameraclipper.hh>
-#include <ceCore/graphics/camera.hh>
-#include <ceCore/graphics/projector.hh>
+#include <ceCore/graphics/csCamera.hh>
+#include <ceCore/graphics/csProjector.hh>
 
 namespace cryo
 {
@@ -17,7 +17,7 @@ namespace cryo
  *     +----------+
  *    0             2
  */
-CameraClipper::CameraClipper(const Camera &camera, const Projector &projector, bool near, bool far)
+CameraClipper::CameraClipper(const csCamera &camera, const csProjector &projector, bool near, bool far)
         : iClipper()
 {
   Matrix4f viewMatrixInv;

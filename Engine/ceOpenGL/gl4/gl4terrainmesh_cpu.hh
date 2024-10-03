@@ -1,8 +1,8 @@
 #pragma  once
 
 #include <ceOpenGL/openglexport.hh>
-#include <ceCore/graphics/iterrainmesh.hh>
-#include <ceCore/graphics/vertexdeclaration.hh>
+#include <ceCore/graphics/iTerrainMesh.hh>
+#include <ceCore/graphics/csVertexDeclaration.hh>
 
 namespace cryo
 {
@@ -60,7 +60,7 @@ public:
   };
 public:
   GL4TerrainMeshCPU(uint32_t vao,
-                    const VertexDeclaration& vd,
+                    const csVertexDeclaration& vd,
                     iVertexBuffer* vb,
                     iIndexBuffer* ib,
                     const BoundingBox& bbox,
@@ -70,7 +70,7 @@ public:
   ~GL4TerrainMeshCPU() override = default;
 
   CS_NODISCARD virtual const BoundingBox& GetBoundingBox() const override;
-  CS_NODISCARD virtual const VertexDeclaration& GetVertexDeclaration() const override;
+  CS_NODISCARD virtual const csVertexDeclaration& GetVertexDeclaration() const override;
   void SetReferencePoint(const Vector3f& refPoint) override;
 
   void Render(iDevice* graphics, eRenderPass pass) override;
@@ -85,8 +85,8 @@ private:
   void RebuildIndices();
 
 
-  uint32_t          m_vao;
-  VertexDeclaration m_vd;
+  uint32_t            m_vao;
+  csVertexDeclaration m_vd;
   iVertexBuffer* m_vb;
   iIndexBuffer * m_ib;
   BoundingBox               m_bbox;

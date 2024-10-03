@@ -2,7 +2,7 @@
 #pragma once
 
 #include <ceOpenGL/openglexport.hh>
-#include <ceCore/graphics/itexture2d.hh>
+#include <ceCore/graphics/iTexture2D.hh>
 #include <vector>
 
 
@@ -41,8 +41,8 @@ public:
   bool Initialize(uint16_t width, uint16_t height, ePixelFormat format, bool generateMipMaps, uint16_t multiSamples);
 
   uint16_t GetSamples() const override;
-  void Data(const Image * image) override;
-  void Data(uint16_t level, const Image * image) override;
+  void Data(const csImage * image) override;
+  void Data(uint16_t level, const csImage * image) override;
   void Data(uint16_t level, ePixelFormat format, const void* data) override;
   void Data(uint16_t level, uint16_t x, uint16_t y, uint16_t width, uint16_t height, ePixelFormat format, const void* data) override;
 private:

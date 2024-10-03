@@ -2,7 +2,7 @@
 #include <ceImgLoader/pngloader.hh>
 #include <iostream>
 #include <ceCore/resource/vfs.hh>
-#include <ceCore/graphics/image.hh>
+#include <ceCore/graphics/csImage.hh>
 #include <png.h>
 
 namespace cryo::img
@@ -18,7 +18,7 @@ PngLoader::PngLoader()
 
 bool PngLoader::CanLoad(const Class* cls, const ResourceLocator& locator) const
 {
-  return cls->IsAssignableFrom<Image>() 
+  return cls->IsAssignableFrom<csImage>()
     && locator.GetExtension() == "PNG";
 }
 
@@ -147,7 +147,7 @@ iObject* PngLoader::Load(const Class* cls, const ResourceLocator& locator) const
   delete[] row_pointers;
   row_pointers = nullptr;
 
-  Image* img = new Image(width, height, imageFormat);
+  csImage * img = new csImage(width, height, imageFormat);
   img->Copy(0, image_buffer);
   delete[] image_buffer;
 

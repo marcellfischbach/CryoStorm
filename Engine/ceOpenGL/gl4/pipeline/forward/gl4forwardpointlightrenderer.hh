@@ -21,8 +21,8 @@ struct iGfxScene;
 struct iTexture2D;
 class Settings;
 
-class Camera;
-class Projector;
+class csCamera;
+class csProjector;
 
 }
 
@@ -51,8 +51,8 @@ public:
   void Clear();
   void Add(GL4PointLight *pointLight);
 
-  void RenderShadowMaps(const Camera &camera,
-                        const Projector &projector);
+  void RenderShadowMaps(const csCamera &camera,
+                        const csProjector &projector);
 
   iTexture2D* GetColorTexture();
   iTexture2D* GetDepthTexture();
@@ -60,7 +60,7 @@ private:
   void SortLights();
 
 
-  void RenderShadow(GL4PointLight *pointLight, const Camera &camera, const Projector &projector, size_t lightIdx);
+  void RenderShadow(GL4PointLight *pointLight, const csCamera &camera, const csProjector &projector, size_t lightIdx);
   void ApplyShadowMapToDevice(GL4PointLight *pointLight, size_t lightIdx);
   GL4RenderTarget2D *GetPointLightShadowMap(Size idx);
 

@@ -1,6 +1,6 @@
 
 #include <ceOpenGL/gl4/shadergraph/gl4shadergraphcompiler.hh>
-#include <ceCore/graphics/shadergraph/sgnodes.hh>
+#include <ceCore/graphics/shadergraph/csSGNodes.hh>
 #include <algorithm>
 
 namespace cryo::opengl
@@ -38,19 +38,19 @@ std::string get_gl_type(eSGValueType type)
   return "";
 }
 
-std::string get_operator(SGBinaryOperator::eOperator op)
+std::string get_operator(csSGBinaryOperator::eOperator op)
 {
   switch (op)
   {
-    case SGBinaryOperator::Add:
+    case csSGBinaryOperator::Add:
       return "+";
-    case SGBinaryOperator::Sub:
+    case csSGBinaryOperator::Sub:
       return "-";
-    case SGBinaryOperator::Mul:
+    case csSGBinaryOperator::Mul:
       return "*";
-    case SGBinaryOperator::Div:
+    case csSGBinaryOperator::Div:
       return "/";
-    case SGBinaryOperator::Mod:
+    case csSGBinaryOperator::Mod:
       return "%";
   }
   return "";
@@ -100,18 +100,18 @@ void GL4ShaderGraphCompiler::AddStream(std::vector<StreamInput> &streams,
 
 }
 
-std::vector<GL4ShaderGraphCompiler::StreamInput> GL4ShaderGraphCompiler::FindStreams(std::vector<SGNode *> &nodes)
+std::vector<GL4ShaderGraphCompiler::StreamInput> GL4ShaderGraphCompiler::FindStreams(std::vector<csSGNode *> &nodes)
 {
 
   std::vector<StreamInput> streams;
   for (auto                node: nodes)
   {
-    auto streamNode = node->Query<SGStreamNode>();
+    auto streamNode = node->Query<csSGStreamNode>();
     if (streamNode)
     {
       AddStream(streams, streamNode->GetStream(), streamNode->GetOutput()->GetValueType());
     }
-    auto texture2DNode = node->Query<SGTexture2D>();
+    auto texture2DNode = node->Query<csSGTexture2D>();
     if (texture2DNode)
     {
       if (!texture2DNode->GetInput(0)->GetSource())
@@ -143,15 +143,15 @@ void GL4ShaderGraphCompiler::AddResource(std::vector<ResourceInput> &resources,
   resources.push_back({resourceName, resourceType, matType});
 }
 
-std::vector<GL4ShaderGraphCompiler::ResourceInput> GL4ShaderGraphCompiler::FindResources(std::vector<SGNode *> &nodes)
+std::vector<GL4ShaderGraphCompiler::ResourceInput> GL4ShaderGraphCompiler::FindResources(std::vector<csSGNode *> &nodes)
 {
   std::vector<ResourceInput> resources;
   for (auto                  node: nodes)
   {
-    auto resourceNode = node->Query<SGResourceNode>();
+    auto resourceNode = node->Query<csSGResourceNode>();
     if (resourceNode)
     {
-      if (resourceNode->IsInstanceOf<SGTexture2D>())
+      if (resourceNode->IsInstanceOf<csSGTexture2D>())
       {
         AddResource(resources, resourceNode->GetResourceName(), "sampler2D", resourceNode->GetMatType());
       }
@@ -171,10 +171,10 @@ std::vector<GL4ShaderGraphCompiler::ResourceInput> GL4ShaderGraphCompiler::FindR
 }
 
 
-void GL4ShaderGraphCompiler::GenerateVariable(SGNode *node)
+void GL4ShaderGraphCompiler::GenerateVariable(csSGNode *node)
 {
   const Class *cls = node->GetClass();
-  if (cls->IsInstanceOf<SGConstFloat>())
+  if (cls->IsInstanceOf<csSGConstFloat>())
   {
     std::string v = VarName();
     m_nodeVariables[node] = {
@@ -184,7 +184,7 @@ void GL4ShaderGraphCompiler::GenerateVariable(SGNode *node)
         false
     };
   }
-  else if (cls->IsInstanceOf<SGConstVec2>())
+  else if (cls->IsInstanceOf<csSGConstVec2>())
   {
     std::string v = VarName();
     m_nodeVariables[node] = {
@@ -195,7 +195,7 @@ void GL4ShaderGraphCompiler::GenerateVariable(SGNode *node)
         false
     };
   }
-  else if (cls->IsInstanceOf<SGConstVec3>())
+  else if (cls->IsInstanceOf<csSGConstVec3>())
   {
     std::string v = VarName();
     m_nodeVariables[node] = {
@@ -207,7 +207,7 @@ void GL4ShaderGraphCompiler::GenerateVariable(SGNode *node)
         false
     };
   }
-  else if (cls->IsInstanceOf<SGConstVec4>())
+  else if (cls->IsInstanceOf<csSGConstVec4>())
   {
     std::string v = VarName();
     m_nodeVariables[node] = {
@@ -220,7 +220,7 @@ void GL4ShaderGraphCompiler::GenerateVariable(SGNode *node)
         false
     };
   }
-  else if (cls->IsInstanceOf<SGConstColor3>())
+  else if (cls->IsInstanceOf<csSGConstColor3>())
   {
     std::string v = VarName();
     m_nodeVariables[node] = {
@@ -232,7 +232,7 @@ void GL4ShaderGraphCompiler::GenerateVariable(SGNode *node)
         false
     };
   }
-  else if (cls->IsInstanceOf<SGConstColor4>())
+  else if (cls->IsInstanceOf<csSGConstColor4>())
   {
     std::string v = VarName();
     m_nodeVariables[node] = {
@@ -245,7 +245,7 @@ void GL4ShaderGraphCompiler::GenerateVariable(SGNode *node)
         false
     };
   }
-  else if (cls->IsInstanceOf<SGVec2>())
+  else if (cls->IsInstanceOf<csSGVec2>())
   {
     std::string v      = VarName();
     auto        inputX = GetInputValue(node->GetInput(0));
@@ -272,7 +272,7 @@ void GL4ShaderGraphCompiler::GenerateVariable(SGNode *node)
     }
 
   }
-  else if (cls->IsInstanceOf<SGVec3>())
+  else if (cls->IsInstanceOf<csSGVec3>())
   {
     std::string v      = VarName();
     auto        inputX = GetInputValue(node->GetInput(0));
@@ -320,7 +320,7 @@ void GL4ShaderGraphCompiler::GenerateVariable(SGNode *node)
     }
 
   }
-  else if (cls->IsInstanceOf<SGVec4>())
+  else if (cls->IsInstanceOf<csSGVec4>())
   {
     std::string v      = VarName();
     auto        inputX = GetInputValue(node->GetInput(0));
@@ -410,9 +410,9 @@ void GL4ShaderGraphCompiler::GenerateVariable(SGNode *node)
     }
   }
 
-  else if (cls->IsInstanceOf<SGStreamNode>())
+  else if (cls->IsInstanceOf<csSGStreamNode>())
   {
-    auto *streamNode = node->Query<SGStreamNode>();
+    auto *streamNode = node->Query<csSGStreamNode>();
     m_nodeVariables[node] = {
         "",
         stream_name(streamNode->GetStream()),
@@ -420,11 +420,11 @@ void GL4ShaderGraphCompiler::GenerateVariable(SGNode *node)
         true
     };
   }
-  else if (cls->IsInstanceOf<SGResourceNode>())
+  else if (cls->IsInstanceOf<csSGResourceNode>())
   {
-    if (cls->IsInstanceOf<SGTexture1D>())
+    if (cls->IsInstanceOf<csSGTexture1D>())
     {
-      auto        texture1D = node->Query<SGTexture1D>();
+      auto        texture1D = node->Query<csSGTexture1D>();
       std::string v         = VarName();
       std::string uv        = GetInputValue(texture1D->GetInput(0)).FullQualified();
 
@@ -437,12 +437,12 @@ void GL4ShaderGraphCompiler::GenerateVariable(SGNode *node)
 
 
     }
-    else if (cls->IsInstanceOf<SGTexture2D>())
+    else if (cls->IsInstanceOf<csSGTexture2D>())
     {
-      auto        texture2D = node->Query<SGTexture2D>();
-      std::string v         = VarName();
-      SGNodeInput *uvInput  = texture2D->GetInput(0);
-      std::string uv        = uvInput->GetSource()
+      auto        texture2D = node->Query<csSGTexture2D>();
+      std::string   v        = VarName();
+      csSGNodeInput *uvInput = texture2D->GetInput(0);
+      std::string   uv       = uvInput->GetSource()
                               ? GetInputValue(uvInput).FullQualified()
                               : ("#STREAM-STAGE#" + stream_name(eVertexStream::eVS_UV));
 
@@ -456,9 +456,9 @@ void GL4ShaderGraphCompiler::GenerateVariable(SGNode *node)
 
     }
 
-    else if (cls->IsInstanceOf<SGTexture3D>())
+    else if (cls->IsInstanceOf<csSGTexture3D>())
     {
-      auto        texture3D = node->Query<SGTexture3D>();
+      auto        texture3D = node->Query<csSGTexture3D>();
       std::string v         = VarName();
       std::string uv        = GetInputValue(texture3D->GetInput(0)).FullQualified();
 
@@ -474,7 +474,7 @@ void GL4ShaderGraphCompiler::GenerateVariable(SGNode *node)
 
     else
     {
-      auto resource = node->Query<SGResourceNode>();
+      auto resource = node->Query<csSGResourceNode>();
       m_nodeVariables[node] = {
           "",
           "cs_" + resource->GetResourceName(),
@@ -483,9 +483,9 @@ void GL4ShaderGraphCompiler::GenerateVariable(SGNode *node)
       };
     }
   }
-  else if (cls->IsInstanceOf<SGBinaryOperator>())
+  else if (cls->IsInstanceOf<csSGBinaryOperator>())
   {
-    auto        bin    = node->Query<SGBinaryOperator>();
+    auto        bin    = node->Query<csSGBinaryOperator>();
     std::string v      = VarName();
     auto        inputA = GetInputValue(node->GetInput(0));
     auto        inputB = GetInputValue(node->GetInput(1));
@@ -502,9 +502,9 @@ void GL4ShaderGraphCompiler::GenerateVariable(SGNode *node)
 }
 
 
-void GL4ShaderGraphCompiler::GenerateVariable(SGNodeOutput *output)
+void GL4ShaderGraphCompiler::GenerateVariable(csSGNodeOutput *output)
 {
-  SGNode      *node = output->GetNode();
+  csSGNode    *node = output->GetNode();
   const Class *cls  = node->GetClass();
   auto        var   = m_nodeVariables[node];
   std::string v     = var.Name;
@@ -515,10 +515,10 @@ void GL4ShaderGraphCompiler::GenerateVariable(SGNodeOutput *output)
   bool         stream  = var.Stream;
 
 
-  if (cls->IsInstanceOf<SGDecomposeVec2>())
+  if (cls->IsInstanceOf<csSGDecomposeVec2>())
   {
-    SGNodeInput  *input  = node->GetInput(0);
-    SGNodeOutput *source = input->GetSource();
+    csSGNodeInput  *input  = node->GetInput(0);
+    csSGNodeOutput *source = input->GetSource();
     if (m_outputVariables.contains(source))
     {
       OutputVariable &variable = m_outputVariables[source];
@@ -526,20 +526,20 @@ void GL4ShaderGraphCompiler::GenerateVariable(SGNodeOutput *output)
       stream = variable.Stream;
       type   = eSGValueType::Float;
 
-      if (output->GetName() == SGDecomposeVec2::OUT_X)
+      if (output->GetName() == csSGDecomposeVec2::OUT_X)
       {
         postfix = "x";
       }
-      else if (output->GetName() == SGDecomposeVec2::OUT_Y)
+      else if (output->GetName() == csSGDecomposeVec2::OUT_Y)
       {
         postfix = "y";
       }
     }
   }
-  else if (cls->IsInstanceOf<SGDecomposeVec3>())
+  else if (cls->IsInstanceOf<csSGDecomposeVec3>())
   {
-    SGNodeInput  *input  = node->GetInput(0);
-    SGNodeOutput *source = input->GetSource();
+    csSGNodeInput  *input  = node->GetInput(0);
+    csSGNodeOutput *source = input->GetSource();
     if (m_outputVariables.contains(source))
     {
       OutputVariable &variable = m_outputVariables[source];
@@ -547,24 +547,24 @@ void GL4ShaderGraphCompiler::GenerateVariable(SGNodeOutput *output)
       stream = variable.Stream;
       type   = eSGValueType::Float;
 
-      if (output->GetName() == SGDecomposeVec3::OUT_X)
+      if (output->GetName() == csSGDecomposeVec3::OUT_X)
       {
         postfix = "x";
       }
-      else if (output->GetName() == SGDecomposeVec3::OUT_Y)
+      else if (output->GetName() == csSGDecomposeVec3::OUT_Y)
       {
         postfix = "y";
       }
-      else if (output->GetName() == SGDecomposeVec3::OUT_Z)
+      else if (output->GetName() == csSGDecomposeVec3::OUT_Z)
       {
         postfix = "z";
       }
     }
   }
-  else if (cls->IsInstanceOf<SGDecomposeVec4>())
+  else if (cls->IsInstanceOf<csSGDecomposeVec4>())
   {
-    SGNodeInput  *input  = node->GetInput(0);
-    SGNodeOutput *source = input->GetSource();
+    csSGNodeInput  *input  = node->GetInput(0);
+    csSGNodeOutput *source = input->GetSource();
     if (m_outputVariables.contains(source))
     {
       OutputVariable &variable = m_outputVariables[source];
@@ -572,19 +572,19 @@ void GL4ShaderGraphCompiler::GenerateVariable(SGNodeOutput *output)
       stream = variable.Stream;
       type   = eSGValueType::Float;
 
-      if (output->GetName() == SGDecomposeVec4::OUT_X)
+      if (output->GetName() == csSGDecomposeVec4::OUT_X)
       {
         postfix = "x";
       }
-      else if (output->GetName() == SGDecomposeVec4::OUT_Y)
+      else if (output->GetName() == csSGDecomposeVec4::OUT_Y)
       {
         postfix = "y";
       }
-      else if (output->GetName() == SGDecomposeVec4::OUT_Z)
+      else if (output->GetName() == csSGDecomposeVec4::OUT_Z)
       {
         postfix = "z";
       }
-      else if (output->GetName() == SGDecomposeVec4::OUT_W)
+      else if (output->GetName() == csSGDecomposeVec4::OUT_W)
       {
         postfix = "w";
       }
@@ -596,7 +596,7 @@ void GL4ShaderGraphCompiler::GenerateVariable(SGNodeOutput *output)
 }
 
 
-GL4ShaderGraphCompiler::OutputVariable GL4ShaderGraphCompiler::GetInputValue(SGNodeInput *input)
+GL4ShaderGraphCompiler::OutputVariable GL4ShaderGraphCompiler::GetInputValue(csSGNodeInput *input)
 {
   auto source = input->GetSource();
   if (source)

@@ -3,9 +3,9 @@
 //
 
 #include "game.hh"
-#include <ceCore/graphics/shadergraph/ishadergraphcompiler.hh>
-#include <ceCore/graphics/shadergraph/shadergraph.hh>
-#include <ceCore/graphics/shadergraph/sgnodes.hh>
+#include <ceCore/graphics/shadergraph/iShaderGraphCompiler.hh>
+#include "ceCore/graphics/shadergraph/csShaderGraph.hh"
+#include <ceCore/graphics/shadergraph/csSGNodes.hh>
 #include <ceCore/objectregistry.hh>
 
 CS_DEFINE_GAME(Game)
@@ -34,22 +34,22 @@ CS_DEFINE_GAME(Game)
 #include <ceCore/math/math.hh>
 #include <ceCore/math/color4f.hh>
 #include <ceCore/objectregistry.hh>
-#include <ceCore/graphics/idevice.hh>
-#include <ceCore/graphics/iframerenderer.hh>
-#include <ceCore/graphics/image.hh>
-#include <ceCore/graphics/ipointlight.hh>
-#include <ceCore/graphics/irendermesh.hh>
-#include <ceCore/graphics/irenderpipeline.hh>
-#include <ceCore/graphics/irendertarget2d.hh>
-#include <ceCore/graphics/isampler.hh>
-#include <ceCore/graphics/iterrainmesh.hh>
-#include <ceCore/graphics/skeletonmesh.hh>
-#include <ceCore/graphics/mesh.hh>
-#include <ceCore/graphics/postprocessing.hh>
-#include <ceCore/graphics/skybox/simpleskybox.hh>
-#include <ceCore/graphics/pp/pp.hh>
-#include <ceCore/graphics/shading/ishaderattribute.hh>
-#include <ceCore/graphics/scene/igfxscene.hh>
+#include <ceCore/graphics/iDevice.hh>
+#include <ceCore/graphics/iFrameRenderer.hh>
+#include <ceCore/graphics/csImage.hh>
+#include <ceCore/graphics/iPointLight.hh>
+#include <ceCore/graphics/iRenderMesh.hh>
+#include <ceCore/graphics/iRenderPipeline.hh>
+#include <ceCore/graphics/iRenderTarget2D.hh>
+#include <ceCore/graphics/iSampler.hh>
+#include <ceCore/graphics/iTerrainMesh.hh>
+#include <ceCore/graphics/csSkeletonMesh.hh>
+#include <ceCore/graphics/csMesh.hh>
+#include <ceCore/graphics/csPostProcessing.hh>
+#include <ceCore/graphics/skybox/csSimpleSkybox.hh>
+#include "ceCore/graphics/pp/csPP.hh"
+#include <ceCore/graphics/shading/iShaderAttribute.hh>
+#include <ceCore/graphics/scene/iGfxScene.hh>
 #include <ceCore/physics/physics.hh>
 #include <ceCore/resource/assetmanager.hh>
 #include <ceCore/resource/vfs.hh>
@@ -326,9 +326,9 @@ cryo::iRenderTarget2D *create_render_target(cryo::iDevice *device, uint32_t widt
 }
 
 
-cryo::PostProcessing* setup_post_processing ()
+cryo::csPostProcessing* setup_post_processing()
 {
-  cryo::PostProcessing* postProcessing = nullptr;
+  cryo::csPostProcessing * postProcessing = nullptr;
 #if 0
   
   postProcessing = new cryo::PostProcessing();
@@ -372,7 +372,7 @@ void generate_camera(cryo::csWorld *world)
   cameraState->SetClearMode(cryo::eClearMode::DepthColor);
   cameraState->SetClearColor(cryo::Color4f(0.0f, 0.0f, 0.5f));
   cameraState->SetClearColorMode(cryo::eClearColorMode::Skybox);
-  cameraState->SetSkyboxRenderer(new cryo::SimpleSkybox());
+  cameraState->SetSkyboxRenderer(new cryo::csSimpleSkybox());
 
   auto postProcessing = setup_post_processing ();
   cameraState->SetPostProcessing(postProcessing);
@@ -431,7 +431,7 @@ void generate_terrain(cryo::csWorld *world)
 void generate_test_grid(cryo::csWorld *world, cryo::iMaterial *material)
 {
   auto sphere = create_sphere_mesh(0.25, 16, 12.0f);
-  auto mesh   = new cryo::Mesh();
+  auto mesh   = new cryo::csMesh();
   mesh->AddMaterialSlot("Default", material);
   mesh->AddSubMesh(sphere, 0);
   int gridSize = 100;
@@ -504,7 +504,7 @@ cryo::csEntity *bones[4];
 cryo::csEntity *add_bone(cryo::csWorld *world, cryo::iMaterial *material)
 {
 
-  cryo::Mesh *mesh = cryo::AssetManager::Get()->Load<cryo::Mesh>("/bone_x.fbx");
+  cryo::csMesh *mesh = cryo::AssetManager::Get()->Load<cryo::csMesh>("/bone_x.fbx");
   if (!mesh)
   {
     return nullptr;
@@ -524,8 +524,8 @@ cryo::csEntity *add_bone(cryo::csWorld *world, cryo::iMaterial *material)
 void add_skeleton_mesh(cryo::csWorld *world, cryo::iMaterial *material)
 {
 
-  cryo::SkeletonMesh      *mesh      = cryo::AssetManager::Get()->Load<cryo::SkeletonMesh>("/skinned_mesh.fbx");
-  cryo::csEntity            *entity    = new cryo::csEntity("Skeleton Entity");
+  cryo::csSkeletonMesh *mesh   = cryo::AssetManager::Get()->Load<cryo::csSkeletonMesh>("/skinned_mesh.fbx");
+  cryo::csEntity       *entity = new cryo::csEntity("Skeleton Entity");
   cryo::csSkeletonMeshState *meshState = new cryo::csSkeletonMeshState();
   meshState->SetMesh(mesh);
   meshState->SetMaterial(0, material);
@@ -585,7 +585,7 @@ void generate_batched_test_grid(cryo::csWorld *world, cryo::iMaterial *material)
       cryo::Vector3f(1, 0.0f, 2.0f),
       cryo::Vector3f(2, 0.0f, 2.0f)
   });
-  auto mesh   = new cryo::Mesh();
+  auto mesh   = new cryo::csMesh();
   mesh->AddMaterialSlot("Default", material);
   mesh->AddSubMesh(sphere, 0);
   int gridSize = 100;
@@ -647,8 +647,8 @@ void generate_physics(cryo::csWorld *world, cryo::iMaterial *material)
     for (int i = 0; i < 10; i++)
     {
       {
-        cryo::Mesh            *meshSphere      = new cryo::Mesh();
-        cryo::csEntity              *entitySphere        = new cryo::csEntity("Sphere");
+        cryo::csMesh   *meshSphere   = new cryo::csMesh();
+        cryo::csEntity *entitySphere = new cryo::csEntity("Sphere");
         cryo::csStaticMeshState     *meshStateSphere     = new cryo::csStaticMeshState("Mesh.Sphere");
         cryo::csSphereColliderState *sphereColliderState = new cryo::csSphereColliderState();
         cryo::csRigidBodyState      *rigidBodyState      = new cryo::csRigidBodyState("RigidBody.Sphere");
@@ -679,8 +679,8 @@ void generate_physics(cryo::csWorld *world, cryo::iMaterial *material)
          */
       }
       {
-        cryo::Mesh            *meshSphere      = new cryo::Mesh();
-        cryo::csEntity          *entitySphere    = new cryo::csEntity("Sphere");
+        cryo::csMesh   *meshSphere   = new cryo::csMesh();
+        cryo::csEntity *entitySphere = new cryo::csEntity("Sphere");
         cryo::csStaticMeshState *meshStateSphere = new cryo::csStaticMeshState("Mesh.Sphere");
         meshSphere->AddMaterialSlot("Default", material);
         meshSphere->AddSubMesh(renderMeshSphere, 0);
@@ -692,8 +692,8 @@ void generate_physics(cryo::csWorld *world, cryo::iMaterial *material)
         world->Attach(entitySphere);
       }
       {
-        cryo::Mesh            *meshSphere      = new cryo::Mesh();
-        cryo::csEntity          *entitySphere    = new cryo::csEntity("Sphere");
+        cryo::csMesh   *meshSphere   = new cryo::csMesh();
+        cryo::csEntity *entitySphere = new cryo::csEntity("Sphere");
         cryo::csStaticMeshState *meshStateSphere = new cryo::csStaticMeshState("Mesh.Sphere");
         meshSphere->AddMaterialSlot("Default", material);
         meshSphere->AddSubMesh(renderMeshSphere, 0);
@@ -705,8 +705,8 @@ void generate_physics(cryo::csWorld *world, cryo::iMaterial *material)
         world->Attach(entitySphere);
       }
       {
-        cryo::Mesh            *meshSphere      = new cryo::Mesh();
-        cryo::csEntity          *entitySphere    = new cryo::csEntity("Sphere");
+        cryo::csMesh   *meshSphere   = new cryo::csMesh();
+        cryo::csEntity *entitySphere = new cryo::csEntity("Sphere");
         cryo::csStaticMeshState *meshStateSphere = new cryo::csStaticMeshState("Mesh.Sphere");
         meshSphere->AddMaterialSlot("Default", material);
         meshSphere->AddSubMesh(renderMeshSphere, 0);
@@ -779,13 +779,13 @@ cryo::csLightState *add_point_light(cryo::csWorld *world,
 
 cryo::iMaterial *generate_color_material (const cryo::Color4f &color)
 {
-  auto sg = new cryo::ShaderGraph();
+  auto sg = new cryo::csShaderGraph();
 
 
-  auto roughness = sg->Add<cryo::SGConstFloat>("Roughness");
-  auto diffuse = sg->Add<cryo::SGConstColor3>("Diffuse");
-  auto alpha = sg->Add<cryo::SGConstFloat>("Alpha");
-  auto normal = sg->Add<cryo::SGConstColor3>("Normal");
+  auto roughness = sg->Add<cryo::csSGConstFloat>("Roughness");
+  auto diffuse = sg->Add<cryo::csSGConstColor3>("Diffuse");
+  auto alpha = sg->Add<cryo::csSGConstFloat>("Alpha");
+  auto normal = sg->Add<cryo::csSGConstColor3>("Normal");
 
   roughness->SetValue(1.0f);
   diffuse->SetValue(color.r, color.g, color.b);
@@ -833,9 +833,9 @@ void generate_axis_grid(cryo::csWorld *world)
   cryo::s_material_names[matG] = "DefaultGreen";
   cryo::s_material_names[matB] = "DefaultBlue";
 
-  auto meshR = new cryo::Mesh();
-  auto meshG = new cryo::Mesh();
-  auto meshB = new cryo::Mesh();
+  auto meshR = new cryo::csMesh();
+  auto meshG = new cryo::csMesh();
+  auto meshB = new cryo::csMesh();
   meshR->AddMaterialSlot("Default", matR);
   meshG->AddMaterialSlot("Default", matG);
   meshB->AddMaterialSlot("Default", matB);
@@ -881,9 +881,9 @@ void generate_axis_grid(cryo::csWorld *world)
 void generate_cube_fbx(cryo::csWorld *world)
 {
 
-  cryo::Mesh *mesh = cryo::AssetManager::Get()->Get<cryo::Mesh>("/cube2.fbx");
+  cryo::csMesh *mesh = cryo::AssetManager::Get()->Get<cryo::csMesh>("/cube2.fbx");
 
-  mesh = new cryo::Mesh();
+  mesh = new cryo::csMesh();
   mesh->AddSubMesh(create_sphere_mesh(3.0f, 32, 1.0f), 0);
   mesh->AddMaterialSlot("Default");
   cryo::iMaterial *dustMaterial = cryo::AssetManager::Get()->Get<cryo::iMaterial>("/materials/Dust.sg");
@@ -979,10 +979,10 @@ void setup_world(cryo::csWorld *world)
 
 cryo::iMaterial *create_sg_material ()
 {
-  auto sg = new cryo::ShaderGraph();
+  auto sg = new cryo::csShaderGraph();
   sg->SetAlphaDiscard(0.5f, cryo::eCF_Never);
 
-  auto color = sg->Add<cryo::SGConstColor4>("diffuse");
+  auto color = sg->Add<cryo::csSGConstColor4>("diffuse");
   sg->BindDiffuse(color);
 
   color->SetValue(0.5f, 0.0f, 0.0f, 1.0f);
@@ -995,7 +995,7 @@ cryo::iMaterial *create_sg_material ()
     {
       cryo::iShaderGraphCompiler::Parameters parameters {};
       memset (&parameters, 0, sizeof(parameters));
-      cryo::Material* material = compiler->Compile(sg, parameters);
+      cryo::csMaterial * material = compiler->Compile(sg, parameters);
       return material;
     }
   }
@@ -1006,7 +1006,7 @@ cryo::iMaterial *create_sg_material ()
 bool Game::Initialize(cryo::Engine *engine)
 {
 
-  cryo::AssetManager::Get()->Get<cryo::Material>("/materials/Default.sg");
+  cryo::AssetManager::Get()->Get<cryo::csMaterial>("/materials/Default.sg");
 
 
 

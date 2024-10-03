@@ -3,7 +3,7 @@
 #pragma once
 
 #include <ceOpenGL/openglexport.hh>
-#include <ceCore/graphics/idirectionallight.hh>
+#include <ceCore/graphics/iDirectionalLight.hh>
 
 namespace cryo::opengl
 {

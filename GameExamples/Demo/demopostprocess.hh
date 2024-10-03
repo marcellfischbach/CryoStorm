@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <ceCore/graphics/postprocessing.hh>
+#include <ceCore/graphics/csPostProcessing.hh>
 
 namespace cryo
 {
@@ -12,7 +12,7 @@ struct iShaderAttribute;
 }
 
 CS_CLASS()
-class DemoPostProcess : public CS_SUPER(cryo::SimplePostProcess)
+class DemoPostProcess : public CS_SUPER(cryo::csSimplePostProcess)
 {
 CS_CLASS_GEN_OBJECT;
 public:

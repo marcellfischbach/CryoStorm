@@ -1,6 +1,6 @@
 
 #include <ceCore/entity/csStaticMeshState.hh>
-#include <ceCore/graphics/mesh.hh>
+#include <ceCore/graphics/csMesh.hh>
 
 
 #define CS_STATIC_MESH(ref) reinterpret_cast<cryo::csStaticMeshState*>(ref)
@@ -13,15 +13,15 @@ JNIEXPORT void
 JNICALL Java_org_crimsonedge_core_entity_StaticMeshState_nSetMesh(JNIEnv *env, jclass cls, jlong ref, jlong meshRef)
 {
   auto staticMeshState = CS_STATIC_MESH(ref);
-  auto mesh            = reinterpret_cast<cryo::Mesh *>(meshRef);
+  auto mesh            = reinterpret_cast<cryo::csMesh *>(meshRef);
   staticMeshState->SetMesh(mesh);
 }
 
 JNIEXPORT jobject
 JNICALL Java_org_crimsonedge_core_entity_StaticMeshState_nGetMesh(JNIEnv *env, jclass cls, jlong ref)
 {
-  auto     staticMeshState = CS_STATIC_MESH(ref);
-  cryo::Mesh *pMesh          = staticMeshState->GetMesh();
+  auto         staticMeshState = CS_STATIC_MESH(ref);
+  cryo::csMesh *pMesh          = staticMeshState->GetMesh();
   return pMesh ? pMesh->GetJObject() : nullptr;
 }
 
