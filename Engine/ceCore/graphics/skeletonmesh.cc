@@ -13,12 +13,12 @@ SkeletonMesh::SkeletonMesh()
 
 
 
-Skeleton &SkeletonMesh::GetSkeleton()
+csSkeleton &SkeletonMesh::GetSkeleton()
 {
   return m_skeleton;
 }
 
-const Skeleton &SkeletonMesh::GetSkeleton() const
+const csSkeleton &SkeletonMesh::GetSkeleton() const
 {
   return m_skeleton;
 }

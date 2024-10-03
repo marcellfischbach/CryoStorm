@@ -3,13 +3,13 @@ package org.crimsonedge.core.entity;
 import org.crimsonedge.core.CeClass;
 import org.crimsonedge.core.CoreObject;
 
-@CeClass("cryo::World")
-public class World extends CoreObject {
+@CeClass("cryo::csWorld")
+public class csWorld extends CoreObject {
 
-    public World() {
+    public csWorld() {
     }
 
-    public World(long ref) {
+    public csWorld(long ref) {
         super(ref);
     }
 
@@ -18,11 +18,11 @@ public class World extends CoreObject {
     }
 
     private static native void nAttach (long thisRef, long entityRef);
-    public void attach (Entity entity) {
+    public void attach (csEntity entity) {
         nAttach(getRef(), entity.getRef());
     }
 
-    public void detach (Entity entity) {
+    public void detach (csEntity entity) {
 
     }
 

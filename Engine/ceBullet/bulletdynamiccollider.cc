@@ -109,12 +109,12 @@ btRigidBody* BulletDynamicCollider::GetRigidBody()
   return m_rigidBody;
 }
 
-void BulletDynamicCollider::SetUserData(SpatialState* userData)
+void BulletDynamicCollider::SetUserData(csSpatialState* userData)
 {
   CS_SET(m_userData, userData);
 }
 
-SpatialState* BulletDynamicCollider::GetUserData() const
+csSpatialState* BulletDynamicCollider::GetUserData() const
 {
   return  m_userData;
 }

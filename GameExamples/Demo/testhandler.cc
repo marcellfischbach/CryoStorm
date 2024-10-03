@@ -4,7 +4,7 @@
 using namespace cryo;
 
 BaseTestHandler::BaseTestHandler(const cryo::Vector3f &basePosition, float distance, float animationSpeed)
-    : cryo::EntityState()
+    : cryo::csEntityState()
     , m_basePosition(basePosition)
     , m_distance(distance)
     , m_animationSpeed(animationSpeed)
@@ -20,7 +20,7 @@ BaseTestHandler::~BaseTestHandler()
 void BaseTestHandler::Update(float tpf)
 {
   m_animationValue += tpf * m_animationSpeed;
-  SpatialState *root = GetRoot();
+  csSpatialState *root = GetRoot();
   if (root)
   {
     Vector3f position = m_basePosition + Vector3f(

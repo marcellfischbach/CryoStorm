@@ -2,28 +2,28 @@ package org.crimsonedge.core.entity;
 
 import org.crimsonedge.core.CeClass;
 
-@CeClass("cryo::JavaState")
-public class JavaState extends EntityState{
+@CeClass("cryo::csJavaState")
+public class csJavaState extends csEntityState{
 
-    public JavaState() {
+    public csJavaState() {
     }
 
-    public JavaState(long ref) {
+    public csJavaState(long ref) {
         super(ref);
     }
 
-    public void onAttachedToWorld(World world) {
+    public void onAttachedToWorld(csWorld world) {
     }
 
-    public void onDetachedFromWorld(World world) {
+    public void onDetachedFromWorld(csWorld world) {
     }
 
     public void update(float tpf) {
 
     }
 
-    public SpatialState getRoot () {
-        Entity entity = getEntity();
+    public csSpatialState getRoot () {
+        csEntity entity = getEntity();
         return entity != null ? entity.getRoot() : null;
     }
 }

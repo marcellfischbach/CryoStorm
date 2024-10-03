@@ -30,8 +30,8 @@ public:
   const Matrix4f &GetTransform() const override;
 
 
-  void SetUserData(SpatialState * spatialState) override;
-  SpatialState* GetUserData() const override;
+  void SetUserData(csSpatialState * spatialState) override;
+  csSpatialState* GetUserData() const override;
 
   btRigidBody* GetRigidBody();
 
@@ -57,7 +57,7 @@ private:
 
   BulletWorld* m_world;
 
-  SpatialState* m_userData;
+  csSpatialState * m_userData;
 };
 
 

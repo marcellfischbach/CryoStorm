@@ -15,7 +15,7 @@ namespace cryo
 struct iDevice;
 struct iMaterial;
 struct iRenderMesh;
-class Skeleton;
+class csSkeleton;
 
 CS_CLASS()
 class CS_CORE_API GfxMesh : public CS_SUPER(iObject)
@@ -75,9 +75,9 @@ public:
   void SetLightingDirty(bool lightingDirty);
   CS_NODISCARD bool IsLightingDirty() const;
 
-  void SetSkeleton(Skeleton *skeleton);
-  CS_NODISCARD Skeleton *GetSkeleton();
-  CS_NODISCARD const Skeleton *GetSkeleton() const;
+  void SetSkeleton(csSkeleton *skeleton);
+  CS_NODISCARD csSkeleton *GetSkeleton();
+  CS_NODISCARD const csSkeleton *GetSkeleton() const;
 
 
 private:
@@ -95,7 +95,7 @@ private:
   bool        m_lightingDirty = true;
 
   std::vector<Light> m_lights;
-  Skeleton *m_skeleton;
+  csSkeleton         *m_skeleton;
 
 };
 

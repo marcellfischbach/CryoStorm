@@ -9,7 +9,7 @@ struct iRenderMesh;
 struct Matrix4f;
 struct Vector2f;
 struct Vector3f;
-class Skeleton;
+class csSkeleton;
 }
 
 
@@ -31,6 +31,6 @@ Vector2f Convert2f(aiVector3D &v);
 Vector3f Convert3f(aiVector3D &v);
 Matrix4f ConvertMatrix4x4(aiMatrix4x4 &aiMat);
 
-iRenderMesh *ConvertRenderMesh(aiMesh *mesh, const Matrix4f &matrix,  Skeleton* skeleton);
+iRenderMesh *ConvertRenderMesh(aiMesh *mesh, const Matrix4f &matrix, csSkeleton* skeleton);
 
 }

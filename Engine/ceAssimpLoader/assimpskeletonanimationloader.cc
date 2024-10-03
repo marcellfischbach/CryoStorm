@@ -1,5 +1,5 @@
 #include <ceAssimpLoader/assimpskeletonanimationloader.hh>
-#include <ceCore/animation/skeletonanimation.hh>
+#include <ceCore/animation/csSkeletonAnimation.hh>
 #include <ceCore/resource/vfs.hh>
 #include <assimp/scene.h>
 #include <assimp/Importer.hpp>
@@ -54,7 +54,7 @@ iObject *AssimpSkeletonAnimationLoader::Load(const cryo::Class *cls, const cryo:
   {
     aiAnimation *assimpAnimation = scene->mAnimations[i];
 
-    SkeletonAnimation *animation = Read(assimpAnimation);
+    csSkeletonAnimation *animation = Read(assimpAnimation);
     pack->AddAnimation(animation);
 
     CS_RELEASE(animation);
@@ -65,9 +65,9 @@ iObject *AssimpSkeletonAnimationLoader::Load(const cryo::Class *cls, const cryo:
 
 }
 
-SkeletonAnimation *AssimpSkeletonAnimationLoader::Read(aiAnimation *animation) const
+csSkeletonAnimation *AssimpSkeletonAnimationLoader::Read(aiAnimation *animation) const
 {
-  SkeletonAnimation *result = new SkeletonAnimation();
+  csSkeletonAnimation *result = new csSkeletonAnimation();
   result->SetName(std::string(animation->mName.C_Str()));
   result->SetNumberOfFrames((float) animation->mDuration);
   result->SetFramesPerSecond((float)animation->mTicksPerSecond);

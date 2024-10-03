@@ -1,11 +1,11 @@
 
 #pragma once
 
-#include <ceCore/entity/entitysystem.hh>
+#include <ceCore/entity/csEntitySystem.hh>
 
 
 CS_CLASS()
-class BaseTestHandler : public CS_SUPER(cryo::EntityState)
+class BaseTestHandler : public CS_SUPER(cryo::csEntityState)
 {
   CS_CLASS_GEN_OBJECT;
 protected:

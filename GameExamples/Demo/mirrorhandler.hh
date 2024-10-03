@@ -1,20 +1,20 @@
 
 #pragma once
 
-#include <ceCore/entity/entitysystem.hh>
+#include <ceCore/entity/csEntitySystem.hh>
 
 CS_CLASS()
-class MirrorHandler : public CS_SUPER(cryo::EntityState)
+class MirrorHandler : public CS_SUPER(cryo::csEntityState)
 {
   CS_CLASS_GEN_OBJECT;
 public:
   MirrorHandler();
   ~MirrorHandler() override;
 
-  void SetCameraState(cryo::SpatialState *camera);
+  void SetCameraState(cryo::csSpatialState *camera);
 
   void Update (float tpf) override;
 
 private:
-  cryo::SpatialState *m_cameraState;
+  cryo::csSpatialState *m_cameraState;
 };

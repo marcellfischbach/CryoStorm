@@ -1,8 +1,8 @@
 package org.crimsonedge.demo.scene;
 
 import org.crimsonedge.core.ObjectRegistry;
-import org.crimsonedge.core.entity.Entity;
-import org.crimsonedge.core.entity.StaticMeshState;
+import org.crimsonedge.core.entity.csEntity;
+import org.crimsonedge.core.entity.csStaticMeshState;
 import org.crimsonedge.core.graphics.*;
 import org.crimsonedge.core.graphics.material.IMaterial;
 import org.crimsonedge.core.math.Vector2f;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class TestEntity extends Entity {
+public class TestEntity extends csEntity {
 
     static byte[] textureRGB(int width, int height) {
         byte[] res = new byte[width * height * 3];
@@ -55,7 +55,7 @@ public class TestEntity extends Entity {
         int slot = mesh.addMaterialSlot("Default", planeMaterial);
         mesh.addSubMesh(plane, slot);
 
-        StaticMeshState staticMeshState = new StaticMeshState();
+        csStaticMeshState staticMeshState = new csStaticMeshState();
 
         staticMeshState.setMesh(mesh);
         staticMeshState.setCastShadow(false);

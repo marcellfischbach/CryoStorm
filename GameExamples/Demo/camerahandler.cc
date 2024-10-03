@@ -2,28 +2,28 @@
 #include "camerahandler.hh"
 #include <ceCore/input/input.hh>
 #include <ceCore/math/vector3f.hh>
-#include <ceCore/entity/transform.hh>
-#include <ceCore/entity/spatialstate.hh>
+#include <ceCore/entity/csTransform.hh>
+#include <ceCore/entity/csSpatialState.hh>
 
 CameraHandler::CameraHandler()
 //        : cryo::EntityState(), m_speed(4.0f), m_rotSpeed(0.0025f), m_rotY(1.88), m_rotX(-0.96)
-        : cryo::EntityState(), m_speed(4.0f), m_rotSpeed(0.0025f), m_rotY(4.02), m_rotX(0.33)
+        : cryo::csEntityState(), m_speed(4.0f), m_rotSpeed(0.0025f), m_rotY(4.02), m_rotX(0.33)
 {
   CS_CLASS_GEN_CONSTR;
   SetNeedUpdate(true);
 }
 
 
-void CameraHandler::OnAttachedToWorld(cryo::World *world)
+void CameraHandler::OnAttachedToWorld(cryo::csWorld *world)
 {
-  EntityState::OnAttachedToWorld(world);
+  csEntityState::OnAttachedToWorld(world);
 //  cryo::Input::GetMouse()->SetCursorMode(cryo::eCursorMode::eCM_Fixed);
 }
 
 void CameraHandler::Update(float tpf)
 {
-  cryo::Transform tr = GetRoot()->GetTransform();
-  cryo::Vector3f  dir;
+  cryo::csTransform tr = GetRoot()->GetTransform();
+  cryo::Vector3f    dir;
 
 
 
@@ -99,7 +99,7 @@ void CameraHandler::Update(float tpf)
 
 
 CameraHandlerMotion::CameraHandlerMotion()
-    : cryo::EntityState(), m_position(5.0f, 5.0f, 5.0f), m_target(0, 0, 0), m_distance(1.0f), m_time(0.0f)
+    : cryo::csEntityState(), m_position(5.0f, 5.0f, 5.0f), m_target(0, 0, 0), m_distance(1.0f), m_time(0.0f)
 {
   CS_CLASS_GEN_CONSTR;
   SetNeedUpdate(true);
@@ -109,7 +109,7 @@ CameraHandlerMotion::CameraHandlerMotion()
 
 void CameraHandlerMotion::Update(float tpf)
 {
-  cryo::Transform tr = GetRoot()->GetTransform();
+  cryo::csTransform tr = GetRoot()->GetTransform();
 
   m_time += tpf;
   m_time = ::fmod(m_time, (3.14156f * 2.0f));

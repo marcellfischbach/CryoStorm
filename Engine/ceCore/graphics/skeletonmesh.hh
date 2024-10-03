@@ -16,12 +16,12 @@ public:
   ~SkeletonMesh() override = default;
 
 
-  CS_NODISCARD Skeleton &GetSkeleton ();
-  CS_NODISCARD const Skeleton &GetSkeleton () const;
+  CS_NODISCARD csSkeleton &GetSkeleton();
+  CS_NODISCARD const csSkeleton &GetSkeleton() const;
 
 
 private:
-  Skeleton m_skeleton;
+  csSkeleton m_skeleton;
 };
 
 }

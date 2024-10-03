@@ -58,7 +58,7 @@ struct Weight
 };
 
 
-Weight get_weight(aiMesh *mesh, unsigned vertexID, Skeleton *skeleton)
+Weight get_weight(aiMesh *mesh, unsigned vertexID, csSkeleton *skeleton)
 {
   struct TempWeight
   {
@@ -85,7 +85,7 @@ Weight get_weight(aiMesh *mesh, unsigned vertexID, Skeleton *skeleton)
       if (weight.mVertexId == vertexID)
       {
         size_t boneIndex = skeleton->IndexOf(std::string(bone->mName.C_Str()));
-        if (boneIndex != Skeleton::ILLEGAL_BONE_ID)
+        if (boneIndex != csSkeleton::ILLEGAL_BONE_ID)
         {
           TempWeight tWeight {
               (int) boneIndex,
@@ -150,7 +150,7 @@ Weight get_weight(aiMesh *mesh, unsigned vertexID, Skeleton *skeleton)
   return res;
 }
 
-iRenderMesh *ConvertRenderMesh(aiMesh *mesh, const Matrix4f &matrix2, Skeleton* skeleton)
+iRenderMesh *ConvertRenderMesh(aiMesh *mesh, const Matrix4f &matrix2, csSkeleton* skeleton)
 {
   Matrix4f matrix = matrix2;
   std::vector<Vector3f> vertices;

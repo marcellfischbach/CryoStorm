@@ -3,7 +3,7 @@
 #include <ceCore/coreexport.hh>
 #include <ceCore/class.hh>
 #include <ceCore/math/matrix4f.hh>
-#include <ceCore/entity/spatialstate.hh>
+#include <ceCore/entity/csSpatialState.hh>
 
 namespace cryo
 {
@@ -41,8 +41,8 @@ struct CS_CORE_API iDynamicCollider : public CS_SUPER(iCollider)
   CS_CLASS_GEN;
   ~iDynamicCollider() override = default;
 
-  virtual void SetUserData(SpatialState * spatialState) = 0;
-  virtual SpatialState *GetUserData() const = 0;
+  virtual void SetUserData(csSpatialState * spatialState) = 0;
+  virtual csSpatialState *GetUserData() const = 0;
 
 };
 

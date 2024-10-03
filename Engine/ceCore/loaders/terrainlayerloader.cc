@@ -3,7 +3,7 @@
 //
 
 #include <ceCore/loaders/terrainlayerloader.hh>
-#include <ceCore/entity/terrainmeshstate.hh>
+#include <ceCore/entity/csTerrainMeshState.hh>
 #include <ceCore/resource/assetmanager.hh>
 #include <ceCore/graphics/itexture2d.hh>
 
@@ -13,7 +13,7 @@ namespace cryo
 
 bool TerrainLayerLoader::CanLoad(const Class* cls, const ResourceLocator& locator) const
 {
-  return cls ->IsAssignableFrom<TerrainLayer>() && locator.GetExtension() == std::string("TERRAINLAYER");
+  return cls ->IsAssignableFrom<csTerrainLayer>() && locator.GetExtension() == std::string("TERRAINLAYER");
 }
 
 iObject* TerrainLayerLoader::Load(const CrimsonFile* file,
@@ -30,7 +30,7 @@ iObject* TerrainLayerLoader::Load(const CrimsonFile* file,
 
   AssetManager* assetMan = AssetManager::Get();
 
-  TerrainLayer* layer = new TerrainLayer();
+  csTerrainLayer * layer = new csTerrainLayer();
 
   const CrimsonFileElement  * diffuseRoughnessElement   = terrainLayerElement->GetChild("diffuseRoughness");
   const CrimsonFileAttribute* diffuseRoughnessAttribute = diffuseRoughnessElement
@@ -60,7 +60,7 @@ iObject* TerrainLayerLoader::Load(const CrimsonFile* file,
 
 bool TerrainLayerMaskLoader::CanLoad(const Class* cls, const ResourceLocator& locator) const
 {
-  return cls ->IsAssignableFrom<TerrainLayerMask>() && locator.GetExtension() == std::string("TERRAINMASK");
+  return cls ->IsAssignableFrom<csTerrainLayerMask>() && locator.GetExtension() == std::string("TERRAINMASK");
 
 }
 
@@ -78,7 +78,7 @@ iObject* TerrainLayerMaskLoader::Load(const CrimsonFile* file,
 
   AssetManager* assetMan = AssetManager::Get();
 
-  auto layer = new TerrainLayerMask();
+  auto layer = new csTerrainLayerMask();
 
   const CrimsonFileElement  * layersElement   = terrainLayerMaskElement->GetChild("layers");
   const CrimsonFileAttribute* layersAttribute = layersElement

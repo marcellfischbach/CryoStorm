@@ -31,38 +31,38 @@ set(SOURCES
         time.hh
         types.hh
 
-        animation/skeletonanimation.cc
-        animation/skeletonanimation.hh
-        animation/skeletonanimationplayer.cc
-        animation/skeletonanimationplayer.hh
+        animation/csSkeletonAnimation.cc
+        animation/csSkeletonAnimation.hh
+        animation/csSkeletonAnimationPlayer.cc
+        animation/csSkeletonAnimationPlayer.hh
 
 
-        entity/camerastate.cc
-        entity/camerastate.hh
-        entity/collisionstate.cc
-        entity/collisionstate.hh
-        entity/entity.cc
-        entity/entity.hh
-        entity/entitystate.cc
-        entity/entitystate.hh
-        entity/lightstate.cc
-        entity/lightstate.hh
-        entity/rigidbodystate.cc
-        entity/rigidbodystate.hh
-        entity/skeletonmeshstate.cc
-        entity/skeletonmeshstate.hh
-        entity/spatialstate.cc
-        entity/spatialstate.hh
-        entity/staticcolliderstate.cc
-        entity/staticcolliderstate.hh
-        entity/staticmeshstate.cc
-        entity/staticmeshstate.hh
-        entity/terrainmeshstate.cc
-        entity/terrainmeshstate.hh
-        entity/transform.cc
-        entity/transform.hh
-        entity/world.cc
-        entity/world.hh
+        entity/csCameraState.cc
+        entity/csCameraState.hh
+        entity/csCollisionState.cc
+        entity/csCollisionState.hh
+        entity/csEntity.cc
+        entity/csEntity.hh
+        entity/csEntityState.cc
+        entity/csEntityState.hh
+        entity/csLightState.cc
+        entity/csLightState.hh
+        entity/csRigidBodyState.cc
+        entity/csRigidBodyState.hh
+        entity/csSkeletonMeshState.cc
+        entity/csSkeletonMeshState.hh
+        entity/csSpatialState.cc
+        entity/csSpatialState.hh
+        entity/csStaticColliderState.cc
+        entity/csStaticColliderState.hh
+        entity/csStaticMeshState.cc
+        entity/csStaticMeshState.hh
+        entity/csTerrainMeshState.cc
+        entity/csTerrainMeshState.hh
+        entity/csTransform.cc
+        entity/csTransform.hh
+        entity/csWorld.cc
+        entity/csWorld.hh
 
 
         graphics/camera.cc
@@ -285,13 +285,13 @@ if (${JAVA_BINDINGS})
             objectregistry_java.cc
 
 
-            entity/entity_java.cc
-            entity/entitystate_java.cc
-            entity/javastate.cc
-            entity/javastate.hh
-            entity/spatialstate_java.cc
-            entity/staticmeshstate_java.cc
-            entity/world_java.cc
+            entity/csEntity_java.cc
+            entity/csEntityState_java.cc
+            entity/csJavaState.cc
+            entity/csJavaState.hh
+            entity/csSpatialState_java.cc
+            entity/csStaticMeshState_java.cc
+            entity/csWorld_java.cc
 
             graphics/idevice_java.cc
             graphics/irendermesh_java.cc

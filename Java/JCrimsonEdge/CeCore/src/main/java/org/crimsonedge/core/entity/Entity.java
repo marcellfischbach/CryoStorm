@@ -3,24 +3,24 @@ package org.crimsonedge.core.entity;
 import org.crimsonedge.core.CeClass;
 import org.crimsonedge.core.CoreObject;
 
-@CeClass("cryo::Entity")
-public class Entity extends CoreObject {
+@CeClass("cryo::csEntity")
+public class csEntity extends CoreObject {
 
     private static native void nSetName(long ref, String name);
 
     private static native String nGetName(long ref);
 
-    private static native World nGetWorld(long ref);
+    private static native csWorld nGetWorld(long ref);
 
     private static native boolean nAttachEntity(long ref, long childRef, long parentRef);
 
     private static native boolean nDetachEntity(long ref, long childRef);
 
-    private static native Entity nGetParent (long ref);
+    private static native csEntity nGetParent (long ref);
 
     private static native int nGetNumberOfChildren(long ref);
 
-    private static native Entity nGetChild(long ref, int idx);
+    private static native csEntity nGetChild(long ref, int idx);
 
     private static native boolean nAttachState(long ref, long stateRef);
 
@@ -28,12 +28,12 @@ public class Entity extends CoreObject {
 
     private static native void nSetRoot (long ref, long rootStateRef);
 
-    private static native SpatialState nGetRoot (long ref);
+    private static native csSpatialState nGetRoot (long ref);
 
-    public Entity() {
+    public csEntity() {
     }
 
-    public Entity(long ref) {
+    public csEntity(long ref) {
         super(ref);
     }
 
@@ -45,26 +45,26 @@ public class Entity extends CoreObject {
         return nGetName(getRef());
     }
 
-    public World getWorld() {
+    public csWorld getWorld() {
         return nGetWorld(getRef());
     }
 
-    public boolean attach(Entity child) {
+    public boolean attach(csEntity child) {
         return attach(child, null);
     }
 
-    public boolean attach(Entity child, SpatialState parentState) {
+    public boolean attach(csEntity child, csSpatialState parentState) {
         return nAttachEntity(getRef(),
                              child != null ? child.getRef() : 0,
                              parentState != null ? parentState.getRef() : 0);
     }
 
 
-    public boolean detach(Entity child) {
+    public boolean detach(csEntity child) {
         return nDetachEntity(getRef(), child.getRef());
     }
 
-    public Entity getParent () {
+    public csEntity getParent () {
         return nGetParent(getRef());
     }
 
@@ -72,23 +72,23 @@ public class Entity extends CoreObject {
         return nGetNumberOfChildren(getRef());
     }
 
-    public Entity getChild (int idx) {
+    public csEntity getChild (int idx) {
         return nGetChild(getRef(), idx);
     }
 
-    public boolean attach(EntityState child) {
+    public boolean attach(csEntityState child) {
         return nAttachState(getRef(), child.getRef());
     }
 
-    public boolean detach(EntityState child) {
+    public boolean detach(csEntityState child) {
         return nDetachState(getRef(), child.getRef());
     }
 
-    public void setRoot(SpatialState rootState) {
+    public void setRoot(csSpatialState rootState) {
         nSetRoot(getRef(), rootState != null ? rootState.getRef() : 0);
     }
 
-    public SpatialState getRoot() {
+    public csSpatialState getRoot() {
         return nGetRoot(getRef());
     }
 }

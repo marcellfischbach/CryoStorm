@@ -13,7 +13,7 @@ namespace cryo
 
 
 CS_CLASS()
-class CS_CORE_API Skeleton : public CS_SUPER(Object)
+class CS_CORE_API csSkeleton : public CS_SUPER(Object)
 {
   CS_CLASS_GEN_OBJECT;
 public:
@@ -32,10 +32,10 @@ public:
   static const std::string ILLEGAL_BONE_NAME;
   static const Matrix4f    ILLEGAL_BONE_MATRIX;
 
-  Skeleton();
+  csSkeleton();
 
   void Clear();
-  void InitializeFrom(const Skeleton& skeleton);
+  void InitializeFrom(const csSkeleton& skeleton);
 
   CS_NODISCARD size_t AddRoot(const std::string &name);
   CS_NODISCARD size_t AddChild(const std::string &name, size_t parent);
@@ -55,7 +55,7 @@ public:
 
   CS_NODISCARD const std::vector<Matrix4f> &GetSkeletonBones () const;
 
-  Skeleton& operator=(const Skeleton& skeleton);
+  csSkeleton& operator=(const csSkeleton& skeleton);
 
 
 private:

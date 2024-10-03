@@ -3,14 +3,14 @@ package org.crimsonedge.core.entity;
 import org.crimsonedge.core.CeClass;
 import org.crimsonedge.core.CoreObject;
 
-@CeClass("cryo::EntityState")
-public abstract class EntityState extends CoreObject  {
+@CeClass("cryo::csEntityState")
+public abstract class csEntityState extends CoreObject  {
 
 
-    public EntityState() {
+    public csEntityState() {
     }
 
-    public EntityState(long ref) {
+    public csEntityState(long ref) {
         super(ref);
     }
 
@@ -18,7 +18,7 @@ public abstract class EntityState extends CoreObject  {
     private static native String nGetName (long ref);
 
     private static native void nSetEntity (long ref, long entityRef);
-    private static native Entity nGetEntity (long ref);
+    private static native csEntity nGetEntity (long ref);
 
     public void setName (String name) {
         nSetName(getRef(), name);
@@ -28,11 +28,11 @@ public abstract class EntityState extends CoreObject  {
         return nGetName(getRef());
     }
 
-    public void setEntity (Entity entity) {
+    public void setEntity (csEntity entity) {
         nSetEntity(getRef(), entity != null ? entity.getRef() : 0);
     }
 
-    public Entity getEntity () {
+    public csEntity getEntity () {
         return nGetEntity(getRef());
     }
 

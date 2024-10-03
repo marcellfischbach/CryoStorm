@@ -1,6 +1,6 @@
 package org.crimsonedge.core;
 
-import org.crimsonedge.core.entity.Entity;
+import org.crimsonedge.core.entity.csEntity;
 
 public class Bootstrapper {
 

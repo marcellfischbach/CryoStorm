@@ -1,6 +1,6 @@
 package org.crimsonedge.core;
 
-import org.crimsonedge.core.entity.World;
+import org.crimsonedge.core.entity.csWorld;
 import org.crimsonedge.core.graphics.IDevice;
 
 public class Engine {
@@ -8,7 +8,7 @@ public class Engine {
     private static native void nSetEnv ();
     private static native boolean nInitialize (String[] args, long externalModuleRef, IGame game);
     private static native void nProcessFrame ();
-    private static native World nGetWorld();
+    private static native csWorld nGetWorld();
     private static native IDevice nGetDevice();
 
 
@@ -20,7 +20,7 @@ public class Engine {
         nProcessFrame ();
     }
 
-    public World getWorld () {
+    public csWorld getWorld () {
         return nGetWorld();
     }
 

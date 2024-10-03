@@ -141,7 +141,7 @@ void AssimpSkeletonMeshLoader::ReadSkeleton(aiNode *node,
   {
     for (unsigned i = 0, in = node->mNumChildren; i < in; ++i)
     {
-      ReadBone(node->mChildren[i], d, Skeleton::ILLEGAL_BONE_ID);
+      ReadBone(node->mChildren[i], d, csSkeleton::ILLEGAL_BONE_ID);
     }
     d.mesh->GetSkeleton().SetBase(globalMatrix);
     d.mesh->GetSkeleton().UpdateBones();
@@ -165,8 +165,8 @@ void AssimpSkeletonMeshLoader::ReadBone(aiNode *node,
 
   size_t boneID;
 
-  Skeleton &skeleton = d.mesh->GetSkeleton();
-  if (parentBoneID == Skeleton::ILLEGAL_BONE_ID)
+  csSkeleton &skeleton = d.mesh->GetSkeleton();
+  if (parentBoneID == csSkeleton::ILLEGAL_BONE_ID)
   {
     boneID = skeleton.AddRoot(nodeName);
   }
@@ -175,8 +175,8 @@ void AssimpSkeletonMeshLoader::ReadBone(aiNode *node,
     boneID = skeleton.AddChild(nodeName, parentBoneID);
   }
 
-  Quaternion rotation = Quaternion::FromMatrix(localMatrix);
-  Skeleton::Bone &bone = skeleton.GetBone(boneID);
+  Quaternion       rotation = Quaternion::FromMatrix(localMatrix);
+  csSkeleton::Bone &bone    = skeleton.GetBone(boneID);
   bone.rotation = rotation;
   bone.poseRotation = rotation;
   bone.offset = localMatrix.GetTranslation();

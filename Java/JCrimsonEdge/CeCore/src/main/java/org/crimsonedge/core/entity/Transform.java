@@ -5,9 +5,9 @@ import org.crimsonedge.core.math.Matrix4f;
 import org.crimsonedge.core.math.Quaternion;
 import org.crimsonedge.core.math.Vector3f;
 
-public class Transform {
+public class csTransform {
 
-    private final SpatialState spatialState;
+    private final csSpatialState spatialState;
 
     private final Vector3f translation = new Vector3f();
 
@@ -23,7 +23,7 @@ public class Transform {
 
     private final Matrix4f globalMatrix = new Matrix4f();
 
-    public Transform(SpatialState spatialState) {
+    public csTransform(csSpatialState spatialState) {
         this.spatialState = spatialState;
     }
 
@@ -61,13 +61,13 @@ public class Transform {
     }
 
 
-    public Transform setTranslation(Vector3f translation) {
+    public csTransform setTranslation(Vector3f translation) {
         this.translation.set(translation);
         this.dirty = true;
         return this;
     }
 
-    public Transform setTranslation(float x, float y, float z) {
+    public csTransform setTranslation(float x, float y, float z) {
         this.translation.set(x, y, z);
         this.dirty = true;
         return this;
@@ -78,7 +78,7 @@ public class Transform {
         return t;
     }
 
-    public Transform setRotation(Quaternion rotation) {
+    public csTransform setRotation(Quaternion rotation) {
         this.rotation.set(rotation);
         this.dirty = true;
         return this;
@@ -89,7 +89,7 @@ public class Transform {
         return r;
     }
 
-    public Transform setScale(Vector3f scale) {
+    public csTransform setScale(Vector3f scale) {
         this.scale.set(scale);
         this.dirty = true;
         return this;

@@ -10,7 +10,7 @@ struct aiAnimation;
 namespace cryo
 {
 
-class SkeletonAnimation;
+class csSkeletonAnimation;
 
 namespace assimp
 {
@@ -30,7 +30,7 @@ public:
 
 private:
 
-  SkeletonAnimation *Read(aiAnimation* animation) const;
+  csSkeletonAnimation *Read(aiAnimation* animation) const;
 
 };
 

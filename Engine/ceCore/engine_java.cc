@@ -2,7 +2,7 @@
 #include <ceCore/engine.hh>
 #include <ceCore/game_java.hh>
 #include <ceCore/java.hh>
-#include <ceCore/entity/world.hh>
+#include <ceCore/entity/csWorld.hh>
 #include <ceCore/graphics/idevice.hh>
 
 

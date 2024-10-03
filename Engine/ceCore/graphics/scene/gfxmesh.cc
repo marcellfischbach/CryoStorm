@@ -268,17 +268,17 @@ bool GfxMesh::IsLightingDirty() const
   return m_lightingDirty;
 }
 
-void GfxMesh::SetSkeleton(cryo::Skeleton *skeleton)
+void GfxMesh::SetSkeleton(cryo::csSkeleton *skeleton)
 {
   CS_SET(m_skeleton, skeleton);
 }
 
-Skeleton* GfxMesh::GetSkeleton()
+csSkeleton* GfxMesh::GetSkeleton()
 {
   return m_skeleton;
 }
 
-const Skeleton* GfxMesh::GetSkeleton() const
+const csSkeleton* GfxMesh::GetSkeleton() const
 {
   return m_skeleton;
 }

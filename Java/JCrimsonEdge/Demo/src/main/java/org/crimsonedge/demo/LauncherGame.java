@@ -2,7 +2,7 @@ package org.crimsonedge.demo;
 
 import org.crimsonedge.core.Engine;
 import org.crimsonedge.core.IGame;
-import org.crimsonedge.core.entity.World;
+import org.crimsonedge.core.entity.csWorld;
 import org.crimsonedge.demo.scene.TestEntity;
 
 public class LauncherGame implements IGame {
@@ -11,12 +11,12 @@ public class LauncherGame implements IGame {
 
     @Override
     public boolean initialize() {
-        World world = Engine.instance().getWorld();
+        csWorld world = Engine.instance().getWorld();
         System.out.println("LauncherGame.initialize");
 
 
 
-//        Entity entity = new Entity();
+//        csEntity entity = new csEntity();
         world.attach(new TestEntity());
 
 

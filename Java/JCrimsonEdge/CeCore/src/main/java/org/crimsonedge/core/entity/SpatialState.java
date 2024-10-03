@@ -3,13 +3,13 @@ package org.crimsonedge.core.entity;
 import org.crimsonedge.core.CeClass;
 import org.crimsonedge.core.math.Matrix4f;
 
-@CeClass("cryo::SpatialState")
-public class SpatialState extends EntityState {
+@CeClass("cryo::csSpatialState")
+public class csSpatialState extends csEntityState {
 
-    public SpatialState() {
+    public csSpatialState() {
     }
 
-    public SpatialState(long ref) {
+    public csSpatialState(long ref) {
         super(ref);
     }
 
@@ -24,11 +24,11 @@ public class SpatialState extends EntityState {
 
     private static native boolean nDetach(long ref, long childRef);
 
-    private static native SpatialState nGetParent(long ref);
+    private static native csSpatialState nGetParent(long ref);
 
     private static native int nGetNumberOfChildren(long ref);
 
-    private static native SpatialState nGetChild(long ref, int idx);
+    private static native csSpatialState nGetChild(long ref, int idx);
 
     private static native void nGetGlobalMatrix(long ref, float[] m);
     private static native void nGetLocalMatrix(long ref, float[] m);
@@ -43,7 +43,7 @@ public class SpatialState extends EntityState {
         return nIsStatic(getRef());
     }
 
-    public boolean attach(SpatialState child) {
+    public boolean attach(csSpatialState child) {
         return nAttach(getRef(), child != null ? child.getRef() : 0);
     }
 
@@ -51,11 +51,11 @@ public class SpatialState extends EntityState {
         return nDetachSelf(getRef());
     }
 
-    public boolean detach(SpatialState child) {
+    public boolean detach(csSpatialState child) {
         return nDetach(getRef(), child != null ? child.getRef() : 0);
     }
 
-    public SpatialState getParent() {
+    public csSpatialState getParent() {
         return nGetParent(getRef());
     }
 
@@ -63,7 +63,7 @@ public class SpatialState extends EntityState {
         return nGetNumberOfChildren(getRef());
     }
 
-    public SpatialState getChild(int idx) {
+    public csSpatialState getChild(int idx) {
         return nGetChild(getRef(), idx);
     }
 
@@ -94,9 +94,9 @@ public class SpatialState extends EntityState {
         nUpdateTransformation(getRef());
     }
 
-    private final Transform _transform = new Transform(this);
-    public Transform getTransform () {
-        SpatialState parent = getParent();
+    private final csTransform _transform = new csTransform(this);
+    public csTransform getTransform () {
+        csSpatialState parent = getParent();
         if (parent != null) {
             _transform.initialize(getLocalMatrix(), parent.getGlobalMatrix());
         }

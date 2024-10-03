@@ -19,7 +19,7 @@ struct iRenderTarget2D;
 struct iSkyboxRenderer;
 struct iWindow;
 
-class World;
+class csWorld;
 
 class CS_CORE_API  Engine
 {
@@ -36,8 +36,8 @@ public:
   void SetSkyboxRenderer(iSkyboxRenderer *skyboxRenderer);
   iSkyboxRenderer *GetSkyboxRenderer();
 
-  void SetWorld(World *world);
-  World *GetWorld();
+  void SetWorld(csWorld *world);
+  csWorld *GetWorld();
 
 
   bool InitializeEngine(const std::vector<std::string> &args, iModule *externalModule);
@@ -54,8 +54,8 @@ private:
   iDevice         *m_device         = nullptr;
   iFrameRenderer  *m_frameRenderer  = nullptr;
   iSkyboxRenderer *m_skyboxRenderer = nullptr;
-  iRenderTarget2D *m_renderTarget   = nullptr;
-  World           *m_world          = nullptr;
+  iRenderTarget2D *m_renderTarget = nullptr;
+  csWorld         *m_world        = nullptr;
 
   bool m_active       = true;
   int  m_exitValue    = 0;

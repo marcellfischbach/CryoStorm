@@ -7,7 +7,7 @@
 #include <ceCore/objectregistry.hh>
 #include <ceCore/settings.hh>
 #include <ceCore/coremodule.hh>
-#include <ceCore/entity/world.hh>
+#include <ceCore/entity/csWorld.hh>
 #include <ceCore/graphics/idevice.hh>
 #include <ceCore/graphics/iframerenderer.hh>
 #include <ceCore/graphics/defaultframerenderer.hh>
@@ -71,12 +71,12 @@ iWindow *Engine::GetWindow()
   return m_window;
 }
 
-void Engine::SetWorld(cryo::World *world)
+void Engine::SetWorld(cryo::csWorld *world)
 {
   CS_SET(m_world, world);
 }
 
-World *Engine::GetWorld()
+csWorld *Engine::GetWorld()
 {
   return m_world;
 }
@@ -314,7 +314,7 @@ bool Engine::InitializeGame()
 
   if (!m_world)
   {
-    m_world = new World();
+    m_world = new csWorld();
   }
 
   iGame* game = open_game("ceGame");

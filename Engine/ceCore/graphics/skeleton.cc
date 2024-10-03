@@ -5,10 +5,10 @@ namespace cryo
 {
 
 
-const std::string Skeleton::ILLEGAL_BONE_NAME;
-const Matrix4f Skeleton::ILLEGAL_BONE_MATRIX = Matrix4f();
+const std::string csSkeleton::ILLEGAL_BONE_NAME;
+const Matrix4f csSkeleton::ILLEGAL_BONE_MATRIX = Matrix4f();
 
-Skeleton::Bone Skeleton::IllegalBone = {
+csSkeleton::Bone csSkeleton::IllegalBone = {
     ILLEGAL_BONE_ID,
     ILLEGAL_BONE_NAME,
     std::vector<size_t>(),
@@ -18,21 +18,21 @@ Skeleton::Bone Skeleton::IllegalBone = {
     Matrix4f()
 };
 
-Skeleton::Skeleton()
+csSkeleton::csSkeleton()
     : Object()
     , m_base()
 {
   CS_CLASS_GEN_CONSTR;
 }
 
-void Skeleton::Clear()
+void csSkeleton::Clear()
 {
   m_bones.clear();
   m_skeletonBones.clear();
   m_rootBones.clear();
 }
 
-void Skeleton::InitializeFrom(const cryo::Skeleton &skeleton)
+void csSkeleton::InitializeFrom(const cryo::csSkeleton &skeleton)
 {
   Clear();
 
@@ -49,7 +49,7 @@ void Skeleton::InitializeFrom(const cryo::Skeleton &skeleton)
   UpdateBones();
 }
 
-Skeleton &Skeleton::operator=(const cryo::Skeleton &skeleton)
+csSkeleton &csSkeleton::operator=(const cryo::csSkeleton &skeleton)
 {
   Clear();
 
@@ -67,7 +67,7 @@ Skeleton &Skeleton::operator=(const cryo::Skeleton &skeleton)
   return *this;
 }
 
-size_t Skeleton::Add(const std::string &name)
+size_t csSkeleton::Add(const std::string &name)
 {
   size_t idx = m_bones.size();
 
@@ -87,14 +87,14 @@ size_t Skeleton::Add(const std::string &name)
 }
 
 
-size_t Skeleton::AddRoot(const std::string &name)
+size_t csSkeleton::AddRoot(const std::string &name)
 {
   size_t idx = Add(name);
   m_rootBones.push_back(idx);
   return idx;
 }
 
-size_t Skeleton::AddChild(const std::string &name, size_t parent)
+size_t csSkeleton::AddChild(const std::string &name, size_t parent)
 {
   size_t idx = Add(name);
   if (parent < m_bones.size())
@@ -105,22 +105,22 @@ size_t Skeleton::AddChild(const std::string &name, size_t parent)
   return idx;
 }
 
-void Skeleton::SetBase(const cryo::Matrix4f &base)
+void csSkeleton::SetBase(const cryo::Matrix4f &base)
 {
   m_base = base;
 }
 
-const Matrix4f &Skeleton::GetBase() const
+const Matrix4f &csSkeleton::GetBase() const
 {
   return m_base;
 }
 
-size_t Skeleton::GetNumberOfBones() const
+size_t csSkeleton::GetNumberOfBones() const
 {
   return m_bones.size();
 }
 
-size_t Skeleton::IndexOf(const std::string &name) const
+size_t csSkeleton::IndexOf(const std::string &name) const
 {
   for (const auto &bone: m_bones)
   {
@@ -132,7 +132,7 @@ size_t Skeleton::IndexOf(const std::string &name) const
   return ILLEGAL_BONE_ID;
 }
 
-Skeleton::Bone &Skeleton::GetBone(size_t idx)
+csSkeleton::Bone &csSkeleton::GetBone(size_t idx)
 {
   if (idx >= m_bones.size())
   {
@@ -142,7 +142,7 @@ Skeleton::Bone &Skeleton::GetBone(size_t idx)
 }
 
 
-const Skeleton::Bone &Skeleton::GetBone(size_t idx) const
+const csSkeleton::Bone &csSkeleton::GetBone(size_t idx) const
 {
   if (idx >= m_bones.size())
   {
@@ -151,7 +151,7 @@ const Skeleton::Bone &Skeleton::GetBone(size_t idx) const
   return m_bones[idx];
 }
 
-void Skeleton::UpdateBones()
+void csSkeleton::UpdateBones()
 {
   Matrix4f identity;
   identity.SetIdentity();
@@ -161,7 +161,7 @@ void Skeleton::UpdateBones()
   }
 }
 
-void Skeleton::UpdateBone(size_t idx, const cryo::Matrix4f &parent)
+void csSkeleton::UpdateBone(size_t idx, const cryo::Matrix4f &parent)
 {
   Bone &bone = m_bones[idx];
 
@@ -180,7 +180,7 @@ void Skeleton::UpdateBone(size_t idx, const cryo::Matrix4f &parent)
   }
 }
 
-const std::vector<Matrix4f> &Skeleton::GetSkeletonBones() const
+const std::vector<Matrix4f> &csSkeleton::GetSkeletonBones() const
 {
   return m_skeletonBones;
 }

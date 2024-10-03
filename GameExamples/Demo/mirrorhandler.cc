@@ -3,7 +3,7 @@
 
 
 MirrorHandler::MirrorHandler()
-: cryo::EntityState()
+: cryo::csEntityState()
 , m_cameraState(nullptr)
 {
   SetNeedUpdate(true);
@@ -14,7 +14,7 @@ MirrorHandler::~MirrorHandler()
   CS_RELEASE(m_cameraState);
 }
 
-void MirrorHandler::SetCameraState(cryo::SpatialState *cameraState)
+void MirrorHandler::SetCameraState(cryo::csSpatialState *cameraState)
 {
   CS_SET(m_cameraState, cameraState);
 }

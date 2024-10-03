@@ -4,10 +4,10 @@
 
 #pragma once
 
-#include <ceCore/entity/entitystate.hh>
+#include <ceCore/entity/csEntityState.hh>
 
 CS_CLASS()
-class ExitGameState : public CS_SUPER(cryo::EntityState)
+class ExitGameState : public CS_SUPER(cryo::csEntityState)
 {
   CS_CLASS_GEN;
 public:

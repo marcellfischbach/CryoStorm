@@ -1,12 +1,12 @@
 package org.crimsonedge.demo.scene;
 
-import org.crimsonedge.core.entity.JavaState;
-import org.crimsonedge.core.entity.SpatialState;
-import org.crimsonedge.core.entity.World;
+import org.crimsonedge.core.entity.csJavaState;
+import org.crimsonedge.core.entity.csSpatialState;
+import org.crimsonedge.core.entity.csWorld;
 
-public class MyState extends JavaState {
+public class MyState extends csJavaState {
 
-    private SpatialState root;
+    private csSpatialState root;
 
     public MyState() {
     }
@@ -16,12 +16,12 @@ public class MyState extends JavaState {
     }
 
     @Override
-    public void onAttachedToWorld(World world) {
+    public void onAttachedToWorld(csWorld world) {
         root = getRoot();
     }
 
     @Override
-    public void onDetachedFromWorld(World world) {
+    public void onDetachedFromWorld(csWorld world) {
     }
 
 
