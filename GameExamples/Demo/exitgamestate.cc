@@ -3,8 +3,8 @@
 //
 
 #include "exitgamestate.hh"
-#include "ceCore/input/csInput.hh"
-#include <ceCore/csEngine.hh>
+#include <csCore/input/csInput.hh>
+#include <csCore/csEngine.hh>
 
 ExitGameState::ExitGameState()
 {

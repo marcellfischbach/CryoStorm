@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QAbstractTableModel>
-#include <ceCore/resource/csVFS.hh>
+#include <csCore/resource/csVFS.hh>
 #include <QDir>
 
 

@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <ceCore/entity/csEntityState.hh>
+#include <csCore/entity/csEntityState.hh>
 
 CS_CLASS()
 class ExitGameState : public CS_SUPER(cryo::csEntityState)

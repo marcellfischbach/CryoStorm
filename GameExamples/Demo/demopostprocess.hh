@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <ceCore/graphics/csPostProcessing.hh>
+#include <csCore/graphics/csPostProcessing.hh>
 
 namespace cryo
 {

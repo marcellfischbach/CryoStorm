@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <ceCore/iGame.hh>
+#include <csCore/iGame.hh>
 
 class Game : public cryo::iGame
 {

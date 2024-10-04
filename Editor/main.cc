@@ -2,8 +2,8 @@
 #include <QMainWindow>
 #include <QApplication>
 #include <mainwindow.hh>
-#include <ceCore/resource/csVFS.hh>
-#include <ceCore/resource/csVFSConfigReader.hh>
+#include <csCore/resource/csVFS.hh>
+#include <csCore/resource/csVFSConfigReader.hh>
 
 
 int main(int argc, char** argv)

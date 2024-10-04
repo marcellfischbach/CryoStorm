@@ -60,7 +60,7 @@ void MasterGenerator::Generate(Cache& cache, iOutput* output, const std::string 
   source += "\n\n";
   source += sourceIncludes;
   source += "\n\n";
-  source += "#include <ceCore/csClassRegistry.hh>\n\n";
+  source += "#include <csCore/csClassRegistry.hh>\n\n";
   source += register_classes;
   source += unregister_classes;
 

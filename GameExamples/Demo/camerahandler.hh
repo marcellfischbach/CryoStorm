@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <ceCore/entity/csEntitySystem.hh>
+#include <csCore/entity/csEntitySystem.hh>
 
 CS_CLASS()
 class CameraHandler : public CS_SUPER(cryo::csEntityState)

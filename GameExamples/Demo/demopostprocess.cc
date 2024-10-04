@@ -1,12 +1,12 @@
 
 #include <vector>
 #include "demopostprocess.hh"
-#include <ceCore/resource/csAssetManager.hh>
-#include <ceCore/graphics/iDevice.hh>
-#include <ceCore/graphics/iTexture2D.hh>
-#include <ceCore/graphics/iRenderTarget2D.hh>
-#include <ceCore/graphics/shading/iShader.hh>
-#include <ceCore/graphics/shading/iShaderAttribute.hh>
+#include <csCore/resource/csAssetManager.hh>
+#include <csCore/graphics/iDevice.hh>
+#include <csCore/graphics/iTexture2D.hh>
+#include <csCore/graphics/iRenderTarget2D.hh>
+#include <csCore/graphics/shading/iShader.hh>
+#include <csCore/graphics/shading/iShaderAttribute.hh>
 
 DemoPostProcess::DemoPostProcess()
     : csSimplePostProcess()

@@ -1,9 +1,9 @@
 
 #include "camerahandler.hh"
-#include "ceCore/input/csInput.hh"
-#include <ceCore/math/csVector3f.hh>
-#include <ceCore/entity/csTransform.hh>
-#include <ceCore/entity/csSpatialState.hh>
+#include <csCore/input/csInput.hh>
+#include <csCore/math/csVector3f.hh>
+#include <csCore/entity/csTransform.hh>
+#include <csCore/entity/csSpatialState.hh>
 
 using namespace cryo;
 

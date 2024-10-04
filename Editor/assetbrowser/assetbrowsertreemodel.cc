@@ -3,8 +3,8 @@
 //
 
 #include <assetbrowser/assetbrowsertreemodel.hh>
-#include <ceCore/resource/csVFS.hh>
-#include <ceCore/resource/csFileSystemArchive.hh>
+#include <csCore/resource/csVFS.hh>
+#include <csCore/resource/csFileSystemArchive.hh>
 #include <QDir>
 #include <QFileInfo>
 
