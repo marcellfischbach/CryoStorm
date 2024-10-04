@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <ceCore/class.hh>
+#include <ceCore/csClass.hh>
 #include <string>
 #include <vector>
 

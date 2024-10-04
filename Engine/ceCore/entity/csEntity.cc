@@ -164,7 +164,7 @@ csEntity *csEntity::GetChild(Size idx)
   return const_cast<csEntity *>(static_cast<const csEntity *>(this)->GetChild(idx));
 }
 
-const csEntityState *csEntity::GetState(const Class *cls) const
+const csEntityState *csEntity::GetState(const csClass *cls) const
 {
   for (auto state: m_states)
   {
@@ -176,13 +176,13 @@ const csEntityState *csEntity::GetState(const Class *cls) const
   return nullptr;
 }
 
-csEntityState *csEntity::GetState(const Class *cls)
+csEntityState *csEntity::GetState(const csClass *cls)
 {
   return const_cast<csEntityState *>(static_cast<const csEntity *>(this)->GetState(cls));
 }
 
 
-std::vector<const csEntityState *> csEntity::GetStates(const Class *cls) const
+std::vector<const csEntityState *> csEntity::GetStates(const csClass *cls) const
 {
   std::vector<const csEntityState *> result;
   for (auto                          state: m_states)
@@ -195,7 +195,7 @@ std::vector<const csEntityState *> csEntity::GetStates(const Class *cls) const
   return result;
 }
 
-std::vector<csEntityState *> csEntity::GetStates(const Class *cls)
+std::vector<csEntityState *> csEntity::GetStates(const csClass *cls)
 {
   std::vector<csEntityState *> result;
   for (auto                    state: m_states)

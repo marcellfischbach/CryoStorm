@@ -12,7 +12,7 @@ JNIEXPORT jobject
 JNICALL Java_org_crimsonedge_core_ObjectRegistry_nGet(JNIEnv *env, jclass, jstring clsName)
 {
   const char* clsString = env->GetStringUTFChars(clsName, 0);
-  const cryo::Class *cls = cryo::csClassRegistry::Get()->GetClass(clsString);
+  const cryo::csClass *cls = cryo::csClassRegistry::Get()->GetClass(clsString);
   env->ReleaseStringUTFChars(clsName, clsString);
 
   cryo::iObject* obj = cryo::csObjectRegistry::Get(cls);

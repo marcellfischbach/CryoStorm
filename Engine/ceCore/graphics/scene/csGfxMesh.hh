@@ -2,7 +2,7 @@
 #pragma once
 
 #include <ceCore/csCoreExport.hh>
-#include <ceCore/class.hh>
+#include <ceCore/csClass.hh>
 #include <ceCore/math/csBoundingBox.hh>
 #include <ceCore/math/csMatrix4f.hh>
 #include <ceCore/graphics/eRenderPass.hh>

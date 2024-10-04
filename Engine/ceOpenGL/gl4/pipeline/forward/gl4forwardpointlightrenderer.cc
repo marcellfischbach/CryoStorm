@@ -141,7 +141,7 @@ GL4RenderTarget2D* GL4ForwardPointLightRenderer::GetPointLightShadowMap(Size lig
 
 void GL4ForwardPointLightRenderer::SetDevice(iDevice* device)
 {
-  m_device = QueryClass<GL4Device>(device);
+  m_device = csQueryClass<GL4Device>(device);
   m_shadowRenderer.SetDevice(m_device);
 }
 

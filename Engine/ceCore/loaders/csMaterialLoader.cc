@@ -18,7 +18,7 @@ csMaterialLoader::csMaterialLoader()
   AddValidFile(csMaterialInstance::GetStaticClass(), "MATINSTANCE");
 }
 
-iObject *csMaterialLoader::Load(const csCryoFile *file, const Class *cls, const csResourceLocator &locator) const
+iObject *csMaterialLoader::Load(const csCryoFile *file, const csClass *cls, const csResourceLocator &locator) const
 {
   if (cls->IsAssignableFrom<csMaterial>() && file->Root()->HasChild("material"))
   {
@@ -31,7 +31,7 @@ iObject *csMaterialLoader::Load(const csCryoFile *file, const Class *cls, const 
   return nullptr;
 }
 
-csMaterial *csMaterialLoader::LoadMaterial(const Class *, const csCryoFile *file, const csResourceLocator &locator)
+csMaterial *csMaterialLoader::LoadMaterial(const csClass *, const csCryoFile *file, const csResourceLocator &locator)
 {
   const csCryoFileElement *root            = file->Root();
   const csCryoFileElement *materialElement = root->GetChild("material");
@@ -63,7 +63,7 @@ csMaterial *csMaterialLoader::LoadMaterial(const Class *, const csCryoFile *file
   return material;
 }
 
-iObject *csMaterialLoader::LoadMaterialInstance(const Class *, const csCryoFile *file, const csResourceLocator &locator)
+iObject *csMaterialLoader::LoadMaterialInstance(const csClass *, const csCryoFile *file, const csResourceLocator &locator)
 {
 
   const csCryoFileElement *root            = file->Root();

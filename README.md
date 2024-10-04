@@ -8,7 +8,7 @@ me if the project is not state of the art.
 
 # Components
 
-The basic design of the engine consists of a core module (**ceCore** located at *csEngine/ceCore*). The core modules
+The basic design of the engine consists of a core module (**ceCore** located at *Engine/ceCore*). The core modules
 consists of
 
 - *EntityGraph* for logical entities (game logic lives here)
@@ -17,8 +17,8 @@ consists of
 - *Graphics* mostly interfaces that must be implemented by a rendering module (**ceOpenGL**)
 - *Physics* mostly interfaces that must be implemented by a physics module (**ceBullet**)
 
-At the moment there is only one rendering implementations in OpenGLv4 (**ceOpenGL** located at *csEngine/ceOpenGL*) and
-one physics implementation using BulletPhysics (**ceBullet** located at *csEngine/ceBullet*). But the engine is designed to
+At the moment there is only one rendering implementations in OpenGLv4 (**ceOpenGL** located at *Engine/ceOpenGL*) and
+one physics implementation using BulletPhysics (**ceBullet** located at *Engine/ceBullet*). But the engine is designed to
 include any other API (e.g. D3D, Vulkan, PhysX, ...).
 
 The entire engine is written the C++ and GLSL for OpenGL-Shading. The build process is managed by CMake.

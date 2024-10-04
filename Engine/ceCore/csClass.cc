@@ -1,5 +1,5 @@
 
-#include <ceCore/class.hh>
+#include <ceCore/csClass.hh>
 
 // ---------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------
@@ -8,28 +8,17 @@
 namespace cryo
 {
 
-
-iObject::iObject()
-{
-
-}
-
-iObject::~iObject()
-{
-
-}
-
-const cryo::Class* iObject::GetClass() const
+const cryo::csClass* iObject::GetClass() const
 {
   return cryo::iObjectClass::Get();
 }
 
-const cryo::Class* iObject::GetStaticClass()
+const cryo::csClass* iObject::GetStaticClass()
 {
   return cryo::iObjectClass::Get();
 }
 
-void* iObject::QueryClass(const Class* clazz)
+void* iObject::QueryClass(const csClass* clazz)
 {
   if (clazz == iObjectClass::Get())
   {
@@ -39,7 +28,7 @@ void* iObject::QueryClass(const Class* clazz)
 }
 
 
-const void* iObject::QueryClass(const Class* clazz) const
+const void* iObject::QueryClass(const csClass* clazz) const
 {
   if (clazz == iObjectClass::Get())
   {
@@ -56,22 +45,22 @@ iObjectClass* iObjectClass::Get()
 }
 
 iObjectClass::iObjectClass()
-  : Class("cryo::iObject")
+  : csClass("cryo::iObject")
 {
 }
 
 cryo::iObject* iObjectClass::CreateInstance() const
 {
-  throw cryo::InstanciationException("cryo::iObject");
+  throw cryo::csInstantiationException("cryo::iObject");
 }
 
-Object::Object()
+csObject::csObject()
   : cryo::iObject()
 {
   CS_CLASS_GEN_CONSTR;
 }
 
-Object::~Object()
+csObject::~csObject()
 {
 
 }
@@ -80,25 +69,25 @@ Object::~Object()
 // ---------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------
 
-Class::Class(const std::string& name)
+csClass::csClass(const std::string& name)
   : m_name(name)
 {
 
 }
 
-const std::string& Class::GetName() const
+const std::string& csClass::GetName() const
 {
   return m_name;
 }
 
-bool Class::IsInstanceOf(const Class* clazz) const
+bool csClass::IsInstanceOf(const csClass* clazz) const
 {
   if (clazz == this)
   {
     return true;
   }
 
-  for (const Class* parent : m_superClasses)
+  for (const csClass * parent : m_superClasses)
   {
     if (parent->IsInstanceOf(clazz))
     {
@@ -108,39 +97,39 @@ bool Class::IsInstanceOf(const Class* clazz) const
   return false;
 }
 
-bool Class::IsAssignableFrom(const Class* clazz) const
+bool csClass::IsAssignableFrom(const csClass* clazz) const
 {
   return clazz->IsInstanceOf(this);
 }
 
-void Class::AddSuperClass(const Class* parentClass)
+void csClass::AddSuperClass(const csClass* parentClass)
 {
   m_superClasses.push_back(parentClass);
 }
 
-void Class::AddProperty(const Property* prop)
+void csClass::AddProperty(const csProperty* prop)
 {
   m_properties.push_back(prop);
 }
 
-void Class::AddFunction(const Function* function)
+void csClass::AddFunction(const csFunction* function)
 {
   m_functions.push_back(function);
 }
 
-size_t Class::GetNumberOfProperties() const
+size_t csClass::GetNumberOfProperties() const
 {
   return m_properties.size();
 }
 
-const Property* Class::GetProperty(size_t idx) const
+const csProperty* csClass::GetProperty(size_t idx) const
 {
   return m_properties[idx];
 }
 
-const Property* Class::GetProperty(const std::string& propName) const
+const csProperty* csClass::GetProperty(const std::string& propName) const
 {
-  for (const Property* prop : m_properties)
+  for (const csProperty * prop : m_properties)
   {
     if (prop->GetName() == propName)
     {
@@ -150,12 +139,12 @@ const Property* Class::GetProperty(const std::string& propName) const
   return nullptr;
 }
 
-size_t Class::GetNumberOfFunctions() const
+size_t csClass::GetNumberOfFunctions() const
 {
   return m_functions.size();
 }
 
-const Function* Class::GetFunction(size_t idx) const
+const csFunction* csClass::GetFunction(size_t idx) const
 {
   if (idx >= m_functions.size())
   {
@@ -164,10 +153,10 @@ const Function* Class::GetFunction(size_t idx) const
   return m_functions[idx];
 }
 
-std::vector<const Function*> Class::GetFunction(const std::string& functionName) const
+std::vector<const csFunction*> csClass::GetFunction(const std::string& functionName) const
 {
-  std::vector<const Function*> result;
-  for (const Function* function : m_functions)
+  std::vector<const csFunction*> result;
+  for (const csFunction * function : m_functions)
   {
     if (function->GetName() == functionName)
     {
@@ -178,10 +167,10 @@ std::vector<const Function*> Class::GetFunction(const std::string& functionName)
 }
 
 
-std::vector<const Function*> Class::GetFunction(const std::string& functionName, eConstness constness) const
+std::vector<const csFunction*> csClass::GetFunction(const std::string& functionName, eConstness constness) const
 {
-  std::vector<const Function*> result;
-  for (const Function* function : m_functions)
+  std::vector<const csFunction*> result;
+  for (const csFunction * function : m_functions)
   {
     if (function->GetName() == functionName && function->GetConstness() == constness)
     {
@@ -193,52 +182,52 @@ std::vector<const Function*> Class::GetFunction(const std::string& functionName,
 
 
 
-const Function* Class::GetFirstFunction(const std::string& functionName) const
+const csFunction* csClass::GetFirstFunction(const std::string& functionName) const
 {
-  for (const Function* function : m_functions)
+  for (const csFunction * function : m_functions)
   {
     if (function->GetName() == functionName)
     {
       return function;
     }
   }
-  throw NoSuchMethodException(functionName);
+  throw csNoSuchMethodException(functionName);
 }
 
 
-const Function* Class::GetFirstFunction(const std::string& functionName, eConstness constness) const
+const csFunction* csClass::GetFirstFunction(const std::string& functionName, eConstness constness) const
 {
-  for (const Function* function : m_functions)
+  for (const csFunction * function : m_functions)
   {
     if (function->GetName() == functionName && function->GetConstness() == constness)
     {
       return function;
     }
   }
-  throw NoSuchMethodException(functionName);
+  throw csNoSuchMethodException(functionName);
 }
 
-size_t Class::GetNumberOfSuperClasses() const
+size_t csClass::GetNumberOfSuperClasses() const
 {
   return m_superClasses.size();
 }
 
-const Class* Class::GetSuperClass(size_t idx) const
+const csClass* csClass::GetSuperClass(size_t idx) const
 {
   return m_superClasses[idx];
 }
 
-void Class::AddMeta(const std::string& key, const std::string& value)
+void csClass::AddMeta(const std::string& key, const std::string& value)
 {
   m_meta[key] = value;
 }
 
-bool Class::HasMeta(const std::string& meta) const
+bool csClass::HasMeta(const std::string& meta) const
 {
   return m_meta.find(meta) != m_meta.end();
 }
 
-const std::string Class::GetMeta(const std::string& meta) const
+const std::string csClass::GetMeta(const std::string& meta) const
 {
   auto it = m_meta.find(meta);
   if (it != m_meta.end())
@@ -252,7 +241,7 @@ const std::string Class::GetMeta(const std::string& meta) const
 // ---------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------
 
-Property::Property(const ValueDeclaration& containerDecl, const std::string& name, const ValueDeclaration& decl)
+csProperty::csProperty(const csValueDeclaration& containerDecl, const std::string& name, const csValueDeclaration& decl)
   : m_name(name)
   , m_containerDecl(containerDecl)
   , m_decl(decl)
@@ -260,37 +249,37 @@ Property::Property(const ValueDeclaration& containerDecl, const std::string& nam
 
 }
 
-Property::~Property()
+csProperty::~csProperty()
 {
 
 }
 
-bool Property::IsContainer() const
+bool csProperty::IsContainer() const
 {
   return !m_containerDecl.GetType().empty();
 }
 
-const ValueDeclaration& Property::GetDecl() const
+const csValueDeclaration& csProperty::GetDecl() const
 {
   return m_decl;
 }
 
-const ValueDeclaration& Property::GetContainerDecl() const
+const csValueDeclaration& csProperty::GetContainerDecl() const
 {
   return m_containerDecl;
 }
 
-const std::string& Property::GetName() const
+const std::string& csProperty::GetName() const
 {
   return m_name;
 }
 
-void Property::SetProperty(const std::string& key, const std::string& value)
+void csProperty::SetProperty(const std::string& key, const std::string& value)
 {
   m_properties[key] = value;
 }
 
-std::set<std::string> Property::GetProperties() const
+std::set<std::string> csProperty::GetProperties() const
 {
   std::set<std::string> res;
   for (auto const& it : m_properties)
@@ -300,12 +289,12 @@ std::set<std::string> Property::GetProperties() const
   return res;
 }
 
-bool Property::HasProperty(const std::string& property) const
+bool csProperty::HasProperty(const std::string& property) const
 {
   return m_properties.find(property) != m_properties.end();
 }
 
-std::string Property::GetProperty(const std::string& property) const
+std::string csProperty::GetProperty(const std::string& property) const
 {
   std::map<std::string, std::string>::const_iterator it = m_properties.find(property);
   if (it != m_properties.end())
@@ -318,7 +307,7 @@ std::string Property::GetProperty(const std::string& property) const
 // ---------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------
 
-ValueDeclaration::ValueDeclaration(eConstness constness, const std::string& type, eValueMemoryMode mode)
+csValueDeclaration::csValueDeclaration(eConstness constness, const std::string& type, eValueMemoryMode mode)
   : m_constness(constness)
   , m_type(type)
   , m_mode(mode)
@@ -326,22 +315,22 @@ ValueDeclaration::ValueDeclaration(eConstness constness, const std::string& type
 
 }
 
-eConstness  ValueDeclaration::GetConstness() const
+eConstness  csValueDeclaration::GetConstness() const
 {
   return m_constness;
 }
 
-const std::string& ValueDeclaration::GetType() const
+const std::string& csValueDeclaration::GetType() const
 {
   return m_type;
 }
 
-eValueMemoryMode ValueDeclaration::GetMode() const
+eValueMemoryMode csValueDeclaration::GetMode() const
 {
   return m_mode;
 }
 
-bool ValueDeclaration::operator==(const ValueDeclaration& other) const
+bool csValueDeclaration::operator==(const csValueDeclaration& other) const
 {
   return m_constness == other.m_constness &&
     m_type == other.m_type &&
@@ -351,18 +340,18 @@ bool ValueDeclaration::operator==(const ValueDeclaration& other) const
 
 // ---------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------
-FunctionAttribute::FunctionAttribute(const ValueDeclaration& type, const std::string& name)
+csFunctionAttribute::csFunctionAttribute(const csValueDeclaration& type, const std::string& name)
   : m_type(type)
   , m_name(name)
 {
 }
 
-const ValueDeclaration& FunctionAttribute::GetType() const
+const csValueDeclaration& csFunctionAttribute::GetType() const
 {
   return m_type;
 }
 
-const std::string& FunctionAttribute::GetName() const
+const std::string& csFunctionAttribute::GetName() const
 {
   return m_name;
 }
@@ -370,7 +359,7 @@ const std::string& FunctionAttribute::GetName() const
 // ---------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------
 
-Function::Function(eFunctionVirtuality virtuality, const ValueDeclaration& returnType, const std::string& name, eConstness constness)
+csFunction::csFunction(eFunctionVirtuality virtuality, const csValueDeclaration& returnType, const std::string& name, eConstness constness)
   : m_virtuality(virtuality)
   , m_constness(constness)
   , m_name(name)
@@ -379,17 +368,17 @@ Function::Function(eFunctionVirtuality virtuality, const ValueDeclaration& retur
 
 }
 
-void Function::AddAttribute(const FunctionAttribute& attribute)
+void csFunction::AddAttribute(const csFunctionAttribute& attribute)
 {
   m_attributes.push_back(attribute);
 }
 
-size_t Function::GetNumberOfAttributes() const
+size_t csFunction::GetNumberOfAttributes() const
 {
   return m_attributes.size();
 }
 
-const FunctionAttribute& Function::GetAttribute(size_t idx) const
+const csFunctionAttribute& csFunction::GetAttribute(size_t idx) const
 {
   if (idx >= m_attributes.size())
   {
@@ -399,28 +388,28 @@ const FunctionAttribute& Function::GetAttribute(size_t idx) const
   return m_attributes[idx];
 }
 
-const std::string& Function::GetName() const
+const std::string& csFunction::GetName() const
 {
   return m_name;
 }
 
-const ValueDeclaration& Function::GetReturnType() const
+const csValueDeclaration& csFunction::GetReturnType() const
 {
   return m_returnType;
 }
 
-eFunctionVirtuality Function::GetVirtuality() const
+eFunctionVirtuality csFunction::GetVirtuality() const
 {
   return m_virtuality;
 }
 
-eConstness Function::GetConstness() const
+eConstness csFunction::GetConstness() const
 {
   return m_constness;
 }
 
 
-Class::~Class()
+csClass::~csClass()
 {
 
 }

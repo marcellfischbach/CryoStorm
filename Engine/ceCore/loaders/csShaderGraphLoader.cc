@@ -23,12 +23,12 @@ csShaderGraphLoader::csShaderGraphLoader()
 }
 
 
-iObject *csShaderGraphLoader::Load(const csCryoFile *file, const Class *cls, const csResourceLocator &locator) const
+iObject *csShaderGraphLoader::Load(const csCryoFile *file, const csClass *cls, const csResourceLocator &locator) const
 {
   const csCryoFileElement *root               = file->Root();
   const csCryoFileElement *shaderGraphElement = root->GetChild("shaderGraph");
-  auto                    sg                  = new csShaderGraph();
-  AutoRelease              autoRelSG(sg);
+  auto          sg                  = new csShaderGraph();
+  csAutoRelease autoRelSG(sg);
 
 
   if (!shaderGraphElement)
@@ -186,7 +186,7 @@ csSGNode *csShaderGraphLoader::CreateNode(const cryo::csCryoFileElement *nodeEle
   {
     return nullptr;
   }
-  const Class *nodeTypeClass = csClassRegistry::Get()->GetClass(nodeTypeName);
+  const csClass *nodeTypeClass = csClassRegistry::Get()->GetClass(nodeTypeName);
   if (!nodeTypeClass)
   {
     fprintf(stderr, "Unable to loader shader graph: Class name '%s' node found.\n", nodeTypeName.c_str());
@@ -212,7 +212,7 @@ csShaderGraphLoader::CreateResourceNode(const cryo::csCryoFileElement *nodeEleme
   {
     return nullptr;
   }
-  const Class *nodeTypeClass = csClassRegistry::Get()->GetClass(nodeTypeName);
+  const csClass *nodeTypeClass = csClassRegistry::Get()->GetClass(nodeTypeName);
   if (!nodeTypeClass)
   {
     fprintf(stderr, "Unable to loader shader graph: Class name '%s' node found.\n", nodeTypeName.c_str());

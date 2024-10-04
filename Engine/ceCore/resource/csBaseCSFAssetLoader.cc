@@ -8,7 +8,7 @@
 namespace cryo
 {
 
-void csBaseCSFAssetLoader::AddValidFile(const Class* cls, const std::string& fileExtension)
+void csBaseCSFAssetLoader::AddValidFile(const csClass* cls, const std::string& fileExtension)
 {
   ValidFile validFile;
   validFile.Cls = cls;
@@ -19,12 +19,12 @@ void csBaseCSFAssetLoader::AddValidFile(const Class* cls, const std::string& fil
 bool csBaseCSFAssetLoader::Open(const csResourceLocator& locator, csCryoFile &file)
 {
   iFile* fd = cryo::csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
-  AutoRelease arFD(fd);
+  csAutoRelease arFD(fd);
 
   return file.Parse(fd);
 }
 
-bool csBaseCSFAssetLoader::CanLoad(const Class* cls, const csResourceLocator& locator) const
+bool csBaseCSFAssetLoader::CanLoad(const csClass* cls, const csResourceLocator& locator) const
 {
   const std::string& extension = locator.GetExtension();
   for (auto &validFile : m_validFiles)
@@ -37,7 +37,7 @@ bool csBaseCSFAssetLoader::CanLoad(const Class* cls, const csResourceLocator& lo
   return false;
 }
 
-iObject *csBaseCSFAssetLoader::Load(const Class* cls, const csResourceLocator& locator) const
+iObject *csBaseCSFAssetLoader::Load(const csClass* cls, const csResourceLocator& locator) const
 {
   csCryoFile file;
   if (!Open(locator, file))

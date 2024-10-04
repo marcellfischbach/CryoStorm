@@ -165,7 +165,7 @@ GL4PSSMShadowBufferObject *GL4ForwardDirectionalLightRenderer::GetDirectionalLig
 
 void GL4ForwardDirectionalLightRenderer::SetDevice(iDevice *device)
 {
-  m_device = QueryClass<GL4Device>(device);
+  m_device = csQueryClass<GL4Device>(device);
 }
 
 void GL4ForwardDirectionalLightRenderer::SetScene(iGfxScene *scene)

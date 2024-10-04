@@ -2,7 +2,7 @@
 #pragma once
 
 #include <ceCore/csCoreExport.hh>
-#include <ceCore/class.hh>
+#include <ceCore/csClass.hh>
 #include <vector>
 
 namespace cryo
@@ -11,6 +11,7 @@ namespace cryo
 class csEntity;
 class csWorld;
 class csSpatialState;
+
 
 CS_CLASS()
 class CS_CORE_API csEntityState : public CS_SUPER(iObject)
@@ -38,8 +39,8 @@ public:
     return static_cast<const ES*>(GetState(ES::GetStaticClass()));
   }
 
-  csEntityState* GetState(const Class* cls);
-  const csEntityState* GetState(const Class* cls) const;
+  csEntityState* GetState(const csClass* cls);
+  const csEntityState* GetState(const csClass* cls) const;
 
   template<typename ES>
   std::vector<ES*> GetStates()
@@ -54,8 +55,8 @@ public:
     return *reinterpret_cast<std::vector<const ES*>*>(&GetStates(ES::GetStaticClass()));
   }
 
-  std::vector<csEntityState*> GetStates(const Class* cls);
-  std::vector<const csEntityState*> GetStates(const Class* cls) const;
+  std::vector<csEntityState*> GetStates(const csClass* cls);
+  std::vector<const csEntityState*> GetStates(const csClass* cls) const;
 
   csSpatialState* GetRoot();
   const csSpatialState* GetRoot() const;

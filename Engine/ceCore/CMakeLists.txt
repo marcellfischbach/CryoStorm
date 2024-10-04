@@ -3,8 +3,8 @@ add_definitions(-DCS_CORE_EXPORT)
 add_definitions(-D_USE_MATH_DEFINES)
 
 set(SOURCES
-        class.cc
-        class.hh
+        csClass.cc
+        csClass.hh
         csClassRegistry.cc
         csClassRegistry.hh
         csDefs.hh

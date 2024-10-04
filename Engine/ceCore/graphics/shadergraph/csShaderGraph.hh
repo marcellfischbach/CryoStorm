@@ -1,7 +1,7 @@
 #pragma once
 
 #include <ceCore/csCoreExport.hh>
-#include <ceCore/class.hh>
+#include <ceCore/csClass.hh>
 
 #include <ceCore/graphics/eBlendFactor.hh>
 #include <ceCore/graphics/eCompareFunc.hh>
@@ -25,11 +25,11 @@ public:
 
   template<typename T>
   T *Add(const std::string &key);
-  csSGNode *Add(const Class *nodeClass, const std::string &key);
+  csSGNode *Add(const csClass *nodeClass, const std::string &key);
 
   template<typename T>
   T *AddResource(const std::string &key, const std::string &resourceName);
-  csSGResourceNode *AddResource(const Class *nodeClass, const std::string &key, const std::string &resourceName);
+  csSGResourceNode *AddResource(const csClass *nodeClass, const std::string &key, const std::string &resourceName);
 
   void BindDiffuse(csSGNode *node, size_t outputIdx = 0);
   void BindAlpha(csSGNode *node, size_t outputIdx = 0);
@@ -124,7 +124,7 @@ private:
 template<typename T>
 T *csShaderGraph::Add(const std::string &key)
 {
-  const Class *nodeClass = T::GetStaticClass();
+  const csClass *nodeClass = T::GetStaticClass();
 
   csSGNode *node = Add(nodeClass, key);
 
@@ -136,7 +136,7 @@ T *csShaderGraph::Add(const std::string &key)
 template<typename T>
 T *csShaderGraph::AddResource(const std::string &key, const std::string &resourceName)
 {
-  const Class *nodeClass = T::GetStaticClass();
+  const csClass *nodeClass = T::GetStaticClass();
 
   csSGNode *node = AddResource(nodeClass, key, resourceName);
 

@@ -55,7 +55,7 @@ std::string HeaderGenerator::OutputClass(ClassNode* clsNode)
     source += "{\n";
   }
 
-  source += "\nclass " + clsName + " : public cryo::Class\n";
+  source += "\nclass " + clsName + " : public cryo::csClass\n";
   source += "{\n";
   source += "public:\n";
   source += " " + clsName + "();\n";

@@ -5,7 +5,7 @@
 #pragma once
 
 #include <ceCore/csCoreExport.hh>
-#include <ceCore/class.hh>
+#include <ceCore/csClass.hh>
 #include <ceCore/resource/iAssetLoader.hh>
 #include <vector>
 
@@ -26,15 +26,15 @@ protected:
   {
     AddValidFile(T::GetStaticClass(), fileExtension);
   }
-  void AddValidFile (const Class* cls, const std::string &fileExtension);
+  void AddValidFile(const csClass* cls, const std::string &fileExtension);
 
-  virtual iObject* Load(const csCryoFile *file, const Class* cls, const csResourceLocator& locator) const = 0;
+  virtual iObject* Load(const csCryoFile *file, const csClass* cls, const csResourceLocator& locator) const = 0;
 
 public:
   ~csBaseCSFAssetLoader() override = default;
 
-  bool CanLoad(const Class* cls, const csResourceLocator& locator) const override ;
-  CS_NODISCARD iObject* Load(const Class* cls, const csResourceLocator& locator) const override;
+  bool CanLoad(const csClass* cls, const csResourceLocator& locator) const override ;
+  CS_NODISCARD iObject* Load(const csClass* cls, const csResourceLocator& locator) const override;
 
 private:
   CS_NODISCARD static bool Open(const csResourceLocator &locator, csCryoFile &file);
@@ -42,7 +42,7 @@ private:
 
   struct ValidFile
   {
-    const Class* Cls;
+    const csClass * Cls;
     std::string Extension;
   };
 

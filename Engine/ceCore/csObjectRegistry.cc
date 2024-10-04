@@ -14,9 +14,9 @@ csObjectRegistry::csObjectRegistry()
 
 }
 
-void csObjectRegistry::Register(const Class *cls, iObject *obj)
+void csObjectRegistry::Register(const csClass *cls, iObject *obj)
 {
-  std::map<const Class *, iObject *> &registry = csObjectRegistry::Get()->m_registry;
+  std::map<const csClass *, iObject *> &registry = csObjectRegistry::Get()->m_registry;
 
   auto it = registry.find(cls);
   if (it != registry.end())
@@ -29,7 +29,7 @@ void csObjectRegistry::Register(const Class *cls, iObject *obj)
   registry[cls] = obj;
 }
 
-iObject *csObjectRegistry::Get(const Class *cls)
+iObject *csObjectRegistry::Get(const csClass *cls)
 {
   csObjectRegistry *reg = csObjectRegistry::Get();
   auto             it   = reg->m_registry.find(cls);

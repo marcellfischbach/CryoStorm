@@ -3,7 +3,7 @@
 #pragma once
 
 #include <ceCore/csCoreExport.hh>
-#include <ceCore/class.hh>
+#include <ceCore/csClass.hh>
 #include <ceCore/graphics/eRenderPass.hh>
 #include <ceCore/graphics/scene/csGfxMesh.hh>
 #include <ceCore/graphics/scene/iGfxScene.hh>

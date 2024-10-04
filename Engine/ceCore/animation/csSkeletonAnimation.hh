@@ -2,7 +2,7 @@
 #pragma once
 
 #include <ceCore/csCoreExport.hh>
-#include <ceCore/class.hh>
+#include <ceCore/csClass.hh>
 #include <ceCore/math/csVector3f.hh>
 #include <ceCore/math/csQuaternion.hh>
 

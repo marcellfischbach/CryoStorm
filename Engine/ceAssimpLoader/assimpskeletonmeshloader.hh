@@ -21,9 +21,9 @@ public:
   AssimpSkeletonMeshLoader();
   virtual ~AssimpSkeletonMeshLoader() { }
 
-  virtual bool CanLoad(const Class * cls, const csResourceLocator & locator) const;
+  virtual bool CanLoad(const csClass * cls, const csResourceLocator & locator) const;
 
-  virtual iObject* Load(const Class * cls, const csResourceLocator & locator) const;
+  virtual iObject* Load(const csClass * cls, const csResourceLocator & locator) const;
 
 private:
   void ReadSkeleton(aiNode* node, const csMatrix4f &parentMatrix, SkeletonLoaderData& d) const;

@@ -4,7 +4,7 @@
 
 
 #include <ceCore/csCoreExport.hh>
-#include <ceCore/class.hh>
+#include <ceCore/csClass.hh>
 #include <ceCore/math/csColor4f.hh>
 #include <ceCore/math/csVector.hh>
 #include <ceCore/math/csMatrix.hh>

@@ -36,7 +36,7 @@ AssimpMeshLoader::AssimpMeshLoader()
 }
 
 
-bool AssimpMeshLoader::CanLoad(const Class *cls, const csResourceLocator &locator) const
+bool AssimpMeshLoader::CanLoad(const csClass *cls, const csResourceLocator &locator) const
 {
   const std::string &ext = locator.GetExtension();
   return cls == csMesh::GetStaticClass()
@@ -64,7 +64,7 @@ static void debug_node(aiNode *node, const csMatrix4f &parent, const std::string
 //  }
 }
 
-iObject *AssimpMeshLoader::Load(const Class *cls, const csResourceLocator &locator) const
+iObject *AssimpMeshLoader::Load(const csClass *cls, const csResourceLocator &locator) const
 {
   iFile *file = cryo::csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (!file)

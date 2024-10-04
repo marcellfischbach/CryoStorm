@@ -19,7 +19,7 @@ csSkeleton::Bone csSkeleton::IllegalBone = {
 };
 
 csSkeleton::csSkeleton()
-    : Object()
+    : csObject()
     , m_base()
 {
   CS_CLASS_GEN_CONSTR;

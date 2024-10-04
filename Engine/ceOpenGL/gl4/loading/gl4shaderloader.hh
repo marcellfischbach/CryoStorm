@@ -17,9 +17,9 @@ public:
   virtual ~GL4ShaderLoader() = default;
 
 
-  bool CanLoad(const Class * cls, const csResourceLocator & locator) const override;
+  bool CanLoad(const csClass * cls, const csResourceLocator & locator) const override;
 
-  iObject* Load(const Class * cls, const csResourceLocator & locator) const override;
+  iObject* Load(const csClass * cls, const csResourceLocator & locator) const override;
 
 };
 

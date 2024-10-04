@@ -2,7 +2,7 @@
 #pragma once
 
 #include <ceCore/csCoreExport.hh>
-#include <ceCore/class.hh>
+#include <ceCore/csClass.hh>
 #include <ceCore/math/csMatrix4f.hh>
 #include <ceCore/math/csQuaternion.hh>
 #include <vector>
@@ -13,7 +13,7 @@ namespace cryo
 
 
 CS_CLASS()
-class CS_CORE_API csSkeleton : public CS_SUPER(Object)
+class CS_CORE_API csSkeleton : public CS_SUPER(csObject)
 {
   CS_CLASS_GEN_OBJECT;
 public:

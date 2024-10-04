@@ -2,7 +2,7 @@
 #pragma once
 
 #include <ceCore/csCoreExport.hh>
-#include <ceCore/class.hh>
+#include <ceCore/csClass.hh>
 #include <ceCore/resource/iAssetLoader.hh>
 #include <ceCore/resource/iAssetLoader.hh>
 #include <map>
@@ -28,7 +28,7 @@ public:
   {
     return Get<T>(csResourceLocator(locator));
   }
-  iObject *Get(const Class *cls, const std::string &locator)
+  iObject *Get(const csClass *cls, const std::string &locator)
   {
     return Get(cls, csResourceLocator(locator));
   }
@@ -39,7 +39,7 @@ public:
     iObject *obj = Get(T::GetStaticClass(), locator);
     return obj ? obj->Query<T>() : nullptr;
   }
-  iObject *Get(const Class *cls, const csResourceLocator &locator);
+  iObject *Get(const csClass *cls, const csResourceLocator &locator);
 
   template<typename T>
   T *Load(const csResourceLocator &locator)
@@ -47,7 +47,7 @@ public:
     iObject *obj = Load(T::GetStaticClass(), locator);
     return obj ? obj->Query<T>() : nullptr;
   }
-  iObject *Load(const Class *cls, const csResourceLocator &locator);
+  iObject *Load(const csClass *cls, const csResourceLocator &locator);
 
   template<typename T>
   T *Load(const std::string &locator)
@@ -55,7 +55,7 @@ public:
     iObject *obj = Load(T::GetStaticClass(), csResourceLocator(locator));
     return obj ? obj->Query<T>() : nullptr;
   }
-  iObject *Load(const Class *cls, const std::string &locator)
+  iObject *Load(const csClass *cls, const std::string &locator)
   {
     return Load(cls, csResourceLocator(locator));
   }

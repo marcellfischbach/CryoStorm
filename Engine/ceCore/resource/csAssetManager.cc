@@ -36,7 +36,7 @@ void csAssetManager::RegisterLoader(iAssetLoader* loader)
 }
 
 
-iObject* csAssetManager::Get(const Class* cls, const csResourceLocator& locator)
+iObject* csAssetManager::Get(const csClass* cls, const csResourceLocator& locator)
 {
   auto it = m_cachedObjects.find(locator);
   if (it != m_cachedObjects.end())
@@ -50,7 +50,7 @@ iObject* csAssetManager::Get(const Class* cls, const csResourceLocator& locator)
 }
 
 
-iObject* csAssetManager::Load(const Class* cls, const csResourceLocator& locator)
+iObject* csAssetManager::Load(const csClass* cls, const csResourceLocator& locator)
 {
   for (iAssetLoader* loader : m_loaders)
   {

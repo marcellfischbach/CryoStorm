@@ -6,7 +6,7 @@
 #include "ceCore/csDefs.hh"
 #include "iKeyboard.hh"
 #include "iMouse.hh"
-#include "ceCore/class.hh"
+#include "ceCore/csClass.hh"
 
 
 namespace cryo

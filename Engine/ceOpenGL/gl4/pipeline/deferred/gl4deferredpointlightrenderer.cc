@@ -61,7 +61,7 @@ bool GL4DeferredPointLightRenderer::Initialize()
 
 void GL4DeferredPointLightRenderer::SetDevice(iDevice *device)
 {
-  m_device = QueryClass<GL4Device>(device);
+  m_device = csQueryClass<GL4Device>(device);
 }
 
 void GL4DeferredPointLightRenderer::SetScene(cryo::iGfxScene *scene)

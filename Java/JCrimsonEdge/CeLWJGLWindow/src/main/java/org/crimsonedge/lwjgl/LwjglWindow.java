@@ -14,7 +14,7 @@ public class LwjglWindow extends CoreObject implements IWindow {
     private final LwjglKeyboard keyboard;
 
     private static native long nCreate();
-    private static native void nSetJObject (long ref, Object obj);
+    private static native void nSetJObject (long ref, csObject obj);
 
     private static native LwjglMouse nGetMouse (long ref);
     private static native LwjglKeyboard nGetKeyboard(long ref);

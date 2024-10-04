@@ -17,9 +17,9 @@ namespace cryo::img
     JpegLoader();
     virtual ~JpegLoader() { }
 
-    virtual bool CanLoad(const Class * cls, const csResourceLocator & locator) const;
+    virtual bool CanLoad(const csClass * cls, const csResourceLocator & locator) const;
 
-    virtual iObject* Load(const Class * cls, const csResourceLocator & locator) const;
+    virtual iObject* Load(const csClass * cls, const csResourceLocator & locator) const;
 
   };
 

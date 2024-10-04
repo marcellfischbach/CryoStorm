@@ -15,7 +15,7 @@ struct iTexture2D;
 
 
 CS_CLASS()
-class CS_CORE_API csTerrainLayerMask : public CS_SUPER(Object)
+class CS_CORE_API csTerrainLayerMask : public CS_SUPER(csObject)
 {
 CS_CLASS_GEN;
 public:
@@ -36,7 +36,7 @@ private:
 };
 
 CS_CLASS()
-class CS_CORE_API csTerrainLayer : public CS_SUPER(Object)
+class CS_CORE_API csTerrainLayer : public CS_SUPER(csObject)
 {
 CS_CLASS_GEN;
 public:

@@ -428,7 +428,7 @@ GL4PSSMShadowBufferObject GL4PSSMRenderer::CreateDirectionalLightShadowBuffer()
     colorDesc.Layers  = 4;
     colorDesc.Format  = ePF_RGBA;
     colorDesc.MipMaps = false;
-    sbo.ShadowColor = QueryClass<GL4Texture2DArray>(m_device->CreateTexture(colorDesc));
+    sbo.ShadowColor = csQueryClass<GL4Texture2DArray>(m_device->CreateTexture(colorDesc));
     sbo.ShadowColor->SetSampler(GetShadowBufferColorSampler());
   }
 
@@ -438,7 +438,7 @@ GL4PSSMShadowBufferObject GL4PSSMRenderer::CreateDirectionalLightShadowBuffer()
   depthDesc.Layers  = 4;
   depthDesc.Format  = ePF_Depth;
   depthDesc.MipMaps = false;
-  sbo.ShadowDepth = QueryClass<GL4Texture2DArray>(m_device->CreateTexture(depthDesc));
+  sbo.ShadowDepth = csQueryClass<GL4Texture2DArray>(m_device->CreateTexture(depthDesc));
   sbo.ShadowDepth->SetSampler(GetShadowBufferDepthSampler());
 
 
@@ -447,7 +447,7 @@ GL4PSSMShadowBufferObject GL4PSSMRenderer::CreateDirectionalLightShadowBuffer()
     iRenderTarget2D::Descriptor desc {};
     desc.Width  = (uint16_t) m_directionalLightShadowBufferSize;
     desc.Height = (uint16_t) m_directionalLightShadowBufferSize;
-    auto shadowRenderTarget = QueryClass<GL4RenderTarget2D>(m_device->CreateRenderTarget(desc));
+    auto shadowRenderTarget = csQueryClass<GL4RenderTarget2D>(m_device->CreateRenderTarget(desc));
 
 
     if (sbo.ShadowColor)
@@ -511,7 +511,7 @@ GL4RenderTarget2D *GL4PSSMRenderer::CreateDirectionalLightShadowMap()
   iRenderTarget2D::Descriptor desc {};
   desc.Width  = (uint16_t) m_directionalLightShadowMapWidth;
   desc.Height = (uint16_t) m_directionalLightShadowMapHeight;
-  auto target = QueryClass<GL4RenderTarget2D>(m_device->CreateRenderTarget(desc));
+  auto target = csQueryClass<GL4RenderTarget2D>(m_device->CreateRenderTarget(desc));
 
   iTexture2D::Descriptor colorDesc {};
   colorDesc.Width   = (uint16_t) m_directionalLightShadowMapWidth;

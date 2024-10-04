@@ -85,7 +85,7 @@ eCompareFunc CompareFunc(const std::string& compareFunc)
   return eCF_Always;
 }
 
-iObject* csSamplerLoader::Load(const csCryoFile *file, const Class* cls, const csResourceLocator& locator) const
+iObject* csSamplerLoader::Load(const csCryoFile *file, const csClass* cls, const csResourceLocator& locator) const
 {
   const csCryoFileElement * samplerElement = file->Root()->GetChild("sampler");
   if (!samplerElement)

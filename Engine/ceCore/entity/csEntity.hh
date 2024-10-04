@@ -2,7 +2,7 @@
 #pragma once
 
 #include <ceCore/csCoreExport.hh>
-#include <ceCore/class.hh>
+#include <ceCore/csClass.hh>
 #include <ceCore/csTypes.hh>
 #include <string>
 #include <vector>
@@ -50,8 +50,8 @@ public:
     return static_cast<const ES*>(GetState(ES::GetStaticClass()));
   }
 
-  csEntityState* GetState(const Class * cls);
-  const csEntityState* GetState(const Class * cls) const;
+  csEntityState* GetState(const csClass * cls);
+  const csEntityState* GetState(const csClass * cls) const;
 
 
   template<typename ES>
@@ -66,8 +66,8 @@ public:
     return *reinterpret_cast<std::vector<const ES*>*>(&GetStates(ES::GetStaticClass()));
   }
 
-  std::vector<csEntityState*> GetStates(const Class * cls);
-  std::vector<const csEntityState*> GetStates(const Class * cls) const;
+  std::vector<csEntityState*> GetStates(const csClass * cls);
+  std::vector<const csEntityState*> GetStates(const csClass * cls) const;
 
   bool Attach(csEntityState* entityState);
   bool Detach(csEntityState* entityState);

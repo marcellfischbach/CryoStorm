@@ -3,7 +3,7 @@
 
 #include "ceCore/csCoreExport.hh"
 #include "eKey.hh"
-#include "ceCore/class.hh"
+#include "ceCore/csClass.hh"
 
 
 namespace cryo

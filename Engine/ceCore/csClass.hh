@@ -20,17 +20,17 @@
 #define CS_FUNCTION(...)
 #ifdef CS_JAVA
 #define CS_CLASS_GEN public: \
-    const cryo::Class *GetClass () const override; \
-    static const cryo::Class *GetStaticClass (); \
-    void *QueryClass(const cryo::Class *clazz) override; \
-    const void *QueryClass(const cryo::Class *clazz) const override; \
+    const cryo::csClass *GetClass () const override; \
+    static const cryo::csClass *GetStaticClass (); \
+    void *QueryClass(const cryo::csClass *clazz) override; \
+    const void *QueryClass(const cryo::csClass *clazz) const override; \
     jobject CreateJObject () const
 #else
 #define CS_CLASS_GEN public: \
-    const cryo::Class *GetClass () const override; \
-    static const cryo::Class *GetStaticClass (); \
-    void *QueryClass(const cryo::Class *clazz) override; \
-    const void *QueryClass(const cryo::Class *clazz) const override;
+    const cryo::csClass *GetClass () const override; \
+    static const cryo::csClass *GetStaticClass (); \
+    void *QueryClass(const cryo::csClass *clazz) override; \
+    const void *QueryClass(const cryo::csClass *clazz) const override;
 #endif
 
 #ifdef CS_JAVA
@@ -156,14 +156,14 @@ namespace cryo
 {
 
 
-class BadMethodInvokation : public std::exception
+class csBadMethodInvokation : public std::exception
 {
 public:
-  BadMethodInvokation(const std::string &msg)
+  csBadMethodInvokation(const std::string &msg)
       : m_msg(msg)
   {
   }
-  virtual ~BadMethodInvokation()
+  virtual ~csBadMethodInvokation()
   {
 
   }
@@ -177,14 +177,14 @@ private:
 };
 
 
-class NoSuchMethodException : public std::exception
+class csNoSuchMethodException : public std::exception
 {
 public:
-  NoSuchMethodException(const std::string &methodName)
+  csNoSuchMethodException(const std::string &methodName)
       : m_methodName(methodName)
   {
   }
-  virtual ~NoSuchMethodException()
+  virtual ~csNoSuchMethodException()
   {
 
   }
@@ -198,14 +198,14 @@ private:
 };
 
 
-class InstanciationException : public std::exception
+class csInstantiationException : public std::exception
 {
 public:
-  InstanciationException(const std::string &className)
+  csInstantiationException(const std::string &className)
       : m_className(className)
   {
   }
-  virtual ~InstanciationException()
+  virtual ~csInstantiationException()
   {
 
   }
@@ -219,14 +219,14 @@ private:
 };
 
 
-class Class;
+class csClass;
 
 struct CS_CORE_API iObject
 {
-  iObject();
-  virtual ~iObject();
-  virtual const Class *GetClass() const;
-  static const Class *GetStaticClass();
+  iObject() = default;
+  virtual ~iObject() = default;
+  CS_NODISCARD virtual const csClass *GetClass() const;
+  static const csClass *GetStaticClass();
 
   virtual void AddRef() = 0;
 
@@ -245,14 +245,14 @@ struct CS_CORE_API iObject
     return reinterpret_cast<T *>(QueryClass(T::GetStaticClass()));
   }
 
-  CS_NODISCARD virtual void *QueryClass(const Class *clazz);
+  CS_NODISCARD virtual void *QueryClass(const csClass *clazz);
 
   template<typename T>
   CS_NODISCARD const T *Query() const
   {
     return reinterpret_cast<const T *>(QueryClass(T::GetStaticClass()));
   }
-  CS_NODISCARD virtual const void *QueryClass(const Class *clazz) const;
+  CS_NODISCARD virtual const void *QueryClass(const csClass *clazz) const;
 
   template<typename T>
   bool IsInstanceOf() const;
@@ -260,21 +260,21 @@ struct CS_CORE_API iObject
 };
 
 
-class AutoRelease
+class csAutoRelease
 {
 private:
   iObject *obj;
 public:
-  explicit AutoRelease(iObject *obj) : obj(obj)
+  explicit csAutoRelease(iObject *obj) : obj(obj)
   {}
-  ~AutoRelease()
+  ~csAutoRelease()
   { CS_RELEASE(obj); }
 
 };
 
 
 template<typename T>
-T *QueryClass(cryo::iObject *object)
+T *csQueryClass(cryo::iObject *object)
 {
   if (!object)
   {
@@ -284,7 +284,7 @@ T *QueryClass(cryo::iObject *object)
 }
 
 template<typename T>
-const T *QueryClass(const cryo::iObject *object)
+const T *csQueryClass(const cryo::iObject *object)
 {
   if (!object)
   {
@@ -315,31 +315,31 @@ enum eFunctionVirtuality
 };
 
 
-class CS_CORE_API ValueDeclaration
+class CS_CORE_API csValueDeclaration
 {
 public:
-  ValueDeclaration(eConstness constness = eC_NonConst,
-                   const std::string &type = "void",
-                   eValueMemoryMode mode = eVMM_Value);
+  csValueDeclaration(eConstness constness = eC_NonConst,
+                     const std::string &type = "void",
+                     eValueMemoryMode mode = eVMM_Value);
 
   eConstness GetConstness() const;
   const std::string &GetType() const;
   eValueMemoryMode GetMode() const;
 
-  bool operator==(const ValueDeclaration &other) const;
+  bool operator==(const csValueDeclaration &other) const;
 private:
   eConstness       m_constness;
   std::string      m_type;
   eValueMemoryMode m_mode;
 };
 
-class CS_CORE_API Property
+class CS_CORE_API csProperty
 {
 public:
-  virtual ~Property();
+  virtual ~csProperty();
 
-  const ValueDeclaration &GetContainerDecl() const;
-  const ValueDeclaration &GetDecl() const;
+  const csValueDeclaration &GetContainerDecl() const;
+  const csValueDeclaration &GetDecl() const;
   bool IsContainer() const;
   const std::string &GetName() const;
 
@@ -372,7 +372,7 @@ public:
 
 
 protected:
-  Property(const ValueDeclaration &containerDecl, const std::string &name, const ValueDeclaration &decl);
+  csProperty(const csValueDeclaration &containerDecl, const std::string &name, const csValueDeclaration &decl);
 
   void SetProperty(const std::string &key, const std::string &value = "");
   virtual void SetValue(cryo::iObject *object, void *data) const = 0;
@@ -382,38 +382,38 @@ protected:
 
 private:
   std::string                        m_name;
-  ValueDeclaration                   m_containerDecl;
-  ValueDeclaration                   m_decl;
+  csValueDeclaration                 m_containerDecl;
+  csValueDeclaration                 m_decl;
   std::map<std::string, std::string> m_properties;
 
 };
 
 
-class CS_CORE_API FunctionAttribute
+class CS_CORE_API csFunctionAttribute
 {
 public:
-  FunctionAttribute(const ValueDeclaration &type = ValueDeclaration(), const std::string &name = "");
+  csFunctionAttribute(const csValueDeclaration &type = csValueDeclaration(), const std::string &name = "");
 
-  const ValueDeclaration &GetType() const;
+  const csValueDeclaration &GetType() const;
   const std::string &GetName() const;
 
 private:
-  ValueDeclaration m_type;
-  std::string      m_name;
+  csValueDeclaration m_type;
+  std::string        m_name;
 };
 
-class CS_CORE_API Function
+class CS_CORE_API csFunction
 {
 public:
-  virtual ~Function()
+  virtual ~csFunction()
   {}
   const std::string &GetName() const;
-  const ValueDeclaration &GetReturnType() const;
+  const csValueDeclaration &GetReturnType() const;
   eFunctionVirtuality GetVirtuality() const;
   eConstness GetConstness() const;
 
   size_t GetNumberOfAttributes() const;
-  const FunctionAttribute &GetAttribute(size_t idx) const;
+  const csFunctionAttribute &GetAttribute(size_t idx) const;
 
 
   //
@@ -483,12 +483,12 @@ public:
 
 
 protected:
-  Function(eFunctionVirtuality virtuality,
-           const ValueDeclaration &returnType,
-           const std::string &name,
-           eConstness constness);
+  csFunction(eFunctionVirtuality virtuality,
+             const csValueDeclaration &returnType,
+             const std::string &name,
+             eConstness constness);
 
-  void AddAttribute(const FunctionAttribute &attribute);
+  void AddAttribute(const csFunctionAttribute &attribute);
 
   virtual void InvokeVoidImpl(cryo::iObject *obj, ...) const = 0;
   virtual void InvokeVoidImpl(const cryo::iObject *obj, ...) const = 0;
@@ -506,18 +506,18 @@ protected:
 private:
   eFunctionVirtuality m_virtuality;
   eConstness          m_constness;
-  std::string         m_name;
-  ValueDeclaration    m_returnType;
+  std::string        m_name;
+  csValueDeclaration m_returnType;
 
-  std::vector<FunctionAttribute> m_attributes;
-  FunctionAttribute              m_invalid;
+  std::vector<csFunctionAttribute> m_attributes;
+  csFunctionAttribute              m_invalid;
 };
 
 
-class CS_CORE_API Class
+class CS_CORE_API csClass
 {
 public:
-  virtual ~Class();
+  virtual ~csClass();
   virtual cryo::iObject *CreateInstance() const = 0;
   template<typename T>
   T *CreateInstance() const
@@ -528,7 +528,7 @@ public:
       return 0;
     }
 
-    T *t = cryo::QueryClass<T>(obj);
+    T *t = cryo::csQueryClass<T>(obj);
     if (!t)
     {
       obj->Release();
@@ -538,18 +538,18 @@ public:
   }
 
   size_t GetNumberOfProperties() const;
-  const Property *GetProperty(size_t idx) const;
-  const Property *GetProperty(const std::string &propName) const;
+  const csProperty *GetProperty(size_t idx) const;
+  const csProperty *GetProperty(const std::string &propName) const;
 
   size_t GetNumberOfFunctions() const;
-  const Function *GetFunction(size_t idx) const;
-  std::vector<const Function *> GetFunction(const std::string &functionName) const;
-  std::vector<const Function *> GetFunction(const std::string &functionName, eConstness constness) const;
-  const Function *GetFirstFunction(const std::string &functionName) const;
-  const Function *GetFirstFunction(const std::string &functionName, eConstness constness) const;
+  const csFunction *GetFunction(size_t idx) const;
+  std::vector<const csFunction *> GetFunction(const std::string &functionName) const;
+  std::vector<const csFunction *> GetFunction(const std::string &functionName, eConstness constness) const;
+  const csFunction *GetFirstFunction(const std::string &functionName) const;
+  const csFunction *GetFirstFunction(const std::string &functionName, eConstness constness) const;
 
   size_t GetNumberOfSuperClasses() const;
-  const Class *GetSuperClass(size_t idx) const;
+  const csClass *GetSuperClass(size_t idx) const;
 
   bool HasMeta(const std::string &meta) const;
   const std::string GetMeta(const std::string &meta) const;
@@ -561,39 +561,39 @@ public:
   {
     return IsInstanceOf(T::GetStaticClass());
   }
-  bool IsInstanceOf(const Class *clazz) const;
+  bool IsInstanceOf(const csClass *clazz) const;
 
   template<typename T>
   bool IsAssignableFrom() const
   {
     return IsAssignableFrom(T::GetStaticClass());
   }
-  bool IsAssignableFrom(const Class *clazz) const;
+  bool IsAssignableFrom(const csClass *clazz) const;
 
 
 protected:
-  Class(const std::string &name);
+  csClass(const std::string &name);
 
-  void AddSuperClass(const Class *parentClass);
-  void AddProperty(const Property *prop);
-  void AddFunction(const Function *function);
+  void AddSuperClass(const csClass *parentClass);
+  void AddProperty(const csProperty *prop);
+  void AddFunction(const csFunction *function);
   void AddMeta(const std::string &key, const std::string &value);
 private:
-  std::string                        m_name;
-  std::vector<const Class *>         m_superClasses;
-  std::vector<const Property *>      m_properties;
-  std::vector<const Function *>      m_functions;
+  std::string                   m_name;
+  std::vector<const csClass *>    m_superClasses;
+  std::vector<const csProperty *> m_properties;
+  std::vector<const csFunction *> m_functions;
   std::map<std::string, std::string> m_meta;
 };
 
 template<typename T>
-T *csNewClassInstance(const Class *clazz)
+T *csNewClassInstance(const csClass *clazz)
 {
   return reinterpret_cast<T *>(clazz->CreateInstance());
 }
 
 template<typename T>
-bool InstanceOf(const iObject *obj)
+bool csInstanceOf(const iObject *obj)
 {
   if (!obj)
   {
@@ -603,7 +603,7 @@ bool InstanceOf(const iObject *obj)
 }
 
 
-class CS_CORE_API iObjectClass : public Class
+class CS_CORE_API iObjectClass : public csClass
 {
 public:
   iObjectClass();
@@ -632,13 +632,13 @@ namespace cryo
 #endif
 
 CS_CLASS()
-class CS_CORE_API Object : public CS_SUPER(iObject)
+class CS_CORE_API csObject : public CS_SUPER(iObject)
 {
 CS_CLASS_GEN_OBJECT;
 
 public:
-  Object();
-  ~Object() override;
+  csObject();
+  ~csObject() override;
 
 
 };

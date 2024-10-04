@@ -19,10 +19,10 @@ public:
   csTerrainLayerLoader() = default;
   ~csTerrainLayerLoader() override = default;
 
-  bool CanLoad(const Class* cls, const csResourceLocator& locator) const override;
+  bool CanLoad(const csClass* cls, const csResourceLocator& locator) const override;
 
 protected:
-  iObject* Load(const csCryoFile* file, const Class* cls, const csResourceLocator& locator) const override;
+  iObject* Load(const csCryoFile* file, const csClass* cls, const csResourceLocator& locator) const override;
 
 };
 
@@ -38,10 +38,10 @@ public:
   csTerrainLayerMaskLoader() = default;
   ~csTerrainLayerMaskLoader() override = default;
 
-  bool CanLoad(const Class* cls, const csResourceLocator& locator) const override;
+  bool CanLoad(const csClass* cls, const csResourceLocator& locator) const override;
 
 protected:
-  iObject* Load(const csCryoFile* file, const Class* cls, const csResourceLocator& locator) const override;
+  iObject* Load(const csCryoFile* file, const csClass* cls, const csResourceLocator& locator) const override;
 
 };
 

@@ -22,11 +22,11 @@ public:
   }
 
 
-  iObject* Load(const csCryoFile* file, const Class* cls, const csResourceLocator& locator) const override;
+  iObject* Load(const csCryoFile* file, const csClass* cls, const csResourceLocator& locator) const override;
 
 private:
-  static csMaterial* LoadMaterial(const Class* cls, const csCryoFile* file, const csResourceLocator& locator);
-  static iObject* LoadMaterialInstance(const Class* cls, const csCryoFile* file, const csResourceLocator& locator);
+  static csMaterial* LoadMaterial(const csClass* cls, const csCryoFile* file, const csResourceLocator& locator);
+  static iObject* LoadMaterialInstance(const csClass* cls, const csCryoFile* file, const csResourceLocator& locator);
 
   static void LoadShading(csMaterial* material, const csCryoFileElement* materialElement, const csResourceLocator& locator);
   static void LoadQueue(csMaterial* material, const csCryoFileElement* materialElement, const csResourceLocator& locator);

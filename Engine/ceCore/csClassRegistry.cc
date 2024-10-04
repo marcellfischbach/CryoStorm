@@ -18,7 +18,7 @@ csClassRegistry* csClassRegistry::Get()
   return &reg;
 }
 
-void csClassRegistry::Register(const Class* clazz)
+void csClassRegistry::Register(const csClass* clazz)
 {
   if (!clazz)
   {
@@ -33,7 +33,7 @@ void csClassRegistry::Register(const Class* clazz)
   m_classes[clazz->GetName()] = clazz;
 }
 
-void csClassRegistry::Unregister(const Class* clazz)
+void csClassRegistry::Unregister(const csClass* clazz)
 {
   if (!clazz)
   {
@@ -55,15 +55,15 @@ void csClassRegistry::Unregister(const Class* clazz)
   }
 }
 
-const std::vector<const Class*>& csClassRegistry::GetAllClasses() const
+const std::vector<const csClass*>& csClassRegistry::GetAllClasses() const
 {
   return m_allClasses;
 }
 
 
-const Class* csClassRegistry::GetClass(const std::string & name) const
+const csClass* csClassRegistry::GetClass(const std::string & name) const
 {
-  std::map<std::string, const Class*>::const_iterator it = m_classes.find(name);
+  std::map<std::string, const csClass*>::const_iterator it = m_classes.find(name);
   if (it == m_classes.end())
   {
     return 0;
@@ -73,7 +73,7 @@ const Class* csClassRegistry::GetClass(const std::string & name) const
 
 void* csClassRegistry::CreateClass(const std::string & name) const
 {
-  const Class* clazz = GetClass(name);
+  const csClass * clazz = GetClass(name);
   if (!clazz)
   {
     return 0;

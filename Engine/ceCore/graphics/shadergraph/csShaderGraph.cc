@@ -32,7 +32,7 @@ csShaderGraph::~csShaderGraph() noexcept
 
 }
 
-csSGNode *csShaderGraph::Add(const cryo::Class *nodeClass, const std::string &key)
+csSGNode *csShaderGraph::Add(const cryo::csClass *nodeClass, const std::string &key)
 {
   if (!nodeClass->IsInstanceOf<csSGNode>())
   {
@@ -57,7 +57,7 @@ csSGNode *csShaderGraph::Add(const cryo::Class *nodeClass, const std::string &ke
 
 }
 
-csSGResourceNode *csShaderGraph::AddResource(const cryo::Class *nodeClass,
+csSGResourceNode *csShaderGraph::AddResource(const cryo::csClass *nodeClass,
                                              const std::string &key,
                                              const std::string &resourceName)
 {

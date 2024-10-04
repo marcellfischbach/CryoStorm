@@ -30,7 +30,7 @@ JpegLoader::JpegLoader()
 }
 
 
-bool JpegLoader::CanLoad(const Class* cls, const csResourceLocator& locator) const
+bool JpegLoader::CanLoad(const csClass* cls, const csResourceLocator& locator) const
 {
   return cls->IsAssignableFrom<csImage>() &&
          (locator.GetExtension() == "JPEG"
@@ -38,7 +38,7 @@ bool JpegLoader::CanLoad(const Class* cls, const csResourceLocator& locator) con
 }
 
 
-iObject* JpegLoader::Load(const Class* cls, const csResourceLocator& locator) const
+iObject* JpegLoader::Load(const csClass* cls, const csResourceLocator& locator) const
 {
   iFile* ifile = cryo::csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   FILE* infile = ifile->Query<csFileSystemFile>()->GetHandle();

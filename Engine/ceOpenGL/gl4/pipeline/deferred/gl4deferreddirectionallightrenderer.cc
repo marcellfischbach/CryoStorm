@@ -55,7 +55,7 @@ bool GL4DeferredDirectionalLightRenderer::Initialize()
 
 void GL4DeferredDirectionalLightRenderer::SetDevice(iDevice *device)
 {
-  m_device = QueryClass<GL4Device>(device);
+  m_device = csQueryClass<GL4Device>(device);
 }
 
 void GL4DeferredDirectionalLightRenderer::SetScene(cryo::iGfxScene *scene)

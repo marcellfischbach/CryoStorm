@@ -285,7 +285,7 @@ GL4ShaderLoader::GL4ShaderLoader()
 }
 
 
-bool GL4ShaderLoader::CanLoad(const Class *cls, const csResourceLocator &locator) const
+bool GL4ShaderLoader::CanLoad(const csClass *cls, const csResourceLocator &locator) const
 {
   std::string ext = locator.GetExtension();
 
@@ -300,7 +300,7 @@ bool GL4ShaderLoader::CanLoad(const Class *cls, const csResourceLocator &locator
 }
 
 
-iObject *GL4ShaderLoader::Load(const Class *cls, const csResourceLocator &locator) const
+iObject *GL4ShaderLoader::Load(const csClass *cls, const csResourceLocator &locator) const
 {
   iFile *file = csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (!file)

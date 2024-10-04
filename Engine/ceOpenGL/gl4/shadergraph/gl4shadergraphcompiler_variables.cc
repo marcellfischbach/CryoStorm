@@ -173,7 +173,7 @@ std::vector<GL4ShaderGraphCompiler::ResourceInput> GL4ShaderGraphCompiler::FindR
 
 void GL4ShaderGraphCompiler::GenerateVariable(csSGNode *node)
 {
-  const Class *cls = node->GetClass();
+  const csClass *cls = node->GetClass();
   if (cls->IsInstanceOf<csSGConstFloat>())
   {
     std::string v = VarName();
@@ -504,9 +504,9 @@ void GL4ShaderGraphCompiler::GenerateVariable(csSGNode *node)
 
 void GL4ShaderGraphCompiler::GenerateVariable(csSGNodeOutput *output)
 {
-  csSGNode    *node = output->GetNode();
-  const Class *cls  = node->GetClass();
-  auto        var   = m_nodeVariables[node];
+  csSGNode      *node = output->GetNode();
+  const csClass *cls  = node->GetClass();
+  auto          var   = m_nodeVariables[node];
   std::string v     = var.Name;
 
   std::string  name    = v;

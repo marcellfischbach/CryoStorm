@@ -20,7 +20,7 @@ GL4ProgramLoader::GL4ProgramLoader()
   AddValidFile(GL4Program::GetStaticClass(), "SHADER");
 }
 
-iObject* GL4ProgramLoader::Load(const csCryoFile* file, const Class* cls, const csResourceLocator& locator) const
+iObject* GL4ProgramLoader::Load(const csCryoFile* file, const csClass* cls, const csResourceLocator& locator) const
 {
 
   const csCryoFileElement * programElement = file->Root()->GetChild("program");

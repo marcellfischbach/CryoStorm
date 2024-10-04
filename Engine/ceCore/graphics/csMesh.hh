@@ -2,7 +2,7 @@
 #pragma once
 
 #include <ceCore/csCoreExport.hh>
-#include <ceCore/class.hh>
+#include <ceCore/csClass.hh>
 #include <ceCore/graphics/iRenderMesh.hh>
 #include <ceCore/graphics/material/iMaterial.hh>
 #include <ceCore/csTypes.hh>

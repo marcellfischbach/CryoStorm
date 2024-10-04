@@ -27,9 +27,9 @@ public:
   AssimpMeshLoader();
   virtual ~AssimpMeshLoader() { }
 
-  virtual bool CanLoad(const Class * cls, const csResourceLocator & locator) const;
+  virtual bool CanLoad(const csClass * cls, const csResourceLocator & locator) const;
 
-  virtual iObject* Load(const Class * cls, const csResourceLocator & locator) const;
+  virtual iObject* Load(const csClass * cls, const csResourceLocator & locator) const;
 
 private:
   void ReadNode(aiNode* node, const csMatrix4f &parentMatrix, StaticLoaderData& d) const;

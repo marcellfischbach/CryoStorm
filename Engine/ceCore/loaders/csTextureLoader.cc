@@ -23,7 +23,7 @@ csTextureLoader::csTextureLoader()
 }
 
 
-iObject *csTextureLoader::Load(const csCryoFile * file, const Class *cls, const csResourceLocator &locator) const
+iObject *csTextureLoader::Load(const csCryoFile * file, const csClass *cls, const csResourceLocator &locator) const
 {
   auto textureElement = file->Root()->GetChild(0);
   auto tag = textureElement->GetTagName();

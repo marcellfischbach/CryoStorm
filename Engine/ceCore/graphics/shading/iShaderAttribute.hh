@@ -1,7 +1,7 @@
 #pragma  once
 
 #include <string>
-#include <ceCore/class.hh>
+#include <ceCore/csClass.hh>
 #include <ceCore/csTypes.hh>
 #include <ceCore/math/csColor4f.hh>
 #include <ceCore/math/csVector.hh>

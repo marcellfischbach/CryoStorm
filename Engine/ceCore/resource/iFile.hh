@@ -1,7 +1,7 @@
 #pragma once
 
 #include <ceCore/csCoreExport.hh>
-#include <ceCore/class.hh>
+#include <ceCore/csClass.hh>
 #include <ceCore/csTypes.hh>
 #include <ceCore/resource/eAccessMode.hh>
 #include <ceCore/resource/eOpenMode.hh>

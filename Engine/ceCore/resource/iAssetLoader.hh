@@ -2,7 +2,7 @@
 #pragma once
 
 #include <ceCore/csCoreExport.hh>
-#include <ceCore/class.hh>
+#include <ceCore/csClass.hh>
 #include <ceCore/csTypes.hh>
 #include <ceCore/resource/csCryoFile.hh>
 #include <ceCore/resource/csResourceLocator.hh>
@@ -26,9 +26,9 @@ struct CS_CORE_API iAssetLoader : public iObject
     return DefaultPriority;
   }
 
-  virtual bool CanLoad(const Class* cls, const csResourceLocator& locator) const = 0;
+  virtual bool CanLoad(const csClass* cls, const csResourceLocator& locator) const = 0;
 
-  virtual iObject* Load(const Class* cls, const csResourceLocator& locator) const = 0;
+  virtual iObject* Load(const csClass* cls, const csResourceLocator& locator) const = 0;
 
 };
 

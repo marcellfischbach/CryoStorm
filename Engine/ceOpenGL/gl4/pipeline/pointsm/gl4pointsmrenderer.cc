@@ -226,7 +226,7 @@ GL4RenderTarget2D *GL4PointSMRenderer::GetShadowBuffer(eCubeFace face)
     desc.Width  = m_pointLightShadowBufferSize;
     desc.Height = m_pointLightShadowBufferSize;
 
-    m_pointLightShadowBuffer[face] = QueryClass<GL4RenderTarget2D>(m_device->CreateRenderTarget(desc));
+    m_pointLightShadowBuffer[face] = csQueryClass<GL4RenderTarget2D>(m_device->CreateRenderTarget(desc));
 
 
     if (m_shadowSamplingMode == ShadowSamplingMode::VSM || true)
@@ -311,7 +311,7 @@ GL4RenderTarget2D *GL4PointSMRenderer::CreateShadowMap()
   iRenderTarget2D::Descriptor desc {};
   desc.Width  = (uint16_t) m_pointLightShadowMapWidth;
   desc.Height = (uint16_t) m_pointLightShadowMapHeight;
-  auto target = QueryClass<GL4RenderTarget2D>(m_device->CreateRenderTarget(desc));
+  auto target = csQueryClass<GL4RenderTarget2D>(m_device->CreateRenderTarget(desc));
 
   iTexture2D::Descriptor colorDesc {};
   colorDesc.Width   = (uint16_t) m_pointLightShadowMapWidth;

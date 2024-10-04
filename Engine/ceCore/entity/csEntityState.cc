@@ -1,7 +1,6 @@
 #include <ceCore/entity/csEntityState.hh>
 #include "csEntity.hh"
 #include <ceCore/entity/csWorld.hh>
-#include <entity/entitystate.refl.hh>
 
 namespace cryo
 {
@@ -50,23 +49,23 @@ csEntity* csEntityState::GetEntity()
 }
 
 
-csEntityState* csEntityState::GetState(const Class* cls)
+csEntityState* csEntityState::GetState(const csClass* cls)
 {
   return m_entity ? m_entity->GetState(cls) : nullptr;
 }
 
-const csEntityState* csEntityState::GetState(const Class* cls) const
+const csEntityState* csEntityState::GetState(const csClass* cls) const
 {
   return m_entity ? static_cast<const csEntity*>(m_entity)->GetState(cls) : nullptr;
 }
 
 
-std::vector<csEntityState*> csEntityState::GetStates(const Class* cls)
+std::vector<csEntityState*> csEntityState::GetStates(const csClass* cls)
 {
   return m_entity ? m_entity->GetStates(cls) : std::vector<csEntityState*>();
 }
 
-std::vector<const csEntityState*> csEntityState::GetStates(const Class* cls) const
+std::vector<const csEntityState*> csEntityState::GetStates(const csClass* cls) const
 {
   return m_entity ? static_cast<const csEntity*>(m_entity)->GetStates(cls) : std::vector<const csEntityState*>();
 }

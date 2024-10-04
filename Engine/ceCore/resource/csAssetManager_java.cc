@@ -10,7 +10,7 @@ JNICALL Java_org_crimsonedge_core_resource_AssetManager_nGet(JNIEnv *env, jclass
   jobject result = nullptr;
   const char* clsChar = env->GetStringUTFChars(cls, 0);
   const char* locatorChar = env->GetStringUTFChars(locator, 0);
-  const cryo::Class *pClass = cryo::csClassRegistry::Get()->GetClass(clsChar);
+  const cryo::csClass *pClass = cryo::csClassRegistry::Get()->GetClass(clsChar);
   if (pClass)
   {
     cryo::iObject *pObject = cryo::csAssetManager::Get()->Get(pClass, locatorChar);
@@ -30,7 +30,7 @@ JNICALL Java_org_crimsonedge_core_resource_AssetManager_nLoad(JNIEnv *env, jclas
   jobject result = nullptr;
   const char* clsChar = env->GetStringUTFChars(cls, 0);
   const char* locatorChar = env->GetStringUTFChars(locator, 0);
-  const cryo::Class *pClass = cryo::csClassRegistry::Get()->GetClass(clsChar);
+  const cryo::csClass *pClass = cryo::csClassRegistry::Get()->GetClass(clsChar);
   if (pClass)
   {
     cryo::iObject *pObject = cryo::csAssetManager::Get()->Load(pClass, locatorChar);

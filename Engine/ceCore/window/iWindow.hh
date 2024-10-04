@@ -2,7 +2,7 @@
 
 #include <ceCore/csCoreExport.hh>
 #include <ceCore/csTypes.hh>
-#include <ceCore/class.hh>
+#include <ceCore/csClass.hh>
 
 #include <string>
 

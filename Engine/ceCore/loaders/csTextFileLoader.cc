@@ -10,13 +10,13 @@ namespace cryo
 {
 
 
-bool csTextFileLoader::CanLoad(const cryo::Class *cls, const cryo::csResourceLocator &locator) const
+bool csTextFileLoader::CanLoad(const cryo::csClass *cls, const cryo::csResourceLocator &locator) const
 {
   // text file loader can load everything
   return csTextFile::GetStaticClass() == cls;
 }
 
-iObject *csTextFileLoader::Load(const cryo::Class *cls, const cryo::csResourceLocator &locator) const
+iObject *csTextFileLoader::Load(const cryo::csClass *cls, const cryo::csResourceLocator &locator) const
 {
   iFile *file = csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (!file)

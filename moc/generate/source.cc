@@ -142,13 +142,13 @@ std::string ClassGenerator::GenerateFunctionClass(ClassNode *classNode,
     source += "{\n";
   }
 
-  source += "\nclass " + fnctClassName + " : public cryo::Function\n";
+  source += "\nclass " + fnctClassName + " : public cryo::csFunction\n";
   source += "{\n";
   source += "public:\n";
 
   // create the constructor
   source += "  " + fnctClassName + "()\n";
-  source += std::string("    : cryo::Function (") +
+  source += std::string("    : cryo::csFunction (") +
             (function->IsVirtual() ? "cryo::eFV_Virtual, " : "cryo::eFV_NonVirtual, ") +
             GenerateCSValueDeclaration(function->GetReturnValue()) + ", " +
             "\"" + function->GetName() + "\", " +
@@ -200,15 +200,15 @@ ClassGenerator::GenerateFunctionVoidInvokeMethod(ClassNode *classNode, FunctionN
   fkt += "  {\n";
   if (constMethod && !function->IsConst())
   {
-    fkt += "    throw cryo::BadMethodInvokation(\"[" + function->GetName() + "] No const-call\");\n";
+    fkt += "    throw cryo::csBadMethodInvokation(\"[" + function->GetName() + "] No const-call\");\n";
   }
   else
   {
     fkt +=
-        "    " + sConst + classNode->GetName() + " *d = cryo::QueryClass<" + sConst + classNode->GetName() + ">(obj);\n";
+        "    " + sConst + classNode->GetName() + " *d = cryo::csQueryClass<" + sConst + classNode->GetName() + ">(obj);\n";
     fkt += "    if (!d)\n";
     fkt += "    {\n";
-    fkt += "      throw cryo::BadMethodInvokation(\"[" + function->GetName() + "] Object is not instance of " +
+    fkt += "      throw cryo::csBadMethodInvokation(\"[" + function->GetName() + "] Object is not instance of " +
            classNode->GetName() + "\");\n";
     fkt += "    }\n\n";
 
@@ -253,19 +253,19 @@ ClassGenerator::GenerateFunctionValueInvokeMethod(ClassNode *classNode, Function
   fkt += "  {\n";
   if (!function->GetReturnValue().IsValue() || function->GetReturnValue().IsVoid())
   {
-    fkt += "    throw cryo::BadMethodInvokation(\"[" + function->GetName() + "] No value-call\");\n";
+    fkt += "    throw cryo::csBadMethodInvokation(\"[" + function->GetName() + "] No value-call\");\n";
   }
   else if (constMethod && !function->IsConst())
   {
-    fkt += "    throw cryo::BadMethodInvokation(\"[" + function->GetName() + "] No const-call\");\n";
+    fkt += "    throw cryo::csBadMethodInvokation(\"[" + function->GetName() + "] No const-call\");\n";
   }
   else
   {
     fkt +=
-        "    " + sConst + classNode->GetName() + " *d = cryo::QueryClass<" + sConst + classNode->GetName() + ">(obj);\n";
+        "    " + sConst + classNode->GetName() + " *d = cryo::csQueryClass<" + sConst + classNode->GetName() + ">(obj);\n";
     fkt += "    if (!d)\n";
     fkt += "    {\n";
-    fkt += "      throw cryo::BadMethodInvokation(\"[" + function->GetName() + "] Object is not instance of " +
+    fkt += "      throw cryo::csBadMethodInvokation(\"[" + function->GetName() + "] Object is not instance of " +
            classNode->GetName() + "\");\n";
     fkt += "    }\n\n";
 
@@ -320,23 +320,23 @@ std::string ClassGenerator::GenerateFunctionReferenceInvokeMethod(ClassNode *cla
   fkt += "  {\n";
   if (!function->GetReturnValue().IsReference())
   {
-    fkt += "    throw cryo::BadMethodInvokation(\"[" + function->GetName() + "] No reference-call\");\n";
+    fkt += "    throw cryo::csBadMethodInvokation(\"[" + function->GetName() + "] No reference-call\");\n";
   }
   else if (!constReturn && function->GetReturnValue().IsConst())
   {
-    fkt += "    throw cryo::BadMethodInvokation(\"[" + function->GetName() + "] Return value is non-const\");\n";
+    fkt += "    throw cryo::csBadMethodInvokation(\"[" + function->GetName() + "] Return value is non-const\");\n";
   }
   else if (constMethod && !function->IsConst())
   {
-    fkt += "    throw cryo::BadMethodInvokation(\"[" + function->GetName() + "] No const-call\");\n";
+    fkt += "    throw cryo::csBadMethodInvokation(\"[" + function->GetName() + "] No const-call\");\n";
   }
   else
   {
     fkt +=
-        "    " + sConst + classNode->GetName() + " *d = cryo::QueryClass<" + sConst + classNode->GetName() + ">(obj);\n";
+        "    " + sConst + classNode->GetName() + " *d = cryo::csQueryClass<" + sConst + classNode->GetName() + ">(obj);\n";
     fkt += "    if (!d)\n";
     fkt += "    {\n";
-    fkt += "      throw cryo::BadMethodInvokation(\"[" + function->GetName() + "] Object is not instance of " +
+    fkt += "      throw cryo::csBadMethodInvokation(\"[" + function->GetName() + "] Object is not instance of " +
            classNode->GetName() + "\");\n";
     fkt += "    }\n\n";
 
@@ -387,23 +387,23 @@ std::string ClassGenerator::GenerateFunctionPointerInvokeMethod(ClassNode *class
   fkt += "  {\n";
   if (!function->GetReturnValue().IsPointer())
   {
-    fkt += "    throw cryo::BadMethodInvokation(\"[" + function->GetName() + "] No pointer-call\");\n";
+    fkt += "    throw cryo::csBadMethodInvokation(\"[" + function->GetName() + "] No pointer-call\");\n";
   }
   else if (!constReturn && function->GetReturnValue().IsConst())
   {
-    fkt += "    throw cryo::BadMethodInvokation(\"[" + function->GetName() + "] Return value is non-const\");\n";
+    fkt += "    throw cryo::csBadMethodInvokation(\"[" + function->GetName() + "] Return value is non-const\");\n";
   }
   else if (constMethod && !function->IsConst())
   {
-    fkt += "    throw cryo::BadMethodInvokation(\"[" + function->GetName() + "] No const-call\");\n";
+    fkt += "    throw cryo::csBadMethodInvokation(\"[" + function->GetName() + "] No const-call\");\n";
   }
   else
   {
     fkt +=
-        "    " + sConst + classNode->GetName() + " *d = cryo::QueryClass<" + sConst + classNode->GetName() + ">(obj);\n";
+        "    " + sConst + classNode->GetName() + " *d = cryo::csQueryClass<" + sConst + classNode->GetName() + ">(obj);\n";
     fkt += "    if (!d)\n";
     fkt += "    {\n";
-    fkt += "      throw cryo::BadMethodInvokation(\"Object is not instance of " + classNode->GetName() + "\");\n";
+    fkt += "      throw cryo::csBadMethodInvokation(\"Object is not instance of " + classNode->GetName() + "\");\n";
     fkt += "    }\n\n";
 
     fkt += "    va_list lst;\n";
@@ -530,11 +530,11 @@ std::string ClassGenerator::GenerateAttribute(ClassNode *classNode,
     prop += "namespace " + ns->GetName() + "\n";
     prop += "{\n";
   }
-  prop += "\nclass " + propClassName + " : public cryo::Property\n";
+  prop += "\nclass " + propClassName + " : public cryo::csProperty\n";
   prop += "{\n";
   prop += "public:\n";
   prop += "  " + propClassName + "()\n";
-  prop += "    : cryo::Property(" + GenerateCSValueDeclaration(containerType, false) + ", \"" + propName + "\", " +
+  prop += "    : cryo::csProperty(" + GenerateCSValueDeclaration(containerType, false) + ", \"" + propName + "\", " +
           GenerateCSValueDeclaration(type, true) + ")\n";
   prop += "  {\n";
   prop += "  }\n\n";
@@ -546,10 +546,10 @@ std::string ClassGenerator::GenerateAttribute(ClassNode *classNode,
   prop += "  {\n";
   if (visibility == std::string("public") && !type.IsConst())
   {
-    prop += "    " + classNode->GetName() + " *d = cryo::QueryClass<" + classNode->GetName() + ">(object);\n";
+    prop += "    " + classNode->GetName() + " *d = cryo::csQueryClass<" + classNode->GetName() + ">(object);\n";
     prop += "    if (!d)\n";
     prop += "    {\n";
-    prop += "      throw cryo::BadMethodInvokation(\"Object is not instance of " + classNode->GetName() + "\");\n";
+    prop += "      throw cryo::csBadMethodInvokation(\"Object is not instance of " + classNode->GetName() + "\");\n";
     prop += "    }\n\n";
 
     if (!type.IsPointer() || meta->Has("Native"))
@@ -566,7 +566,7 @@ std::string ClassGenerator::GenerateAttribute(ClassNode *classNode,
   }
   else
   {
-    prop += "    throw cryo::BadMethodInvokation(\"Property [" + classNode->GetName() + "::" + member->GetName() +
+    prop += "    throw cryo::csBadMethodInvokation(\"Property [" + classNode->GetName() + "::" + member->GetName() +
             "] is not public\");\n";
   }
   prop += "  }\n\n";
@@ -575,16 +575,16 @@ std::string ClassGenerator::GenerateAttribute(ClassNode *classNode,
   prop += "  {\n";
   if (visibility == std::string("public"))
   {
-    prop += "    const " + classNode->GetName() + " *d = cryo::QueryClass<const " + classNode->GetName() + ">(object);\n";
+    prop += "    const " + classNode->GetName() + " *d = cryo::csQueryClass<const " + classNode->GetName() + ">(object);\n";
     prop += "    if (!d)\n";
     prop += "    {\n";
-    prop += "      throw cryo::BadMethodInvokation(\"Object is not instance of " + classNode->GetName() + "\");\n";
+    prop += "      throw cryo::csBadMethodInvokation(\"Object is not instance of " + classNode->GetName() + "\");\n";
     prop += "    }\n\n";
     prop += "    return reinterpret_cast<const void*>(&d->" + member->GetName() + ");";
   }
   else
   {
-    prop += "    throw cryo::BadMethodInvokation(\"Property [" + classNode->GetName() + "::" + member->GetName() +
+    prop += "    throw cryo::csBadMethodInvokation(\"Property [" + classNode->GetName() + "::" + member->GetName() +
             "] is not public\");\n";
   }
   prop += "  }\n\n";
@@ -594,16 +594,16 @@ std::string ClassGenerator::GenerateAttribute(ClassNode *classNode,
   prop += "  {\n";
   if (visibility == std::string("public"))
   {
-    prop += "    " + classNode->GetName() + " *d = cryo::QueryClass<" + classNode->GetName() + ">(object);\n";
+    prop += "    " + classNode->GetName() + " *d = cryo::csQueryClass<" + classNode->GetName() + ">(object);\n";
     prop += "    if (!d)\n";
     prop += "    {\n";
-    prop += "      throw cryo::BadMethodInvokation(\"Object is not instance of " + classNode->GetName() + "\");\n";
+    prop += "      throw cryo::csBadMethodInvokation(\"Object is not instance of " + classNode->GetName() + "\");\n";
     prop += "    }\n\n";
     prop += "    return reinterpret_cast<void*>(&d->" + member->GetName() + ");";
   }
   else
   {
-    prop += "    throw cryo::BadMethodInvokation(\"Property [" + classNode->GetName() + "::" + member->GetName() +
+    prop += "    throw cryo::csBadMethodInvokation(\"Property [" + classNode->GetName() + "::" + member->GetName() +
             "] is not public\");\n";
   }
   prop += "  }\n\n";
@@ -682,7 +682,7 @@ std::string ClassGenerator::GenerateCSValueDeclaration(const TypeDef &typeDef, b
   }
 
 
-  return std::string("cryo::ValueDeclaration(") +
+  return std::string("cryo::csValueDeclaration(") +
          (typeDef.IsConst() ? "cryo::eC_Const" : "cryo::eC_NonConst") + ", " +
          "\"" + typeDef.GetTypeName(withSubTypes) + "\", " +
          evmm + ")";
@@ -690,7 +690,7 @@ std::string ClassGenerator::GenerateCSValueDeclaration(const TypeDef &typeDef, b
 
 std::string ClassGenerator::GenerateAddAttribute(const Argument &argument)
 {
-  return std::string("AddAttribute(cryo::FunctionAttribute (") +
+  return std::string("AddAttribute(cryo::csFunctionAttribute (") +
          GenerateCSValueDeclaration(argument.GetType()) + ", " +
          "\"" + argument.GetName() + "\"))";
 
@@ -716,7 +716,7 @@ std::string ClassGenerator::GenerateClass(ClassNode *classNode, std::list<Namesp
   // 
   // Class constructor
   cls += fns + classClassName + "::" + classClassName + "()\n";
-  cls += "  : cryo::Class(\"" + fns + className + "\")\n";
+  cls += "  : cryo::csClass(\"" + fns + className + "\")\n";
   cls += "{\n";
   for (auto super: classNode->GetSupers())
   {
@@ -746,16 +746,16 @@ std::string ClassGenerator::GenerateClass(ClassNode *classNode, std::list<Namesp
   }
   else
   {
-    cls += "  throw cryo::InstanciationException(\"" + fns + className + "\");\n";
+    cls += "  throw cryo::csInstantiationException(\"" + fns + className + "\");\n";
   }
   cls += "}\n\n";
 
 
-  cls += "const cryo::Class *" + fns + className + "::GetClass() const\n";
+  cls += "const cryo::csClass *" + fns + className + "::GetClass() const\n";
   cls += "{\n";
   cls += "  return " + fns + classClassName + "::Get();\n";
   cls += "}\n\n";
-  cls += "const cryo::Class *" + fns + className + "::GetStaticClass()\n";
+  cls += "const cryo::csClass *" + fns + className + "::GetStaticClass()\n";
   cls += "{\n";
   cls += "  return " + fns + classClassName + "::Get();\n";
   cls += "}\n\n";
@@ -780,7 +780,7 @@ ClassGenerator::GenerateQueryClass(ClassNode *classNode, std::list<NamespaceNode
   std::string className      = classNode->GetName();
   std::string classClassName = classNode->GetName() + "Class";
 
-  query += sConst + "void *" + fns + className + "::QueryClass(const cryo::Class* clazz) " + sConst + "\n";
+  query += sConst + "void *" + fns + className + "::QueryClass(const cryo::csClass* clazz) " + sConst + "\n";
   query += "{\n";
   query += "  if (clazz == " + fns + classClassName + "::Get())\n";
   query += "  {\n";

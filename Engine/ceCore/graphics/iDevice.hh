@@ -5,7 +5,7 @@
 #include <ceCore/csTypes.hh>
 #include <ceCore/math/csColor4f.hh>
 #include <ceCore/math/csMatrix.hh>
-#include <ceCore/class.hh>
+#include <ceCore/csClass.hh>
 #include <ceCore/graphics/eBlendFactor.hh>
 #include <ceCore/graphics/eCompareFunc.hh>
 #include <ceCore/graphics/eFillMode.hh>

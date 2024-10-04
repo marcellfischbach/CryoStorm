@@ -3,7 +3,7 @@
 
 #include <ceCore/csCoreExport.hh>
 #include <map>
-#include <ceCore/class.hh>
+#include <ceCore/csClass.hh>
 
 namespace cryo
 {
@@ -39,21 +39,21 @@ public:
     {
       Register(T::GetStaticClass(), obj);
     }
-    static void Register (const Class* cls, iObject *obj);
+    static void Register(const csClass* cls, iObject *obj);
 
     template<typename T> static T* Get() 
     {
         iObject *obj = Get(T::GetStaticClass());
         return obj ? static_cast<T*>(obj->QueryClass(T::GetStaticClass())) : nullptr;
     }
-    static iObject* Get(const Class* cls);
+    static iObject* Get(const csClass* cls);
 
 private:
     csObjectRegistry();
 
 private:
   static csObjectRegistry* Get();
-  std::map<const Class*, iObject*> m_registry;
+  std::map<const csClass*, iObject*> m_registry;
 };
 
 }

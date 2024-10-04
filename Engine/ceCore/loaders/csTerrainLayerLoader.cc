@@ -11,13 +11,13 @@
 namespace cryo
 {
 
-bool csTerrainLayerLoader::CanLoad(const Class* cls, const csResourceLocator& locator) const
+bool csTerrainLayerLoader::CanLoad(const csClass* cls, const csResourceLocator& locator) const
 {
   return cls ->IsAssignableFrom<csTerrainLayer>() && locator.GetExtension() == std::string("TERRAINLAYER");
 }
 
 iObject* csTerrainLayerLoader::Load(const csCryoFile* file,
-                                    const Class* cls,
+                                    const csClass* cls,
                                     const csResourceLocator& locator) const
 {
   const csCryoFileElement * rootElement = file->Root();
@@ -58,14 +58,14 @@ iObject* csTerrainLayerLoader::Load(const csCryoFile* file,
 
 
 
-bool csTerrainLayerMaskLoader::CanLoad(const Class* cls, const csResourceLocator& locator) const
+bool csTerrainLayerMaskLoader::CanLoad(const csClass* cls, const csResourceLocator& locator) const
 {
   return cls ->IsAssignableFrom<csTerrainLayerMask>() && locator.GetExtension() == std::string("TERRAINMASK");
 
 }
 
 iObject* csTerrainLayerMaskLoader::Load(const csCryoFile* file,
-                                        const Class* cls,
+                                        const csClass* cls,
                                         const csResourceLocator& locator) const
 {
   const csCryoFileElement * rootElement = file->Root();

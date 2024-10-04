@@ -261,10 +261,10 @@ void GL4DeferredPipeline::RenderLight(cryo::csGfxLight *light)
   switch (light->GetLight()->GetType())
   {
     case eLT_Directional:
-      RenderDirectionalLight(cryo::QueryClass<GL4DirectionalLight>(light->GetLight()));
+      RenderDirectionalLight(cryo::csQueryClass<GL4DirectionalLight>(light->GetLight()));
       break;
     case eLT_Point:
-      RenderPointLight(cryo::QueryClass<GL4PointLight>(light->GetLight()));
+      RenderPointLight(cryo::csQueryClass<GL4PointLight>(light->GetLight()));
       break;
     default:
       break;

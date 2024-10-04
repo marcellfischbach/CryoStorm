@@ -20,7 +20,7 @@ public class CoreObject implements ICoreObject{
         this.ref = ref;
     }
 
-    private static CeClass getCeClass(Class<?> cls) {
+    private static CeClass getCeClass(csClass<?> cls) {
         while (cls != null) {
             CeClass ceClass = cls.getAnnotation(CeClass.class);
             if (ceClass != null) {

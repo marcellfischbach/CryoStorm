@@ -5,7 +5,7 @@
 #pragma once
 
 #include <ceCore/csCoreExport.hh>
-#include <ceCore/class.hh>
+#include <ceCore/csClass.hh>
 #include <ceCore/resource/iAssetLoader.hh>
 
 namespace cryo
@@ -20,9 +20,9 @@ public:
   csTextFileLoader() = default;
   ~csTextFileLoader() override = default;
 
-  bool CanLoad(const Class *cls, const csResourceLocator &locator) const override;
+  bool CanLoad(const csClass *cls, const csResourceLocator &locator) const override;
 
-  iObject *Load(const Class *cls, const csResourceLocator &locator) const override;
+  iObject *Load(const csClass *cls, const csResourceLocator &locator) const override;
 
 };
 

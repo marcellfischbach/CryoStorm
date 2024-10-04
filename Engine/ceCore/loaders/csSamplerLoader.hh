@@ -19,7 +19,7 @@ public:
 
 
 protected:
-  iObject* Load(const csCryoFile *file, const Class* cls, const csResourceLocator& locator) const override ;
+  iObject* Load(const csCryoFile *file, const csClass* cls, const csResourceLocator& locator) const override ;
 
 };
 
