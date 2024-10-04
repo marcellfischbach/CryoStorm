@@ -1,5 +1,5 @@
 
-#include <ceImgLoader/jpegloader.hh>
+#include <ceImgLoader/csJpegLoader.hh>
 #include <iostream>
 #include <ceCore/resource/csVFS.hh>
 #include <ceCore/graphics/csImage.hh>
@@ -22,7 +22,7 @@ struct my_error_mgr {
   jmp_buf setjmp_buffer;	/* for return to caller */
 };
 
-JpegLoader::JpegLoader()
+csJpegLoader::csJpegLoader()
 {
   CS_CLASS_GEN_CONSTR;
 
@@ -30,7 +30,7 @@ JpegLoader::JpegLoader()
 }
 
 
-bool JpegLoader::CanLoad(const csClass* cls, const csResourceLocator& locator) const
+bool csJpegLoader::CanLoad(const csClass* cls, const csResourceLocator& locator) const
 {
   return cls->IsAssignableFrom<csImage>() &&
          (locator.GetExtension() == "JPEG"
@@ -38,7 +38,7 @@ bool JpegLoader::CanLoad(const csClass* cls, const csResourceLocator& locator) c
 }
 
 
-iObject* JpegLoader::Load(const csClass* cls, const csResourceLocator& locator) const
+iObject* csJpegLoader::Load(const csClass* cls, const csResourceLocator& locator) const
 {
   iFile* ifile = cryo::csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   FILE* infile = ifile->Query<csFileSystemFile>()->GetHandle();

@@ -1,5 +1,5 @@
 
-#include <ceImgLoader/pngloader.hh>
+#include <ceImgLoader/csPngLoader.hh>
 #include <iostream>
 #include <ceCore/resource/csVFS.hh>
 #include <ceCore/graphics/csImage.hh>
@@ -8,7 +8,7 @@
 namespace cryo::img
 {
 
-PngLoader::PngLoader()
+csPngLoader::csPngLoader()
 {
   CS_CLASS_GEN_CONSTR;
 
@@ -16,7 +16,7 @@ PngLoader::PngLoader()
 }
 
 
-bool PngLoader::CanLoad(const csClass* cls, const csResourceLocator& locator) const
+bool csPngLoader::CanLoad(const csClass* cls, const csResourceLocator& locator) const
 {
   return cls->IsAssignableFrom<csImage>()
     && locator.GetExtension() == "PNG";
@@ -38,7 +38,7 @@ void read_data_from_i_file(png_structp png_ptr, png_bytep buffer, png_size_t siz
 }
 
 
-iObject* PngLoader::Load(const csClass* cls, const csResourceLocator& locator) const
+iObject* csPngLoader::Load(const csClass* cls, const csResourceLocator& locator) const
 {
   iFile* fp = csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (!fp)

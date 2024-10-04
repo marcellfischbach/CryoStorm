@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <ceImgLoader/imgloaderexport.hh>
+#include <ceImgLoader/csImgLoaderExport.hh>
 #include <ceCore/resource/iAssetLoader.hh>
 
 namespace cryo::img
@@ -9,12 +9,12 @@ namespace cryo::img
 
 
 CS_CLASS()
-class CS_IMGLOADER_API PngLoader: public CS_SUPER(iAssetLoader)
+class CS_IMGLOADER_API csPngLoader: public CS_SUPER(iAssetLoader)
 {
   CS_CLASS_GEN_OBJECT;
 public:
-  PngLoader();
-  virtual ~PngLoader() { }
+  csPngLoader();
+  virtual ~csPngLoader() { }
 
   virtual bool CanLoad(const csClass * cls, const csResourceLocator & locator) const;
 

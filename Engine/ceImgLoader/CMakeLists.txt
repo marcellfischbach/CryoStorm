@@ -4,13 +4,13 @@ add_definitions(-DCS_IMGLOADER_EXPORT)
 add_definitions(-D_USE_MATH_DEFINES)
 
 set(SOURCES
-        imgloaderexport.hh
-        imgloadermodule.cc
-        imgloadermodule.hh
-        jpegloader.cc
-        jpegloader.hh
-        pngloader.cc
-        pngloader.hh
+        csImgLoaderExport.hh
+        csImgLoaderModule.cc
+        csImgLoaderModule.hh
+        csJpegLoader.cc
+        csJpegLoader.hh
+        csPngLoader.cc
+        csPngLoader.hh
     )
 
 add_library(ceImgLoader SHARED
