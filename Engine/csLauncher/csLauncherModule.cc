@@ -1,6 +1,6 @@
 
-#include <csLauncher/launchermodule.hh>
-#include <csLauncher/window/sdlwindow.hh>
+#include <csLauncher/csLauncherModule.hh>
+#include <csLauncher/window/csSDLWindow.hh>
 #include <csCore/csObjectRegistry.hh>
 #include <csCore/csEngine.hh>
 #include <csCore/csSettings.hh>
@@ -10,12 +10,12 @@
 namespace cryo::launcher
 {
 
-bool LauncherModule::Register(const std::vector<std::string> &args, csEngine *engine)
+bool csLauncherModule::Register(const std::vector<std::string> &args, csEngine *engine)
 {
   register_classes();
 
-  SDLWindow *window = new SDLWindow();
-  SDLInputSystem *inputSystem = new SDLInputSystem(window->GetKeyboard(), window->GetMouse());
+  csSDLWindow      *window      = new csSDLWindow();
+  csSDLInputSystem *inputSystem = new csSDLInputSystem(window->GetKeyboard(), window->GetMouse());
   csObjectRegistry::Register<iInputSystem>(inputSystem);
   csObjectRegistry::Register<iWindow>(window);
   engine->SetWindow(window);
@@ -23,9 +23,9 @@ bool LauncherModule::Register(const std::vector<std::string> &args, csEngine *en
   return true;
 }
 
-bool LauncherModule::Initialize(const std::vector<std::string> &args, csEngine *engine)
+bool csLauncherModule::Initialize(const std::vector<std::string> &args, csEngine *engine)
 {
-  SDLWindow *window = (SDLWindow*)engine->GetWindow();
+  csSDLWindow *window = (csSDLWindow*)engine->GetWindow();
   window->Initialize();
 
   const std::string &iconName = csSettings::Get().Display().GetText("icon");

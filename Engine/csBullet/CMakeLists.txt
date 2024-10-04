@@ -21,24 +21,24 @@ set(SOURCES
         )
 
 
-add_library(ceBullet SHARED
+add_library(csBullet SHARED
         ${SOURCES}
         )
 
-target_link_libraries(ceBullet
-        ceCore
+target_link_libraries(csBullet
+        csCore
         ${BULLET_LIBRARIES}
         )
 
-add_dependencies(ceBullet ceMOC)
-CS_MOC(ceBullet)
+add_dependencies(csBullet csMOC)
+CS_MOC(csBullet)
 
 
-install(TARGETS ceBullet
+install(TARGETS csBullet
         RUNTIME DESTINATION bin
         ARCHIVE DESTINATION lib
         )
 
-install(DIRECTORY . DESTINATION include/ceBullet FILES_MATCHING PATTERN "*.hh")
+install(DIRECTORY . DESTINATION include/csBullet FILES_MATCHING PATTERN "*.hh")
 
 

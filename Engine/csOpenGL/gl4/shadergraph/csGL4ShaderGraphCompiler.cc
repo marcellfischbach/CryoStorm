@@ -670,7 +670,7 @@ void csGL4ShaderGraphCompiler::SetMaterialDefaults(cryo::csMaterial *material)
   }
 }
 
-iShaderGraphCompiler *GL4ShaderGraphCompilerFactory::Create() const
+iShaderGraphCompiler *csGL4ShaderGraphCompilerFactory::Create() const
 {
   return new csGL4ShaderGraphCompiler();
 }

@@ -17,4 +17,4 @@ public:
 
 }
 
-CS_DECLARE_LIBRARY(ceOpenGL);
+CS_DECLARE_LIBRARY(csOpenGL);

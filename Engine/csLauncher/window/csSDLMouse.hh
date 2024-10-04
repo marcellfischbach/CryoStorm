@@ -8,11 +8,11 @@ namespace cryo::launcher
 {
 
 
-class SDLMouse : public iMouse
+class csSDLMouse : public iMouse
 {
 public:
-  SDLMouse();
-  ~SDLMouse() override = default;
+  csSDLMouse();
+  ~csSDLMouse() override = default;
 
   void SetWindow (SDL_Window *window);
 

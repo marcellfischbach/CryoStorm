@@ -3,7 +3,7 @@
 
 include_directories(${CrimsonEdge_SOURCE_DIR}/moc)
 
-add_executable(ceMOC
+add_executable(csMOC
 	ast.cc
 	ast.hh
 	cache.cc
@@ -30,4 +30,4 @@ add_executable(ceMOC
 
 
 
-install(TARGETS ceMOC RUNTIME DESTINATION bin)
+install(TARGETS csMOC RUNTIME DESTINATION bin)

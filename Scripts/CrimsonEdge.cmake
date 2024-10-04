@@ -20,13 +20,13 @@ function(CS_MOC trgt)
 
 	set(TARGET_NAME "${trgt}-MOC")
 	add_custom_target(${TARGET_NAME}
-                            COMMAND ${EXEC_PATH}ceMOC  --path ${MOC_DIRECTORY} --sourcepath ${CMAKE_CURRENT_SOURCE_DIR}
+                            COMMAND ${EXEC_PATH}csMOC  --path ${MOC_DIRECTORY} --sourcepath ${CMAKE_CURRENT_SOURCE_DIR}
 			WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-			BYPRODUCTS "${MOC_DIRECTORY}/.ceCache"
+			BYPRODUCTS "${MOC_DIRECTORY}/.csCache"
 	)
 	if (CrimsonEdge_BINARY_DIR)
 		# this is an in-engine build
-		add_dependencies(${TARGET_NAME} ceMOC)
+		add_dependencies(${TARGET_NAME} csMOC)
 	endif()
 	add_dependencies(${trgt} ${TARGET_NAME})
 

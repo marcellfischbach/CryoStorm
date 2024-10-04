@@ -14,16 +14,16 @@ consists of
 - *EntityGraph* for logical entities (game logic lives here)
 - *SceneGraph* holding all rendered elements (generated on-the-fly by the *EntityGraph*)
 - *AssetManagement* standard way for loading data from the filesystem and managing reusable elements
-- *Graphics* mostly interfaces that must be implemented by a rendering module (**ceOpenGL**)
+- *Graphics* mostly interfaces that must be implemented by a rendering module (**csOpenGL**)
 - *Physics* mostly interfaces that must be implemented by a physics module (**ceBullet**)
 
-At the moment there is only one rendering implementations in OpenGLv4 (**ceOpenGL** located at *Engine/ceOpenGL*) and
+At the moment there is only one rendering implementations in OpenGLv4 (**csOpenGL** located at *Engine/csOpenGL*) and
 one physics implementation using BulletPhysics (**ceBullet** located at *Engine/ceBullet*). But the engine is designed to
 include any other API (e.g. D3D, Vulkan, PhysX, ...).
 
 The entire engine is written the C++ and GLSL for OpenGL-Shading. The build process is managed by CMake.
 The engine comes with a MOC (MetaObjectCompiler) that is used to generate a basic form of reflection on top of C++-Classes.
-The MOC (**ceMOC**) generates C++-Code holding classes for wrapping the *real* C++ classes.
+The MOC (**csMOC**) generates C++-Code holding classes for wrapping the *real* C++ classes.
 This code generation process is integrated within the CMake build process and is tested to be functional with
 
 - Build from CMD
@@ -57,8 +57,8 @@ When compiled without any special parameters this will generate the following ex
 - \<out>/bin/ceCore.dll
 - \<out>/bin/ceImgLoader.dll
 - \<out>/bin/ceLauncher.exe
-- \<out>/bin/ceMOC.exe
-- \<out>/bin/ceOpenGL.dll
+- \<out>/bin/csMOC.exe
+- \<out>/bin/csOpenGL.dll
 
 ## Launching the engine
 

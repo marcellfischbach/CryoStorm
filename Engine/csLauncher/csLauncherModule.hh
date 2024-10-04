@@ -7,7 +7,7 @@
 namespace cryo::launcher
 {
 
-class LauncherModule : public cryo::iModule
+class csLauncherModule : public cryo::iModule
 {
 public:
   bool Register(const std::vector<std::string> &args, csEngine *engine);

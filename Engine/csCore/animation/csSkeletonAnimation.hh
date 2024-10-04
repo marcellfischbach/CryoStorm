@@ -88,12 +88,12 @@ private:
 
 
 CS_CLASS()
-class CS_CORE_API SkeletonAnimationPack : public CS_SUPER(iObject)
+class CS_CORE_API csSkeletonAnimationPack : public CS_SUPER(iObject)
 {
 CS_CLASS_GEN_OBJECT;
 public:
-  SkeletonAnimationPack() = default;
-  ~SkeletonAnimationPack() override = default;
+  csSkeletonAnimationPack() = default;
+  ~csSkeletonAnimationPack() override = default;
 
   void AddAnimation(csSkeletonAnimation *animation);
   csSkeletonAnimation *Get(const std::string &name);

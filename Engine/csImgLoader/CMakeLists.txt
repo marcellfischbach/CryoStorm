@@ -13,27 +13,27 @@ set(SOURCES
         csPngLoader.hh
     )
 
-add_library(ceImgLoader SHARED
+add_library(csImgLoader SHARED
         ${SOURCES}
         )
 
 message("JPEG libraries: ${JPEG_LIBRARIES}")
 
-target_link_libraries(ceImgLoader
-        ceCore
+target_link_libraries(csImgLoader
+        csCore
         ${PNG_LIBRARIES}
         ${JPEG_LIBRARIES}
         )
 
-add_dependencies(ceImgLoader ceMOC)
-CS_MOC(ceImgLoader)
+add_dependencies(csImgLoader csMOC)
+CS_MOC(csImgLoader)
 
 
-install(TARGETS ceImgLoader
+install(TARGETS csImgLoader
         RUNTIME DESTINATION bin
         ARCHIVE DESTINATION lib
         )
 
-install(DIRECTORY . DESTINATION include/ceImgLoader FILES_MATCHING PATTERN "*.hh")
+install(DIRECTORY . DESTINATION include/csImgLoader FILES_MATCHING PATTERN "*.hh")
 
 

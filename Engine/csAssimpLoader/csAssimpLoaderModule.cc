@@ -32,7 +32,7 @@ bool csAssimpLoaderModule::Initialize(const std::vector<std::string> &args, csEn
 
 }
 
-CS_DEFINE_LIBRARY(ceAssimpLoader)
+CS_DEFINE_LIBRARY(csAssimpLoader)
 {
   printf ("Load library: ceAssimpLoader\n");
   return new cryo::assimp::csAssimpLoaderModule;

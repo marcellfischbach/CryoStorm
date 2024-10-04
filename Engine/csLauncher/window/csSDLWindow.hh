@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include <csLauncher/window/sdlmouse.hh>
-#include <csLauncher/window/sdlkeyboard.hh>
+#include <csLauncher/window/csSDLMouse.hh>
+#include <csLauncher/window/csSDLKeyboard.hh>
 #include <csCore/window/iWindow.hh>
 #include <SDL.h>
 
@@ -16,7 +16,7 @@ namespace cryo::launcher
 
 
 CS_CLASS()
-class SDLWindow : public CS_SUPER(iWindow)
+class csSDLWindow : public CS_SUPER(iWindow)
 {
 CS_CLASS_GEN_OBJECT;
 
@@ -41,8 +41,8 @@ public:
   void Present() override;
   void ProcessUpdates() override;
 
-  SDLKeyboard* GetKeyboard();
-  SDLMouse* GetMouse();
+  csSDLKeyboard* GetKeyboard();
+  csSDLMouse* GetMouse();
 
 private:
   SDL_Window *m_window = nullptr;
@@ -58,8 +58,8 @@ private:
 
   std::string m_title = std::string("CrimsonEdge");
 
-  SDLKeyboard m_keyboard;
-  SDLMouse    m_mouse;
+  csSDLKeyboard m_keyboard;
+  csSDLMouse    m_mouse;
 };
 
 }

@@ -2,7 +2,7 @@
 // Created by mcel on 30.04.2024.
 //
 
-#include <csLauncher/window/sdlwindow.hh>
+#include <csLauncher/window/csSDLWindow.hh>
 #include <csCore/csSettings.hh>
 #include <csCore/resource/csAssetManager.hh>
 #include <csCore/graphics/csImage.hh>
@@ -10,7 +10,7 @@
 namespace cryo::launcher
 {
 
-bool SDLWindow::Initialize()
+bool csSDLWindow::Initialize()
 {
   const cryo::csSettingsFile &settings = cryo::csSettings::Get().Display();
 
@@ -80,7 +80,7 @@ bool SDLWindow::Initialize()
   return true;
 }
 
-void SDLWindow::SetTitle(const std::string &title)
+void csSDLWindow::SetTitle(const std::string &title)
 {
   m_title = title;
   if (m_window)
@@ -89,12 +89,12 @@ void SDLWindow::SetTitle(const std::string &title)
   }
 }
 
-const std::string &SDLWindow::GetTitle() const
+const std::string &csSDLWindow::GetTitle() const
 {
   return m_title;
 }
 
-void SDLWindow::SetPosition(int16_t x, int16_t y)
+void csSDLWindow::SetPosition(int16_t x, int16_t y)
 {
   m_posX = x;
   m_posY = y;
@@ -104,17 +104,17 @@ void SDLWindow::SetPosition(int16_t x, int16_t y)
   }
 }
 
-int SDLWindow::GetPositionX() const
+int csSDLWindow::GetPositionX() const
 {
   return m_posX;
 }
 
-int SDLWindow::GetPositionY() const
+int csSDLWindow::GetPositionY() const
 {
   return m_posY;
 }
 
-void SDLWindow::SetResolution(uint16_t width, uint16_t height)
+void csSDLWindow::SetResolution(uint16_t width, uint16_t height)
 {
   m_width  = width;
   m_height = height;
@@ -124,18 +124,18 @@ void SDLWindow::SetResolution(uint16_t width, uint16_t height)
   }
 }
 
-int SDLWindow::GetWidth() const
+int csSDLWindow::GetWidth() const
 {
   return m_width;
 }
 
 
-int SDLWindow::GetHeight() const
+int csSDLWindow::GetHeight() const
 {
   return m_height;
 }
 
-void SDLWindow::SetWindowIcon(const cryo::csResourceLocator &locator)
+void csSDLWindow::SetWindowIcon(const cryo::csResourceLocator &locator)
 {
   if (m_window)
   {
@@ -163,7 +163,7 @@ void SDLWindow::SetWindowIcon(const cryo::csResourceLocator &locator)
   }
 }
 
-void SDLWindow::Show()
+void csSDLWindow::Show()
 {
   m_visible = true;
   if (m_window)
@@ -174,7 +174,7 @@ void SDLWindow::Show()
 }
 
 
-void SDLWindow::Hide()
+void csSDLWindow::Hide()
 {
   m_visible = false;
   if (m_window)
@@ -183,7 +183,7 @@ void SDLWindow::Hide()
   }
 }
 
-void SDLWindow::Present()
+void csSDLWindow::Present()
 {
   if (m_window)
   {
@@ -191,7 +191,7 @@ void SDLWindow::Present()
   }
 }
 
-void SDLWindow::ProcessUpdates()
+void csSDLWindow::ProcessUpdates()
 {
   if (m_window)
   {
@@ -226,12 +226,12 @@ void SDLWindow::ProcessUpdates()
 }
 
 
-SDLMouse *SDLWindow::GetMouse()
+csSDLMouse *csSDLWindow::GetMouse()
 {
   return &m_mouse;
 }
 
-SDLKeyboard *SDLWindow::GetKeyboard()
+csSDLKeyboard *csSDLWindow::GetKeyboard()
 {
   return &m_keyboard;
 }

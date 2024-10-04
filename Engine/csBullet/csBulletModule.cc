@@ -27,7 +27,7 @@ bool csBulletModule::Initialize(const std::vector<std::string> &args, csEngine *
 
 }
 
-CS_DEFINE_LIBRARY(ceBullet)
+CS_DEFINE_LIBRARY(csBullet)
 {
   printf ("Load library: ceBullet\n");
   return new cryo::bullet::csBulletModule;

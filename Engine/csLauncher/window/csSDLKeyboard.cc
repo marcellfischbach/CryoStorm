@@ -1,10 +1,10 @@
-#include <csLauncher/window/sdlkeyboard.hh>
-#include <csLauncher/window/sdlkey_map.hh>
+#include <csLauncher/window/csSDLKeyboard.hh>
+#include <csLauncher/window/csSDLKeyMap.hh>
 
 namespace cryo::launcher
 {
 
-SDLKeyboard::SDLKeyboard()
+csSDLKeyboard::csSDLKeyboard()
 {
     for (int i=0; i < eKey::eK_COUNT; ++i)
     {
@@ -16,28 +16,28 @@ SDLKeyboard::SDLKeyboard()
 
 
 
-bool SDLKeyboard::IsKeyDown(eKey key) const
+bool csSDLKeyboard::IsKeyDown(eKey key) const
 {
     return m_current[key];
 }
 
-bool SDLKeyboard::IsKeyUp(eKey key) const
+bool csSDLKeyboard::IsKeyUp(eKey key) const
 {
     return !m_current[key];
 }
 
-bool SDLKeyboard::IsKeyPressed(eKey key) const
+bool csSDLKeyboard::IsKeyPressed(eKey key) const
 {
     return !m_last[key] && m_current[key];
 }
 
-bool SDLKeyboard::IsKeyReleased(eKey key) const
+bool csSDLKeyboard::IsKeyReleased(eKey key) const
 {
     return m_last[key] && !m_current[key];
 }
 
 
-void SDLKeyboard::Update()
+void csSDLKeyboard::Update()
 {
     for (int i=0; i < eKey::eK_COUNT; ++i)
     {
@@ -45,7 +45,7 @@ void SDLKeyboard::Update()
     }
 }
 
-void SDLKeyboard::Update(SDL_Scancode scanCode, bool down)
+void csSDLKeyboard::Update(SDL_Scancode scanCode, bool down)
 {
     m_current[Map(scanCode)] = down;
 }

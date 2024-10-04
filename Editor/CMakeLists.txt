@@ -40,8 +40,8 @@ add_executable(
 
 target_link_libraries(EdLauncher
         PRIVATE
-        ceCore
-        ceOpenGL
+        csCore
+        csOpenGL
         Qt6::Core
         Qt6::Widgets
         Qt6::OpenGL

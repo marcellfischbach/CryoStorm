@@ -17,4 +17,4 @@ public:
 
 }
 
-CS_DECLARE_LIBRARY(ceImgLoader);
+CS_DECLARE_LIBRARY(csImgLoader);

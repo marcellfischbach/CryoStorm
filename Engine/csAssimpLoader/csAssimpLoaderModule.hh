@@ -17,4 +17,4 @@ public:
 
 }
 
-CS_DECLARE_LIBRARY(ceAssimpLoader);
+CS_DECLARE_LIBRARY(csAssimpLoader);

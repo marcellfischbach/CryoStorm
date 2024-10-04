@@ -19,24 +19,24 @@ set(SOURCES
         csAssimpSkeletonMeshLoader.hh
     )
 
-add_library(ceAssimpLoader SHARED
+add_library(csAssimpLoader SHARED
         ${SOURCES}
         )
 
-target_link_libraries(ceAssimpLoader
-        ceCore
+target_link_libraries(csAssimpLoader
+        csCore
         ${assimp_LIBRARIES}
         )
 
-add_dependencies(ceAssimpLoader ceMOC)
-CS_MOC(ceAssimpLoader)
+add_dependencies(csAssimpLoader csMOC)
+CS_MOC(csAssimpLoader)
 
 
-install(TARGETS ceAssimpLoader
+install(TARGETS csAssimpLoader
         RUNTIME DESTINATION bin
         ARCHIVE DESTINATION lib
         )
 
-install(DIRECTORY . DESTINATION include/ceAssimpLoader FILES_MATCHING PATTERN "*.hh")
+install(DIRECTORY . DESTINATION include/csAssimpLoader FILES_MATCHING PATTERN "*.hh")
 
 

@@ -30,7 +30,7 @@ bool csImgLoaderModule::Initialize(const std::vector<std::string> &args, csEngin
 
 }
 
-CS_DEFINE_LIBRARY(ceImgLoader)
+CS_DEFINE_LIBRARY(csImgLoader)
 {
   printf ("Load library: ceImgLoader\n");
   return new cryo::img::csImgLoaderModule;

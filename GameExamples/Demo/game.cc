@@ -11,7 +11,7 @@
 CS_DEFINE_GAME(Game)
 
 
-#include <csLauncher/launchermodule.hh>
+#include <csLauncher/csLauncherModule.hh>
 #include "exitgamestate.hh"
 #include "testhandler.hh"
 #include <csCore/csEngine.hh>
@@ -540,8 +540,8 @@ void add_skeleton_mesh(cryo::csWorld *world, cryo::iMaterial *material)
   global_skeleton = &meshState->GetSkeleton();
 
 
-  cryo::SkeletonAnimationPack
-      *animationPack = cryo::csAssetManager::Get()->Load<cryo::SkeletonAnimationPack>("/skinned_mesh.fbx");
+  cryo::csSkeletonAnimationPack
+      *animationPack = cryo::csAssetManager::Get()->Load<cryo::csSkeletonAnimationPack>("/skinned_mesh.fbx");
   global_animation = animationPack->Get("Armature|MyAnimation01");
   global_animation->SetLoop(true);
 

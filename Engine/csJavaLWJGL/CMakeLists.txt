@@ -17,23 +17,23 @@ set(SOURCES
 )
 
 
-add_library(ceJavaLWJGL SHARED ${SOURCES}
+add_library(csJavaLWJGL SHARED ${SOURCES}
 )
 
-add_dependencies(ceJavaLWJGL
-        ceMOC
-        ceGame
+add_dependencies(csJavaLWJGL
+        csMOC
+        csGame
 )
-add_dependencies(ceJavaLWJGL ceAssimpLoader)
-add_dependencies(ceJavaLWJGL ceBullet)
-add_dependencies(ceJavaLWJGL ceImgLoader)
-add_dependencies(ceJavaLWJGL ceOpenGL)
+add_dependencies(csJavaLWJGL csAssimpLoader)
+add_dependencies(csJavaLWJGL csBullet)
+add_dependencies(csJavaLWJGL csImgLoader)
+add_dependencies(csJavaLWJGL csOpenGL)
 
-CS_MOC(ceJavaLWJGL ceJavaLWJGL)
+CS_MOC(csJavaLWJGL csJavaLWJGL)
 
 
-target_link_libraries(ceJavaLWJGL
-        ceCore
+target_link_libraries(csJavaLWJGL
+        csCore
         ${JNI_LIBRARIES}
 )
 

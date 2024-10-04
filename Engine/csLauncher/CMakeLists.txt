@@ -3,41 +3,41 @@
 add_definitions(-D_USE_MATH_DEFINES)
 
 set(SOURCES
-        launchermodule.cc
-        launchermodule.hh
+        csLauncherModule.cc
+        csLauncherModule.hh
         main.cc
-        window/sdlbutton_map.hh
-        window/sdlinputsystem.cc
-        window/sdlinputsystem.hh
-        window/sdlkey_map.hh
-        window/sdlkeyboard.cc
-        window/sdlkeyboard.hh
-        window/sdlmouse.cc
-        window/sdlmouse.hh
-        window/sdlwindow.cc
-        window/sdlwindow.hh
+        window/csSDLButtonMap.hh
+        window/csSDLInputSystem.cc
+        window/csSDLInputSystem.hh
+        window/csSDLKeyMap.hh
+        window/csSDLKeyboard.cc
+        window/csSDLKeyboard.hh
+        window/csSDLMouse.cc
+        window/csSDLMouse.hh
+        window/csSDLWindow.cc
+        window/csSDLWindow.hh
 
 )
 
 
-add_executable(ceLauncher ${SOURCES}
+add_executable(csLauncher ${SOURCES}
 )
 
-add_dependencies(ceLauncher
-        ceMOC
-        ceGame
+add_dependencies(csLauncher
+        csMOC
+        csGame
 )
 
 
-CS_MOC(ceLauncher ceLauncher)
+CS_MOC(csLauncher csLauncher)
 
 
-target_link_libraries(ceLauncher
-        ceCore
+target_link_libraries(csLauncher
+        csCore
         ${SDL_LIBRARY}
 )
 
-add_dependencies(ceLauncher ceAssimpLoader)
-add_dependencies(ceLauncher ceBullet)
-add_dependencies(ceLauncher ceImgLoader)
-add_dependencies(ceLauncher ceOpenGL)
+add_dependencies(csLauncher csAssimpLoader)
+add_dependencies(csLauncher csBullet)
+add_dependencies(csLauncher csImgLoader)
+add_dependencies(csLauncher csOpenGL)

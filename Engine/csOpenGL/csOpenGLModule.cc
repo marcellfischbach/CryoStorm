@@ -44,7 +44,7 @@ bool csOpenGLModule::Register(const std::vector<std::string> &args, csEngine *en
     return false;
   }
 
-  csObjectRegistry::Register<iShaderGraphCompilerFactory>(new GL4ShaderGraphCompilerFactory());
+  csObjectRegistry::Register<iShaderGraphCompilerFactory>(new csGL4ShaderGraphCompilerFactory());
   csObjectRegistry::Register<iRenderMeshGeneratorFactory>(new csGL4RenderMeshGeneratorFactory());
   csObjectRegistry::Register<iRenderMeshBatchGeneratorFactory>(new csGL4RenderMeshBatchGeneratorFactory());
   csObjectRegistry::Register<iTerrainMeshGeneratorFactory>(new csGL4TerrainMeshGeneratorFactory());
@@ -77,8 +77,8 @@ bool csOpenGLModule::Initialize(const std::vector<std::string> &args, csEngine *
 
 }
 
-CS_DEFINE_LIBRARY(ceOpenGL)
+CS_DEFINE_LIBRARY(csOpenGL)
 {
-  printf ("Load library: ceOpenGL\n");
+  printf ("Load library: csOpenGL\n");
   return new cryo::opengl::csOpenGLModule;
 }

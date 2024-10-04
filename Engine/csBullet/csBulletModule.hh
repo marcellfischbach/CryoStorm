@@ -17,4 +17,4 @@ public:
 
 }
 
-CS_DECLARE_LIBRARY(ceBullet);
+CS_DECLARE_LIBRARY(csBullet);

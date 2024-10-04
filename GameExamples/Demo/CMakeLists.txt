@@ -18,24 +18,24 @@ set(SOURCES
         testhandler.hh
     )
 
-add_library(ceGame SHARED
+add_library(csGame SHARED
         ${SOURCES}
         )
 
 
-target_link_libraries(ceGame
-        ceCore
+target_link_libraries(csGame
+        csCore
         )
 
-add_dependencies(ceGame ceMOC)
-CS_MOC(ceGame)
+add_dependencies(csGame csMOC)
+CS_MOC(csGame)
 
 
-install(TARGETS ceGame
+install(TARGETS csGame
         RUNTIME DESTINATION bin
         ARCHIVE DESTINATION lib
         )
 
-install(DIRECTORY . DESTINATION include/ceImgLoader FILES_MATCHING PATTERN "*.hh")
+install(DIRECTORY . DESTINATION include/csImgLoader FILES_MATCHING PATTERN "*.hh")
 
 

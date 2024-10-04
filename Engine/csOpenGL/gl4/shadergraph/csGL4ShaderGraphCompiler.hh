@@ -155,11 +155,11 @@ public:
 
 
 CS_CLASS()
-class CS_OGL_API GL4ShaderGraphCompilerFactory : public CS_SUPER(iShaderGraphCompilerFactory)
+class CS_OGL_API csGL4ShaderGraphCompilerFactory : public CS_SUPER(iShaderGraphCompilerFactory)
 {
 CS_CLASS_GEN_OBJECT;
 public:
-  GL4ShaderGraphCompilerFactory() = default;
+  csGL4ShaderGraphCompilerFactory() = default;
 
   iShaderGraphCompiler *Create() const override;
 

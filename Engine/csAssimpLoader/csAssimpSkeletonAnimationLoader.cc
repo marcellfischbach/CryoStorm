@@ -17,7 +17,7 @@ csAssimpSkeletonAnimationLoader::csAssimpSkeletonAnimationLoader()
 bool csAssimpSkeletonAnimationLoader::CanLoad(const cryo::csClass *cls, const cryo::csResourceLocator &locator) const
 {
   const std::string &ext = locator.GetExtension();
-  return cls == SkeletonAnimationPack::GetStaticClass()
+  return cls == csSkeletonAnimationPack::GetStaticClass()
          && ext == std::string("FBX");
 }
 
@@ -48,7 +48,7 @@ iObject *csAssimpSkeletonAnimationLoader::Load(const cryo::csClass *cls, const c
                                                         | aiProcess_OptimizeMeshes
   );
 
-  SkeletonAnimationPack *pack = new SkeletonAnimationPack();
+  csSkeletonAnimationPack *pack = new csSkeletonAnimationPack();
 
   for (int i = 0; i < scene->mNumAnimations; ++i)
   {

@@ -12,7 +12,7 @@
 
 //
 // Meta information for CS_CLASS definitions
-//  Virtual - Prevent the ceMOC from implementing CreateInstance 
+//  Virtual - Prevent the csMOC from implementing CreateInstance
 
 #define CS_CLASS(...)
 #define CS_SUPER(Cls) Cls

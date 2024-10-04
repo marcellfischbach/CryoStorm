@@ -1,11 +1,11 @@
 
-#include <csLauncher/window/sdlmouse.hh>
-#include <csLauncher/window/sdlbutton_map.hh>
+#include <csLauncher/window/csSDLMouse.hh>
+#include <csLauncher/window/csSDLButtonMap.hh>
 
 namespace cryo::launcher
 {
 
-SDLMouse::SDLMouse()
+csSDLMouse::csSDLMouse()
   : m_x(0)
   , m_y(0)
   , m_relX(0)
@@ -22,23 +22,23 @@ SDLMouse::SDLMouse()
   }
 }
 
-void SDLMouse::SetWindow(SDL_Window *window)
+void csSDLMouse::SetWindow(SDL_Window *window)
 {
   m_window = window;
 }
 
-void SDLMouse::SetVisible(bool visible)
+void csSDLMouse::SetVisible(bool visible)
 {
   SDL_ShowCursor(visible ? SDL_ENABLE : SDL_DISABLE);
   m_cursorVisible = SDL_ShowCursor(SDL_QUERY) == SDL_ENABLE;
 }
 
-bool SDLMouse::IsVisible() const
+bool csSDLMouse::IsVisible() const
 {
   return m_cursorVisible;
 }
 
-void SDLMouse::SetCursorMode(eCursorMode mode)
+void csSDLMouse::SetCursorMode(eCursorMode mode)
 {
   m_cursorMode = mode;
   switch (m_cursorMode)
@@ -59,64 +59,64 @@ void SDLMouse::SetCursorMode(eCursorMode mode)
   SetVisible(m_cursorVisible);
 }
 
-eCursorMode SDLMouse::GetCursorMode() const
+eCursorMode csSDLMouse::GetCursorMode() const
 {
   return m_cursorMode;
 }
 
-int32_t SDLMouse::GetX() const
+int32_t csSDLMouse::GetX() const
 {
   return m_x;
 }
 
-int32_t SDLMouse::GetY() const
+int32_t csSDLMouse::GetY() const
 {
   return m_y;
 }
 
-int32_t SDLMouse::GetDeltaX() const
+int32_t csSDLMouse::GetDeltaX() const
 {
   return m_relX;
 }
 
-int32_t SDLMouse::GetDeltaY() const
+int32_t csSDLMouse::GetDeltaY() const
 {
   return m_relY;
 }
 
-int32_t SDLMouse::GetWheel() const
+int32_t csSDLMouse::GetWheel() const
 {
   return m_wheel;
 }
 
-int32_t SDLMouse::GetWheelHorizontal() const
+int32_t csSDLMouse::GetWheelHorizontal() const
 {
   return m_wheelHorizontal;
 }
 
 
-bool SDLMouse::IsButtonDown(eMouseButton mouseButton) const
+bool csSDLMouse::IsButtonDown(eMouseButton mouseButton) const
 {
   return m_current[(size_t)mouseButton];
 }
 
-bool SDLMouse::IsButtonUp(eMouseButton mouseButton) const
+bool csSDLMouse::IsButtonUp(eMouseButton mouseButton) const
 {
   return !m_current[(size_t)mouseButton];
 }
 
-bool SDLMouse::IsButtonPressed(eMouseButton mouseButton) const
+bool csSDLMouse::IsButtonPressed(eMouseButton mouseButton) const
 {
   return !m_last[(size_t)mouseButton] && m_current[(size_t)mouseButton];
 }
 
-bool SDLMouse::IsButtonReleased(eMouseButton mouseButton) const
+bool csSDLMouse::IsButtonReleased(eMouseButton mouseButton) const
 {
   return m_last[(size_t)mouseButton] && !m_current[(size_t)mouseButton];
 }
 
 
-void SDLMouse::Update()
+void csSDLMouse::Update()
 {
   m_wheel = 0;
   m_wheelHorizontal = 0;
@@ -126,7 +126,7 @@ void SDLMouse::Update()
 
 }
 
-void SDLMouse::Update(uint8_t button, bool down)
+void csSDLMouse::Update(uint8_t button, bool down)
 {
   if (button < (size_t)eMouseButton::eMB_COUNT)
   {
@@ -134,13 +134,13 @@ void SDLMouse::Update(uint8_t button, bool down)
   }
 }
 
-void SDLMouse::Update(int32_t wheel, int32_t wheelHorizontal)
+void csSDLMouse::Update(int32_t wheel, int32_t wheelHorizontal)
 {
   m_wheel = wheel;
   m_wheelHorizontal = wheelHorizontal;
 }
 
-void SDLMouse::Update(int32_t x, int32_t y, int32_t relX, int32_t relY)
+void csSDLMouse::Update(int32_t x, int32_t y, int32_t relX, int32_t relY)
 {
   m_x = x;
   m_y = y;

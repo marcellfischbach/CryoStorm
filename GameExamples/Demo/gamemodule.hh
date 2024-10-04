@@ -13,4 +13,4 @@ public:
 };
 
 
-CS_DECLARE_LIBRARY(ceGame);
+CS_DECLARE_LIBRARY(csGame);

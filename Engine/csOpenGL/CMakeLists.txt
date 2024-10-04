@@ -100,26 +100,26 @@ set(SOURCES
         )
 
 
-add_library(ceOpenGL SHARED
+add_library(csOpenGL SHARED
         ${SOURCES}
         )
 
-target_link_libraries(ceOpenGL
-        ceCore
+target_link_libraries(csOpenGL
+        csCore
         tinyxml2
         ${OPENGL_LIBRARIES}
         ${GLEW_LIBRARIES}
         )
 
-add_dependencies(ceOpenGL ceMOC)
-CS_MOC(ceOpenGL)
+add_dependencies(csOpenGL csMOC)
+CS_MOC(csOpenGL)
 
 
-install(TARGETS ceOpenGL
+install(TARGETS csOpenGL
         RUNTIME DESTINATION bin
         ARCHIVE DESTINATION lib
         )
 
-install(DIRECTORY . DESTINATION include/ceOpenGL FILES_MATCHING PATTERN "*.hh")
+install(DIRECTORY . DESTINATION include/csOpenGL FILES_MATCHING PATTERN "*.hh")
 
 

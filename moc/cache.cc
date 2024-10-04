@@ -17,7 +17,7 @@ namespace cryo::moc
 
 void Cache::Load(const std::string& path)
 {
-  std::ifstream stream(path + "/.ceCache");
+  std::ifstream stream(path + "/.csCache");
   std::string line;
   int l = 1;
   while (std::getline(stream, line))
@@ -81,7 +81,7 @@ void Cache::Load(const std::string& path)
 
 void Cache::Store(const std::string& path)
 {
-  std::ofstream stream(path + "/.ceCache");
+  std::ofstream stream(path + "/.csCache");
   for (auto it: m_fileCache)
   {
     Data& data = it.second;

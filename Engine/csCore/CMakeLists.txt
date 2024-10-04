@@ -315,28 +315,28 @@ if (${JAVA_BINDINGS})
 endif ()
 
 
-add_library(ceCore SHARED
+add_library(csCore SHARED
         ${SOURCES}
 )
 
-target_link_libraries(ceCore
+target_link_libraries(csCore
         ${PNG_LIBRARIES}
 )
 
 if (${JAVA_BINDINGS})
-    target_link_libraries(ceCore ${JNI_LIBRARIES})
+    target_link_libraries(csCore ${JNI_LIBRARIES})
 endif ()
 
-add_dependencies(ceCore ceMOC)
-CS_MOC(ceCore)
+add_dependencies(csCore csMOC)
+CS_MOC(csCore)
 
 
-install(TARGETS ceCore
+install(TARGETS csCore
         RUNTIME DESTINATION bin
         ARCHIVE DESTINATION lib
 )
 
-install(DIRECTORY . DESTINATION include/ceCore FILES_MATCHING PATTERN "*.hh")
+install(DIRECTORY . DESTINATION include/csCore FILES_MATCHING PATTERN "*.hh")
 
 
 

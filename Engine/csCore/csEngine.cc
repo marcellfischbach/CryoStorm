@@ -317,7 +317,7 @@ bool csEngine::InitializeGame()
     m_world = new csWorld();
   }
 
-  iGame* game = open_game("ceGame");
+  iGame* game = open_game("csGame");
   if (game)
   {
     game->Initialize(this);

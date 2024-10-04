@@ -7,12 +7,12 @@
 namespace cryo::launcher
 {
 
-class SDLKeyboard : public iKeyboard
+class csSDLKeyboard : public iKeyboard
 {
 public:
 
-  SDLKeyboard();
-    virtual ~SDLKeyboard() { }
+  csSDLKeyboard();
+    virtual ~csSDLKeyboard() { }
 
     void Update ();
     void Update (SDL_Scancode scanCode, bool down);

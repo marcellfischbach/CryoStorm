@@ -3,7 +3,7 @@
 #include <csCore/resource/csVFS.hh>
 #include <csCore/resource/csVFSConfigReader.hh>
 #include <csCore/iGame.hh>
-#include <csLauncher/launchermodule.hh>
+#include <csLauncher/csLauncherModule.hh>
 #ifdef CS_WIN32
 #include <Windows.h>
 #endif
@@ -38,7 +38,7 @@ int main(int argc, char** argv)
   cryo::csVFSConfigReader::Read(dataPath, configFilename);
 
   cryo::csEngine *engine = cryo::csEngine::Get();
-  if (!engine->InitializeEngine(args, new cryo::launcher::LauncherModule()))
+  if (!engine->InitializeEngine(args, new cryo::launcher::csLauncherModule()))
   {
     printf ("Unable to initialize engine\n");
     return -1;

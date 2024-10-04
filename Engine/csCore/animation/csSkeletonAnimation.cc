@@ -210,7 +210,7 @@ csSkeletonAnimation::Channel &csSkeletonAnimation::GetChannel(const std::string 
 }
 
 
-void SkeletonAnimationPack::AddAnimation(csSkeletonAnimation *animation)
+void csSkeletonAnimationPack::AddAnimation(csSkeletonAnimation *animation)
 {
   if (animation)
   {
@@ -219,7 +219,7 @@ void SkeletonAnimationPack::AddAnimation(csSkeletonAnimation *animation)
   }
 }
 
-csSkeletonAnimation *SkeletonAnimationPack::Get(const std::string &name)
+csSkeletonAnimation *csSkeletonAnimationPack::Get(const std::string &name)
 {
   for (auto &animation: m_animations)
   {
