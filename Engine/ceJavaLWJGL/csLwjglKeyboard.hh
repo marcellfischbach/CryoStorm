@@ -10,11 +10,11 @@
 namespace cryo::java
 {
 
-class LwjglKeyboard : public iKeyboard
+class csLwjglKeyboard : public iKeyboard
 {
 public:
-  LwjglKeyboard();
-  ~LwjglKeyboard() = default;
+  csLwjglKeyboard();
+  ~csLwjglKeyboard() = default;
 
   jobject GetJObject ();
 

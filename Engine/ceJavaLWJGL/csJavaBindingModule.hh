@@ -11,7 +11,7 @@
 namespace cryo::java
 {
 
-class JavaBindingModule : public cryo::iModule
+class csJavaBindingModule : public cryo::iModule
 {
 public:
   bool Register(const std::vector<std::string> &args, csEngine *engine);

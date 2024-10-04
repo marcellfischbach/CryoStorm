@@ -3,7 +3,7 @@ package org.crimsonedge.lwjgl;
 import org.crimsonedge.core.input.EKey;
 import org.crimsonedge.core.input.IKeyboard;
 
-public class LwjglKeyboard implements IKeyboard {
+public class csLwjglKeyboard implements IKeyboard {
     
     private final long ref;
     
@@ -19,7 +19,7 @@ public class LwjglKeyboard implements IKeyboard {
     private Event[] events = new Event[1000];
     private int numEvents = 0;
 
-    public LwjglKeyboard(long ref) {
+    public csLwjglKeyboard(long ref) {
         this.ref = ref;
         for (int i = 0; i < events.length; i++) {
             events[i] = new Event();

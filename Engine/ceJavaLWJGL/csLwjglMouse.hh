@@ -10,11 +10,11 @@
 namespace cryo::java
 {
 
-class LwjglMouse : public iMouse
+class csLwjglMouse : public iMouse
 {
 public:
-  LwjglMouse();
-  ~LwjglMouse() = default;
+  csLwjglMouse();
+  ~csLwjglMouse() = default;
 
   jobject GetJObject ();
 

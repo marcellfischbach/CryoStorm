@@ -4,16 +4,16 @@ add_definitions(-D_USE_MATH_DEFINES)
 add_definitions(-DCS_JAVA_EXPORT)
 
 set(SOURCES
-        javabindingmodule.cc
-        javabindingmodule.hh
-        lwjglinputsystem.cc
-        lwjglinputsystem.hh
-        lwjglkeyboard.cc
-        lwjglkeyboard.hh
-        lwjglmouse.cc
-        lwjglmouse.hh
-        lwjglwindow.cc
-        lwjglwindow.hh
+        csJavaBindingModule.cc
+        csJavaBindingModule.hh
+        csLwjglInputSystem.cc
+        csLwjglInputSystem.hh
+        csLwjglKeyboard.cc
+        csLwjglKeyboard.hh
+        csLwjglMouse.cc
+        csLwjglMouse.hh
+        csLwjglWindow.cc
+        csLwjglWindow.hh
 )
 
 

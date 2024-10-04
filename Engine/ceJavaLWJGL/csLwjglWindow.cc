@@ -2,7 +2,7 @@
 // Created by MCEL on 08.05.2024.
 //
 
-#include <ceJavaLWJGL/lwjglwindow.hh>
+#include <ceJavaLWJGL/csLwjglWindow.hh>
 #include <ceCore/csJava.hh>
 #include <ceCore/csJavaCalls.hh>
 
@@ -14,7 +14,7 @@ extern "C"
 JNIEXPORT jlong JNICALL Java_org_crimsonedge_lwjgl_LwjglWindow_nCreate(JNIEnv *env, jclass cls)
 {
   cryo::csJava::Set(env);
-  auto lwjgWindow = new cryo::java::LwjglWindow();
+  auto lwjgWindow = new cryo::java::csLwjglWindow();
   return reinterpret_cast<jlong>(lwjgWindow);
 }
 
@@ -23,21 +23,21 @@ JNIEXPORT void JNICALL Java_org_crimsonedge_lwjgl_LwjglWindow_nSetJObject(JNIEnv
 {
   object = env->NewGlobalRef(object);
 
-  auto window = reinterpret_cast<cryo::java::LwjglWindow*>(ref);
+  auto window = reinterpret_cast<cryo::java::csLwjglWindow*>(ref);
   window->SetJObject(object);
 
 }
 
 JNIEXPORT jobject JNICALL Java_org_crimsonedge_lwjgl_LwjglWindow_nGetMouse(JNIEnv *env, jclass cls, jlong ref)
 {
-  auto window = reinterpret_cast<cryo::java::LwjglWindow*>(ref);
+  auto window = reinterpret_cast<cryo::java::csLwjglWindow*>(ref);
   return window->GetMouse()->GetJObject();
 }
 
 
 JNIEXPORT jobject JNICALL Java_org_crimsonedge_lwjgl_LwjglWindow_nGetKeyboard(JNIEnv *env, jclass cls, jlong ref)
 {
-  auto window = reinterpret_cast<cryo::java::LwjglWindow*>(ref);
+  auto window = reinterpret_cast<cryo::java::csLwjglWindow*>(ref);
   return window->GetKeyboard()->GetJObject();
 }
 
@@ -46,19 +46,19 @@ JNIEXPORT jobject JNICALL Java_org_crimsonedge_lwjgl_LwjglWindow_nGetKeyboard(JN
 namespace cryo::java
 {
 
-LwjglWindow *LwjglWindow::s_instance = nullptr;
+csLwjglWindow *csLwjglWindow::s_instance = nullptr;
 
-LwjglWindow *LwjglWindow::Get()
+csLwjglWindow *csLwjglWindow::Get()
 {
   return s_instance;
 }
 
-LwjglWindow::LwjglWindow()
+csLwjglWindow::csLwjglWindow()
 {
   s_instance = this;
 }
 
-void LwjglWindow::SetTitle(const std::string &title)
+void csLwjglWindow::SetTitle(const std::string &title)
 {
   static csJavaCallVoid1<jstring> setTitle(csJava::Get(), this, THIS_CLASS_NAME, "setTitle", JAVA_STRING);
 
@@ -67,7 +67,7 @@ void LwjglWindow::SetTitle(const std::string &title)
 
 }
 
-const std::string &LwjglWindow::GetTitle() const
+const std::string &csLwjglWindow::GetTitle() const
 {
   static csJavaCallObject<jstring> getTitle(csJava::Get(), this, THIS_CLASS_NAME, "getTitle", JAVA_STRING);
 
@@ -81,71 +81,71 @@ const std::string &LwjglWindow::GetTitle() const
   return m_title;
 }
 
-void LwjglWindow::SetPosition(int16_t x, int16_t y)
+void csLwjglWindow::SetPosition(int16_t x, int16_t y)
 {
   static csJavaCallVoid2<jint, jint> setPosition (csJava::Get(), this, THIS_CLASS_NAME, "setPosition", JAVA_INT, JAVA_INT);
   setPosition.call(csJava::Get(), x, y);
 }
 
-int LwjglWindow::GetPositionX() const
+int csLwjglWindow::GetPositionX() const
 {
   static csJavaCallInt getPositionX (csJava::Get(), this, THIS_CLASS_NAME, "getPositionX");
 
   return (int)getPositionX.call(csJava::Get(), 0);
 }
-int LwjglWindow::GetPositionY() const
+int csLwjglWindow::GetPositionY() const
 {
   static csJavaCallInt getPositionY (csJava::Get(), this, THIS_CLASS_NAME, "getPositionY");
 
   return (int)getPositionY.call(csJava::Get(), 0);
 }
 
-void LwjglWindow::SetResolution(uint16_t width, uint16_t height)
+void csLwjglWindow::SetResolution(uint16_t width, uint16_t height)
 {
   static csJavaCallVoid2<jint, jint> setResolution (csJava::Get(), this, THIS_CLASS_NAME, "setResoluation", JAVA_INT, JAVA_INT);
   setResolution.call(csJava::Get(), width, height);
 }
-int LwjglWindow::GetWidth() const
+int csLwjglWindow::GetWidth() const
 {
   static csJavaCallInt getWidth (csJava::Get(), this, THIS_CLASS_NAME, "getWidth");
   return getWidth.call(csJava::Get(), 100);
 }
-int LwjglWindow::GetHeight() const
+int csLwjglWindow::GetHeight() const
 {
   static csJavaCallInt getHeight (csJava::Get(), this, THIS_CLASS_NAME, "getHeight");
   return getHeight.call(csJava::Get(), 100);
 }
 
 
-void LwjglWindow::SetWindowIcon(const csResourceLocator &iconName)
+void csLwjglWindow::SetWindowIcon(const csResourceLocator &iconName)
 {
 
 }
 
-void LwjglWindow::Show()
+void csLwjglWindow::Show()
 {
 
 }
-void LwjglWindow::Hide()
-{
-
-}
-
-void LwjglWindow::Present()
+void csLwjglWindow::Hide()
 {
 
 }
 
-void LwjglWindow::ProcessUpdates()
+void csLwjglWindow::Present()
+{
+
+}
+
+void csLwjglWindow::ProcessUpdates()
 {
 }
 
-LwjglMouse *LwjglWindow::GetMouse()
+csLwjglMouse *csLwjglWindow::GetMouse()
 {
   return &m_mouse;
 }
 
-LwjglKeyboard *LwjglWindow::GetKeyboard()
+csLwjglKeyboard *csLwjglWindow::GetKeyboard()
 {
   return &m_keyboard;
 }

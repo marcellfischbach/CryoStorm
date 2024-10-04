@@ -3,23 +3,23 @@ package org.crimsonedge.lwjgl;
 import org.crimsonedge.core.CoreObject;
 import org.crimsonedge.core.window.IWindow;
 
-public class LwjglWindow extends CoreObject implements IWindow {
+public class csLwjglWindow extends CoreObject implements IWindow {
 
     private String title;
 
     private final LwjglWindowCanvas canvas;
 
-    private final LwjglMouse mouse;
+    private final csLwjglMouse mouse;
 
-    private final LwjglKeyboard keyboard;
+    private final csLwjglKeyboard keyboard;
 
     private static native long nCreate();
     private static native void nSetJObject (long ref, csObject obj);
 
-    private static native LwjglMouse nGetMouse (long ref);
-    private static native LwjglKeyboard nGetKeyboard(long ref);
+    private static native csLwjglMouse nGetMouse (long ref);
+    private static native csLwjglKeyboard nGetKeyboard(long ref);
 
-    public LwjglWindow(LwjglWindowCanvas canvas) {
+    public csLwjglWindow(LwjglWindowCanvas canvas) {
         super (nCreate());
         nSetJObject(getRef(), this);
         this.mouse = nGetMouse(getRef());
@@ -88,11 +88,11 @@ public class LwjglWindow extends CoreObject implements IWindow {
         //
     }
 
-    public LwjglMouse getMouse() {
+    public csLwjglMouse getMouse() {
         return mouse;
     }
 
-    public LwjglKeyboard getKeyboard() {
+    public csLwjglKeyboard getKeyboard() {
         return keyboard;
     }
 }

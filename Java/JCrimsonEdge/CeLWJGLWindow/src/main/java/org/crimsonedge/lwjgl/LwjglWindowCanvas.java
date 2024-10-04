@@ -18,7 +18,7 @@ public class LwjglWindowCanvas extends AWTGLCanvas  {
 
     private long wnd;
 
-    private final LwjglWindow window;
+    private final csLwjglWindow window;
 
     private int renderWidth;
 
@@ -34,7 +34,7 @@ public class LwjglWindowCanvas extends AWTGLCanvas  {
         this.renderWidth = 1024;
         this.renderHeight = 768;
 
-        this.window = new LwjglWindow(this);
+        this.window = new csLwjglWindow(this);
         this.args = args;
 
 

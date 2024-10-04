@@ -1,9 +1,9 @@
 
 #pragma once
 
-#include <ceJavaLWJGL/javaexport.hh>
-#include <ceJavaLWJGL/lwjglkeyboard.hh>
-#include <ceJavaLWJGL/lwjglmouse.hh>
+#include <ceJavaLWJGL/csJavaExport.hh>
+#include <ceJavaLWJGL/csLwjglKeyboard.hh>
+#include <ceJavaLWJGL/csLwjglMouse.hh>
 #include <ceCore/window/iWindow.hh>
 
 #include <jni.h>
@@ -12,14 +12,14 @@ namespace cryo::java
 {
 
 CS_CLASS(jclass="org.crimsonedge.launcher.LwjglWindow")
-class CS_JAVA_API LwjglWindow : public CS_SUPER(iWindow)
+class CS_JAVA_API csLwjglWindow : public CS_SUPER(iWindow)
 {
   CS_CLASS_GEN_OBJECT;
 public:
-  LwjglWindow();
-  ~LwjglWindow() override = default;
+  csLwjglWindow();
+  ~csLwjglWindow() override = default;
 
-  static LwjglWindow* Get();
+  static csLwjglWindow* Get();
   
   void SetTitle(const std::string& title) override;
   const std::string &GetTitle() const override;
@@ -47,15 +47,15 @@ public:
   void ProcessUpdates() override;
 
 
-  LwjglMouse *GetMouse ();
-  LwjglKeyboard *GetKeyboard ();
+  csLwjglMouse *GetMouse();
+  csLwjglKeyboard *GetKeyboard();
 private:
   mutable std::string m_title;
 
-  LwjglKeyboard m_keyboard;
-  LwjglMouse m_mouse;
+  csLwjglKeyboard m_keyboard;
+  csLwjglMouse    m_mouse;
 
-  static LwjglWindow* s_instance;
+  static csLwjglWindow * s_instance;
 
 };
 

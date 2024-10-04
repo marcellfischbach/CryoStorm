@@ -2,9 +2,9 @@
 
 #include <jni.h>
 #include <master.refl.cc>
-#include <ceJavaLWJGL/javabindingmodule.hh>
-#include <ceJavaLWJGL/lwjglwindow.hh>
-#include <ceJavaLWJGL/lwjglinputsystem.hh>
+#include <ceJavaLWJGL/csJavaBindingModule.hh>
+#include <ceJavaLWJGL/csLwjglWindow.hh>
+#include <ceJavaLWJGL/csLwjglInputSystem.hh>
 #include <ceCore/csJavaGame.hh>
 #include <ceCore/csObjectRegistry.hh>
 #include <ceCore/csEngine.hh>
@@ -17,13 +17,13 @@
 namespace cryo::java
 {
 
-bool JavaBindingModule::Register(const std::vector<std::string> &args, csEngine *engine)
+bool csJavaBindingModule::Register(const std::vector<std::string> &args, csEngine *engine)
 {
   register_classes();
 
 //  SDLWindow *window = new SDLWindow();
-  LwjglWindow      *window      = LwjglWindow::Get();
-  LwjglInputSystem *inputSystem = new LwjglInputSystem(window->GetKeyboard(), window->GetMouse());
+  csLwjglWindow      *window      = csLwjglWindow::Get();
+  csLwjglInputSystem *inputSystem = new csLwjglInputSystem(window->GetKeyboard(), window->GetMouse());
   csObjectRegistry::Register<iInputSystem>(inputSystem);
   csObjectRegistry::Register<iWindow>(window);
   engine->SetWindow(window);
@@ -31,7 +31,7 @@ bool JavaBindingModule::Register(const std::vector<std::string> &args, csEngine 
   return true;
 }
 
-bool JavaBindingModule::Initialize(const std::vector<std::string> &args, csEngine *engine)
+bool csJavaBindingModule::Initialize(const std::vector<std::string> &args, csEngine *engine)
 {
 //  SDLWindow *window = (SDLWindow*)engine->GetWindow();
 //  window->Initialize();
@@ -58,7 +58,7 @@ extern "C"
 JNIEXPORT jlong
 JNICALL Java_org_crimsonedge_lwjgl_LwjglModule_nCreateLwjglModule(JNIEnv *env, jclass cls)
 {
-  return reinterpret_cast<jlong>(new cryo::java::JavaBindingModule());
+  return reinterpret_cast<jlong>(new cryo::java::csJavaBindingModule());
 }
 
 

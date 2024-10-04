@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class LwjglMouse implements IMouse {
+public class csLwjglMouse implements IMouse {
 
     private final long ref;
 
@@ -37,7 +37,7 @@ public class LwjglMouse implements IMouse {
     private LwjglWindowCanvas canvas;
     private Cursor blankCursor;
 
-    public LwjglMouse(long ref) {
+    public csLwjglMouse(long ref) {
         this.ref = ref;
         PointerInfo inf = MouseInfo.getPointerInfo();
         Point p = inf.getLocation();
