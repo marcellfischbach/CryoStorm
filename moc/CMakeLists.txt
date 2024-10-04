@@ -1,7 +1,7 @@
 
 
 
-include_directories(${CrimsonEdge_SOURCE_DIR}/moc)
+include_directories(${CryoStorm_SOURCE_DIR}/moc)
 
 add_executable(csMOC
 	ast.cc

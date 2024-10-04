@@ -9,8 +9,8 @@ function(CS_MOC trgt)
 	message("MOC: ${CMAKE_SOURCE_DIR}")
 
 	set (EXEC_PATH "")
-	if (CrimsonEdge_BINARY_DIR) 
-		set(EXEC_PATH "${CrimsonEdge_BINARY_DIR}/bin/")
+	if (CryoStorm_BINARY_DIR)
+		set(EXEC_PATH "${CryoStorm_BINARY_DIR}/bin/")
 	endif()
 	
 	#string(REGEX REPLACE ".*/" "" ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
@@ -24,7 +24,7 @@ function(CS_MOC trgt)
 			WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 			BYPRODUCTS "${MOC_DIRECTORY}/.csCache"
 	)
-	if (CrimsonEdge_BINARY_DIR)
+	if (CryoStorm_BINARY_DIR)
 		# this is an in-engine build
 		add_dependencies(${TARGET_NAME} csMOC)
 	endif()

@@ -1,6 +1,6 @@
-# CrimsonEdge
+# CryoStorm
 
-**CrimsonEdge** is game engine that currently focuses mostly on rending and physics simulation.
+**CryoStorm** is game engine that currently focuses mostly on rending and physics simulation.
 
 All implementations are written by a single developer, so development is quite slow but steadily ongoing. So bear with 
 me if the project is not state of the art. 

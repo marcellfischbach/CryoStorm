@@ -56,7 +56,7 @@ private:
 
   bool m_visible = false;
 
-  std::string m_title = std::string("CrimsonEdge");
+  std::string m_title = std::string("CryoStorm");
 
   csSDLKeyboard m_keyboard;
   csSDLMouse    m_mouse;
