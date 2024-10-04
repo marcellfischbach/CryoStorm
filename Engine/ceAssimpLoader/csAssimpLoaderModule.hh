@@ -1,13 +1,13 @@
 
 #pragma once
 
-#include <ceAssimpLoader/assimpexport.hh>
+#include <ceAssimpLoader/csAssimpExport.hh>
 #include <ceCore/iModule.hh>
 
 namespace cryo::assimp
 {
 
-class CS_ASSIMP_API AssimpLoaderModule : public iModule
+class CS_ASSIMP_API csAssimpLoaderModule : public iModule
 {
 public:
   bool Register(const std::vector<std::string> &args, csEngine *engine);

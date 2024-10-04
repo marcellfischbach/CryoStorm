@@ -10,7 +10,7 @@ struct iMaterial;
 namespace cryo::assimp
 {
 
-class AssimpMaterialLoader
+class csAssimpMaterialLoader
 {
 
 public:

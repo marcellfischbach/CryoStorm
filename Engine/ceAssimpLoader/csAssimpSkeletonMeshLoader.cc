@@ -1,7 +1,7 @@
 
-#include <ceAssimpLoader/assimpskeletonmeshloader.hh>
-#include <ceAssimpLoader/assimpmaterialloader.hh>
-#include <ceAssimpLoader/assimpconverter.hh>
+#include <ceAssimpLoader/csAssimpSkeletonMeshLoader.hh>
+#include <ceAssimpLoader/csAssimpMaterialLoader.hh>
+#include <ceAssimpLoader/csAssimpConverter.hh>
 #include <ceCore/graphics/iDevice.hh>
 #include <ceCore/graphics/iRenderMesh.hh>
 #include <ceCore/resource/iFile.hh>
@@ -30,13 +30,13 @@ struct SkeletonLoaderData
 
 };
 
-AssimpSkeletonMeshLoader::AssimpSkeletonMeshLoader()
+csAssimpSkeletonMeshLoader::csAssimpSkeletonMeshLoader()
 {
   CS_CLASS_GEN_CONSTR;
 }
 
 
-bool AssimpSkeletonMeshLoader::CanLoad(const csClass *cls, const csResourceLocator &locator) const
+bool csAssimpSkeletonMeshLoader::CanLoad(const csClass *cls, const csResourceLocator &locator) const
 {
   const std::string &ext = locator.GetExtension();
   return cls == csSkeletonMesh::GetStaticClass()
@@ -65,7 +65,7 @@ static void debug_node(aiNode *node, const csMatrix4f &parent, const std::string
 //  }
 }
 
-iObject *AssimpSkeletonMeshLoader::Load(const csClass *cls, const csResourceLocator &locator) const
+iObject *csAssimpSkeletonMeshLoader::Load(const csClass *cls, const csResourceLocator &locator) const
 {
   iFile *file = cryo::csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (!file)
@@ -107,7 +107,7 @@ iObject *AssimpSkeletonMeshLoader::Load(const csClass *cls, const csResourceLoca
     {
       Size idx = d.mesh->AddMaterialSlot(materialName);
       d.materialSlots[materialName] = idx;
-      d.defaultMaterials[materialName] = AssimpMaterialLoader::Read(material);
+      d.defaultMaterials[materialName] = csAssimpMaterialLoader::Read(material);
     }
   }
 
@@ -129,9 +129,9 @@ iObject *AssimpSkeletonMeshLoader::Load(const csClass *cls, const csResourceLoca
   return d.mesh;
 }
 
-void AssimpSkeletonMeshLoader::ReadSkeleton(aiNode *node,
-                                            const csMatrix4f &parentMatrix,
-                                            SkeletonLoaderData &d) const
+void csAssimpSkeletonMeshLoader::ReadSkeleton(aiNode *node,
+                                              const csMatrix4f &parentMatrix,
+                                              SkeletonLoaderData &d) const
 {
   csMatrix4f localMatrix  = ConvertMatrix4x4(node->mTransformation);
   csMatrix4f globalMatrix = parentMatrix * localMatrix;
@@ -155,9 +155,9 @@ void AssimpSkeletonMeshLoader::ReadSkeleton(aiNode *node,
   }
 }
 
-void AssimpSkeletonMeshLoader::ReadBone(aiNode *node,
-                                        SkeletonLoaderData &d,
-                                        size_t  parentBoneID) const
+void csAssimpSkeletonMeshLoader::ReadBone(aiNode *node,
+                                          SkeletonLoaderData &d,
+                                          size_t  parentBoneID) const
 {
 
   csMatrix4f  localMatrix = ConvertMatrix4x4(node->mTransformation);
@@ -188,7 +188,7 @@ void AssimpSkeletonMeshLoader::ReadBone(aiNode *node,
 
 }
 
-void AssimpSkeletonMeshLoader::ReadMesh(aiNode *node, const csMatrix4f &parentMatrix, SkeletonLoaderData &d) const
+void csAssimpSkeletonMeshLoader::ReadMesh(aiNode *node, const csMatrix4f &parentMatrix, SkeletonLoaderData &d) const
 {
   csMatrix4f localMatrix  = ConvertMatrix4x4(node->mTransformation);
   csMatrix4f globalMatrix = parentMatrix * localMatrix;

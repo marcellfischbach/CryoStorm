@@ -1,7 +1,7 @@
 
-#include <ceAssimpLoader/assimpmeshloader.hh>
-#include <ceAssimpLoader/assimpmaterialloader.hh>
-#include <ceAssimpLoader/assimpconverter.hh>
+#include <ceAssimpLoader/csAssimpMeshLoader.hh>
+#include <ceAssimpLoader/csAssimpMaterialLoader.hh>
+#include <ceAssimpLoader/csAssimpConverter.hh>
 #include <ceCore/graphics/iDevice.hh>
 #include <ceCore/graphics/csMesh.hh>
 #include <ceCore/graphics/iRenderMesh.hh>
@@ -30,13 +30,13 @@ struct StaticLoaderData
 
 };
 
-AssimpMeshLoader::AssimpMeshLoader()
+csAssimpMeshLoader::csAssimpMeshLoader()
 {
   CS_CLASS_GEN_CONSTR;
 }
 
 
-bool AssimpMeshLoader::CanLoad(const csClass *cls, const csResourceLocator &locator) const
+bool csAssimpMeshLoader::CanLoad(const csClass *cls, const csResourceLocator &locator) const
 {
   const std::string &ext = locator.GetExtension();
   return cls == csMesh::GetStaticClass()
@@ -64,7 +64,7 @@ static void debug_node(aiNode *node, const csMatrix4f &parent, const std::string
 //  }
 }
 
-iObject *AssimpMeshLoader::Load(const csClass *cls, const csResourceLocator &locator) const
+iObject *csAssimpMeshLoader::Load(const csClass *cls, const csResourceLocator &locator) const
 {
   iFile *file = cryo::csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (!file)
@@ -106,7 +106,7 @@ iObject *AssimpMeshLoader::Load(const csClass *cls, const csResourceLocator &loc
     {
       Size idx = d.mesh->AddMaterialSlot(materialName);
       d.materialSlots[materialName] = idx;
-      d.defaultMaterials[materialName] = AssimpMaterialLoader::Read(material);
+      d.defaultMaterials[materialName] = csAssimpMaterialLoader::Read(material);
     }
   }
 
@@ -126,7 +126,7 @@ iObject *AssimpMeshLoader::Load(const csClass *cls, const csResourceLocator &loc
   return d.mesh;
 }
 
-void AssimpMeshLoader::ReadNode(aiNode *node, const csMatrix4f &parentMatrix, StaticLoaderData &d) const
+void csAssimpMeshLoader::ReadNode(aiNode *node, const csMatrix4f &parentMatrix, StaticLoaderData &d) const
 {
   csMatrix4f localMatrix  = ConvertMatrix4x4(node->mTransformation);
   csMatrix4f globalMatrix = parentMatrix * localMatrix;

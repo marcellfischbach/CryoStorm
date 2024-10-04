@@ -1,4 +1,4 @@
-#include <ceAssimpLoader/assimpconverter.hh>
+#include <ceAssimpLoader/csAssimpConverter.hh>
 #include <ceCore/math/csVector4i.hh>
 #include <ceCore/graphics/iRenderMesh.hh>
 #include <ceCore/graphics/csSkeleton.hh>

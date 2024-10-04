@@ -4,19 +4,19 @@ add_definitions(-DCS_ASSIMP_EXPORT)
 add_definitions(-D_USE_MATH_DEFINES)
 
 set(SOURCES
-        assimpexport.hh
-        assimploadermodule.cc
-        assimploadermodule.hh
-        assimpmaterialloader.cc
-        assimpmaterialloader.hh
-        assimpmeshloader.cc
-        assimpmeshloader.hh
-        assimpconverter.cc
-        assimpconverter.hh
-        assimpskeletonanimationloader.cc
-        assimpskeletonanimationloader.hh
-        assimpskeletonmeshloader.cc
-        assimpskeletonmeshloader.hh
+        csAssimpExport.hh
+        csAssimpLoaderModule.cc
+        csAssimpLoaderModule.hh
+        csAssimpMaterialLoader.cc
+        csAssimpMaterialLoader.hh
+        csAssimpMeshLoader.cc
+        csAssimpMeshLoader.hh
+        csAssimpConverter.cc
+        csAssimpConverter.hh
+        csAssimpSkeletonAnimationLoader.cc
+        csAssimpSkeletonAnimationLoader.hh
+        csAssimpSkeletonMeshLoader.cc
+        csAssimpSkeletonMeshLoader.hh
     )
 
 add_library(ceAssimpLoader SHARED

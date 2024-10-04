@@ -2,7 +2,7 @@
 // Created by Marcell on 16.04.2024.
 //
 
-#include <ceAssimpLoader/assimpmaterialloader.hh>
+#include <ceAssimpLoader/csAssimpMaterialLoader.hh>
 #include <ceCore/resource/csAssetManager.hh>
 #include <ceCore/graphics/material/csMaterialInstance.hh>
 #include <assimp/scene.h>
@@ -10,7 +10,7 @@
 namespace cryo::assimp
 {
 
-iMaterial *AssimpMaterialLoader::Read(aiMaterial *material)
+iMaterial *csAssimpMaterialLoader::Read(aiMaterial *material)
 {
   csMaterial *baseMaterial = csAssetManager::Get()->Get<csMaterial>("file:///materials/Default.mat");
   if (!baseMaterial)

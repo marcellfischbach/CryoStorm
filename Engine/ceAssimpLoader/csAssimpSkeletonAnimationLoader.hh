@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <ceAssimpLoader/assimpexport.hh>
+#include <ceAssimpLoader/csAssimpExport.hh>
 #include <ceCore/resource/iAssetLoader.hh>
 
 
@@ -17,12 +17,12 @@ namespace assimp
 
 
 CS_CLASS()
-class CS_ASSIMP_API AssimpSkeletonAnimationLoader : public CS_SUPER(iAssetLoader)
+class CS_ASSIMP_API csAssimpSkeletonAnimationLoader : public CS_SUPER(iAssetLoader)
 {
 CS_CLASS_GEN_OBJECT;
 public:
-  AssimpSkeletonAnimationLoader();
-  ~AssimpSkeletonAnimationLoader() override = default;
+  csAssimpSkeletonAnimationLoader();
+  ~csAssimpSkeletonAnimationLoader() override = default;
 
   virtual bool CanLoad(const csClass *cls, const csResourceLocator &locator) const;
 

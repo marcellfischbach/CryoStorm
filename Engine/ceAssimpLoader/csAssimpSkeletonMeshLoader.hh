@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <ceAssimpLoader/assimpexport.hh>
+#include <ceAssimpLoader/csAssimpExport.hh>
 #include <ceCore/resource/iAssetLoader.hh>
 #include <ceCore/math/csMatrix4f.hh>
 
@@ -14,12 +14,12 @@ namespace cryo::assimp
 struct SkeletonLoaderData;
 
 CS_CLASS()
-class CS_ASSIMP_API AssimpSkeletonMeshLoader : public CS_SUPER(iAssetLoader)
+class CS_ASSIMP_API csAssimpSkeletonMeshLoader : public CS_SUPER(iAssetLoader)
 {
 CS_CLASS_GEN_OBJECT;
 public:
-  AssimpSkeletonMeshLoader();
-  virtual ~AssimpSkeletonMeshLoader() { }
+  csAssimpSkeletonMeshLoader();
+  virtual ~csAssimpSkeletonMeshLoader() { }
 
   virtual bool CanLoad(const csClass * cls, const csResourceLocator & locator) const;
 

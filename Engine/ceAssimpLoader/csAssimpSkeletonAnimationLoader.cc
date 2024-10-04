@@ -1,4 +1,4 @@
-#include <ceAssimpLoader/assimpskeletonanimationloader.hh>
+#include <ceAssimpLoader/csAssimpSkeletonAnimationLoader.hh>
 #include <ceCore/animation/csSkeletonAnimation.hh>
 #include <ceCore/resource/csVFS.hh>
 #include <assimp/scene.h>
@@ -8,13 +8,13 @@
 namespace cryo::assimp
 {
 
-AssimpSkeletonAnimationLoader::AssimpSkeletonAnimationLoader()
+csAssimpSkeletonAnimationLoader::csAssimpSkeletonAnimationLoader()
 {
   CS_CLASS_GEN_CONSTR;
 }
 
 
-bool AssimpSkeletonAnimationLoader::CanLoad(const cryo::csClass *cls, const cryo::csResourceLocator &locator) const
+bool csAssimpSkeletonAnimationLoader::CanLoad(const cryo::csClass *cls, const cryo::csResourceLocator &locator) const
 {
   const std::string &ext = locator.GetExtension();
   return cls == SkeletonAnimationPack::GetStaticClass()
@@ -22,7 +22,7 @@ bool AssimpSkeletonAnimationLoader::CanLoad(const cryo::csClass *cls, const cryo
 }
 
 
-iObject *AssimpSkeletonAnimationLoader::Load(const cryo::csClass *cls, const cryo::csResourceLocator &locator) const
+iObject *csAssimpSkeletonAnimationLoader::Load(const cryo::csClass *cls, const cryo::csResourceLocator &locator) const
 {
   iFile *file = cryo::csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (!file)
@@ -65,7 +65,7 @@ iObject *AssimpSkeletonAnimationLoader::Load(const cryo::csClass *cls, const cry
 
 }
 
-csSkeletonAnimation *AssimpSkeletonAnimationLoader::Read(aiAnimation *animation) const
+csSkeletonAnimation *csAssimpSkeletonAnimationLoader::Read(aiAnimation *animation) const
 {
   csSkeletonAnimation *result = new csSkeletonAnimation();
   result->SetName(std::string(animation->mName.C_Str()));
