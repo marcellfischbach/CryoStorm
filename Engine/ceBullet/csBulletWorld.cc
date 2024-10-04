@@ -1,14 +1,14 @@
 
-#include <ceBullet/bulletworld.hh>
-#include <ceBullet/bulletdynamiccollider.hh>
-#include <ceBullet/bulletstaticcollider.hh>
+#include <ceBullet/csBulletWorld.hh>
+#include <ceBullet/csBulletDynamicCollider.hh>
+#include <ceBullet/csBulletStaticCollider.hh>
 #include <btBulletDynamicsCommon.h>
 
 namespace cryo::bullet
 {
 
 
-BulletWorld::BulletWorld()
+csBulletWorld::csBulletWorld()
   : m_writeId(0)
   , m_tmpId(1)
   , m_exportId(2)
@@ -26,13 +26,13 @@ BulletWorld::BulletWorld()
   m_world->setGravity(btVector3(0.0f, -9.81f, 0.0f));
 }
 
-BulletWorld::~BulletWorld()
+csBulletWorld::~csBulletWorld()
 {
 
 }
 
 
-void BulletWorld::Step(float tpf)
+void csBulletWorld::Step(float tpf)
 {
   m_resultFrame[m_writeId].clear();
   m_world->stepSimulation(tpf);
@@ -43,7 +43,7 @@ void BulletWorld::Step(float tpf)
   m_writeId = tmp;
 }
 
-const std::vector<iPhysicsWorld::DynamicResult>& BulletWorld::SwapResult()
+const std::vector<iPhysicsWorld::DynamicResult>& csBulletWorld::SwapResult()
 {
   // swap the temp and the export index
   unsigned tmp = m_tmpId;
@@ -54,10 +54,10 @@ const std::vector<iPhysicsWorld::DynamicResult>& BulletWorld::SwapResult()
 }
 
 
-void BulletWorld::AddCollider(iStaticCollider* collider)
+void csBulletWorld::AddCollider(iStaticCollider* collider)
 {
 
-  auto staticCollider = static_cast<BulletStaticCollider*>(collider);
+  auto staticCollider = static_cast<csBulletStaticCollider*>(collider);
   auto object = staticCollider->GetCollisionObject();
   if (object)
   {
@@ -65,9 +65,9 @@ void BulletWorld::AddCollider(iStaticCollider* collider)
   }
 }
 
-void BulletWorld::AddCollider(iDynamicCollider* collider)
+void csBulletWorld::AddCollider(iDynamicCollider* collider)
 {
-  auto dynamicCollider = static_cast<BulletDynamicCollider*>(collider);
+  auto dynamicCollider = static_cast<csBulletDynamicCollider*>(collider);
   dynamicCollider->SetWorld(this);
   auto body = dynamicCollider->GetRigidBody();
   if (body)
@@ -78,9 +78,9 @@ void BulletWorld::AddCollider(iDynamicCollider* collider)
 }
 
 
-void BulletWorld::RemoveCollider(iStaticCollider* collider)
+void csBulletWorld::RemoveCollider(iStaticCollider* collider)
 {
-  auto staticCollider = static_cast<BulletStaticCollider*>(collider);
+  auto staticCollider = static_cast<csBulletStaticCollider*>(collider);
   auto object = staticCollider->GetCollisionObject();
   if (object)
   {
@@ -89,9 +89,9 @@ void BulletWorld::RemoveCollider(iStaticCollider* collider)
 
 }
 
-void BulletWorld::RemoveCollider(iDynamicCollider* collider)
+void csBulletWorld::RemoveCollider(iDynamicCollider* collider)
 {
-  auto dynamicCollider = static_cast<BulletDynamicCollider*>(collider);
+  auto dynamicCollider = static_cast<csBulletDynamicCollider*>(collider);
   dynamicCollider->SetWorld(nullptr);
   auto body = dynamicCollider->GetRigidBody();
   if (body)
@@ -102,7 +102,7 @@ void BulletWorld::RemoveCollider(iDynamicCollider* collider)
 }
 
 
-void BulletWorld::RegisterUpdate(BulletDynamicCollider* collider, const csMatrix4f& matrix)
+void csBulletWorld::RegisterUpdate(csBulletDynamicCollider* collider, const csMatrix4f& matrix)
 {
   DynamicResult res{ collider, matrix };
   m_resultFrame[m_writeId].emplace_back(res);

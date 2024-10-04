@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <ceBullet/bulletexport.hh>
+#include <ceBullet/csBulletExport.hh>
 #include <ceCore/physics/iCollisionShape.hh>
 
 class btCollisionShape;
@@ -11,12 +11,12 @@ namespace cryo::bullet
 
 CS_CLASS()
 
-class CS_BULLET_API BulletCollisionShape : public CS_SUPER(iCollisionShape)
+class CS_BULLET_API csBulletCollisionShape : public CS_SUPER(iCollisionShape)
 {
   CS_CLASS_GEN_OBJECT;
 public:
-  BulletCollisionShape(btCollisionShape * shape);
-  ~BulletCollisionShape() override;
+  csBulletCollisionShape(btCollisionShape * shape);
+  ~csBulletCollisionShape() override;
 
   btCollisionShape* GetShape();
   const btCollisionShape* GetShape() const;

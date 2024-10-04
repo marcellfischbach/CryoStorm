@@ -1,13 +1,13 @@
 
 #pragma once
 
-#include <ceBullet/bulletexport.hh>
+#include <ceBullet/csBulletExport.hh>
 #include <ceCore/iModule.hh>
 
 namespace cryo::bullet
 {
 
-class CS_BULLET_API BulletModule : public iModule
+class CS_BULLET_API csBulletModule : public iModule
 {
 public:
   bool Register(const std::vector<std::string> &args, csEngine *engine);

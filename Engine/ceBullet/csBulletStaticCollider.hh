@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <ceBullet/bulletexport.hh>
+#include <ceBullet/csBulletExport.hh>
 #include <ceCore/physics/iCollider.hh>
 #include <ceCore/math/csMatrix4f.hh>
 #include <set>
@@ -12,15 +12,15 @@ class btCompoundShape;
 namespace cryo::bullet
 {
 
-class BulletCollisionShape;
+class csBulletCollisionShape;
 
 CS_CLASS()
-class BulletStaticCollider : public CS_SUPER(iStaticCollider)
+class csBulletStaticCollider : public CS_SUPER(iStaticCollider)
 {
   CS_CLASS_GEN_OBJECT;
 public:
-  BulletStaticCollider();
-  ~BulletStaticCollider() override;
+  csBulletStaticCollider();
+  ~csBulletStaticCollider() override;
 
   void Attach(iCollisionShape * shape) override;
   void Detach(iCollisionShape * shape) override;
@@ -35,8 +35,8 @@ private:
   btCollisionObject* m_collisionObject;
 
   btCompoundShape* m_compoundShape;
-  std::set<BulletCollisionShape*> m_shapes;
-  csMatrix4f                      m_transform;
+  std::set<csBulletCollisionShape*> m_shapes;
+  csMatrix4f                        m_transform;
 };
 
 

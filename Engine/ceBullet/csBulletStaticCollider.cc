@@ -1,14 +1,14 @@
 
-#include <ceBullet/bulletstaticcollider.hh>
-#include <ceBullet/bulletcollisionshape.hh>
-#include <ceBullet/bulletutils.hh>
+#include <ceBullet/csBulletStaticCollider.hh>
+#include <ceBullet/csBulletCollisionShape.hh>
+#include <ceBullet/csBulletUtils.hh>
 #include <btBulletCollisionCommon.h>
 #include <algorithm>
 
 namespace cryo::bullet
 {
 
-BulletStaticCollider::BulletStaticCollider()
+csBulletStaticCollider::csBulletStaticCollider()
   : iStaticCollider()
   , m_collisionObject(new btCollisionObject())
   , m_compoundShape(nullptr)
@@ -19,13 +19,13 @@ BulletStaticCollider::BulletStaticCollider()
   CS_CLASS_GEN_CONSTR;
 }
 
-BulletStaticCollider::~BulletStaticCollider()
+csBulletStaticCollider::~csBulletStaticCollider()
 {
   delete m_collisionObject;
 }
 
 
-void BulletStaticCollider::Attach(iCollisionShape* shape)
+void csBulletStaticCollider::Attach(iCollisionShape* shape)
 {
   if (std::ranges::find(m_shapes, shape) != m_shapes.end())
   {
@@ -33,7 +33,7 @@ void BulletStaticCollider::Attach(iCollisionShape* shape)
   }
 
 
-  auto btShape = static_cast<BulletCollisionShape*>(shape);
+  auto btShape = static_cast<csBulletCollisionShape*>(shape);
   m_shapes.insert(btShape);
 
   if (m_shapes.size() == 1)
@@ -56,7 +56,7 @@ void BulletStaticCollider::Attach(iCollisionShape* shape)
 
 }
 
-void BulletStaticCollider::Detach(iCollisionShape* shape)
+void csBulletStaticCollider::Detach(iCollisionShape* shape)
 {
   auto it = std::ranges::find(m_shapes, shape);
   if (it == m_shapes.end())
@@ -65,7 +65,7 @@ void BulletStaticCollider::Detach(iCollisionShape* shape)
   }
   m_shapes.erase(it);
 
-  auto btShape = static_cast<BulletCollisionShape*>(shape);
+  auto btShape = static_cast<csBulletCollisionShape*>(shape);
   if (m_compoundShape)
   {
     m_compoundShape->removeChildShape(btShape->GetShape());
@@ -85,7 +85,7 @@ void BulletStaticCollider::Detach(iCollisionShape* shape)
 
 
 
-void BulletStaticCollider::SetTransform(const csMatrix4f& transform)
+void csBulletStaticCollider::SetTransform(const csMatrix4f& transform)
 {
   m_transform = transform;
   if (m_collisionObject)
@@ -97,13 +97,13 @@ void BulletStaticCollider::SetTransform(const csMatrix4f& transform)
 }
 
 
-const csMatrix4f& BulletStaticCollider::GetTransform() const
+const csMatrix4f& csBulletStaticCollider::GetTransform() const
 {
   return m_transform;
 }
 
 
-btCollisionObject* BulletStaticCollider::GetCollisionObject()
+btCollisionObject* csBulletStaticCollider::GetCollisionObject()
 {
   return m_collisionObject;
 }

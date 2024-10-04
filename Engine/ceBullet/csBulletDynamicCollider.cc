@@ -1,16 +1,16 @@
 
-#include <ceBullet/bulletdynamiccollider.hh>
-#include <ceBullet/bulletcollisionshape.hh>
-#include <ceBullet/bulletworld.hh>
+#include <ceBullet/csBulletDynamicCollider.hh>
+#include <ceBullet/csBulletCollisionShape.hh>
+#include <ceBullet/csBulletWorld.hh>
 #include <btBulletCollisionCommon.h>
 #include <btBulletDynamicsCommon.h>
-#include <ceBullet/bulletutils.hh>
+#include <ceBullet/csBulletUtils.hh>
 #include <algorithm>
 
 namespace cryo::bullet
 {
 
-BulletDynamicCollider::BulletDynamicCollider()
+csBulletDynamicCollider::csBulletDynamicCollider()
   : iDynamicCollider()
   , m_rigidBody(nullptr)
   , m_compoundShape(nullptr)
@@ -21,13 +21,13 @@ BulletDynamicCollider::BulletDynamicCollider()
   CS_CLASS_GEN_CONSTR;
 }
 
-BulletDynamicCollider::~BulletDynamicCollider()
+csBulletDynamicCollider::~csBulletDynamicCollider()
 {
   delete m_rigidBody;
 }
 
 
-void BulletDynamicCollider::Attach(iCollisionShape* shape)
+void csBulletDynamicCollider::Attach(iCollisionShape* shape)
 {
   if (std::ranges::find(m_shapes, shape) != m_shapes.end())
   {
@@ -35,13 +35,13 @@ void BulletDynamicCollider::Attach(iCollisionShape* shape)
   }
 
 
-  auto btShape = static_cast<BulletCollisionShape*>(shape);
+  auto btShape = static_cast<csBulletCollisionShape*>(shape);
   m_shapes.insert(btShape);
 
 }
 
 
-void BulletDynamicCollider::Detach(iCollisionShape* shape)
+void csBulletDynamicCollider::Detach(iCollisionShape* shape)
 {
   auto it = std::ranges::find(m_shapes, shape);
   if (it == m_shapes.end())
@@ -51,7 +51,7 @@ void BulletDynamicCollider::Detach(iCollisionShape* shape)
   m_shapes.erase(it);
 }
 
-void BulletDynamicCollider::SetTransform(const csMatrix4f& transform)
+void csBulletDynamicCollider::SetTransform(const csMatrix4f& transform)
 {
   m_transform = transform;
   if (m_rigidBody)
@@ -63,13 +63,13 @@ void BulletDynamicCollider::SetTransform(const csMatrix4f& transform)
 }
 
 
-const csMatrix4f &BulletDynamicCollider::GetTransform() const
+const csMatrix4f &csBulletDynamicCollider::GetTransform() const
 {
   return m_transform;
 }
 
 
-btRigidBody* BulletDynamicCollider::GetRigidBody()
+btRigidBody* csBulletDynamicCollider::GetRigidBody()
 {
   if (!m_rigidBody)
   {
@@ -109,27 +109,27 @@ btRigidBody* BulletDynamicCollider::GetRigidBody()
   return m_rigidBody;
 }
 
-void BulletDynamicCollider::SetUserData(csSpatialState* userData)
+void csBulletDynamicCollider::SetUserData(csSpatialState* userData)
 {
   CS_SET(m_userData, userData);
 }
 
-csSpatialState* BulletDynamicCollider::GetUserData() const
+csSpatialState* csBulletDynamicCollider::GetUserData() const
 {
   return  m_userData;
 }
 
-void BulletDynamicCollider::SetWorld(BulletWorld* world)
+void csBulletDynamicCollider::SetWorld(csBulletWorld* world)
 {
   CS_SET(m_world, world);
 }
 
-void BulletDynamicCollider::MotionState::getWorldTransform(btTransform& worldTrans) const
+void csBulletDynamicCollider::MotionState::getWorldTransform(btTransform& worldTrans) const
 {
   Matrix4fTobtTransform(priv->m_transform, worldTrans);
 }
 
-void BulletDynamicCollider::MotionState::setWorldTransform(const btTransform& worldTrans)
+void csBulletDynamicCollider::MotionState::setWorldTransform(const btTransform& worldTrans)
 {
   btTransformToMatrix4f(worldTrans, priv->m_transform);
 

@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <ceBullet/bulletexport.hh>
+#include <ceBullet/csBulletExport.hh>
 #include <ceCore/physics/iPhysicsSystem.hh>
 
 namespace cryo::bullet
@@ -9,13 +9,13 @@ namespace cryo::bullet
 
 CS_CLASS()
 
-class CS_BULLET_API BulletSystem : public CS_SUPER(iPhysicsSystem)
+class CS_BULLET_API csBulletSystem : public CS_SUPER(iPhysicsSystem)
 {
 CS_CLASS_GEN_OBJECT;
 public:
-  BulletSystem();
+  csBulletSystem();
 
-  ~BulletSystem() override;
+  ~csBulletSystem() override;
 
   CS_NODISCARD iPhysicsWorld *CreateWorld() override;
 

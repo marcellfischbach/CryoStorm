@@ -2,7 +2,7 @@
 #pragma once
 
 
-#include <ceBullet/bulletexport.hh>
+#include <ceBullet/csBulletExport.hh>
 #include <ceCore/physics/iPhysicsWorld.hh>
 
 
@@ -17,14 +17,14 @@ namespace cryo::bullet
 {
 
 
-class BulletDynamicCollider;
+class csBulletDynamicCollider;
 CS_CLASS()
-class CS_BULLET_API BulletWorld : public CS_SUPER(iPhysicsWorld)
+class CS_BULLET_API csBulletWorld : public CS_SUPER(iPhysicsWorld)
 {
   CS_CLASS_GEN_OBJECT;
 public:
-  BulletWorld();
-  ~BulletWorld() override;
+  csBulletWorld();
+  ~csBulletWorld() override;
 
   void Step(float tpf) override;
   const std::vector<DynamicResult>& SwapResult() override;
@@ -37,7 +37,7 @@ public:
   void RemoveCollider(iStaticCollider * collider) override;
   void RemoveCollider(iDynamicCollider * collider) override;
 
-  void RegisterUpdate(BulletDynamicCollider * collider, const csMatrix4f & transform);
+  void RegisterUpdate(csBulletDynamicCollider * collider, const csMatrix4f & transform);
 
 private:
   btDiscreteDynamicsWorld *m_world;

@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <ceBullet/bulletexport.hh>
+#include <ceBullet/csBulletExport.hh>
 #include <ceCore/physics/iCollider.hh>
 #include <set>
 #include <btBulletDynamicsCommon.h>
@@ -12,16 +12,16 @@ class btCompoundShape;
 namespace cryo::bullet
 {
 
-class BulletCollisionShape;
-class BulletWorld;
+class csBulletCollisionShape;
+class csBulletWorld;
 
 CS_CLASS()
-class BulletDynamicCollider : public CS_SUPER(iDynamicCollider)
+class csBulletDynamicCollider : public CS_SUPER(iDynamicCollider)
 {
   CS_CLASS_GEN_OBJECT;
 public:
-  BulletDynamicCollider();
-  ~BulletDynamicCollider() override;
+  csBulletDynamicCollider();
+  ~csBulletDynamicCollider() override;
 
   void Attach(iCollisionShape * shape) override;
   void Detach(iCollisionShape * shape) override;
@@ -35,18 +35,18 @@ public:
 
   btRigidBody* GetRigidBody();
 
-  void SetWorld(BulletWorld * world);
+  void SetWorld(csBulletWorld * world);
 
 private:
 
   btRigidBody* m_rigidBody;
 
   btCompoundShape* m_compoundShape;
-  std::set<BulletCollisionShape*> m_shapes;
+  std::set<csBulletCollisionShape*> m_shapes;
 
   struct MotionState : public btMotionState
   {
-    BulletDynamicCollider* priv;
+    csBulletDynamicCollider * priv;
     void getWorldTransform(btTransform& worldTrans) const override;
 
     void setWorldTransform(const btTransform& worldTrans) override;
@@ -55,7 +55,7 @@ private:
   csMatrix4f m_transform;
 
 
-  BulletWorld* m_world;
+  csBulletWorld * m_world;
 
   csSpatialState * m_userData;
 };
