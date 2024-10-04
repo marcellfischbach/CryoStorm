@@ -3,9 +3,9 @@
 #pragma once
 
 
-#include <ceCore/coreexport.hh>
+#include <ceCore/csCoreExport.hh>
 #include <ceCore/class.hh>
-#include <ceCore/types.hh>
+#include <ceCore/csTypes.hh>
 #include <ceCore/graphics/eBlendFactor.hh>
 #include <ceCore/graphics/eDepthMode.hh>
 #include <ceCore/graphics/eRenderPass.hh>
@@ -14,9 +14,9 @@
 #include <ceCore/graphics/iTexture.hh>
 #include <ceCore/graphics/material/eMaterialAttributeType.hh>
 #include <ceCore/graphics/material/iMaterial.hh>
-#include <ceCore/math/color4f.hh>
-#include <ceCore/math/matrix.hh>
-#include <ceCore/math/vector.hh>
+#include <ceCore/math/csColor4f.hh>
+#include <ceCore/math/csMatrix.hh>
+#include <ceCore/math/csVector.hh>
 #include <string>
 #include <array>
 
@@ -79,13 +79,13 @@ public:
   void Debug(Size idx) override;
 
   void Set(Size idx, float value) override;
-  void Set(Size idx, const Vector2f & v) override;
-  void Set(Size idx, const Vector3f & v) override;
-  void Set(Size idx, const Vector4f & v) override;
-  void Set(Size idx, const Color4f & v) override;
+  void Set(Size idx, const csVector2f & v) override;
+  void Set(Size idx, const csVector3f & v) override;
+  void Set(Size idx, const csVector4f & v) override;
+  void Set(Size idx, const csColor4f & v) override;
   void Set(Size idx, int value) override;
-  void Set(Size idx, const Matrix3f & m) override;
-  void Set(Size idx, const Matrix4f & m) override;
+  void Set(Size idx, const csMatrix3f & m) override;
+  void Set(Size idx, const csMatrix4f & m) override;
   void Set(Size idx, iTexture * texture) override;
 
 

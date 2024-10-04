@@ -2,8 +2,8 @@
 #pragma once
 
 #include <ceBullet/bulletexport.hh>
-#include <ceCore/physics/icollider.hh>
-#include <ceCore/math/matrix4f.hh>
+#include <ceCore/physics/iCollider.hh>
+#include <ceCore/math/csMatrix4f.hh>
 #include <set>
 
 class btCollisionObject;
@@ -25,8 +25,8 @@ public:
   void Attach(iCollisionShape * shape) override;
   void Detach(iCollisionShape * shape) override;
 
-  void SetTransform(const Matrix4f & transform) override;
-  const Matrix4f& GetTransform() const override;
+  void SetTransform(const csMatrix4f & transform) override;
+  const csMatrix4f& GetTransform() const override;
 
 
   btCollisionObject* GetCollisionObject();
@@ -36,7 +36,7 @@ private:
 
   btCompoundShape* m_compoundShape;
   std::set<BulletCollisionShape*> m_shapes;
-  Matrix4f m_transform;
+  csMatrix4f                      m_transform;
 };
 
 

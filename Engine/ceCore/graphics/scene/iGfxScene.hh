@@ -1,8 +1,8 @@
 #pragma once
 
-#include <ceCore/coreexport.hh>
+#include <ceCore/csCoreExport.hh>
 #include <ceCore/class.hh>
-#include <ceCore/defs.hh>
+#include <ceCore/csDefs.hh>
 #include <functional>
 
 namespace cryo

@@ -49,13 +49,13 @@ float GL4DirectionalLight::GetShadowMapBias() const
   return m_shadowBias;
 }
 
-void GL4DirectionalLight::SetColor(const Color4f& color)
+void GL4DirectionalLight::SetColor(const csColor4f& color)
 {
   m_color = color;
   m_intensity = color.r + color.g + color.b;
 }
 
-const Color4f& GL4DirectionalLight::GetColor() const
+const csColor4f& GL4DirectionalLight::GetColor() const
 {
   return m_color;
 }
@@ -70,12 +70,12 @@ float GL4DirectionalLight::GetIntensity() const
   return m_intensity;
 }
 
-void GL4DirectionalLight::SetDirection(const Vector3f& direction)
+void GL4DirectionalLight::SetDirection(const csVector3f& direction)
 {
   m_direction = direction;
 }
 
-const Vector3f& GL4DirectionalLight::GetDirection() const
+const csVector3f& GL4DirectionalLight::GetDirection() const
 {
   return m_direction;
 }

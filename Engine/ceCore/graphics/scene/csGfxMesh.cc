@@ -43,7 +43,7 @@ void csGfxMesh::Render(iDevice* device, eRenderPass pass)
 
     if (m_skeleton)
     {
-      const std::vector<Matrix4f> &bones = m_skeleton->GetSkeletonBones();
+      const std::vector<csMatrix4f> &bones = m_skeleton->GetSkeletonBones();
       device->SetSkeletonMatrices(bones.data(), bones.size());
     }
     device->SetModelMatrix(m_modelMatrix);
@@ -59,7 +59,7 @@ void csGfxMesh::RenderUnlit(iDevice* device, eRenderPass pass)
   {
     if (m_skeleton)
     {
-      const std::vector<Matrix4f> &bones = m_skeleton->GetSkeletonBones();
+      const std::vector<csMatrix4f> &bones = m_skeleton->GetSkeletonBones();
       device->SetSkeletonMatrices(bones.data(), bones.size());
     }
 
@@ -85,7 +85,7 @@ void csGfxMesh::RenderForward(iDevice* device, eRenderPass pass, const csGfxLigh
 
     if (m_skeleton)
     {
-      const std::vector<Matrix4f> &bones = m_skeleton->GetSkeletonBones();
+      const std::vector<csMatrix4f> &bones = m_skeleton->GetSkeletonBones();
       device->SetSkeletonMatrices(bones.data(), bones.size());
     }
 
@@ -171,13 +171,13 @@ const iRenderMesh* csGfxMesh::GetMesh() const
 }
 
 
-void csGfxMesh::SetModelMatrix(const Matrix4f& modelMatrix)
+void csGfxMesh::SetModelMatrix(const csMatrix4f& modelMatrix)
 {
   m_modelMatrix = modelMatrix;
   UpdateBoundingBox();
 }
 
-const Matrix4f& csGfxMesh::GetModelMatrix()  const
+const csMatrix4f& csGfxMesh::GetModelMatrix()  const
 {
   return m_modelMatrix;
 }
@@ -243,7 +243,7 @@ const std::vector<csGfxMesh::Light>& csGfxMesh::GetLights() const
   return m_lights;
 }
 
-const BoundingBox &csGfxMesh::GetBoundingBox() const
+const csBoundingBox &csGfxMesh::GetBoundingBox() const
 {
   return m_boundingBox;
 }

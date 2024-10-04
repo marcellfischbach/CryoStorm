@@ -3,9 +3,9 @@
 #include <ceOpenGL/openglexport.hh>
 
 #include <ceCore/class.hh>
-#include <ceCore/types.hh>
-#include <ceCore/math/boundingbox.hh>
-#include <ceCore/math/vector.hh>
+#include <ceCore/csTypes.hh>
+#include <ceCore/math/csBoundingBox.hh>
+#include <ceCore/math/csVector.hh>
 #include <ceCore/graphics/iRenderMesh.hh>
 #include <ceCore/graphics/eDataType.hh>
 #include <ceCore/graphics/ePrimitiveType.hh>
@@ -33,13 +33,13 @@ public:
                 ePrimitiveType type,
                 eDataType indexType,
                 Size count,
-                const BoundingBox &boundingBox);
+                const csBoundingBox &boundingBox);
   ~GL4RenderMesh() override;
 
   CS_NODISCARD Size GetNumberOfIndices() const;
   CS_NODISCARD Size GetNumberOfVertices() const;
 
-  CS_NODISCARD const BoundingBox &GetBoundingBox() const override;
+  CS_NODISCARD const csBoundingBox &GetBoundingBox() const override;
   CS_NODISCARD const csVertexDeclaration& GetVertexDeclaration() const override;
 
   void Render(iDevice * graphics, eRenderPass pass) override;
@@ -53,7 +53,7 @@ private:
   csVertexDeclaration m_vertexDeclaration;
   GL4VertexBuffer* m_vertexBuffer;
   GL4IndexBuffer* m_indexBuffer;
-  BoundingBox m_boundingBox;
+  csBoundingBox m_boundingBox;
 
   uint32_t m_indexType;
   eDataType m_indexDataType;
@@ -73,53 +73,53 @@ public:
   ~GL4RenderMeshGenerator() override;
 
   void SetPrimitiveType(ePrimitiveType primitiveType);
-  void SetVertices(const std::vector<Vector2f> & vertices) override;
-  void SetVertices(const std::vector<Vector3f> & vertices) override;
-  void SetVertices(const std::vector<Vector4f> & vertices) override;
-  void SetNormals(const std::vector<Vector3f> & normals) override;
-  void SetColors(const std::vector<Color4f> & colors) override;
-  void SetTangents(const std::vector<Vector3f> & tangents) override;
-  void SetUV0(const std::vector<Vector3f> & uv) override;
-  void SetUV1(const std::vector<Vector2f> & uv) override;
-  void SetUV2(const std::vector<Vector2f> & uv) override;
-  void SetUV3(const std::vector<Vector2f> & uv) override;
+  void SetVertices(const std::vector<csVector2f> & vertices) override;
+  void SetVertices(const std::vector<csVector3f> & vertices) override;
+  void SetVertices(const std::vector<csVector4f> & vertices) override;
+  void SetNormals(const std::vector<csVector3f> & normals) override;
+  void SetColors(const std::vector<csColor4f> & colors) override;
+  void SetTangents(const std::vector<csVector3f> & tangents) override;
+  void SetUV0(const std::vector<csVector3f> & uv) override;
+  void SetUV1(const std::vector<csVector2f> & uv) override;
+  void SetUV2(const std::vector<csVector2f> & uv) override;
+  void SetUV3(const std::vector<csVector2f> & uv) override;
   void SetIndices(const std::vector<uint32_t> & indices) override;
-  void SetUV0(const std::vector<Vector2f> & uv) override;
-  void SetBoneIndices(const std::vector<Vector4i> &boneIndices) override;
-  void SetBoneWeights(const std::vector<Vector4f> &boneWeights) override;
-  void AddVertices(const std::vector<Vector2f> & vertices);
-  void AddVertices(const std::vector<Vector3f> & vertices);
-  void AddVertices(const std::vector<Vector4f> & vertices);
-  void AddNormals(const std::vector<Vector3f> & normals);
-  void AddColors(const std::vector<Color4f> & colors);
-  void AddTangents(const std::vector<Vector3f> & tangents);
-  void AddUV0(const std::vector<Vector2f> & uv);
-  void AddUV0(const std::vector<Vector3f> & uv);
-  void AddUV1(const std::vector<Vector2f> & uv);
-  void AddUV2(const std::vector<Vector2f> & uv);
-  void AddUV3(const std::vector<Vector2f> & uv) ;
-  void AddBoneIndices(const std::vector<Vector4i> & boneIndices) ;
-  void AddBoneWeights(const std::vector<Vector4f> & boneWeights) ;
+  void SetUV0(const std::vector<csVector2f> & uv) override;
+  void SetBoneIndices(const std::vector<csVector4i> &boneIndices) override;
+  void SetBoneWeights(const std::vector<csVector4f> &boneWeights) override;
+  void AddVertices(const std::vector<csVector2f> & vertices);
+  void AddVertices(const std::vector<csVector3f> & vertices);
+  void AddVertices(const std::vector<csVector4f> & vertices);
+  void AddNormals(const std::vector<csVector3f> & normals);
+  void AddColors(const std::vector<csColor4f> & colors);
+  void AddTangents(const std::vector<csVector3f> & tangents);
+  void AddUV0(const std::vector<csVector2f> & uv);
+  void AddUV0(const std::vector<csVector3f> & uv);
+  void AddUV1(const std::vector<csVector2f> & uv);
+  void AddUV2(const std::vector<csVector2f> & uv);
+  void AddUV3(const std::vector<csVector2f> & uv) ;
+  void AddBoneIndices(const std::vector<csVector4i> & boneIndices) ;
+  void AddBoneWeights(const std::vector<csVector4f> & boneWeights) ;
   void AddIndices(const std::vector<uint32_t> & indices);
 
   CS_NODISCARD size_t GetNumberOfVertices() const;
   iRenderMesh* Generate() override;
 private:
-  ePrimitiveType m_primitiveType;
-  std::vector<Vector2f> m_vertices2;
-  std::vector<Vector3f> m_vertices3;
-  std::vector<Vector4f> m_vertices4;
-  std::vector<Vector3f> m_normals;
-  std::vector<Color4f> m_colors;
-  std::vector<Vector3f> m_tangents;
-  std::vector<Vector2f> m_uv02;
-  std::vector<Vector3f> m_uv03;
-  std::vector<Vector2f> m_uv1;
-  std::vector<Vector2f> m_uv2;
-  std::vector<Vector2f> m_uv3;
-  std::vector<Vector4i> m_boneIndices;
-  std::vector<Vector4f> m_boneWeights;
-  std::vector<uint32_t> m_indices;
+  ePrimitiveType          m_primitiveType;
+  std::vector<csVector2f> m_vertices2;
+  std::vector<csVector3f> m_vertices3;
+  std::vector<csVector4f> m_vertices4;
+  std::vector<csVector3f> m_normals;
+  std::vector<csColor4f>  m_colors;
+  std::vector<csVector3f> m_tangents;
+  std::vector<csVector2f> m_uv02;
+  std::vector<csVector3f> m_uv03;
+  std::vector<csVector2f> m_uv1;
+  std::vector<csVector2f> m_uv2;
+  std::vector<csVector2f> m_uv3;
+  std::vector<csVector4i> m_boneIndices;
+  std::vector<csVector4f> m_boneWeights;
+  std::vector<uint32_t>   m_indices;
 
 
 };
@@ -145,7 +145,7 @@ public:
   GL4RenderMeshBatchGenerator() = default;
   ~GL4RenderMeshBatchGenerator() override = default;
 
-  void Add(const iRenderMesh* mesh, const Matrix4f &matrix) override;
+  void Add(const iRenderMesh* mesh, const csMatrix4f &matrix) override;
 
    iRenderMesh* Generate() override;
 

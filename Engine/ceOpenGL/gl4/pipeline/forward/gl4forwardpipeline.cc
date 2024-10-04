@@ -15,12 +15,12 @@
 #include <ceCore/graphics/iSampler.hh>
 #include <ceCore/graphics/iSkyboxRenderer.hh>
 #include <ceCore/graphics/csPostProcessing.hh>
-#include <ceCore/math/clipper/boxclipper.hh>
-#include <ceCore/math/clipper/cameraclipper.hh>
-#include <ceCore/math/clipper/multiplaneclipper.hh>
-#include <ceCore/math/clipper/sphereclipper.hh>
-#include <ceCore/settings.hh>
-#include <ceCore/objectregistry.hh>
+#include <ceCore/math/clipper/csBoxClipper.hh>
+#include <ceCore/math/clipper/csCameraClipper.hh>
+#include <ceCore/math/clipper/csMultiPlaneClipper.hh>
+#include <ceCore/math/clipper/csSphereClipper.hh>
+#include <ceCore/csSettings.hh>
+#include <ceCore/csObjectRegistry.hh>
 #include <algorithm>
 #include <array>
 #include <GL/glew.h>
@@ -67,7 +67,7 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target,
   {
 
 
-    CameraClipper clppr(*m_camera, *m_projector);
+    csCameraClipper clppr(*m_camera, *m_projector);
 
     ScanVisibleMeshes(&clppr);
 
@@ -85,7 +85,7 @@ void GL4ForwardPipeline::Render(iRenderTarget2D *target,
     RenderPostProcessing(target);
 
 
-    if (ObjectRegistry::Get<DebugCache>()->IsDebug())
+    if (csObjectRegistry::Get<csDebugCache>()->IsDebug())
     {
       RenderDebugToTarget();
     }
@@ -604,10 +604,10 @@ float GL4ForwardPipeline::CalcMeshLightInfluence(const csGfxLight *light, const 
       break;
     case eLT_Point:
       auto     pointLight = light->GetLight()->Query<iPointLight>();
-      Vector3f lightPos   = pointLight->GetPosition();
-      Vector3f meshPos    = mesh->GetModelMatrix().GetTranslation();
-      Vector3f delta      = lightPos - meshPos;
-      float    halfSize   = mesh->GetMesh()->GetBoundingBox().GetDiagonal() / 2.0f;
+      csVector3f lightPos = pointLight->GetPosition();
+      csVector3f meshPos  = mesh->GetModelMatrix().GetTranslation();
+      csVector3f delta    = lightPos - meshPos;
+      float      halfSize = mesh->GetMesh()->GetBoundingBox().GetDiagonal() / 2.0f;
       float    distance   = delta.Length();
       float    overlap    = pointLight->GetRange() + halfSize - distance;
       if (overlap > 0.0f)

@@ -23,12 +23,12 @@ void MasterGenerator::Generate(Cache& cache, iOutput* output, const std::string 
   std::string register_classes = "";
   register_classes += "static void register_classes()\n";
   register_classes += "{\n";
-  register_classes += "  cryo::ClassRegistry *reg = cryo::ClassRegistry::Get();\n";
+  register_classes += "  cryo::csClassRegistry *reg = cryo::csClassRegistry::Get();\n";
 
   std::string unregister_classes = "";
   unregister_classes += "static void unregister_classes()\n";
   unregister_classes += "{\n";
-  unregister_classes += "  cryo::ClassRegistry *reg = cryo::ClassRegistry::Get();\n";
+  unregister_classes += "  cryo::csClassRegistry *reg = cryo::csClassRegistry::Get();\n";
 
   for (auto it : cache.GetFileCache())
   {
@@ -60,7 +60,7 @@ void MasterGenerator::Generate(Cache& cache, iOutput* output, const std::string 
   source += "\n\n";
   source += sourceIncludes;
   source += "\n\n";
-  source += "#include <ceCore/classregistry.hh>\n\n";
+  source += "#include <ceCore/csClassRegistry.hh>\n\n";
   source += register_classes;
   source += unregister_classes;
 

@@ -1,6 +1,6 @@
 
 #include <ceCore/graphics/csSamplers.hh>
-#include <ceCore/resource/assetmanager.hh>
+#include <ceCore/resource/csAssetManager.hh>
 
 namespace cryo
 {
@@ -67,10 +67,10 @@ void csSamplers::Load()
 
   // mock the default stuff
 
-  m_default = AssetManager::Get()->Load<iSampler>(ResourceLocator("/samplers/default.sampler"));
-  m_test = AssetManager::Get()->Load<iSampler>(ResourceLocator("/samplers/test.sampler"));
-  m_normalMap = AssetManager::Get()->Load<iSampler>(ResourceLocator("/samplers/normal_map.sampler"));
-  m_uiSprite = AssetManager::Get()->Load<iSampler>(ResourceLocator("/samplers/ui_sprite.sampler"));
+  m_default = csAssetManager::Get()->Load<iSampler>(csResourceLocator("/samplers/default.sampler"));
+  m_test = csAssetManager::Get()->Load<iSampler>(csResourceLocator("/samplers/test.sampler"));
+  m_normalMap = csAssetManager::Get()->Load<iSampler>(csResourceLocator("/samplers/normal_map.sampler"));
+  m_uiSprite = csAssetManager::Get()->Load<iSampler>(csResourceLocator("/samplers/ui_sprite.sampler"));
 
 }
 

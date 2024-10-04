@@ -1,7 +1,7 @@
 package org.crimsonedge.core.entity;
 
 import org.crimsonedge.core.CeClass;
-import org.crimsonedge.core.math.Matrix4f;
+import org.crimsonedge.core.math.csMatrix4f;
 
 @CeClass("cryo::csSpatialState")
 public class csSpatialState extends csEntityState {
@@ -68,24 +68,24 @@ public class csSpatialState extends csEntityState {
     }
 
 
-    private final Matrix4f _globalMatrix = new Matrix4f();
+    private final csMatrix4f _globalMatrix = new csMatrix4f();
     private final float[] _globalMatrixArray = new float[16];
-    public Matrix4f getGlobalMatrix () {
+    public csMatrix4f getGlobalMatrix () {
         nGetGlobalMatrix(getRef(), _globalMatrixArray);
         _globalMatrix.set(_globalMatrixArray);
         return _globalMatrix;
     }
 
 
-    private final Matrix4f _localMatrix = new Matrix4f();
+    private final csMatrix4f _localMatrix = new csMatrix4f();
     private final float[] _localMatrixArray = new float[16];
-    public Matrix4f getLocalMatrix () {
+    public csMatrix4f getLocalMatrix () {
         nGetLocalMatrix(getRef(), _localMatrixArray);
         _localMatrix.set(_localMatrixArray);
         return _localMatrix;
     }
 
-    public void setLocalMatrix(Matrix4f matrix) {
+    public void setLocalMatrix(csMatrix4f matrix) {
         matrix.toArray(_localMatrixArray);
         nSetLocalMatrix(getRef(), _localMatrixArray);
     }

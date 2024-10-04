@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ceCore/coreexport.hh>
+#include <ceCore/csCoreExport.hh>
 
 namespace cryo
 {

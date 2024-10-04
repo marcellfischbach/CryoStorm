@@ -6,7 +6,7 @@
 
 #include <ceOpenGL/gl4/pipeline/pssm/gl4pssmfilter.hh>
 #include <ceCore/graphics/scene/csGfxSceneCollector.hh>
-#include <ceCore/math/matrix4f.hh>
+#include <ceCore/math/csMatrix4f.hh>
 
 #include <array>
 #include <vector>
@@ -23,7 +23,7 @@ struct iTexture2D;
 class csCamera;
 class csGfxMesh;
 class csProjector;
-class Settings;
+class csSettings;
 
 namespace opengl
 {
@@ -78,7 +78,7 @@ public:
   bool IsShadowMapValid(GL4RenderTarget2D *shadowMap) const;
   bool IsShadowBufferValid(GL4PSSMShadowBufferObject &shadowMap) const;
 
-  CS_NODISCARD const std::array<Matrix4f, 4> &GetMatrices() const;
+  CS_NODISCARD const std::array<csMatrix4f, 4> &GetMatrices() const;
   CS_NODISCARD const std::array<float, 4> &GetSplits() const;
 
 private:
@@ -89,7 +89,7 @@ private:
 
 
   GL4RenderTarget2D *GetDirectionalLightShadowMapTemp();
-  static float GetSplitSize(const Vector3f *near, const Vector3f *far);
+  static float GetSplitSize(const csVector3f *near, const csVector3f *far);
   iSampler *GetShadowMapColorSampler();
   iSampler *GetShadowBufferColorSampler();
   iSampler *GetShadowBufferDepthSampler();
@@ -122,7 +122,7 @@ private:
   float                m_shadowFar;
   std::array<float, 4> m_splits;
 
-  std::array<Matrix4f, 4> m_shadowMatrices;
+  std::array<csMatrix4f, 4> m_shadowMatrices;
 
   ShadowSamplingMode m_shadowSamplingMode;
   iSampler           *m_shadowMapColorSampler    = nullptr;

@@ -3,7 +3,7 @@
 #include <ceCore/graphics/iDevice.hh>
 #include <ceCore/graphics/shading/iShader.hh>
 #include <ceCore/graphics/shading/iShaderAttribute.hh>
-#include <ceCore/resource/assetmanager.hh>
+#include <ceCore/resource/csAssetManager.hh>
 
 namespace cryo
 {
@@ -43,7 +43,7 @@ bool csSimpleSkybox::PrepShader()
     return true;
   }
 
-  m_prepShader = AssetManager::Get()->Get<iShader>("/shaders/gl4/skybox/simple/simple_skybox.shader");
+  m_prepShader = csAssetManager::Get()->Get<iShader>("/shaders/gl4/skybox/simple/simple_skybox.shader");
   return m_prepShader;
 }
 

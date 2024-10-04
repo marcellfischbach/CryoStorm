@@ -10,8 +10,8 @@
 #include <ceCore/graphics/iRenderMesh.hh>
 #include <ceCore/graphics/shading/iShader.hh>
 #include <ceCore/graphics/shading/iShaderAttribute.hh>
-#include <ceCore/objectregistry.hh>
-#include <ceCore/resource/assetmanager.hh>
+#include <ceCore/csObjectRegistry.hh>
+#include <ceCore/resource/csAssetManager.hh>
 
 namespace cryo
 {
@@ -89,29 +89,29 @@ iRenderMesh *csSkyboxMesh::RenderMesh(cryo::iDevice *device)
 {
   if (!m_renderMesh)
   {
-    iRenderMeshGenerator *generator = ObjectRegistry::Get<iRenderMeshGeneratorFactory>()->Create();
+    iRenderMeshGenerator *generator = csObjectRegistry::Get<iRenderMeshGeneratorFactory>()->Create();
 
-    std::vector<Vector4f> vertices;
-    std::vector<Vector3f> uvs;
-    std::vector<uint32_t> indices;
+    std::vector<csVector4f> vertices;
+    std::vector<csVector3f> uvs;
+    std::vector<uint32_t>   indices;
 
-    vertices.push_back(Vector4f(-1.0f, -1.0f, -1.0f, 1.0f));
-    vertices.push_back(Vector4f(-1.0f, -1.0f, 1.0f, 1.0f));
-    vertices.push_back(Vector4f(-1.0f, 1.0f, -1.0f, 1.0f));
-    vertices.push_back(Vector4f(-1.0f, 1.0f, 1.0f, 1.0f));
-    vertices.push_back(Vector4f(1.0f, -1.0f, -1.0f, 1.0f));
-    vertices.push_back(Vector4f(1.0f, -1.0f, 1.0f, 1.0f));
-    vertices.push_back(Vector4f(1.0f, 1.0f, -1.0f, 1.0f));
-    vertices.push_back(Vector4f(1.0f, 1.0f, 1.0f, 1.0f));
+    vertices.push_back(csVector4f(-1.0f, -1.0f, -1.0f, 1.0f));
+    vertices.push_back(csVector4f(-1.0f, -1.0f, 1.0f, 1.0f));
+    vertices.push_back(csVector4f(-1.0f, 1.0f, -1.0f, 1.0f));
+    vertices.push_back(csVector4f(-1.0f, 1.0f, 1.0f, 1.0f));
+    vertices.push_back(csVector4f(1.0f, -1.0f, -1.0f, 1.0f));
+    vertices.push_back(csVector4f(1.0f, -1.0f, 1.0f, 1.0f));
+    vertices.push_back(csVector4f(1.0f, 1.0f, -1.0f, 1.0f));
+    vertices.push_back(csVector4f(1.0f, 1.0f, 1.0f, 1.0f));
 
-    uvs.push_back(Vector3f(-1.0f, -1.0f, -1.0f));
-    uvs.push_back(Vector3f(-1.0f, -1.0f, 1.0f));
-    uvs.push_back(Vector3f(-1.0f, 1.0f, -1.0f));
-    uvs.push_back(Vector3f(-1.0f, 1.0f, 1.0f));
-    uvs.push_back(Vector3f(1.0f, -1.0f, -1.0f));
-    uvs.push_back(Vector3f(1.0f, -1.0f, 1.0f));
-    uvs.push_back(Vector3f(1.0f, 1.0f, -1.0f));
-    uvs.push_back(Vector3f(1.0f, 1.0f, 1.0f));
+    uvs.push_back(csVector3f(-1.0f, -1.0f, -1.0f));
+    uvs.push_back(csVector3f(-1.0f, -1.0f, 1.0f));
+    uvs.push_back(csVector3f(-1.0f, 1.0f, -1.0f));
+    uvs.push_back(csVector3f(-1.0f, 1.0f, 1.0f));
+    uvs.push_back(csVector3f(1.0f, -1.0f, -1.0f));
+    uvs.push_back(csVector3f(1.0f, -1.0f, 1.0f));
+    uvs.push_back(csVector3f(1.0f, 1.0f, -1.0f));
+    uvs.push_back(csVector3f(1.0f, 1.0f, 1.0f));
 
     // front
     indices.push_back(0);
@@ -172,7 +172,7 @@ iShader *csSkyboxMesh::ShaderDeferred(iDevice *device)
 {
   if (!m_shaderDeferred)
   {
-    m_shaderDeferred = AssetManager::Get()->Get<iShader>("${shaders}/skybox/skybox_on_screen_deferred.shader");
+    m_shaderDeferred = csAssetManager::Get()->Get<iShader>("${shaders}/skybox/skybox_on_screen_deferred.shader");
     if (!m_shaderDeferred)
     {
       return nullptr;
@@ -190,7 +190,7 @@ iShader *csSkyboxMesh::ShaderForward(iDevice *device)
 {
   if (!m_shaderForward)
   {
-    m_shaderForward = AssetManager::Get()->Get<iShader>("${shaders}/skybox/skybox_on_screen_forward.shader");
+    m_shaderForward = csAssetManager::Get()->Get<iShader>("${shaders}/skybox/skybox_on_screen_forward.shader");
     if (!m_shaderForward)
     {
       return nullptr;

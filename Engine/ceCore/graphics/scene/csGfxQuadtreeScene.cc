@@ -8,9 +8,9 @@
 #include <ceCore/graphics/material/iMaterial.hh>
 #include <ceCore/graphics/iLight.hh>
 #include <ceCore/graphics/iPointLight.hh>
-#include <ceCore/math/boundingbox.hh>
+#include <ceCore/math/csBoundingBox.hh>
 #include <ceCore/math/iclipper.hh>
-#include <ceCore/math/vector3f.hh>
+#include <ceCore/math/csVector3f.hh>
 #include <array>
 #include <algorithm>
 
@@ -32,7 +32,7 @@ struct MaterialCompound
 struct csGfxQuadtreeScene::Cell
 {
 
-  Cell(Cell *parent, size_t depth, const Vector2f &min, const Vector2f &max);
+  Cell(Cell *parent, size_t depth, const csVector2f &min, const csVector2f &max);
 
   bool m_dirty;
 
@@ -60,7 +60,7 @@ struct csGfxQuadtreeScene::Cell
   MaterialCompound& GetShadedCompound(iMaterial* material);
 
 
-  CS_NODISCARD size_t Idx(const Vector3f &v) const;
+  CS_NODISCARD size_t Idx(const csVector3f &v) const;
   void UpdateBoundingBox();
   void RemoveLight(csGfxLight *light) const;
   void ScanMeshes(const iClipper *clipper, csGfxSceneCollector &collector) const;
@@ -69,19 +69,19 @@ struct csGfxQuadtreeScene::Cell
                   uint32_t scanMask,
                   const std::function<void(csGfxMesh *)> &callback) const;
   Cell                          *m_parent;
-  size_t                        m_depth;
-  Vector2f                      m_min;
-  Vector2f                      m_center;
-  Vector2f                      m_max;
-  BoundingBox                   m_bbox;
-  std::array<Cell *, 4>         m_cells;
+  size_t        m_depth;
+  csVector2f    m_min;
+  csVector2f    m_center;
+  csVector2f    m_max;
+  csBoundingBox m_bbox;
+  std::array<Cell *, 4> m_cells;
   bool                          m_optimizationDirty = true;
 };
 
 csGfxQuadtreeScene::csGfxQuadtreeScene()
 {
   CS_CLASS_GEN_CONSTR;
-  m_root = new Cell(nullptr, 0, Vector2f(-100.0f, -100.0f), Vector2f(100.0f, 100.0f));
+  m_root = new Cell(nullptr, 0, csVector2f(-100.0f, -100.0f), csVector2f(100.0f, 100.0f));
 }
 
 void csGfxQuadtreeScene::Add(csGfxCamera *camera)
@@ -344,7 +344,7 @@ void csGfxQuadtreeScene::ScanStaticLights(const iClipper *clipper, const std::fu
     if (lght->GetType() == eLT_Point)
     {
       auto *plight = lght->Query<const iPointLight>();
-      test = clipper->Test(Sphere(plight->GetPosition(), plight->GetRange())) != eClippingResult::eCR_Outside;
+      test = clipper->Test(csSphere(plight->GetPosition(), plight->GetRange())) != eClippingResult::eCR_Outside;
     }
     if (test && !callback(light))
     {
@@ -362,7 +362,7 @@ void csGfxQuadtreeScene::ScanDynamicLights(const iClipper *clipper, const std::f
     if (lght->GetType() == eLT_Point)
     {
       auto *plight = lght->Query<const iPointLight>();
-      test = clipper->Test(Sphere(plight->GetPosition(), plight->GetRange())) != eClippingResult::eCR_Outside;
+      test = clipper->Test(csSphere(plight->GetPosition(), plight->GetRange())) != eClippingResult::eCR_Outside;
     }
 
     if (test && !callback(light))
@@ -392,7 +392,7 @@ void csGfxQuadtreeScene::ScanLights(const iClipper *clipper,
   }
 }
 
-csGfxQuadtreeScene::Cell::Cell(Cell *parent, size_t depth, const Vector2f &min, const Vector2f &max)
+csGfxQuadtreeScene::Cell::Cell(Cell *parent, size_t depth, const csVector2f &min, const csVector2f &max)
     : m_parent(parent)
     , m_depth(depth)
     , m_min(min)
@@ -430,10 +430,10 @@ void csGfxQuadtreeScene::Cell::Add(csGfxMesh *mesh)
 
   if (m_shaded.size() + m_unshaded.size() + 1 > MAX_ENTRIES_PER_CELL && m_depth < MAX_CELL_DEPTH)
   {
-    m_cells[0] = new Cell(this, m_depth + 1, Vector2f(m_min.x, m_min.y), Vector2f(m_center.x, m_center.y));
-    m_cells[1] = new Cell(this, m_depth + 1, Vector2f(m_min.x, m_center.y), Vector2f(m_center.x, m_max.y));
-    m_cells[2] = new Cell(this, m_depth + 1, Vector2f(m_center.x, m_min.y), Vector2f(m_max.x, m_center.y));
-    m_cells[3] = new Cell(this, m_depth + 1, Vector2f(m_center.x, m_center.y), Vector2f(m_max.x, m_max.y));
+    m_cells[0] = new Cell(this, m_depth + 1, csVector2f(m_min.x, m_min.y), csVector2f(m_center.x, m_center.y));
+    m_cells[1] = new Cell(this, m_depth + 1, csVector2f(m_min.x, m_center.y), csVector2f(m_center.x, m_max.y));
+    m_cells[2] = new Cell(this, m_depth + 1, csVector2f(m_center.x, m_min.y), csVector2f(m_max.x, m_center.y));
+    m_cells[3] = new Cell(this, m_depth + 1, csVector2f(m_center.x, m_center.y), csVector2f(m_max.x, m_max.y));
 
     for (const auto &item: m_shaded)
     {
@@ -690,7 +690,7 @@ void csGfxQuadtreeScene::Cell::RemoveLight(csGfxLight *light) const
   }
 }
 
-size_t csGfxQuadtreeScene::Cell::Idx(const Vector3f &v) const
+size_t csGfxQuadtreeScene::Cell::Idx(const csVector3f &v) const
 {
   size_t idx = 0;
   if (v.x > m_center.x)

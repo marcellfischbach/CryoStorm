@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include <ceCore/input/imouse.hh>
-#include <ceCore/java.hh>
+#include <ceCore/input/iMouse.hh>
+#include <ceCore/csJava.hh>
 
 namespace cryo::java
 {

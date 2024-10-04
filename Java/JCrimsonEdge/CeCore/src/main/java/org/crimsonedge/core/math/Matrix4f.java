@@ -1,6 +1,6 @@
 package org.crimsonedge.core.math;
 
-public class Matrix4f {
+public class csMatrix4f {
 
     public float m00;
     public float m01;
@@ -22,12 +22,12 @@ public class Matrix4f {
     public float m32;
     public float m33;
 
-    public Matrix4f() {
+    public csMatrix4f() {
         m00 = m11 = m22 = m33 = 1.0f;
         m01 = m02 = m03 = m10 = m12 = m13 = m20 = m21 = m23 = m30 = m31 = m32 = 0.0f;
     }
 
-    public Matrix4f(float m00, float m01, float m02, float m03,
+    public csMatrix4f(float m00, float m01, float m02, float m03,
                     float m10, float m11, float m12, float m13,
                     float m20, float m21, float m22, float m23,
                     float m30, float m31, float m32, float m33) {
@@ -49,7 +49,7 @@ public class Matrix4f {
         this.m33 = m33;
     }
 
-    public Matrix4f(Matrix4f m) {
+    public csMatrix4f(csMatrix4f m) {
         this.m00 = m.m00;
         this.m01 = m.m01;
         this.m02 = m.m02;
@@ -68,7 +68,7 @@ public class Matrix4f {
         this.m33 = m.m33;
     }
 
-    public Matrix4f (float[] m) {
+    public csMatrix4f (float[] m) {
         m00 = m[0];
         m01 = m[1];
         m02 = m[2];
@@ -144,7 +144,7 @@ public class Matrix4f {
         m[14] = m32;
         m[15] = m33;
     }
-    public void set(Matrix4f m) {
+    public void set(csMatrix4f m) {
         this.m00 = m.m00;
         this.m01 = m.m01;
         this.m02 = m.m02;
@@ -167,48 +167,48 @@ public class Matrix4f {
         m01 = m02 = m03 = m10 = m12 = m13 = m20 = m21 = m23 = m30 = m31 = m32 = 0.0f;
     }
 
-    public void setTranslation (Vector3f translation) {
+    public void setTranslation (csVector3f translation) {
         m30 = translation.x;
         m31 = translation.y;
         m32 = translation.z;
     }
 
-    public Vector3f getTranslation (Vector3f translation) {
+    public csVector3f getTranslation (csVector3f translation) {
         translation.x = m30;
         translation.y = m31;
         translation.z = m32;
         return translation;
     }
 
-    public Vector3f getXAxis (Vector3f x) {
+    public csVector3f getXAxis (csVector3f x) {
         x.x = m00;
         x.y = m01;
         x.z = m02;
         return x;
     }
 
-    public Vector3f getYAxis (Vector3f y) {
+    public csVector3f getYAxis (csVector3f y) {
         y.x = m10;
         y.y = m11;
         y.z = m12;
         return y;
     }
 
-    public Vector3f getZAxis (Vector3f z) {
+    public csVector3f getZAxis (csVector3f z) {
         z.x = m20;
         z.y = m21;
         z.z = m22;
         return z;
     }
 
-    public void scale (Vector3f scale) {
+    public void scale (csVector3f scale) {
         m00 *= scale.x;
         m11 *= scale.y;
         m22 *= scale.z;
     }
 
 
-    public Vector3f mult(Vector3f v, Vector3f r)
+    public csVector3f mult(csVector3f v, csVector3f r)
     {
         float x = m00 * v.x + m10 * v.y + m20 * v.z;
         float y = m01 * v.x + m11 * v.y + m21 * v.z;
@@ -217,7 +217,7 @@ public class Matrix4f {
         return r;
     }
 
-    public static Matrix4f mult (Matrix4f m0, Matrix4f m1, Matrix4f r)
+    public static csMatrix4f mult (csMatrix4f m0, csMatrix4f m1, csMatrix4f r)
     {
         float mm00 = m0.m00 * m1.m00 + m0.m10 * m1.m01 + m0.m20 * m1.m02 + m0.m30 * m1.m03;
         float mm01 = m0.m01 * m1.m00 + m0.m11 * m1.m01 + m0.m21 * m1.m02 + m0.m31 * m1.m03;

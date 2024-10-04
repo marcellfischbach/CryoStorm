@@ -7,7 +7,7 @@
 #include <ceCore/graphics/iDevice.hh>
 #include <ceCore/graphics/scene/csGfxLight.hh>
 #include <ceCore/graphics/scene/iGfxScene.hh>
-#include <ceCore/objectregistry.hh>
+#include <ceCore/csObjectRegistry.hh>
 
 namespace cryo
 {
@@ -62,13 +62,13 @@ void csLightState::TransformationUpdatedPreChildren()
 {
   if (m_pointLight)
   {
-    const Matrix4f& mat = GetGlobalMatrix();
+    const csMatrix4f & mat = GetGlobalMatrix();
 
     m_pointLight->SetPosition(mat.GetTranslation());
   }
   if (m_directionalLight)
   {
-    const Matrix4f& mat = GetGlobalMatrix();
+    const csMatrix4f & mat = GetGlobalMatrix();
     m_directionalLight->SetDirection(mat.GetZAxis());
   }
 }
@@ -81,7 +81,7 @@ eLightType csLightState::GetType() const
 
 iLight* csLightState::CreateLight()
 {
-  iDevice* device = ObjectRegistry::Get<iDevice>();
+  iDevice* device = csObjectRegistry::Get<iDevice>();
   switch (m_lightType)
   {
   case eLT_Point: return device->CreatePointLight();
@@ -148,13 +148,13 @@ void csLightState::RemoveFromScene(csWorld* world)
   m_directionalLight = nullptr;
 }
 
-void csLightState::SetColor(const Color4f& color)
+void csLightState::SetColor(const csColor4f& color)
 {
   m_color = color;
   UpdateValues();
 }
 
-const Color4f& csLightState::GetColor() const
+const csColor4f& csLightState::GetColor() const
 {
   return m_color;
 }

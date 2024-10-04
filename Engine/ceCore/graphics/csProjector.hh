@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include <ceCore/coreexport.hh>
+#include <ceCore/csCoreExport.hh>
 #include <ceCore/class.hh>
 #include <ceCore/graphics/eProjectionMode.hh>
-#include <ceCore/math/matrix4f.hh>
-#include <ceCore/math/vector3f.hh>
+#include <ceCore/math/csMatrix4f.hh>
+#include <ceCore/math/csVector3f.hh>
 
 namespace cryo
 {
@@ -25,7 +25,7 @@ public:
   void UpdatePerspective(float left, float right, float bottom, float top, float near, float far);
   void UpdateOrtho(float left, float right, float bottom, float top, float near, float far);
 
-  void GetPoints(float depth, Vector3f* out) const;
+  void GetPoints(float depth, csVector3f* out) const;
   CS_NODISCARD float GetLeft () const;
   CS_NODISCARD float GetRight () const;
   CS_NODISCARD float GetBottom () const;
@@ -34,8 +34,8 @@ public:
   CS_NODISCARD float GetFar() const;
 
   void Bind(iDevice* device) const;
-  Matrix4f GetProjectionMatrix(iDevice *device) const;
-  Matrix4f GetProjectionMatrixInv(iDevice *device) const;
+  csMatrix4f GetProjectionMatrix(iDevice *device) const;
+  csMatrix4f GetProjectionMatrixInv(iDevice *device) const;
 
 
 private:

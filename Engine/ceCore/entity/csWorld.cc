@@ -6,8 +6,8 @@
 #include <ceCore/graphics/scene/iGfxScene.hh>
 #include <ceCore/graphics/scene/csGfxSimpleScene.hh>
 #include <ceCore/graphics/scene/csGfxQuadtreeScene.hh>
-#include <ceCore/physics/physics.hh>
-#include <ceCore/objectregistry.hh>
+#include "ceCore/physics/csPhysics.hh"
+#include <ceCore/csObjectRegistry.hh>
 
 #include <atomic>
 #include <thread>
@@ -26,7 +26,7 @@ csWorld::csWorld()
 {
   CS_CLASS_GEN_CONSTR;
   SetScene(new csGfxQuadtreeScene());
-  SetPhysicsWorld(ObjectRegistry::Get<iPhysicsSystem>()->CreateWorld());
+  SetPhysicsWorld(csObjectRegistry::Get<iPhysicsSystem>()->CreateWorld());
 }
 
 void csWorld::SetScene(iGfxScene *scene)

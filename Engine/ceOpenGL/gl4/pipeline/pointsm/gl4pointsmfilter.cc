@@ -5,7 +5,7 @@
 #include "ceOpenGL/gl4/shading/gl4program.hh"
 #include "ceOpenGL/gl4/shading/gl4shaderattribute.hh"
 #include "ceOpenGL/gl4/gl4rendertarget2d.hh"
-#include "ceCore/resource/assetmanager.hh"
+#include "ceCore/resource/csAssetManager.hh"
 
 namespace cryo::opengl
 {
@@ -22,7 +22,7 @@ GL4PointSMFilter::~GL4PointSMFilter()
 
 }
 
-bool GL4PointSMFilter::Initialize(const Vector2f &distance, float radius, float samples, float maxSampleDistance)
+bool GL4PointSMFilter::Initialize(const csVector2f &distance, float radius, float samples, float maxSampleDistance)
 {
   m_distance = distance;
   m_radius = radius;
@@ -30,8 +30,8 @@ bool GL4PointSMFilter::Initialize(const Vector2f &distance, float radius, float 
   m_maxSampleDistance = maxSampleDistance;
 
 
-  m_shadowMapFilterShader = AssetManager::Get()->Get<iShader>(
-      ResourceLocator("file://${engine}/opengl/gl4/pointsm/point_light_shadow_map_filter.shader")
+  m_shadowMapFilterShader = csAssetManager::Get()->Get<iShader>(
+      csResourceLocator("file://${engine}/opengl/gl4/pointsm/point_light_shadow_map_filter.shader")
   );
   if (!m_shadowMapFilterShader)
   {

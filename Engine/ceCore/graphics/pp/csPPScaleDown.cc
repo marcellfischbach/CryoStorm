@@ -9,7 +9,7 @@ csPPScaleDown::csPPScaleDown()
   DeclareInput(ePPImageType::Color, "Color");
   DeclareOutput(ePPImageType::Color, "Color");
 
-  m_shader               = cryo::AssetManager::Get()->Get<cryo::iShader>("${shaders}/pp/scale_down/scale_down.shader");
+  m_shader               = cryo::csAssetManager::Get()->Get<cryo::iShader>("${shaders}/pp/scale_down/scale_down.shader");
   m_attribColor          = m_shader ? m_shader->GetShaderAttribute("Color") : nullptr;
   m_attribTextureSizeInv = m_shader ? m_shader->GetShaderAttribute("TextureSizeInv") : nullptr;
 }
@@ -46,7 +46,7 @@ void csPPScaleDown::Process(iDevice *device, iRenderTarget2D *finalTarget)
   if (m_shader && m_attribColor && RefreshOutputTexture(device))
   {
     device->SetRenderTarget(m_renderTarget);
-    device->Clear(false, cryo::Color4f(0, 0, 0, 0), false, 1.0f, false, 0);
+    device->Clear(false, cryo::csColor4f(0, 0, 0, 0), false, 1.0f, false, 0);
     device->SetBlending(false);
     device->SetDepthTest(false);
     device->SetShader(m_shader);

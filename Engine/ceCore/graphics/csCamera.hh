@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include <ceCore/coreexport.hh>
+#include <ceCore/csCoreExport.hh>
 #include <ceCore/class.hh>
-#include <ceCore/math/matrix4f.hh>
-#include <ceCore/math/vector3f.hh>
+#include <ceCore/math/csMatrix4f.hh>
+#include <ceCore/math/csVector3f.hh>
 
 namespace cryo
 {
@@ -20,25 +20,25 @@ public:
   csCamera();
   virtual ~csCamera();
 
-  void SetEye(const Vector3f & eye);
-  const Vector3f &GetEye() const;
+  void SetEye(const csVector3f & eye);
+  const csVector3f &GetEye() const;
 
-  void SetSpot(const Vector3f & spot);
-  const Vector3f &GetSpot() const;
+  void SetSpot(const csVector3f & spot);
+  const csVector3f &GetSpot() const;
 
-  void SetUp(const Vector3f & up);
-  const Vector3f &GetUp() const;
+  void SetUp(const csVector3f & up);
+  const csVector3f &GetUp() const;
 
 
   void Bind(iDevice * device) const;
-  Matrix4f GetViewMatrix () const;
-  Matrix4f GetViewMatrixInv () const;
+  csMatrix4f GetViewMatrix() const;
+  csMatrix4f GetViewMatrixInv() const;
 
 private:
 
-  Vector3f m_eye;
-  Vector3f m_spot;
-  Vector3f m_up;
+  csVector3f m_eye;
+  csVector3f m_spot;
+  csVector3f m_up;
 
 };
 

@@ -1,8 +1,8 @@
 
-#include <ceCore/engine.hh>
-#include <ceCore/resource/vfs.hh>
-#include <ceCore/resource/vfsconfigreader.hh>
-#include <ceCore/igame.hh>
+#include <ceCore/csEngine.hh>
+#include <ceCore/resource/csVFS.hh>
+#include <ceCore/resource/csVFSConfigReader.hh>
+#include <ceCore/iGame.hh>
 #include <ceLauncher/launchermodule.hh>
 #ifdef CS_WIN32
 #include <Windows.h>
@@ -34,10 +34,10 @@ int main(int argc, char** argv)
 
 
   printf("Starting with data-path: '%s'\n", dataPath.c_str()); fflush(stdout);
-  cryo::VFS::Get()->SetRootPath(dataPath);
-  cryo::VFSConfigReader::Read(dataPath, configFilename);
+  cryo::csVFS::Get()->SetRootPath(dataPath);
+  cryo::csVFSConfigReader::Read(dataPath, configFilename);
 
-  cryo::Engine *engine = cryo::Engine::Get();
+  cryo::csEngine *engine = cryo::csEngine::Get();
   if (!engine->InitializeEngine(args, new cryo::launcher::LauncherModule()))
   {
     printf ("Unable to initialize engine\n");

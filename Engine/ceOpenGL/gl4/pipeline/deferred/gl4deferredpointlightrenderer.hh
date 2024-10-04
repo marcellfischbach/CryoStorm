@@ -9,10 +9,10 @@ namespace cryo
 {
 
 class csCamera;
-class Matrix4f;
+class csMatrix4f;
 class csProjector;
 class csGBuffer;
-class Settings;
+class csSettings;
 
 struct iDevice;
 struct iGfxScene;
@@ -52,12 +52,12 @@ public:
 
 private:
   GL4RenderTarget2D *GetShadowMap();
-  void CalcSphereSizeOnScreen(const Matrix4f &camera,
-                              const Matrix4f &projection,
+  void CalcSphereSizeOnScreen(const csMatrix4f &camera,
+                              const csMatrix4f &projection,
                               const GL4PointLight *light,
-                              Vector2f &outBottomLeft,
-                              Vector2f &outTopRight) const;
-  Vector2f OnScreen(const Vector3f &v, const Matrix4f &m) const;
+                              csVector2f &outBottomLeft,
+                              csVector2f &outTopRight) const;
+  csVector2f OnScreen(const csVector3f &v, const csMatrix4f &m) const;
 
 
   GL4Device *m_device;

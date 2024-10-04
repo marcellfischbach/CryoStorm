@@ -3,7 +3,7 @@
 
 
 #include <ceBullet/bulletexport.hh>
-#include <ceCore/physics/iphysicsworld.hh>
+#include <ceCore/physics/iPhysicsWorld.hh>
 
 
 
@@ -37,7 +37,7 @@ public:
   void RemoveCollider(iStaticCollider * collider) override;
   void RemoveCollider(iDynamicCollider * collider) override;
 
-  void RegisterUpdate(BulletDynamicCollider * collider, const Matrix4f & transform);
+  void RegisterUpdate(BulletDynamicCollider * collider, const csMatrix4f & transform);
 
 private:
   btDiscreteDynamicsWorld *m_world;

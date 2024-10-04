@@ -26,12 +26,12 @@ public:
 	void Bind(int x, int y) override;
 	void Bind(int x, int y, int z) override;
 	void Bind(int x, int y, int z, int w) override;
-	void Bind(const Vector2f& v) override;
-	void Bind(const Vector3f& v) override;
-	void Bind(const Vector4f& v) override;
-	void Bind(const Color4f& v) override;
-	void Bind(const Matrix3f& v) override;
-	void Bind(const Matrix4f& v) override;
+	void Bind(const csVector2f& v) override;
+	void Bind(const csVector3f& v) override;
+	void Bind(const csVector4f& v) override;
+	void Bind(const csColor4f& v) override;
+	void Bind(const csMatrix3f& v) override;
+	void Bind(const csMatrix4f& v) override;
 
 private:
 	std::string m_name;

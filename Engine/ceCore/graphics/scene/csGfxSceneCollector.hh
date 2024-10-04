@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ceCore/coreexport.hh>
+#include <ceCore/csCoreExport.hh>
 #include <array>
 #include <vector>
 #include <ceCore/graphics/eRenderQueue.hh>

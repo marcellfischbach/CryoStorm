@@ -2,8 +2,8 @@
 #include <QMainWindow>
 #include <QApplication>
 #include <mainwindow.hh>
-#include <ceCore/resource/vfs.hh>
-#include <ceCore/resource/vfsconfigreader.hh>
+#include <ceCore/resource/csVFS.hh>
+#include <ceCore/resource/csVFSConfigReader.hh>
 
 
 int main(int argc, char** argv)
@@ -36,8 +36,8 @@ int main(int argc, char** argv)
 
 
   printf("Starting with data-path: '%s'\n", dataPath.c_str()); fflush(stdout);
-  cryo::VFS::Get()->SetRootPath(dataPath);
-  cryo::VFSConfigReader::Read(dataPath, configFilename);
+  cryo::csVFS::Get()->SetRootPath(dataPath);
+  cryo::csVFSConfigReader::Read(dataPath, configFilename);
 
   MainWindow wnd;
   wnd.resize(1024, 768);

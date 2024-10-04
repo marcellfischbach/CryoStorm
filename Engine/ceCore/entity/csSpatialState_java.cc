@@ -77,9 +77,9 @@ JNICALL Java_org_crimsonedge_core_entity_SpatialState_nGetGlobalMatrix(JNIEnv *e
                                                                        jfloatArray mArray)
 {
   jfloat *m = env->GetFloatArrayElements(mArray, 0);
-  auto spatialState = CS_SPATIAL_STATE(ref);
-  const cryo::Matrix4f &f = spatialState->GetGlobalMatrix();
-  memcpy (m, &f, sizeof(cryo::Matrix4f));
+  auto                   spatialState = CS_SPATIAL_STATE(ref);
+  const cryo::csMatrix4f &f           = spatialState->GetGlobalMatrix();
+  memcpy (m, &f, sizeof(cryo::csMatrix4f));
   env->ReleaseFloatArrayElements(mArray, m, 0);
 }
 
@@ -91,9 +91,9 @@ JNICALL Java_org_crimsonedge_core_entity_SpatialState_nGetLocalMatrix(JNIEnv *en
                                                                        jfloatArray mArray)
 {
   jfloat *m = env->GetFloatArrayElements(mArray, 0);
-  auto spatialState = CS_SPATIAL_STATE(ref);
-  const cryo::Matrix4f &f = spatialState->GetLocalMatrix();
-  memcpy (m, &f, sizeof(cryo::Matrix4f));
+  auto                   spatialState = CS_SPATIAL_STATE(ref);
+  const cryo::csMatrix4f &f           = spatialState->GetLocalMatrix();
+  memcpy (m, &f, sizeof(cryo::csMatrix4f));
   env->ReleaseFloatArrayElements(mArray, m, 0);
 }
 
@@ -108,7 +108,7 @@ JNICALL Java_org_crimsonedge_core_entity_SpatialState_nSetLocalMatrix(JNIEnv *en
   jfloat *m = env->GetFloatArrayElements(mArray, 0);
 
   auto spatialState = CS_SPATIAL_STATE(ref);
-  spatialState->SetLocalMatrix(*reinterpret_cast<const cryo::Matrix4f *>(m));
+  spatialState->SetLocalMatrix(*reinterpret_cast<const cryo::csMatrix4f *>(m));
   env->ReleaseFloatArrayElements(mArray, m, 0);
 }
 

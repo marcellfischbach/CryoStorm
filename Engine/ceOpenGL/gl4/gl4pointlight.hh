@@ -32,14 +32,14 @@ public:
   void SetShadowMapBias(float shadowBias) override;
   float GetShadowMapBias() const;
 
-  void SetColor(const Color4f & color) override;
-  const Color4f& GetColor() const override;
+  void SetColor(const csColor4f & color) override;
+  const csColor4f& GetColor() const override;
 
   void SetIntensity(float intensity) override;
   float GetIntensity() const override;
 
-  void SetPosition(const Vector3f & position) override;
-  const Vector3f& GetPosition() const override;
+  void SetPosition(const csVector3f & position) override;
+  const csVector3f& GetPosition() const override;
 
   void SetRange(float range) override;
   float GetRange() const override;
@@ -48,12 +48,12 @@ private:
 
   eLightChangeMode m_changeMode;
   bool m_castShadow;
-  float m_shadowBias;
-  Color4f m_color;
-  float m_intensity;
+  float     m_shadowBias;
+  csColor4f m_color;
+  float     m_intensity;
 
-  Vector3f m_position;
-  float m_range;
+  csVector3f m_position;
+  float      m_range;
 
 };
 

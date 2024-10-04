@@ -31,35 +31,35 @@ public class IRenderMeshGenerator extends CoreObject {
 
     private static native IRenderMesh nGenerate(long ref);
 
-    public void setVertices2f(List<Vector2f> vertices) {
-        nSetVertices2f(getRef(), Vector2f.toFloatArray(vertices));
+    public void setVertices2f(List<csVector2f> vertices) {
+        nSetVertices2f(getRef(), csVector2f.toFloatArray(vertices));
     }
 
-    public void setVertices3f(List<Vector3f> vertices) {
-        nSetVertices3f(getRef(), Vector3f.toFloatArray(vertices));
+    public void setVertices3f(List<csVector3f> vertices) {
+        nSetVertices3f(getRef(), csVector3f.toFloatArray(vertices));
     }
 
-    public void setVertices4f(List<Vector4f> vertices) {
-        nSetVertices4f(getRef(), Vector4f.toFloatArray(vertices));
+    public void setVertices4f(List<csVector4f> vertices) {
+        nSetVertices4f(getRef(), csVector4f.toFloatArray(vertices));
     }
 
-    public void setNormals3f(List<Vector3f> normals) {
-        nSetNormals3f(getRef(), Vector3f.toFloatArray(normals));
-
-    }
-
-    public void setColors4f(List<Color4f> colors) {
-        nSetColors4f(getRef(), Color4f.toFloatArray(colors));
+    public void setNormals3f(List<csVector3f> normals) {
+        nSetNormals3f(getRef(), csVector3f.toFloatArray(normals));
 
     }
 
-    public void setTangents3f(List<Vector3f> tangents) {
-        nSetTangents3f(getRef(), Vector3f.toFloatArray(tangents));
+    public void setColors4f(List<csColor4f> colors) {
+        nSetColors4f(getRef(), csColor4f.toFloatArray(colors));
 
     }
 
-    public void setUV02f(List<Vector2f> uvs) {
-        nSetUV02f(getRef(), Vector2f.toFloatArray(uvs));
+    public void setTangents3f(List<csVector3f> tangents) {
+        nSetTangents3f(getRef(), csVector3f.toFloatArray(tangents));
+
+    }
+
+    public void setUV02f(List<csVector2f> uvs) {
+        nSetUV02f(getRef(), csVector2f.toFloatArray(uvs));
 
     }
 

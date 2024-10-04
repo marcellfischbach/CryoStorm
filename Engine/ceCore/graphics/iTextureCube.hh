@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include <ceCore/coreexport.hh>
+#include <ceCore/csCoreExport.hh>
 #include <ceCore/graphics/ePixelFormat.hh>
 #include <ceCore/graphics/iTexture.hh>
-#include <ceCore/types.hh>
+#include <ceCore/csTypes.hh>
 #include <ceCore/graphics/eCubeFace.hh>
 
 namespace cryo

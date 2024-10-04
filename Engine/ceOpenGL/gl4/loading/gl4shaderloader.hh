@@ -2,7 +2,7 @@
 #pragma once
 
 #include <ceOpenGL/openglexport.hh>
-#include <ceCore/resource/iassetloader.hh>
+#include <ceCore/resource/iAssetLoader.hh>
 
 namespace cryo::opengl
 {
@@ -17,9 +17,9 @@ public:
   virtual ~GL4ShaderLoader() = default;
 
 
-  bool CanLoad(const Class * cls, const ResourceLocator & locator) const override;
+  bool CanLoad(const Class * cls, const csResourceLocator & locator) const override;
 
-  iObject* Load(const Class * cls, const ResourceLocator & locator) const override;
+  iObject* Load(const Class * cls, const csResourceLocator & locator) const override;
 
 };
 

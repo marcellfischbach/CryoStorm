@@ -1,7 +1,7 @@
 
 #include <ceCore/graphics/csVertexDeclaration.hh>
 #include <ceCore/graphics/csGraphicsExceptions.hh>
-#include <ceCore/math/math.hh>
+#include "ceCore/math/csMath.hh"
 
 namespace cryo
 {

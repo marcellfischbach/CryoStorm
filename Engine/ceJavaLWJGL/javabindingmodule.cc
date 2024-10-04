@@ -5,33 +5,33 @@
 #include <ceJavaLWJGL/javabindingmodule.hh>
 #include <ceJavaLWJGL/lwjglwindow.hh>
 #include <ceJavaLWJGL/lwjglinputsystem.hh>
-#include <ceCore/game_java.hh>
-#include <ceCore/objectregistry.hh>
-#include <ceCore/engine.hh>
-#include <ceCore/java.hh>
-#include <ceCore/input/iinputsystem.hh>
-#include <ceCore/window/iwindow.hh>
+#include <ceCore/csJavaGame.hh>
+#include <ceCore/csObjectRegistry.hh>
+#include <ceCore/csEngine.hh>
+#include <ceCore/csJava.hh>
+#include <ceCore/input/iInputSystem.hh>
+#include <ceCore/window/iWindow.hh>
 
 
 
 namespace cryo::java
 {
 
-bool JavaBindingModule::Register(const std::vector<std::string> &args, Engine *engine)
+bool JavaBindingModule::Register(const std::vector<std::string> &args, csEngine *engine)
 {
   register_classes();
 
 //  SDLWindow *window = new SDLWindow();
   LwjglWindow      *window      = LwjglWindow::Get();
   LwjglInputSystem *inputSystem = new LwjglInputSystem(window->GetKeyboard(), window->GetMouse());
-  ObjectRegistry::Register<iInputSystem>(inputSystem);
-  ObjectRegistry::Register<iWindow>(window);
+  csObjectRegistry::Register<iInputSystem>(inputSystem);
+  csObjectRegistry::Register<iWindow>(window);
   engine->SetWindow(window);
 
   return true;
 }
 
-bool JavaBindingModule::Initialize(const std::vector<std::string> &args, Engine *engine)
+bool JavaBindingModule::Initialize(const std::vector<std::string> &args, csEngine *engine)
 {
 //  SDLWindow *window = (SDLWindow*)engine->GetWindow();
 //  window->Initialize();

@@ -2,7 +2,7 @@
 #include <ceOpenGL/gl4/gl4sampler.hh>
 #include <ceOpenGL/gl4/gl4comparefuncmap.hh>
 #include <ceOpenGL/gl4/gl4texturecomparemodemap.hh>
-#include <ceCore/math/math.hh>
+#include "ceCore/math/csMath.hh"
 #include <GL/glew.h>
 
 
@@ -224,7 +224,7 @@ eTextureAddressMode GL4Sampler::GetAddressW() const
   return m_addressW;
 }
 
-void GL4Sampler::SetBorderColor(const Color4f& borderColor)
+void GL4Sampler::SetBorderColor(const csColor4f& borderColor)
 {
   if (m_borderColor != borderColor)
   {
@@ -234,7 +234,7 @@ void GL4Sampler::SetBorderColor(const Color4f& borderColor)
   }
 }
 
-const Color4f& GL4Sampler::GetBorderColor() const
+const csColor4f& GL4Sampler::GetBorderColor() const
 {
   return m_borderColor;
 }

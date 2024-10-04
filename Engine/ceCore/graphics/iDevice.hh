@@ -1,10 +1,10 @@
 #pragma once
 
 
-#include <ceCore/coreexport.hh>
-#include <ceCore/types.hh>
-#include <ceCore/math/color4f.hh>
-#include <ceCore/math/matrix.hh>
+#include <ceCore/csCoreExport.hh>
+#include <ceCore/csTypes.hh>
+#include <ceCore/math/csColor4f.hh>
+#include <ceCore/math/csMatrix.hh>
 #include <ceCore/class.hh>
 #include <ceCore/graphics/eBlendFactor.hh>
 #include <ceCore/graphics/eCompareFunc.hh>
@@ -41,7 +41,7 @@ CS_CLASS_GEN;
 
   virtual void SetViewport(int16_t x, int16_t y, uint16_t width, uint16_t height) = 0;
   virtual void Clear(bool clearColor,
-                     const Color4f &color,
+                     const csColor4f &color,
                      bool clearDepth,
                      float depth,
                      bool clearStencil,
@@ -60,29 +60,29 @@ CS_CLASS_GEN;
                               eBlendFactor dstFactorColor,
                               eBlendFactor dstFactorAlpha) = 0;
 
-  virtual void SetModelMatrix(const Matrix4f &modelMatrix) = 0;
-  virtual void SetViewMatrix(const Matrix4f &viewMatrix) = 0;
-  virtual void SetProjectionMatrix(const Matrix4f &projectionwMatrix) = 0;
+  virtual void SetModelMatrix(const csMatrix4f &modelMatrix) = 0;
+  virtual void SetViewMatrix(const csMatrix4f &viewMatrix) = 0;
+  virtual void SetProjectionMatrix(const csMatrix4f &projectionwMatrix) = 0;
 
-  virtual void SetModelMatrix(const Matrix4f &modelMatrix, const Matrix4f &modelMatrixInv) = 0;
-  virtual void SetViewMatrix(const Matrix4f &viewMatrix, const Matrix4f &viewMatrixInv) = 0;
-  virtual void SetProjectionMatrix(const Matrix4f &projectionMatrix, const Matrix4f &projectionMatrixInv) = 0;
+  virtual void SetModelMatrix(const csMatrix4f &modelMatrix, const csMatrix4f &modelMatrixInv) = 0;
+  virtual void SetViewMatrix(const csMatrix4f &viewMatrix, const csMatrix4f &viewMatrixInv) = 0;
+  virtual void SetProjectionMatrix(const csMatrix4f &projectionMatrix, const csMatrix4f &projectionMatrixInv) = 0;
 
-  virtual void SetShadowMapViewMatrices(const Matrix4f *viewMatrices, Size numMatrices) = 0;
-  virtual void SetShadowMapProjectionMatrices(const Matrix4f *projectionMatrices, Size numMatrices) = 0;
+  virtual void SetShadowMapViewMatrices(const csMatrix4f *viewMatrices, Size numMatrices) = 0;
+  virtual void SetShadowMapProjectionMatrices(const csMatrix4f *projectionMatrices, Size numMatrices) = 0;
 
-  virtual void SetSkeletonMatrices(const Matrix4f *skeletonMatrices, Size numMatrices) = 0;
+  virtual void SetSkeletonMatrices(const csMatrix4f *skeletonMatrices, Size numMatrices) = 0;
 
-  virtual const Matrix4f &GetViewMatrix() const = 0;
-  virtual const Matrix4f &GetViewMatrixInv() const = 0;
-  virtual const Matrix4f &GetProjectionMatrix() const = 0;
-  virtual const Matrix4f &GetProjectionMatrixInv() const = 0;
+  virtual const csMatrix4f &GetViewMatrix() const = 0;
+  virtual const csMatrix4f &GetViewMatrixInv() const = 0;
+  virtual const csMatrix4f &GetProjectionMatrix() const = 0;
+  virtual const csMatrix4f &GetProjectionMatrixInv() const = 0;
 
 
-  virtual Matrix4f &GetPerspectiveProjection(float l, float r, float b, float t, float n, float f, Matrix4f &m) = 0;
-  virtual Matrix4f &GetPerspectiveProjectionInv(float l, float r, float b, float t, float n, float f, Matrix4f &m) = 0;
-  virtual Matrix4f &GetOrthographicProjection(float l, float r, float b, float t, float n, float f, Matrix4f &m) = 0;
-  virtual Matrix4f &GetOrthographicProjectionInv(float l, float r, float b, float t, float n, float f, Matrix4f &m) = 0;
+  virtual csMatrix4f &GetPerspectiveProjection(float l, float r, float b, float t, float n, float f, csMatrix4f &m) = 0;
+  virtual csMatrix4f &GetPerspectiveProjectionInv(float l, float r, float b, float t, float n, float f, csMatrix4f &m) = 0;
+  virtual csMatrix4f &GetOrthographicProjection(float l, float r, float b, float t, float n, float f, csMatrix4f &m) = 0;
+  virtual csMatrix4f &GetOrthographicProjectionInv(float l, float r, float b, float t, float n, float f, csMatrix4f &m) = 0;
 
   virtual void SetRenderLayer(int8_t renderLayer) = 0;
   virtual int8_t GetRenderLayer() const = 0;
@@ -109,7 +109,7 @@ CS_CLASS_GEN;
                                          iTexture2DArray *shadowBuffersDepth,
                                          iTexture2DArray *shadowBuffersColor,
                                          const std::array<float, 4> &layers,
-                                         const std::array<Matrix4f, 4> &matrices) = 0;
+                                         const std::array<csMatrix4f, 4> &matrices) = 0;
 //  virtual void SetLightShadowMap(iLight *light, iTexture2D *shadowMap) = 0;
 
   virtual iSampler *CreateSampler() = 0;
@@ -136,8 +136,8 @@ CS_CLASS_GEN;
   virtual void RenderFullscreen(iTexture2DArray *texture, int layer) = 0;
   virtual void RenderFullscreen(iTextureCube *texture,
                                 eCubeFace face,
-                                const Vector2f &scale = Vector2f(1.0f, 1.0f),
-                                const Vector2f &translation = Vector2f(0.0f, 0.0f)) = 0;
+                                const csVector2f &scale = csVector2f(1.0f, 1.0f),
+                                const csVector2f &translation = csVector2f(0.0f, 0.0f)) = 0;
 
   virtual void BindForwardLight(const iLight *light, Size idx) = 0;
   virtual void FinishForwardLights(Size numLights) = 0;

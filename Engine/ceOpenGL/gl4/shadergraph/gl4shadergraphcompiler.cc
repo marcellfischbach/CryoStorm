@@ -5,9 +5,9 @@
 #include <ceOpenGL/gl4/gl4exceptions.hh>
 #include <algorithm>
 #include <ceCore/graphics/shadergraph/csSGNodes.hh>
-#include <ceCore/resource/assetmanager.hh>
-#include <ceCore/resource/textfile.hh>
-#include <ceCore/settings.hh>
+#include <ceCore/resource/csAssetManager.hh>
+#include <ceCore/resource/csTextFile.hh>
+#include <ceCore/csSettings.hh>
 
 namespace cryo::opengl
 {
@@ -522,9 +522,9 @@ const GL4ShaderGraphLightData &GL4ShaderGraphLightData::Get()
 GL4ShaderGraphLightData::GL4ShaderGraphLightData()
 {
   Valid = false;
-  const SettingsFile &gfxSettings = Settings::Get().Graphics();
+  const csSettingsFile &gfxSettings = csSettings::Get().Graphics();
 
-  TextFile *txt = AssetManager::Get()->Get<TextFile>("/shaders/gl4/shadergraph/diffuse/diffuse_default_lighting.glsl");
+  csTextFile *txt = csAssetManager::Get()->Get<csTextFile>("/shaders/gl4/shadergraph/diffuse/diffuse_default_lighting.glsl");
   if (!txt)
   {
     return;
@@ -532,7 +532,7 @@ GL4ShaderGraphLightData::GL4ShaderGraphLightData()
   DiffuseLightingDefault = txt->GetContent();
   txt->Release();
 
-  txt = AssetManager::Get()->Get<TextFile>("/shaders/gl4/shadergraph/diffuse/diffuse_attenuated_lighting.glsl");
+  txt = csAssetManager::Get()->Get<csTextFile>("/shaders/gl4/shadergraph/diffuse/diffuse_attenuated_lighting.glsl");
   if (!txt)
   {
     return;
@@ -542,7 +542,7 @@ GL4ShaderGraphLightData::GL4ShaderGraphLightData()
 
 
   std::string ambientFile = gfxSettings.GetText("ambient", "null");
-  txt = AssetManager::Get()->Get<TextFile>("/shaders/gl4/shadergraph/lighting/ambient_" + ambientFile + ".glsl");
+  txt = csAssetManager::Get()->Get<csTextFile>("/shaders/gl4/shadergraph/lighting/ambient_" + ambientFile + ".glsl");
   if (!txt)
   {
     return;
@@ -551,7 +551,7 @@ GL4ShaderGraphLightData::GL4ShaderGraphLightData()
 
 
   std::string diffuseFile = gfxSettings.GetText("diffuse", "null");
-  txt = AssetManager::Get()->Get<TextFile>("/shaders/gl4/shadergraph/lighting/diffuse_" + diffuseFile + ".glsl");
+  txt = csAssetManager::Get()->Get<csTextFile>("/shaders/gl4/shadergraph/lighting/diffuse_" + diffuseFile + ".glsl");
   if (!txt)
   {
     return;
@@ -559,21 +559,21 @@ GL4ShaderGraphLightData::GL4ShaderGraphLightData()
   DiffuseLightingDiffuse = txt->GetContent();
 
   std::string specularFile = gfxSettings.GetText("specular", "null");
-  txt = AssetManager::Get()->Get<TextFile>("/shaders/gl4/shadergraph/lighting/specular_" + specularFile + ".glsl");
+  txt = csAssetManager::Get()->Get<csTextFile>("/shaders/gl4/shadergraph/lighting/specular_" + specularFile + ".glsl");
   if (!txt)
   {
     return;
   }
   DiffuseLightingSpecular = txt->GetContent();
 
-  txt = AssetManager::Get()->Get<TextFile>("/shaders/gl4/shadergraph/lighting/shadow_map.glsl");
+  txt = csAssetManager::Get()->Get<csTextFile>("/shaders/gl4/shadergraph/lighting/shadow_map.glsl");
   if (!txt)
   {
     return;
   }
   DiffuseLightingShadowMap = txt->GetContent();
 
-  txt = AssetManager::Get()->Get<TextFile>("/shaders/gl4/shadergraph/lighting/shadow_inline.glsl");
+  txt = csAssetManager::Get()->Get<csTextFile>("/shaders/gl4/shadergraph/lighting/shadow_inline.glsl");
   if (!txt)
   {
     return;
@@ -640,20 +640,20 @@ void GL4ShaderGraphCompiler::SetMaterialDefaults(cryo::csMaterial *material)
         material->Set(idx, def->floats[0]);
         break;
       case eMAT_Vec2:
-        material->Set(idx, Vector2f(def->floats[0], def->floats[1]));
+        material->Set(idx, csVector2f(def->floats[0], def->floats[1]));
         break;
       case eMAT_Vec3:
-        material->Set(idx, Vector3f(def->floats[0], def->floats[1], def->floats[2]));
+        material->Set(idx, csVector3f(def->floats[0], def->floats[1], def->floats[2]));
         break;
       case eMAT_Vec4:
-        material->Set(idx, Vector4f(def->floats[0], def->floats[1], def->floats[2], def->floats[3]));
+        material->Set(idx, csVector4f(def->floats[0], def->floats[1], def->floats[2], def->floats[3]));
         break;
 
       case eMAT_Matrix3:
-        material->Set(idx, Matrix3f(def->floats.data()));
+        material->Set(idx, csMatrix3f(def->floats.data()));
         break;
       case eMAT_Matrix4:
-        material->Set(idx, Matrix4f(def->floats.data()));
+        material->Set(idx, csMatrix4f(def->floats.data()));
         break;
 
       case eMAT_Int:

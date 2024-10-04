@@ -4,7 +4,7 @@
 #include <ceOpenGL/gl4/gl4directionallight.hh>
 #include <ceOpenGL/gl4/gl4rendertarget2d.hh>
 #include <ceOpenGL/gl4/gl4texture2darray.hh>
-#include <ceCore/resource/assetmanager.hh>
+#include <ceCore/resource/csAssetManager.hh>
 #include <ceCore/graphics/csCamera.hh>
 #include <ceCore/graphics/iDevice.hh>
 #include <ceCore/graphics/csGBuffer.hh>
@@ -21,8 +21,8 @@ bool GL4DeferredDirectionalLightRenderer::Initialize()
 {
   m_pssmRenderer.Initialize();
 
-  m_nonShadow.m_shader = AssetManager::Get()->Get<iShader>(
-      ResourceLocator("file://${engine}/opengl/gl4/deferred/directional_light_deferred_no_shadow.shader"));
+  m_nonShadow.m_shader = csAssetManager::Get()->Get<iShader>(
+      csResourceLocator("file://${engine}/opengl/gl4/deferred/directional_light_deferred_no_shadow.shader"));
   if (m_nonShadow.m_shader)
   {
     m_nonShadow.m_attrDiffuseRoughness       = m_nonShadow.m_shader->GetShaderAttribute("DiffuseRoughness");
@@ -35,8 +35,8 @@ bool GL4DeferredDirectionalLightRenderer::Initialize()
     m_nonShadow.m_attrCameraPosition         = m_nonShadow.m_shader->GetShaderAttribute("CameraPosition");
   }
 
-  m_shadow.m_shader = AssetManager::Get()->Get<iShader>(
-      ResourceLocator("file://${engine}/opengl/gl4/deferred/directional_light_deferred_shadow.shader"));
+  m_shadow.m_shader = csAssetManager::Get()->Get<iShader>(
+      csResourceLocator("file://${engine}/opengl/gl4/deferred/directional_light_deferred_shadow.shader"));
   if (m_shadow.m_shader)
   {
 
@@ -144,7 +144,7 @@ void GL4DeferredDirectionalLightRenderer::Render(const csCamera *camera,
   }
   if (lrs->m_attrLightAmbientColor)
   {
-    lrs->m_attrLightAmbientColor->Bind(Color4f());
+    lrs->m_attrLightAmbientColor->Bind(csColor4f());
   }
   if (lrs->m_attrCameraPosition)
   {

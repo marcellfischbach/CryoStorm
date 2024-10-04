@@ -83,25 +83,25 @@ public class csMaterialInstance extends CoreObject implements IMaterial {
 
 
     @Override
-    public void set(int idx, Vector2f v) {
+    public void set(int idx, csVector2f v) {
         nSetVec2f(getRef(), idx, v.x, v.y);
     }
 
 
     @Override
-    public void set(int idx, Vector3f v) {
+    public void set(int idx, csVector3f v) {
         nSetVec3f(getRef(), idx, v.x, v.y, v.z);
     }
 
 
     @Override
-    public void set(int idx, Vector4f v) {
+    public void set(int idx, csVector4f v) {
         nSetVec4f(getRef(), idx, v.x, v.y, v.z, v.w);
     }
 
 
     @Override
-    public void set(int idx, Color4f v) {
+    public void set(int idx, csColor4f v) {
         nSetColor4f(getRef(), idx, v.r, v.g, v.b, v.a);
     }
 
@@ -115,7 +115,7 @@ public class csMaterialInstance extends CoreObject implements IMaterial {
     private static final float[] F9 = new float[9];
 
     @Override
-    public void set(int idx, Matrix3f m) {
+    public void set(int idx, csMatrix3f m) {
         m.toArray(F9);
         nSetMatrix3f(getRef(), idx, F9);
     }
@@ -124,7 +124,7 @@ public class csMaterialInstance extends CoreObject implements IMaterial {
     private static final float[] F16 = new float[16];
 
     @Override
-    public void set(int idx, Matrix4f m) {
+    public void set(int idx, csMatrix4f m) {
         m.toArray(F16);
         nSetMatrix4f(getRef(), idx, F16);
 

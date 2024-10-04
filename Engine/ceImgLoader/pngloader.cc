@@ -1,7 +1,7 @@
 
 #include <ceImgLoader/pngloader.hh>
 #include <iostream>
-#include <ceCore/resource/vfs.hh>
+#include <ceCore/resource/csVFS.hh>
 #include <ceCore/graphics/csImage.hh>
 #include <png.h>
 
@@ -16,7 +16,7 @@ PngLoader::PngLoader()
 }
 
 
-bool PngLoader::CanLoad(const Class* cls, const ResourceLocator& locator) const
+bool PngLoader::CanLoad(const Class* cls, const csResourceLocator& locator) const
 {
   return cls->IsAssignableFrom<csImage>()
     && locator.GetExtension() == "PNG";
@@ -38,9 +38,9 @@ void read_data_from_i_file(png_structp png_ptr, png_bytep buffer, png_size_t siz
 }
 
 
-iObject* PngLoader::Load(const Class* cls, const ResourceLocator& locator) const
+iObject* PngLoader::Load(const Class* cls, const csResourceLocator& locator) const
 {
-  iFile* fp = VFS::Get()->Open(locator, eAM_Read, eOM_Binary);
+  iFile* fp = csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (!fp)
   {
     return nullptr;

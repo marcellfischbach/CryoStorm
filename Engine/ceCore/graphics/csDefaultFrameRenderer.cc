@@ -4,7 +4,7 @@
 #include <ceCore/graphics/iRenderTarget2D.hh>
 #include <ceCore/graphics/scene/csGfxCamera.hh>
 #include <ceCore/graphics/scene/iGfxScene.hh>
-#include <ceCore/objectregistry.hh>
+#include <ceCore/csObjectRegistry.hh>
 #include <ceCore/graphics/iDevice.hh>
 #include <ceCore/graphics/eClearMode.hh>
 #include <algorithm>
@@ -78,7 +78,7 @@ iRenderPipeline *csDefaultFrameRenderer::GetRenderPipeline()
 {
   if (!m_renderPipeline)
   {
-    m_renderPipeline = ObjectRegistry::Get<iRenderPipeline>();
+    m_renderPipeline = csObjectRegistry::Get<iRenderPipeline>();
   }
   return m_renderPipeline;
 }

@@ -1,9 +1,9 @@
 #pragma once
 
-#include <ceCore/coreexport.hh>
+#include <ceCore/csCoreExport.hh>
 #include <ceCore/class.hh>
 #include <ceCore/graphics/shadergraph/eSGValueType.hh>
-#include <ceCore/math/vector.hh>
+#include <ceCore/math/csVector.hh>
 #include <utility>
 #include <string>
 #include <set>

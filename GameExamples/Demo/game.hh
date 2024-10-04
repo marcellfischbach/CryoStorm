@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <ceCore/igame.hh>
+#include <ceCore/iGame.hh>
 
 class Game : public cryo::iGame
 {
@@ -12,7 +12,7 @@ public:
   ~Game() override = default;
 
 
-  bool Initialize(cryo::Engine *engine) override;
+  bool Initialize(cryo::csEngine *engine) override;
 
 };
 

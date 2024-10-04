@@ -1,6 +1,6 @@
 package org.crimsonedge.core;
 
-public class ObjectRegistry {
+public class csObjectRegistry {
 
     private static native Object nGet(String cls);
 

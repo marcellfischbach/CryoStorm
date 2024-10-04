@@ -5,31 +5,31 @@ add_definitions(-D_USE_MATH_DEFINES)
 set(SOURCES
         class.cc
         class.hh
-        classregistry.cc
-        classregistry.hh
-        defs.hh
-        diamond.hh
-        coreexport.hh
-        coremodule.cc
-        coremodule.hh
-        engine.cc
-        engine.hh
-        fps.cc
-        fps.hh
-        igame.hh
-        imodule.hh
-        objectregistry.cc
-        objectregistry.hh
-        outofboundsexception.hh
-        settings.cc
-        settings.hh
-        string.cc
-        string.hh
-        ticker.cc
-        ticker.hh
-        time.cc
-        time.hh
-        types.hh
+        csClassRegistry.cc
+        csClassRegistry.hh
+        csDefs.hh
+        csDiamond.hh
+        csCoreExport.hh
+        csCoreModule.cc
+        csCoreModule.hh
+        csEngine.cc
+        csEngine.hh
+        csFPS.cc
+        csFPS.hh
+        iGame.hh
+        iModule.hh
+        csObjectRegistry.cc
+        csObjectRegistry.hh
+        csOutOfBoundsException.hh
+        csSettings.cc
+        csSettings.hh
+        csString.cc
+        csString.hh
+        csTicker.cc
+        csTicker.hh
+        csTime.cc
+        csTime.hh
+        csTypes.hh
 
         animation/csSkeletonAnimation.cc
         animation/csSkeletonAnimation.hh
@@ -179,110 +179,110 @@ set(SOURCES
         graphics/skybox/csSkyboxMesh.hh
 
 
-        input/iinputsystem.hh
-        input/ikeyboard.hh
-        input/imouse.hh
-        input/input.cc
-        input/input.hh
-        input/key.hh
+        input/iInputSystem.hh
+        input/iKeyboard.hh
+        input/iMouse.hh
+        input/csInput.cc
+        input/csInput.hh
+        input/eKey.hh
 
-        loaders/materialloader.cc
-        loaders/materialloader.hh
-        loaders/samplerloader.cc
-        loaders/samplerloader.hh
-        loaders/shadergraphloader.cc
-        loaders/shadergraphloader.hh
-        loaders/terrainlayerloader.cc
-        loaders/terrainlayerloader.hh
-        loaders/textfileloader.cc
-        loaders/textfileloader.hh
-        loaders/textureloader.cc
-        loaders/textureloader.hh
+        loaders/csMaterialLoader.cc
+        loaders/csMaterialLoader.hh
+        loaders/csSamplerLoader.cc
+        loaders/csSamplerLoader.hh
+        loaders/csShaderGraphLoader.cc
+        loaders/csShaderGraphLoader.hh
+        loaders/csTerrainLayerLoader.cc
+        loaders/csTerrainLayerLoader.hh
+        loaders/csTextFileLoader.cc
+        loaders/csTextFileLoader.hh
+        loaders/csTextureLoader.cc
+        loaders/csTextureLoader.hh
 
 
-        math/boundingbox.cc
-        math/boundingbox.hh
-        math/color4f.hh
-        math/eclippingresult.hh
-        math/hysteresis.hh
+        math/csBoundingBox.cc
+        math/csBoundingBox.hh
+        math/csColor4f.hh
+        math/eClippingResult.hh
+        math/csHysteresis.hh
         math/iclipper.hh
-        math/math.hh
-        math/matrix.hh
-        math/matrix3f.hh
-        math/matrix4f.hh
-        math/plane.hh
-        math/quaternion.hh
-        math/randomrange.hh
-        math/sphere.hh
-        math/vector.hh
-        math/vector2f.hh
-        math/vector2i.hh
-        math/vector3f.hh
-        math/vector4f.hh
-        math/vector4i.hh
+        math/csMath.hh
+        math/csMatrix.hh
+        math/csMatrix3f.hh
+        math/csMatrix4f.hh
+        math/csPlane.hh
+        math/csQuaternion.hh
+        math/csRandomRange.hh
+        math/csSphere.hh
+        math/csVector.hh
+        math/csVector2f.hh
+        math/csVector2i.hh
+        math/csVector3f.hh
+        math/csVector4f.hh
+        math/csVector4i.hh
 
-        math/clipper/boxclipper.cc
-        math/clipper/boxclipper.hh
-        math/clipper/cameraclipper.cc
-        math/clipper/cameraclipper.hh
-        math/clipper/compoundclipper.cc
-        math/clipper/compoundclipper.hh
-        math/clipper/multiplaneclipper.cc
-        math/clipper/multiplaneclipper.hh
-        math/clipper/planeclipper.cc
-        math/clipper/planeclipper.hh
-        math/clipper/sphereclipper.cc
-        math/clipper/sphereclipper.hh
+        math/clipper/csBoxClipper.cc
+        math/clipper/csBoxClipper.hh
+        math/clipper/csCameraClipper.cc
+        math/clipper/csCameraClipper.hh
+        math/clipper/csCompoundClipper.cc
+        math/clipper/csCompoundClipper.hh
+        math/clipper/csMultiPlaneClipper.cc
+        math/clipper/csMultiPlaneClipper.hh
+        math/clipper/csPlaneClipper.cc
+        math/clipper/csPlaneClipper.hh
+        math/clipper/csSphereClipper.cc
+        math/clipper/csSphereClipper.hh
 
-        physics/icollider.hh
-        physics/icollisionshape.hh
-        physics/iphysicssystem.hh
-        physics/iphysicsworld.hh
+        physics/iCollider.hh
+        physics/iCollisionShape.hh
+        physics/iPhysicsSystem.hh
+        physics/iPhysicsWorld.hh
 
-        resource/assetmanager.cc
-        resource/assetmanager.hh
-        resource/basecefassetloader.cc
-        resource/basecefassetloader.hh
-        resource/binarydata.cc
-        resource/binarydata.hh
-        resource/eaccessmode.hh
-        resource/eopenmode.hh
-        resource/eseekmode.hh
-        resource/file.cc
-        resource/file.hh
-        resource/filesystemarchive.cc
-        resource/filesystemarchive.hh
-        resource/filesystemfile.cc
-        resource/filesystemfile.hh
-        resource/iarchive.hh
-        resource/iassetloader.hh
-        resource/ifile.hh
-        resource/resourceexceptions.hh
-        resource/resourcelocator.cc
-        resource/resourcelocator.hh
-        resource/textfile.cc
-        resource/textfile.hh
-        resource/vfs.cc
-        resource/vfs.hh
-        resource/vfsconfigreader.cc
-        resource/vfsconfigreader.hh
+        resource/csAssetManager.cc
+        resource/csAssetManager.hh
+        resource/csBaseCSFAssetLoader.cc
+        resource/csBaseCSFAssetLoader.hh
+        resource/csBinaryData.cc
+        resource/csBinaryData.hh
+        resource/eAccessMode.hh
+        resource/eOpenMode.hh
+        resource/eSeekMode.hh
+        resource/csCryoFile.cc
+        resource/csCryoFile.hh
+        resource/csFileSystemArchive.cc
+        resource/csFileSystemArchive.hh
+        resource/csFileSystemFile.cc
+        resource/csFileSystemFile.hh
+        resource/iArchive.hh
+        resource/iAssetLoader.hh
+        resource/iFile.hh
+        resource/csResourceExceptions.hh
+        resource/csResourceLocator.cc
+        resource/csResourceLocator.hh
+        resource/csTextFile.cc
+        resource/csTextFile.hh
+        resource/csVFS.cc
+        resource/csVFS.hh
+        resource/csVFSConfigReader.cc
+        resource/csVFSConfigReader.hh
 
-        #window/wnddesc.hh
 
-        window/iwindow.hh
+
+        window/iWindow.hh
 
 )
 
 
 if (${JAVA_BINDINGS})
     SET(SOURCES ${SOURCES}
-            engine_java.cc
-            java.cc
-            java.hh
-            java_methods.hh
-            game_java.cc
-            game_java.hh
-            objectregistry_java.cc
+            csEngine_java.cc
+            csJava.cc
+            csJava.hh
+            csJavaCalls.hh
+            csJavaGame.cc
+            csJavaGame.hh
+            csObjectRegistry_java.cc
 
 
             entity/csEntity_java.cc
@@ -303,13 +303,13 @@ if (${JAVA_BINDINGS})
             graphics/shading/iShader_java.cc
             graphics/shading/iShaderAttribute_java.cc
 
-            input/input_java.cc
+            input/csInput_java.cc
 
-            resource/assetmanager_java.cc
-            resource/javaarchive.cc
-            resource/javaarchive.hh
-            resource/javafile.cc
-            resource/javafile.hh
+            resource/csAssetManager_java.cc
+            resource/csJavaArchive.cc
+            resource/csJavaArchive.hh
+            resource/csJavaFile.cc
+            resource/csJavaFile.hh
     )
 
 endif ()

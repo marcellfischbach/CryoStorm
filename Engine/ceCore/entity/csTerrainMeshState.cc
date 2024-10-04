@@ -9,7 +9,7 @@
 #include <ceCore/graphics/shading/iShader.hh>
 #include <ceCore/graphics/scene/csGfxMesh.hh>
 #include <ceCore/graphics/scene/iGfxScene.hh>
-#include <ceCore/resource/assetmanager.hh>
+#include <ceCore/resource/csAssetManager.hh>
 
 namespace cryo
 {
@@ -269,7 +269,7 @@ void csTerrainMeshState::TransformationUpdatedPreChildren()
 {
   if (m_gfxMesh)
   {
-    Matrix4f mat = GetGlobalMatrix();
+    csMatrix4f mat = GetGlobalMatrix();
     m_gfxMesh->SetModelMatrix(mat);
   }
 }
@@ -278,7 +278,7 @@ void csTerrainMeshState::UpdateMaterial()
 {
   if (!m_material)
   {
-    m_material = AssetManager::Get()->Get<iMaterial>(ResourceLocator("/materials/terrain/terrain4.mat"));
+    m_material = csAssetManager::Get()->Get<iMaterial>(csResourceLocator("/materials/terrain/terrain4.mat"));
     cryo::s_material_names[m_material] = "Terrain4";
     if (!m_material)
     {

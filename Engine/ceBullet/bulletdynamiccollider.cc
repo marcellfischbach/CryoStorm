@@ -51,7 +51,7 @@ void BulletDynamicCollider::Detach(iCollisionShape* shape)
   m_shapes.erase(it);
 }
 
-void BulletDynamicCollider::SetTransform(const Matrix4f& transform)
+void BulletDynamicCollider::SetTransform(const csMatrix4f& transform)
 {
   m_transform = transform;
   if (m_rigidBody)
@@ -63,7 +63,7 @@ void BulletDynamicCollider::SetTransform(const Matrix4f& transform)
 }
 
 
-const Matrix4f &BulletDynamicCollider::GetTransform() const
+const csMatrix4f &BulletDynamicCollider::GetTransform() const
 {
   return m_transform;
 }

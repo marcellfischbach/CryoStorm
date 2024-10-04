@@ -5,7 +5,7 @@
 #include <ceOpenGL/openglexport.hh>
 #include <ceOpenGL/openglconstants.hh>
 #include <ceOpenGL/gl4/pipeline/pointsm/gl4pointsmrenderer.hh>
-#include <ceCore/types.hh>
+#include <ceCore/csTypes.hh>
 #include <map>
 #include <vector>
 #include <array>
@@ -19,7 +19,7 @@ struct iShader;
 struct iShaderAttribute;
 struct iGfxScene;
 struct iTexture2D;
-class Settings;
+class csSettings;
 
 class csCamera;
 class csProjector;

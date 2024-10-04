@@ -54,12 +54,12 @@ float GL4PointLight::GetShadowMapBias() const
 }
 
 
-void GL4PointLight::SetColor(const Color4f& color)
+void GL4PointLight::SetColor(const csColor4f& color)
 {
   m_color = color;
 }
 
-const Color4f& GL4PointLight::GetColor() const
+const csColor4f& GL4PointLight::GetColor() const
 {
   return m_color;
 }
@@ -74,12 +74,12 @@ float GL4PointLight::GetIntensity() const
   return m_intensity;
 }
 
-void GL4PointLight::SetPosition(const Vector3f& position)
+void GL4PointLight::SetPosition(const csVector3f& position)
 {
   m_position = position;
 }
 
-const Vector3f& GL4PointLight::GetPosition() const
+const csVector3f& GL4PointLight::GetPosition() const
 {
   return m_position;
 }

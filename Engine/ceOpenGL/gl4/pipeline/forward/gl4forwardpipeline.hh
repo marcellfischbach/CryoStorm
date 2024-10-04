@@ -11,7 +11,7 @@
 #include <ceCore/graphics/skybox/csSkyboxMesh.hh>
 #include <ceCore/graphics/scene/csGfxMesh.hh>
 #include <ceCore/graphics/scene/csGfxSceneCollector.hh>
-#include <ceCore/types.hh>
+#include <ceCore/csTypes.hh>
 #include <map>
 #include <vector>
 

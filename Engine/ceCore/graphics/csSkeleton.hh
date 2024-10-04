@@ -1,10 +1,10 @@
 
 #pragma once
 
-#include <ceCore/coreexport.hh>
+#include <ceCore/csCoreExport.hh>
 #include <ceCore/class.hh>
-#include <ceCore/math/matrix4f.hh>
-#include <ceCore/math/quaternion.hh>
+#include <ceCore/math/csMatrix4f.hh>
+#include <ceCore/math/csQuaternion.hh>
 #include <vector>
 
 
@@ -22,15 +22,15 @@ public:
     size_t              id;
     std::string         name;
     std::vector<size_t> children;
-    Vector3f            offset;
-    Quaternion          rotation;
-    Quaternion          poseRotation;
-    Matrix4f            globalMatrix;
+    csVector3f          offset;
+    csQuaternion        rotation;
+    csQuaternion poseRotation;
+    csMatrix4f   globalMatrix;
   };
 
   static const size_t      ILLEGAL_BONE_ID = ~0x00;
   static const std::string ILLEGAL_BONE_NAME;
-  static const Matrix4f    ILLEGAL_BONE_MATRIX;
+  static const csMatrix4f  ILLEGAL_BONE_MATRIX;
 
   csSkeleton();
 
@@ -40,8 +40,8 @@ public:
   CS_NODISCARD size_t AddRoot(const std::string &name);
   CS_NODISCARD size_t AddChild(const std::string &name, size_t parent);
 
-  void SetBase(const Matrix4f &base);
-  const Matrix4f &GetBase () const;
+  void SetBase(const csMatrix4f &base);
+  const csMatrix4f &GetBase() const;
 
   void UpdateBones ();
 
@@ -53,24 +53,24 @@ public:
   CS_NODISCARD Bone& GetBone(size_t idx);
   CS_NODISCARD const Bone& GetBone(size_t idx) const;
 
-  CS_NODISCARD const std::vector<Matrix4f> &GetSkeletonBones () const;
+  CS_NODISCARD const std::vector<csMatrix4f> &GetSkeletonBones() const;
 
   csSkeleton& operator=(const csSkeleton& skeleton);
 
 
 private:
   size_t Add(const std::string &name);
-  void UpdateBone (size_t idx, const Matrix4f &parent);
+  void UpdateBone(size_t idx, const csMatrix4f &parent);
 
 
 
 private:
   std::vector<size_t>   m_rootBones;
-  std::vector<Bone>     m_bones;
-  std::vector<Matrix4f> m_skeletonBones;
-  std::vector<Matrix4f> m_poseMatrices;
-  Matrix4f              m_base;
-  static Bone           IllegalBone;
+  std::vector<Bone>        m_bones;
+  std::vector<csMatrix4f>  m_skeletonBones;
+  std::vector<csMatrix4f>  m_poseMatrices;
+  csMatrix4f               m_base;
+  static Bone              IllegalBone;
 };
 
 } // ce

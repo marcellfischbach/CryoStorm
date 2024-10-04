@@ -7,9 +7,9 @@
 #include <ceOpenGL/gl4/gl4pointlight.hh>
 #include <ceOpenGL/gl4/gl4rendertarget2d.hh>
 #include <ceOpenGL/gl4/gl4rendertargetcube.hh>
-#include <ceCore/settings.hh>
-#include <ceCore/math/clipper/cameraclipper.hh>
-#include <ceCore/resource/assetmanager.hh>
+#include <ceCore/csSettings.hh>
+#include <ceCore/math/clipper/csCameraClipper.hh>
+#include <ceCore/resource/csAssetManager.hh>
 #include <ceCore/graphics/csCamera.hh>
 #include <ceCore/graphics/csProjector.hh>
 #include <ceCore/graphics/scene/iGfxScene.hh>
@@ -31,7 +31,7 @@ GL4PointSMRenderer::GL4PointSMRenderer()
 
 void GL4PointSMRenderer::Initialize()
 {
-  const SettingsFile &settings = Settings::Get().Graphics();
+  const csSettingsFile &settings = csSettings::Get().Graphics();
   m_pointLightShadowBufferSize = settings.GetInt("point_light.shadow_map.size", 1024);
   std::string filter = settings.GetText("point_light.shadow_map.filter.mode", "Plain");
   if (filter == std::string("Plain"))
@@ -48,8 +48,8 @@ void GL4PointSMRenderer::Initialize()
   }
 
 
-  m_shadowMappingShader = AssetManager::Get()->Get<iShader>(
-      ResourceLocator("file://${engine}/opengl/gl4/pointsm/point_light_shadow_map.shader"));
+  m_shadowMappingShader = csAssetManager::Get()->Get<iShader>(
+      csResourceLocator("file://${engine}/opengl/gl4/pointsm/point_light_shadow_map.shader"));
   if (m_shadowMappingShader)
   {
     m_attrLightPosition = m_shadowMappingShader->GetShaderAttribute("LightPosition");
@@ -59,11 +59,11 @@ void GL4PointSMRenderer::Initialize()
   }
 
 
-  Vector2f distance       = settings.GetVector2f("point_light.shadow_map.filter.distance", Vector2f(1, 25));
-  float    radius         = settings.GetFloat("point_light.shadow_map.filter.radius", 10.0f);
+  csVector2f distance = settings.GetVector2f("point_light.shadow_map.filter.distance", csVector2f(1, 25));
+  float      radius   = settings.GetFloat("point_light.shadow_map.filter.radius", 10.0f);
   float    samples        = settings.GetFloat("point_light.shadow_map.filter.samples", 25.0f);
   float    sampleDistance = settings.GetFloat("point_light.shadow_map.filter.sampleDistance", 0.1f);
-  m_shadowMapFilter.Initialize(Vector2f(distance.x, distance.y - distance.x), radius, samples, sampleDistance);
+  m_shadowMapFilter.Initialize(csVector2f(distance.x, distance.y - distance.x), radius, samples, sampleDistance);
 
 }
 
@@ -109,28 +109,28 @@ void GL4PointSMRenderer::RenderShadowBuffer(const GL4PointLight *pointLight,
 {
 
   float    near = pointLight->GetRange() * 0.001f;
-  float    far  = pointLight->GetRange();
-  Matrix4f projection;
-  Matrix4f projectionInv;
+  float      far  = pointLight->GetRange();
+  csMatrix4f projection;
+  csMatrix4f projectionInv;
   m_device->GetPerspectiveProjection(-near, near, -near, near, near, far, projection);
   m_device->GetPerspectiveProjectionInv(-near, near, -near, near, near, far, projectionInv);
 
-  Vector3f pos = pointLight->GetPosition();
-  Matrix4f views[6];
-  views[0].SetLookAt(pos, pos + Vector3f(1, 0, 0), Vector3f(0, -1, 0));
-  views[1].SetLookAt(pos, pos + Vector3f(-1, 0, 0), Vector3f(0, -1, 0));
-  views[2].SetLookAt(pos, pos + Vector3f(0, 1, 0), Vector3f(0, 0, -1));
-  views[3].SetLookAt(pos, pos + Vector3f(0, -1, 0), Vector3f(0, 0, 1));
-  views[4].SetLookAt(pos, pos + Vector3f(0, 0, -1), Vector3f(0, -1, 0));
-  views[5].SetLookAt(pos, pos + Vector3f(0, 0, 1), Vector3f(0, -1, 0));
+  csVector3f pos = pointLight->GetPosition();
+  csMatrix4f views[6];
+  views[0].SetLookAt(pos, pos + csVector3f(1, 0, 0), csVector3f(0, -1, 0));
+  views[1].SetLookAt(pos, pos + csVector3f(-1, 0, 0), csVector3f(0, -1, 0));
+  views[2].SetLookAt(pos, pos + csVector3f(0, 1, 0), csVector3f(0, 0, -1));
+  views[3].SetLookAt(pos, pos + csVector3f(0, -1, 0), csVector3f(0, 0, 1));
+  views[4].SetLookAt(pos, pos + csVector3f(0, 0, -1), csVector3f(0, -1, 0));
+  views[5].SetLookAt(pos, pos + csVector3f(0, 0, 1), csVector3f(0, -1, 0));
 
-  Matrix4f viewsInv[6];
-  viewsInv[0].SetLookAtInv(pos, pos + Vector3f(1, 0, 0), Vector3f(0, -1, 0));
-  viewsInv[1].SetLookAtInv(pos, pos + Vector3f(-1, 0, 0), Vector3f(0, -1, 0));
-  viewsInv[2].SetLookAtInv(pos, pos + Vector3f(0, 1, 0), Vector3f(0, 0, -1));
-  viewsInv[3].SetLookAtInv(pos, pos + Vector3f(0, -1, 0), Vector3f(0, 0, 1));
-  viewsInv[4].SetLookAtInv(pos, pos + Vector3f(0, 0, -1), Vector3f(0, -1, 0));
-  viewsInv[5].SetLookAtInv(pos, pos + Vector3f(0, 0, 1), Vector3f(0, -1, 0));
+  csMatrix4f viewsInv[6];
+  viewsInv[0].SetLookAtInv(pos, pos + csVector3f(1, 0, 0), csVector3f(0, -1, 0));
+  viewsInv[1].SetLookAtInv(pos, pos + csVector3f(-1, 0, 0), csVector3f(0, -1, 0));
+  viewsInv[2].SetLookAtInv(pos, pos + csVector3f(0, 1, 0), csVector3f(0, 0, -1));
+  viewsInv[3].SetLookAtInv(pos, pos + csVector3f(0, -1, 0), csVector3f(0, 0, 1));
+  viewsInv[4].SetLookAtInv(pos, pos + csVector3f(0, 0, -1), csVector3f(0, -1, 0));
+  viewsInv[5].SetLookAtInv(pos, pos + csVector3f(0, 0, 1), csVector3f(0, -1, 0));
 
   m_device->SetProjectionMatrix(projection);
 
@@ -142,12 +142,12 @@ void GL4PointSMRenderer::RenderShadowBuffer(const GL4PointLight *pointLight,
     m_device->SetDepthTest(true);
     m_device->SetBlending(false);
     m_device->SetColorWrite(true, true, true, true);
-    m_device->Clear(true, Color4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, true, 0);
+    m_device->Clear(true, csColor4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, true, 0);
 
     m_device->SetViewMatrix(views[i]);
 
 
-    CameraClipper clipper(viewsInv[i], projectionInv, false, true);
+    csCameraClipper clipper(viewsInv[i], projectionInv, false, true);
 
     size_t count = 0;
     m_scene->ScanMeshes(&clipper, iGfxScene::eSM_Dynamic | iGfxScene::eSM_Static,
@@ -171,7 +171,7 @@ void GL4PointSMRenderer::RenderShadowMap(const GL4PointLight *pointLight,
   m_device->SetDepthWrite(true);
   m_device->SetDepthTest(false);
   m_device->SetColorWrite(true, true, true, true);
-  m_device->Clear(true, Color4f(0.0, 0.0f, 0.0f, 0.0f), true, 1.0f, true, 0);
+  m_device->Clear(true, csColor4f(0.0, 0.0f, 0.0f, 0.0f), true, 1.0f, true, 0);
 
   m_device->SetShader(m_shadowMappingShader);
   m_device->ResetTextures();
@@ -184,9 +184,9 @@ void GL4PointSMRenderer::RenderShadowMap(const GL4PointLight *pointLight,
   }
   if (m_attrMappingBias)
   {
-    m_attrMappingBias->Bind(Vector3f(pointLight->GetRange() * 0.001f,
-                                     pointLight->GetRange(),
-                                     pointLight->GetShadowMapBias()));
+    m_attrMappingBias->Bind(csVector3f(pointLight->GetRange() * 0.001f,
+                                       pointLight->GetRange(),
+                                       pointLight->GetShadowMapBias()));
   }
 
   if (m_attrShadowBuffer)

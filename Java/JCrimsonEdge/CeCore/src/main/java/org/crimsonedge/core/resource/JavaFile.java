@@ -7,8 +7,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 
-@CeClass("cryo::JavaFile")
-public class JavaFile extends CoreObject implements IFile {
+@CeClass("cryo::csJavaFile")
+public class csJavaFile extends CoreObject implements IFile {
 
     private final String name;
 
@@ -18,7 +18,7 @@ public class JavaFile extends CoreObject implements IFile {
 
     private int ptr;
 
-    public JavaFile(String name, InputStream inputStream) {
+    public csJavaFile(String name, InputStream inputStream) {
         super();
         this.name = name;
         this.inputStream = inputStream;

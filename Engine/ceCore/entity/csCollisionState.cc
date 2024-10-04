@@ -1,11 +1,11 @@
 #include <ceCore/entity/csCollisionState.hh>
 #include <ceCore/entity/csRigidBodyState.hh>
 #include <ceCore/entity/csWorld.hh>
-#include <ceCore/physics/iphysicssystem.hh>
-#include <ceCore/physics/icollider.hh>
-#include <ceCore/physics/icollisionshape.hh>
-#include <ceCore/physics/iphysicsworld.hh>
-#include <ceCore/objectregistry.hh>
+#include <ceCore/physics/iPhysicsSystem.hh>
+#include <ceCore/physics/iCollider.hh>
+#include <ceCore/physics/iCollisionShape.hh>
+#include <ceCore/physics/iPhysicsWorld.hh>
+#include <ceCore/csObjectRegistry.hh>
 
 namespace cryo
 {
@@ -27,7 +27,7 @@ iCollisionShape* csCollisionState::GetShape()
 {
   if (!m_shape)
   {
-    auto physSystem = ObjectRegistry::Get<iPhysicsSystem>();
+    auto physSystem = csObjectRegistry::Get<iPhysicsSystem>();
     if (physSystem)
     {
       m_shape = CreateShape(physSystem);
@@ -108,12 +108,12 @@ iCollisionShape* csBoxColliderState::CreateShape(iPhysicsSystem* physSystem) con
 }
 
 
-void csBoxColliderState::SetHalfExtends(const Vector3f &halfExtends)
+void csBoxColliderState::SetHalfExtends(const csVector3f &halfExtends)
 {
   m_halfExtends = halfExtends;
 }
 
-const Vector3f &csBoxColliderState::GetHalfExtends() const
+const csVector3f &csBoxColliderState::GetHalfExtends() const
 {
   return m_halfExtends;
 }

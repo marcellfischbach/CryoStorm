@@ -138,7 +138,7 @@ JNICALL Java_org_crimsonedge_core_graphics_shading_IShaderAttribute_nBindMatrix3
 {
   auto attribute = reinterpret_cast<cryo::iShaderAttribute *>(ref);
   jfloat *m      = env->GetFloatArrayElements(floatArray, 0);
-  attribute->Bind(*reinterpret_cast<const cryo::Matrix3f*>(m));
+  attribute->Bind(*reinterpret_cast<const cryo::csMatrix3f*>(m));
   env->ReleaseFloatArrayElements(floatArray, m, 0);
 }
 
@@ -151,7 +151,7 @@ JNICALL Java_org_crimsonedge_core_graphics_shading_IShaderAttribute_nBindMatrix4
 {
   auto attribute = reinterpret_cast<cryo::iShaderAttribute *>(ref);
   jfloat *m      = env->GetFloatArrayElements(floatArray, 0);
-  attribute->Bind(*reinterpret_cast<const cryo::Matrix4f*>(m));
+  attribute->Bind(*reinterpret_cast<const cryo::csMatrix4f*>(m));
   env->ReleaseFloatArrayElements(floatArray, m, 0);
 }
 

@@ -3,8 +3,8 @@
 //
 
 #include <assetbrowser/assetbrowsertreemodel.hh>
-#include <ceCore/resource/vfs.hh>
-#include <ceCore/resource/filesystemarchive.hh>
+#include <ceCore/resource/csVFS.hh>
+#include <ceCore/resource/csFileSystemArchive.hh>
 #include <QDir>
 #include <QFileInfo>
 
@@ -22,7 +22,7 @@ void AssetBrowserTreeModel::Reload()
   }
   m_archives.clear();
 
-  for (auto archive: cryo::VFS::Get()->GetArchives())
+  for (auto archive: cryo::csVFS::Get()->GetArchives())
   {
 
 
@@ -32,7 +32,7 @@ void AssetBrowserTreeModel::Reload()
 
 void AssetBrowserTreeModel::LoadArchive(const cryo::iArchive *archive)
 {
-  const cryo::FileSystemArchive *fsArchive = archive->Query<cryo::FileSystemArchive>();
+  const cryo::csFileSystemArchive *fsArchive = archive->Query<cryo::csFileSystemArchive>();
   if (!fsArchive)
   {
     return;

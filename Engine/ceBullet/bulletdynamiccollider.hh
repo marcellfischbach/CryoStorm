@@ -2,7 +2,7 @@
 #pragma once
 
 #include <ceBullet/bulletexport.hh>
-#include <ceCore/physics/icollider.hh>
+#include <ceCore/physics/iCollider.hh>
 #include <set>
 #include <btBulletDynamicsCommon.h>
 
@@ -26,8 +26,8 @@ public:
   void Attach(iCollisionShape * shape) override;
   void Detach(iCollisionShape * shape) override;
 
-  void SetTransform(const Matrix4f & transform) override;
-  const Matrix4f &GetTransform() const override;
+  void SetTransform(const csMatrix4f & transform) override;
+  const csMatrix4f &GetTransform() const override;
 
 
   void SetUserData(csSpatialState * spatialState) override;
@@ -52,7 +52,7 @@ private:
     void setWorldTransform(const btTransform& worldTrans) override;
   } m_motionState;
 
-  Matrix4f m_transform;
+  csMatrix4f m_transform;
 
 
   BulletWorld* m_world;

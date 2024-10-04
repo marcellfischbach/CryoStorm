@@ -73,7 +73,7 @@ void csSkeletonAnimationPlayer::UpdateFrame(float time)
   for (int i     = 0; i < m_skeleton->GetNumberOfBones(); ++i)
   {
     csSkeleton::Bone &bone = m_skeleton->GetBone(i);
-    bone.rotation = Quaternion(0.0f, 0.0f, 0.0f, 0.0f);
+    bone.rotation = csQuaternion(0.0f, 0.0f, 0.0f, 0.0f);
   }
 
   m_animation->PushSkeleton(m_skeleton, frame, 1.0f);

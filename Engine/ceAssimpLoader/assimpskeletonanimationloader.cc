@@ -1,6 +1,6 @@
 #include <ceAssimpLoader/assimpskeletonanimationloader.hh>
 #include <ceCore/animation/csSkeletonAnimation.hh>
-#include <ceCore/resource/vfs.hh>
+#include <ceCore/resource/csVFS.hh>
 #include <assimp/scene.h>
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
@@ -14,7 +14,7 @@ AssimpSkeletonAnimationLoader::AssimpSkeletonAnimationLoader()
 }
 
 
-bool AssimpSkeletonAnimationLoader::CanLoad(const cryo::Class *cls, const cryo::ResourceLocator &locator) const
+bool AssimpSkeletonAnimationLoader::CanLoad(const cryo::Class *cls, const cryo::csResourceLocator &locator) const
 {
   const std::string &ext = locator.GetExtension();
   return cls == SkeletonAnimationPack::GetStaticClass()
@@ -22,9 +22,9 @@ bool AssimpSkeletonAnimationLoader::CanLoad(const cryo::Class *cls, const cryo::
 }
 
 
-iObject *AssimpSkeletonAnimationLoader::Load(const cryo::Class *cls, const cryo::ResourceLocator &locator) const
+iObject *AssimpSkeletonAnimationLoader::Load(const cryo::Class *cls, const cryo::csResourceLocator &locator) const
 {
-  iFile *file = cryo::VFS::Get()->Open(locator, eAM_Read, eOM_Binary);
+  iFile *file = cryo::csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (!file)
   {
     return nullptr;
@@ -81,25 +81,25 @@ csSkeletonAnimation *AssimpSkeletonAnimationLoader::Read(aiAnimation *animation)
     for (int r = 0; r < channel->mNumRotationKeys; ++r)
     {
       aiQuatKey &rotation = channel->mRotationKeys[r];
-      result->AddRotationFrame(channelName, rotation.mTime, Quaternion(rotation.mValue.x,
-                                                                       rotation.mValue.y,
-                                                                       rotation.mValue.z,
-                                                                       -rotation.mValue.w));
+      result->AddRotationFrame(channelName, rotation.mTime, csQuaternion(rotation.mValue.x,
+                                                                         rotation.mValue.y,
+                                                                         rotation.mValue.z,
+                                                                         -rotation.mValue.w));
     }
 
     for (int r = 0; r < channel->mNumPositionKeys; ++r)
     {
       aiVectorKey &position = channel->mPositionKeys[r];
-      result->AddPositionFrame(channelName, position.mTime, Vector3f(position.mValue.x,
-                                                                     position.mValue.y,
-                                                                     position.mValue.z));
+      result->AddPositionFrame(channelName, position.mTime, csVector3f(position.mValue.x,
+                                                                       position.mValue.y,
+                                                                       position.mValue.z));
     }
     for (int r = 0; r < channel->mNumScalingKeys; ++r)
     {
       aiVectorKey &scale = channel->mScalingKeys[r];
-      result->AddScaleFrame(channelName, scale.mTime, Vector3f(scale.mValue.x,
-                                                               scale.mValue.y,
-                                                               scale.mValue.z));
+      result->AddScaleFrame(channelName, scale.mTime, csVector3f(scale.mValue.x,
+                                                                 scale.mValue.y,
+                                                                 scale.mValue.z));
     }
   }
 

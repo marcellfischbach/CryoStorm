@@ -1,7 +1,7 @@
 #ifndef SDLKEYBOARD_HH
 #define SDLKEYBOARD_HH
 
-#include <ceCore/input/ikeyboard.hh>
+#include <ceCore/input/iKeyboard.hh>
 #include <SDL.h>
 
 namespace cryo::launcher
@@ -17,11 +17,11 @@ public:
     void Update ();
     void Update (SDL_Scancode scanCode, bool down);
 
-    virtual bool IsKeyDown(Key key) const;
-    virtual bool IsKeyUp(Key key) const;
+    virtual bool IsKeyDown(eKey key) const;
+    virtual bool IsKeyUp(eKey key) const;
 
-    virtual bool IsKeyPressed(Key key) const;
-    virtual bool IsKeyReleased(Key key) const;
+    virtual bool IsKeyPressed(eKey key) const;
+    virtual bool IsKeyReleased(eKey key) const;
 
 private:
     bool m_current[eK_COUNT];

@@ -1,7 +1,7 @@
 
 #pragma  once
 
-#include <ceCore/coreexport.hh>
+#include <ceCore/csCoreExport.hh>
 #include <ceCore/graphics/iRenderTarget.hh>
 #include <ceCore/graphics/iTexture2D.hh>
 #include <ceCore/graphics/iTexture2DArray.hh>

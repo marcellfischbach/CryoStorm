@@ -2,7 +2,7 @@
 
 #include <ceOpenGL/openglexport.hh>
 #include <ceCore/graphics/shading/iShader.hh>
-#include <ceCore/types.hh>
+#include <ceCore/csTypes.hh>
 #include <vector>
 
 namespace cryo::opengl

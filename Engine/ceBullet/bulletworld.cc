@@ -102,7 +102,7 @@ void BulletWorld::RemoveCollider(iDynamicCollider* collider)
 }
 
 
-void BulletWorld::RegisterUpdate(BulletDynamicCollider* collider, const Matrix4f& matrix)
+void BulletWorld::RegisterUpdate(BulletDynamicCollider* collider, const csMatrix4f& matrix)
 {
   DynamicResult res{ collider, matrix };
   m_resultFrame[m_writeId].emplace_back(res);

@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include <ceCore/coreexport.hh>
-#include <ceCore/types.hh>
+#include <ceCore/csCoreExport.hh>
+#include <ceCore/csTypes.hh>
 #include <ceCore/graphics/eDataType.hh>
 #include <ceCore/graphics/eVertexStream.hh>
 #include <vector>
-#include <ceCore/defs.hh>
+#include <ceCore/csDefs.hh>
 
 namespace cryo
 {

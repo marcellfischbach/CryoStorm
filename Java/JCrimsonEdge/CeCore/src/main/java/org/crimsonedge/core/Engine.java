@@ -3,7 +3,7 @@ package org.crimsonedge.core;
 import org.crimsonedge.core.entity.csWorld;
 import org.crimsonedge.core.graphics.IDevice;
 
-public class Engine {
+public class csEngine {
 
     private static native void nSetEnv ();
     private static native boolean nInitialize (String[] args, long externalModuleRef, IGame game);
@@ -28,7 +28,7 @@ public class Engine {
         return nGetDevice();
     }
 
-    private Engine() {
+    private csEngine() {
         System.loadLibrary("ceCore");
     }
 
@@ -37,11 +37,11 @@ public class Engine {
         nSetEnv();
     }
 
-    private static Engine instance = null;
+    private static csEngine instance = null;
 
-    public static Engine instance() {
+    public static csEngine instance() {
         if (instance == null) {
-            instance = new Engine();
+            instance = new csEngine();
         }
         return instance;
     }

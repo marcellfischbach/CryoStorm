@@ -7,7 +7,7 @@
 #include <ceOpenGL/gl4/gl4rendertarget2d.hh>
 #include <ceOpenGL/gl4/gl4texturecube.hh>
 
-#include <ceCore/settings.hh>
+#include <ceCore/csSettings.hh>
 #include <ceCore/graphics/csCamera.hh>
 #include <ceCore/graphics/csProjector.hh>
 #include <ceCore/graphics/iDevice.hh>
@@ -16,10 +16,10 @@
 #include <ceCore/graphics/shading/iShaderAttribute.hh>
 #include <ceCore/graphics/scene/csGfxMesh.hh>
 #include <ceCore/graphics/scene/iGfxScene.hh>
-#include <ceCore/math/clipper/cameraclipper.hh>
-#include <ceCore/math/clipper/multiplaneclipper.hh>
-#include <ceCore/math/clipper/sphereclipper.hh>
-#include <ceCore/resource/assetmanager.hh>
+#include <ceCore/math/clipper/csCameraClipper.hh>
+#include <ceCore/math/clipper/csMultiPlaneClipper.hh>
+#include <ceCore/math/clipper/csSphereClipper.hh>
+#include <ceCore/resource/csAssetManager.hh>
 
 #include <algorithm>
 #include <GL/glew.h>

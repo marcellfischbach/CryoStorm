@@ -6,17 +6,17 @@ import org.crimsonedge.core.CoreObject;
 import java.io.File;
 import java.io.InputStream;
 
-@CeClass("cryo::JavaArchive")
-public class JavaArchive extends CoreObject implements IArchive {
+@CeClass("cryo::csJavaArchive")
+public class csJavaArchive extends CoreObject implements IArchive {
 
     private int priority;
 
     private String rootPath;
 
-    public JavaArchive() {
+    public csJavaArchive() {
     }
 
-    public JavaArchive(long ref) {
+    public csJavaArchive(long ref) {
         super(ref);
     }
 
@@ -49,12 +49,12 @@ public class JavaArchive extends CoreObject implements IArchive {
 
 
         String path = this.rootPath + "/" + locator;
-        InputStream resourceAsStream = JavaArchive.class.getResourceAsStream(path);
+        InputStream resourceAsStream = csJavaArchive.class.getResourceAsStream(path);
         if (resourceAsStream == null) {
             return null;
         }
 
-        JavaFile file = new JavaFile(path, resourceAsStream);
+        csJavaFile file = new csJavaFile(path, resourceAsStream);
         if (!file.open(accessMode, openMode)) {
             return null;
         }

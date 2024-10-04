@@ -82,32 +82,32 @@ public class IShaderAttribute extends CoreObject {
     }
 
 
-    public void bind(Vector2f v) {
+    public void bind(csVector2f v) {
         nBindFloat2(getRef(), v.x, v.y);
     }
 
-    public void bind(Vector3f v) {
+    public void bind(csVector3f v) {
         nBindFloat3(getRef(), v.x, v.y, v.z);
     }
 
-    public void bind(Vector4f v) {
+    public void bind(csVector4f v) {
         nBindFloat4(getRef(), v.x, v.y, v.z, v.w);
     }
 
-    public void bind(Color4f v) {
+    public void bind(csColor4f v) {
         nBindFloat4(getRef(), v.r, v.g, v.b, v.a);
     }
 
     private static final float[] F9 = new float[9];
 
-    public void bind(Matrix3f v) {
+    public void bind(csMatrix3f v) {
         v.toArray(F9);
         nBindMatrix3f(getRef(), F9);
     }
 
     private static final float[] F16 = new float[16];
 
-    public void bind(Matrix4f v) {
+    public void bind(csMatrix4f v) {
         v.toArray(F16);
         nBindMatrix4f(getRef(), F16);
     }

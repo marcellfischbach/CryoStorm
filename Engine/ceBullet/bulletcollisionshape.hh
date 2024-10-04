@@ -2,7 +2,7 @@
 #pragma once
 
 #include <ceBullet/bulletexport.hh>
-#include <ceCore/physics/icollisionshape.hh>
+#include <ceCore/physics/iCollisionShape.hh>
 
 class btCollisionShape;
 

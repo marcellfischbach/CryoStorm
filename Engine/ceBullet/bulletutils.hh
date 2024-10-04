@@ -1,19 +1,19 @@
 #pragma 
 
-#include <ceCore/defs.hh>
-#include <ceCore/math/matrix4f.hh>
+#include <ceCore/csDefs.hh>
+#include <ceCore/math/csMatrix4f.hh>
 #include <LinearMath/btTransform.h>
 
 namespace cryo::bullet
 {
 
 
-CS_FORCEINLINE void btTransformToMatrix4f(const btTransform& tr, Matrix4f& matrix)
+CS_FORCEINLINE void btTransformToMatrix4f(const btTransform& tr, csMatrix4f& matrix)
 {
   tr.getOpenGLMatrix(&matrix.m00);
 }
 
-CS_FORCEINLINE void Matrix4fTobtTransform(const Matrix4f& matrix, btTransform& tr)
+CS_FORCEINLINE void Matrix4fTobtTransform(const csMatrix4f& matrix, btTransform& tr)
 {
   tr.setFromOpenGLMatrix(&matrix.m00);
 

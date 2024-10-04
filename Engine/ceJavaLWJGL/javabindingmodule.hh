@@ -5,7 +5,7 @@
 #pragma once
 
 
-#include <ceCore/imodule.hh>
+#include <ceCore/iModule.hh>
 
 
 namespace cryo::java
@@ -14,8 +14,8 @@ namespace cryo::java
 class JavaBindingModule : public cryo::iModule
 {
 public:
-  bool Register(const std::vector<std::string> &args, Engine *engine);
-  bool Initialize(const std::vector<std::string> &args, Engine *engine);
+  bool Register(const std::vector<std::string> &args, csEngine *engine);
+  bool Initialize(const std::vector<std::string> &args, csEngine *engine);
 
 };
 

@@ -196,7 +196,7 @@ void csStaticMeshState::RemoveMeshFromScene(csWorld *world)
 
 void csStaticMeshState::TransformationUpdatedPreChildren()
 {
-  Matrix4f  mat = GetGlobalMatrix();
+  csMatrix4f mat = GetGlobalMatrix();
   for (auto gfxMesh: m_gfxMeshes)
   {
     gfxMesh->SetModelMatrix(mat);

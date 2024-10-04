@@ -6,16 +6,16 @@ namespace cryo
 
 
 const std::string csSkeleton::ILLEGAL_BONE_NAME;
-const Matrix4f csSkeleton::ILLEGAL_BONE_MATRIX = Matrix4f();
+const csMatrix4f csSkeleton::ILLEGAL_BONE_MATRIX = csMatrix4f();
 
 csSkeleton::Bone csSkeleton::IllegalBone = {
     ILLEGAL_BONE_ID,
     ILLEGAL_BONE_NAME,
     std::vector<size_t>(),
-    Vector3f(),
-    Quaternion(),
-    Quaternion(),
-    Matrix4f()
+    csVector3f(),
+    csQuaternion(),
+    csQuaternion(),
+    csMatrix4f()
 };
 
 csSkeleton::csSkeleton()
@@ -75,10 +75,10 @@ size_t csSkeleton::Add(const std::string &name)
       idx,
       name,
       std::vector<size_t>(),
-      Vector3f(),
-      Quaternion(),
-      Quaternion(),
-      Matrix4f()
+      csVector3f(),
+      csQuaternion(),
+      csQuaternion(),
+      csMatrix4f()
   };
   m_bones.push_back(bone);
   m_skeletonBones.emplace_back();
@@ -105,12 +105,12 @@ size_t csSkeleton::AddChild(const std::string &name, size_t parent)
   return idx;
 }
 
-void csSkeleton::SetBase(const cryo::Matrix4f &base)
+void csSkeleton::SetBase(const cryo::csMatrix4f &base)
 {
   m_base = base;
 }
 
-const Matrix4f &csSkeleton::GetBase() const
+const csMatrix4f &csSkeleton::GetBase() const
 {
   return m_base;
 }
@@ -153,7 +153,7 @@ const csSkeleton::Bone &csSkeleton::GetBone(size_t idx) const
 
 void csSkeleton::UpdateBones()
 {
-  Matrix4f identity;
+  csMatrix4f identity;
   identity.SetIdentity();
   for (const size_t &idx: m_rootBones)
   {
@@ -161,16 +161,16 @@ void csSkeleton::UpdateBones()
   }
 }
 
-void csSkeleton::UpdateBone(size_t idx, const cryo::Matrix4f &parent)
+void csSkeleton::UpdateBone(size_t idx, const cryo::csMatrix4f &parent)
 {
   Bone &bone = m_bones[idx];
 
-  Matrix4f local;
+  csMatrix4f local;
   bone.rotation.ToMatrix4(local);
   local.SetTranslation(bone.offset);
 
 
-  Matrix4f global = parent * local;
+  csMatrix4f global = parent * local;
   bone.globalMatrix = global;
   m_skeletonBones[idx] = global * m_poseMatrices[idx];
 
@@ -180,7 +180,7 @@ void csSkeleton::UpdateBone(size_t idx, const cryo::Matrix4f &parent)
   }
 }
 
-const std::vector<Matrix4f> &csSkeleton::GetSkeletonBones() const
+const std::vector<csMatrix4f> &csSkeleton::GetSkeletonBones() const
 {
   return m_skeletonBones;
 }

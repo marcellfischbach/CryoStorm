@@ -4,11 +4,11 @@
 #include <ceAssimpLoader/assimpconverter.hh>
 #include <ceCore/graphics/iDevice.hh>
 #include <ceCore/graphics/iRenderMesh.hh>
-#include <ceCore/resource/ifile.hh>
+#include <ceCore/resource/iFile.hh>
 #include <ceCore/graphics/csSkeletonMesh.hh>
-#include <ceCore/resource/vfs.hh>
-#include <ceCore/objectregistry.hh>
-#include <ceCore/types.hh>
+#include <ceCore/resource/csVFS.hh>
+#include <ceCore/csObjectRegistry.hh>
+#include <ceCore/csTypes.hh>
 
 #include <assimp/scene.h>
 #include <assimp/Importer.hpp>
@@ -36,7 +36,7 @@ AssimpSkeletonMeshLoader::AssimpSkeletonMeshLoader()
 }
 
 
-bool AssimpSkeletonMeshLoader::CanLoad(const Class *cls, const ResourceLocator &locator) const
+bool AssimpSkeletonMeshLoader::CanLoad(const Class *cls, const csResourceLocator &locator) const
 {
   const std::string &ext = locator.GetExtension();
   return cls == csSkeletonMesh::GetStaticClass()
@@ -44,7 +44,7 @@ bool AssimpSkeletonMeshLoader::CanLoad(const Class *cls, const ResourceLocator &
 }
 
 
-static void debug_node (aiNode *node, const Matrix4f &parent, const std::string &indent)
+static void debug_node(aiNode *node, const csMatrix4f &parent, const std::string &indent)
 {
 
 //  Matrix4f local = ConvertMatrix4x4(node->mTransformation);
@@ -65,9 +65,9 @@ static void debug_node (aiNode *node, const Matrix4f &parent, const std::string 
 //  }
 }
 
-iObject *AssimpSkeletonMeshLoader::Load(const Class *cls, const ResourceLocator &locator) const
+iObject *AssimpSkeletonMeshLoader::Load(const Class *cls, const csResourceLocator &locator) const
 {
-  iFile *file = cryo::VFS::Get()->Open(locator, eAM_Read, eOM_Binary);
+  iFile *file = cryo::csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (!file)
   {
     return nullptr;
@@ -112,7 +112,7 @@ iObject *AssimpSkeletonMeshLoader::Load(const Class *cls, const ResourceLocator 
   }
 
 
-  Matrix4f parentMatrix;
+  csMatrix4f parentMatrix;
   parentMatrix.SetRotationY((float)M_PI);
 
   debug_node(scene->mRootNode, parentMatrix,  "");
@@ -130,11 +130,11 @@ iObject *AssimpSkeletonMeshLoader::Load(const Class *cls, const ResourceLocator 
 }
 
 void AssimpSkeletonMeshLoader::ReadSkeleton(aiNode *node,
-                                            const Matrix4f &parentMatrix,
+                                            const csMatrix4f &parentMatrix,
                                             SkeletonLoaderData &d) const
 {
-  Matrix4f localMatrix  = ConvertMatrix4x4(node->mTransformation);
-  Matrix4f globalMatrix = parentMatrix * localMatrix;
+  csMatrix4f localMatrix  = ConvertMatrix4x4(node->mTransformation);
+  csMatrix4f globalMatrix = parentMatrix * localMatrix;
 
   std::string nodeName = std::string (node->mName.C_Str());
   if (nodeName == "Armature" || nodeName == "Skeleton")
@@ -160,8 +160,8 @@ void AssimpSkeletonMeshLoader::ReadBone(aiNode *node,
                                         size_t  parentBoneID) const
 {
 
-  Matrix4f localMatrix = ConvertMatrix4x4(node->mTransformation);
-  std::string nodeName = std::string (node->mName.C_Str());
+  csMatrix4f  localMatrix = ConvertMatrix4x4(node->mTransformation);
+  std::string nodeName    = std::string (node->mName.C_Str());
 
   size_t boneID;
 
@@ -175,7 +175,7 @@ void AssimpSkeletonMeshLoader::ReadBone(aiNode *node,
     boneID = skeleton.AddChild(nodeName, parentBoneID);
   }
 
-  Quaternion       rotation = Quaternion::FromMatrix(localMatrix);
+  csQuaternion     rotation = csQuaternion::FromMatrix(localMatrix);
   csSkeleton::Bone &bone    = skeleton.GetBone(boneID);
   bone.rotation = rotation;
   bone.poseRotation = rotation;
@@ -188,10 +188,10 @@ void AssimpSkeletonMeshLoader::ReadBone(aiNode *node,
 
 }
 
-void AssimpSkeletonMeshLoader::ReadMesh(aiNode *node, const Matrix4f &parentMatrix, SkeletonLoaderData &d) const
+void AssimpSkeletonMeshLoader::ReadMesh(aiNode *node, const csMatrix4f &parentMatrix, SkeletonLoaderData &d) const
 {
-  Matrix4f localMatrix  = ConvertMatrix4x4(node->mTransformation);
-  Matrix4f globalMatrix = parentMatrix * localMatrix;
+  csMatrix4f localMatrix  = ConvertMatrix4x4(node->mTransformation);
+  csMatrix4f globalMatrix = parentMatrix * localMatrix;
 
 
   for (unsigned i = 0, in = node->mNumMeshes; i < in; ++i)

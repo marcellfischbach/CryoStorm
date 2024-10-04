@@ -1,6 +1,6 @@
 package org.crimsonedge.lwjgl;
 
-import org.crimsonedge.core.Engine;
+import org.crimsonedge.core.csEngine;
 import org.crimsonedge.core.IGame;
 import org.crimsonedge.core.input.EKey;
 import org.crimsonedge.core.input.EMouseButton;
@@ -115,7 +115,7 @@ public class LwjglWindowCanvas extends AWTGLCanvas  {
     @Override
     public void initGL() {
 
-        Engine.instance().initialize(this.args, new LwjglModule(), this.game);
+        csEngine.instance().initialize(this.args, new LwjglModule(), this.game);
     }
 
     @Override
@@ -127,7 +127,7 @@ public class LwjglWindowCanvas extends AWTGLCanvas  {
         window.getMouse().update();
 
 
-        Engine.instance().processFrame();
+        csEngine.instance().processFrame();
 
         swapBuffers();
 

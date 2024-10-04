@@ -1,7 +1,7 @@
 
 #include <ceCore/graphics/csImage.hh>
-#include <ceCore/math/math.hh>
-#include <ceCore/math/vector3f.hh>
+#include "ceCore/math/csMath.hh"
+#include <ceCore/math/csVector3f.hh>
 #include <string.h>
 
 namespace cryo
@@ -338,7 +338,7 @@ void csImage::ColorCorrectionNormalize()
       float  fy = ((float)ptr[1] / 255.0f) * 2.0f - 1.0f;
       float  fz = ((float)ptr[2] / 255.0f) * 2.0f - 1.0f;
 
-      Vector3f v (fx, fy, fz);
+      csVector3f v (fx, fy, fz);
       v.Normalize();
 
       ptr[0] = (uint8_t)((v.x * 0.5f + 0.5f) * 255.0f);

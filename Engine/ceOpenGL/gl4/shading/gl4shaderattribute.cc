@@ -88,52 +88,52 @@ void GL4ShaderAttribute::Bind(int x, int y, int z, int w)
 
 
 
-void GL4ShaderAttribute::Bind(const Vector2f& v) 
+void GL4ShaderAttribute::Bind(const csVector2f& v)
 {
   glUniform2fv(m_absLocation, 1, &v.x);
 }
 
 
 
-void GL4ShaderAttribute::Bind(const Vector3f& v) 
+void GL4ShaderAttribute::Bind(const csVector3f& v)
 {
   glUniform3fv(m_absLocation, 1, &v.x);
 }
 
 
 
-void GL4ShaderAttribute::Bind(const Vector4f& v) 
+void GL4ShaderAttribute::Bind(const csVector4f& v)
 {
   glUniform4fv(m_absLocation, 1, &v.x);
 }
 
 
 
-void GL4ShaderAttribute::Bind(const Color4f& v) 
+void GL4ShaderAttribute::Bind(const csColor4f& v)
 {
   glUniform4fv(m_absLocation, 1, &v.r);
 }
 
 
 
-void GL4ShaderAttribute::Bind(const Matrix3f& v) 
+void GL4ShaderAttribute::Bind(const csMatrix3f& v)
 {
   glUniformMatrix3fv(m_absLocation, 1, false, &v.m00);
 }
 
-void GL4ShaderAttribute::Bind(const Matrix3f* v, Size count)
+void GL4ShaderAttribute::Bind(const csMatrix3f* v, Size count)
 {
   glUniformMatrix3fv(m_absLocation, (GLsizei)count, false, &v->m00);
 }
 
 
 
-void GL4ShaderAttribute::Bind(const Matrix4f& v) 
+void GL4ShaderAttribute::Bind(const csMatrix4f& v)
 {
   glUniformMatrix4fv(m_absLocation, 1, false, &v.m00);
 }
 
-void GL4ShaderAttribute::Bind(const Matrix4f* v, Size count)
+void GL4ShaderAttribute::Bind(const csMatrix4f* v, Size count)
 {
   glUniformMatrix4fv(m_absLocation, (GLsizei)count, false, &v->m00);
 }

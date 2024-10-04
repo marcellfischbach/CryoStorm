@@ -75,38 +75,38 @@ void GL4ShaderAttributeNull::Bind(int x, int y, int z, int w)
 
 
 
-void GL4ShaderAttributeNull::Bind(const Vector2f& v) 
+void GL4ShaderAttributeNull::Bind(const csVector2f& v)
 {
 }
 
 
 
-void GL4ShaderAttributeNull::Bind(const Vector3f& v) 
+void GL4ShaderAttributeNull::Bind(const csVector3f& v)
 {
 }
 
 
 
-void GL4ShaderAttributeNull::Bind(const Vector4f& v) 
+void GL4ShaderAttributeNull::Bind(const csVector4f& v)
 {
 }
 
 
 
-void GL4ShaderAttributeNull::Bind(const Color4f& v) 
+void GL4ShaderAttributeNull::Bind(const csColor4f& v)
 {
 }
 
 
 
-void GL4ShaderAttributeNull::Bind(const Matrix3f& v) 
+void GL4ShaderAttributeNull::Bind(const csMatrix3f& v)
 {
 }
 
 
 
 
-void GL4ShaderAttributeNull::Bind(const Matrix4f& v) 
+void GL4ShaderAttributeNull::Bind(const csMatrix4f& v)
 {
 }
 

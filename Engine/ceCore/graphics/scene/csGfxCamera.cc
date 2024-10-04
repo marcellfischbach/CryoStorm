@@ -75,7 +75,7 @@ eClearColorMode csGfxCamera::GetClearColorMode() const
   return m_clearColorMode;
 }
 
-const Color4f &csGfxCamera::GetClearColor() const
+const csColor4f &csGfxCamera::GetClearColor() const
 {
   return m_clearColor;
 }
@@ -152,7 +152,7 @@ void csGfxCamera::UpdateData(float near, float far, float angle, float angleWidt
 
 void csGfxCamera::UpdateClear(eClearMode mode,
                               eClearColorMode clearColorMode,
-                              const Color4f &color,
+                              const csColor4f &color,
                               iSkyboxRenderer *skybox,
                               float depth)
 {

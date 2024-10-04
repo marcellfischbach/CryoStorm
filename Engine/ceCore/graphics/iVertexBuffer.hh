@@ -1,9 +1,9 @@
 
 #pragma once
 
-#include <ceCore/coreexport.hh>
+#include <ceCore/csCoreExport.hh>
 #include <ceCore/class.hh>
-#include <ceCore/types.hh>
+#include <ceCore/csTypes.hh>
 #include <ceCore/graphics/eBufferUsage.hh>
 
 

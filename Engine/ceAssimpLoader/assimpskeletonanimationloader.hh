@@ -2,7 +2,7 @@
 #pragma once
 
 #include <ceAssimpLoader/assimpexport.hh>
-#include <ceCore/resource/iassetloader.hh>
+#include <ceCore/resource/iAssetLoader.hh>
 
 
 struct aiAnimation;
@@ -24,9 +24,9 @@ public:
   AssimpSkeletonAnimationLoader();
   ~AssimpSkeletonAnimationLoader() override = default;
 
-  virtual bool CanLoad(const Class *cls, const ResourceLocator &locator) const;
+  virtual bool CanLoad(const Class *cls, const csResourceLocator &locator) const;
 
-  virtual iObject *Load(const Class *cls, const ResourceLocator &locator) const;
+  virtual iObject *Load(const Class *cls, const csResourceLocator &locator) const;
 
 private:
 

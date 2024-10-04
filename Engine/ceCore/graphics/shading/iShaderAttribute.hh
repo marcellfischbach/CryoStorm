@@ -2,10 +2,10 @@
 
 #include <string>
 #include <ceCore/class.hh>
-#include <ceCore/types.hh>
-#include <ceCore/math/color4f.hh>
-#include <ceCore/math/vector.hh>
-#include <ceCore/math/matrix.hh>
+#include <ceCore/csTypes.hh>
+#include <ceCore/math/csColor4f.hh>
+#include <ceCore/math/csVector.hh>
+#include <ceCore/math/csMatrix.hh>
 
 namespace cryo
 {
@@ -41,21 +41,21 @@ struct iShaderAttribute
 
 	virtual void Bind(int x, int y, int z, int w) = 0;
 
-	virtual void Bind(const Vector2f& v) = 0;
+	virtual void Bind(const csVector2f& v) = 0;
 
-	virtual void Bind(const Vector3f& v) = 0;
+	virtual void Bind(const csVector3f& v) = 0;
 
-	virtual void Bind(const Vector4f& v) = 0;
+	virtual void Bind(const csVector4f& v) = 0;
 
-	virtual void Bind(const Color4f& v) = 0;
+	virtual void Bind(const csColor4f& v) = 0;
 
-	virtual void Bind(const Matrix3f& v) = 0;
+	virtual void Bind(const csMatrix3f& v) = 0;
 
-	virtual void Bind(const Matrix3f* v, Size count) = 0;
+	virtual void Bind(const csMatrix3f* v, Size count) = 0;
 
-	virtual void Bind(const Matrix4f& v) = 0;
+	virtual void Bind(const csMatrix4f& v) = 0;
 
-	virtual void Bind(const Matrix4f* v, Size count) = 0;
+	virtual void Bind(const csMatrix4f* v, Size count) = 0;
 };
 
 

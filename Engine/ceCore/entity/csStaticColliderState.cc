@@ -2,10 +2,10 @@
 #include <ceCore/entity/csStaticColliderState.hh>
 #include <ceCore/entity/csCollisionState.hh>
 #include <ceCore/entity/csWorld.hh>
-#include <ceCore/physics/iphysicssystem.hh>
-#include <ceCore/physics/iphysicsworld.hh>
-#include <ceCore/physics/icollider.hh>
-#include <ceCore/objectregistry.hh>
+#include <ceCore/physics/iPhysicsSystem.hh>
+#include <ceCore/physics/iPhysicsWorld.hh>
+#include <ceCore/physics/iCollider.hh>
+#include <ceCore/csObjectRegistry.hh>
 
 namespace cryo
 {
@@ -28,7 +28,7 @@ csStaticColliderState::~csStaticColliderState()
 
 void csStaticColliderState::OnAttachedToWorld(csWorld *world)
 {
-  auto physSystem = ObjectRegistry::Get<iPhysicsSystem>();
+  auto physSystem = csObjectRegistry::Get<iPhysicsSystem>();
   if (!physSystem)
   {
     return;

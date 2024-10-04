@@ -1,14 +1,14 @@
 
 #pragma once
 
-#include <ceCore/coreexport.hh>
+#include <ceCore/csCoreExport.hh>
 #include <ceCore/class.hh>
-#include <ceCore/types.hh>
+#include <ceCore/csTypes.hh>
 #include <ceCore/graphics/eCompareFunc.hh>
 #include <ceCore/graphics/eFilterMode.hh>
 #include <ceCore/graphics/eTextureAddressMode.hh>
 #include <ceCore/graphics/eTextureCompareMode.hh>
-#include <ceCore/math/color4f.hh>
+#include <ceCore/math/csColor4f.hh>
 
 namespace cryo
 {
@@ -40,8 +40,8 @@ struct CS_CORE_API iSampler : public CS_SUPER(iObject)
   virtual void SetAddressW(eTextureAddressMode mode) = 0;
   virtual eTextureAddressMode GetAddressW() const = 0;
 
-  virtual void SetBorderColor(const Color4f& borderColo) = 0;
-  virtual const Color4f& GetBorderColor() const = 0;
+  virtual void SetBorderColor(const csColor4f& borderColo) = 0;
+  virtual const csColor4f& GetBorderColor() const = 0;
 
 
   virtual void SetTextureCompareMode(eTextureCompareMode compareMode) = 0;

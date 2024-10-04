@@ -2,24 +2,24 @@
 #include <ceBullet/bulletmodule.hh>
 #include <ceBullet/bulletsystem.hh>
 #include <master.refl.cc>
-#include <ceCore/objectregistry.hh>
+#include <ceCore/csObjectRegistry.hh>
 
 
 
 namespace cryo::bullet
 {
 
-bool BulletModule::Register(const std::vector<std::string> &args, Engine *engine)
+bool BulletModule::Register(const std::vector<std::string> &args, csEngine *engine)
 {
   register_classes();
 
 
-  ObjectRegistry::Register<iPhysicsSystem>(new BulletSystem());
+  csObjectRegistry::Register<iPhysicsSystem>(new BulletSystem());
 
   return true;
 }
 
-bool BulletModule::Initialize(const std::vector<std::string> &args, Engine *engine)
+bool BulletModule::Initialize(const std::vector<std::string> &args, csEngine *engine)
 {
   return true;
 }

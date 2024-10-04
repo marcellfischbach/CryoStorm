@@ -1,11 +1,11 @@
 
 #pragma once
 
-#include <ceCore/coreexport.hh>
+#include <ceCore/csCoreExport.hh>
 #include <ceCore/class.hh>
 #include <ceCore/graphics/iRenderMesh.hh>
 #include <ceCore/graphics/material/iMaterial.hh>
-#include <ceCore/types.hh>
+#include <ceCore/csTypes.hh>
 
 
 #include <string>
@@ -71,7 +71,7 @@ public:
     std::string m_name;
   };
 
-  const BoundingBox& GetBoundingBox() const;
+  const csBoundingBox& GetBoundingBox() const;
 
   Size AddMaterialSlot(const std::string& name, iMaterial* defaultMaterial = nullptr);
   void SetDefaultMaterial(Size idx, iMaterial* defaultMaterial);
@@ -87,7 +87,7 @@ public:
 
 
 private:
-  BoundingBox m_boundingBox;
+  csBoundingBox             m_boundingBox;
   std::vector<MaterialSlot> m_materialSlots;
   std::vector<SubMesh> m_subMeshes;
 

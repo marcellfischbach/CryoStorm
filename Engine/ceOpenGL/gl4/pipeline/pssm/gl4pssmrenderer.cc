@@ -6,8 +6,8 @@
 #include <ceOpenGL/gl4/gl4rendertarget2d.hh>
 #include <ceOpenGL/gl4/gl4rendertarget2darray.hh>
 #include <ceOpenGL/gl4/gl4texture2darray.hh>
-#include <ceCore/settings.hh>
-#include <ceCore/resource/assetmanager.hh>
+#include <ceCore/csSettings.hh>
+#include <ceCore/resource/csAssetManager.hh>
 #include <ceCore/graphics/csCamera.hh>
 #include <ceCore/graphics/iSampler.hh>
 #include <ceCore/graphics/csProjector.hh>
@@ -15,10 +15,10 @@
 #include <ceCore/graphics/shading/iShaderAttribute.hh>
 #include <ceCore/graphics/scene/iGfxScene.hh>
 #include <ceCore/graphics/scene/csGfxMesh.hh>
-#include <ceCore/math/clipper/cameraclipper.hh>
+#include <ceCore/math/clipper/csCameraClipper.hh>
 
 #include <algorithm>
-#include <ceCore/time.hh>
+#include <ceCore/csTime.hh>
 
 namespace cryo::opengl
 {
@@ -33,10 +33,10 @@ GL4PSSMRenderer::GL4PSSMRenderer()
 
 void GL4PSSMRenderer::Initialize()
 {
-  const SettingsFile &settings = Settings::Get().Graphics();
+  const csSettingsFile &settings = csSettings::Get().Graphics();
   m_shadowNear = settings.GetFloat("directional_light.shadow_map.near", 1.0f);
   m_shadowFar  = settings.GetFloat("directional_light.shadow_map.far", 1.0f);
-  Vector4f splits = settings.GetVector4f("directional_light.shadow_map.cascades", Vector4f(0.0f, 1.0f, 1.0f, 1.0f));
+  csVector4f splits = settings.GetVector4f("directional_light.shadow_map.cascades", csVector4f(0.0f, 1.0f, 1.0f, 1.0f));
 
   m_splits[0] = m_shadowNear + (m_shadowFar - m_shadowNear) * splits.x;
   m_splits[1] = m_shadowNear + (m_shadowFar - m_shadowNear) * splits.y;
@@ -59,19 +59,19 @@ void GL4PSSMRenderer::Initialize()
     m_shadowSamplingMode = ShadowSamplingMode::VSM;
   }
 
-  Vector2f distance       = settings.GetVector2f("directional_light.shadow_map.filter.distance", Vector2f(1, 25));
-  float    radiusPerCent  = settings.GetFloat("directional_light.shadow_map.filter.radius", 1.0f);
+  csVector2f distance      = settings.GetVector2f("directional_light.shadow_map.filter.distance", csVector2f(1, 25));
+  float      radiusPerCent = settings.GetFloat("directional_light.shadow_map.filter.radius", 1.0f);
   float    samplesFactor  = settings.GetFloat("directional_light.shadow_map.filter.samplesFactor", 1.0f);
   float    sampleDistance = settings.GetFloat("directional_light.shadow_map.filter.sampleDistance", 0.1f);
 
-  m_shadowMapFilter.Initialize(Vector2f(distance.x, distance.y - distance.x),
+  m_shadowMapFilter.Initialize(csVector2f(distance.x, distance.y - distance.x),
                                radiusPerCent / 100.0f,
                                samplesFactor,
                                sampleDistance);
 
 
-  m_shadowMappingShader = AssetManager::Get()->Get<iShader>(
-      ResourceLocator("file://${engine}/opengl/gl4/pssm/directional_light_shadow_map.shader"));
+  m_shadowMappingShader = csAssetManager::Get()->Get<iShader>(
+      csResourceLocator("file://${engine}/opengl/gl4/pssm/directional_light_shadow_map.shader"));
   if (m_shadowMappingShader)
   {
     m_attrLayersDepth   = m_shadowMappingShader->GetShaderAttribute("LayersDepth");
@@ -147,12 +147,12 @@ void GL4PSSMRenderer::RenderShadow(const GL4DirectionalLight *directionalLight,
 }
 
 static void calc_projection_matrix(GL4Device *device,
-                                   Vector3f near[4],
-                                   Vector3f far[4],
+                                   csVector3f near[4],
+                                   csVector3f far[4],
                                    float n,
                                    float f,
-                                   const Matrix4f &cameraMatrix,
-                                   Matrix4f &projectionMatrix)
+                                   const csMatrix4f &cameraMatrix,
+                                   csMatrix4f &projectionMatrix)
 {
 
   float       l = FLT_MAX;
@@ -161,12 +161,12 @@ static void calc_projection_matrix(GL4Device *device,
   float       t = -FLT_MAX;
   for (size_t i = 0; i < 4; i++)
   {
-    Vector3f v = Matrix4f::Transform(cameraMatrix, near[i]);
+    csVector3f v = csMatrix4f::Transform(cameraMatrix, near[i]);
     l = ::fminf(v.x, l);
     r = ::fmaxf(v.x, r);
     b = ::fminf(v.y, b);
     t = ::fmaxf(v.y, t);
-    v = Matrix4f::Transform(cameraMatrix, far[i]);
+    v = csMatrix4f::Transform(cameraMatrix, far[i]);
     l = ::fminf(v.x, l);
     r = ::fmaxf(v.x, r);
     b = ::fminf(v.y, b);
@@ -178,12 +178,12 @@ static void calc_projection_matrix(GL4Device *device,
 
 
 static void calc_projection_matrix_inv(GL4Device *device,
-                                       Vector3f near[4],
-                                       Vector3f far[4],
+                                       csVector3f near[4],
+                                       csVector3f far[4],
                                        float n,
                                        float f,
-                                       const Matrix4f &cameraMatrix,
-                                       Matrix4f &projectionMatrix)
+                                       const csMatrix4f &cameraMatrix,
+                                       csMatrix4f &projectionMatrix)
 {
 
   float       l = FLT_MAX;
@@ -192,12 +192,12 @@ static void calc_projection_matrix_inv(GL4Device *device,
   float       t = -FLT_MAX;
   for (size_t i = 0; i < 4; i++)
   {
-    Vector2f v = Matrix4f::TransformXY(cameraMatrix, near[i]);
+    csVector2f v = csMatrix4f::TransformXY(cameraMatrix, near[i]);
     l = ::fminf(v.x, l);
     r = ::fmaxf(v.x, r);
     b = ::fminf(v.y, b);
     t = ::fmaxf(v.y, t);
-    v = Matrix4f::TransformXY(cameraMatrix, far[i]);
+    v = csMatrix4f::TransformXY(cameraMatrix, far[i]);
     l = ::fminf(v.x, l);
     r = ::fmaxf(v.x, r);
     b = ::fminf(v.y, b);
@@ -208,9 +208,9 @@ static void calc_projection_matrix_inv(GL4Device *device,
 }
 
 
-static void calc_center_position(Vector3f near[4], Vector3f far[4], Vector3f &outPos)
+static void calc_center_position(csVector3f near[4], csVector3f far[4], csVector3f &outPos)
 {
-  outPos        = Vector3f(0.0f, 0.0f, 0.0f);
+  outPos        = csVector3f(0.0f, 0.0f, 0.0f);
   for (size_t i = 0; i < 4; i++)
   {
     outPos += near[i];
@@ -225,25 +225,25 @@ void GL4PSSMRenderer::RenderShadowBuffer(const GL4DirectionalLight *directionalL
                                          const cryo::csProjector &projector)
 {
 
-  Vector3f splitPoints[5][4];
+  csVector3f splitPoints[5][4];
   projector.GetPoints(m_shadowNear, splitPoints[0]);
   projector.GetPoints(m_splits[0], splitPoints[1]);
   projector.GetPoints(m_splits[1], splitPoints[2]);
   projector.GetPoints(m_splits[2], splitPoints[3]);
   projector.GetPoints(m_splits[3], splitPoints[4]);
 
-  const Matrix4f &camMatInv = camera.GetViewMatrixInv();
+  const csMatrix4f &camMatInv = camera.GetViewMatrixInv();
 
-  Matrix4f shadowMapView[4];
-  Matrix4f shadowMapProjection[4];
+  csMatrix4f shadowMapView[4];
+  csMatrix4f shadowMapProjection[4];
 
   for (size_t i = 0; i < 4; i++)
   {
-    splitPoints[0][i] = Matrix4f::Transform(camMatInv, splitPoints[0][i]);
-    splitPoints[1][i] = Matrix4f::Transform(camMatInv, splitPoints[1][i]);
-    splitPoints[2][i] = Matrix4f::Transform(camMatInv, splitPoints[2][i]);
-    splitPoints[3][i] = Matrix4f::Transform(camMatInv, splitPoints[3][i]);
-    splitPoints[4][i] = Matrix4f::Transform(camMatInv, splitPoints[4][i]);
+    splitPoints[0][i] = csMatrix4f::Transform(camMatInv, splitPoints[0][i]);
+    splitPoints[1][i] = csMatrix4f::Transform(camMatInv, splitPoints[1][i]);
+    splitPoints[2][i] = csMatrix4f::Transform(camMatInv, splitPoints[2][i]);
+    splitPoints[3][i] = csMatrix4f::Transform(camMatInv, splitPoints[3][i]);
+    splitPoints[4][i] = csMatrix4f::Transform(camMatInv, splitPoints[4][i]);
   }
 
   size_t      maxShadowCaster = 0;
@@ -251,18 +251,18 @@ void GL4PSSMRenderer::RenderShadowBuffer(const GL4DirectionalLight *directionalL
   {
 
 
-    Vector3f centerPosition;
-    Matrix4f view, viewInv, proj, projInv;
+    csVector3f centerPosition;
+    csMatrix4f view, viewInv, proj, projInv;
 
     calc_center_position(splitPoints[i], splitPoints[i + 1], centerPosition);
 
-    view.SetLookAt(centerPosition, centerPosition + directionalLight->GetDirection(), Vector3f(0, 1, 0));
-    viewInv.SetLookAtInv(centerPosition, centerPosition + directionalLight->GetDirection(), Vector3f(0, 1, 0));
+    view.SetLookAt(centerPosition, centerPosition + directionalLight->GetDirection(), csVector3f(0, 1, 0));
+    viewInv.SetLookAtInv(centerPosition, centerPosition + directionalLight->GetDirection(), csVector3f(0, 1, 0));
 
 
-    Vector3f xAxis            = viewInv.GetXAxis().Normalize();
-    Vector3f yAxis            = viewInv.GetYAxis().Normalize();
-    float    sizeSplit        = GetSplitSize(splitPoints[i], splitPoints[i + 1]) / 2.0f;
+    csVector3f xAxis     = viewInv.GetXAxis().Normalize();
+    csVector3f yAxis     = viewInv.GetYAxis().Normalize();
+    float      sizeSplit = GetSplitSize(splitPoints[i], splitPoints[i + 1]) / 2.0f;
     auto     shadowBufferSize = static_cast<float>(m_directionalLightShadowBufferSize);
     float    modV             = sizeSplit * 2.0f / shadowBufferSize;
     float    onAxisX          = xAxis.Dot(centerPosition);
@@ -274,7 +274,7 @@ void GL4PSSMRenderer::RenderShadowBuffer(const GL4DirectionalLight *directionalL
     calc_projection_matrix_inv(m_device, splitPoints[i], splitPoints[i + 1], -1.0f, 1.0f, view, projInv);
 
 
-    CameraClipper clipper(viewInv, projInv, false, false);
+    csCameraClipper clipper(viewInv, projInv, false, false);
 
 
     float near = FLT_MAX;
@@ -287,11 +287,11 @@ void GL4PSSMRenderer::RenderShadowBuffer(const GL4DirectionalLight *directionalL
     {
       if (mesh->IsCastShadow())
       {
-        const Vector3f *bboxPoints = mesh->GetBoundingBox().GetPoints();
+        const csVector3f *bboxPoints = mesh->GetBoundingBox().GetPoints();
         for (unsigned  j           = 0; j < 8; j++)
         {
-          Vector3f point = bboxPoints[j];
-          float    v     = Matrix4f::TransformZ(view, point);
+          csVector3f point = bboxPoints[j];
+          float      v     = csMatrix4f::TransformZ(view, point);
 
           near = ::fminf(near, v);
           far  = ::fmaxf(far, v);
@@ -323,14 +323,14 @@ void GL4PSSMRenderer::RenderShadowBuffer(const GL4DirectionalLight *directionalL
     m_device->SetDepthTest(true);
     m_device->SetBlending(false);
     m_device->SetColorWrite(false, false, false, false);
-    m_device->Clear(false, Color4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, false, 0);
+    m_device->Clear(false, csColor4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, false, 0);
 
     m_device->SetProjectionMatrix(proj);
     m_device->SetViewMatrix(view);
 
 //    std::sort(m_meshesCache.begin(), m_meshesCache.end(), material_shader_compare_less_forward);
 
-    uint64_t        startTime = Time::GetTime();
+    uint64_t        startTime = csTime::GetTime();
 //    printf (" [%d @ (%.2f %.2f)]", m_meshesCache.size(), near, far);
     size_t          c         = 0;
     for (const auto &mesh: meshes)
@@ -366,7 +366,7 @@ void GL4PSSMRenderer::RenderShadowMap(const GL4DirectionalLight *directionalLigh
   m_device->SetDepthTest(false);
   m_device->SetBlending(false);
   m_device->SetColorWrite(true, true, true, true);
-  m_device->Clear(true, Color4f(0.0, 0.0f, 0.0f, 0.0f), true, 1.0f, true, 0);
+  m_device->Clear(true, csColor4f(0.0, 0.0f, 0.0f, 0.0f), true, 1.0f, true, 0);
 
   m_device->SetShader(m_shadowMappingShader);
   m_device->ResetTextures();
@@ -375,7 +375,7 @@ void GL4PSSMRenderer::RenderShadowMap(const GL4DirectionalLight *directionalLigh
 
   if (m_attrLayersDepth)
   {
-    m_attrLayersDepth->Bind(Vector4f(m_splits[0], m_splits[1], m_splits[2], m_splits[3]));
+    m_attrLayersDepth->Bind(csVector4f(m_splits[0], m_splits[1], m_splits[2], m_splits[3]));
   }
   if (m_attrLayersBias)
   {
@@ -533,7 +533,7 @@ GL4RenderTarget2D *GL4PSSMRenderer::CreateDirectionalLightShadowMap()
 }
 
 
-float GL4PSSMRenderer::GetSplitSize(const Vector3f *near, const Vector3f *far)
+float GL4PSSMRenderer::GetSplitSize(const csVector3f *near, const csVector3f *far)
 {
   /*
   *     1         3
@@ -665,7 +665,7 @@ GL4PSSMShadowBufferObject &GL4PSSMShadowBufferObject::operator=(const GL4PSSMSha
   return *this;
 }
 
-const std::array<Matrix4f, 4> &GL4PSSMRenderer::GetMatrices() const
+const std::array<csMatrix4f, 4> &GL4PSSMRenderer::GetMatrices() const
 {
   return m_shadowMatrices;
 }

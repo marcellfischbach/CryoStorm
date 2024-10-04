@@ -1,7 +1,7 @@
 
 
 #include <ceCore/graphics/csMesh.hh>
-#include <ceCore/outofboundsexception.hh>
+#include <ceCore/csOutOfBoundsException.hh>
 
 namespace cryo
 {
@@ -16,7 +16,7 @@ csMesh::~csMesh()
 
 }
 
-const BoundingBox & csMesh::GetBoundingBox() const
+const csBoundingBox & csMesh::GetBoundingBox() const
 {
   return m_boundingBox;
 }
@@ -40,7 +40,7 @@ void csMesh::SetDefaultMaterial(Size idx, iMaterial* defaultMaterial)
 {
   if (idx >= m_materialSlots.size())
   {
-    throw OutOfBoundsException();
+    throw csOutOfBoundsException();
   }
   CS_SET(m_materialSlots[idx].m_defaultMaterial, defaultMaterial);
 }
@@ -63,7 +63,7 @@ const csMesh::SubMesh &csMesh::GetSubMesh(Size idx) const
 {
   if (idx >= m_subMeshes.size())
   {
-    throw OutOfBoundsException();
+    throw csOutOfBoundsException();
   }
   return m_subMeshes[idx];
 }
@@ -77,7 +77,7 @@ const csMesh::MaterialSlot& csMesh::GetMaterialSlot(Size idx) const
 {
   if (idx >= m_materialSlots.size())
   {
-    throw OutOfBoundsException();
+    throw csOutOfBoundsException();
   }
 
   return m_materialSlots[idx];

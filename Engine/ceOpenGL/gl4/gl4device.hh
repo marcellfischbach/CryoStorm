@@ -29,7 +29,7 @@ public:
 
   void SetViewport(int16_t x, int16_t y, uint16_t width, uint16_t height) override;
   void Clear(bool clearColor,
-             const Color4f &color,
+             const csColor4f &color,
              bool clearDepth,
              float depth,
              bool clearStencil,
@@ -47,28 +47,28 @@ public:
                       eBlendFactor dstFactorColor,
                       eBlendFactor dstFactorAlpha) override;
 
-  void SetModelMatrix(const Matrix4f &modelMatrix) override;
-  void SetViewMatrix(const Matrix4f &viewMatrix) override;
-  void SetProjectionMatrix(const Matrix4f &projectionwMatrix) override;
+  void SetModelMatrix(const csMatrix4f &modelMatrix) override;
+  void SetViewMatrix(const csMatrix4f &viewMatrix) override;
+  void SetProjectionMatrix(const csMatrix4f &projectionwMatrix) override;
 
-  void SetModelMatrix(const Matrix4f &modelMatrix, const Matrix4f &modelMatrixInv) override;
-  void SetViewMatrix(const Matrix4f &viewMatrix, const Matrix4f &viewMatrixInv) override;
-  void SetProjectionMatrix(const Matrix4f &projectionwMatrix, const Matrix4f &projectionMatrixInv) override;
+  void SetModelMatrix(const csMatrix4f &modelMatrix, const csMatrix4f &modelMatrixInv) override;
+  void SetViewMatrix(const csMatrix4f &viewMatrix, const csMatrix4f &viewMatrixInv) override;
+  void SetProjectionMatrix(const csMatrix4f &projectionwMatrix, const csMatrix4f &projectionMatrixInv) override;
 
-  void SetShadowMapViewMatrices(const Matrix4f *viewMatrices, Size numMatrices) override;
-  void SetShadowMapProjectionMatrices(const Matrix4f *projectionMatrices, Size numMatrices) override;
+  void SetShadowMapViewMatrices(const csMatrix4f *viewMatrices, Size numMatrices) override;
+  void SetShadowMapProjectionMatrices(const csMatrix4f *projectionMatrices, Size numMatrices) override;
 
-  void SetSkeletonMatrices(const Matrix4f *skeletonMatrices, Size numMatrices) override;
+  void SetSkeletonMatrices(const csMatrix4f *skeletonMatrices, Size numMatrices) override;
 
-  const Matrix4f &GetViewMatrix() const override;
-  const Matrix4f &GetViewMatrixInv() const override;
-  const Matrix4f &GetProjectionMatrix() const override;
-  const Matrix4f &GetProjectionMatrixInv() const override;
+  const csMatrix4f &GetViewMatrix() const override;
+  const csMatrix4f &GetViewMatrixInv() const override;
+  const csMatrix4f &GetProjectionMatrix() const override;
+  const csMatrix4f &GetProjectionMatrixInv() const override;
 
-  Matrix4f &GetPerspectiveProjection(float l, float r, float b, float t, float n, float f, Matrix4f &m) override;
-  Matrix4f &GetPerspectiveProjectionInv(float l, float r, float b, float t, float n, float f, Matrix4f &m) override;
-  Matrix4f &GetOrthographicProjection(float l, float r, float b, float t, float n, float f, Matrix4f &m) override;
-  Matrix4f &GetOrthographicProjectionInv(float l, float r, float b, float t, float n, float f, Matrix4f &m) override;
+  csMatrix4f &GetPerspectiveProjection(float l, float r, float b, float t, float n, float f, csMatrix4f &m) override;
+  csMatrix4f &GetPerspectiveProjectionInv(float l, float r, float b, float t, float n, float f, csMatrix4f &m) override;
+  csMatrix4f &GetOrthographicProjection(float l, float r, float b, float t, float n, float f, csMatrix4f &m) override;
+  csMatrix4f &GetOrthographicProjectionInv(float l, float r, float b, float t, float n, float f, csMatrix4f &m) override;
 
 
   void SetRenderLayer(int8_t renderLayer) override;
@@ -95,7 +95,7 @@ public:
                                  iTexture2DArray *shadowBuffersDepth,
                                  iTexture2DArray *shadowBuffersColor,
                                  const std::array<float, 4> &layers,
-                                 const std::array<Matrix4f, 4> &matrices) override;
+                                 const std::array<csMatrix4f, 4> &matrices) override;
 //  void SetLightShadowMap(iLight *light, iTexture2D *shadowMap);
 
   iSampler *CreateSampler() override;
@@ -122,8 +122,8 @@ public:
   void RenderFullscreen(iTexture2DArray *texture, int layer) override;
   void RenderFullscreen(iTextureCube *texture,
                         eCubeFace face,
-                        const Vector2f &scale,
-                        const Vector2f &translation) override;
+                        const csVector2f &scale,
+                        const csVector2f &translation) override;
 
 
   void BindForwardLight(const iLight *light, Size idx);
@@ -191,22 +191,22 @@ private:
   eBlendFactor m_dstFactorAlpha;
 
 
-  Matrix4f m_modelMatrix;
-  Matrix4f m_viewMatrix;
-  Matrix4f m_projectionMatrix;
+  csMatrix4f m_modelMatrix;
+  csMatrix4f m_viewMatrix;
+  csMatrix4f m_projectionMatrix;
 
 
-  Matrix4f m_modelViewMatrix;
-  Matrix4f m_viewProjectionMatrix;
-  Matrix4f m_modelViewProjectionMatrix;
+  csMatrix4f m_modelViewMatrix;
+  csMatrix4f m_viewProjectionMatrix;
+  csMatrix4f m_modelViewProjectionMatrix;
 
-  Matrix4f m_modelMatrixInv;
-  Matrix4f m_viewMatrixInv;
-  Matrix4f m_projectionMatrixInv;
+  csMatrix4f m_modelMatrixInv;
+  csMatrix4f m_viewMatrixInv;
+  csMatrix4f m_projectionMatrixInv;
 
-  Matrix4f m_modelViewMatrixInv;
-  Matrix4f m_viewProjectionMatrixInv;
-  Matrix4f m_modelViewProjectionMatrixInv;
+  csMatrix4f m_modelViewMatrixInv;
+  csMatrix4f m_viewProjectionMatrixInv;
+  csMatrix4f m_modelViewProjectionMatrixInv;
 
   bool m_modelViewMatrixDirty;
   bool m_viewProjectionMatrixDirty;
@@ -220,14 +220,14 @@ private:
   bool m_viewProjectionMatrixInvDirty;
   bool m_modelViewProjectionMatrixInvDirty;
 
-  Size     m_shadowMapMatrixCount;
-  Matrix4f m_shadowMapViewMatrices[6];
-  Matrix4f m_shadowMapProjectionMatrices[6];
-  Matrix4f m_shadowMapViewProjectionMatrices[6];
-  bool     m_shadowMapViewProjectionMatrixDirty;
+  Size       m_shadowMapMatrixCount;
+  csMatrix4f m_shadowMapViewMatrices[6];
+  csMatrix4f m_shadowMapProjectionMatrices[6];
+  csMatrix4f m_shadowMapViewProjectionMatrices[6];
+  bool       m_shadowMapViewProjectionMatrixDirty;
 
-  Size     m_skeletonMatrixCount;
-  Matrix4f m_skeletonMatrices[256];
+  Size       m_skeletonMatrixCount;
+  csMatrix4f m_skeletonMatrices[256];
 
   float    m_clearColorR;
   float    m_clearColorG;

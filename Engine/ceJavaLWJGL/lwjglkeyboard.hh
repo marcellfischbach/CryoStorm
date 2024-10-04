@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <ceCore/input/ikeyboard.hh>
+#include <ceCore/input/iKeyboard.hh>
 
 
 namespace cryo::java
@@ -19,11 +19,11 @@ public:
   jobject GetJObject ();
 
 
-  bool IsKeyDown(Key key) const override;
-  bool IsKeyUp(Key key) const override;
+  bool IsKeyDown(eKey key) const override;
+  bool IsKeyUp(eKey key) const override;
 
-  bool IsKeyPressed(Key key) const override;
-  bool IsKeyReleased(Key key) const override;
+  bool IsKeyPressed(eKey key) const override;
+  bool IsKeyReleased(eKey key) const override;
 
 
 private:

@@ -21,12 +21,12 @@ public interface IMaterial extends ICoreObject {
      default void debug (int idx) {}
 
      void set(int idx, float value) ;
-     void set(int idx, Vector2f v) ;
-     void set(int idx, Vector3f v) ;
-     void set(int idx, Vector4f v) ;
-     void set(int idx, Color4f v) ;
+     void set(int idx, csVector2f v) ;
+     void set(int idx, csVector3f v) ;
+     void set(int idx, csVector4f v) ;
+     void set(int idx, csColor4f v) ;
      void set(int idx, int value) ;
-     void set(int idx, Matrix3f m) ;
-     void set(int idx, Matrix4f m) ;
+     void set(int idx, csMatrix3f m) ;
+     void set(int idx, csMatrix4f m) ;
      void set(int idx, ITexture texture) ;
 }

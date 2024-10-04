@@ -1,9 +1,9 @@
 
 
 #include <ceCore/entity/csCameraState.hh>
-#include <ceCore/math/matrix4f.hh>
-#include <ceCore/math/vector3f.hh>
-#include <ceCore/math/vector4f.hh>
+#include <ceCore/math/csMatrix4f.hh>
+#include <ceCore/math/csVector3f.hh>
+#include <ceCore/math/csVector4f.hh>
 #include <math.h>
 #include <ceCore/graphics/iRenderTarget2D.hh>
 #include <ceCore/graphics/iSkyboxRenderer.hh>
@@ -149,13 +149,13 @@ eClearColorMode csCameraState::GetClearColorMode() const
 }
 
 
-void csCameraState::SetClearColor(const Color4f &clearColor)
+void csCameraState::SetClearColor(const csColor4f &clearColor)
 {
   m_clearColor = clearColor;
   UpdateGfxCamera();
 }
 
-const Color4f &csCameraState::GetClearColor() const
+const csColor4f &csCameraState::GetClearColor() const
 {
   return m_clearColor;
 }
@@ -218,11 +218,11 @@ void csCameraState::OnDetachedFromWorld(csWorld *world)
 
 void csCameraState::TransformationUpdatedPreChildren()
 {
-  const Matrix4f &m = GetGlobalMatrix();
+  const csMatrix4f &m = GetGlobalMatrix();
 
-  Vector3f eye(m * Vector4f(0.0, 0.0, 0.0, 1.0f));
-  Vector3f dir(m * Vector4f(0.0, 0.0, 1.0, 0.0f));
-  Vector3f up(m * Vector4f(0.0, 1.0, 0.0, 0.0f));
+  csVector3f eye(m * csVector4f(0.0, 0.0, 0.0, 1.0f));
+  csVector3f dir(m * csVector4f(0.0, 0.0, 1.0, 0.0f));
+  csVector3f up(m * csVector4f(0.0, 1.0, 0.0, 0.0f));
 
   m_camera.SetEye(eye);
   m_camera.SetSpot(eye + dir);

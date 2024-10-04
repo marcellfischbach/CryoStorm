@@ -2,7 +2,7 @@
 #pragma once
 
 #include <cstdint>
-#include <ceCore/defs.hh>
+#include <ceCore/csDefs.hh>
 
 #ifdef CS_JAVA
 
@@ -47,7 +47,7 @@
       {                     \
         if (m_jobject)        \
         {                     \
-          cryo::Java::Get()->DeleteGlobalRef(m_jobject);          \
+          cryo::csJava::Get()->DeleteGlobalRef(m_jobject);          \
           m_jobject = nullptr; \
         }                   \
         delete this;\
@@ -85,16 +85,16 @@ public:                                \
     {                       \
       if (!m_jobject && !m_jobjectChecked)       \
       {                                \
-          static jclass cls = cryo::Java::Get() ? cryo::Java::Get()->FindClass (fqcn) : nullptr; \
+          static jclass cls = cryo::csJava::Get() ? cryo::csJava::Get()->FindClass (fqcn) : nullptr; \
           if (cls) \
           { \
-            static jmethodID ctor = cryo::Java::Get()->GetMethodID(cls, "<init>", "(J)V"); \
+            static jmethodID ctor = cryo::csJava::Get()->GetMethodID(cls, "<init>", "(J)V"); \
             if (ctor) \
             { \
-              jobject obj = cryo::Java::Get()->NewObject(cls, ctor, reinterpret_cast<jlong>(this)); \
+              jobject obj = cryo::csJava::Get()->NewObject(cls, ctor, reinterpret_cast<jlong>(this)); \
               if (obj) \
               { \
-                m_jobject = cryo::Java::Get()->NewGlobalRef(obj);                              \
+                m_jobject = cryo::csJava::Get()->NewGlobalRef(obj);                              \
                 if (!m_jobject)        \
                 {                      \
                   return nullptr;\
@@ -149,7 +149,7 @@ public:                                \
 #include <string>
 #include <vector>
 #include <stdarg.h>
-#include <ceCore/coreexport.hh>
+#include <ceCore/csCoreExport.hh>
 #include <exception>
 
 namespace cryo
@@ -625,7 +625,7 @@ bool iObject::IsInstanceOf() const
 
 }
 
-#include <ceCore/java.hh>
+#include <ceCore/csJava.hh>
 
 namespace cryo
 {

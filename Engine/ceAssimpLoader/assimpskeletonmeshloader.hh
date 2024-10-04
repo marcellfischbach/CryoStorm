@@ -2,8 +2,8 @@
 #pragma once
 
 #include <ceAssimpLoader/assimpexport.hh>
-#include <ceCore/resource/iassetloader.hh>
-#include <ceCore/math/matrix4f.hh>
+#include <ceCore/resource/iAssetLoader.hh>
+#include <ceCore/math/csMatrix4f.hh>
 
 struct aiMesh;
 struct aiNode;
@@ -21,14 +21,14 @@ public:
   AssimpSkeletonMeshLoader();
   virtual ~AssimpSkeletonMeshLoader() { }
 
-  virtual bool CanLoad(const Class * cls, const ResourceLocator & locator) const;
+  virtual bool CanLoad(const Class * cls, const csResourceLocator & locator) const;
 
-  virtual iObject* Load(const Class * cls, const ResourceLocator & locator) const;
+  virtual iObject* Load(const Class * cls, const csResourceLocator & locator) const;
 
 private:
-  void ReadSkeleton(aiNode* node, const Matrix4f &parentMatrix, SkeletonLoaderData& d) const;
+  void ReadSkeleton(aiNode* node, const csMatrix4f &parentMatrix, SkeletonLoaderData& d) const;
   void ReadBone(aiNode* node, SkeletonLoaderData& d, size_t parentBoneID) const;
-  void ReadMesh(aiNode* node, const Matrix4f &parentMatrix, SkeletonLoaderData& d) const;
+  void ReadMesh(aiNode* node, const csMatrix4f &parentMatrix, SkeletonLoaderData& d) const;
 
 
 };

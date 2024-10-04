@@ -22,15 +22,15 @@ void MirrorHandler::SetCameraState(cryo::csSpatialState *cameraState)
 
 void MirrorHandler::Update(float tpf)
 {
-  const cryo::Matrix4f camMat = m_cameraState->GetGlobalMatrix();
-  cryo::Vector3f pos = cryo::Matrix4f::Transform(camMat, cryo::Vector3f(0.0f, 0.0f, 0.0f));
-  cryo::Vector3f dir = cryo::Matrix4f::Mult(camMat, cryo::Vector3f(0, 0, 1));
-  cryo::Vector3f spot = pos + dir;
+  const cryo::csMatrix4f camMat = m_cameraState->GetGlobalMatrix();
+  cryo::csVector3f       pos    = cryo::csMatrix4f::Transform(camMat, cryo::csVector3f(0.0f, 0.0f, 0.0f));
+  cryo::csVector3f       dir    = cryo::csMatrix4f::Mult(camMat, cryo::csVector3f(0, 0, 1));
+  cryo::csVector3f       spot   = pos + dir;
 
 
   GetRoot()->GetTransform()
-  .SetTranslation(cryo::Vector3f(pos.x, -pos.y, pos.z))
-  .LookAt(cryo::Vector3f(spot.x, -spot.y, spot.z), cryo::Vector3f(0.0f, 1.0f, 0.0f))
+  .SetTranslation(cryo::csVector3f(pos.x, -pos.y, pos.z))
+  .LookAt(cryo::csVector3f(spot.x, -spot.y, spot.z), cryo::csVector3f(0.0f, 1.0f, 0.0f))
   .Finish();
 
 

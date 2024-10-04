@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ceCore/input/iinputsystem.hh>
+#include <ceCore/input/iInputSystem.hh>
 #include <ceLauncher/window/sdlkeyboard.hh>
 #include <ceLauncher/window/sdlmouse.hh>
 #include <ceLauncher/window/sdlwindow.hh>

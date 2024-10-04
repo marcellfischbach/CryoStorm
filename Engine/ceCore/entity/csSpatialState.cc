@@ -136,12 +136,12 @@ void csSpatialState::SetTransform(const csTransform& transform)
 }
 
 
-const Matrix4f& csSpatialState::GetLocalMatrix() const
+const csMatrix4f& csSpatialState::GetLocalMatrix() const
 {
   return m_localMatrix;
 }
 
-void csSpatialState::SetLocalMatrix(const Matrix4f& matrix)
+void csSpatialState::SetLocalMatrix(const csMatrix4f& matrix)
 {
   m_localMatrix = matrix;
   UpdateTransformation();
@@ -174,7 +174,7 @@ void csSpatialState::UpdateTransformation()
   TransformationUpdatedPostChildren();
 }
 
-const Matrix4f& csSpatialState::GetGlobalMatrix() const
+const csMatrix4f& csSpatialState::GetGlobalMatrix() const
 {
   return m_globalMatrix;
 }

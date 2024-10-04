@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <ceCore/coreexport.hh>
+#include <ceCore/csCoreExport.hh>
 #include <ceCore/graphics/iRenderTarget2D.hh>
 #include <ceCore/graphics/iRenderTargetCube.hh>
 #include <ceCore/graphics/iSkyboxRenderer.hh>

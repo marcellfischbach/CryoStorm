@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ceCore/input/iinputsystem.hh>
+#include <ceCore/input/iInputSystem.hh>
 #include <ceJavaLWJGL/lwjglkeyboard.hh>
 #include <ceJavaLWJGL/lwjglmouse.hh>
 #include <ceJavaLWJGL/lwjglwindow.hh>

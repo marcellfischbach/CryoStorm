@@ -3,10 +3,10 @@
 #include <ceOpenGL/gl4/shading/gl4program.hh>
 #include <ceOpenGL/gl4/shading/gl4shader.hh>
 #include <ceOpenGL/gl4/gl4exceptions.hh>
-#include <ceCore/resource/vfs.hh>
+#include <ceCore/resource/csVFS.hh>
 #include <ceCore/graphics/eVertexStream.hh>
-#include <ceCore/math/math.hh>
-#include <ceCore/resource/file.hh>
+#include "ceCore/math/csMath.hh"
+#include <ceCore/resource/csCryoFile.hh>
 #include <regex>
 #include <iostream>
 #include <set>
@@ -15,9 +15,9 @@
 namespace cryo::opengl
 {
 
-std::vector<std::string> replace_includes(const ResourceLocator *parent,
+std::vector<std::string> replace_includes(const csResourceLocator *parent,
                                           std::vector<std::string> &lines,
-                                          std::set<ResourceLocator> &included);
+                                          std::set<csResourceLocator> &included);
 
 
 std::vector<std::string> split(const std::string &string)
@@ -96,7 +96,7 @@ void replace(std::vector<std::string> &lines, const std::string &vertexStreamNam
 }
 
 std::vector<std::string>
-loadExternalLinesRaw(const ResourceLocator &locator, iFile *file, std::set<ResourceLocator> &included)
+loadExternalLinesRaw(const csResourceLocator &locator, iFile *file, std::set<csResourceLocator> &included)
 {
   file->Seek(eSM_End, 0);
   long size = file->Tell();
@@ -114,16 +114,16 @@ loadExternalLinesRaw(const ResourceLocator &locator, iFile *file, std::set<Resou
 }
 
 std::vector<std::string>
-loadExternalLinesSpc(const ResourceLocator &locator, iFile *file, std::set<ResourceLocator> &included)
+loadExternalLinesSpc(const csResourceLocator &locator, iFile *file, std::set<csResourceLocator> &included)
 {
-  cryo::CrimsonFile fFile;
-  bool            res = fFile.Parse(file);
+  cryo::csCryoFile fFile;
+  bool             res = fFile.Parse(file);
   if (!res)
   {
     return std::vector<std::string>();
   }
 
-  CrimsonFileElement *fragment = fFile.Root()->GetChild("fragment");
+  csCryoFileElement *fragment = fFile.Root()->GetChild("fragment");
   if (!fragment || fragment->GetNumberOfAttributes() == 0)
   {
     return std::vector<std::string>();
@@ -136,9 +136,9 @@ loadExternalLinesSpc(const ResourceLocator &locator, iFile *file, std::set<Resou
 }
 
 
-std::vector<std::string> loadExternalLines(const ResourceLocator &locator, std::set<ResourceLocator> &included)
+std::vector<std::string> loadExternalLines(const csResourceLocator &locator, std::set<csResourceLocator> &included)
 {
-  iFile *file = VFS::Get()->Open(locator, eAM_Read, eOM_Binary);
+  iFile *file = csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (!file)
   {
     return std::vector<std::string>();
@@ -168,7 +168,7 @@ std::vector<std::string> loadExternalLines(const ResourceLocator &locator, std::
 }
 
 std::vector<std::string>
-replace_includes(const ResourceLocator *parent, std::vector<std::string> &lines, std::set<ResourceLocator> &included)
+replace_includes(const csResourceLocator *parent, std::vector<std::string> &lines, std::set<csResourceLocator> &included)
 {
   std::vector<std::string> result;
   std::regex               reg("(#include\\s*\\<\\s*)([^\\>\\s]+)(\\s*\\>)");
@@ -179,7 +179,7 @@ replace_includes(const ResourceLocator *parent, std::vector<std::string> &lines,
     {
 
       std::string              part1       = sm[2];
-      ResourceLocator          locator(parent, part1);
+      csResourceLocator        locator(parent, part1);
       std::vector<std::string> loadedLines = loadExternalLines(locator, included);
       included.insert(locator);
       for (std::string &l: loadedLines)
@@ -197,7 +197,7 @@ replace_includes(const ResourceLocator *parent, std::vector<std::string> &lines,
 
 GL4Shader *LoadShader(const std::string &typeText,
                       const std::string &origSource,
-                      const ResourceLocator *locator)
+                      const csResourceLocator *locator)
 {
   eGL4ShaderType shaderType;
   if (typeText == "vertex")
@@ -230,8 +230,8 @@ GL4Shader *LoadShader(const std::string &typeText,
   }
 
 
-  std::vector<std::string>  lines = split(origSource);
-  std::set<ResourceLocator> included;
+  std::vector<std::string>    lines = split(origSource);
+  std::set<csResourceLocator> included;
 
   lines = replace_includes(locator, lines, included);
   replace(lines, "eVS_Vertices", eVS_Vertices);
@@ -285,7 +285,7 @@ GL4ShaderLoader::GL4ShaderLoader()
 }
 
 
-bool GL4ShaderLoader::CanLoad(const Class *cls, const ResourceLocator &locator) const
+bool GL4ShaderLoader::CanLoad(const Class *cls, const csResourceLocator &locator) const
 {
   std::string ext = locator.GetExtension();
 
@@ -300,9 +300,9 @@ bool GL4ShaderLoader::CanLoad(const Class *cls, const ResourceLocator &locator) 
 }
 
 
-iObject *GL4ShaderLoader::Load(const Class *cls, const ResourceLocator &locator) const
+iObject *GL4ShaderLoader::Load(const Class *cls, const csResourceLocator &locator) const
 {
-  iFile *file = VFS::Get()->Open(locator, eAM_Read, eOM_Binary);
+  iFile *file = csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (!file)
   {
     return nullptr;

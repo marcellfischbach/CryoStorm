@@ -3,7 +3,7 @@
 //
 
 #include <ceAssimpLoader/assimpmaterialloader.hh>
-#include <ceCore/resource/assetmanager.hh>
+#include <ceCore/resource/csAssetManager.hh>
 #include <ceCore/graphics/material/csMaterialInstance.hh>
 #include <assimp/scene.h>
 
@@ -12,7 +12,7 @@ namespace cryo::assimp
 
 iMaterial *AssimpMaterialLoader::Read(aiMaterial *material)
 {
-  csMaterial *baseMaterial = AssetManager::Get()->Get<csMaterial>("file:///materials/Default.mat");
+  csMaterial *baseMaterial = csAssetManager::Get()->Get<csMaterial>("file:///materials/Default.mat");
   if (!baseMaterial)
   {
     return nullptr;
@@ -28,7 +28,7 @@ iMaterial *AssimpMaterialLoader::Read(aiMaterial *material)
     Size idx = result->IndexOf("Color");
     if (idx != csMaterial::UndefinedIndex)
     {
-      result->Set(idx, Color4f(diffuse.r, diffuse.g, diffuse.b, 1.0f));
+      result->Set(idx, csColor4f(diffuse.r, diffuse.g, diffuse.b, 1.0f));
     }
   }
   return result;

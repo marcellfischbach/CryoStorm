@@ -52,7 +52,7 @@ void csProjector::UpdateOrtho(float left, float right, float bottom, float top, 
 void csProjector::Bind(iDevice* device) const
 {
 
-  Matrix4f projection, projectionInv;
+  csMatrix4f projection, projectionInv;
   switch (m_mode)
   {
   case ePM_Perspective:
@@ -69,10 +69,10 @@ void csProjector::Bind(iDevice* device) const
 
 }
 
-Matrix4f csProjector::GetProjectionMatrix(iDevice* device) const
+csMatrix4f csProjector::GetProjectionMatrix(iDevice* device) const
 {
 
-  Matrix4f matrix;
+  csMatrix4f matrix;
   switch (m_mode)
   {
   case ePM_Perspective:
@@ -87,10 +87,10 @@ Matrix4f csProjector::GetProjectionMatrix(iDevice* device) const
 }
 
 
-Matrix4f csProjector::GetProjectionMatrixInv(iDevice* device) const
+csMatrix4f csProjector::GetProjectionMatrixInv(iDevice* device) const
 {
 
-  Matrix4f matrix;
+  csMatrix4f matrix;
   switch (m_mode)
   {
   case ePM_Perspective:
@@ -105,7 +105,7 @@ Matrix4f csProjector::GetProjectionMatrixInv(iDevice* device) const
 }
 
 
-void csProjector::GetPoints(float depth, Vector3f* out) const
+void csProjector::GetPoints(float depth, csVector3f* out) const
 {
   float depth_factor = 1.0f;
   switch (m_mode)
@@ -123,10 +123,10 @@ void csProjector::GetPoints(float depth, Vector3f* out) const
   float b = m_bottom * depth_factor;
   float t = m_top * depth_factor;
 
-  out[0] = Vector3f(l, b, depth);
-  out[1] = Vector3f(l, t, depth);
-  out[2] = Vector3f(r, b, depth);
-  out[3] = Vector3f(r, t, depth);
+  out[0] = csVector3f(l, b, depth);
+  out[1] = csVector3f(l, t, depth);
+  out[2] = csVector3f(r, b, depth);
+  out[3] = csVector3f(r, t, depth);
 
 }
 

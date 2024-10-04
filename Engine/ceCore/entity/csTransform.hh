@@ -1,10 +1,10 @@
 
 #pragma once
 
-#include <ceCore/coreexport.hh>
+#include <ceCore/csCoreExport.hh>
 
-#include <ceCore/math/quaternion.hh>
-#include <ceCore/math/vector3f.hh>
+#include <ceCore/math/csQuaternion.hh>
+#include <ceCore/math/csVector3f.hh>
 
 namespace cryo
 {
@@ -14,33 +14,33 @@ class CS_CORE_API csTransform
 {
 public:
   csTransform(csSpatialState *state,
-              const Matrix4f &matrix,
-              const Matrix4f &parentMatrix = Matrix4f()
+              const csMatrix4f &matrix,
+              const csMatrix4f &parentMatrix = csMatrix4f()
              );
 
-  csTransform &SetTranslation(const Vector3f &translation);
+  csTransform &SetTranslation(const csVector3f &translation);
   csTransform &SetTranslation(float x, float y, float z);
-  const Vector3f &GetTranslation() const;
+  const csVector3f &GetTranslation() const;
 
-  csTransform& SetRotation(const Quaternion &rotation);
-  const Quaternion &GetRotation () const;
+  csTransform& SetRotation(const csQuaternion &rotation);
+  const csQuaternion &GetRotation() const;
 
-  csTransform& SetScale(const Vector3f &scale);
-  const Vector3f &GetScalar() const;
+  csTransform& SetScale(const csVector3f &scale);
+  const csVector3f &GetScalar() const;
 
-  csTransform& LookAt(const Vector3f &at, const Vector3f &up = Vector3f(0.0f, 1.0f, 0.0f));
+  csTransform& LookAt(const csVector3f &at, const csVector3f &up = csVector3f(0.0f, 1.0f, 0.0f));
 
-  const Matrix4f &GetMatrix() const;
-  const Matrix4f &GetGlobalMatrix() const;
+  const csMatrix4f &GetMatrix() const;
+  const csMatrix4f &GetGlobalMatrix() const;
 
-  Vector3f GetForward () const;
-  Vector3f GetBackward () const;
+  csVector3f GetForward() const;
+  csVector3f GetBackward() const;
 
-  Vector3f GetRight () const;
-  Vector3f GetLeft () const;
+  csVector3f GetRight() const;
+  csVector3f GetLeft() const;
 
-  Vector3f GetUp () const;
-  Vector3f GetDown () const;
+  csVector3f GetUp() const;
+  csVector3f GetDown() const;
 
 
 
@@ -51,14 +51,14 @@ private:
   void UpdateMatrix() const;
 
   csSpatialState *m_state;
-  Vector3f       m_translation;
-  Quaternion m_rotation;
-  Vector3f m_scale;
+  csVector3f     m_translation;
+  csQuaternion   m_rotation;
+  csVector3f     m_scale;
 
-  Matrix4f m_parentMatrix;
-  mutable bool m_dirty;
-  mutable Matrix4f m_matrix;
-  mutable Matrix4f m_globalMatrix;
+  csMatrix4f         m_parentMatrix;
+  mutable bool       m_dirty;
+  mutable csMatrix4f m_matrix;
+  mutable csMatrix4f m_globalMatrix;
 };
 
 }

@@ -2,11 +2,11 @@
 #include <ceOpenGL/openglmodule.hh>
 #include <master.refl.cc>
 
-#include <ceCore/engine.hh>
-#include <ceCore/objectregistry.hh>
-#include <ceCore/settings.hh>
+#include <ceCore/csEngine.hh>
+#include <ceCore/csObjectRegistry.hh>
+#include <ceCore/csSettings.hh>
 #include <ceCore/graphics/csSamplers.hh>
-#include <ceCore/resource/assetmanager.hh>
+#include <ceCore/resource/csAssetManager.hh>
 #include <ceOpenGL/gl4/gl4device.hh>
 #include <ceOpenGL/gl4/gl4rendermesh.hh>
 #include <ceOpenGL/gl4/gl4terrainmesh.hh>
@@ -19,39 +19,39 @@
 namespace cryo::opengl
 {
 
-bool OpenGLModule::Register(const std::vector<std::string> &args, Engine *engine)
+bool OpenGLModule::Register(const std::vector<std::string> &args, csEngine *engine)
 {
   register_classes();
 
-  AssetManager::Get()->RegisterLoader(new GL4ProgramLoader());
-  AssetManager::Get()->RegisterLoader(new GL4ShaderLoader());
+  csAssetManager::Get()->RegisterLoader(new GL4ProgramLoader());
+  csAssetManager::Get()->RegisterLoader(new GL4ShaderLoader());
 
   GL4Device *device = new GL4Device();
-  ObjectRegistry::Register<iDevice>(device);
+  csObjectRegistry::Register<iDevice>(device);
   engine->SetDevice(device);
 
-  std::string renderPipline = Settings::Get().Graphics().GetText("pipeline", "forward");
+  std::string renderPipline = csSettings::Get().Graphics().GetText("pipeline", "forward");
   if (renderPipline == std::string("forward"))
   {
-    ObjectRegistry::Register<iRenderPipeline>(new GL4ForwardPipeline());
+    csObjectRegistry::Register<iRenderPipeline>(new GL4ForwardPipeline());
   }
   else if (renderPipline == std::string("deferred"))
   {
-    ObjectRegistry::Register<iRenderPipeline>(new GL4DeferredPipeline());
+    csObjectRegistry::Register<iRenderPipeline>(new GL4DeferredPipeline());
   }
   else
   {
     return false;
   }
 
-  ObjectRegistry::Register<iShaderGraphCompilerFactory>(new GL4ShaderGraphCompilerFactory());
-  ObjectRegistry::Register<iRenderMeshGeneratorFactory>(new GL4RenderMeshGeneratorFactory());
-  ObjectRegistry::Register<iRenderMeshBatchGeneratorFactory>(new GL4RenderMeshBatchGeneratorFactory());
-  ObjectRegistry::Register<iTerrainMeshGeneratorFactory>(new GL4TerrainMeshGeneratorFactory());
+  csObjectRegistry::Register<iShaderGraphCompilerFactory>(new GL4ShaderGraphCompilerFactory());
+  csObjectRegistry::Register<iRenderMeshGeneratorFactory>(new GL4RenderMeshGeneratorFactory());
+  csObjectRegistry::Register<iRenderMeshBatchGeneratorFactory>(new GL4RenderMeshBatchGeneratorFactory());
+  csObjectRegistry::Register<iTerrainMeshGeneratorFactory>(new GL4TerrainMeshGeneratorFactory());
   return true;
 }
 
-bool OpenGLModule::Initialize(const std::vector<std::string> &args, Engine *engine)
+bool OpenGLModule::Initialize(const std::vector<std::string> &args, csEngine *engine)
 {
   GL4Device* gl4Graphics = (GL4Device*)engine->GetDevice();
   bool initialized = gl4Graphics->Initialize();
@@ -60,12 +60,12 @@ bool OpenGLModule::Initialize(const std::vector<std::string> &args, Engine *engi
     csSamplers * samplers = new csSamplers();
     samplers->Load();
 
-    ObjectRegistry::Register<csSamplers>(samplers);
+    csObjectRegistry::Register<csSamplers>(samplers);
 
   }
 
 
-  iRenderPipeline* pipeline = ObjectRegistry::Get<iRenderPipeline>();
+  iRenderPipeline* pipeline = csObjectRegistry::Get<iRenderPipeline>();
   if (pipeline)
   {
     pipeline->Initialize();

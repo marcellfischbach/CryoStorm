@@ -5,26 +5,26 @@
 #include <ceAssimpLoader/assimpskeletonanimationloader.hh>
 #include <ceAssimpLoader/assimpskeletonmeshloader.hh>
 
-#include <ceCore/objectregistry.hh>
-#include <ceCore/resource/assetmanager.hh>
+#include <ceCore/csObjectRegistry.hh>
+#include <ceCore/resource/csAssetManager.hh>
 
 
 namespace cryo::assimp
 {
 
-bool AssimpLoaderModule::Register(const std::vector<std::string> &args, Engine *engine)
+bool AssimpLoaderModule::Register(const std::vector<std::string> &args, csEngine *engine)
 {
   register_classes();
 
-  AssetManager::Get()->RegisterLoader(new AssimpMeshLoader());
-  AssetManager::Get()->RegisterLoader(new AssimpSkeletonAnimationLoader());
-  AssetManager::Get()->RegisterLoader(new AssimpSkeletonMeshLoader());
+  csAssetManager::Get()->RegisterLoader(new AssimpMeshLoader());
+  csAssetManager::Get()->RegisterLoader(new AssimpSkeletonAnimationLoader());
+  csAssetManager::Get()->RegisterLoader(new AssimpSkeletonMeshLoader());
 
 
   return true;
 }
 
-bool AssimpLoaderModule::Initialize(const std::vector<std::string> &args, Engine *engine)
+bool AssimpLoaderModule::Initialize(const std::vector<std::string> &args, csEngine *engine)
 {
   return true;
 }

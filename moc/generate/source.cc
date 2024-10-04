@@ -852,16 +852,16 @@ std::string ClassGenerator::GenerateCreateJObject(cryo::moc::ClassNode *classNod
   {
     std::string jclass = meta->Get("jclass");
     jclass = convert_java_class_path(jclass);
-    getter += "  static jclass cls = cryo::Java::Get() ? cryo::Java::Get()->FindClass (\"" + jclass + "\") : nullptr;\n";
+    getter += "  static jclass cls = cryo::csJava::Get() ? cryo::csJava::Get()->FindClass (\"" + jclass + "\") : nullptr;\n";
     getter += "  if (cls)\n";
     getter += "  {\n";
-    getter += "    static jmethodID ctor = cryo::Java::Get()->GetMethodID(cls, \"<init>\", \"(J)V\");\n";
+    getter += "    static jmethodID ctor = cryo::csJava::Get()->GetMethodID(cls, \"<init>\", \"(J)V\");\n";
     getter += "    if (ctor)\n";
     getter += "    {\n";
-    getter += "      jobject obj = cryo::Java::Get()->NewObject(cls, ctor, reinterpret_cast<jlong>(this));\n";
+    getter += "      jobject obj = cryo::csJava::Get()->NewObject(cls, ctor, reinterpret_cast<jlong>(this));\n";
     getter += "      if (obj)\n";
     getter += "      {\n";
-    getter += "        obj = cryo::Java::Get()->NewGlobalRef(obj);\n";
+    getter += "        obj = cryo::csJava::Get()->NewGlobalRef(obj);\n";
     getter += "        return obj;\n";
     getter += "      }\n";
     getter += "    }\n";

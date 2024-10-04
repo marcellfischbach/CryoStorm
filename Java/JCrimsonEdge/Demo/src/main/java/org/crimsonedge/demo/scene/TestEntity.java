@@ -1,14 +1,14 @@
 package org.crimsonedge.demo.scene;
 
-import org.crimsonedge.core.ObjectRegistry;
+import org.crimsonedge.core.csObjectRegistry;
 import org.crimsonedge.core.entity.csEntity;
 import org.crimsonedge.core.entity.csStaticMeshState;
 import org.crimsonedge.core.graphics.*;
 import org.crimsonedge.core.graphics.material.IMaterial;
-import org.crimsonedge.core.math.Vector2f;
-import org.crimsonedge.core.math.Vector3f;
-import org.crimsonedge.core.math.Vector4f;
-import org.crimsonedge.core.resource.AssetManager;
+import org.crimsonedge.core.math.csVector2f;
+import org.crimsonedge.core.math.csVector3f;
+import org.crimsonedge.core.math.csVector4f;
+import org.crimsonedge.core.resource.csAssetManager;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,7 +34,7 @@ public class TestEntity extends csEntity {
     public TestEntity() {
         super ();
 
-        IDevice device = ObjectRegistry.get(IDevice.class);
+        IDevice device = csObjectRegistry.get(IDevice.class);
 
         ITexture2D.Descriptor desc = new ITexture2D.Descriptor();
         desc.format = EPixelFormat.RGB;
@@ -46,7 +46,7 @@ public class TestEntity extends csEntity {
         ITexture2D txt2d = device.createTexture(desc);
         txt2d.data(0, EPixelFormat.RGB, textureRGB(desc.width, desc.height));
 
-        IMaterial planeMaterial = AssetManager.get(IMaterial.class, "/materials/Default.mat");
+        IMaterial planeMaterial = csAssetManager.get(IMaterial.class, "/materials/Default.mat");
         int diffuseIdx = planeMaterial.indexOf("Diffuse");
         planeMaterial.set(diffuseIdx, txt2d);
 
@@ -65,26 +65,26 @@ public class TestEntity extends csEntity {
     }
 
     private IRenderMesh generatePlane() {
-        IRenderMeshGeneratorFactory iRenderMeshGeneratorFactory = ObjectRegistry.get(IRenderMeshGeneratorFactory.class);
+        IRenderMeshGeneratorFactory iRenderMeshGeneratorFactory = csObjectRegistry.get(IRenderMeshGeneratorFactory.class);
         IRenderMeshGenerator generator = iRenderMeshGeneratorFactory.create();
 
-        List<Vector4f> vertices = Stream.of(
-                new Vector4f(-1.0f, -1.0f, 0.0f, 1.0f),
-                new Vector4f(-1.0f, 1.0f, 0.0f, 1.0f),
-                new Vector4f(1.0f, -1.0f, 0.0f, 1.0f),
-                new Vector4f(1.0f, 1.0f, 0.0f, 1.0f)
+        List<csVector4f> vertices = Stream.of(
+                new csVector4f(-1.0f, -1.0f, 0.0f, 1.0f),
+                new csVector4f(-1.0f, 1.0f, 0.0f, 1.0f),
+                new csVector4f(1.0f, -1.0f, 0.0f, 1.0f),
+                new csVector4f(1.0f, 1.0f, 0.0f, 1.0f)
         ).collect(Collectors.toList());
-        List<Vector3f> normals = Stream.of(
-                new Vector3f(0.0f, 1.0f, 0.0f),
-                new Vector3f(0.0f, 1.0f, 0.0f),
-                new Vector3f(0.0f, 1.0f, 0.0f),
-                new Vector3f(0.0f, 1.0f, 0.0f)
+        List<csVector3f> normals = Stream.of(
+                new csVector3f(0.0f, 1.0f, 0.0f),
+                new csVector3f(0.0f, 1.0f, 0.0f),
+                new csVector3f(0.0f, 1.0f, 0.0f),
+                new csVector3f(0.0f, 1.0f, 0.0f)
         ).collect(Collectors.toList());
-        List<Vector2f> uvs = Stream.of(
-                new Vector2f(0.0f, 0.0f),
-                new Vector2f(0.0f, 1.0f),
-                new Vector2f(1.0f, 0.0f),
-                new Vector2f(1.0f, 1.0f)
+        List<csVector2f> uvs = Stream.of(
+                new csVector2f(0.0f, 0.0f),
+                new csVector2f(0.0f, 1.0f),
+                new csVector2f(1.0f, 0.0f),
+                new csVector2f(1.0f, 1.0f)
         ).collect(Collectors.toList());
         List<Integer> indices = Stream.of(0, 1, 3, 0, 3, 2, 0, 3, 1, 0, 2, 3).collect(Collectors.toList());
         generator.setVertices4f(vertices);

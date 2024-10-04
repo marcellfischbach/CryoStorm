@@ -3,7 +3,7 @@
 #include <ceOpenGL/openglexport.hh>
 #include <ceOpenGL/gl4/shading/gl4shadertype.hh>
 #include <ceCore/class.hh>
-#include <ceCore/types.hh>
+#include <ceCore/csTypes.hh>
 #include <string>
 #include <stdexcept>
 

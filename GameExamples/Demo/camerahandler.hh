@@ -32,8 +32,8 @@ public:
 
   void Update(float tpf) override;
 private:
-  cryo::Vector3f m_position;
-  cryo::Vector3f m_target;
-  float m_distance;
+  cryo::csVector3f m_position;
+  cryo::csVector3f m_target;
+  float            m_distance;
   float m_time;
 };

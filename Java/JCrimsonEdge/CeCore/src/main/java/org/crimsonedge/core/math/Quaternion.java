@@ -1,18 +1,18 @@
 package org.crimsonedge.core.math;
 
-public final class Quaternion {
+public final class csQuaternion {
 
     private float x;
     private float y;
     private float z;
     private float w;
 
-    public Quaternion() {
+    public csQuaternion() {
         x = y = z = 0.0f;
         w = 1.0f;
     }
 
-    public void set(final Quaternion q) {
+    public void set(final csQuaternion q) {
         x = q.x;
         y = q.y;
         z = q.z;
@@ -26,7 +26,7 @@ public final class Quaternion {
         this.w = w;
     }
 
-    public void from(Matrix3f m) {
+    public void from(csMatrix3f m) {
         float qw = (float) Math.sqrt(1.0f + m.m00 + m.m11 + m.m22) / 2.0f;
         float qw4 = qw * 4.0f;
 
@@ -37,7 +37,7 @@ public final class Quaternion {
         this.w = qw;
     }
 
-    public void toMatrix(Matrix3f m) {
+    public void toMatrix(csMatrix3f m) {
         float sqx = x * x;
         float sqy = y * y;
         float sqz = z * z;
@@ -48,7 +48,7 @@ public final class Quaternion {
                 2.0f * (x * z - w * y), 2.0f * (y * z + w * x), 2.0f * (sqw + sqz) - 1.0f);
     }
 
-    public void toMatrix(Matrix4f m) {
+    public void toMatrix(csMatrix4f m) {
         float sqx = x * x;
         float sqy = y * y;
         float sqz = z * z;

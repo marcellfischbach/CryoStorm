@@ -2,8 +2,8 @@
 #pragma once
 
 #include <ceAssimpLoader/assimpexport.hh>
-#include <ceCore/resource/iassetloader.hh>
-#include <ceCore/math/matrix4f.hh>
+#include <ceCore/resource/iAssetLoader.hh>
+#include <ceCore/math/csMatrix4f.hh>
 
 struct aiMesh;
 struct aiNode;
@@ -27,12 +27,12 @@ public:
   AssimpMeshLoader();
   virtual ~AssimpMeshLoader() { }
 
-  virtual bool CanLoad(const Class * cls, const ResourceLocator & locator) const;
+  virtual bool CanLoad(const Class * cls, const csResourceLocator & locator) const;
 
-  virtual iObject* Load(const Class * cls, const ResourceLocator & locator) const;
+  virtual iObject* Load(const Class * cls, const csResourceLocator & locator) const;
 
 private:
-  void ReadNode(aiNode* node, const Matrix4f &parentMatrix, StaticLoaderData& d) const;
+  void ReadNode(aiNode* node, const csMatrix4f &parentMatrix, StaticLoaderData& d) const;
 
 };
 

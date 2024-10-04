@@ -1,9 +1,9 @@
 #pragma once
 
-#include <ceCore/coreexport.hh>
+#include <ceCore/csCoreExport.hh>
 #include <ceCore/class.hh>
 #include <ceCore/graphics/eClearMode.hh>
-#include <ceCore/math/color4f.hh>
+#include <ceCore/math/csColor4f.hh>
 
 namespace cryo
 {
@@ -33,7 +33,7 @@ public:
 
   eClearMode GetClearMode() const;
   eClearColorMode GetClearColorMode() const;
-  const Color4f &GetClearColor() const;
+  const csColor4f &GetClearColor() const;
   float GetClearDepth() const;
 
   void SetRenderTarget(iRenderTarget2D *renderTarget);
@@ -54,7 +54,7 @@ public:
 
   void UpdateData(float near, float far, float angle, float angleWidthHeight);
 
-  void UpdateClear(eClearMode mode, eClearColorMode clearColorMode, const Color4f &color, iSkyboxRenderer *skybox, float depth);
+  void UpdateClear(eClearMode mode, eClearColorMode clearColorMode, const csColor4f &color, iSkyboxRenderer *skybox, float depth);
 
   void UpdateProjector(uint32_t width, uint32_t height);
 
@@ -69,8 +69,8 @@ private:
   eClearMode      m_clearMode;
   eClearColorMode m_clearColorMode;
 
-  Color4f      m_clearColor;
-  float        m_clearDepth;
+  csColor4f m_clearColor;
+  float     m_clearDepth;
 
   csCamera    *m_camera;
   csProjector *m_projector;

@@ -3,7 +3,7 @@
 #include <ceOpenGL/gl4/gl4pixelformatmap.hh>
 #include <ceCore/graphics/csImage.hh>
 #include <ceCore/graphics/iSampler.hh>
-#include <ceCore/math/math.hh>
+#include "ceCore/math/csMath.hh"
 #include <GL/glew.h>
 
 namespace cryo::opengl

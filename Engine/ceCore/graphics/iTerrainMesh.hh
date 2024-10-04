@@ -2,9 +2,9 @@
 #pragma once
 
 
-#include <ceCore/coreexport.hh>
+#include <ceCore/csCoreExport.hh>
 #include <ceCore/graphics/iRenderMesh.hh>
-#include <ceCore/types.hh>
+#include <ceCore/csTypes.hh>
 
 namespace cryo
 {
@@ -34,7 +34,7 @@ CS_CLASS_GEN;
 
 
 
-  virtual void SetReferencePoint (const Vector3f& pos) = 0;
+  virtual void SetReferencePoint(const csVector3f& pos) = 0;
 };
 
 
@@ -47,7 +47,7 @@ CS_CLASS_GEN;
 
   virtual void SetSize (eTerrainSize size) = 0;
   virtual void SetPatchSize (eTerrainSize size) = 0;
-  virtual void SetSize (const Vector3f &min, const Vector3f& max) = 0;
+  virtual void SetSize(const csVector3f &min, const csVector3f& max) = 0;
   virtual void SetNormalizedHeightData (const std::vector<float> &heightData) = 0;
   virtual void SetHeightData (const std::vector<float> &heightData) = 0;
 

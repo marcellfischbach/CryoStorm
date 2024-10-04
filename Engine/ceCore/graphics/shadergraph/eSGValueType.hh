@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ceCore/bitmask.hh>
+#include <ceCore/csBitMask.hh>
 
 namespace cryo
 {

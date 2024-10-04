@@ -10,7 +10,7 @@ csPPCombine::csPPCombine()
   DeclareInput(ePPImageType::Color, "Color1");
   DeclareOutput(ePPImageType::Color, "Color");
 
-  m_shader               = cryo::AssetManager::Get()->Get<cryo::iShader>("${shaders}/pp/combine/combine.shader");
+  m_shader               = cryo::csAssetManager::Get()->Get<cryo::iShader>("${shaders}/pp/combine/combine.shader");
   m_attribColor0          = m_shader ? m_shader->GetShaderAttribute("Color0") : nullptr;
   m_attribColor1          = m_shader ? m_shader->GetShaderAttribute("Color1") : nullptr;
 }
@@ -54,7 +54,7 @@ void csPPCombine::Process(iDevice *device, iRenderTarget2D *finalTarget)
   if (m_shader && m_attribColor0 && m_attribColor1 && RefreshOutputTexture(device, finalTarget))
   {
     device->SetRenderTarget(m_renderTarget);
-    device->Clear(false, cryo::Color4f(0, 0, 0, 0), false, 1.0f, false, 0);
+    device->Clear(false, cryo::csColor4f(0, 0, 0, 0), false, 1.0f, false, 0);
     device->SetBlending(false);
     device->SetDepthTest(false);
     device->SetShader(m_shader);

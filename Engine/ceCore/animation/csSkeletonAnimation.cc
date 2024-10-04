@@ -82,7 +82,7 @@ void skeleton_animation_update_bone_rotation(const csSkeletonAnimation::Channel 
       auto &frameX0 = *last;
       float a = (frame - frameX0.frame) / (frameX1.frame - frameX0.frame);
 
-      Quaternion quat = Quaternion::Blend(frameX0.rotation, frameX1.rotation, a);
+      csQuaternion quat = csQuaternion::Blend(frameX0.rotation, frameX1.rotation, a);
       bone.rotation = bone.rotation + quat  * blendFactor;
       return;
     }
@@ -130,7 +130,7 @@ void csSkeletonAnimation::PushSkeleton(cryo::csSkeleton *skeleton, float frame, 
 
 void csSkeletonAnimation::AddRotationFrame(const std::string &channelName,
                                            float frame,
-                                           const Quaternion &rotation)
+                                           const csQuaternion &rotation)
 {
   FrameRotation rotFrame {
       frame,
@@ -149,7 +149,7 @@ void csSkeletonAnimation::AddRotationFrame(const std::string &channelName,
   channel.rotations.push_back(rotFrame);
 }
 
-void csSkeletonAnimation::AddPositionFrame(const std::string &channelName, float frame, const cryo::Vector3f &position)
+void csSkeletonAnimation::AddPositionFrame(const std::string &channelName, float frame, const cryo::csVector3f &position)
 {
   FramePosition posFrame {
       frame,
@@ -169,7 +169,7 @@ void csSkeletonAnimation::AddPositionFrame(const std::string &channelName, float
 }
 
 
-void csSkeletonAnimation::AddScaleFrame(const std::string &channelName, float time, const cryo::Vector3f &scale)
+void csSkeletonAnimation::AddScaleFrame(const std::string &channelName, float time, const cryo::csVector3f &scale)
 {
   FrameScale scaleFrame {
       time,

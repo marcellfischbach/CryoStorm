@@ -2,11 +2,11 @@
 #pragma  once
 
 
-#include <ceCore/coreexport.hh>
+#include <ceCore/csCoreExport.hh>
 #include <ceCore/entity/csSpatialState.hh>
 #include <ceCore/graphics/eLightType.hh>
-#include <ceCore/math/color4f.hh>
-#include <ceCore/math/vector3f.hh>
+#include <ceCore/math/csColor4f.hh>
+#include <ceCore/math/csVector3f.hh>
 
 namespace cryo
 {
@@ -35,8 +35,8 @@ public:
   void SetShadowMapBias(float bias);
   CS_NODISCARD float GetShadowMapBias() const;
 
-  void SetColor(const Color4f &color);
-  CS_NODISCARD const Color4f &GetColor() const;
+  void SetColor(const csColor4f &color);
+  CS_NODISCARD const csColor4f &GetColor() const;
 
   void SetRange(float range);
   CS_NODISCARD float GetRange() const;
@@ -65,9 +65,9 @@ private:
   eLightType m_lightType;
 
   bool m_castShadow;
-  float m_shadowBias;
-  Color4f m_color;
-  float m_range;
+  float     m_shadowBias;
+  csColor4f m_color;
+  float     m_range;
 };
 
 }

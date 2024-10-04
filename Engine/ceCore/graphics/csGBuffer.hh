@@ -1,7 +1,7 @@
 #pragma  once
 
-#include <ceCore/coreexport.hh>
-#include <ceCore/types.hh>
+#include <ceCore/csCoreExport.hh>
+#include <ceCore/csTypes.hh>
 #include <vector>
 
 namespace cryo

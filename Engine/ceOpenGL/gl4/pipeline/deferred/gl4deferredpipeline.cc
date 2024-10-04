@@ -3,10 +3,10 @@
 #include <ceOpenGL/gl4/gl4directionallight.hh>
 #include <ceOpenGL/gl4/gl4pointlight.hh>
 #include <ceOpenGL/glerror.hh>
-#include <ceCore/settings.hh>
-#include <ceCore/engine.hh>
+#include <ceCore/csSettings.hh>
+#include <ceCore/csEngine.hh>
 #include <ceCore/math/iclipper.hh>
-#include <ceCore/math/clipper/cameraclipper.hh>
+#include <ceCore/math/clipper/csCameraClipper.hh>
 #include <ceCore/graphics/csCamera.hh>
 #include <ceCore/graphics/csProjector.hh>
 #include <ceCore/graphics/iDevice.hh>
@@ -46,8 +46,8 @@ void GL4DeferredPipeline::Initialize()
   m_directionalLightRenderer.Initialize();
   m_pointLightRenderer.Initialize();
 
-  m_backMaskShader = AssetManager::Get()->Get<iShader>(
-      ResourceLocator("file://${engine}/opengl/gl4/deferred/back_mask.shader"));
+  m_backMaskShader = csAssetManager::Get()->Get<iShader>(
+      csResourceLocator("file://${engine}/opengl/gl4/deferred/back_mask.shader"));
   if (m_backMaskShader)
   {
     m_attrBackMaskDepth = m_backMaskShader->GetShaderAttribute("Depth");
@@ -60,7 +60,7 @@ void GL4DeferredPipeline::Render(iRenderTarget2D *target, const csGfxCamera *cam
   m_frame++;
   if (SetupVariables(target, camera, device, scene))
   {
-    CameraClipper clppr(*m_camera, *m_projector);
+    csCameraClipper clppr(*m_camera, *m_projector);
     ScanVisibleMeshes(&clppr);
     ScanLightsAndShadows(&clppr);
 
@@ -87,7 +87,7 @@ void GL4DeferredPipeline::RenderGBuffer(uint16_t width,
   m_device->SetDepthTest(true);
   m_device->SetDepthWrite(true);
   m_device->SetColorWrite(true, true, true, true);
-  m_device->Clear(true, Color4f(0.0f, 0.0f, 0.0f, 0.0f),
+  m_device->Clear(true, csColor4f(0.0f, 0.0f, 0.0f, 0.0f),
                   m_gfxCamera->GetClearMode() == eClearMode::Depth ||
                   m_gfxCamera->GetClearMode() == eClearMode::DepthColor,
                   1.0f, true, 0);
@@ -421,10 +421,10 @@ float GL4DeferredPipeline::CalcMeshLightInfluence(const csGfxLight *light, const
       break;
     case eLT_Point:
       auto     pointLight = light->GetLight()->Query<iPointLight>();
-      Vector3f lightPos   = pointLight->GetPosition();
-      Vector3f meshPos    = mesh->GetModelMatrix().GetTranslation();
-      Vector3f delta      = lightPos - meshPos;
-      float    halfSize   = mesh->GetMesh()->GetBoundingBox().GetDiagonal() / 2.0f;
+      csVector3f lightPos = pointLight->GetPosition();
+      csVector3f meshPos  = mesh->GetModelMatrix().GetTranslation();
+      csVector3f delta    = lightPos - meshPos;
+      float      halfSize = mesh->GetMesh()->GetBoundingBox().GetDiagonal() / 2.0f;
       float    distance   = delta.Length();
       float    overlap    = pointLight->GetRange() + halfSize - distance;
       if (overlap > 0.0f)

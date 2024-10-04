@@ -1,13 +1,13 @@
 #ifndef SDLKEY_MAP_HH
 #define SDLKEY_MAP_HH
 
-#include <ceCore/input/key.hh>
+#include <ceCore/input/eKey.hh>
 #include <SDL.h>
 
 namespace cryo::launcher
 {
 
-static Key Map(SDL_Scancode scanCode)
+static eKey Map(SDL_Scancode scanCode)
 {
     switch (scanCode) {
     case SDL_SCANCODE_ESCAPE: return eK_Escape;

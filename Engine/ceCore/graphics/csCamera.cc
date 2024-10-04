@@ -23,59 +23,59 @@ csCamera::~csCamera()
 
 
 
-void csCamera::SetEye(const Vector3f& eye)
+void csCamera::SetEye(const csVector3f& eye)
 {
   m_eye = eye;
 }
 
-const Vector3f& csCamera::GetEye() const
+const csVector3f& csCamera::GetEye() const
 {
   return m_eye;
 }
 
 
 
-void csCamera::SetSpot(const Vector3f& spot)
+void csCamera::SetSpot(const csVector3f& spot)
 {
   m_spot = spot;
 }
 
-const Vector3f& csCamera::GetSpot() const
+const csVector3f& csCamera::GetSpot() const
 {
   return m_spot;
 }
 
 
-void csCamera::SetUp(const Vector3f& up)
+void csCamera::SetUp(const csVector3f& up)
 {
   m_up = up;
 }
 
-const Vector3f& csCamera::GetUp() const
+const csVector3f& csCamera::GetUp() const
 {
   return m_up;
 }
 
 void csCamera::Bind(iDevice* device) const
 {
-  Matrix4f viewMatrix, viewMatrixInv;
+  csMatrix4f viewMatrix, viewMatrixInv;
   viewMatrix.SetLookAt(m_eye, m_spot, m_up);
   viewMatrixInv.SetLookAtInv(m_eye, m_spot, m_up);
   device->SetViewMatrix(viewMatrix, viewMatrixInv);
 }
 
-Matrix4f csCamera::GetViewMatrix() const
+csMatrix4f csCamera::GetViewMatrix() const
 {
-  Matrix4f matrix;
+  csMatrix4f matrix;
   matrix.SetLookAt(m_eye, m_spot, m_up);
   return matrix;
 }
 
 
 
-Matrix4f csCamera::GetViewMatrixInv() const
+csMatrix4f csCamera::GetViewMatrixInv() const
 {
-  Matrix4f matrix;
+  csMatrix4f matrix;
   matrix.SetLookAtInv(m_eye, m_spot, m_up);
   return matrix;
 }

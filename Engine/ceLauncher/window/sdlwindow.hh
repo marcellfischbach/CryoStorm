@@ -6,7 +6,7 @@
 
 #include <ceLauncher/window/sdlmouse.hh>
 #include <ceLauncher/window/sdlkeyboard.hh>
-#include <ceCore/window/iwindow.hh>
+#include <ceCore/window/iWindow.hh>
 #include <SDL.h>
 
 namespace cryo::launcher
@@ -34,7 +34,7 @@ public:
   int GetWidth() const override;
   int GetHeight() const override;
 
-  void SetWindowIcon (const ResourceLocator &locator) override;
+  void SetWindowIcon(const csResourceLocator &locator) override;
 
   void Show() override;
   void Hide() override;

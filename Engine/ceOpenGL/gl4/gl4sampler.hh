@@ -43,8 +43,8 @@ public:
   void SetAddressW(eTextureAddressMode mode) override;
   eTextureAddressMode GetAddressW() const override;
 
-  void SetBorderColor(const Color4f & borderColo) override;
-  const Color4f& GetBorderColor() const override;
+  void SetBorderColor(const csColor4f & borderColo) override;
+  const csColor4f& GetBorderColor() const override;
 
   void SetTextureCompareMode(eTextureCompareMode compareMode) override;
   eTextureCompareMode GetTextureCompareMode() const override;
@@ -67,7 +67,7 @@ private:
   eTextureAddressMode m_addressV;
   eTextureAddressMode m_addressW;
 
-  Color4f m_borderColor;
+  csColor4f m_borderColor;
 
   eTextureCompareMode m_textureCompareMode;
   eCompareFunc m_textureCompareFunc;

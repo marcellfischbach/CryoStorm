@@ -248,7 +248,7 @@ void GfxSimpleScene::ScanStaticLights(const iClipper *clipper, const std::functi
     if (lght->GetType() == eLT_Point)
     {
       auto *plight = lght->Query<const iPointLight>();
-      test = clipper->Test(Sphere(plight->GetPosition(), plight->GetRange())) != eClippingResult::eCR_Outside;
+      test = clipper->Test(csSphere(plight->GetPosition(), plight->GetRange())) != eClippingResult::eCR_Outside;
     }
     if (test && !callback(light))
     {
@@ -266,7 +266,7 @@ void GfxSimpleScene::ScanDynamicLights(const iClipper *clipper, const std::funct
     if (lght->GetType() == eLT_Point)
     {
       auto *plight = lght->Query<const iPointLight>();
-      test = clipper->Test(Sphere(plight->GetPosition(), plight->GetRange())) != eClippingResult::eCR_Outside;
+      test = clipper->Test(csSphere(plight->GetPosition(), plight->GetRange())) != eClippingResult::eCR_Outside;
     }
 
     if (test && !callback(light))

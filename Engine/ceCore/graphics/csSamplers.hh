@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <ceCore/coreexport.hh>
+#include <ceCore/csCoreExport.hh>
 #include <ceCore/class.hh>
 #include <ceCore/graphics/iSampler.hh>
 

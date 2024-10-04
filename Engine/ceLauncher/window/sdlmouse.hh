@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include <ceCore/input/imouse.hh>
+#include <ceCore/input/iMouse.hh>
 #include <SDL.h>
 
 namespace cryo::launcher

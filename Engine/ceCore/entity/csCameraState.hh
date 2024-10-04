@@ -1,13 +1,13 @@
 
 #pragma once
 
-#include <ceCore/coreexport.hh>
+#include <ceCore/csCoreExport.hh>
 #include <ceCore/entity/csSpatialState.hh>
 
 #include <ceCore/graphics/csCamera.hh>
 #include <ceCore/graphics/csProjector.hh>
 #include <ceCore/graphics/eClearMode.hh>
-#include <ceCore/math/color4f.hh>
+#include <ceCore/math/csColor4f.hh>
 
 namespace cryo
 {
@@ -51,8 +51,8 @@ public:
   void SetClearColorMode(eClearColorMode clearMode);
   eClearColorMode GetClearColorMode() const;
 
-  void SetClearColor(const Color4f &clearColor);
-  const Color4f &GetClearColor() const;
+  void SetClearColor(const csColor4f &clearColor);
+  const csColor4f &GetClearColor() const;
 
   void SetClearDepth(float clearDepth);
   float GetClearDepth() const;
@@ -102,7 +102,7 @@ private:
   eClearColorMode m_clearColorMode = eClearColorMode::PlainColor;
 
   CS_PROPERTY()
-  Color4f m_clearColor = Color4f();
+  csColor4f m_clearColor = csColor4f();
 
   CS_PROPERTY()
   float m_clearDepth = 1.0f;

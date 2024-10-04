@@ -2,7 +2,7 @@ package org.crimsonedge.core.math;
 
 import java.util.List;
 
-public class Color4f {
+public class csColor4f {
 
     public float r;
     public float g;
@@ -11,10 +11,10 @@ public class Color4f {
 
 
 
-    public static float[] toFloatArray(List<Color4f> colors) {
+    public static float[] toFloatArray(List<csColor4f> colors) {
         float[] result = new float[colors.size() * 4];
         int i = 0;
-        for (Color4f color : colors) {
+        for (csColor4f color : colors) {
             result[i++] = color.r;
             result[i++] = color.g;
             result[i++] = color.b;

@@ -2,7 +2,7 @@ package org.crimsonedge.core.resource;
 
 import org.crimsonedge.core.CeClass;
 
-public class AssetManager {
+public class csAssetManager {
 
 
     private static native Object nGet(String cls, String locator);

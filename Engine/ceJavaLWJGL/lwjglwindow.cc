@@ -3,8 +3,8 @@
 //
 
 #include <ceJavaLWJGL/lwjglwindow.hh>
-#include <ceCore/java.hh>
-#include <ceCore/java_methods.hh>
+#include <ceCore/csJava.hh>
+#include <ceCore/csJavaCalls.hh>
 
 #define THIS_CLASS_NAME "org/crimsonedge/core/window/IWindow"
 
@@ -13,7 +13,7 @@ extern "C"
 
 JNIEXPORT jlong JNICALL Java_org_crimsonedge_lwjgl_LwjglWindow_nCreate(JNIEnv *env, jclass cls)
 {
-  cryo::Java::Set(env);
+  cryo::csJava::Set(env);
   auto lwjgWindow = new cryo::java::LwjglWindow();
   return reinterpret_cast<jlong>(lwjgWindow);
 }
@@ -60,64 +60,64 @@ LwjglWindow::LwjglWindow()
 
 void LwjglWindow::SetTitle(const std::string &title)
 {
-  static JavaCallVoid1<jstring> setTitle(Java::Get(), this, THIS_CLASS_NAME, "setTitle", JAVA_STRING);
+  static csJavaCallVoid1<jstring> setTitle(csJava::Get(), this, THIS_CLASS_NAME, "setTitle", JAVA_STRING);
 
-  jstring titleString = Java::Get()->NewStringUTF(title.c_str());
-  setTitle.call(Java::Get(), titleString);
+  jstring titleString = csJava::Get()->NewStringUTF(title.c_str());
+  setTitle.call(csJava::Get(), titleString);
 
 }
 
 const std::string &LwjglWindow::GetTitle() const
 {
-  static JavaCallObject<jstring> getTitle(Java::Get(), this, THIS_CLASS_NAME, "getTitle", JAVA_STRING);
+  static csJavaCallObject<jstring> getTitle(csJava::Get(), this, THIS_CLASS_NAME, "getTitle", JAVA_STRING);
 
-  jstring jString = getTitle.call(Java::Get(), nullptr);
+  jstring jString = getTitle.call(csJava::Get(), nullptr);
   if (jString)
   {
-    const char* ptr = Java::Get()->GetStringUTFChars(jString, 0);
+    const char* ptr = csJava::Get()->GetStringUTFChars(jString, 0);
     m_title = std::string(ptr);
-    Java::Get()->ReleaseStringUTFChars(jString, ptr);
+    csJava::Get()->ReleaseStringUTFChars(jString, ptr);
   }
   return m_title;
 }
 
 void LwjglWindow::SetPosition(int16_t x, int16_t y)
 {
-  static JavaCallVoid2<jint, jint> setPosition (Java::Get(), this, THIS_CLASS_NAME, "setPosition", JAVA_INT, JAVA_INT);
-  setPosition.call(Java::Get(), x, y);
+  static csJavaCallVoid2<jint, jint> setPosition (csJava::Get(), this, THIS_CLASS_NAME, "setPosition", JAVA_INT, JAVA_INT);
+  setPosition.call(csJava::Get(), x, y);
 }
 
 int LwjglWindow::GetPositionX() const
 {
-  static JavaCallInt getPositionX (Java::Get(), this, THIS_CLASS_NAME, "getPositionX");
+  static csJavaCallInt getPositionX (csJava::Get(), this, THIS_CLASS_NAME, "getPositionX");
 
-  return (int)getPositionX.call(Java::Get(), 0);
+  return (int)getPositionX.call(csJava::Get(), 0);
 }
 int LwjglWindow::GetPositionY() const
 {
-  static JavaCallInt getPositionY (Java::Get(), this, THIS_CLASS_NAME, "getPositionY");
+  static csJavaCallInt getPositionY (csJava::Get(), this, THIS_CLASS_NAME, "getPositionY");
 
-  return (int)getPositionY.call(Java::Get(), 0);
+  return (int)getPositionY.call(csJava::Get(), 0);
 }
 
 void LwjglWindow::SetResolution(uint16_t width, uint16_t height)
 {
-  static JavaCallVoid2<jint, jint> setResolution (Java::Get(), this, THIS_CLASS_NAME, "setResoluation", JAVA_INT, JAVA_INT);
-  setResolution.call(Java::Get(), width, height);
+  static csJavaCallVoid2<jint, jint> setResolution (csJava::Get(), this, THIS_CLASS_NAME, "setResoluation", JAVA_INT, JAVA_INT);
+  setResolution.call(csJava::Get(), width, height);
 }
 int LwjglWindow::GetWidth() const
 {
-  static JavaCallInt getWidth (Java::Get(), this, THIS_CLASS_NAME, "getWidth");
-  return getWidth.call(Java::Get(), 100);
+  static csJavaCallInt getWidth (csJava::Get(), this, THIS_CLASS_NAME, "getWidth");
+  return getWidth.call(csJava::Get(), 100);
 }
 int LwjglWindow::GetHeight() const
 {
-  static JavaCallInt getHeight (Java::Get(), this, THIS_CLASS_NAME, "getHeight");
-  return getHeight.call(Java::Get(), 100);
+  static csJavaCallInt getHeight (csJava::Get(), this, THIS_CLASS_NAME, "getHeight");
+  return getHeight.call(csJava::Get(), 100);
 }
 
 
-void LwjglWindow::SetWindowIcon(const ResourceLocator &iconName)
+void LwjglWindow::SetWindowIcon(const csResourceLocator &iconName)
 {
 
 }

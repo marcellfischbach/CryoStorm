@@ -4,7 +4,7 @@
 #include <ceJavaLWJGL/javaexport.hh>
 #include <ceJavaLWJGL/lwjglkeyboard.hh>
 #include <ceJavaLWJGL/lwjglmouse.hh>
-#include <ceCore/window/iwindow.hh>
+#include <ceCore/window/iWindow.hh>
 
 #include <jni.h>
 
@@ -37,7 +37,7 @@ public:
    * Optional.
    * @param iconName
    */
-  void SetWindowIcon (const ResourceLocator &iconName) override;
+  void SetWindowIcon(const csResourceLocator &iconName) override;
 
   void Show () override;
   void Hide () override;

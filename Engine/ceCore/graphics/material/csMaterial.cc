@@ -227,13 +227,13 @@ bool csMaterial::BindAttribute(iDevice *device,
         shaderAttribute->Bind(floats[0]);
         break;
       case eMAT_Vec2:
-        shaderAttribute->Bind(*std::bit_cast<const Vector2f *>(floats.data()));
+        shaderAttribute->Bind(*std::bit_cast<const csVector2f *>(floats.data()));
         break;
       case eMAT_Vec3:
-        shaderAttribute->Bind(*std::bit_cast<const Vector3f *>(floats.data()));
+        shaderAttribute->Bind(*std::bit_cast<const csVector3f *>(floats.data()));
         break;
       case eMAT_Vec4:
-        shaderAttribute->Bind(*std::bit_cast<const Vector4f *>(floats.data()));
+        shaderAttribute->Bind(*std::bit_cast<const csVector4f *>(floats.data()));
         break;
       case eMAT_Int:
         shaderAttribute->Bind(ints[0]);
@@ -244,10 +244,10 @@ bool csMaterial::BindAttribute(iDevice *device,
         // TODO: Need integer based vectors
         break;
       case eMAT_Matrix3:
-        shaderAttribute->Bind(*std::bit_cast<const Matrix3f *>(floats.data()));
+        shaderAttribute->Bind(*std::bit_cast<const csMatrix3f *>(floats.data()));
         break;
       case eMAT_Matrix4:
-        shaderAttribute->Bind(*std::bit_cast<const Matrix4f *>(floats.data()));
+        shaderAttribute->Bind(*std::bit_cast<const csMatrix4f *>(floats.data()));
         break;
       case eMAT_Texture:
         if (!BindTexture(device, shaderAttribute, texture))
@@ -350,7 +350,7 @@ void csMaterial::Set(Size idx, float value)
 }
 
 
-void csMaterial::Set(Size idx, const Vector2f &v)
+void csMaterial::Set(Size idx, const csVector2f &v)
 {
   if (idx >= m_attributes.size())
   {
@@ -363,7 +363,7 @@ void csMaterial::Set(Size idx, const Vector2f &v)
 }
 
 
-void csMaterial::Set(Size idx, const Vector3f &v)
+void csMaterial::Set(Size idx, const csVector3f &v)
 {
   if (idx >= m_attributes.size())
   {
@@ -376,7 +376,7 @@ void csMaterial::Set(Size idx, const Vector3f &v)
   attr.Floats[2] = v.z;
 }
 
-void csMaterial::Set(Size idx, const Vector4f &v)
+void csMaterial::Set(Size idx, const csVector4f &v)
 {
   if (idx >= m_attributes.size())
   {
@@ -390,7 +390,7 @@ void csMaterial::Set(Size idx, const Vector4f &v)
   attr.Floats[3] = v.w;
 }
 
-void csMaterial::Set(Size idx, const Color4f &v)
+void csMaterial::Set(Size idx, const csColor4f &v)
 {
   if (idx >= m_attributes.size())
   {
@@ -417,7 +417,7 @@ void csMaterial::Set(Size idx, int value)
 }
 
 
-void csMaterial::Set(Size idx, const Matrix3f &m)
+void csMaterial::Set(Size idx, const csMatrix3f &m)
 {
   if (idx >= m_attributes.size())
   {
@@ -428,7 +428,7 @@ void csMaterial::Set(Size idx, const Matrix3f &m)
   memcpy(attr.Floats.data(), &m, sizeof(float) * 9);
 }
 
-void csMaterial::Set(Size idx, const Matrix4f &m)
+void csMaterial::Set(Size idx, const csMatrix4f &m)
 {
   if (idx >= m_attributes.size())
   {

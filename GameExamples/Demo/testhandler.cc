@@ -3,7 +3,7 @@
 
 using namespace cryo;
 
-BaseTestHandler::BaseTestHandler(const cryo::Vector3f &basePosition, float distance, float animationSpeed)
+BaseTestHandler::BaseTestHandler(const cryo::csVector3f &basePosition, float distance, float animationSpeed)
     : cryo::csEntityState()
     , m_basePosition(basePosition)
     , m_distance(distance)
@@ -23,7 +23,7 @@ void BaseTestHandler::Update(float tpf)
   csSpatialState *root = GetRoot();
   if (root)
   {
-    Vector3f position = m_basePosition + Vector3f(
+    csVector3f position = m_basePosition + csVector3f(
         ceCos(m_animationValue) * m_distance,
         0.0f,
         ceSin(m_animationValue*1.3f) * m_distance
@@ -33,28 +33,28 @@ void BaseTestHandler::Update(float tpf)
 }
 
 
-TestHandler01::TestHandler01(const cryo::Vector3f &basePosition, float distance, float animationSpeed)
+TestHandler01::TestHandler01(const cryo::csVector3f &basePosition, float distance, float animationSpeed)
     : BaseTestHandler(basePosition, distance, animationSpeed)
 {
 
 }
 
 
-TestHandler02::TestHandler02(const cryo::Vector3f &basePosition, float distance, float animationSpeed)
+TestHandler02::TestHandler02(const cryo::csVector3f &basePosition, float distance, float animationSpeed)
     : BaseTestHandler(basePosition, distance, animationSpeed)
 {
 
 }
 
 
-TestHandler03::TestHandler03(const cryo::Vector3f &basePosition, float distance, float animationSpeed)
+TestHandler03::TestHandler03(const cryo::csVector3f &basePosition, float distance, float animationSpeed)
     : BaseTestHandler(basePosition, distance, animationSpeed)
 {
 
 }
 
 
-TestHandler04::TestHandler04(const cryo::Vector3f &basePosition, float distance, float animationSpeed)
+TestHandler04::TestHandler04(const cryo::csVector3f &basePosition, float distance, float animationSpeed)
     : BaseTestHandler(basePosition, distance, animationSpeed)
 {
 

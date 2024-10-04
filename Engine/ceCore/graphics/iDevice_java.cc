@@ -1,5 +1,5 @@
 #include <ceCore/graphics/iDevice.hh>
-#include <ceCore/java.hh>
+#include <ceCore/csJava.hh>
 
 
 extern "C"

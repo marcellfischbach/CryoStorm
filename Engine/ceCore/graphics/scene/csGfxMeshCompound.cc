@@ -3,7 +3,7 @@
 //
 
 #include <ceCore/graphics/scene/csGfxMeshCompound.hh>
-#include <ceCore/objectregistry.hh>
+#include <ceCore/csObjectRegistry.hh>
 #include <ceCore/graphics/iRenderMesh.hh>
 
 namespace cryo
@@ -66,7 +66,7 @@ void csGfxMeshCompound::RegenerateMesh()
 {
   printf ("Regenerate mesh: %d\n", m_internalMeshes.size());
   iMaterial* material = nullptr;
-  iRenderMeshBatchGenerator *generator = ObjectRegistry::Get<iRenderMeshBatchGeneratorFactory>()->Create();
+  iRenderMeshBatchGenerator *generator = csObjectRegistry::Get<iRenderMeshBatchGeneratorFactory>()->Create();
   for (const auto &internalMesh: m_internalMeshes)
   {
     generator->Add(internalMesh->GetMesh(), internalMesh->GetModelMatrix());

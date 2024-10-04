@@ -1,8 +1,8 @@
 #include <ceAssimpLoader/assimpconverter.hh>
-#include <ceCore/math/vector4i.hh>
+#include <ceCore/math/csVector4i.hh>
 #include <ceCore/graphics/iRenderMesh.hh>
 #include <ceCore/graphics/csSkeleton.hh>
-#include <ceCore/objectregistry.hh>
+#include <ceCore/csObjectRegistry.hh>
 
 #include <assimp/scene.h>
 #include <assimp/Importer.hpp>
@@ -15,23 +15,23 @@ namespace cryo::assimp
 {
 
 
-Color4f ConvertRGBA(aiColor4D &v)
+csColor4f ConvertRGBA(aiColor4D &v)
 {
   return {v.r, v.g, v.b, v.a};
 }
 
-Vector3f Convert3f(aiVector3D &v)
+csVector3f Convert3f(aiVector3D &v)
 {
   return {v.x, v.y, v.z};
 }
 
-Vector2f Convert2f(aiVector3D &v)
+csVector2f Convert2f(aiVector3D &v)
 {
   return {v.x, v.y};
 }
 
 
-Matrix4f ConvertMatrix4x4(aiMatrix4x4 &aiMat)
+csMatrix4f ConvertMatrix4x4(aiMatrix4x4 &aiMat)
 {
 #if 0
   return Matrix4f(
@@ -41,7 +41,7 @@ Matrix4f ConvertMatrix4x4(aiMatrix4x4 &aiMat)
       aiMat.d1, aiMat.d2, aiMat.d3, aiMat.d4
   );
 #else
-  return Matrix4f(
+  return csMatrix4f(
       aiMat.a1, aiMat.b1, aiMat.c1, aiMat.d1,
       aiMat.a2, aiMat.b2, aiMat.c2, aiMat.d2,
       aiMat.a3, aiMat.b3, aiMat.c3, aiMat.d3,
@@ -53,8 +53,8 @@ Matrix4f ConvertMatrix4x4(aiMatrix4x4 &aiMat)
 
 struct Weight
 {
-  Vector4i bones;
-  Vector4f weight;
+  csVector4i bones;
+  csVector4f weight;
 };
 
 
@@ -150,45 +150,45 @@ Weight get_weight(aiMesh *mesh, unsigned vertexID, csSkeleton *skeleton)
   return res;
 }
 
-iRenderMesh *ConvertRenderMesh(aiMesh *mesh, const Matrix4f &matrix2, csSkeleton* skeleton)
+iRenderMesh *ConvertRenderMesh(aiMesh *mesh, const csMatrix4f &matrix2, csSkeleton* skeleton)
 {
-  Matrix4f matrix = matrix2;
-  std::vector<Vector3f> vertices;
-  std::vector<Vector3f> normals;
-  std::vector<Vector3f> tangents;
-  std::vector<Vector2f> uvs;
-  std::vector<Vector4f> weights;
-  std::vector<Vector4i> bones;
-  std::vector<Color4f>  colors;
+  csMatrix4f              matrix = matrix2;
+  std::vector<csVector3f> vertices;
+  std::vector<csVector3f> normals;
+  std::vector<csVector3f> tangents;
+  std::vector<csVector2f> uvs;
+  std::vector<csVector4f> weights;
+  std::vector<csVector4i> bones;
+  std::vector<csColor4f>  colors;
 
   for (unsigned i = 0, in = mesh->mNumVertices; i < in; ++i)
   {
-    Vector3f vertex = Convert3f(mesh->mVertices[i]);
-    vertices.push_back(Matrix4f::Transform(matrix, vertex));
+    csVector3f vertex = Convert3f(mesh->mVertices[i]);
+    vertices.push_back(csMatrix4f::Transform(matrix, vertex));
 //    printf("[%d] %.2f %.2f %.2f", i, vertex.x, vertex.y, vertex.z);
 
     if (mesh->mNormals)
     {
-      Vector3f normal = Convert3f(mesh->mNormals[i]);
+      csVector3f normal = Convert3f(mesh->mNormals[i]);
       normal.Normalize();
-      normals.push_back(Matrix4f::Mult(matrix, normal));
+      normals.push_back(csMatrix4f::Mult(matrix, normal));
 //      printf("   %.2f %.2f %.2f", normal.x, normal.y, normal.z);
     }
     if (mesh->mTangents)
     {
-      Vector3f tangent = Convert3f(mesh->mTangents[i]);
+      csVector3f tangent = Convert3f(mesh->mTangents[i]);
       tangent.Normalize();
-      tangents.push_back(Matrix4f::Mult(matrix, tangent));
+      tangents.push_back(csMatrix4f::Mult(matrix, tangent));
     }
 
     if (mesh->mTextureCoords[0])
     {
-      Vector2f uv = Convert2f(mesh->mTextureCoords[0][i]);
+      csVector2f uv = Convert2f(mesh->mTextureCoords[0][i]);
       uvs.push_back(uv);
     }
     if (mesh->mColors[0])
     {
-      Color4f color = ConvertRGBA(mesh->mColors[0][i]);
+      csColor4f color = ConvertRGBA(mesh->mColors[0][i]);
       colors.push_back(color);
     }
     else
@@ -220,7 +220,7 @@ iRenderMesh *ConvertRenderMesh(aiMesh *mesh, const Matrix4f &matrix2, csSkeleton
   }
 
 
-  auto                 renderMeshGenFact = ObjectRegistry::Get<iRenderMeshGeneratorFactory>();
+  auto                 renderMeshGenFact = csObjectRegistry::Get<iRenderMeshGeneratorFactory>();
   iRenderMeshGenerator *generator        = renderMeshGenFact->Create();
   generator->SetVertices(vertices);
   if (mesh->mNormals)

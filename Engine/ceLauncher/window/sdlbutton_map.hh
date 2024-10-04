@@ -1,8 +1,8 @@
 
 #pragma once
 
-#include <ceCore/input/button.hh>
-#include <ceCore/types.hh>
+#include <ceCore/input/eMouseButton.hh>
+#include <ceCore/csTypes.hh>
 
 namespace cryo::launcher
 {

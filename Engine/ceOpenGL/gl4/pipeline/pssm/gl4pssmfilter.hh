@@ -1,7 +1,7 @@
 
 #pragma  once
 
-#include "ceCore/math/vector.hh"
+#include "ceCore/math/csVector.hh"
 
 namespace cryo
 {
@@ -26,14 +26,14 @@ public:
   GL4PSSMFilter();
   ~GL4PSSMFilter();
 
-  bool Initialize (const Vector2f &distance, float radius, float samplesFactor, float maxSampleDistance);
+  bool Initialize(const csVector2f &distance, float radius, float samplesFactor, float maxSampleDistance);
 
   void Render (GL4Device* device, iTexture2D* depthBuffer,  iTexture2D *shadowMap, GL4RenderTarget2D *target);
 
 
 private:
-  Vector2f m_distance;
-  float m_radius;
+  csVector2f m_distance;
+  float      m_radius;
   float m_samplesFactor;
   float m_maxSampleDistance;
 

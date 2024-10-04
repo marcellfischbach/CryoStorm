@@ -3,11 +3,11 @@
 
 
 
-#include <ceCore/coreexport.hh>
+#include <ceCore/csCoreExport.hh>
 #include <ceCore/class.hh>
-#include <ceCore/math/color4f.hh>
-#include <ceCore/math/vector.hh>
-#include <ceCore/math/matrix.hh>
+#include <ceCore/math/csColor4f.hh>
+#include <ceCore/math/csVector.hh>
+#include <ceCore/math/csMatrix.hh>
 #include <ceCore/graphics/eFillMode.hh>
 #include <ceCore/graphics/eRenderPass.hh>
 #include <ceCore/graphics/eRenderQueue.hh>
@@ -42,13 +42,13 @@ struct CS_CORE_API iMaterial : public CS_SUPER(iObject)
   virtual void Debug (Size idx) {}
 
   virtual void Set(Size idx, float value) = 0;
-  virtual void Set(Size idx, const Vector2f & v) = 0;
-  virtual void Set(Size idx, const Vector3f & v) = 0;
-  virtual void Set(Size idx, const Vector4f & v) = 0;
-  virtual void Set(Size idx, const Color4f & v) = 0;
+  virtual void Set(Size idx, const csVector2f & v) = 0;
+  virtual void Set(Size idx, const csVector3f & v) = 0;
+  virtual void Set(Size idx, const csVector4f & v) = 0;
+  virtual void Set(Size idx, const csColor4f & v) = 0;
   virtual void Set(Size idx, int value) = 0;
-  virtual void Set(Size idx, const Matrix3f & m) = 0;
-  virtual void Set(Size idx, const Matrix4f & m) = 0;
+  virtual void Set(Size idx, const csMatrix3f & m) = 0;
+  virtual void Set(Size idx, const csMatrix4f & m) = 0;
   virtual void Set(Size idx, iTexture * texture) = 0;
 };
 

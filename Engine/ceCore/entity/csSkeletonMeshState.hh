@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <ceCore/coreexport.hh>
+#include <ceCore/csCoreExport.hh>
 #include <ceCore/entity/csStaticMeshState.hh>
 #include <ceCore/graphics/csSkeleton.hh>
 

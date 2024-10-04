@@ -2,24 +2,24 @@ package org.crimsonedge.core.math;
 
 import java.util.List;
 
-public class Vector2f {
+public class csVector2f {
 
     public float x;
 
     public float y;
 
-    public Vector2f() {
+    public csVector2f() {
     }
 
-    public Vector2f(float x, float y) {
+    public csVector2f(float x, float y) {
         this.x = x;
         this.y = y;
     }
 
-    public static float[] toFloatArray(List<Vector2f> vectors) {
+    public static float[] toFloatArray(List<csVector2f> vectors) {
         float[] result = new float[vectors.size() * 2];
         int i = 0;
-        for (Vector2f vector : vectors) {
+        for (csVector2f vector : vectors) {
             result[i++] = vector.x;
             result[i++] = vector.y;
         }

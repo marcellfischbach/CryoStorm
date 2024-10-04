@@ -1,10 +1,10 @@
 
 #pragma once
 
-#include <ceCore/coreexport.hh>
+#include <ceCore/csCoreExport.hh>
 #include <ceCore/class.hh>
-#include <ceCore/math/boundingbox.hh>
-#include <ceCore/math/matrix4f.hh>
+#include <ceCore/math/csBoundingBox.hh>
+#include <ceCore/math/csMatrix4f.hh>
 #include <ceCore/graphics/eRenderPass.hh>
 #include <ceCore/graphics/scene/csGfxLight.hh>
 #include <vector>
@@ -53,8 +53,8 @@ public:
   iRenderMesh *GetMesh();
   CS_NODISCARD const iRenderMesh *GetMesh() const;
 
-  void SetModelMatrix(const Matrix4f &modelMatrix);
-  CS_NODISCARD const Matrix4f &GetModelMatrix() const;
+  void SetModelMatrix(const csMatrix4f &modelMatrix);
+  CS_NODISCARD const csMatrix4f &GetModelMatrix() const;
 
   void ClearLights();
   void AddLight(csGfxLight *light, float incluence);
@@ -63,7 +63,7 @@ public:
   CS_NODISCARD Size GetNumberOfLights() const;
   CS_NODISCARD const std::vector<Light> &GetLights() const;
 
-  CS_NODISCARD const BoundingBox &GetBoundingBox() const;
+  CS_NODISCARD const csBoundingBox &GetBoundingBox() const;
 
   void Render(iDevice *device, eRenderPass pass);
   void RenderUnlit(iDevice *device, eRenderPass pass);
@@ -88,10 +88,10 @@ private:
   bool m_receiveShadow = true;
   bool m_castShadow    = true;
   iMaterial   *m_material = nullptr;
-  iRenderMesh *m_mesh     = nullptr;
-  Matrix4f    m_modelMatrix;
-  BoundingBox m_boundingBox;
-  uint64_t    m_frame         = 0;
+  iRenderMesh   *m_mesh     = nullptr;
+  csMatrix4f    m_modelMatrix;
+  csBoundingBox m_boundingBox;
+  uint64_t      m_frame         = 0;
   bool        m_lightingDirty = true;
 
   std::vector<Light> m_lights;

@@ -1,9 +1,9 @@
 
 #include <ceImgLoader/jpegloader.hh>
 #include <iostream>
-#include <ceCore/resource/vfs.hh>
+#include <ceCore/resource/csVFS.hh>
 #include <ceCore/graphics/csImage.hh>
-#include <ceCore/resource/filesystemfile.hh>
+#include <ceCore/resource/csFileSystemFile.hh>
 extern "C" {
 #ifdef CS_WIN32
 //#include <Windows.h>
@@ -30,7 +30,7 @@ JpegLoader::JpegLoader()
 }
 
 
-bool JpegLoader::CanLoad(const Class* cls, const ResourceLocator& locator) const
+bool JpegLoader::CanLoad(const Class* cls, const csResourceLocator& locator) const
 {
   return cls->IsAssignableFrom<csImage>() &&
          (locator.GetExtension() == "JPEG"
@@ -38,10 +38,10 @@ bool JpegLoader::CanLoad(const Class* cls, const ResourceLocator& locator) const
 }
 
 
-iObject* JpegLoader::Load(const Class* cls, const ResourceLocator& locator) const
+iObject* JpegLoader::Load(const Class* cls, const csResourceLocator& locator) const
 {
-  iFile* ifile = cryo::VFS::Get()->Open(locator, eAM_Read, eOM_Binary);
-  FILE* infile = ifile->Query<FileSystemFile>()->GetHandle();
+  iFile* ifile = cryo::csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
+  FILE* infile = ifile->Query<csFileSystemFile>()->GetHandle();
 
 
   struct jpeg_decompress_struct cinfo;

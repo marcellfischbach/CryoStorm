@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include <ceCore/coreexport.hh>
+#include <ceCore/csCoreExport.hh>
 #include <ceCore/class.hh>
-#include <ceCore/math/vector3f.hh>
-#include <ceCore/types.hh>
+#include <ceCore/math/csVector3f.hh>
+#include <ceCore/csTypes.hh>
 
 namespace cryo
 {

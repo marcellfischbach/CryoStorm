@@ -1,11 +1,11 @@
 
 #pragma once
 
-#include <ceCore/coreexport.hh>
+#include <ceCore/csCoreExport.hh>
 #include <ceCore/entity/csEntityState.hh>
 #include <ceCore/entity/csTransform.hh>
-#include <ceCore/types.hh>
-#include <ceCore/math/matrix4f.hh>
+#include <ceCore/csTypes.hh>
+#include <ceCore/math/csMatrix4f.hh>
 #include <vector>
 
 namespace cryo
@@ -39,9 +39,9 @@ public:
    */
   csTransform GetTransform();
   void SetTransform(const csTransform &transform);
-  const Matrix4f& GetGlobalMatrix() const;
-  const Matrix4f& GetLocalMatrix() const;
-  void SetLocalMatrix(const Matrix4f &matrix);
+  const csMatrix4f& GetGlobalMatrix() const;
+  const csMatrix4f& GetLocalMatrix() const;
+  void SetLocalMatrix(const csMatrix4f &matrix);
 //  void LookAt(const Vector3f & from, const Vector3f & at, const Vector3f & up = Vector3f(0.0f, 1.0f, 0.0f));
   void UpdateTransformation();
   /**
@@ -64,9 +64,9 @@ private:
   csSpatialState * m_parent;
   std::vector<csSpatialState*> m_children;
 
-  Matrix4f m_localMatrix;
+  csMatrix4f m_localMatrix;
 
-  Matrix4f m_globalMatrix;
+  csMatrix4f m_globalMatrix;
 
 };
 

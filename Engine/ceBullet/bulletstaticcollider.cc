@@ -85,7 +85,7 @@ void BulletStaticCollider::Detach(iCollisionShape* shape)
 
 
 
-void BulletStaticCollider::SetTransform(const Matrix4f& transform)
+void BulletStaticCollider::SetTransform(const csMatrix4f& transform)
 {
   m_transform = transform;
   if (m_collisionObject)
@@ -97,7 +97,7 @@ void BulletStaticCollider::SetTransform(const Matrix4f& transform)
 }
 
 
-const Matrix4f& BulletStaticCollider::GetTransform() const
+const csMatrix4f& BulletStaticCollider::GetTransform() const
 {
   return m_transform;
 }

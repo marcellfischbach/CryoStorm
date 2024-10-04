@@ -3,7 +3,7 @@
 //
 
 #include <ceJavaLWJGL/lwjglkeyboard.hh>
-#include <ceCore/java_methods.hh>
+#include <ceCore/csJavaCalls.hh>
 
 #define THIS_CLASS "org/crimsonedge/lwjgl/LwjglKeyboard"
 
@@ -11,7 +11,7 @@ namespace cryo::java
 {
 LwjglKeyboard::LwjglKeyboard()
 {
-  JNIEnv *pEnv = Java::Get();
+  JNIEnv *pEnv = csJava::Get();
   cls = pEnv->FindClass(THIS_CLASS);
   jmethodID constructor = pEnv->GetMethodID(cls, "<init>", "(J)V");
   jobj = pEnv->NewObject(cls, constructor, reinterpret_cast<jlong>(this));
@@ -23,29 +23,29 @@ jobject LwjglKeyboard::GetJObject()
   return jobj;
 }
 
-bool LwjglKeyboard::IsKeyDown(cryo::Key key) const
+bool LwjglKeyboard::IsKeyDown(cryo::eKey key) const
 {
-  static JavaCallBoolean1<jint> jcall (Java::Get(), jobj, THIS_CLASS, "isKeyDown", JAVA_INT);
-  return jcall.call(Java::Get(), key, false);
+  static csJavaCallBoolean1<jint> jcall (csJava::Get(), jobj, THIS_CLASS, "isKeyDown", JAVA_INT);
+  return jcall.call(csJava::Get(), key, false);
 }
 
-bool LwjglKeyboard::IsKeyUp(cryo::Key key) const
+bool LwjglKeyboard::IsKeyUp(cryo::eKey key) const
 {
-  static JavaCallBoolean1<jint> jcall (Java::Get(), jobj, THIS_CLASS, "isKeyUp", JAVA_INT);
-  return jcall.call(Java::Get(), key, true);
+  static csJavaCallBoolean1<jint> jcall (csJava::Get(), jobj, THIS_CLASS, "isKeyUp", JAVA_INT);
+  return jcall.call(csJava::Get(), key, true);
 }
 
 
-bool LwjglKeyboard::IsKeyPressed(cryo::Key key) const
+bool LwjglKeyboard::IsKeyPressed(cryo::eKey key) const
 {
-  static JavaCallBoolean1<jint> jcall (Java::Get(), jobj, THIS_CLASS, "isKeyPressed", JAVA_INT);
-  return jcall.call(Java::Get(), key, false);
+  static csJavaCallBoolean1<jint> jcall (csJava::Get(), jobj, THIS_CLASS, "isKeyPressed", JAVA_INT);
+  return jcall.call(csJava::Get(), key, false);
 }
 
-bool LwjglKeyboard::IsKeyReleased(cryo::Key key) const
+bool LwjglKeyboard::IsKeyReleased(cryo::eKey key) const
 {
-  static JavaCallBoolean1<jint> jcall (Java::Get(), jobj, THIS_CLASS, "isKeyReleased", JAVA_INT);
-  return jcall.call(Java::Get(), key, false);
+  static csJavaCallBoolean1<jint> jcall (csJava::Get(), jobj, THIS_CLASS, "isKeyReleased", JAVA_INT);
+  return jcall.call(csJava::Get(), key, false);
 }
 
 

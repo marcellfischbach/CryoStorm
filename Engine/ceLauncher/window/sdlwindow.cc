@@ -3,8 +3,8 @@
 //
 
 #include <ceLauncher/window/sdlwindow.hh>
-#include <ceCore/settings.hh>
-#include <ceCore/resource/assetmanager.hh>
+#include <ceCore/csSettings.hh>
+#include <ceCore/resource/csAssetManager.hh>
 #include <ceCore/graphics/csImage.hh>
 
 namespace cryo::launcher
@@ -12,7 +12,7 @@ namespace cryo::launcher
 
 bool SDLWindow::Initialize()
 {
-  const cryo::SettingsFile &settings = cryo::Settings::Get().Display();
+  const cryo::csSettingsFile &settings = cryo::csSettings::Get().Display();
 
 
   SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE);
@@ -32,9 +32,9 @@ bool SDLWindow::Initialize()
 
   uint32_t     flags    = SDL_WINDOW_OPENGL;
   // flags |= SDL_WINDOW_BORDERLESS;
-  std::string  title    = settings.GetText("title");
-  cryo::Vector2i res      = settings.GetVector2i("resolution");
-  cryo::Vector2i pos      = settings.GetVector2i("pos");
+  std::string      title = settings.GetText("title");
+  cryo::csVector2i res   = settings.GetVector2i("resolution");
+  cryo::csVector2i pos   = settings.GetVector2i("pos");
 
   std::string  viewMode = settings.GetText("viewmode", "windowed");
   if (viewMode == "fullscreen")
@@ -135,12 +135,12 @@ int SDLWindow::GetHeight() const
   return m_height;
 }
 
-void SDLWindow::SetWindowIcon(const cryo::ResourceLocator &locator)
+void SDLWindow::SetWindowIcon(const cryo::csResourceLocator &locator)
 {
   if (m_window)
   {
 
-    auto image = cryo::AssetManager::Get()->Load<cryo::csImage>("file:///icons/cryo-stasis_64.png");
+    auto image = cryo::csAssetManager::Get()->Load<cryo::csImage>("file:///icons/cryo-stasis_64.png");
     if (!image)
     {
       return;

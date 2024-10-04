@@ -1,10 +1,10 @@
 
 #pragma once
 
-#include <ceCore/coreexport.hh>
+#include <ceCore/csCoreExport.hh>
 #include <ceCore/class.hh>
-#include <ceCore/math/vector3f.hh>
-#include <ceCore/math/quaternion.hh>
+#include <ceCore/math/csVector3f.hh>
+#include <ceCore/math/csQuaternion.hh>
 
 namespace cryo
 {
@@ -19,18 +19,18 @@ CS_CLASS_GEN_OBJECT;
 public:
   struct FrameRotation
   {
-    float     frame;
-    Quaternion rotation;
+    float        frame;
+    csQuaternion rotation;
   };
   struct FramePosition
   {
-    float   frame;
-    Vector3f position;
+    float      frame;
+    csVector3f position;
   };
   struct FrameScale
   {
-    float   frame;
-    Vector3f scale;
+    float      frame;
+    csVector3f scale;
   };
 
 
@@ -66,15 +66,15 @@ public:
 
   void AddRotationFrame(const std::string &channelName,
                         float frame,
-                        const Quaternion &rotation);
+                        const csQuaternion &rotation);
 
   void AddPositionFrame(const std::string &channelName,
                         float frame,
-                        const Vector3f &position);
+                        const csVector3f &position);
 
   void AddScaleFrame(const std::string &channelName,
                         float time,
-                        const Vector3f &scale);
+                        const csVector3f &scale);
 
 private:
 

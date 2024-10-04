@@ -6,7 +6,7 @@ namespace cryo
 {
 
 
-csTransform::csTransform(csSpatialState *state, const Matrix4f &matrix, const Matrix4f &parentMatrix)
+csTransform::csTransform(csSpatialState *state, const csMatrix4f &matrix, const csMatrix4f &parentMatrix)
     : m_state(state), m_matrix(matrix), m_translation(0.0f, 0.0f, 0.0f), m_rotation(0.0f, 0.0f, 0.0f, 1.0f), m_scale(
     1.0f,
     1.0f,
@@ -18,18 +18,18 @@ csTransform::csTransform(csSpatialState *state, const Matrix4f &matrix, const Ma
 void csTransform::ExtractTRS()
 {
   m_translation = m_matrix.GetTranslation();
-  m_scale       = Vector3f(m_matrix.GetXAxis().Length(),
-                           m_matrix.GetYAxis().Length(),
-                           m_matrix.GetZAxis().Length());
+  m_scale       = csVector3f(m_matrix.GetXAxis().Length(),
+                             m_matrix.GetYAxis().Length(),
+                             m_matrix.GetZAxis().Length());
 
-  Matrix3f rotMat(m_matrix.m00 / m_scale.x, m_matrix.m01 / m_scale.x, m_matrix.m02 / m_scale.x,
+  csMatrix3f rotMat(m_matrix.m00 / m_scale.x, m_matrix.m01 / m_scale.x, m_matrix.m02 / m_scale.x,
                   m_matrix.m10 / m_scale.y, m_matrix.m11 / m_scale.y, m_matrix.m12 / m_scale.y,
                   m_matrix.m20 / m_scale.z, m_matrix.m21 / m_scale.z, m_matrix.m22 / m_scale.z
   );
-  m_rotation = Quaternion::FromMatrix(rotMat);
+  m_rotation = csQuaternion::FromMatrix(rotMat);
 }
 
-csTransform &csTransform::SetTranslation(const Vector3f &translation)
+csTransform &csTransform::SetTranslation(const csVector3f &translation)
 {
   m_translation = translation;
   m_dirty       = true;
@@ -45,26 +45,26 @@ csTransform &csTransform::SetTranslation(float x, float y, float z)
   return *this;
 }
 
-const Vector3f &csTransform::GetTranslation() const
+const csVector3f &csTransform::GetTranslation() const
 {
   return m_translation;
 }
 
 
-csTransform &csTransform::SetRotation(const Quaternion &rotation)
+csTransform &csTransform::SetRotation(const csQuaternion &rotation)
 {
   m_rotation = rotation;
   m_dirty    = true;
   return *this;
 }
 
-const Quaternion &csTransform::GetRotation() const
+const csQuaternion &csTransform::GetRotation() const
 {
   return m_rotation;
 }
 
 
-csTransform &csTransform::SetScale(const Vector3f &scale)
+csTransform &csTransform::SetScale(const csVector3f &scale)
 {
   m_scale = scale;
   m_dirty = true;
@@ -72,19 +72,19 @@ csTransform &csTransform::SetScale(const Vector3f &scale)
 }
 
 
-const Vector3f &csTransform::GetScalar() const
+const csVector3f &csTransform::GetScalar() const
 {
   return m_scale;
 }
 
-csTransform &csTransform::LookAt(const Vector3f &at, const Vector3f &up)
+csTransform &csTransform::LookAt(const csVector3f &at, const csVector3f &up)
 {
-  Vector3f from = Matrix4f::Transform(m_parentMatrix, m_translation);
+  csVector3f from = csMatrix4f::Transform(m_parentMatrix, m_translation);
 
-  Matrix4f matrix;
+  csMatrix4f matrix;
   matrix.SetLookAtInv(from, at, up);
 
-  Matrix4f parent = m_parentMatrix;
+  csMatrix4f parent = m_parentMatrix;
   parent.Invert();
   m_matrix = matrix * parent;
 
@@ -94,58 +94,58 @@ csTransform &csTransform::LookAt(const Vector3f &at, const Vector3f &up)
 }
 
 
-const Matrix4f &csTransform::GetMatrix() const
+const csMatrix4f &csTransform::GetMatrix() const
 {
   UpdateMatrix();
   return m_matrix;
 }
 
 
-const Matrix4f &csTransform::GetGlobalMatrix() const
+const csMatrix4f &csTransform::GetGlobalMatrix() const
 {
   UpdateMatrix();
   return m_globalMatrix;
 }
 
-Vector3f csTransform::GetForward() const
+csVector3f csTransform::GetForward() const
 {
   UpdateMatrix();
-  return m_globalMatrix * Vector3f(0, 0, 1);
+  return m_globalMatrix * csVector3f(0, 0, 1);
 }
 
 
-Vector3f csTransform::GetBackward() const
+csVector3f csTransform::GetBackward() const
 {
   UpdateMatrix();
-  return m_globalMatrix * Vector3f(0, 0, -1);
+  return m_globalMatrix * csVector3f(0, 0, -1);
 }
 
 
-Vector3f csTransform::GetLeft() const
+csVector3f csTransform::GetLeft() const
 {
   UpdateMatrix();
-  return m_globalMatrix * Vector3f(-1, 0, 0);
+  return m_globalMatrix * csVector3f(-1, 0, 0);
 }
 
 
-Vector3f csTransform::GetRight() const
+csVector3f csTransform::GetRight() const
 {
   UpdateMatrix();
-  return m_globalMatrix * Vector3f(1, 0, 0);
+  return m_globalMatrix * csVector3f(1, 0, 0);
 }
 
 
-Vector3f csTransform::GetUp() const
+csVector3f csTransform::GetUp() const
 {
   UpdateMatrix();
-  return m_globalMatrix * Vector3f(0, 1, 0);
+  return m_globalMatrix * csVector3f(0, 1, 0);
 }
 
 
-Vector3f csTransform::GetDown() const
+csVector3f csTransform::GetDown() const
 {
   UpdateMatrix();
-  return m_globalMatrix * Vector3f(0, -1, 0);
+  return m_globalMatrix * csVector3f(0, -1, 0);
 }
 
 void csTransform::Finish()

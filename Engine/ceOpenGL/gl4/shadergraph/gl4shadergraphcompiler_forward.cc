@@ -1,8 +1,8 @@
 
 
 #include <ceOpenGL/gl4/shadergraph/gl4shadergraphcompiler.hh>
-#include <ceCore/resource/assetmanager.hh>
-#include <ceCore/resource/textfile.hh>
+#include <ceCore/resource/csAssetManager.hh>
+#include <ceCore/resource/csTextFile.hh>
 #include <ceCore/graphics/eVertexStream.hh>
 #include <ceCore/graphics/shadergraph/csSGNodes.hh>
 

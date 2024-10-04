@@ -3,8 +3,8 @@
 //
 
 #include "exitgamestate.hh"
-#include <ceCore/input/input.hh>
-#include <ceCore/engine.hh>
+#include "ceCore/input/csInput.hh"
+#include <ceCore/csEngine.hh>
 
 ExitGameState::ExitGameState()
 {
@@ -13,8 +13,8 @@ ExitGameState::ExitGameState()
 
 void ExitGameState::Update(float tpf)
 {
-  if (cryo::Input::IsKeyPressed(cryo::Key::eK_Escape))
+  if (cryo::csInput::IsKeyPressed(cryo::eKey::eK_Escape))
   {
-    cryo::Engine::Get()->Exit(0);
+    cryo::csEngine::Get()->Exit(0);
   }
 }

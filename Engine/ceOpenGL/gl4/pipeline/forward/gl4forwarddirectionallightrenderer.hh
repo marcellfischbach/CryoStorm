@@ -6,8 +6,8 @@
 #include <ceOpenGL/openglconstants.hh>
 #include <ceOpenGL/gl4/pipeline/pssm/gl4pssmrenderer.hh>
 #include <ceOpenGL/gl4/pipeline/pssm/gl4pssmfilter.hh>
-#include <ceCore/types.hh>
-#include <ceCore/math/matrix4f.hh>
+#include <ceCore/csTypes.hh>
+#include <ceCore/math/csMatrix4f.hh>
 #include <map>
 #include <array>
 #include <vector>
@@ -25,7 +25,7 @@ class csCamera;
 class csGfxMesh;
 struct iGfxScene;
 class csProjector;
-class Settings;
+class csSettings;
 
 }
 

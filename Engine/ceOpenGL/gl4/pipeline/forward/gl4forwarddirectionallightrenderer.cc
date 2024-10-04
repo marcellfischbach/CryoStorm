@@ -8,7 +8,7 @@
 #include <ceOpenGL/gl4/gl4rendertarget2darray.hh>
 #include <ceOpenGL/gl4/gl4texture2darray.hh>
 
-#include <ceCore/settings.hh>
+#include <ceCore/csSettings.hh>
 #include <ceCore/graphics/csCamera.hh>
 #include <ceCore/graphics/iDevice.hh>
 #include <ceCore/graphics/iSampler.hh>
@@ -17,9 +17,9 @@
 #include <ceCore/graphics/scene/iGfxScene.hh>
 #include <ceCore/graphics/shading/iShader.hh>
 #include <ceCore/graphics/shading/iShaderAttribute.hh>
-#include <ceCore/math/math.hh>
-#include <ceCore/math/clipper/cameraclipper.hh>
-#include <ceCore/resource/assetmanager.hh>
+#include "ceCore/math/csMath.hh"
+#include <ceCore/math/clipper/csCameraClipper.hh>
+#include <ceCore/resource/csAssetManager.hh>
 
 #include <algorithm>
 

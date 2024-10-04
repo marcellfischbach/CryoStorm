@@ -5,10 +5,10 @@
 #include <ceCore/graphics/iDevice.hh>
 #include <ceCore/graphics/csMesh.hh>
 #include <ceCore/graphics/iRenderMesh.hh>
-#include <ceCore/resource/ifile.hh>
-#include <ceCore/resource/vfs.hh>
-#include <ceCore/objectregistry.hh>
-#include <ceCore/types.hh>
+#include <ceCore/resource/iFile.hh>
+#include <ceCore/resource/csVFS.hh>
+#include <ceCore/csObjectRegistry.hh>
+#include <ceCore/csTypes.hh>
 
 #include <assimp/scene.h>
 #include <assimp/Importer.hpp>
@@ -36,14 +36,14 @@ AssimpMeshLoader::AssimpMeshLoader()
 }
 
 
-bool AssimpMeshLoader::CanLoad(const Class *cls, const ResourceLocator &locator) const
+bool AssimpMeshLoader::CanLoad(const Class *cls, const csResourceLocator &locator) const
 {
   const std::string &ext = locator.GetExtension();
   return cls == csMesh::GetStaticClass()
          && ext == std::string("FBX");
 }
 
-static void debug_node (aiNode *node, const Matrix4f &parent, const std::string &indent)
+static void debug_node(aiNode *node, const csMatrix4f &parent, const std::string &indent)
 {
 //
 //  Matrix4f local = ConvertMatrix4x4(node->mTransformation);
@@ -64,9 +64,9 @@ static void debug_node (aiNode *node, const Matrix4f &parent, const std::string 
 //  }
 }
 
-iObject *AssimpMeshLoader::Load(const Class *cls, const ResourceLocator &locator) const
+iObject *AssimpMeshLoader::Load(const Class *cls, const csResourceLocator &locator) const
 {
-  iFile *file = cryo::VFS::Get()->Open(locator, eAM_Read, eOM_Binary);
+  iFile *file = cryo::csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (!file)
   {
     return nullptr;
@@ -111,7 +111,7 @@ iObject *AssimpMeshLoader::Load(const Class *cls, const ResourceLocator &locator
   }
 
 
-  Matrix4f parentMatrix;
+  csMatrix4f parentMatrix;
   parentMatrix.SetRotationY((float)M_PI);
   debug_node(scene->mRootNode, parentMatrix, "");
   ReadNode(scene->mRootNode, parentMatrix, d);
@@ -126,10 +126,10 @@ iObject *AssimpMeshLoader::Load(const Class *cls, const ResourceLocator &locator
   return d.mesh;
 }
 
-void AssimpMeshLoader::ReadNode(aiNode *node, const Matrix4f &parentMatrix, StaticLoaderData &d) const
+void AssimpMeshLoader::ReadNode(aiNode *node, const csMatrix4f &parentMatrix, StaticLoaderData &d) const
 {
-  Matrix4f localMatrix  = ConvertMatrix4x4(node->mTransformation);
-  Matrix4f globalMatrix = parentMatrix * localMatrix;
+  csMatrix4f localMatrix  = ConvertMatrix4x4(node->mTransformation);
+  csMatrix4f globalMatrix = parentMatrix * localMatrix;
   
   
 

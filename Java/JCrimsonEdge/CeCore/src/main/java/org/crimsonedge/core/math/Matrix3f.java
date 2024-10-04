@@ -1,6 +1,6 @@
 package org.crimsonedge.core.math;
 
-public class Matrix3f {
+public class csMatrix3f {
 
     public float m00;
     public float m01;
@@ -15,12 +15,12 @@ public class Matrix3f {
     public float m22;
 
 
-    public Matrix3f() {
+    public csMatrix3f() {
         m00 = m11 = m22 = 1.0f;
         m01 = m02 = m10 = m12 = m20 = m21 = 0.0f;
     }
 
-    public Matrix3f(float m00, float m01, float m02,
+    public csMatrix3f(float m00, float m01, float m02,
                     float m10, float m11, float m12,
                     float m20, float m21, float m22) {
         this.m00 = m00;
@@ -34,7 +34,7 @@ public class Matrix3f {
         this.m22 = m22;
     }
 
-    public Matrix3f(Matrix3f m) {
+    public csMatrix3f(csMatrix3f m) {
         this.m00 = m.m00;
         this.m01 = m.m01;
         this.m02 = m.m02;
@@ -46,7 +46,7 @@ public class Matrix3f {
         this.m22 = m.m22;
     }
 
-    public Matrix3f(float[] m) {
+    public csMatrix3f(float[] m) {
         m00 = m[0];
         m01 = m[1];
         m02 = m[2];
@@ -96,7 +96,7 @@ public class Matrix3f {
         m[8] = m22;
     }
 
-    public void set(Matrix3f m) {
+    public void set(csMatrix3f m) {
         this.m00 = m.m00;
         this.m01 = m.m01;
         this.m02 = m.m02;
@@ -113,21 +113,21 @@ public class Matrix3f {
         m01 = m02 = m10 = m12 = m20 = m21 = 0.0f;
     }
 
-    public Vector3f getXAxis(Vector3f x) {
+    public csVector3f getXAxis(csVector3f x) {
         x.x = m00;
         x.y = m01;
         x.z = m02;
         return x;
     }
 
-    public Vector3f getYAxis(Vector3f y) {
+    public csVector3f getYAxis(csVector3f y) {
         y.x = m10;
         y.y = m11;
         y.z = m12;
         return y;
     }
 
-    public Vector3f getZAxis(Vector3f z) {
+    public csVector3f getZAxis(csVector3f z) {
         z.x = m20;
         z.y = m21;
         z.z = m22;

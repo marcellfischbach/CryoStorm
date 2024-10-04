@@ -4,11 +4,11 @@
 
 namespace cryo
 {
-struct Color4f;
+struct csColor4f;
 struct iRenderMesh;
-struct Matrix4f;
-struct Vector2f;
-struct Vector3f;
+struct csMatrix4f;
+struct csVector2f;
+struct csVector3f;
 class csSkeleton;
 }
 
@@ -26,11 +26,11 @@ struct aiMesh;
 namespace cryo::assimp
 {
 
-Color4f ConvertRGBA(aiColor4D &v);
-Vector2f Convert2f(aiVector3D &v);
-Vector3f Convert3f(aiVector3D &v);
-Matrix4f ConvertMatrix4x4(aiMatrix4x4 &aiMat);
+csColor4f ConvertRGBA(aiColor4D &v);
+csVector2f Convert2f(aiVector3D &v);
+csVector3f Convert3f(aiVector3D &v);
+csMatrix4f ConvertMatrix4x4(aiMatrix4x4 &aiMat);
 
-iRenderMesh *ConvertRenderMesh(aiMesh *mesh, const Matrix4f &matrix, csSkeleton* skeleton);
+iRenderMesh *ConvertRenderMesh(aiMesh *mesh, const csMatrix4f &matrix, csSkeleton* skeleton);
 
 }

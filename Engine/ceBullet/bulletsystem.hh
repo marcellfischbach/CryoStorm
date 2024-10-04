@@ -2,7 +2,7 @@
 #pragma once
 
 #include <ceBullet/bulletexport.hh>
-#include <ceCore/physics/iphysicssystem.hh>
+#include <ceCore/physics/iPhysicsSystem.hh>
 
 namespace cryo::bullet
 {

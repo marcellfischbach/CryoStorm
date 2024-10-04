@@ -1,9 +1,9 @@
 
 #pragma once
 
-#include <ceCore/coreexport.hh>
+#include <ceCore/csCoreExport.hh>
 #include <ceCore/class.hh>
-#include <ceCore/resource/assetmanager.hh>
+#include <ceCore/resource/csAssetManager.hh>
 #include <ceCore/graphics/ePixelFormat.hh>
 #include <ceCore/graphics/iDevice.hh>
 #include <ceCore/graphics/iTexture2D.hh>

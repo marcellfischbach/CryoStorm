@@ -2,7 +2,7 @@
 #pragma once
 
 
-#include <ceCore/coreexport.hh>
+#include <ceCore/csCoreExport.hh>
 #include <ceCore/entity/csSpatialState.hh>
 
 
@@ -59,15 +59,15 @@ public:
   csBoxColliderState();
   ~csBoxColliderState() override;
 
-  void SetHalfExtends(const Vector3f &halfExtends);
-  const Vector3f &GetHalfExtends() const;
+  void SetHalfExtends(const csVector3f &halfExtends);
+  const csVector3f &GetHalfExtends() const;
 
 protected:
 
   iCollisionShape* CreateShape(iPhysicsSystem * physSystem) const override;
 
 private:
-  Vector3f m_halfExtends;
+  csVector3f m_halfExtends;
 };
 
 }

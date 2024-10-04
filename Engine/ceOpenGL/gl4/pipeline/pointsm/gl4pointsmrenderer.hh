@@ -16,7 +16,7 @@ namespace cryo
 class csCamera;
 class csGfxMesh;
 class csProjector;
-class Settings;
+class csSettings;
 
 struct iGfxScene;
 struct iSampler;
