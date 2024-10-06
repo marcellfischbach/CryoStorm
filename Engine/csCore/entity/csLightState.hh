@@ -17,7 +17,7 @@ struct iDirectionalLight;
 class csGfxLight;
 class csWorld;
 
-CS_CLASS()
+CS_CLASS(jclass=org.cryo.core.entity.LightState)
 class CS_CORE_API csLightState : public CS_SUPER(csSpatialState)
 {
   CS_CLASS_GEN_OBJECT;
@@ -35,7 +35,9 @@ public:
   void SetShadowMapBias(float bias);
   CS_NODISCARD float GetShadowMapBias() const;
 
+  CS_FUNCTION()
   void SetColor(const csColor4f &color);
+  CS_FUNCTION()
   CS_NODISCARD const csColor4f &GetColor() const;
 
   void SetRange(float range);

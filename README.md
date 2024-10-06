@@ -52,11 +52,11 @@ must be within the build path
 
 When compiled without any special parameters this will generate the following executable files
 
-- \<out>/bin/ceAssimpLoader.dll
-- \<out>/bin/ceBullet.dll
-- \<out>/bin/ceCore.dll
-- \<out>/bin/ceImgLoader.dll
-- \<out>/bin/ceLauncher.exe
+- \<out>/bin/csAssimpLoader.dll
+- \<out>/bin/csBullet.dll
+- \<out>/bin/csCore.dll
+- \<out>/bin/csImgLoader.dll
+- \<out>/bin/csLauncher.exe
 - \<out>/bin/csMOC.exe
 - \<out>/bin/csOpenGL.dll
 
@@ -94,13 +94,13 @@ But this has a serious impact on the rendering performance.
 
 Ideas on how implementation is integrated into the engine exists for the following features
 
-- csPostProcessing
+- PostProcessing
   - Bloom
   - ScreenSpaceAmbientOcclusion
   - ScreenSpaceReflection
   - Vignette 
 - Audio processing
 - More physics (character controller, trigger, ropes/chains, ...)
-- csShaderGraph as an alternative to GLSL
+- ShaderGraph as an alternative to GLSL
 - SceneLoading
 - Editor - a complete editor for creating scenes and setup for a game

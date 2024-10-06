@@ -1,0 +1,13 @@
+<template>
+    <types>
+        <type>csVector2f</type>
+        <type>cryo::csVector2f</type>
+    </types>
+    <arguments>
+        <argument type="jfloat" id="x" idx="0" />
+        <argument type="jfloat" id="y" idx="1" />
+    </arguments>
+    <script>
+        csVector2f ${outArg} (${x}, ${y});
+    </script>
+</template>

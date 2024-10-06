@@ -310,6 +310,11 @@ int main(int argc, char** argv)
   // file = "D:\\DEV\\CobaltSKY\\Engine\\cobalt\\entity\\csdynamiccolliderstate.hh";
   path = "C:\\Users\\MCEL\\CMakeBuilds\\d5ee80a5-d1ee-2937-85d1-86f3b75e756d\\build\\x64-Release\\src\\test";
 
+  if (argc == 1)
+  {
+    print_usage(argv[0]);
+    return 0;
+  }
 
   for (int i = 1; i < argc; i++)
   {

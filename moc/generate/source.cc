@@ -1,5 +1,6 @@
 
 #include <generate/source.hh>
+#include <generate/java.hh>
 #include <generate/ioutput.hh>
 #include <ast.hh>
 
@@ -40,6 +41,10 @@ void SourceGenerator::Output(iOutput *output)
 
     ClassGenerator classGenerator;
     source += classGenerator.OutputClass(cls, nss, meta);
+
+
+    JavaGenerator javaGenerator;
+    source += javaGenerator.OutputClass(cls, nss, meta);
 
 
   }
