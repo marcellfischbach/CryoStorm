@@ -12,7 +12,11 @@ int main(int argc, char **argv)
     return -1;
   }
 
-  xml::csDocument doc = xml::csParser::ParseFilename(std::string(argv[1]));
+  xml::csDocument *doc = xml::csParser::ParseFilename(std::string(argv[1]));
 
+  if (doc)
+  {
+    delete doc;
+  }
 
 }
