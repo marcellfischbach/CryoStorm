@@ -13,7 +13,8 @@ class csWorld;
 class csSpatialState;
 
 
-CS_CLASS()
+
+CS_CLASS(jclass="org.cryo.core.entity.EntityState")
 class CS_CORE_API csEntityState : public CS_SUPER(iObject)
 {
 CS_CLASS_GEN_OBJECT;
@@ -21,9 +22,12 @@ public:
   csEntityState(const std::string& name = std::string(""));
   virtual ~csEntityState();
 
+  CS_FUNCTION()
   void SetName(const std::string& name);
+  CS_FUNCTION()
   const std::string& GetName() const;
 
+  CS_FUNCTION()
   void SetEntity(csEntity* entity);
   csEntity* GetEntity();
   const csEntity* GetEntity() const;

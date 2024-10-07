@@ -1,0 +1,215 @@
+<converters>
+    <converter>
+        <types>
+            <type>bool</type>
+        </types>
+        <in-arguments>
+            <argument jtype="jboolean" id="bool"/>
+        </in-arguments>
+        <out-arguments>
+        </out-arguments>
+        <in-conversion>
+            bool ${csArg} = ${bool};
+        </in-conversion>
+        <out-conversion returnType="jboolean" fullQualifiedType="bool">
+            return (jboolean)${csRet};
+        </out-conversion>
+    </converter>
+
+    <converter>
+        <types>
+            <type>int8_t</type>
+        </types>
+        <in-arguments>
+            <argument jtype="jbyte" id="int"/>
+        </in-arguments>
+        <out-arguments>
+        </out-arguments>
+        <in-conversion>
+            int8_t ${csArg} = (int8_t)${int};
+        </in-conversion>
+        <out-conversion returnType="jbyte" fullQualifiedType="int8_t">
+            return (jbyte)${csRet};
+        </out-conversion>
+    </converter>
+
+    <converter>
+        <types>
+            <type>uint8_t</type>
+        </types>
+        <in-arguments>
+            <argument jtype="jshort" id="int"/>
+        </in-arguments>
+        <out-arguments>
+        </out-arguments>
+        <in-conversion>
+            uint8_t ${csArg} = (uint8_t)${int};
+        </in-conversion>
+        <out-conversion returnType="jshort" fullQualifiedType="uint8_t">
+            return (jshort)${csRet};
+        </out-conversion>
+    </converter>
+
+
+    <converter>
+        <types>
+            <type>int16_t</type>
+        </types>
+        <in-arguments>
+            <argument jtype="jshort" id="int"/>
+        </in-arguments>
+        <out-arguments>
+        </out-arguments>
+        <in-conversion>
+            int16_t ${csArg} = (int16_t)${int};
+        </in-conversion>
+        <out-conversion returnType="jshort" fullQualifiedType="int16_t">
+            return (jbyte)${csRet};
+        </out-conversion>
+    </converter>
+
+    <converter>
+        <types>
+            <type>uint16_t</type>
+        </types>
+        <in-arguments>
+            <argument jtype="jint" id="int"/>
+        </in-arguments>
+        <out-arguments>
+        </out-arguments>
+        <in-conversion>
+            uint16_t ${csArg} = (uint16_t)${int};
+        </in-conversion>
+        <out-conversion returnType="jint" fullQualifiedType="uint16_t">
+            return (jint)${csRet};
+        </out-conversion>
+    </converter>
+
+    <converter>
+        <types>
+            <type>int32_t</type>
+        </types>
+        <in-arguments>
+            <argument jtype="jint" id="int"/>
+        </in-arguments>
+        <out-arguments>
+        </out-arguments>
+        <in-conversion>
+            int32_t ${csArg} = (int32_t)${int};
+        </in-conversion>
+        <out-conversion returnType="jint" fullQualifiedType="int32_t">
+            return (jint)${csRet};
+        </out-conversion>
+    </converter>
+
+    <converter>
+        <types>
+            <type>uint32_t</type>
+        </types>
+        <in-arguments>
+            <argument jtype="jlong" id="int"/>
+        </in-arguments>
+        <out-arguments>
+        </out-arguments>
+        <in-conversion>
+            uint32_t ${csArg} = (uint32_t)${int};
+        </in-conversion>
+        <out-conversion returnType="jlong" fullQualifiedType="uint32_t">
+            return (jlong)${csRet};
+        </out-conversion>
+    </converter>
+
+    <converter>
+        <types>
+            <type>int64_t</type>
+        </types>
+        <in-arguments>
+            <argument jtype="jlong" id="int"/>
+        </in-arguments>
+        <out-arguments>
+        </out-arguments>
+        <in-conversion>
+            int64_t ${csArg} = (int64_t)${int};
+        </in-conversion>
+        <out-conversion returnType="jlong" fullQualifiedType="int64_t">
+            return (jlong)${csRet};
+        </out-conversion>
+    </converter>
+
+
+    <converter>
+        <types>
+            <type>uint64_t</type>
+        </types>
+        <in-arguments>
+            <argument jtype="jlong" id="int"/>
+        </in-arguments>
+        <out-arguments>
+        </out-arguments>
+        <in-conversion>
+            uint64_t ${csArg} = (uint64_t)${int};
+        </in-conversion>
+        <out-conversion returnType="jlong" fullQualifiedType="uint64_t">
+            return (jlong)${csRet};
+        </out-conversion>
+    </converter>
+
+
+    <converter>
+        <types>
+            <type>float</type>
+        </types>
+        <in-arguments>
+            <argument jtype="jfloat" id="float"/>
+        </in-arguments>
+        <out-arguments>
+        </out-arguments>
+        <in-conversion>
+            float ${csArg} = (float)${float};
+        </in-conversion>
+        <out-conversion returnType="jfloat" fullQualifiedType="float">
+            return (jfloat)${csRet};
+        </out-conversion>
+    </converter>
+
+
+    <converter>
+        <types>
+            <type>double</type>
+        </types>
+        <in-arguments>
+            <argument jtype="jdouble" id="double"/>
+        </in-arguments>
+        <out-arguments>
+        </out-arguments>
+        <in-conversion>
+            double ${csArg} = (double)${double};
+        </in-conversion>
+        <out-conversion returnType="jdouble" fullQualifiedType="double">
+            return (jdouble)${csRet};
+        </out-conversion>
+    </converter>
+
+
+
+    <converter>
+        <types>
+            <type>string</type>
+            <type>std::string</type>
+        </types>
+        <in-arguments>
+            <argument jtype="jstring" id="str"/>
+        </in-arguments>
+        <out-arguments>
+        </out-arguments>
+        <in-conversion>
+            const char* ${csTmp} = env->GetStringUTFChars(${str}, 0);
+            std::string ${csArg} (${csTmp})
+            env->ReleaseStringUTFChars(${str}, ${csTmp});
+        </in-conversion>
+        <out-conversion returnType="jstring" fullQualifiedType="std::string">
+            return env->NewStringUTF(${csRet}.c_str());
+        </out-conversion>
+    </converter>
+    
+</converters>

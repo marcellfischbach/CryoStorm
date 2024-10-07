@@ -19,6 +19,7 @@ class csGfxLight;
 class csWorld;
 
 
+
 CS_CLASS(jclass=org.cryo.core.entity.LightState)
 class CS_CORE_API csLightState : public CS_SUPER(csSpatialState)
 {
@@ -31,19 +32,25 @@ public:
   void SetType(eLightType type);
   CS_NODISCARD eLightType GetType() const;
 
+  CS_FUNCTION()
   void SetCastShadow(bool castShadow);
-  CS_NODISCARD bool IsCastShadow() const;
+  CS_FUNCTION()
+  CS_NODISCARD  bool IsCastShadow() const;
 
+  CS_FUNCTION()
   void SetShadowMapBias(float bias);
+  CS_FUNCTION()
   CS_NODISCARD float GetShadowMapBias() const;
 
   CS_FUNCTION()
   void SetColor(const csColor4f &color);
 
   CS_FUNCTION()
-  [[nodiscard]] const csColor4f &GetColor() const;
+  CS_NODISCARD const csColor4f &GetColor() const;
 
+  CS_FUNCTION()
   void SetRange(float range);
+  CS_FUNCTION()
   CS_NODISCARD float GetRange() const;
 
 
