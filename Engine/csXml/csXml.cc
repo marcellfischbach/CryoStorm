@@ -6,19 +6,6 @@
 namespace cryo::xml
 {
 
-static int64_t tick()
-{
-  LARGE_INTEGER c, f;
-  if (QueryPerformanceCounter(&c) && QueryPerformanceFrequency(&f))
-  {
-    c.QuadPart *= 1000000;
-    c.QuadPart /= f.QuadPart;
-    c.QuadPart /= 1000;
-    return c.QuadPart;
-  }
-
-  return GetTickCount64();
-}
 
 
 
@@ -41,7 +28,6 @@ size_t csParseException::GetColumn() const
 
 csDocument *csParser::ParseFilename(const std::string &filename)
 {
-  int64_t startReadFile = tick();
   FILE *fs;
   auto error = fopen_s(&fs, filename.c_str(), "rt");
   if (error)
@@ -62,9 +48,6 @@ csDocument *csParser::ParseFilename(const std::string &filename)
   std::string content(buffer, size);
   delete[] buffer;
 
-  int64_t endReadFile = tick();
-  printf ("Read file: %lld\n", endReadFile - startReadFile);
-
   return ParseContent(content);
 }
 
@@ -84,11 +67,7 @@ csParser::csParser(const std::string &content)
 
 csDocument *csParser::Parse()
 {
-  int64_t startTokenize = tick();
   Tokenize();
-  int64_t endTokenize = tick();
-  printf ("Tokenize: %lld\n", endTokenize - startTokenize);
-
 
   auto document = new csDocument();
 
@@ -603,6 +582,53 @@ eNodeType csNode::GetType() const
   return m_type;
 }
 
+bool csNode::IsElement() const
+{
+  return m_type == eNT_Element;
+}
+
+
+bool csNode::IsText() const
+{
+  return m_type == eNT_Text;
+}
+
+
+bool csNode::IsComment() const
+{
+  return m_type == eNT_Comment;
+}
+
+csElement* csNode::AsElement()
+{
+  return nullptr;
+}
+
+const csElement* csNode::AsElement() const
+{
+  return nullptr;
+}
+
+csText* csNode::AsText()
+{
+  return nullptr;
+}
+
+const csText* csNode::AsText() const
+{
+  return nullptr;
+}
+
+csComment* csNode::AsComment()
+{
+  return nullptr;
+}
+
+const csComment* csNode::AsComment() const
+{
+  return nullptr;
+}
+
 
 const csElement *csNode::GetParent() const
 {
@@ -641,6 +667,17 @@ const std::string &csElement::GetTagName() const
 {
   return m_tagName;
 }
+
+csElement* csElement::AsElement ()
+{
+  return this;
+}
+
+const csElement* csElement::AsElement () const
+{
+  return this;
+}
+
 
 csElement *csElement::CreateChildElement(const std::string &tagName)
 {
@@ -691,6 +728,60 @@ void csElement::CreateChildComment(const std::string &text)
   m_children.push_back(child);
 }
 
+size_t csElement::GetNumberOfChildren() const
+{
+  return m_children.size();
+}
+
+csNode* csElement::GetChild(size_t idx)
+{
+  return m_children[idx];
+}
+
+const csNode* csElement::GetChild(size_t idx) const
+{
+  return m_children[idx];
+}
+
+
+bool csElement::HasAttribute(const std::string &key) const
+{
+  for (const auto &attrib: m_attributes)
+  {
+    if (attrib->GetKey() == key)
+    {
+      return true;
+    }
+  }
+  return false;
+}
+
+std::string csElement::GetAttribute(const std::string &key) const
+{
+  for (const auto &attrib: m_attributes)
+  {
+    if (attrib->GetKey() == key)
+    {
+      return attrib->GetValue();
+    }
+  }
+  return "";
+}
+
+std::string csElement::GetContent () const
+{
+  std::string content;
+  for (const auto &child: m_children)
+  {
+    const xml::csText *text = child->AsText();
+    if (text)
+    {
+      content += text->GetContent();
+    }
+
+  }
+  return content;
+}
 
 void csElement::AddAttribute(const std::string &key, const std::string &value)
 {
@@ -726,6 +817,15 @@ const std::string &csText::GetContent() const
 }
 
 
+csText* csText::AsText ()
+{
+  return this;
+}
+
+const csText* csText::AsText () const
+{
+  return this;
+}
 
 csComment::csComment()
     : csNode(eNT_Comment)
@@ -741,6 +841,16 @@ void csComment::SetContent(const std::string &content)
 const std::string &csComment::GetContent() const
 {
   return m_content;
+}
+
+csComment* csComment::AsComment ()
+{
+  return this;
+}
+
+const csComment* csComment::AsComment () const
+{
+  return this;
 }
 
 csElement *csDocument::CreateRoot(const std::string &tagName)

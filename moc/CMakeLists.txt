@@ -15,6 +15,8 @@ add_executable(csMOC
         generate/header.hh
         generate/java.cc
         generate/java.hh
+        generate/javaconverter.cc
+        generate/javaconverter.hh
         generate/master.cc
         generate/master.hh
         generate/source.cc

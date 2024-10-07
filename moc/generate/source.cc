@@ -203,7 +203,11 @@ ClassGenerator::GenerateFunctionVoidInvokeMethod(ClassNode *classNode, FunctionN
   fkt += "\n";
   fkt += "  virtual void InvokeVoidImpl (" + sConst + "cryo::iObject* obj, ...) const\n";
   fkt += "  {\n";
-  if (constMethod && !function->IsConst())
+  if (!function->GetReturnValue().IsVoid())
+  {
+    fkt += "    throw cryo::csBadMethodInvokation(\"[" + function->GetName() + "] No void-call\");\n";
+  }
+  else if (constMethod && !function->IsConst())
   {
     fkt += "    throw cryo::csBadMethodInvokation(\"[" + function->GetName() + "] No const-call\");\n";
   }

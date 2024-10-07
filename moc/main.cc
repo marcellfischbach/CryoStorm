@@ -17,6 +17,7 @@
 #include <parser/tokenizer.hh>
 #include <parser/parser.hh>
 #include <parser/parseexception.hh>
+#include <generate/javaconverter.hh>
 
 //class StackWalkerToConsole : public StackWalker
 //{
@@ -36,6 +37,7 @@ void print_usage(char* name)
   printf("    --header <header>      the hh file when a single file is processed\n");
   printf("    --path   <path>        base path that contains the moc file and where to put the files\n");
   printf("    --prefix <prefix>      the include prefix where include files are located\n");
+  printf("    --javaConverter <path> path, where *-moc.xml files are located");
 }
 
 class StdOutOutput : public cryo::moc::iOutput
@@ -304,11 +306,13 @@ int main(int argc, char** argv)
   std::string header;
   std::string sourcePath;
   std::string path;
+  std::string javaConverter;
 
   header = "header";
   source = "source";
   // file = "D:\\DEV\\CobaltSKY\\Engine\\cobalt\\entity\\csdynamiccolliderstate.hh";
   path = "C:\\Users\\MCEL\\CMakeBuilds\\d5ee80a5-d1ee-2937-85d1-86f3b75e756d\\build\\x64-Release\\src\\test";
+
 
   if (argc == 1)
   {
@@ -369,12 +373,27 @@ int main(int argc, char** argv)
       path = std::string(argv[++i]);
       // std::cout << " path: '" << path << "'";
     }
+    else if (arg == "--javaConverter")
+    {
+      if (i + 1 >= argc)
+      {
+        print_usage(argv[0]);
+        return -1;
+      }
+      javaConverter = std::string(argv[++i]);
+      // std::cout << " path: '" << path << "'";
+    }
     else
     {
       printf("Invalid arg %s\n", arg.c_str());
       print_usage(argv[0]);
       return -1;
     }
+  }
+
+  if (!javaConverter.empty())
+  {
+    JavaConverters::Get()->ReadConverters (javaConverter);
   }
 
   if (!file.empty() && !source.empty() && !header.empty())

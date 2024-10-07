@@ -1,6 +1,7 @@
 #include <generate/java.hh>
 #include <ast.hh>
 #include <generate/generator.hh>
+#include <generate/javaconverter.hh>
 
 namespace cryo::moc
 {
@@ -110,6 +111,13 @@ std::string convert_return_type_to_jni_type(FunctionNode *function, CSMetaNode *
   {
     return "jdouble";
   }
+
+  const JavaConverter *converter = JavaConverters::Get()->FindConverter(typeName);
+  if (converter)
+  {
+    return converter->GetOutputReturnType();
+  }
+
   if (def.IsPointer() || def.IsPointerToPointer() || def.IsReference())
   {
     return "jlong";
@@ -117,59 +125,76 @@ std::string convert_return_type_to_jni_type(FunctionNode *function, CSMetaNode *
   return "void";
 }
 
-bool test_cryo(const std::string &type, const std::string &cryoType)
-{
-  return type == cryoType || type == std::string("cryo::") + cryoType;
-}
 
 std::string
-convert_function_argument_to_jni_type(const Argument &argument, CSMetaNode *meta, uint32_t c, uint32_t &numArgs)
+convert_function_input_parameter_to_jni_type(const Argument &argument, CSMetaNode *meta, uint32_t jniArgCount, uint32_t &numJniArgCount)
 {
   const TypeDef &def = argument.GetType();
   std::string typeName = def.GetTypeName();
-  numArgs = 1;
+  numJniArgCount = 1;
   if (typeName == "std::string" || typeName == "string")
   {
-    return ", jstring arg" + std::to_string(c);
+    return ", jstring arg" + std::to_string(jniArgCount);
   }
   else if (typeName == "int8_t")
   {
-    return ", jbyte arg" + std::to_string(c);
+    return ", jbyte arg" + std::to_string(jniArgCount);
   }
   else if (typeName == "uint8_t" || typeName == "int16_t")
   {
-    return ", jshort arg" + std::to_string(c);
+    return ", jshort arg" + std::to_string(jniArgCount);
   }
   else if (typeName == "int" || typeName == "uint16_t" || typeName == "int32_t")
   {
-    return ", jint arg" + std::to_string(c);
+    return ", jint arg" + std::to_string(jniArgCount);
   }
   else if (typeName == "unsigned" || typeName == "uint32_t" || typeName == "int64_t")
   {
-    return ", jlong arg" + std::to_string(c);
+    return ", jlong arg" + std::to_string(jniArgCount);
   }
   else if (typeName == "float")
   {
-    return ", jfloat arg" + std::to_string(c);
+    return ", jfloat arg" + std::to_string(jniArgCount);
   }
   else if (typeName == "double")
   {
-    return ", jdouble arg" + std::to_string(c);
+    return ", jdouble arg" + std::to_string(jniArgCount);
   }
-  else if (test_cryo(typeName, "csVector2f"))
+  else
   {
-    numArgs = 2;
-    return ", jfloat arg" + std::to_string(c) + ", jfloat arg" + std::to_string(c + 1);
+    const JavaConverter *converter = JavaConverters::Get()->FindConverter(typeName);
+    if (converter)
+    {
+      numJniArgCount = converter->GetInputArguments().size();
+      std::string arguments;
+      for (const auto &arg: converter->GetInputArguments())
+      {
+        arguments += ", " + arg.GetJType() + " jniArg" + std::to_string(jniArgCount++);
+      }
+      return arguments;
+    }
   }
-  else if (test_cryo(typeName, "csColor4f"))
+
+  return ", jlong arg" + std::to_string(jniArgCount);
+}
+
+std::string
+convert_function_output_parameter_to_jni_type(const FunctionNode *function, CSMetaNode *meta)
+{
+  const TypeDef &def = function->GetReturnValue();
+  std::string typeName = def.GetTypeName();
+  size_t jniArgCount = 0;
+  const JavaConverter *converter = JavaConverters::Get()->FindConverter(typeName);
+  if (converter)
   {
-    numArgs = 4;
-    return ", jfloat arg" + std::to_string(c)
-           + ", jfloat arg" + std::to_string(c + 1)
-           + ", jfloat arg" + std::to_string(c + 2)
-           + ", jfloat arg" + std::to_string(c + 3);
+    std::string arguments;
+    for (const auto &arg: converter->GetOutputArguments())
+    {
+      arguments += ", " + arg.GetJType() + " jniOutArg" + std::to_string(jniArgCount++);
+    }
+    return arguments;
   }
-  return ", jlong arg" + std::to_string(c);
+  return "";
 }
 
 std::string convert_string_input_to_jni(uint32_t inputC, uint32_t outputC)
@@ -179,68 +204,54 @@ std::string convert_string_input_to_jni(uint32_t inputC, uint32_t outputC)
   std::string argOut = std::string("csArg") + std::to_string(outputC);
   std::string source;
   source += std::string("  const char *") + argTmp + " = env->GetStringUTFChars(" + argIn + ", 0);\n";
-  source += std::string("  std::string ") + argOut + "(" + argTmp + ")\n";
+  source += std::string("  std::string ") + argOut + "(" + argTmp + ");\n";
   source += std::string("  env->ReleaseStringUTFChars(" + argIn + ", " + argTmp + ");\n");
 
   return source;
 }
 
-std::string convert_vector_float_type_to_jni (std::string typeName, uint32_t count, uint32_t inputC, uint32_t outputC)
-{
-  std::string argOut = std::string("csArg") + std::to_string(outputC);
-
-  std::string source;
-  source += std::string ("  ") + typeName + " " + argOut + "(";
-  for (uint32_t i=0; i<count; i++)
-  {
-    if (i != 0)
-    {
-      source += ", ";
-    }
-    source += std::string ("arg") + std::to_string(inputC+i);
-  }
-  source += ");\n";
-
-  return source;
-}
 
 std::string
-convert_input_argument_to_jni(const Argument &argument, uint32_t inputC, uint32_t outputC, uint32_t &numArgs)
+convert_input_parameter_to_jni(const Argument &argument, uint32_t jniArgCount, uint32_t csMethodArgCount, uint32_t &numCsMethodArgCount)
 {
   const TypeDef &def = argument.GetType();
   std::string typeName = def.GetTypeName();
-  numArgs = 1;
+  numCsMethodArgCount = 1;
   if (typeName == "std::string" || typeName == "string")
   {
-    return convert_string_input_to_jni(inputC, outputC);
+    return convert_string_input_to_jni(jniArgCount, csMethodArgCount);
   }
   else if (typeName == "int8_t")
   {
-    return ", jbyte arg" + std::to_string(inputC++);
+    return ", jbyte arg" + std::to_string(jniArgCount++);
   }
   else if (typeName == "uint8_t" || typeName == "int16_t")
   {
-    return ", jshort arg" + std::to_string(inputC++);
+    return ", jshort arg" + std::to_string(jniArgCount++);
   }
   else if (typeName == "int" || typeName == "uint16_t" || typeName == "int32_t")
   {
-    return ", jint arg" + std::to_string(inputC++);
+    return ", jint arg" + std::to_string(jniArgCount++);
   }
   else if (typeName == "unsigned" || typeName == "uint32_t" || typeName == "int64_t")
   {
-    return ", jlong arg" + std::to_string(inputC++);
+    return ", jlong arg" + std::to_string(jniArgCount++);
   }
   else if (typeName == "float")
   {
-    return ", jfloat arg" + std::to_string(inputC++);
+    return ", jfloat arg" + std::to_string(jniArgCount++);
   }
   else if (typeName == "double")
   {
-    return ", jdouble arg" + std::to_string(inputC++);
+    return ", jdouble arg" + std::to_string(jniArgCount++);
   }
-  else if (test_cryo(typeName, "csColor4f"))
+  else
   {
-    return convert_vector_float_type_to_jni(typeName, 4, inputC, outputC);
+    const JavaConverter *converter = JavaConverters::Get()->FindConverter(typeName);
+    if (converter)
+    {
+      return converter->ConvertInput (jniArgCount, csMethodArgCount);
+    }
   }
   return "";
 }
@@ -252,7 +263,7 @@ std::string convert_result(const FunctionNode *function)
   std::string typeName = def.GetTypeName();
   if (typeName == "std::string" || typeName == "string")
   {
-    return "  return env->NewStringUTF(csRes.c_str());";
+    return "  return env->NewStringUTF(csReturnValue.c_str());";
   }
   else if (typeName == "int8_t")
   {
@@ -278,7 +289,44 @@ std::string convert_result(const FunctionNode *function)
   {
     return " return static_cast<jdouble>(csRes);";
   }
+
+  const JavaConverter *converter = JavaConverters::Get()->FindConverter(typeName);
+  if (converter)
+  {
+    return converter->ConvertOutput();
+  }
   return "";
+}
+
+std::string convert_return_type_to_cs(const FunctionNode *function)
+{
+  const TypeDef &def = function->GetReturnValue();
+  std::string typeName = def.GetTypeName();
+
+  const JavaConverter *converter = JavaConverters::Get()->FindConverter(typeName);
+  if (converter && !converter->GetFullQualifiedType().empty())
+  {
+    std::string fullTypeName;
+    if (def.IsConst())
+    {
+      fullTypeName += "const ";
+      fullTypeName += converter->GetFullQualifiedType();
+      if (def.IsReference())
+      {
+        fullTypeName += "&";
+      }
+      else if (def.IsPointerToPointer())
+      {
+        fullTypeName += "**";
+      }
+      else if (def.IsPointer())
+      {
+        fullTypeName += "*";
+      }
+    }
+    return fullTypeName;
+  }
+  return function->GetReturnValue().GetText();
 }
 
 
@@ -297,31 +345,34 @@ std::string JavaGenerator::GenerateFunction(ClassNode *classNode, std::list<Name
   std::string methodName = convert_to_jni_method_name(javaFQClass, functionNode->GetName());
 
 
-  source += "JNIEXPORT " + convert_return_type_to_jni_type(functionNode, functionMeta) + "\n";
-  source += "JNICALL " + methodName + "(JNIEnv* env, jclass cls, jlong ref";
+
 
   std::string argConversion;
-  uint32_t inputC = 0;
-  uint32_t outputC = 0;
+  std::string functionArguments;
+  uint32_t jniArgCount      = 0;
+  uint32_t csMethodArgCount = 0;
   for (auto &arg: functionNode->GetArguments())
   {
-    uint32_t numInputArgs, numOutputArgs;
-    source += convert_function_argument_to_jni_type(arg, functionMeta, inputC, numInputArgs);
-    argConversion += convert_input_argument_to_jni(arg, inputC, outputC, numOutputArgs);
+    uint32_t numJniArgCount, numCsMethodArgCount;
+    functionArguments += convert_function_input_parameter_to_jni_type(arg, functionMeta, jniArgCount, numJniArgCount);
+    argConversion += convert_input_parameter_to_jni(arg, jniArgCount, csMethodArgCount, numCsMethodArgCount);
 
 
-    inputC += numInputArgs;
-    outputC += numOutputArgs;
+    jniArgCount += numJniArgCount;
+    csMethodArgCount += numCsMethodArgCount;
   }
+  
+  functionArguments += convert_function_output_parameter_to_jni_type(functionNode, functionMeta);
 
-  source += std::string(")\n")
+  source += "JNIEXPORT " + convert_return_type_to_jni_type(functionNode, functionMeta) + "\n";
+  source += "JNICALL " + methodName + "(JNIEnv* env, jclass cls, jlong ref" + functionArguments  + ")\n"
             + "{\n"
             + "  auto csRef = reinterpret_cast<" + fns + classNode->GetName() + "*>(ref);\n"
             + argConversion + "\n"
             + "  ";
   if (!functionNode->GetReturnValue().IsVoid())
   {
-    source += functionNode->GetReturnValue().GetText() + " csRes = ";
+    source += convert_return_type_to_cs (functionNode) + " csReturnValue = ";
   }
   source += "csRef->" + functionNode->GetName() + "(";
   for (int i = 0; i < functionNode->GetArguments().size(); ++i)

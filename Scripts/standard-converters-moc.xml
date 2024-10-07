@@ -1,0 +1,29 @@
+<converters>
+    <converter>
+        <types>
+            <type>csColor4f</type>
+            <type>cryo::csColor4f</type>
+        </types>
+        <in-arguments>
+            <argument jtype="jfloat" id="r"/>
+            <argument jtype="jfloat" id="g"/>
+            <argument jtype="jfloat" id="b"/>
+            <argument jtype="jfloat" id="a"/>
+        </in-arguments>
+        <out-arguments>
+            <argument jtype="jfloatArray" id="out"/>
+        </out-arguments>
+        <in-conversion>
+            cryo::csColor4f ${csArg} (${r}, ${g}, ${b}, ${a});
+        </in-conversion>
+        <out-conversion returnType="void" fullQualifiedType="cryo::csColor4f">
+            jfloat *${csTmp} = env->GetFloatArrayElements(${out}, 0);
+            ${csTmp}[0] = ${csRet}.r;
+            ${csTmp}[1] = ${csRet}.g;
+            ${csTmp}[2] = ${csRet}.b;
+            ${csTmp}[3] = ${csRet}.a;
+            env->ReleaseFloatArrayElements(${out}, ${csTmp}, 0);
+        </out-conversion>
+
+    </converter>
+</converters>

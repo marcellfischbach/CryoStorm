@@ -35,6 +35,8 @@ enum eNodeType
 };
 
 class csElement;
+class csText;
+class csComment;
 class CS_XML_API csNode
 {
   friend class csDocument;
@@ -44,6 +46,18 @@ public:
 
   [[nodiscard]] eNodeType GetType() const;
 
+  bool  IsElement () const;
+  bool  IsText () const;
+  bool  IsComment () const;
+
+  [[nodiscard]] virtual csElement* AsElement ();
+  [[nodiscard]] virtual const csElement* AsElement () const;
+
+  [[nodiscard]] virtual csText* AsText ();
+  [[nodiscard]] virtual const csText* AsText () const;
+
+  [[nodiscard]] virtual csComment* AsComment ();
+  [[nodiscard]] virtual const csComment* AsComment () const;
 
   [[nodiscard]] const csElement *GetParent() const;
   [[nodiscard]] csElement *GetParent();
@@ -69,10 +83,24 @@ public:
   ~csElement() override;
 
   [[nodiscard]] const std::string &GetTagName() const;
-
+  
+  [[nodiscard]] csElement *AsElement() override;
+  [[nodiscard]] const csElement *AsElement() const override;
+  
   csElement *CreateChildElement(const std::string &tagName);
   void CreateChildText(const std::string &text, bool trim);
   void CreateChildComment(const std::string &text);
+
+  [[nodiscard]] size_t GetNumberOfChildren() const;
+  [[nodiscard]] csNode* GetChild (size_t idx);
+  [[nodiscard]] const csNode* GetChild (size_t idx) const;
+
+
+  bool HasAttribute (const std::string &key) const;
+  std::string GetAttribute (const std::string &key) const;
+
+
+  [[nodiscard]] std::string GetContent () const;
 
 
   void AddAttribute(const std::string &key, const std::string &value);
@@ -97,6 +125,10 @@ public:
 
   void SetContent(const std::string &content);
   [[nodiscard]] const std::string &GetContent() const;
+
+  [[nodiscard]] csText *AsText() override;
+  [[nodiscard]] const csText *AsText() const override;
+
 private:
 private:
   std::string m_content;
@@ -110,19 +142,22 @@ public:
 
   void SetContent(const std::string &content);
   [[nodiscard]] const std::string &GetContent() const;
+
+  [[nodiscard]] csComment *AsComment() override;
+  [[nodiscard]] const csComment *AsComment() const override;
+
 private:
 private:
   std::string m_content;
 };
 
 
-
 class CS_XML_API csParseException : public std::exception
 {
 public:
   csParseException(const std::string &message, size_t line, size_t column);
-  size_t GetLine () const;
-  size_t GetColumn () const;
+  size_t GetLine() const;
+  size_t GetColumn() const;
 
 private:
   size_t m_line;

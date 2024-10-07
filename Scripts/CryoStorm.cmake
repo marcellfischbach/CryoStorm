@@ -20,7 +20,7 @@ function(CS_MOC trgt)
 
 	set(TARGET_NAME "${trgt}-MOC")
 	add_custom_target(${TARGET_NAME}
-                            COMMAND ${EXEC_PATH}csMOC  --path ${MOC_DIRECTORY} --sourcepath ${CMAKE_CURRENT_SOURCE_DIR}
+                            COMMAND ${EXEC_PATH}csMOC  --path ${MOC_DIRECTORY} --sourcepath ${CMAKE_CURRENT_SOURCE_DIR} --javaConverter ${CryoStorm_SOURCE_DIR}/Scripts\;${CryoStorm_SOURCE_DIR}/data
 			WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 			BYPRODUCTS "${MOC_DIRECTORY}/.csCache"
 	)

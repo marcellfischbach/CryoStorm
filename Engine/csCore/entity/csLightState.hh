@@ -8,6 +8,7 @@
 #include <csCore/math/csColor4f.hh>
 #include <csCore/math/csVector3f.hh>
 
+
 namespace cryo
 {
 
@@ -16,6 +17,7 @@ struct iPointLight;
 struct iDirectionalLight;
 class csGfxLight;
 class csWorld;
+
 
 CS_CLASS(jclass=org.cryo.core.entity.LightState)
 class CS_CORE_API csLightState : public CS_SUPER(csSpatialState)
@@ -37,8 +39,9 @@ public:
 
   CS_FUNCTION()
   void SetColor(const csColor4f &color);
+
   CS_FUNCTION()
-  CS_NODISCARD const csColor4f &GetColor() const;
+  [[nodiscard]] const csColor4f &GetColor() const;
 
   void SetRange(float range);
   CS_NODISCARD float GetRange() const;
