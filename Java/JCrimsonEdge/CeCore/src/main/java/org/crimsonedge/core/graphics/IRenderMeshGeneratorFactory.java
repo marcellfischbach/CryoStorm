@@ -3,7 +3,7 @@ package org.crimsonedge.core.graphics;
 import org.crimsonedge.core.CeClass;
 import org.crimsonedge.core.CoreObject;
 
-@CeClass("cryo::iRenderMeshGeneratorFactory")
+@CeClass("cs::iRenderMeshGeneratorFactory")
 public class IRenderMeshGeneratorFactory extends CoreObject {
 
 

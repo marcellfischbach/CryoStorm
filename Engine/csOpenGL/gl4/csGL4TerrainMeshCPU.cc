@@ -11,7 +11,7 @@
 #include <gl/glew.h>
 
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 

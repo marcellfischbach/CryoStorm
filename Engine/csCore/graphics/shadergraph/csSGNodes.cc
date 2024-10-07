@@ -1,7 +1,7 @@
 
 #include <csCore/graphics/shadergraph/csSGNodes.hh>
 
-namespace cryo
+namespace cs
 {
 
 

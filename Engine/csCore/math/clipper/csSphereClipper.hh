@@ -5,7 +5,7 @@
 #include <csCore/math/iclipper.hh>
 #include <csCore/csDefs.hh>
 
-namespace cryo
+namespace cs
 {
 
 

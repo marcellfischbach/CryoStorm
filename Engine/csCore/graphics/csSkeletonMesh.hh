@@ -4,7 +4,7 @@
 #include <csCore/graphics/csMesh.hh>
 #include <csCore/graphics/csSkeleton.hh>
 
-namespace cryo
+namespace cs
 {
 
 CS_CLASS()

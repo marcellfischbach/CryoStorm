@@ -204,7 +204,7 @@
         </out-arguments>
         <in-conversion>
             const char* ${csTmp} = env->GetStringUTFChars(${str}, 0);
-            std::string ${csArg} (${csTmp})
+            std::string ${csArg} (${csTmp});
             env->ReleaseStringUTFChars(${str}, ${csTmp});
         </in-conversion>
         <out-conversion returnType="jstring" fullQualifiedType="std::string">

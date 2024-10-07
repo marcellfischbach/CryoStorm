@@ -3,7 +3,7 @@
 #include <csCore/csCoreExport.hh>
 #include <string>
 
-namespace cryo
+namespace cs
 {
 
 class CS_CORE_API csResourceLocator

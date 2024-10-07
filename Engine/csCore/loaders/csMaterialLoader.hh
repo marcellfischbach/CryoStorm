@@ -4,7 +4,7 @@
 #include <csCore/graphics/material/eMaterialAttributeType.hh>
 #include <csCore/resource/csBaseCSFAssetLoader.hh>
 
-namespace cryo
+namespace cs
 {
 
 struct iMaterial;

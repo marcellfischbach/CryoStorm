@@ -7,7 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 
-@CeClass("cryo::csJavaFile")
+@CeClass("cs::csJavaFile")
 public class csJavaFile extends CoreObject implements IFile {
 
     private final String name;

@@ -3,7 +3,7 @@ package org.crimsonedge.core.entity;
 import org.crimsonedge.core.CeClass;
 import org.crimsonedge.core.CoreObject;
 
-@CeClass("cryo::csEntity")
+@CeClass("cs::csEntity")
 public class csEntity extends CoreObject {
 
     private static native void nSetName(long ref, String name);

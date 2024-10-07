@@ -1,7 +1,7 @@
 
 #include <csCore/graphics/pp/csPPHighPass.hh>
 
-namespace cryo
+namespace cs
 {
 
 csPPHighPass::csPPHighPass(float highValue)
@@ -10,7 +10,7 @@ csPPHighPass::csPPHighPass(float highValue)
   DeclareInput(ePPImageType::Color, "Color");
   DeclareOutput(ePPImageType::Color, "Color");
 
-  m_shader               = cryo::csAssetManager::Get()->Get<cryo::iShader>("${shaders}/pp/high_pass/high_pass.shader");
+  m_shader               = cs::csAssetManager::Get()->Get<cs::iShader>("${shaders}/pp/high_pass/high_pass.shader");
   m_attribColor          = m_shader ? m_shader->GetShaderAttribute("Color") : nullptr;
   m_attribHighValue = m_shader ? m_shader->GetShaderAttribute("HighValue") : nullptr;
 }
@@ -24,7 +24,7 @@ csPPHighPass::~csPPHighPass()
 
 
 
-bool csPPHighPass::RefreshOutputTexture(cryo::iDevice *device, iRenderTarget2D *finalTarget)
+bool csPPHighPass::RefreshOutputTexture(cs::iDevice *device, iRenderTarget2D *finalTarget)
 {
   if (finalTarget)
   {
@@ -46,7 +46,7 @@ bool csPPHighPass::RefreshOutputTexture(cryo::iDevice *device, iRenderTarget2D *
                             m_inputs[0]->GetFormat(),
                             false,
                             0,
-                            cryo::ePF_Depth);
+                            cs::ePF_Depth);
 }
 
 void csPPHighPass::Process(iDevice *device, iRenderTarget2D *finalTarget)
@@ -54,14 +54,14 @@ void csPPHighPass::Process(iDevice *device, iRenderTarget2D *finalTarget)
   if (m_shader && m_attribColor && RefreshOutputTexture(device, finalTarget))
   {
     device->SetRenderTarget(m_renderTarget);
-    device->Clear(false, cryo::csColor4f(0, 0, 0, 0), false, 1.0f, false, 0);
+    device->Clear(false, cs::csColor4f(0, 0, 0, 0), false, 1.0f, false, 0);
     device->SetBlending(false);
     device->SetDepthTest(false);
     device->SetShader(m_shader);
     device->ResetTextures();
     if (m_attribColor)
     {
-      cryo::eTextureUnit unit = device->BindTexture(m_inputs[0]);
+      cs::eTextureUnit unit = device->BindTexture(m_inputs[0]);
       m_attribColor->Bind(unit);
     }
     if (m_attribHighValue)

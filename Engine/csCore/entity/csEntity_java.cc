@@ -9,7 +9,7 @@ extern "C"
 JNIEXPORT void
 JNICALL Java_org_crimsonedge_core_entity_Entity_nSetName(JNIEnv *env, jclass cls, jlong entityRef, jstring name)
 {
-  auto entity = reinterpret_cast<cryo::csEntity *>(entityRef);
+  auto entity = reinterpret_cast<cs::csEntity *>(entityRef);
 
   const char *string = env->GetStringUTFChars(name, 0);
   entity->SetName(string);
@@ -19,15 +19,15 @@ JNICALL Java_org_crimsonedge_core_entity_Entity_nSetName(JNIEnv *env, jclass cls
 JNIEXPORT jstring
 JNICALL Java_org_crimsonedge_core_entity_Entity_nGetName(JNIEnv *env, jclass cls, jlong entityRef)
 {
-  auto entity = reinterpret_cast<cryo::csEntity *>(entityRef);
+  auto entity = reinterpret_cast<cs::csEntity *>(entityRef);
   return env->NewStringUTF(entity->GetName().c_str());
 }
 
 JNIEXPORT jobject
 JNICALL Java_org_crimsonedge_core_entity_Entity_nGetWorld(JNIEnv *env, jclass cls, jlong entityRef)
 {
-  auto          entity  = reinterpret_cast<cryo::csEntity *>(entityRef);
-  cryo::csWorld *pWorld = entity->GetWorld();
+  auto          entity  = reinterpret_cast<cs::csEntity *>(entityRef);
+  cs::csWorld *pWorld = entity->GetWorld();
   return pWorld ? pWorld->GetJObject() : nullptr;
 }
 
@@ -35,9 +35,9 @@ JNICALL Java_org_crimsonedge_core_entity_Entity_nGetWorld(JNIEnv *env, jclass cl
 JNIEXPORT jboolean
 JNICALL Java_org_crimsonedge_core_entity_Entity_nAttachEntity(JNIEnv *env, jclass cls, jlong thisRef, jlong childRef, jlong parentStateRef)
 {
-  auto entity = reinterpret_cast<cryo::csEntity *>(thisRef);
-  auto parent = reinterpret_cast<cryo::csSpatialState*>(parentStateRef);
-  auto child  = reinterpret_cast<cryo::csEntity *>(childRef);
+  auto entity = reinterpret_cast<cs::csEntity *>(thisRef);
+  auto parent = reinterpret_cast<cs::csSpatialState*>(parentStateRef);
+  auto child  = reinterpret_cast<cs::csEntity *>(childRef);
 
   return entity->Attach(child, parent);
 }
@@ -45,8 +45,8 @@ JNICALL Java_org_crimsonedge_core_entity_Entity_nAttachEntity(JNIEnv *env, jclas
 JNIEXPORT jboolean
 JNICALL Java_org_crimsonedge_core_entity_Entity_nDetachEntity(JNIEnv *env, jclass cls, jlong thisRef, jlong childRef)
 {
-  auto entity = reinterpret_cast<cryo::csEntity *>(thisRef);
-  auto child  = reinterpret_cast<cryo::csEntity *>(childRef);
+  auto entity = reinterpret_cast<cs::csEntity *>(thisRef);
+  auto child  = reinterpret_cast<cs::csEntity *>(childRef);
 
   return entity->Detach(child);
 }
@@ -56,8 +56,8 @@ JNICALL Java_org_crimsonedge_core_entity_Entity_nDetachEntity(JNIEnv *env, jclas
 JNIEXPORT jobject
 JNICALL Java_org_crimsonedge_core_entity_Entity_nGetParent(JNIEnv *env, jclass cls, jlong entityRef)
 {
-  auto           entity   = reinterpret_cast<cryo::csEntity *>(entityRef);
-  cryo::csEntity *pEntity = entity->GetParent();
+  auto           entity   = reinterpret_cast<cs::csEntity *>(entityRef);
+  cs::csEntity *pEntity = entity->GetParent();
   return pEntity ? pEntity->GetJObject() : nullptr;
 }
 
@@ -66,15 +66,15 @@ JNICALL Java_org_crimsonedge_core_entity_Entity_nGetParent(JNIEnv *env, jclass c
 JNIEXPORT jint
 JNICALL Java_org_crimsonedge_core_entity_Entity_nGetNumberOfChildren(JNIEnv *env, jclass cls, jlong entityRef)
 {
-  auto entity = reinterpret_cast<cryo::csEntity *>(entityRef);
+  auto entity = reinterpret_cast<cs::csEntity *>(entityRef);
   return (jint)entity->GetNumberOfChildren();
 }
 
 JNIEXPORT jobject
 JNICALL Java_org_crimsonedge_core_entity_Entity_nGetChild(JNIEnv *env, jclass cls, jlong entityRef, jint idx)
 {
-  auto           entity   = reinterpret_cast<cryo::csEntity *>(entityRef);
-  cryo::csEntity *pEntity = entity->GetChild(idx);
+  auto           entity   = reinterpret_cast<cs::csEntity *>(entityRef);
+  cs::csEntity *pEntity = entity->GetChild(idx);
   return pEntity ? pEntity->GetJObject() : nullptr;
 }
 
@@ -83,8 +83,8 @@ JNICALL Java_org_crimsonedge_core_entity_Entity_nGetChild(JNIEnv *env, jclass cl
 JNIEXPORT jboolean
 JNICALL Java_org_crimsonedge_core_entity_Entity_nAttachState(JNIEnv *env, jclass cls, jlong thisRef, jlong stateRef)
 {
-  auto entity = reinterpret_cast<cryo::csEntity *>(thisRef);
-  auto state  = reinterpret_cast<cryo::csEntityState *>(stateRef);
+  auto entity = reinterpret_cast<cs::csEntity *>(thisRef);
+  auto state  = reinterpret_cast<cs::csEntityState *>(stateRef);
 
   return entity->Attach(state);
 }
@@ -92,8 +92,8 @@ JNICALL Java_org_crimsonedge_core_entity_Entity_nAttachState(JNIEnv *env, jclass
 JNIEXPORT jboolean
 JNICALL Java_org_crimsonedge_core_entity_Entity_nDetachState(JNIEnv *env, jclass cls, jlong thisRef, jlong stateRef)
 {
-  auto entity = reinterpret_cast<cryo::csEntity *>(thisRef);
-  auto state  = reinterpret_cast<cryo::csEntityState *>(stateRef);
+  auto entity = reinterpret_cast<cs::csEntity *>(thisRef);
+  auto state  = reinterpret_cast<cs::csEntityState *>(stateRef);
 
   return entity->Detach(state);
 }
@@ -103,8 +103,8 @@ JNICALL Java_org_crimsonedge_core_entity_Entity_nDetachState(JNIEnv *env, jclass
 JNIEXPORT void
 JNICALL Java_org_crimsonedge_core_entity_Entity_nSetRoot(JNIEnv *env, jclass cls, jlong thisRef, jlong rootStateRef)
 {
-  auto entity = reinterpret_cast<cryo::csEntity *>(thisRef);
-  auto state  = reinterpret_cast<cryo::csSpatialState *>(rootStateRef);
+  auto entity = reinterpret_cast<cs::csEntity *>(thisRef);
+  auto state  = reinterpret_cast<cs::csSpatialState *>(rootStateRef);
 
   entity->SetRoot(state);
 }
@@ -114,8 +114,8 @@ JNICALL Java_org_crimsonedge_core_entity_Entity_nSetRoot(JNIEnv *env, jclass cls
 JNIEXPORT void
 JNICALL Java_org_crimsonedge_core_entity_Entity_nGetRoot(JNIEnv *env, jclass cls, jlong thisRef)
 {
-  auto                 entity  = reinterpret_cast<cryo::csEntity *>(thisRef);
-  cryo::csSpatialState *pState = entity->GetRoot();
+  auto                 entity  = reinterpret_cast<cs::csEntity *>(thisRef);
+  cs::csSpatialState *pState = entity->GetRoot();
   pState? pState->GetJObject() : nullptr;
 }
 

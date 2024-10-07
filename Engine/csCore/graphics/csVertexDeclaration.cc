@@ -3,7 +3,7 @@
 #include <csCore/graphics/csGraphicsExceptions.hh>
 #include <csCore/math/csMath.hh>
 
-namespace cryo
+namespace cs
 {
 
 csVertexDeclaration::csVertexDeclaration(const std::vector<csVertexDeclaration::Attribute>& attributes)

@@ -5,7 +5,7 @@
 #include <csCore/math/csMatrix4f.hh>
 #include <csCore/entity/csSpatialState.hh>
 
-namespace cryo
+namespace cs
 {
 
 struct iCollisionShape;

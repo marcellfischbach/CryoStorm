@@ -1,7 +1,7 @@
 #include <csCore/csObjectRegistry.hh>
 
 
-namespace cryo
+namespace cs
 {
 
 csDebugCache::csDebugCache()

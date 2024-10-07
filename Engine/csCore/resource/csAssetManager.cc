@@ -5,7 +5,7 @@
 #include <csCore/resource/csVFS.hh>
 #include <algorithm>
 
-namespace cryo
+namespace cs
 {
 
 csAssetManager * csAssetManager::s_assetManager = nullptr;

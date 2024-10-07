@@ -3,7 +3,7 @@
 #include <csCore/graphics/iDevice.hh>
 
 
-namespace cryo
+namespace cs
 {
 
 

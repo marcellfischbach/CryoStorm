@@ -20,7 +20,7 @@
 #include <string>
 #include <array>
 
-namespace cryo
+namespace cs
 {
 
 struct iShader;

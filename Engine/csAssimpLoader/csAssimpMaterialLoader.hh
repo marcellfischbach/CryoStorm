@@ -3,11 +3,11 @@
 
 struct aiMaterial;
 
-namespace cryo
+namespace cs
 {
 struct iMaterial;
 }
-namespace cryo::assimp
+namespace cs::assimp
 {
 
 class csAssimpMaterialLoader

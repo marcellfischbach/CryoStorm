@@ -4,7 +4,7 @@
 #include <csCore/csClass.hh>
 #include <csCore/graphics/eTextureType.hh>
 
-namespace cryo
+namespace cs
 {
 
 struct iTexture;

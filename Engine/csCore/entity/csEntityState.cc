@@ -2,7 +2,7 @@
 #include "csEntity.hh"
 #include <csCore/entity/csWorld.hh>
 
-namespace cryo
+namespace cs
 {
 
 csEntityState::csEntityState(const std::string &name)

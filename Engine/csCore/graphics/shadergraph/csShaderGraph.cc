@@ -1,7 +1,7 @@
 #include "csShaderGraph.hh"
 #include <cmath>
 
-namespace cryo
+namespace cs
 {
 
 static const size_t IDX_DIFFUSE = 0;
@@ -32,7 +32,7 @@ csShaderGraph::~csShaderGraph() noexcept
 
 }
 
-csSGNode *csShaderGraph::Add(const cryo::csClass *nodeClass, const std::string &key)
+csSGNode *csShaderGraph::Add(const cs::csClass *nodeClass, const std::string &key)
 {
   if (!nodeClass->IsInstanceOf<csSGNode>())
   {
@@ -57,7 +57,7 @@ csSGNode *csShaderGraph::Add(const cryo::csClass *nodeClass, const std::string &
 
 }
 
-csSGResourceNode *csShaderGraph::AddResource(const cryo::csClass *nodeClass,
+csSGResourceNode *csShaderGraph::AddResource(const cs::csClass *nodeClass,
                                              const std::string &key,
                                              const std::string &resourceName)
 {
@@ -104,7 +104,7 @@ csSGNodeInput *csShaderGraph::GetAlphaInput()
   return m_alpha;
 }
 
-void csShaderGraph::BindRoughness(cryo::csSGNode *node, size_t outputIdx)
+void csShaderGraph::BindRoughness(cs::csSGNode *node, size_t outputIdx)
 {
   Bind(IDX_ROUGHNESS, node, outputIdx);
 }
@@ -114,7 +114,7 @@ csSGNodeInput *csShaderGraph::GetRoughnessInput()
   return m_roughness;
 }
 
-void csShaderGraph::BindNormal(cryo::csSGNode *node, size_t outputIdx)
+void csShaderGraph::BindNormal(cs::csSGNode *node, size_t outputIdx)
 {
   Bind(IDX_NORMAL, node, outputIdx);
 }
@@ -124,7 +124,7 @@ csSGNodeInput *csShaderGraph::GetNormalInput()
   return m_normal;
 }
 
-void csShaderGraph::BindMetallic(cryo::csSGNode *node, size_t outputIdx)
+void csShaderGraph::BindMetallic(cs::csSGNode *node, size_t outputIdx)
 {
   Bind(IDX_METALLIC, node, outputIdx);
 }
@@ -235,7 +235,7 @@ void csShaderGraph::SetDefault(const std::string &attribute, size_t count, int *
   m_defaults.push_back(def);
 }
 
-void csShaderGraph::SetDefault(const std::string &attribute, cryo::iTexture *texture)
+void csShaderGraph::SetDefault(const std::string &attribute, cs::iTexture *texture)
 {
   Default def{};
   def.name = attribute;

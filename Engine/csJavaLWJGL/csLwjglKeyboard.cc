@@ -7,7 +7,7 @@
 
 #define THIS_CLASS "org/crimsonedge/lwjgl/LwjglKeyboard"
 
-namespace cryo::java
+namespace cs::java
 {
 csLwjglKeyboard::csLwjglKeyboard()
 {
@@ -23,26 +23,26 @@ jobject csLwjglKeyboard::GetJObject()
   return jobj;
 }
 
-bool csLwjglKeyboard::IsKeyDown(cryo::eKey key) const
+bool csLwjglKeyboard::IsKeyDown(cs::eKey key) const
 {
   static csJavaCallBoolean1<jint> jcall (csJava::Get(), jobj, THIS_CLASS, "isKeyDown", JAVA_INT);
   return jcall.call(csJava::Get(), key, false);
 }
 
-bool csLwjglKeyboard::IsKeyUp(cryo::eKey key) const
+bool csLwjglKeyboard::IsKeyUp(cs::eKey key) const
 {
   static csJavaCallBoolean1<jint> jcall (csJava::Get(), jobj, THIS_CLASS, "isKeyUp", JAVA_INT);
   return jcall.call(csJava::Get(), key, true);
 }
 
 
-bool csLwjglKeyboard::IsKeyPressed(cryo::eKey key) const
+bool csLwjglKeyboard::IsKeyPressed(cs::eKey key) const
 {
   static csJavaCallBoolean1<jint> jcall (csJava::Get(), jobj, THIS_CLASS, "isKeyPressed", JAVA_INT);
   return jcall.call(csJava::Get(), key, false);
 }
 
-bool csLwjglKeyboard::IsKeyReleased(cryo::eKey key) const
+bool csLwjglKeyboard::IsKeyReleased(cs::eKey key) const
 {
   static csJavaCallBoolean1<jint> jcall (csJava::Get(), jobj, THIS_CLASS, "isKeyReleased", JAVA_INT);
   return jcall.call(csJava::Get(), key, false);

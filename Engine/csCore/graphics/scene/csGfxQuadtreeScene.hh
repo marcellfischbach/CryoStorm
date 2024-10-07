@@ -5,7 +5,7 @@
 #include <csCore/graphics/scene/iGfxScene.hh>
 
 
-namespace cryo
+namespace cs
 {
 
 

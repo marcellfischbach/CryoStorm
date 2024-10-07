@@ -5,7 +5,7 @@
 #include <csOpenGL/csOpenGLExport.hh>
 #include <csCore/graphics/iIndexBuffer.hh>
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 CS_CLASS()
 class CS_OGL_API csGL4IndexBuffer : public CS_SUPER(iIndexBuffer)

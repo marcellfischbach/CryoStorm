@@ -2,7 +2,7 @@
 #include <csCore/csJava.hh>
 #include <csCore/csJavaCalls.hh>
 
-namespace cryo
+namespace cs
 {
 
 static std::string s_name = "";

@@ -3,7 +3,7 @@
 #include <csCore/resource/csFileSystemFile.hh>
 #include <csCore/resource/csResourceExceptions.hh>
 
-namespace cryo
+namespace cs
 {
 csFileSystemFile::csFileSystemFile(const std::string& path)
   : iFile()

@@ -10,7 +10,7 @@
 #include <csCore/graphics/eTextureCompareMode.hh>
 #include <csCore/math/csColor4f.hh>
 
-namespace cryo
+namespace cs
 {
 
 CS_CLASS()

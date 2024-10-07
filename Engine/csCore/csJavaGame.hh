@@ -9,7 +9,7 @@
 #include <jni.h>
 
 
-namespace cryo
+namespace cs
 {
 
 class CS_CORE_API csGameJava : public iGame
@@ -17,7 +17,7 @@ class CS_CORE_API csGameJava : public iGame
 public:
   csGameJava(jobject gameObject);
 
-  bool Initialize(cryo::csEngine* engine) override;
+  bool Initialize(cs::csEngine* engine) override;
 
 private:
   jobject  m_gameObject;

@@ -5,8 +5,8 @@
 extern "C"
 {
 
-#define CS_MAT(ref) reinterpret_cast<cryo::csMaterial*>(ref)
-#define CS_INSTANCE(ref) reinterpret_cast<cryo::csMaterialInstance*>(ref)
+#define CS_MAT(ref) reinterpret_cast<cs::csMaterial*>(ref)
+#define CS_INSTANCE(ref) reinterpret_cast<cs::csMaterialInstance*>(ref)
 
 
 JNIEXPORT void
@@ -26,7 +26,7 @@ JNICALL Java_org_crimsonedge_core_graphics_material_MaterialInstance_nGetMateria
                                                                                   jlong instanceRef)
 {
   auto             instance  = CS_INSTANCE(instanceRef);
-  cryo::csMaterial *material = instance->GetMaterial();
+  cs::csMaterial *material = instance->GetMaterial();
   return material ? material->GetJObject() : nullptr;
 }
 
@@ -94,7 +94,7 @@ JNICALL Java_org_crimsonedge_core_graphics_material_MaterialInstance_nSetVec2f(J
                                                                                float y)
 {
   auto instance = CS_INSTANCE(instanceRef);
-  instance->Set(idx, cryo::csVector2f(x, y));
+  instance->Set(idx, cs::csVector2f(x, y));
 }
 
 
@@ -108,7 +108,7 @@ JNICALL Java_org_crimsonedge_core_graphics_material_MaterialInstance_nSetVec3f(J
                                                                                float z)
 {
   auto instance = CS_INSTANCE(instanceRef);
-  instance->Set(idx, cryo::csVector3f(x, y, z));
+  instance->Set(idx, cs::csVector3f(x, y, z));
 }
 
 
@@ -123,7 +123,7 @@ JNICALL Java_org_crimsonedge_core_graphics_material_MaterialInstance_nSetVec4f(J
                                                                                float w)
 {
   auto instance = CS_INSTANCE(instanceRef);
-  instance->Set(idx, cryo::csVector4f(x, y, z, w));
+  instance->Set(idx, cs::csVector4f(x, y, z, w));
 }
 
 JNIEXPORT void
@@ -137,7 +137,7 @@ JNICALL Java_org_crimsonedge_core_graphics_material_MaterialInstance_nSetColor4f
                                                                                  float a)
 {
   auto instance = CS_INSTANCE(instanceRef);
-  instance->Set(idx, cryo::csColor4f(r, g, b, a));
+  instance->Set(idx, cs::csColor4f(r, g, b, a));
 }
 
 
@@ -162,7 +162,7 @@ JNICALL Java_org_crimsonedge_core_graphics_material_MaterialInstance_nSetMatrix3
   auto   instance = CS_INSTANCE(instanceRef);
   jfloat *m       = env->GetFloatArrayElements(mArray, 0);
 
-  instance->Set(idx, *reinterpret_cast<cryo::csMatrix3f *>(m));
+  instance->Set(idx, *reinterpret_cast<cs::csMatrix3f *>(m));
 
   env->ReleaseFloatArrayElements(mArray, m, 0);
 }
@@ -177,7 +177,7 @@ JNICALL Java_org_crimsonedge_core_graphics_material_MaterialInstance_nSetMatrix4
   auto   instance = CS_INSTANCE(instanceRef);
   jfloat *m       = env->GetFloatArrayElements(mArray, 0);
 
-  instance->Set(idx, *reinterpret_cast<cryo::csMatrix4f *>(m));
+  instance->Set(idx, *reinterpret_cast<cs::csMatrix4f *>(m));
 
   env->ReleaseFloatArrayElements(mArray, m, 0);
 }
@@ -190,7 +190,7 @@ JNICALL Java_org_crimsonedge_core_graphics_material_MaterialInstance_nSetTexture
                                                                                  jlong textureRef)
 {
   auto instance = CS_INSTANCE(instanceRef);
-  auto texture  = reinterpret_cast<cryo::iTexture *>(textureRef);
+  auto texture  = reinterpret_cast<cs::iTexture *>(textureRef);
 
   instance->Set(idx, texture);
 }

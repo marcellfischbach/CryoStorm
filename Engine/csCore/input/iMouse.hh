@@ -6,7 +6,7 @@
 #include <csCore/input/eMouseButton.hh>
 #include <csCore/input/eCursorMode.hh>
 
-namespace cryo
+namespace cs
 {
 
 

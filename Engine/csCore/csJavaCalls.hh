@@ -9,7 +9,7 @@
 #include <jni.h>
 
 
-namespace cryo
+namespace cs
 {
 
 #define JAVA_BOOLEAN "Z"

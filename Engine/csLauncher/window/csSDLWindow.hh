@@ -9,7 +9,7 @@
 #include <csCore/window/iWindow.hh>
 #include <SDL.h>
 
-namespace cryo::launcher
+namespace cs::launcher
 {
 
 

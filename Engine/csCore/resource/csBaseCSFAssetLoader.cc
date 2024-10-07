@@ -5,7 +5,7 @@
 #include <csCore/resource/csBaseCSFAssetLoader.hh>
 #include <csCore/resource/csVFS.hh>
 
-namespace cryo
+namespace cs
 {
 
 void csBaseCSFAssetLoader::AddValidFile(const csClass* cls, const std::string& fileExtension)
@@ -18,7 +18,7 @@ void csBaseCSFAssetLoader::AddValidFile(const csClass* cls, const std::string& f
 
 bool csBaseCSFAssetLoader::Open(const csResourceLocator& locator, csCryoFile &file)
 {
-  iFile* fd = cryo::csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
+  iFile* fd = cs::csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   csAutoRelease arFD(fd);
 
   return file.Parse(fd);

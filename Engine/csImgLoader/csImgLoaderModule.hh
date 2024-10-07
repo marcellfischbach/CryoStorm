@@ -4,7 +4,7 @@
 #include <csImgLoader/csImgLoaderExport.hh>
 #include <csCore/iModule.hh>
 
-namespace cryo::img
+namespace cs::img
 {
 
 class CS_IMGLOADER_API csImgLoaderModule : public iModule

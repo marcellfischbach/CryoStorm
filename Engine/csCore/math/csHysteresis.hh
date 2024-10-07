@@ -3,7 +3,7 @@
 #include <csCore/csCoreExport.hh>
 #include <csCore/csDefs.hh>
 
-namespace cryo
+namespace cs
 {
 
 template<typename T>

@@ -4,7 +4,7 @@
 #include <csCore/csCoreExport.hh>
 #include <exception>
 
-namespace cryo
+namespace cs
 {
 
 class csOutOfBoundsException : public std::exception

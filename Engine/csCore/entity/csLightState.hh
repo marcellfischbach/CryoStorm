@@ -9,7 +9,7 @@
 #include <csCore/math/csVector3f.hh>
 
 
-namespace cryo
+namespace cs
 {
 
 struct iLight;
@@ -43,10 +43,10 @@ public:
   CS_NODISCARD float GetShadowMapBias() const;
 
   CS_FUNCTION()
-  void SetColor(const csColor4f &color);
+  void SetColor(const cs::csColor4f &color);
 
   CS_FUNCTION()
-  CS_NODISCARD const csColor4f &GetColor() const;
+  CS_NODISCARD const cs::csColor4f &GetColor() const;
 
   CS_FUNCTION()
   void SetRange(float range);

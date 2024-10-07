@@ -13,7 +13,7 @@
 #include <csCore/graphics/shading/iShaderAttribute.hh>
 
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 
@@ -58,7 +58,7 @@ void csGL4DeferredDirectionalLightRenderer::SetDevice(iDevice *device)
   m_device = csQueryClass<csGL4Device>(device);
 }
 
-void csGL4DeferredDirectionalLightRenderer::SetScene(cryo::iGfxScene *scene)
+void csGL4DeferredDirectionalLightRenderer::SetScene(cs::iGfxScene *scene)
 {
   m_scene = scene;
 }

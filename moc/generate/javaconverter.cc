@@ -9,7 +9,7 @@
 #include <iostream>
 #include <csXml/csXml.hh>
 
-using namespace cryo;
+using namespace cs;
 
 JavaConverters *JavaConverters::Get()
 {
@@ -88,7 +88,7 @@ void JavaConverters::ReadConvertersFile(const std::string &filename)
   }
 }
 
-void JavaConverters::ReadConverters(const cryo::xml::csElement *convertersElement)
+void JavaConverters::ReadConverters(const cs::xml::csElement *convertersElement)
 {
   for (int i = 0; i < convertersElement->GetNumberOfChildren(); ++i)
   {
@@ -103,7 +103,7 @@ void JavaConverters::ReadConverters(const cryo::xml::csElement *convertersElemen
 }
 
 
-void JavaConverters::ReadConverter(const cryo::xml::csElement *converterElement)
+void JavaConverters::ReadConverter(const cs::xml::csElement *converterElement)
 {
   JavaConverter        converter;
   const xml::csElement *inputConversionElement;
@@ -145,7 +145,7 @@ void JavaConverters::ReadConverter(const cryo::xml::csElement *converterElement)
   m_converters.push_back(converter);
 }
 
-void JavaConverters::ReadTypes(JavaConverter &converter, const cryo::xml::csElement *typesElement)
+void JavaConverters::ReadTypes(JavaConverter &converter, const cs::xml::csElement *typesElement)
 {
   for (int i = 0; i < typesElement->GetNumberOfChildren(); ++i)
   {
@@ -166,7 +166,7 @@ void JavaConverters::ReadTypes(JavaConverter &converter, const cryo::xml::csElem
   }
 }
 
-void JavaConverters::ReadInputArguments(JavaConverter &converter, const cryo::xml::csElement *inputArgumentsElement)
+void JavaConverters::ReadInputArguments(JavaConverter &converter, const cs::xml::csElement *inputArgumentsElement)
 {
   for (int i = 0; i < inputArgumentsElement->GetNumberOfChildren(); ++i)
   {
@@ -183,7 +183,7 @@ void JavaConverters::ReadInputArguments(JavaConverter &converter, const cryo::xm
 }
 
 
-void JavaConverters::ReadOutputArguments(JavaConverter &converter, const cryo::xml::csElement *outputArgumentsElement)
+void JavaConverters::ReadOutputArguments(JavaConverter &converter, const cs::xml::csElement *outputArgumentsElement)
 {
   for (int i = 0; i < outputArgumentsElement->GetNumberOfChildren(); ++i)
   {

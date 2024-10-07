@@ -3,7 +3,7 @@
 #include <csCore/graphics/scene/csGfxSceneCollector.hh>
 #include <csCore/graphics/material/iMaterial.hh>
 
-namespace cryo
+namespace cs
 {
 
 csGfxSceneCollector::csGfxSceneCollector()

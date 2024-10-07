@@ -1,6 +1,6 @@
 #pragma  once
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 const int   MaxLights         = 4;

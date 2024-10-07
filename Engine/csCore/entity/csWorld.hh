@@ -6,7 +6,7 @@
 #include <array>
 #include <thread>
 
-namespace cryo
+namespace cs
 {
 
 class csEntity;

@@ -9,13 +9,13 @@ CS_DEFINE_LIBRARY(csGame)
 }
 
 
-bool GameModule::Register(const std::vector<std::string> &args, cryo::csEngine *engine)
+bool GameModule::Register(const std::vector<std::string> &args, cs::csEngine *engine)
 {
   register_classes();
   return true;
 }
 
-bool GameModule::Initialize(const std::vector<std::string> &args, cryo::csEngine *engine)
+bool GameModule::Initialize(const std::vector<std::string> &args, cs::csEngine *engine)
 {
   return true;
 }

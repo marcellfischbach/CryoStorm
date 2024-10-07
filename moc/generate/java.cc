@@ -3,7 +3,7 @@
 #include <generate/generator.hh>
 #include <generate/javaconverter.hh>
 
-namespace cryo::moc
+namespace cs::moc
 {
 
 std::string JavaGenerator::OutputClass(ClassNode *classNode, std::list<NamespaceNode *> &nss, CSMetaNode *classMeta)
@@ -15,7 +15,8 @@ std::string JavaGenerator::OutputClass(ClassNode *classNode, std::list<Namespace
   }
 
   source += "#ifdef CS_JAVA\n\n";
-  source += "#include <jni.h>\n\n";
+  source += "#include <jni.h>\n";
+  source += "#include <csCore/csClass.hh>\n\n";
 
   std::string javaFQClass = classMeta->Get("jclass");
 
@@ -89,39 +90,23 @@ std::string convert_return_type_to_jni_type(FunctionNode *function, CSMetaNode *
     return converter->GetOutputReturnType();
   }
 
-  if (typeName == "std::string" || typeName == "string")
+  if (def.IsPointer())
   {
-    return "jstring";
+    if (meta->Has("jrawPtr"))
+    {
+      return "jlong";
+    }
+    else
+    {
+      return "jobject";
+    }
   }
-  else if (typeName == "int8_t")
-  {
-    return "jbyte";
-  }
-  else if (typeName == "uint8_t" || typeName == "int16_t")
-  {
-    return "jshort";
-  }
-  else if (typeName == "int" || typeName == "uint16_t" || typeName == "int32_t")
-  {
-    return "jint";
-  }
-  else if (typeName == "unsigned" || typeName == "uint32_t" || typeName == "int64_t")
+  else if (def.IsReference())
   {
     return "jlong";
-  }
-  else if (typeName == "float")
-  {
-    return "jfloat";
-  }
-  else if (typeName == "double")
-  {
-    return "jdouble";
   }
 
-  if (def.IsPointer() || def.IsPointerToPointer() || def.IsReference())
-  {
-    return "jlong";
-  }
+
   return "void";
 }
 
@@ -147,37 +132,11 @@ convert_function_input_parameter_to_jni_type(const Argument &argument,
     return arguments;
   }
 
-  if (typeName == "std::string" || typeName == "string")
+  if (def.IsPointer() || def.IsReference())
   {
-    return ", jstring arg" + std::to_string(jniArgCount);
+    return ", jlong jniArg" + std::to_string(jniArgCount);
   }
-  else if (typeName == "int8_t")
-  {
-    return ", jbyte arg" + std::to_string(jniArgCount);
-  }
-  else if (typeName == "uint8_t" || typeName == "int16_t")
-  {
-    return ", jshort arg" + std::to_string(jniArgCount);
-  }
-  else if (typeName == "int" || typeName == "uint16_t" || typeName == "int32_t")
-  {
-    return ", jint arg" + std::to_string(jniArgCount);
-  }
-  else if (typeName == "unsigned" || typeName == "uint32_t" || typeName == "int64_t")
-  {
-    return ", jlong arg" + std::to_string(jniArgCount);
-  }
-  else if (typeName == "float")
-  {
-    return ", jfloat arg" + std::to_string(jniArgCount);
-  }
-  else if (typeName == "double")
-  {
-    return ", jdouble arg" + std::to_string(jniArgCount);
-  }
-
-
-  return ", jlong arg" + std::to_string(jniArgCount);
+  return "";
 }
 
 std::string
@@ -199,19 +158,6 @@ convert_function_output_parameter_to_jni_type(const FunctionNode *function, CSMe
   return "";
 }
 
-std::string convert_string_input_to_jni(uint32_t inputC, uint32_t outputC)
-{
-  std::string argIn  = std::string("arg") + std::to_string(inputC);
-  std::string argTmp = std::string("constChar") + std::to_string(outputC);
-  std::string argOut = std::string("csArg") + std::to_string(outputC);
-  std::string source;
-  source += std::string("  const char *") + argTmp + " = env->GetStringUTFChars(" + argIn + ", 0);\n";
-  source += std::string("  std::string ") + argOut + "(" + argTmp + ");\n";
-  source += std::string("  env->ReleaseStringUTFChars(" + argIn + ", " + argTmp + ");\n");
-
-  return source;
-}
-
 
 std::string
 convert_input_parameter_to_jni(const Argument &argument,
@@ -227,40 +173,23 @@ convert_input_parameter_to_jni(const Argument &argument,
   {
     return converter->ConvertInput(jniArgCount, csMethodArgCount);
   }
-  if (typeName == "std::string" || typeName == "string")
+
+  if (def.IsPointer())
   {
-    return convert_string_input_to_jni(jniArgCount, csMethodArgCount);
+    return def.GetText() + " csArg" + std::to_string(csMethodArgCount)
+           + " = reinterpret_cast<" + def.GetText() + ">(jniArg" + std::to_string(jniArgCount) + ");";
   }
-  else if (typeName == "int8_t")
+  else if (def.IsReference())
   {
-    return ", jbyte arg" + std::to_string(jniArgCount++);
-  }
-  else if (typeName == "uint8_t" || typeName == "int16_t")
-  {
-    return ", jshort arg" + std::to_string(jniArgCount++);
-  }
-  else if (typeName == "int" || typeName == "uint16_t" || typeName == "int32_t")
-  {
-    return ", jint arg" + std::to_string(jniArgCount++);
-  }
-  else if (typeName == "unsigned" || typeName == "uint32_t" || typeName == "int64_t")
-  {
-    return ", jlong arg" + std::to_string(jniArgCount++);
-  }
-  else if (typeName == "float")
-  {
-    return ", jfloat arg" + std::to_string(jniArgCount++);
-  }
-  else if (typeName == "double")
-  {
-    return ", jdouble arg" + std::to_string(jniArgCount++);
+    return def.GetText() + " csArg" + std::to_string(csMethodArgCount)
+           + " = *reinterpret_cast<" + def.GetText() + "*>(jniArg" + std::to_string(jniArgCount) + ");";
   }
 
   return "";
 }
 
 
-std::string convert_result(const FunctionNode *function)
+std::string convert_result(const FunctionNode *function, CSMetaNode *functionMeta)
 {
   const TypeDef &def     = function->GetReturnValue();
   std::string   typeName = def.GetTypeName();
@@ -271,68 +200,22 @@ std::string convert_result(const FunctionNode *function)
     return converter->ConvertOutput();
   }
 
-  if (typeName == "std::string" || typeName == "string")
+  if (def.IsPointer())
   {
-    return "  return env->NewStringUTF(csReturnValue.c_str());";
+    if(functionMeta->Has("jrawPtr"))
+    {
+      return "return reinterpret_cast<jlong>(csReturnValue);";
+    }
+    else
+    {
+      return "return csReturnValue ? reinterpret_cast<cs::iObject*>(csReturnValue)->GetJObject() : nullptr;";
+    }
   }
-  else if (typeName == "int8_t")
+  else if (def.IsReference())
   {
-    return " return static_cast<jbyte>(csRes);";
+    return "return reinterpret_cast<jlong>(&csReturnValue);";
   }
-  else if (typeName == "uint8_t" || typeName == "int16_t")
-  {
-    return " return static_cast<jshort>(csRes);";
-  }
-  else if (typeName == "int" || typeName == "uint16_t" || typeName == "int32_t")
-  {
-    return " return static_cast<jint>(csRes);";
-  }
-  else if (typeName == "unsigned" || typeName == "uint32_t" || typeName == "int64_t")
-  {
-    return " return static_cast<jlong>(csRes);";
-  }
-  else if (typeName == "float")
-  {
-    return " return static_cast<jfloat>(csRes);";
-  }
-  else if (typeName == "double")
-  {
-    return " return static_cast<jdouble>(csRes);";
-  }
-
-
   return "";
-}
-
-std::string convert_return_type_to_cs(const FunctionNode *function)
-{
-  const TypeDef &def     = function->GetReturnValue();
-  std::string   typeName = def.GetTypeName();
-
-  const JavaConverter *converter = JavaConverters::Get()->FindConverter(typeName);
-  if (converter && !converter->GetFullQualifiedType().empty())
-  {
-    std::string fullTypeName;
-    if (def.IsConst())
-    {
-      fullTypeName += "const ";
-    }
-    fullTypeName += converter->GetFullQualifiedType();
-    if (def.IsReference())
-    {
-      fullTypeName += "&";
-    }
-    else if (def.IsPointerToPointer())
-    {
-      fullTypeName += "**";
-    }
-    else if (def.IsPointer())
-    {
-      fullTypeName += "*";
-    }
-    return fullTypeName;
-  }
-  return function->GetReturnValue().GetText();
 }
 
 
@@ -376,7 +259,7 @@ std::string JavaGenerator::GenerateFunction(ClassNode *classNode, std::list<Name
             + "  ";
   if (!functionNode->GetReturnValue().IsVoid())
   {
-    source += convert_return_type_to_cs(functionNode) + " csReturnValue = ";
+    source += functionNode->GetReturnValue().GetText() + " csReturnValue = ";
   }
   source += "csRef->" + functionNode->GetName() + "(";
   for (int i = 0; i < functionNode->GetArguments().size(); ++i)
@@ -390,7 +273,7 @@ std::string JavaGenerator::GenerateFunction(ClassNode *classNode, std::list<Name
   source += ");\n";
   if (!functionNode->GetReturnValue().IsVoid())
   {
-    source += convert_result(functionNode) + "\n";
+    source += convert_result(functionNode, functionMeta) + "\n";
   }
   source += "}\n\n";
 

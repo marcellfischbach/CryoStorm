@@ -7,7 +7,7 @@
 #include <csCore/graphics/iTexture.hh>
 #include <csCore/csTypes.hh>
 
-namespace cryo
+namespace cs
 {
 
 class csImage;

@@ -8,7 +8,7 @@
 #include <csCore/graphics/iTextureCube.hh>
 
 
-namespace cryo
+namespace cs
 {
 
 
@@ -95,7 +95,7 @@ iRenderTarget2D *csGfxCamera::GetRenderTarget()
   return m_renderTarget;
 }
 
-void csGfxCamera::SetSkyboxRenderer(cryo::iSkyboxRenderer *skyboxRenderer)
+void csGfxCamera::SetSkyboxRenderer(cs::iSkyboxRenderer *skyboxRenderer)
 {
   CS_SET(m_skyboxRenderer, skyboxRenderer);
 }

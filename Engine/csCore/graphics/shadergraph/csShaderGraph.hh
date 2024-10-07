@@ -11,7 +11,7 @@
 #include <csCore/graphics/iTexture.hh>
 #include <array>
 
-namespace cryo
+namespace cs
 {
 
 

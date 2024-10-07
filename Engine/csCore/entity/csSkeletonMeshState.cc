@@ -7,7 +7,7 @@
 #include <csCore/graphics/scene/csGfxMesh.hh>
 
 
-namespace cryo
+namespace cs
 {
 
 
@@ -18,7 +18,7 @@ csSkeletonMeshState::csSkeletonMeshState()
 }
 
 
-void csSkeletonMeshState::SetMesh(cryo::csMesh *mesh)
+void csSkeletonMeshState::SetMesh(cs::csMesh *mesh)
 {
   csStaticMeshState::SetMesh(mesh);
 

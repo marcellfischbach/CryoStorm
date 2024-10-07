@@ -3,7 +3,7 @@
 #include <csCore/math/csBoundingBox.hh>
 #include <cfloat>
 
-namespace cryo {
+namespace cs {
 
 
 csBoundingBox::csBoundingBox()

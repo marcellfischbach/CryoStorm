@@ -17,7 +17,7 @@
 #include <csCore/graphics/eShadingMode.hh>
 
 
-namespace cryo
+namespace cs
 {
 
 struct iDevice;

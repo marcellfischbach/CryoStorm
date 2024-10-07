@@ -9,7 +9,7 @@
 #include <csCore/graphics/ePixelFormat.hh>
 
 
-namespace cryo
+namespace cs
 {
 
 CS_CLASS()

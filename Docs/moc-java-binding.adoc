@@ -1,0 +1,402 @@
+= csMOC - Java binding
+
+== Classes
+
+All classes that needs to participate in automatic java binding generation at least must declare the
+full-qualified-classname of the Java pendant.
+
+[source, c++]
+----
+CS_CLASS(jclass="org.cryo.core.entity.Entity")
+class csEntity : CS_SUPER(cs::iObject)
+{
+    // ...
+};
+----
+
+This will create linkage code an implements the Method `iObject::GetJObject()`. Calling this method will
+create (if not already existing) an instance of `jobject` (from java JNI interface) that represents the instance
+within the java world.
+
+
+
+
+== Functions
+
+All methods that are annotated with `CS_FUNCTION()` will generate java binding code.
+
+=== Avoid java binding
+
+If Java bindings are not needed or the binding convention is too complicated you can
+disable generation of java bindings with `CS_FUNCTION(noJava)`.
+
+
+=== Binding limitations
+
+There are some binding limitations. If you cannot overcome these limitations disable
+automatic java binding generation and write your own binding code.
+
+==== Full qualified typenames
+Automatic java binding generation is only working correctly if the parameters or result types
+in the java-exposed public api are using full qualified typename declaration.
+
+E.g. if you have a method for getting and setting a color explicitly write the namespace `cs` this case
+event though the class itself is declared in the same namespace. For C++ compiling this is not needed but
+the MOC cannot deduce the right type.
+
+[source, c++]
+----
+namespace cs
+{
+CS_CLASS(jclass="org.test.MyClass")
+class MyClass
+{
+public:
+    CS_FUNCTION()
+    void SetColor (const cs::csColor4f &color);
+
+    CS_FUNCTION()
+    const cs::csColor4f &GetColor () const;
+}
+
+}
+----
+
+
+==== No multiple inheritance
+Classes that are java-exposed and are retrieved in a return statement must never be part of multiple inheritance.
+That comes from the limitation that not all typename are known within the java binding code.
+
+Consider a class `ExtClass` that is not within the project of a class that is using it. (All classes within the same
+project/lib/module are know in java binding code) Typically you would make a
+forward declaration to calm the compiler and do the include of the `ExtClass` within the cpp-file. But that include
+is not performed in the compilation unit of the java binding code and it's not easily possible to include that file.
+So the compiler doesn't know the `ExtClass` declaration. But it is needed to know it to call the `GetJObject()` method
+on it. By that the `jobject` java instance is retrieved.  The solution to this dilemma is that the pointer to the
+`ExtClass` is reinterpreted and cast to an instance of `cs::iObject` that IS known. But that is only safe to do, if
+the `ExtClass` is NOT inheriting from multiple classes, because than the raw pointer to `cs::iObject` might be off.
+
+
+==== Don't declare CS_FUNCTION on methods with the same name
+
+If you have multiple methods with the same name, what is a typical situation when having getters in const or non const
+style. Only declare the CS_FUNCTION() at one of the methods. If you need to have CS_FUNCTION() on both, declare one
+`CS_FUNCTION(noJava)` to prevent java binding generation.
+
+== Calling conventions
+
+=== Method arguments
+
+Method arguments are converted based on the following table.
+
+[cols="1,1"]
+|===
+| C++ | JNI binding
+
+| bool | jboolean
+
+| int8_t | jbyte
+| uint8_t | jshort
+
+| int16_t | jshort
+| uint16_t | jint
+
+| int32_t | jint
+| uint32_t | jlong
+
+| int64_t | jlong
+| uint64_t | WARNING!! jlong with data loss
+
+
+| float | jfloat
+| double | jdouble
+
+| std::string/string | jstring
+| csVector2f | jfloat, jfloat
+| csVector3f | jfloat, jfloat, jfloat
+| csVector4f | jfloat, jfloat, jfloat, jfloat
+| csVector2i | jint, jint
+| csVector3i | jint, jint, jint
+| csVector4i | jint, jint, jint, jint
+| csColor4f | jfloat, jfloat, jfloat, jfloat
+| csMatrix3 | jfloatArray
+| csMatrix4 | jfloatArray
+
+| * ptr of any size | jlong
+
+|===
+
+=== Method return types
+
+Method return types are converted a bit more complex.
+
+Single value scalar types are converted like method arguments
+
+[cols="1,1"]
+|===
+| C++ | JNI binding
+
+| bool | jboolean
+
+| int8_t | jbyte
+| uint8_t | jshort
+
+| int16_t | jshort
+| uint16_t | jint
+
+| int32_t | jint
+| uint32_t | jlong
+
+| int64_t | jlong
+| uint64_t | WARNING!! jlong with data loss
+
+
+| float | jfloat
+| double | jdouble
+
+| std::string/string | jstring
+
+| * ptr of any size | jlong
+
+|===
+
+Complex/compound data types are converted via output variables (currently )
+
+[cols="1,1"]
+|===
+| C++ | JNI binding
+
+| csVector2f | jfloatArray
+| csVector3f | jfloatArray
+| csVector4f | jfloatArray
+| csColor4f | jfloatArray
+| csMatrix3 | jfloatArray
+| csMatrix4 | jfloatArray
+
+| csVector2i | jintArray
+| csVector3i | jintArray
+| csVector4i | jintArray
+
+|===
+
+E.g. a class like the following
+
+[source,c++]
+----
+CS_CLASS(jclass="org.package.SomeType")
+class SomeType : CS_SUPER(iObject)
+{
+    //...
+
+    CS_FUNCTION()
+    const cs::csVector3f &GetVector () const;
+
+    CS_FUNCTION()
+    void SetVector(const cs::csVector3f &vec);
+
+    //...
+};
+
+----
+
+will translate into jni code like
+
+[source,C]
+----
+void Java_org_package_SomeType_nGetVector(JNIEnv env, jclass cls, jlong ref, jfloatArray out)
+{
+    // ...
+}
+
+void Java_org_package_SomeType_nSetVector(JNIEnv env, jclass cls, jlong ref, jfloat arg0, jfloat arg1, jfloat arg2)
+{
+    // ...
+}
+
+----
+
+=== Custom java bindings
+Currently in the `Scrips` folder of the source code there are two binding files.
+
+* primitive-convert-moc.xml
+* standard-converters-moc.xml
+
+During a moc-run the Scripts folder will be scanned for files with naming suffix `-moc.xml`. All files that matches this
+pattern are parsed and interpreted
+
+The gneral layout of a convert file looks like this
+
+[source, xml]
+----
+<converters>
+    <convert>
+        ...
+    </convert>
+    <convert>
+        ...
+    </convert>
+    ...
+</converters>
+----
+
+
+Each convert describes the conversion of one single data type for both method argument and method result type usage.
+
+The convert itself consists of five stages
+[source, xml]
+----
+<convert>
+    <types>...</types>
+    <in-arguments>...</in-arguments>
+    <out-arguments>...</out-arguments>
+    <in-conversion>...</in-conversion>
+    <out-conversion>...</out-conversion>
+</convert>
+----
+
+The types section describes the possible known type names.
+[source, xml]
+----
+<types>
+    <type>csVector4f</type>
+    <type>cs::csVector4f</type>
+</types>
+----
+
+This type name is simply checked against the declaration of the function where it is used. So the above types would match
+in the following functions.
+[source, c++]
+----
+    CS_FUNCTION()
+    void SetColor (const cs::csColor4f &color);
+
+    CS_FUNCTION()
+    const csColor4f &GetColor () const;
+----
+
+The `in-arguments` and `out-arguments` are basically the same. The `in-arguments` are used when dealing with method
+parameters and the `out-arguments` are used when dealing with return types. Complex return types will not be delivered
+as return value to java but rather an output parameters
+
+[source, xml]
+----
+<in-arguments>
+    <argument jtype="jfloat" id="r" />
+    <argument jtype="jfloat" id="g" />
+    <argument jtype="jfloat" id="b" />
+    <argument jtype="jfloat" id="a" />
+</in-arguments>
+----
+
+The `argument` element declares a primitive argument, that will be declared in the jni binding method in the exact order
+as declared in the definition.
+
+* `jtype` matches the type names of the jni system.
+* `id` is name that can be used in the conversion sections later by name. E.g. `id="r"` can be used as `${r}`
+
+
+The `in-conversion` is just a template the is put into the jni binding code. Variables are used with the `${}` naming
+convention. The arguments from the arguments section above can be used that way. The goal of this section is to declare
+a variable with the name `${csArg}`. That variable is used later for the real engine method call
+There are a few special variable names
+
+* `${csArg}`  This is the variable that needs to be declared in the template script. That variable will be used for
+the real Method call of the Engine object
+* `${csTmp}` If you need a unique temporary variable you can use this. If you need more than one just use a suffix like
+ `${csTmp}_01` or whatever suits your needs
+
+
+
+
+The `out-conversion` is just a template the is put into the jni binding code. Variables are used with the `${}` naming
+convention. The arguments from the arguments section above can be used that way. The goal of this section is either
+to do a real return statement if the resulting type is convertible to jni primitive types or to fill the out arguments
+
+The `out-conversion` element also declares to attributes
+
+* `returnType` This is real actual return type of the jni method call
+* `fullQualifiedType` This is the full qualified c++ attribute. (This will be removed later, when all code is merged to
+the MOC limitations from above)
+
+There are a few special variable names
+
+* `${csRes}`  This is the return value from the real engine method call. `csColor4f` for example in `const csColor4f& GetColor()`.
+* `${csTmp}` If you need a unique temporary variable you can use this. If you need more than one just use a suffix like
+`${csTmp}_01` or whatever suits your needs
+
+
+==== Example for a simple int32_t
+[source,xml]
+----
+<converters>
+    <converter>
+        <types>
+            <type>int32_t</type>
+        </types>
+        <in-arguments>
+            <argument jtype="jint" id="int"/>
+        </in-arguments>
+        <out-arguments>
+        </out-arguments>
+        <in-conversion>
+            int32_t ${csArg} = (int32_t)${int};
+        </in-conversion>
+        <out-conversion returnType="jint" fullQualifiedType="int32_t">
+            return (jint)${csRet};
+        </out-conversion>
+    </converter>
+</converters>
+----
+
+The `in-conversion` is straight forward. Just cast the input argument `${int}` (the name is declard in the `in-arguments`)
+into the appropriate `int32_t` type and put that into the variables `${csArg}`.
+
+The `out-conversion` is straight forward as well. The `${csRet}` (The return value from the c++ method call) is casted
+into a `jint` and returned. The `out-conversion` must `return` a value because the `returnType` in the `out-conversion`
+section is declared as `jint`.
+
+==== Example for a complex csColor4f type
+[source, xml]
+----
+<converters>
+    <converter>
+        <types>
+            <type>csColor4f</type>
+            <type>cs::csColor4f</type>
+        </types>
+        <in-arguments>
+            <argument jtype="jfloat" id="r"/>
+            <argument jtype="jfloat" id="g"/>
+            <argument jtype="jfloat" id="b"/>
+            <argument jtype="jfloat" id="a"/>
+        </in-arguments>
+        <out-arguments>
+            <argument jtype="jfloatArray" id="out"/>
+        </out-arguments>
+        <in-conversion>
+            cs::csColor4f ${csArg} (${r}, ${g}, ${b}, ${a});
+        </in-conversion>
+        <out-conversion returnType="void" fullQualifiedType="cs::csColor4f"><![CDATA[
+            jfloat *${csTmp} = env->GetFloatArrayElements(${out}, 0);
+            ${csTmp}[0] = ${csRet}.r;
+            ${csTmp}[1] = ${csRet}.g;
+            ${csTmp}[2] = ${csRet}.b;
+            ${csTmp}[3] = ${csRet}.a;
+            env->ReleaseFloatArrayElements(${out}, ${csTmp}, 0); ]]>
+        </out-conversion>
+    </converter>
+</converters>
+----
+
+The `in-conversion` is straight forward just a cs::csColor4f object with the name `${csArg}` is created and the color values
+from the `in-arguments` sections are passed into the constructor.
+
+The `out-conversion` is much more complicated. It is assumed, that the data is transferred from c++ to java via
+a float array. That float array must be preconstructed with at least 4 values in Java. So the `out-argument` is declared
+as a `jfloatArray`.
+
+In the `out-conversion` section a temporary float-pointer array (`${csTmp}`) is constructed with the jni environment.
+The 4 color values from the `${csRet}` objects (The return value of a method) are put one-by one in the transfer array.
+At last the transfer array is released. So that java retakes control of it.
+
+A return statement is not needed here because the `returnType` of the `out-conversion` sections is declared void.

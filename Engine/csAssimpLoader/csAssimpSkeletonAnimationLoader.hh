@@ -7,7 +7,7 @@
 
 struct aiAnimation;
 
-namespace cryo
+namespace cs
 {
 
 class csSkeletonAnimation;

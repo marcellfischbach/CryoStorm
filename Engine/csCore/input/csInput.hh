@@ -7,7 +7,7 @@
 #include <csCore/input/iKeyboard.hh>
 #include <csCore/input/iMouse.hh>
 
-namespace cryo
+namespace cs
 {
 
 struct iInputSystem;

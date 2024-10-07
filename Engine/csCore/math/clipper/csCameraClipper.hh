@@ -7,7 +7,7 @@
 #include <csCore/math/csPlane.hh>
 #include <vector>
 
-namespace cryo
+namespace cs
 {
 
 class csCamera;

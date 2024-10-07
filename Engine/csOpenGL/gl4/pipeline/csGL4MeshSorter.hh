@@ -2,7 +2,7 @@
 
 #include <csCore/graphics/eRenderPass.hh>
 
-namespace cryo
+namespace cs
 {
 
 class csGfxMesh;

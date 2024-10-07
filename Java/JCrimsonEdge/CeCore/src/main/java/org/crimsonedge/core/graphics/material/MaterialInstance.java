@@ -8,7 +8,7 @@ import org.crimsonedge.core.graphics.EShadingMode;
 import org.crimsonedge.core.graphics.ITexture;
 import org.crimsonedge.core.math.*;
 
-@CeClass("cryo::csMaterialInstance")
+@CeClass("cs::csMaterialInstance")
 public class csMaterialInstance extends CoreObject implements IMaterial {
 
     public csMaterialInstance() {

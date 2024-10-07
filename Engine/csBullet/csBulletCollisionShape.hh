@@ -6,7 +6,7 @@
 
 class btCollisionShape;
 
-namespace cryo::bullet
+namespace cs::bullet
 {
 
 CS_CLASS()

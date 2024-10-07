@@ -6,7 +6,7 @@
 #include <csCore/graphics/iRenderMesh.hh>
 #include <csCore/csTypes.hh>
 
-namespace cryo
+namespace cs
 {
 
 

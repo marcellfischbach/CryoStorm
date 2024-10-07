@@ -6,7 +6,7 @@
 #include <csCore/csObjectRegistry.hh>
 #include <csCore/graphics/iRenderMesh.hh>
 
-namespace cryo
+namespace cs
 {
 
 csGfxMeshCompound::csGfxMeshCompound()
@@ -20,7 +20,7 @@ csGfxMeshCompound::~csGfxMeshCompound()
   
 }
 
-void csGfxMeshCompound::AddMesh(cryo::csGfxMesh *mesh)
+void csGfxMeshCompound::AddMesh(cs::csGfxMesh *mesh)
 {
   for (auto &internalMesh: m_internalMeshes)
   {
@@ -34,7 +34,7 @@ void csGfxMeshCompound::AddMesh(cryo::csGfxMesh *mesh)
   mesh->AddRef();
 }
 
-void csGfxMeshCompound::RemoveMesh(cryo::csGfxMesh *mesh)
+void csGfxMeshCompound::RemoveMesh(cs::csGfxMesh *mesh)
 {
   for (auto it = m_internalMeshes.begin(); it != m_internalMeshes.end(); ++it)
   {
@@ -46,7 +46,7 @@ void csGfxMeshCompound::RemoveMesh(cryo::csGfxMesh *mesh)
   }
 }
 
-bool csGfxMeshCompound::ContainsMesh(const cryo::csGfxMesh *mesh) const
+bool csGfxMeshCompound::ContainsMesh(const cs::csGfxMesh *mesh) const
 {
   if (this == mesh)
   {

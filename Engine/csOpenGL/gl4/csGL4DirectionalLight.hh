@@ -5,7 +5,7 @@
 #include <csOpenGL/csOpenGLExport.hh>
 #include <csCore/graphics/iDirectionalLight.hh>
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 

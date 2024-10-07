@@ -11,7 +11,7 @@
 #include <csCore/graphics/eRenderPass.hh>
 #include <vector>
 
-namespace cryo
+namespace cs
 {
 
 struct iDevice;

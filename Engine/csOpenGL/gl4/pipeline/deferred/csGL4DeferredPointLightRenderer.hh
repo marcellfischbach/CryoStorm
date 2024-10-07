@@ -5,7 +5,7 @@
 #include <csOpenGL/csOpenGLExport.hh>
 #include <csOpenGL/gl4/pipeline/pointsm/csGL4PointSMRenderer.hh>
 
-namespace cryo
+namespace cs
 {
 
 class csCamera;

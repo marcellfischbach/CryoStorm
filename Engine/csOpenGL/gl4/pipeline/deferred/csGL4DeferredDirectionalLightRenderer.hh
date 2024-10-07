@@ -3,7 +3,7 @@
 #include <csOpenGL/gl4/pipeline/pssm/csGL4PSSMRenderer.hh>
 
 
-namespace cryo
+namespace cs
 {
 
 class csCamera;

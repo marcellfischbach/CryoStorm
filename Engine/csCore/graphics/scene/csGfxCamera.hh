@@ -5,7 +5,7 @@
 #include <csCore/graphics/eClearMode.hh>
 #include <csCore/math/csColor4f.hh>
 
-namespace cryo
+namespace cs
 {
 
 class csCamera;

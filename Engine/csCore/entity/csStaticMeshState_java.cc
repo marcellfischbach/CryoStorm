@@ -3,7 +3,7 @@
 #include <csCore/graphics/csMesh.hh>
 
 
-#define CS_STATIC_MESH(ref) reinterpret_cast<cryo::csStaticMeshState*>(ref)
+#define CS_STATIC_MESH(ref) reinterpret_cast<cs::csStaticMeshState*>(ref)
 
 extern "C"
 {
@@ -13,7 +13,7 @@ JNIEXPORT void
 JNICALL Java_org_crimsonedge_core_entity_StaticMeshState_nSetMesh(JNIEnv *env, jclass cls, jlong ref, jlong meshRef)
 {
   auto staticMeshState = CS_STATIC_MESH(ref);
-  auto mesh            = reinterpret_cast<cryo::csMesh *>(meshRef);
+  auto mesh            = reinterpret_cast<cs::csMesh *>(meshRef);
   staticMeshState->SetMesh(mesh);
 }
 
@@ -21,7 +21,7 @@ JNIEXPORT jobject
 JNICALL Java_org_crimsonedge_core_entity_StaticMeshState_nGetMesh(JNIEnv *env, jclass cls, jlong ref)
 {
   auto         staticMeshState = CS_STATIC_MESH(ref);
-  cryo::csMesh *pMesh          = staticMeshState->GetMesh();
+  cs::csMesh *pMesh          = staticMeshState->GetMesh();
   return pMesh ? pMesh->GetJObject() : nullptr;
 }
 
@@ -33,7 +33,7 @@ JNICALL Java_org_crimsonedge_core_entity_StaticMeshState_nSetMaterial(JNIEnv *en
                                                                       jlong materialRef)
 {
   auto staticMeshState = CS_STATIC_MESH(ref);
-  auto material        = reinterpret_cast<cryo::iMaterial *>(materialRef);
+  auto material        = reinterpret_cast<cs::iMaterial *>(materialRef);
   staticMeshState->SetMaterial(idx, material);
 }
 
@@ -41,7 +41,7 @@ JNIEXPORT jobject
 JNICALL Java_org_crimsonedge_core_entity_StaticMeshState_nGetMaterial(JNIEnv *env, jclass cls, jlong ref, jint idx)
 {
   auto          staticMeshState = CS_STATIC_MESH(ref);
-  cryo::iMaterial *pMaterial      = staticMeshState->GetMaterial(idx);
+  cs::iMaterial *pMaterial      = staticMeshState->GetMaterial(idx);
   return pMaterial ? pMaterial->GetJObject() : nullptr;
 }
 

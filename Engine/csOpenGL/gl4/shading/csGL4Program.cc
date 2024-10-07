@@ -6,7 +6,7 @@
 #include <GL/glew.h>
 
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 

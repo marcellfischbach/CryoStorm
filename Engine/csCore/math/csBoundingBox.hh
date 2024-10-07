@@ -5,7 +5,7 @@
 #include <csCore/math/csMatrix4f.hh>
 #include <csCore/math/csVector3f.hh>
 
-namespace cryo {
+namespace cs {
 
 class CS_CORE_API csBoundingBox
 {

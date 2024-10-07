@@ -12,7 +12,7 @@
 #include <csCore/resource/csAssetManager.hh>
 
 
-namespace cryo
+namespace cs
 {
 
 csTextureLoader::csTextureLoader()

@@ -8,7 +8,7 @@
 struct aiMesh;
 struct aiNode;
 
-namespace cryo::assimp
+namespace cs::assimp
 {
 
 struct SkeletonLoaderData;

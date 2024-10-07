@@ -4,7 +4,7 @@
 #include <csCore/entity/csSpatialState.hh>
 #include <vector>
 
-namespace cryo
+namespace cs
 {
 
 struct iTerrainMesh;

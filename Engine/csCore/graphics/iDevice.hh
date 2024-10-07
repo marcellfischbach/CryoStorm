@@ -26,7 +26,7 @@
 #include <csCore/graphics/material/iMaterial.hh>
 #include <array>
 
-namespace cryo
+namespace cs
 {
 
 struct iShader;

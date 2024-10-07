@@ -17,7 +17,7 @@
 #include <string>
 #include <vector>
 
-namespace cryo::assimp
+namespace cs::assimp
 {
 
 
@@ -67,7 +67,7 @@ static void debug_node(aiNode *node, const csMatrix4f &parent, const std::string
 
 iObject *csAssimpSkeletonMeshLoader::Load(const csClass *cls, const csResourceLocator &locator) const
 {
-  iFile *file = cryo::csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
+  iFile *file = cs::csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (!file)
   {
     return nullptr;

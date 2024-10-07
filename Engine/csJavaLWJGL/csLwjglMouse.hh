@@ -7,7 +7,7 @@
 #include <csCore/input/iMouse.hh>
 #include <csCore/csJava.hh>
 
-namespace cryo::java
+namespace cs::java
 {
 
 class csLwjglMouse : public iMouse

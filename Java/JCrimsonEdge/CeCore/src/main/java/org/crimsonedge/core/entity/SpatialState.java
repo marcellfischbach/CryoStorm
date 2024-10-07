@@ -3,7 +3,7 @@ package org.crimsonedge.core.entity;
 import org.crimsonedge.core.CeClass;
 import org.crimsonedge.core.math.csMatrix4f;
 
-@CeClass("cryo::csSpatialState")
+@CeClass("cs::csSpatialState")
 public class csSpatialState extends csEntityState {
 
     public csSpatialState() {

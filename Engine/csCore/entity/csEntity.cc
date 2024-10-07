@@ -3,7 +3,7 @@
 #include <csCore/entity/csSpatialState.hh>
 #include <csCore/entity/csWorld.hh>
 
-namespace cryo
+namespace cs
 {
 
 csEntity::csEntity(const std::string &name)

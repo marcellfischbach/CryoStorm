@@ -2,7 +2,7 @@
 #include <csLauncher/window/csSDLMouse.hh>
 #include <csLauncher/window/csSDLButtonMap.hh>
 
-namespace cryo::launcher
+namespace cs::launcher
 {
 
 csSDLMouse::csSDLMouse()

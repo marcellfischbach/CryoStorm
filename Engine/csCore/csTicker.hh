@@ -4,7 +4,7 @@
 #include <csCore/csTypes.hh>
 #include <csCore/csCoreExport.hh>
 
-namespace cryo
+namespace cs
 {
 
 class CS_CORE_API csTicker

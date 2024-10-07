@@ -12,7 +12,7 @@
 #include <csCore/graphics/eVertexStream.hh>
 
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 

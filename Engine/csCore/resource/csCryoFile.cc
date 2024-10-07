@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 
-namespace cryo
+namespace cs
 {
 
 enum class TokenType
@@ -771,7 +771,7 @@ void Debug(const csCryoFileElement *element, int indent)
 
 void csCryoFile::Debug() const
 {
-  cryo::Debug(&m_root, 0);
+  cs::Debug(&m_root, 0);
 }
 
 std::string Print(const csCryoFileElement *element, bool format, int ind, const std::string &indent, bool &endWithCurly)
@@ -854,7 +854,7 @@ std::string csCryoFile::Print(bool format, int indent)
   for (size_t i = 0, in = m_root.GetNumberOfChildren(); i < in; i++)
   {
     bool ewc = false;
-    print += cryo::Print(m_root.GetChild(i), format, 0, indentStr, ewc);
+    print += cs::Print(m_root.GetChild(i), format, 0, indentStr, ewc);
     if (!ewc && i + 1 < in)
     {
       print += ",";

@@ -4,7 +4,7 @@
 #include <generate/ioutput.hh>
 #include <cache.hh>
 
-namespace cryo::moc
+namespace cs::moc
 {
 
 MasterGenerator::MasterGenerator()
@@ -23,12 +23,12 @@ void MasterGenerator::Generate(Cache& cache, iOutput* output, const std::string 
   std::string register_classes = "";
   register_classes += "static void register_classes()\n";
   register_classes += "{\n";
-  register_classes += "  cryo::csClassRegistry *reg = cryo::csClassRegistry::Get();\n";
+  register_classes += "  cs::csClassRegistry *reg = cs::csClassRegistry::Get();\n";
 
   std::string unregister_classes = "";
   unregister_classes += "static void unregister_classes()\n";
   unregister_classes += "{\n";
-  unregister_classes += "  cryo::csClassRegistry *reg = cryo::csClassRegistry::Get();\n";
+  unregister_classes += "  cs::csClassRegistry *reg = cs::csClassRegistry::Get();\n";
 
   for (auto it : cache.GetFileCache())
   {

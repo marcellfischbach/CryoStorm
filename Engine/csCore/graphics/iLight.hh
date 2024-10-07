@@ -8,7 +8,7 @@
 #include <csCore/graphics/eLightChangeMode.hh>
 #include <csCore/graphics/eLightType.hh>
 
-namespace cryo
+namespace cs
 {
 
 

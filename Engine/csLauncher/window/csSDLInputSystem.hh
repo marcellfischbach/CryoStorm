@@ -5,7 +5,7 @@
 #include <csLauncher/window/csSDLMouse.hh>
 #include <csLauncher/window/csSDLWindow.hh>
 
-namespace cryo::launcher
+namespace cs::launcher
 {
 
 CS_CLASS()

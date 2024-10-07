@@ -1,7 +1,7 @@
 
 #include <csCore/csTicker.hh>
 
-namespace cryo
+namespace cs
 {
 
 #ifdef CS_WIN32

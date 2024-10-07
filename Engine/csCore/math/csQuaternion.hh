@@ -6,7 +6,7 @@
 #include "csMath.hh"
 #include <csCore/math/csMatrix.hh>
 
-namespace cryo
+namespace cs
 {
 
 struct CS_CORE_API csQuaternion

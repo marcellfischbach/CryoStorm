@@ -5,7 +5,7 @@
 #include <csCore/graphics/shading/iShader.hh>
 #include <csCore/resource/csAssetManager.hh>
 
-namespace cryo
+namespace cs
 {
 
 #define IF(prefix, name, text) if (std::string(#name) == (text)) return prefix##name

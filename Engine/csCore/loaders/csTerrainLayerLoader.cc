@@ -8,7 +8,7 @@
 #include <csCore/graphics/iTexture2D.hh>
 
 
-namespace cryo
+namespace cs
 {
 
 bool csTerrainLayerLoader::CanLoad(const csClass* cls, const csResourceLocator& locator) const

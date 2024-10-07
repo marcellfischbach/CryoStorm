@@ -9,7 +9,7 @@
 #include <set>
 
 
-namespace cryo::xml
+namespace cs::xml
 {
 class csElement;
 }
@@ -80,12 +80,12 @@ private:
   void ReadPath(const std::string &path);
   void ReadConvertersFile(const std::string &filename);
 
-  void ReadConverter(const cryo::xml::csElement *converterElement);
-  void ReadConverters (const cryo::xml::csElement *element);
+  void ReadConverter(const cs::xml::csElement *converterElement);
+  void ReadConverters (const cs::xml::csElement *element);
 
-  void ReadTypes (JavaConverter &converter, const cryo::xml::csElement* typesElement);
-  void ReadInputArguments (JavaConverter &converter, const cryo::xml::csElement* inputArgumentsElement);
-  void ReadOutputArguments (JavaConverter &converter, const cryo::xml::csElement* outputArgumentsElement);
+  void ReadTypes (JavaConverter &converter, const cs::xml::csElement* typesElement);
+  void ReadInputArguments (JavaConverter &converter, const cs::xml::csElement* inputArgumentsElement);
+  void ReadOutputArguments (JavaConverter &converter, const cs::xml::csElement* outputArgumentsElement);
 
 private:
 

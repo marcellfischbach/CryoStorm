@@ -9,7 +9,7 @@
 #include <vector>
 #include "iGame.hh"
 
-namespace cryo
+namespace cs
 {
 
 struct iDevice;

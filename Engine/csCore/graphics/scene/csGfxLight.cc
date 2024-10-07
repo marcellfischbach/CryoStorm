@@ -4,7 +4,7 @@
 #include <csCore/graphics/iLight.hh>
 
 
-namespace cryo
+namespace cs
 {
 
 csGfxLight::csGfxLight()

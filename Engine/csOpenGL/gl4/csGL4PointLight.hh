@@ -5,7 +5,7 @@
 #include <csOpenGL/csOpenGLExport.hh>
 #include <csCore/graphics/iPointLight.hh>
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 

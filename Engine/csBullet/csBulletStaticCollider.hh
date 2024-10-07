@@ -9,7 +9,7 @@
 class btCollisionObject;
 class btCompoundShape;
 
-namespace cryo::bullet
+namespace cs::bullet
 {
 
 class csBulletCollisionShape;

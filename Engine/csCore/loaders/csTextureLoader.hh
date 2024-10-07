@@ -7,7 +7,7 @@
 #include <csCore/resource/iAssetLoader.hh>
 #include <csCore/resource/csBaseCSFAssetLoader.hh>
 
-namespace cryo
+namespace cs
 {
 
 class csImage;

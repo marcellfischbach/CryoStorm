@@ -18,7 +18,7 @@
 #include <vector>
 
 
-namespace cryo::assimp
+namespace cs::assimp
 {
 
 struct StaticLoaderData
@@ -66,7 +66,7 @@ static void debug_node(aiNode *node, const csMatrix4f &parent, const std::string
 
 iObject *csAssimpMeshLoader::Load(const csClass *cls, const csResourceLocator &locator) const
 {
-  iFile *file = cryo::csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
+  iFile *file = cs::csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (!file)
   {
     return nullptr;

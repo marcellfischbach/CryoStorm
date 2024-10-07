@@ -8,7 +8,7 @@
 
 
 
-namespace cryo {
+namespace cs {
 
 
 struct CS_CORE_API csColor4f

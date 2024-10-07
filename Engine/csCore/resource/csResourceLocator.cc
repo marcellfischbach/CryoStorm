@@ -2,7 +2,7 @@
 #include <csCore/resource/csResourceLocator.hh>
 #include <csCore/csString.hh>
 
-namespace cryo
+namespace cs
 {
 
 
@@ -52,7 +52,7 @@ std::string extract_extension(const std::string& locator)
   size_t idx = locator.rfind(".");
   if (idx != -1)
   {
-    return cryo::to_upper(locator.substr(idx + 1));
+    return cs::to_upper(locator.substr(idx + 1));
   }
   return "";
 }

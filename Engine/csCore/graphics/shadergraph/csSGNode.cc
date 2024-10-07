@@ -2,7 +2,7 @@
 #include <csCore/graphics/shadergraph/csSGNode.hh>
 
 
-namespace cryo
+namespace cs
 {
 
 
@@ -44,7 +44,7 @@ csSGNodeOutput *csSGNode::DefineOutput(const std::string &name, eSGValueType typ
   return output;
 }
 
-void csSGNode::Bind(size_t inputIdx, cryo::csSGNode *node, size_t outputIdx)
+void csSGNode::Bind(size_t inputIdx, cs::csSGNode *node, size_t outputIdx)
 {
   if (inputIdx >= m_inputs.size())
   {

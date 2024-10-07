@@ -9,7 +9,7 @@
 #include <csCore/graphics/scene/csGfxLight.hh>
 #include <vector>
 
-namespace cryo
+namespace cs
 {
 
 struct iDevice;

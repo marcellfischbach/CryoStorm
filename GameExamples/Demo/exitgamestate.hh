@@ -7,7 +7,7 @@
 #include <csCore/entity/csEntityState.hh>
 
 CS_CLASS()
-class ExitGameState : public CS_SUPER(cryo::csEntityState)
+class ExitGameState : public CS_SUPER(cs::csEntityState)
 {
   CS_CLASS_GEN;
 public:

@@ -1,7 +1,7 @@
 #include <csLauncher/window/csSDLInputSystem.hh>
 
 
-namespace cryo::launcher
+namespace cs::launcher
 {
 
 csSDLInputSystem::csSDLInputSystem(csSDLKeyboard* keyboard, csSDLMouse* mouse)

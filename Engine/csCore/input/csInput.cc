@@ -3,7 +3,7 @@
 #include <csCore/input/iInputSystem.hh>
 #include <csCore/csObjectRegistry.hh>
 
-namespace cryo
+namespace cs
 {
 
 

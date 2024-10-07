@@ -9,7 +9,7 @@
 #include <csCore/graphics/scene/csGfxSceneCollector.hh>
 #include <csCore/graphics/skybox/csSkyboxMesh.hh>
 
-namespace cryo
+namespace cs
 {
 
 class csCamera;

@@ -3,7 +3,7 @@
 #include <csCore/csClassRegistry.hh>
 
 
-namespace cryo
+namespace cs
 {
 
 

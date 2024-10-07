@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 

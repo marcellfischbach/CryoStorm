@@ -3,7 +3,7 @@
 
 #include <csCore/math/csVector.hh>
 
-namespace cryo
+namespace cs
 {
 
 struct iShader;

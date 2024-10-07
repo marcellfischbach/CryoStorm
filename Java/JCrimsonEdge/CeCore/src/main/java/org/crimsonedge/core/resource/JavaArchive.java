@@ -6,7 +6,7 @@ import org.crimsonedge.core.CoreObject;
 import java.io.File;
 import java.io.InputStream;
 
-@CeClass("cryo::csJavaArchive")
+@CeClass("cs::csJavaArchive")
 public class csJavaArchive extends CoreObject implements IArchive {
 
     private int priority;

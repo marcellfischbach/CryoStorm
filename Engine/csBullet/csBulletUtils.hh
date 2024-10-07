@@ -4,7 +4,7 @@
 #include <csCore/math/csMatrix4f.hh>
 #include <LinearMath/btTransform.h>
 
-namespace cryo::bullet
+namespace cs::bullet
 {
 
 

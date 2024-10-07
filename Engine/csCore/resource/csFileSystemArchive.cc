@@ -6,7 +6,7 @@
 #include <csCore/resource/csFileSystemFile.hh>
 #include <csCore/resource/csVFS.hh>
 
-namespace cryo
+namespace cs
 {
 
 csFileSystemArchive::csFileSystemArchive(const std::string &name, const std::string &rootPath, int priority)
@@ -43,7 +43,7 @@ int csFileSystemArchive::GetPriority() const
   return m_priority;
 }
 
-iFile* csFileSystemArchive::Open(const std::string &locator, cryo::eAccessMode accessMode, cryo::eOpenMode openMode)
+iFile* csFileSystemArchive::Open(const std::string &locator, cs::eAccessMode accessMode, cs::eOpenMode openMode)
 {
   csFileSystemFile *file = new csFileSystemFile(m_rootPath + locator);
   if (!file->Open(accessMode, openMode))

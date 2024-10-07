@@ -7,7 +7,7 @@
 #include <csCore/math/csSphere.hh>
 #include <csCore/math/csVector3f.hh>
 
-namespace cryo
+namespace cs
 {
 
 

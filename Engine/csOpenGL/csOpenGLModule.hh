@@ -4,7 +4,7 @@
 #include <csOpenGL/csOpenGLExport.hh>
 #include <csCore/iModule.hh>
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 class CS_OGL_API csOpenGLModule : public iModule

@@ -4,7 +4,7 @@
 #include <csCore/csClass.hh>
 #include <csCore/math/csVector3f.hh>
 
-namespace cryo
+namespace cs
 {
 
 

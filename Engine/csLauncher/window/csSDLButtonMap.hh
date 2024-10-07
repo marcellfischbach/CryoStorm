@@ -4,7 +4,7 @@
 #include <csCore/input/eMouseButton.hh>
 #include <csCore/csTypes.hh>
 
-namespace cryo::launcher
+namespace cs::launcher
 {
 
 static eMouseButton Map(uint8_t button)

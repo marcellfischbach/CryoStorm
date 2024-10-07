@@ -12,7 +12,7 @@ extern "C"
 
 JNIEXPORT void JNICALL Java_org_crimsonedge_core_Engine_nSetEnv(JNIEnv *env, jclass cls)
 {
-  cryo::csJava::Set(env);
+  cs::csJava::Set(env);
 }
 
 
@@ -21,21 +21,21 @@ JNIEXPORT void JNICALL Java_org_crimsonedge_core_Engine_nSetEnv(JNIEnv *env, jcl
 JNIEXPORT jobject
 JNICALL Java_org_crimsonedge_core_Engine_nGetWorld(JNIEnv *env, jclass cls)
 {
-  return cryo::csEngine::Get()->GetWorld()->GetJObject();
+  return cs::csEngine::Get()->GetWorld()->GetJObject();
 }
 
 
 JNIEXPORT jobject
 JNICALL Java_org_crimsonedge_core_Engine_nGetDevice(JNIEnv *env, jclass cls)
 {
-  return cryo::csEngine::Get()->GetDevice()->GetJObject();
+  return cs::csEngine::Get()->GetDevice()->GetJObject();
 }
 
 
 JNIEXPORT jboolean
 JNICALL Java_org_crimsonedge_core_Engine_nInitialize(JNIEnv *env, jclass cls, jobjectArray jargs, jlong externalModuleRef, jobject gameObject)
 {
-  cryo::csJava::Set(env);
+  cs::csJava::Set(env);
   jsize                    argc = env->GetArrayLength(jargs);
   std::vector<std::string> args;
   for (jsize               i    = 0; i < argc; i++)
@@ -50,21 +50,21 @@ JNICALL Java_org_crimsonedge_core_Engine_nInitialize(JNIEnv *env, jclass cls, jo
 
   gameObject = gameObject ? env->NewGlobalRef(gameObject) : nullptr;
 
-  cryo::csGameJava *game = gameObject
-                       ? new cryo::csGameJava(gameObject)
+  cs::csGameJava *game = gameObject
+                       ? new cs::csGameJava(gameObject)
                        : nullptr;
 
-  auto externalModule = reinterpret_cast<cryo::iModule*>(externalModuleRef);
+  auto externalModule = reinterpret_cast<cs::iModule*>(externalModuleRef);
 
-  bool result = cryo::csEngine::Get()->InitializeEngine(args, externalModule);
+  bool result = cs::csEngine::Get()->InitializeEngine(args, externalModule);
   fflush(stdout);
   return result;
 }
 
 extern "C" JNIEXPORT void JNICALL Java_org_crimsonedge_core_Engine_nProcessFrame(JNIEnv *env, jclass cls)
 {
-  cryo::csJava::Set(env);
-  cryo::csEngine::Get()->ProcessFrame();
+  cs::csJava::Set(env);
+  cs::csEngine::Get()->ProcessFrame();
 }
 }
 

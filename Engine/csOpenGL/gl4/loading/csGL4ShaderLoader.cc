@@ -12,7 +12,7 @@
 #include <set>
 
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 std::vector<std::string> replace_includes(const csResourceLocator *parent,
@@ -116,7 +116,7 @@ loadExternalLinesRaw(const csResourceLocator &locator, iFile *file, std::set<csR
 std::vector<std::string>
 loadExternalLinesSpc(const csResourceLocator &locator, iFile *file, std::set<csResourceLocator> &included)
 {
-  cryo::csCryoFile fFile;
+  cs::csCryoFile fFile;
   bool             res = fFile.Parse(file);
   if (!res)
   {

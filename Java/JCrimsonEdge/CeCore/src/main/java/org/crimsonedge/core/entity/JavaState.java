@@ -2,7 +2,7 @@ package org.crimsonedge.core.entity;
 
 import org.crimsonedge.core.CeClass;
 
-@CeClass("cryo::csJavaState")
+@CeClass("cs::csJavaState")
 public class csJavaState extends csEntityState{
 
     public csJavaState() {

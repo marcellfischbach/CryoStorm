@@ -6,7 +6,7 @@
 #include <csCore/csClass.hh>
 
 
-namespace cryo
+namespace cs
 {
 
 struct iKeyboard

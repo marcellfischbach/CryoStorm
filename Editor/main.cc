@@ -36,8 +36,8 @@ int main(int argc, char** argv)
 
 
   printf("Starting with data-path: '%s'\n", dataPath.c_str()); fflush(stdout);
-  cryo::csVFS::Get()->SetRootPath(dataPath);
-  cryo::csVFSConfigReader::Read(dataPath, configFilename);
+  cs::csVFS::Get()->SetRootPath(dataPath);
+  cs::csVFSConfigReader::Read(dataPath, configFilename);
 
   MainWindow wnd;
   wnd.resize(1024, 768);

@@ -4,7 +4,7 @@
 #include <csCore/input/eKey.hh>
 #include <SDL.h>
 
-namespace cryo::launcher
+namespace cs::launcher
 {
 
 static eKey Map(SDL_Scancode scanCode)

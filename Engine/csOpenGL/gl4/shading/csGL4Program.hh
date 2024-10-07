@@ -5,7 +5,7 @@
 #include <csCore/csTypes.hh>
 #include <vector>
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 class csGL4Shader;

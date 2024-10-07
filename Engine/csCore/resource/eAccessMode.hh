@@ -3,7 +3,7 @@
 #pragma once
 
 
-namespace cryo
+namespace cs
 {
 enum eAccessMode
 {

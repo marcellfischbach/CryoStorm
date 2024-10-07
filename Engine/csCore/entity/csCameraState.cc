@@ -12,7 +12,7 @@
 #include <csCore/graphics/scene/iGfxScene.hh>
 #include <csCore/entity/csWorld.hh>
 
-namespace cryo
+namespace cs
 {
 
 
@@ -106,7 +106,7 @@ iRenderTarget2D* csCameraState::GetRenderTarget()
   return m_renderTarget;
 }
 
-void csCameraState::SetSkyboxRenderer(cryo::iSkyboxRenderer *skyboxRenderer)
+void csCameraState::SetSkyboxRenderer(cs::iSkyboxRenderer *skyboxRenderer)
 {
   CS_SET(m_skyboxRenderer, skyboxRenderer);
 }
@@ -182,13 +182,13 @@ bool csCameraState::IsRenderShadows() const
   return m_renderShadows;
 }
 
-void csCameraState::SetPostProcessing(cryo::csPostProcessing *postProcessing)
+void csCameraState::SetPostProcessing(cs::csPostProcessing *postProcessing)
 {
   CS_SET(m_postProcessing, postProcessing);
   UpdateGfxCamera();
 }
 
-cryo::csPostProcessing* csCameraState::GetPostPRocessing() const
+cs::csPostProcessing* csCameraState::GetPostPRocessing() const
 {
   return m_postProcessing;
 }

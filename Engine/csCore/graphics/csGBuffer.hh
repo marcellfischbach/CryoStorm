@@ -4,7 +4,7 @@
 #include <csCore/csTypes.hh>
 #include <vector>
 
-namespace cryo
+namespace cs
 {
 
 struct iDevice;

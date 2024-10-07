@@ -2,7 +2,7 @@
 #include <csCore/graphics/scene/csGfxOctreeScene.hh>
 
 
-namespace cryo
+namespace cs
 {
 
 csGfxOctreeScene::csGfxOctreeScene()

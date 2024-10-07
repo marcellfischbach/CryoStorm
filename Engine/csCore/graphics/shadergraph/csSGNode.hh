@@ -9,7 +9,7 @@
 #include <set>
 #include <vector>
 
-namespace cryo
+namespace cs
 {
 
 eSGValueType EvalValueType(eSGValueType v0, eSGValueType v1);

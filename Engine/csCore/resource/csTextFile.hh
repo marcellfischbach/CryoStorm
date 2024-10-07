@@ -6,7 +6,7 @@
 #include <csCore/resource/iAssetLoader.hh>
 #include <string>
 
-namespace cryo
+namespace cs
 {
 
 

@@ -6,17 +6,17 @@
 #include <csCore/resource/csVFS.hh>
 #include <csCore/resource/csTextFile.hh>
 
-namespace cryo
+namespace cs
 {
 
 
-bool csTextFileLoader::CanLoad(const cryo::csClass *cls, const cryo::csResourceLocator &locator) const
+bool csTextFileLoader::CanLoad(const cs::csClass *cls, const cs::csResourceLocator &locator) const
 {
   // text file loader can load everything
   return csTextFile::GetStaticClass() == cls;
 }
 
-iObject *csTextFileLoader::Load(const cryo::csClass *cls, const cryo::csResourceLocator &locator) const
+iObject *csTextFileLoader::Load(const cs::csClass *cls, const cs::csResourceLocator &locator) const
 {
   iFile *file = csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (!file)

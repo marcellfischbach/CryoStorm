@@ -5,7 +5,7 @@
 #include <csCore/csClass.hh>
 #include <map>
 
-namespace cryo
+namespace cs
 {
 
 class CS_CORE_API csClassRegistry

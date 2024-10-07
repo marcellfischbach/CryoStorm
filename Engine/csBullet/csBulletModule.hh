@@ -4,7 +4,7 @@
 #include <csBullet/csBulletExport.hh>
 #include <csCore/iModule.hh>
 
-namespace cryo::bullet
+namespace cs::bullet
 {
 
 class CS_BULLET_API csBulletModule : public iModule

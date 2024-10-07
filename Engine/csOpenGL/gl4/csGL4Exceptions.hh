@@ -3,7 +3,7 @@
 #include <exception>
 #include <string>
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 

@@ -7,7 +7,7 @@ static const uint64_t MIN_IN_MS = 60 * SECS_IN_MS;
 static const uint64_t HOURS_IN_MS = 60 * MIN_IN_MS;
 #endif
 
-namespace cryo
+namespace cs
 {
 
 

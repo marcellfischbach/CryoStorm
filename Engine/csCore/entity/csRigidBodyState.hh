@@ -4,7 +4,7 @@
 #include <csCore/csCoreExport.hh>
 #include <csCore/entity/csSpatialState.hh>
 
-namespace cryo
+namespace cs
 {
 struct iCollisionShape;
 struct iDynamicCollider;

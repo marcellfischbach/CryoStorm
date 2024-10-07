@@ -6,7 +6,7 @@
 #include <csCore/csDefs.hh>
 #include <vector>
 
-namespace cryo
+namespace cs
 {
 
 

@@ -5,17 +5,17 @@
 // ---------------------------------------------------------------------------------------
 
 
-namespace cryo
+namespace cs
 {
 
-const cryo::csClass* iObject::GetClass() const
+const cs::csClass* iObject::GetClass() const
 {
-  return cryo::iObjectClass::Get();
+  return cs::iObjectClass::Get();
 }
 
-const cryo::csClass* iObject::GetStaticClass()
+const cs::csClass* iObject::GetStaticClass()
 {
-  return cryo::iObjectClass::Get();
+  return cs::iObjectClass::Get();
 }
 
 void* iObject::QueryClass(const csClass* clazz)
@@ -45,17 +45,17 @@ iObjectClass* iObjectClass::Get()
 }
 
 iObjectClass::iObjectClass()
-  : csClass("cryo::iObject")
+  : csClass("cs::iObject")
 {
 }
 
-cryo::iObject* iObjectClass::CreateInstance() const
+cs::iObject* iObjectClass::CreateInstance() const
 {
-  throw cryo::csInstantiationException("cryo::iObject");
+  throw cs::csInstantiationException("cs::iObject");
 }
 
 csObject::csObject()
-  : cryo::iObject()
+  : cs::iObject()
 {
   CS_CLASS_GEN_CONSTR;
 }

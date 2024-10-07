@@ -8,7 +8,7 @@
 #include <csCore/csClass.hh>
 #include <csCore/resource/iAssetLoader.hh>
 
-namespace cryo
+namespace cs
 {
 
 

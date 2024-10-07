@@ -4,7 +4,7 @@
     -->
     <types>
         <type>csVector2f</type>
-        <type>cryo::csVector2f</type>
+        <type>cs::csVector2f</type>
     </types>
     <arguments>
         <argument type="jfloat" id="x" idx="0" />

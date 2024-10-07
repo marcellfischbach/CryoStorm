@@ -4,10 +4,10 @@
 #include <csCore/iModule.hh>
 
 
-namespace cryo::launcher
+namespace cs::launcher
 {
 
-class csLauncherModule : public cryo::iModule
+class csLauncherModule : public cs::iModule
 {
 public:
   bool Register(const std::vector<std::string> &args, csEngine *engine);

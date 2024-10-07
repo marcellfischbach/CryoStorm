@@ -4,7 +4,7 @@
 #include <csOpenGL/csOpenGLExport.hh>
 #include <csCore/graphics/iRenderTargetCube.hh>
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 class csGL4TextureCube;

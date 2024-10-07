@@ -4,7 +4,7 @@
 #include <csOpenGL/csOpenGLExport.hh>
 #include <csCore/resource/iAssetLoader.hh>
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 

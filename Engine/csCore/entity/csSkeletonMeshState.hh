@@ -5,7 +5,7 @@
 #include <csCore/entity/csStaticMeshState.hh>
 #include <csCore/graphics/csSkeleton.hh>
 
-namespace cryo
+namespace cs
 {
 
 class csSkeletonMesh;

@@ -5,7 +5,7 @@
 #include <csCore/graphics/csImage.hh>
 #include <png.h>
 
-namespace cryo::img
+namespace cs::img
 {
 
 csPngLoader::csPngLoader()

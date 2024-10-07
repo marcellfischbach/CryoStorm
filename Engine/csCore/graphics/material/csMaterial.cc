@@ -4,7 +4,7 @@
 #include <csCore/graphics/shading/iShaderAttribute.hh>
 #include <bit>
 
-namespace cryo
+namespace cs
 {
 std::map<iMaterial *, std::string> s_material_names;
 

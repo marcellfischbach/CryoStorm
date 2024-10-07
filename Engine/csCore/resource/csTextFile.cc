@@ -4,7 +4,7 @@
 
 #include <csCore/resource/csTextFile.hh>
 
-namespace cryo
+namespace cs
 {
 
 

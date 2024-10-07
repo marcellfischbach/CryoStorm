@@ -13,9 +13,9 @@ JNICALL Java_org_crimsonedge_core_graphics_Mesh_nAddMaterialSlot(JNIEnv *env,
                                                                  jstring name,
                                                                  jlong materialRef)
 {
-  auto       mesh       = reinterpret_cast<cryo::csMesh *>(ref);
+  auto       mesh       = reinterpret_cast<cs::csMesh *>(ref);
   const char *nameChars = env->GetStringUTFChars(name, 0);
-  auto       material   = reinterpret_cast<cryo::iMaterial *>(materialRef);
+  auto       material   = reinterpret_cast<cs::iMaterial *>(materialRef);
   size_t     idx        = mesh->AddMaterialSlot(nameChars, material);
   env->ReleaseStringUTFChars(name, nameChars);
   return (jint) idx;
@@ -29,8 +29,8 @@ JNICALL Java_org_crimsonedge_core_graphics_Mesh_nSetDefaultMaterial(JNIEnv *env,
                                                                     jint idx,
                                                                     jlong materialRef)
 {
-  auto mesh     = reinterpret_cast<cryo::csMesh *>(ref);
-  auto material = reinterpret_cast<cryo::iMaterial *>(materialRef);
+  auto mesh     = reinterpret_cast<cs::csMesh *>(ref);
+  auto material = reinterpret_cast<cs::iMaterial *>(materialRef);
   mesh->SetDefaultMaterial(idx, material);
 }
 
@@ -40,7 +40,7 @@ JNICALL Java_org_crimsonedge_core_graphics_Mesh_nGetNumberOfMaterialSlots(JNIEnv
                                                                           jclass cls,
                                                                           jlong ref)
 {
-  auto mesh = reinterpret_cast<cryo::csMesh *>(ref);
+  auto mesh = reinterpret_cast<cs::csMesh *>(ref);
 
   return (jint) mesh->GetNumberOfMaterialSlots();
 }
@@ -52,7 +52,7 @@ JNICALL Java_org_crimsonedge_core_graphics_Mesh_nIndexOfMaterialSlot(JNIEnv *env
                                                                      jlong ref,
                                                                      jstring name)
 {
-  auto       mesh       = reinterpret_cast<cryo::csMesh *>(ref);
+  auto       mesh       = reinterpret_cast<cs::csMesh *>(ref);
   const char *nameChars = env->GetStringUTFChars(name, 0);
   size_t     idx        = mesh->IndexOfMaterialSlot(nameChars);
   env->ReleaseStringUTFChars(name, nameChars);
@@ -66,8 +66,8 @@ JNICALL Java_org_crimsonedge_core_graphics_Mesh_nAddSubMesh(JNIEnv *env,
                                                             jlong meshRef,
                                                             jint materialSlotIdx)
 {
-  auto mesh       = reinterpret_cast<cryo::csMesh *>(ref);
-  auto renderMesh = reinterpret_cast<cryo::iRenderMesh *>(meshRef);
+  auto mesh       = reinterpret_cast<cs::csMesh *>(ref);
+  auto renderMesh = reinterpret_cast<cs::iRenderMesh *>(meshRef);
   mesh->AddSubMesh(renderMesh, materialSlotIdx);
 }
 

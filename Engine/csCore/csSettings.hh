@@ -8,7 +8,7 @@
 #include <csCore/resource/csResourceLocator.hh>
 
 #include <string>
-namespace cryo
+namespace cs
 {
 
 class csCryoFile;

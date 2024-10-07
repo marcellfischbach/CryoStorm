@@ -5,7 +5,7 @@
 #include <csCore/csCoreExport.hh>
 #include <string>
 
-namespace cryo
+namespace cs
 {
 class csCryoFile;
 class csCryoFileElement;

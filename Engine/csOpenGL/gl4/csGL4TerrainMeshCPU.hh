@@ -4,13 +4,13 @@
 #include <csCore/graphics/iTerrainMesh.hh>
 #include <csCore/graphics/csVertexDeclaration.hh>
 
-namespace cryo
+namespace cs
 {
 struct iVertexBuffer;
 struct iIndexBuffer;
 }
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 

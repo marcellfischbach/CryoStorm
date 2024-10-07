@@ -1,7 +1,7 @@
 
 #include <csCore/math/clipper/csCompoundClipper.hh>
 
-namespace cryo
+namespace cs
 {
 
 

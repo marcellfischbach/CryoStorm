@@ -5,7 +5,7 @@
 #include <btBulletCollisionCommon.h>
 #include <algorithm>
 
-namespace cryo::bullet
+namespace cs::bullet
 {
 
 csBulletStaticCollider::csBulletStaticCollider()

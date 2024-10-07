@@ -9,7 +9,7 @@
 #include <csCore/resource/csAssetManager.hh>
 
 
-namespace cryo::assimp
+namespace cs::assimp
 {
 
 bool csAssimpLoaderModule::Register(const std::vector<std::string> &args, csEngine *engine)
@@ -35,5 +35,5 @@ bool csAssimpLoaderModule::Initialize(const std::vector<std::string> &args, csEn
 CS_DEFINE_LIBRARY(csAssimpLoader)
 {
   printf ("Load library: ceAssimpLoader\n");
-  return new cryo::assimp::csAssimpLoaderModule;
+  return new cs::assimp::csAssimpLoaderModule;
 }

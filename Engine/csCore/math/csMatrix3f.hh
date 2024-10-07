@@ -7,7 +7,7 @@
 #include <csCore/math/csVector3f.hh>
 
 
-namespace cryo
+namespace cs
 {
 
 
@@ -146,7 +146,7 @@ public:
 
   void Debug(const std::string &msg = "") const
   {
-    printf("cryo::Matrix3f: %s\n", msg.c_str());
+    printf("cs::Matrix3f: %s\n", msg.c_str());
     printf("  %.2f %.2f %.2f\n", m00, m01, m02);
     printf("  %.2f %.2f %.2f\n", m10, m11, m12);
     printf("  %.2f %.2f %.2f\n", m20, m21, m22);

@@ -2,7 +2,7 @@
 
 
 
-namespace cryo
+namespace cs
 {
 struct csColor4f;
 struct iRenderMesh;
@@ -23,7 +23,7 @@ typedef aiMatrix4x4t<float> aiMatrix4x4;
 struct aiMesh;
 
 
-namespace cryo::assimp
+namespace cs::assimp
 {
 
 csColor4f ConvertRGBA(aiColor4D &v);

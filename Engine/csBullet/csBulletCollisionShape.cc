@@ -3,7 +3,7 @@
 #include <btBulletCollisionCommon.h>
 
 
-namespace cryo::bullet
+namespace cs::bullet
 {
 
 

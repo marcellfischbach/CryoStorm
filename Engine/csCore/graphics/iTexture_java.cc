@@ -10,7 +10,7 @@ JNIEXPORT jint JNICALL Java_org_crimsonedge_core_graphics_ITexture_nGetTextureTy
                                                                                    jclass cls,
                                                                                    jlong ref)
 {
-  auto texture = reinterpret_cast<cryo::iTexture*>(ref);
+  auto texture = reinterpret_cast<cs::iTexture*>(ref);
   return texture->GetType();
 }
 
@@ -19,7 +19,7 @@ JNIEXPORT jint JNICALL Java_org_crimsonedge_core_graphics_ITexture_nGetPixelForm
                                                                                    jclass cls,
                                                                                    jlong ref)
 {
-  auto texture = reinterpret_cast<cryo::iTexture*>(ref);
+  auto texture = reinterpret_cast<cs::iTexture*>(ref);
   return texture->GetFormat();
 }
 

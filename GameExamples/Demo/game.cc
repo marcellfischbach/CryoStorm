@@ -65,15 +65,15 @@ CS_DEFINE_GAME(Game)
 #include <string>
 
 
-cryo::csLightState *shadowLightState = nullptr;
+cs::csLightState *shadowLightState = nullptr;
 
 
 
 
-cryo::iTerrainMesh *create_terrain_mesh(float size)
+cs::iTerrainMesh *create_terrain_mesh(float size)
 {
 #define FLAT
-  cryo::iTerrainMeshGenerator *generator = cryo::csObjectRegistry::Get<cryo::iTerrainMeshGeneratorFactory>()->Create();
+  cs::iTerrainMeshGenerator *generator = cs::csObjectRegistry::Get<cs::iTerrainMeshGeneratorFactory>()->Create();
 
   std::vector<float> heightData;
   for (int           i = 0; i < 1025; i++)
@@ -96,26 +96,26 @@ cryo::iTerrainMesh *create_terrain_mesh(float size)
     }
   }
 
-  generator->SetSize(cryo::eTerrainSize::TS_129);
-  generator->SetPatchSize(cryo::eTerrainSize::TS_33);
-  generator->SetSize(cryo::eTerrainSize::TS_1025);
-  generator->SetPatchSize(cryo::eTerrainSize::TS_129);
+  generator->SetSize(cs::eTerrainSize::TS_129);
+  generator->SetPatchSize(cs::eTerrainSize::TS_33);
+  generator->SetSize(cs::eTerrainSize::TS_1025);
+  generator->SetPatchSize(cs::eTerrainSize::TS_129);
   generator->SetNormalizedHeightData(heightData);
-  generator->SetSize(cryo::csVector3f(-size, 0.0f, -size), cryo::csVector3f(size, 10.0f, size));
+  generator->SetSize(cs::csVector3f(-size, 0.0f, -size), cs::csVector3f(size, 10.0f, size));
 
-  cryo::iTerrainMesh *terrainMesh = generator->Generate();
+  cs::iTerrainMesh *terrainMesh = generator->Generate();
   generator->Release();
   return terrainMesh;
 }
 
-cryo::iRenderMesh *create_sphere_mesh(float radius, uint32_t detail, float uv_f)
+cs::iRenderMesh *create_sphere_mesh(float radius, uint32_t detail, float uv_f)
 {
-  cryo::iRenderMeshGenerator    *generator = cryo::csObjectRegistry::Get<cryo::iRenderMeshGeneratorFactory>()->Create();
-  std::vector<cryo::csVector3f> positions;
-  std::vector<cryo::csVector3f> normals;
-  std::vector<cryo::csVector3f> tangents;
-  std::vector<cryo::csVector2f> uv;
-  std::vector<cryo::csColor4f>  colors;
+  cs::iRenderMeshGenerator    *generator = cs::csObjectRegistry::Get<cs::iRenderMeshGeneratorFactory>()->Create();
+  std::vector<cs::csVector3f> positions;
+  std::vector<cs::csVector3f> normals;
+  std::vector<cs::csVector3f> tangents;
+  std::vector<cs::csVector2f> uv;
+  std::vector<cs::csColor4f>  colors;
   std::vector<uint32_t>        indices;
 
   for (uint32_t v = 0; v < detail; v++)
@@ -128,12 +128,12 @@ cryo::iRenderMesh *create_sphere_mesh(float radius, uint32_t detail, float uv_f)
       float factH  = (float) h / (float) (detail * 2 - 1);
       float angleH = factH * (float) M_PI * 2.0f;
 
-      cryo::csVector3f normal(
+      cs::csVector3f normal(
           cosf(angleV) * cosf(angleH),
           sinf(angleV),
           cosf(angleV) * sinf(angleH)
       );
-      cryo::csVector3f tangent(
+      cs::csVector3f tangent(
           cosf(angleH + (float) M_PI / 2.0f),
           0.0f,
           sinf(angleH + (float) M_PI / 2.0f)
@@ -172,28 +172,28 @@ cryo::iRenderMesh *create_sphere_mesh(float radius, uint32_t detail, float uv_f)
   generator->SetColors(colors);
   generator->SetUV0(uv);
   generator->SetIndices(indices);
-  cryo::iRenderMesh *renderMesh = generator->Generate();
+  cs::iRenderMesh *renderMesh = generator->Generate();
   generator->Release();
   return renderMesh;
 
 }
 
 
-cryo::iRenderMesh *
-create_multi_sphere_mesh(float radius, uint32_t detail, float uv_f, size_t num_spheres, cryo::csVector3f *sphere_positions)
+cs::iRenderMesh *
+create_multi_sphere_mesh(float radius, uint32_t detail, float uv_f, size_t num_spheres, cs::csVector3f *sphere_positions)
 {
-  cryo::iRenderMeshGenerator    *generator = cryo::csObjectRegistry::Get<cryo::iRenderMeshGeneratorFactory>()->Create();
-  std::vector<cryo::csVector3f> positions;
-  std::vector<cryo::csVector3f> normals;
-  std::vector<cryo::csVector3f> tangents;
-  std::vector<cryo::csVector2f> uv;
-  std::vector<cryo::csColor4f>  colors;
+  cs::iRenderMeshGenerator    *generator = cs::csObjectRegistry::Get<cs::iRenderMeshGeneratorFactory>()->Create();
+  std::vector<cs::csVector3f> positions;
+  std::vector<cs::csVector3f> normals;
+  std::vector<cs::csVector3f> tangents;
+  std::vector<cs::csVector2f> uv;
+  std::vector<cs::csColor4f>  colors;
   std::vector<uint32_t>        indices;
 
   size_t      idxOrigin = 0;
   for (size_t i         = 0; i < num_spheres; i++)
   {
-    cryo::csVector3f origin = sphere_positions[i];
+    cs::csVector3f origin = sphere_positions[i];
     for (uint32_t v      = 0; v < detail; v++)
     {
       float factV  = (float) v / (float) (detail - 1);
@@ -204,12 +204,12 @@ create_multi_sphere_mesh(float radius, uint32_t detail, float uv_f, size_t num_s
         float factH  = (float) h / (float) (detail * 2 - 1);
         float angleH = factH * (float) M_PI * 2.0f;
 
-        cryo::csVector3f normal(
+        cs::csVector3f normal(
             cosf(angleV) * cosf(angleH),
             sinf(angleV),
             cosf(angleV) * sinf(angleH)
         );
-        cryo::csVector3f tangent(
+        cs::csVector3f tangent(
             cosf(angleH + (float) M_PI / 2.0f),
             0.0f,
             sinf(angleH + (float) M_PI / 2.0f)
@@ -251,14 +251,14 @@ create_multi_sphere_mesh(float radius, uint32_t detail, float uv_f, size_t num_s
   generator->SetColors(colors);
   generator->SetUV0(uv);
   generator->SetIndices(indices);
-  cryo::iRenderMesh *renderMesh = generator->Generate();
+  cs::iRenderMesh *renderMesh = generator->Generate();
   generator->Release();
   return renderMesh;
 
 }
 
 
-void debug(cryo::csSpatialState *state, int indent)
+void debug(cs::csSpatialState *state, int indent)
 {
   if (!state)
   {
@@ -272,50 +272,50 @@ void debug(cryo::csSpatialState *state, int indent)
          state->GetName().c_str(),
          state->GetEntity() ? state->GetEntity()->GetName().c_str() : "n/a"
   );
-  for (cryo::Size i = 0, in = state->GetNumberOfChildren(); i < in; i++)
+  for (cs::Size i = 0, in = state->GetNumberOfChildren(); i < in; i++)
   {
     debug(state->GetChild(i), indent + 1);
   }
 }
 
 
-cryo::iRenderTarget2D *create_render_target(cryo::iDevice *device, uint32_t width, uint32_t height, uint16_t multiSamples)
+cs::iRenderTarget2D *create_render_target(cs::iDevice *device, uint32_t width, uint32_t height, uint16_t multiSamples)
 {
-  cryo::iSampler *colorSampler = device->CreateSampler();
-  colorSampler->SetFilterMode(cryo::eFM_MinMagNearest);
+  cs::iSampler *colorSampler = device->CreateSampler();
+  colorSampler->SetFilterMode(cs::eFM_MinMagNearest);
 
-  cryo::iSampler *depthSampler = device->CreateSampler();
-  depthSampler->SetFilterMode(cryo::eFM_MinMagNearest);
-  depthSampler->SetTextureCompareFunc(cryo::eCF_LessOrEqual);
-  depthSampler->SetTextureCompareMode(cryo::eTCM_None);
+  cs::iSampler *depthSampler = device->CreateSampler();
+  depthSampler->SetFilterMode(cs::eFM_MinMagNearest);
+  depthSampler->SetTextureCompareFunc(cs::eCF_LessOrEqual);
+  depthSampler->SetTextureCompareMode(cs::eTCM_None);
 
-  cryo::iTexture2D::Descriptor rt_col_desc = {};
+  cs::iTexture2D::Descriptor rt_col_desc = {};
   rt_col_desc.Width        = width;
   rt_col_desc.Height       = height;
-  rt_col_desc.Format       = cryo::ePF_RGBA;
+  rt_col_desc.Format       = cs::ePF_RGBA;
   rt_col_desc.MipMaps      = false;
   rt_col_desc.MultiSamples = multiSamples;
-  cryo::iTexture2D *color_texture = device->CreateTexture(rt_col_desc);
+  cs::iTexture2D *color_texture = device->CreateTexture(rt_col_desc);
   color_texture->SetSampler(colorSampler);
 
-  cryo::iTexture2D::Descriptor rt_dpth_desc = {};
+  cs::iTexture2D::Descriptor rt_dpth_desc = {};
   rt_dpth_desc.Width        = width;
   rt_dpth_desc.Height       = height;
-  rt_dpth_desc.Format       = cryo::ePF_DepthStencil;
+  rt_dpth_desc.Format       = cs::ePF_DepthStencil;
   rt_dpth_desc.MipMaps      = false;
   rt_dpth_desc.MultiSamples = multiSamples;
-  cryo::iTexture2D *depth_texture = device->CreateTexture(rt_dpth_desc);
+  cs::iTexture2D *depth_texture = device->CreateTexture(rt_dpth_desc);
   depth_texture->SetSampler(depthSampler);
   printf("CreateDepthTexture: %p\n", depth_texture);
 
 
-  cryo::iRenderTarget2D::Descriptor rt_desc = {};
+  cs::iRenderTarget2D::Descriptor rt_desc = {};
   rt_desc.Width  = width;
   rt_desc.Height = height;
 
-  cryo::iRenderTarget2D *renderTarget = device->CreateRenderTarget(rt_desc);
+  cs::iRenderTarget2D *renderTarget = device->CreateRenderTarget(rt_desc);
   renderTarget->AddColorTexture(color_texture);
-//  renderTarget->SetDepthBuffer(cryo::ePF_Depth);
+//  renderTarget->SetDepthBuffer(cs::ePF_Depth);
   renderTarget->SetDepthTexture(depth_texture);
   if (!renderTarget->Compile())
   {
@@ -326,20 +326,20 @@ cryo::iRenderTarget2D *create_render_target(cryo::iDevice *device, uint32_t widt
 }
 
 
-cryo::csPostProcessing* setup_post_processing()
+cs::csPostProcessing* setup_post_processing()
 {
-  cryo::csPostProcessing * postProcessing = nullptr;
+  cs::csPostProcessing * postProcessing = nullptr;
 #if 0
   
-  postProcessing = new cryo::PostProcessing();
+  postProcessing = new cs::PostProcessing();
 
 
-  auto highPass = new cryo::PPHighPass(0.92f);
-  auto scaleDown0 = new cryo::PPScaleDown();
-  auto scaleDown1 = new cryo::PPScaleDown();
-  auto blurH = new cryo::PPBlurH(30, 1.f);
-  auto blurV = new cryo::PPBlurV(30, 1.f);
-  auto combine = new cryo::PPCombine();
+  auto highPass = new cs::PPHighPass(0.92f);
+  auto scaleDown0 = new cs::PPScaleDown();
+  auto scaleDown1 = new cs::PPScaleDown();
+  auto blurH = new cs::PPBlurH(30, 1.f);
+  auto blurV = new cs::PPBlurV(30, 1.f);
+  auto combine = new cs::PPCombine();
 
   postProcessing->AddProcess(highPass);
   postProcessing->AddProcess(scaleDown0);
@@ -349,30 +349,30 @@ cryo::csPostProcessing* setup_post_processing()
   postProcessing->AddProcess(combine);
 
 
-  postProcessing->Bind({nullptr, (size_t)cryo::PPImageType::Color, highPass, 0});
+  postProcessing->Bind({nullptr, (size_t)cs::PPImageType::Color, highPass, 0});
   postProcessing->Bind({highPass, 0, scaleDown0, 0});
   postProcessing->Bind({scaleDown0, 0, scaleDown1, 0});
 
   postProcessing->Bind({scaleDown1, 0, blurH, 0 });
   postProcessing->Bind({blurH, 0, blurV, 0});
-  postProcessing->Bind({nullptr, (size_t)cryo::PPImageType::Color, combine, 0});
+  postProcessing->Bind({nullptr, (size_t)cs::PPImageType::Color, combine, 0});
   postProcessing->Bind({blurV, 0, combine, 1});
-  postProcessing->Bind({combine, 0, nullptr, (size_t)cryo::PPImageType::Color });
+  postProcessing->Bind({combine, 0, nullptr, (size_t)cs::PPImageType::Color });
 
 
 #endif
   return postProcessing;
 }
 
-void generate_camera(cryo::csWorld *world)
+void generate_camera(cs::csWorld *world)
 {
-  auto cameraEntity = new cryo::csEntity("Camera");
+  auto cameraEntity = new cs::csEntity("Camera");
 
-  auto cameraState  = new cryo::csCameraState();
-  cameraState->SetClearMode(cryo::eClearMode::DepthColor);
-  cameraState->SetClearColor(cryo::csColor4f(0.0f, 0.0f, 0.5f));
-  cameraState->SetClearColorMode(cryo::eClearColorMode::Skybox);
-  cameraState->SetSkyboxRenderer(new cryo::csSimpleSkybox());
+  auto cameraState  = new cs::csCameraState();
+  cameraState->SetClearMode(cs::eClearMode::DepthColor);
+  cameraState->SetClearColor(cs::csColor4f(0.0f, 0.0f, 0.5f));
+  cameraState->SetClearColorMode(cs::eClearColorMode::Skybox);
+  cameraState->SetSkyboxRenderer(new cs::csSimpleSkybox());
 
   auto postProcessing = setup_post_processing ();
   cameraState->SetPostProcessing(postProcessing);
@@ -382,14 +382,14 @@ void generate_camera(cryo::csWorld *world)
   cameraEntity->Attach(cameraState);
   cameraEntity->Attach(cameraHandler);
   cameraEntity->GetRoot()->GetTransform()
-              .SetTranslation(cryo::csVector3f(-5, 5, -5))
-              .LookAt(cryo::csVector3f(0, 0, 0))
+              .SetTranslation(cs::csVector3f(-5, 5, -5))
+              .LookAt(cs::csVector3f(0, 0, 0))
               .Finish();
   world->Attach(cameraEntity);
   world->SetMainCamera(cameraState);
 
-//  auto mirrorCameraEntity = new cryo::Entity("MirrorCamera");
-//  auto mirrorCameraState  = new cryo::CameraState();
+//  auto mirrorCameraEntity = new cs::Entity("MirrorCamera");
+//  auto mirrorCameraState  = new cs::CameraState();
 //  auto mirrorHandler      = new MirrorHandler();
 //  mirrorCameraEntity->Attach(mirrorCameraState);
 //  mirrorCameraEntity->Attach(mirrorHandler);
@@ -402,25 +402,25 @@ void generate_camera(cryo::csWorld *world)
 //  materialMirror->Set(materialMirror->IndexOf("Mirror"), mirrorRenderTarget->GetColorTexture(0));
 }
 
-void generate_terrain(cryo::csWorld *world)
+void generate_terrain(cs::csWorld *world)
 {
-  cryo::csAssetManager *assetMan = cryo::csAssetManager::Get();
+  cs::csAssetManager *assetMan = cs::csAssetManager::Get();
 
-  auto greenGrassLayer = assetMan->Get<cryo::csTerrainLayer>("/terrain/green_grass.terrainlayer");
-  auto dirtLayer       = assetMan->Get<cryo::csTerrainLayer>("/terrain/dirt.terrainlayer");
-  auto fieldstoneLayer = assetMan->Get<cryo::csTerrainLayer>("/terrain/fieldstone.terrainlayer");
-  auto terrainLayers   = assetMan->Get<cryo::csTerrainLayerMask>("/terrain/terrain.terrainmask");
+  auto greenGrassLayer = assetMan->Get<cs::csTerrainLayer>("/terrain/green_grass.terrainlayer");
+  auto dirtLayer       = assetMan->Get<cs::csTerrainLayer>("/terrain/dirt.terrainlayer");
+  auto fieldstoneLayer = assetMan->Get<cs::csTerrainLayer>("/terrain/fieldstone.terrainlayer");
+  auto terrainLayers   = assetMan->Get<cs::csTerrainLayerMask>("/terrain/terrain.terrainmask");
 
   auto terrainMesh  = create_terrain_mesh(40.0f);
-  auto entity0      = new cryo::csEntity("Terrain");
-  auto terrainState = new cryo::csTerrainMeshState();
+  auto entity0      = new cs::csEntity("Terrain");
+  auto terrainState = new cs::csTerrainMeshState();
   terrainState->SetTerrainMesh(terrainMesh);
   terrainState->SetLayerMask(terrainLayers);
   terrainState->AddLayer(greenGrassLayer);
   terrainState->AddLayer(dirtLayer);
   terrainState->AddLayer(fieldstoneLayer);
   terrainState->GetTransform()
-              .SetTranslation(cryo::csVector3f(0, 0, 0))
+              .SetTranslation(cs::csVector3f(0, 0, 0))
               .Finish();
   terrainState->SetStatic(true);
   entity0->Attach(terrainState);
@@ -428,10 +428,10 @@ void generate_terrain(cryo::csWorld *world)
 }
 
 
-void generate_test_grid(cryo::csWorld *world, cryo::iMaterial *material)
+void generate_test_grid(cs::csWorld *world, cs::iMaterial *material)
 {
   auto sphere = create_sphere_mesh(0.25, 16, 12.0f);
-  auto mesh   = new cryo::csMesh();
+  auto mesh   = new cs::csMesh();
   mesh->AddMaterialSlot("Default", material);
   mesh->AddSubMesh(sphere, 0);
   int gridSize = 100;
@@ -445,9 +445,9 @@ void generate_test_grid(cryo::csWorld *world, cryo::iMaterial *material)
     for (int j  = 0; j < gridSize; j++, a++)
     {
       auto fj     = (float) j;
-      auto entity = new cryo::csEntity(std::string("Sphere: ") + std::to_string(i + 1) + ":" + std::to_string(j + 1));
+      auto entity = new cs::csEntity(std::string("Sphere: ") + std::to_string(i + 1) + ":" + std::to_string(j + 1));
 
-      auto meshStateSphere = new cryo::csStaticMeshState("Mesh");
+      auto meshStateSphere = new cs::csStaticMeshState("Mesh");
       meshStateSphere->SetStatic(true);
       meshStateSphere->GetTransform()
                      .SetTranslation(i - start, 0.25f, j - start)
@@ -462,25 +462,25 @@ void generate_test_grid(cryo::csWorld *world, cryo::iMaterial *material)
         case 0:
         {
 
-          auto testHandler01 = new TestHandler01(cryo::Vector3f(i - start, 0.25f, j - start), 0.25f, 0.5f + rnd);
+          auto testHandler01 = new TestHandler01(cs::Vector3f(i - start, 0.25f, j - start), 0.25f, 0.5f + rnd);
           entity->Attach(testHandler01);
           break;
         }
         case 1:
         {
-          auto testHandler02 = new TestHandler02(cryo::Vector3f(i - start, 0.25f, j - start), 0.25f, 0.5f + rnd);
+          auto testHandler02 = new TestHandler02(cs::Vector3f(i - start, 0.25f, j - start), 0.25f, 0.5f + rnd);
           entity->Attach(testHandler02);
           break;
         }
         case 2:
         {
-          auto testHandler03 = new TestHandler03(cryo::Vector3f(i - start, 0.25f, j - start), 0.25f, 0.5f + rnd);
+          auto testHandler03 = new TestHandler03(cs::Vector3f(i - start, 0.25f, j - start), 0.25f, 0.5f + rnd);
           entity->Attach(testHandler03);
           break;
         }
         case 3:
         {
-          auto testHandler04 = new TestHandler04(cryo::Vector3f(i - start, 0.25f, j - start), 0.25f, 0.5f + rnd);
+          auto testHandler04 = new TestHandler04(cs::Vector3f(i - start, 0.25f, j - start), 0.25f, 0.5f + rnd);
           entity->Attach(testHandler04);
           break;
         }
@@ -495,44 +495,44 @@ void generate_test_grid(cryo::csWorld *world, cryo::iMaterial *material)
 
 }
 
-cryo::csSkeleton          *global_skeleton  = nullptr;
-cryo::csSkeletonAnimation       *global_animation = nullptr;
-cryo::csSkeletonAnimationPlayer *global_player    = nullptr;
+cs::csSkeleton          *global_skeleton  = nullptr;
+cs::csSkeletonAnimation       *global_animation = nullptr;
+cs::csSkeletonAnimationPlayer *global_player    = nullptr;
 
-cryo::csEntity *bones[4];
+cs::csEntity *bones[4];
 
-cryo::csEntity *add_bone(cryo::csWorld *world, cryo::iMaterial *material)
+cs::csEntity *add_bone(cs::csWorld *world, cs::iMaterial *material)
 {
 
-  cryo::csMesh *mesh = cryo::csAssetManager::Get()->Load<cryo::csMesh>("/bone_x.fbx");
+  cs::csMesh *mesh = cs::csAssetManager::Get()->Load<cs::csMesh>("/bone_x.fbx");
   if (!mesh)
   {
     return nullptr;
   }
 
-  cryo::csEntity          *entity    = new cryo::csEntity("Bone");
-  cryo::csStaticMeshState *meshState = new cryo::csStaticMeshState();
+  cs::csEntity          *entity    = new cs::csEntity("Bone");
+  cs::csStaticMeshState *meshState = new cs::csStaticMeshState();
   meshState->SetMesh(mesh);
   meshState->SetMaterial(0, material);
   entity->Attach(meshState);
-  entity->GetRoot()->SetLocalMatrix(cryo::csMatrix4f());
+  entity->GetRoot()->SetLocalMatrix(cs::csMatrix4f());
 
   world->Attach(entity);
   return entity;
 }
 
-void add_skeleton_mesh(cryo::csWorld *world, cryo::iMaterial *material)
+void add_skeleton_mesh(cs::csWorld *world, cs::iMaterial *material)
 {
 
-  cryo::csSkeletonMesh *mesh   = cryo::csAssetManager::Get()->Load<cryo::csSkeletonMesh>("/skinned_mesh.fbx");
-  cryo::csEntity       *entity = new cryo::csEntity("Skeleton Entity");
-  cryo::csSkeletonMeshState *meshState = new cryo::csSkeletonMeshState();
+  cs::csSkeletonMesh *mesh   = cs::csAssetManager::Get()->Load<cs::csSkeletonMesh>("/skinned_mesh.fbx");
+  cs::csEntity       *entity = new cs::csEntity("Skeleton Entity");
+  cs::csSkeletonMeshState *meshState = new cs::csSkeletonMeshState();
   meshState->SetMesh(mesh);
   meshState->SetMaterial(0, material);
   entity->Attach(meshState);
 
 //  entity->GetRoot()->GetTransform()
-//        .SetRotation(cryo::Quaternion::FromAxisAngle(0.0f, 1.0f, 0.0f, M_PI / 1.0f * 1.0f))
+//        .SetRotation(cs::Quaternion::FromAxisAngle(0.0f, 1.0f, 0.0f, M_PI / 1.0f * 1.0f))
 //        .Finish();
 
 //  world->Attach(entity);
@@ -540,52 +540,52 @@ void add_skeleton_mesh(cryo::csWorld *world, cryo::iMaterial *material)
   global_skeleton = &meshState->GetSkeleton();
 
 
-  cryo::csSkeletonAnimationPack
-      *animationPack = cryo::csAssetManager::Get()->Load<cryo::csSkeletonAnimationPack>("/skinned_mesh.fbx");
+  cs::csSkeletonAnimationPack
+      *animationPack = cs::csAssetManager::Get()->Load<cs::csSkeletonAnimationPack>("/skinned_mesh.fbx");
   global_animation = animationPack->Get("Armature|MyAnimation01");
   global_animation->SetLoop(true);
 
-  global_player = new cryo::csSkeletonAnimationPlayer();
+  global_player = new cs::csSkeletonAnimationPlayer();
   global_player->SetSkeleton(global_skeleton);
   global_player->SetAnimation(global_animation);
 }
 
 
-void generate_batched_test_grid(cryo::csWorld *world, cryo::iMaterial *material)
+void generate_batched_test_grid(cs::csWorld *world, cs::iMaterial *material)
 {
 
-  auto sphere = create_multi_sphere_mesh(0.25, 16, 12.0f, 25, new cryo::csVector3f[] {
-      cryo::csVector3f(-2, 0.0f, -2.0f),
-      cryo::csVector3f(-1, 0.0f, -2.0f),
-      cryo::csVector3f(0, 0.0f, -2.0f),
-      cryo::csVector3f(1, 0.0f, -2.0f),
-      cryo::csVector3f(2, 0.0f, -2.0f),
+  auto sphere = create_multi_sphere_mesh(0.25, 16, 12.0f, 25, new cs::csVector3f[] {
+      cs::csVector3f(-2, 0.0f, -2.0f),
+      cs::csVector3f(-1, 0.0f, -2.0f),
+      cs::csVector3f(0, 0.0f, -2.0f),
+      cs::csVector3f(1, 0.0f, -2.0f),
+      cs::csVector3f(2, 0.0f, -2.0f),
 
-      cryo::csVector3f(-2, 0.0f, -1.0f),
-      cryo::csVector3f(-1, 0.0f, -1.0f),
-      cryo::csVector3f(0, 0.0f, -1.0f),
-      cryo::csVector3f(1, 0.0f, -1.0f),
-      cryo::csVector3f(2, 0.0f, -1.0f),
+      cs::csVector3f(-2, 0.0f, -1.0f),
+      cs::csVector3f(-1, 0.0f, -1.0f),
+      cs::csVector3f(0, 0.0f, -1.0f),
+      cs::csVector3f(1, 0.0f, -1.0f),
+      cs::csVector3f(2, 0.0f, -1.0f),
 
-      cryo::csVector3f(-2, 0.0f, 0.0f),
-      cryo::csVector3f(-1, 0.0f, 0.0f),
-      cryo::csVector3f(0, 0.0f, 0.0f),
-      cryo::csVector3f(1, 0.0f, 0.0f),
-      cryo::csVector3f(2, 0.0f, 0.0f),
+      cs::csVector3f(-2, 0.0f, 0.0f),
+      cs::csVector3f(-1, 0.0f, 0.0f),
+      cs::csVector3f(0, 0.0f, 0.0f),
+      cs::csVector3f(1, 0.0f, 0.0f),
+      cs::csVector3f(2, 0.0f, 0.0f),
 
-      cryo::csVector3f(-2, 0.0f, 1.0f),
-      cryo::csVector3f(-1, 0.0f, 1.0f),
-      cryo::csVector3f(0, 0.0f, 1.0f),
-      cryo::csVector3f(1, 0.0f, 1.0f),
-      cryo::csVector3f(2, 0.0f, 1.0f),
+      cs::csVector3f(-2, 0.0f, 1.0f),
+      cs::csVector3f(-1, 0.0f, 1.0f),
+      cs::csVector3f(0, 0.0f, 1.0f),
+      cs::csVector3f(1, 0.0f, 1.0f),
+      cs::csVector3f(2, 0.0f, 1.0f),
 
-      cryo::csVector3f(-2, 0.0f, 2.0f),
-      cryo::csVector3f(-1, 0.0f, 2.0f),
-      cryo::csVector3f(0, 0.0f, 2.0f),
-      cryo::csVector3f(1, 0.0f, 2.0f),
-      cryo::csVector3f(2, 0.0f, 2.0f)
+      cs::csVector3f(-2, 0.0f, 2.0f),
+      cs::csVector3f(-1, 0.0f, 2.0f),
+      cs::csVector3f(0, 0.0f, 2.0f),
+      cs::csVector3f(1, 0.0f, 2.0f),
+      cs::csVector3f(2, 0.0f, 2.0f)
   });
-  auto mesh   = new cryo::csMesh();
+  auto mesh   = new cs::csMesh();
   mesh->AddMaterialSlot("Default", material);
   mesh->AddSubMesh(sphere, 0);
   int gridSize = 100;
@@ -598,9 +598,9 @@ void generate_batched_test_grid(cryo::csWorld *world, cryo::iMaterial *material)
     for (int j  = 0; j < gridSize; j += 5)
     {
       auto fj     = (float) j;
-      auto entity = new cryo::csEntity(std::string("Sphere: ") + std::to_string(i + 1) + ":" + std::to_string(j + 1));
+      auto entity = new cs::csEntity(std::string("Sphere: ") + std::to_string(i + 1) + ":" + std::to_string(j + 1));
 
-      auto meshStateSphere = new cryo::csStaticMeshState("Mesh");
+      auto meshStateSphere = new cs::csStaticMeshState("Mesh");
       meshStateSphere->SetStatic(true);
       meshStateSphere->GetTransform()
                      .SetTranslation(i - start + 2, 0.25f, j - start + 2)
@@ -616,42 +616,42 @@ void generate_batched_test_grid(cryo::csWorld *world, cryo::iMaterial *material)
 }
 
 
-void generate_physics(cryo::csWorld *world, cryo::iMaterial *material)
+void generate_physics(cs::csWorld *world, cs::iMaterial *material)
 {
 
-  cryo::iPhysicsSystem *physics = cryo::csObjectRegistry::Get<cryo::iPhysicsSystem>();
+  cs::iPhysicsSystem *physics = cs::csObjectRegistry::Get<cs::iPhysicsSystem>();
   // add the ground plane
   /*
-  cryo::BoxShapeDesc floorDesc{ cryo::Vector3f(100.0f, 1.0f, 100.0f) };
-  cryo::iCollisionShape* floorShape    = physics->CreateShape(floorDesc);
-  cryo::iStaticCollider* floorCollider = physics->CreateStaticCollider();
+  cs::BoxShapeDesc floorDesc{ cs::Vector3f(100.0f, 1.0f, 100.0f) };
+  cs::iCollisionShape* floorShape    = physics->CreateShape(floorDesc);
+  cs::iStaticCollider* floorCollider = physics->CreateStaticCollider();
   floorCollider->Attach(floorShape);
-  floorCollider->SetTransform(cryo::Matrix4f::Translation(0.0f, -1.0f, 0.0f));
+  floorCollider->SetTransform(cs::Matrix4f::Translation(0.0f, -1.0f, 0.0f));
   physWorld->AddCollider(floorCollider);
   */
 
-  cryo::csEntity           *floorEntity      = new cryo::csEntity("Floor");
-  cryo::csBoxColliderState    *floorBoxCollider    = new cryo::csBoxColliderState();
-  cryo::csStaticColliderState *floorStaticCollider = new cryo::csStaticColliderState();
-  floorBoxCollider->SetHalfExtends(cryo::csVector3f(100.0f, 1.0f, 100.0f));
+  cs::csEntity           *floorEntity      = new cs::csEntity("Floor");
+  cs::csBoxColliderState    *floorBoxCollider    = new cs::csBoxColliderState();
+  cs::csStaticColliderState *floorStaticCollider = new cs::csStaticColliderState();
+  floorBoxCollider->SetHalfExtends(cs::csVector3f(100.0f, 1.0f, 100.0f));
   floorEntity->Attach(floorBoxCollider);
   floorEntity->Attach(floorStaticCollider);
-  floorEntity->GetRoot()->GetTransform().SetTranslation(cryo::csVector3f(0.0f, -1.0f, 0.0f)).Finish();
+  floorEntity->GetRoot()->GetTransform().SetTranslation(cs::csVector3f(0.0f, -1.0f, 0.0f)).Finish();
   world->Attach(floorEntity);
 
   float sphereRadius = 0.5f;
   if (false)
   {
-    cryo::iRenderMesh *renderMeshSphere = create_sphere_mesh(sphereRadius, 16, 4.0f);
+    cs::iRenderMesh *renderMeshSphere = create_sphere_mesh(sphereRadius, 16, 4.0f);
 
     for (int i = 0; i < 10; i++)
     {
       {
-        cryo::csMesh   *meshSphere   = new cryo::csMesh();
-        cryo::csEntity *entitySphere = new cryo::csEntity("Sphere");
-        cryo::csStaticMeshState     *meshStateSphere     = new cryo::csStaticMeshState("Mesh.Sphere");
-        cryo::csSphereColliderState *sphereColliderState = new cryo::csSphereColliderState();
-        cryo::csRigidBodyState      *rigidBodyState      = new cryo::csRigidBodyState("RigidBody.Sphere");
+        cs::csMesh   *meshSphere   = new cs::csMesh();
+        cs::csEntity *entitySphere = new cs::csEntity("Sphere");
+        cs::csStaticMeshState     *meshStateSphere     = new cs::csStaticMeshState("Mesh.Sphere");
+        cs::csSphereColliderState *sphereColliderState = new cs::csSphereColliderState();
+        cs::csRigidBodyState      *rigidBodyState      = new cs::csRigidBodyState("RigidBody.Sphere");
 
 
         meshSphere->AddMaterialSlot("Default", material);
@@ -663,7 +663,7 @@ void generate_physics(cryo::csWorld *world, cryo::iMaterial *material)
         rigidBodyState->Attach(meshStateSphere);
 
         rigidBodyState->GetTransform()
-                      .SetTranslation(cryo::csVector3f(0.0f, sphereRadius * 2.5f, 0.0f) * ((float) i + 2.0f))
+                      .SetTranslation(cs::csVector3f(0.0f, sphereRadius * 2.5f, 0.0f) * ((float) i + 2.0f))
                       .Finish();
         meshStateSphere->SetMesh(meshSphere);
         world->Attach(entitySphere);
@@ -671,7 +671,7 @@ void generate_physics(cryo::csWorld *world, cryo::iMaterial *material)
 
 
         /*
-        cryo::iDynamicCollider* sphereCollider = physics->CreateDynamicCollider();
+        cs::iDynamicCollider* sphereCollider = physics->CreateDynamicCollider();
         sphereCollider->Attach(sphereShape);
         sphereCollider->SetTransform(entitySphere->GetRoot()->GetGlobalMatrix());
         sphereCollider->SetUserData(meshStateSphere);
@@ -679,39 +679,39 @@ void generate_physics(cryo::csWorld *world, cryo::iMaterial *material)
          */
       }
       {
-        cryo::csMesh   *meshSphere   = new cryo::csMesh();
-        cryo::csEntity *entitySphere = new cryo::csEntity("Sphere");
-        cryo::csStaticMeshState *meshStateSphere = new cryo::csStaticMeshState("Mesh.Sphere");
+        cs::csMesh   *meshSphere   = new cs::csMesh();
+        cs::csEntity *entitySphere = new cs::csEntity("Sphere");
+        cs::csStaticMeshState *meshStateSphere = new cs::csStaticMeshState("Mesh.Sphere");
         meshSphere->AddMaterialSlot("Default", material);
         meshSphere->AddSubMesh(renderMeshSphere, 0);
         meshStateSphere->GetTransform()
-                       .SetTranslation(cryo::csVector3f(i * sphereRadius * 0.5, 0.0f, 0.0f))
+                       .SetTranslation(cs::csVector3f(i * sphereRadius * 0.5, 0.0f, 0.0f))
                        .Finish();
         meshStateSphere->SetMesh(meshSphere);
         entitySphere->Attach(meshStateSphere);
         world->Attach(entitySphere);
       }
       {
-        cryo::csMesh   *meshSphere   = new cryo::csMesh();
-        cryo::csEntity *entitySphere = new cryo::csEntity("Sphere");
-        cryo::csStaticMeshState *meshStateSphere = new cryo::csStaticMeshState("Mesh.Sphere");
+        cs::csMesh   *meshSphere   = new cs::csMesh();
+        cs::csEntity *entitySphere = new cs::csEntity("Sphere");
+        cs::csStaticMeshState *meshStateSphere = new cs::csStaticMeshState("Mesh.Sphere");
         meshSphere->AddMaterialSlot("Default", material);
         meshSphere->AddSubMesh(renderMeshSphere, 0);
         meshStateSphere->GetTransform()
-                       .SetTranslation(cryo::csVector3f(0.0f, i * sphereRadius, 0.0f))
+                       .SetTranslation(cs::csVector3f(0.0f, i * sphereRadius, 0.0f))
                        .Finish();
         meshStateSphere->SetMesh(meshSphere);
         entitySphere->Attach(meshStateSphere);
         world->Attach(entitySphere);
       }
       {
-        cryo::csMesh   *meshSphere   = new cryo::csMesh();
-        cryo::csEntity *entitySphere = new cryo::csEntity("Sphere");
-        cryo::csStaticMeshState *meshStateSphere = new cryo::csStaticMeshState("Mesh.Sphere");
+        cs::csMesh   *meshSphere   = new cs::csMesh();
+        cs::csEntity *entitySphere = new cs::csEntity("Sphere");
+        cs::csStaticMeshState *meshStateSphere = new cs::csStaticMeshState("Mesh.Sphere");
         meshSphere->AddMaterialSlot("Default", material);
         meshSphere->AddSubMesh(renderMeshSphere, 0);
         meshStateSphere->GetTransform()
-                       .SetTranslation(cryo::csVector3f(0.0f, 0.0f, i * 2.0f * sphereRadius))
+                       .SetTranslation(cs::csVector3f(0.0f, 0.0f, i * 2.0f * sphereRadius))
                        .Finish();
         meshStateSphere->SetMesh(meshSphere);
         entitySphere->Attach(meshStateSphere);
@@ -725,45 +725,45 @@ void generate_physics(cryo::csWorld *world, cryo::iMaterial *material)
 
 
 
-cryo::csLightState *add_directional_light(cryo::csWorld *world,
-                                          const cryo::csVector3f &axis,
+cs::csLightState *add_directional_light(cs::csWorld *world,
+                                          const cs::csVector3f &axis,
                                           float rad,
-                                          const cryo::csColor4f &color,
+                                          const cs::csColor4f &color,
                                           bool isStatic,
                                           bool castsShadow)
 {
-  cryo::csEntity     *entity     = new cryo::csEntity("Directional");
-  cryo::csLightState *lightState = new cryo::csLightState("DirectionalLight");
+  cs::csEntity     *entity     = new cs::csEntity("Directional");
+  cs::csLightState *lightState = new cs::csLightState("DirectionalLight");
   entity->Attach(lightState);
-  lightState->SetType(cryo::eLT_Directional);
+  lightState->SetType(cs::eLT_Directional);
   lightState->SetColor(color);
   lightState->SetShadowMapBias(0.003f);
   lightState->SetStatic(isStatic);
   lightState->SetCastShadow(castsShadow);
   lightState->GetTransform()
-            .SetRotation(cryo::csQuaternion::csQuaternion(axis.Normalized(), rad))
+            .SetRotation(cs::csQuaternion::csQuaternion(axis.Normalized(), rad))
             .Finish();
   world->Attach(entity);
-  const cryo::csVector3f &direction = lightState->GetTransform().GetForward();
+  const cs::csVector3f &direction = lightState->GetTransform().GetForward();
   printf ("%.2f %.2f %.2f\n", direction.x, direction.y, direction.z);
   return lightState;
 }
 
 
-cryo::csLightState *add_point_light(cryo::csWorld *world,
-                                    const cryo::csVector3f &position,
+cs::csLightState *add_point_light(cs::csWorld *world,
+                                    const cs::csVector3f &position,
                                     float range,
-                                    const cryo::csColor4f &color,
+                                    const cs::csColor4f &color,
                                     bool castsShadow)
 {
   float rnd = (float) rand() / (float) RAND_MAX;
 
-  auto entity     = new cryo::csEntity("Point");
-  auto lightState = new cryo::csLightState("PointLight");
+  auto entity     = new cs::csEntity("Point");
+  auto lightState = new cs::csLightState("PointLight");
 //  auto testState  = new TestHandler01(position, range * 0.25f, 0.5f * rnd);
   entity->Attach(lightState);
 //  entity->Attach(testState);
-  lightState->SetType(cryo::eLT_Point);
+  lightState->SetType(cs::eLT_Point);
   lightState->SetColor(color);
   lightState->SetRange(range);
   lightState->SetShadowMapBias(0.003f);
@@ -777,15 +777,15 @@ cryo::csLightState *add_point_light(cryo::csWorld *world,
 }
 
 
-cryo::iMaterial *generate_color_material(const cryo::csColor4f &color)
+cs::iMaterial *generate_color_material(const cs::csColor4f &color)
 {
-  auto sg = new cryo::csShaderGraph();
+  auto sg = new cs::csShaderGraph();
 
 
-  auto roughness = sg->Add<cryo::csSGConstFloat>("Roughness");
-  auto diffuse = sg->Add<cryo::csSGConstColor3>("Diffuse");
-  auto alpha = sg->Add<cryo::csSGConstFloat>("Alpha");
-  auto normal = sg->Add<cryo::csSGConstColor3>("Normal");
+  auto roughness = sg->Add<cs::csSGConstFloat>("Roughness");
+  auto diffuse = sg->Add<cs::csSGConstColor3>("Diffuse");
+  auto alpha = sg->Add<cs::csSGConstFloat>("Alpha");
+  auto normal = sg->Add<cs::csSGConstColor3>("Normal");
 
   roughness->SetValue(1.0f);
   diffuse->SetValue(color.r, color.g, color.b);
@@ -801,13 +801,13 @@ cryo::iMaterial *generate_color_material(const cryo::csColor4f &color)
   sg->SetReceiveShadow(false);
 
 
-  auto compilerFactory = cryo::csObjectRegistry::Get<cryo::iShaderGraphCompilerFactory>();
+  auto compilerFactory = cs::csObjectRegistry::Get<cs::iShaderGraphCompilerFactory>();
   if (compilerFactory)
   {
-    cryo::iShaderGraphCompiler* compiler = compilerFactory->Create();
+    cs::iShaderGraphCompiler* compiler = compilerFactory->Create();
     if (compiler)
     {
-      cryo::iShaderGraphCompiler::Parameters parameters {};
+      cs::iShaderGraphCompiler::Parameters parameters {};
       memset (&parameters, 0, sizeof(parameters));
       return compiler->Compile(sg, parameters);
     }
@@ -818,24 +818,24 @@ cryo::iMaterial *generate_color_material(const cryo::csColor4f &color)
 
 
 
-void generate_axis_grid(cryo::csWorld *world)
+void generate_axis_grid(cs::csWorld *world)
 {
   auto sphere = create_sphere_mesh(0.25, 16, 12.0f);
-  auto matR   = cryo::csAssetManager::Get()->Get<cryo::iMaterial>("/materials/DefaultRed.matinstance");
-  auto matG   = cryo::csAssetManager::Get()->Get<cryo::iMaterial>("/materials/DefaultGreen.matinstance");
-  auto matB   = cryo::csAssetManager::Get()->Get<cryo::iMaterial>("/materials/DefaultBlue.matinstance");
+  auto matR   = cs::csAssetManager::Get()->Get<cs::iMaterial>("/materials/DefaultRed.matinstance");
+  auto matG   = cs::csAssetManager::Get()->Get<cs::iMaterial>("/materials/DefaultGreen.matinstance");
+  auto matB   = cs::csAssetManager::Get()->Get<cs::iMaterial>("/materials/DefaultBlue.matinstance");
 
-//  matR = generate_color_material(cryo::Color4f(0.5f, 0.0f, 0.0f));
-//  matG = generate_color_material(cryo::Color4f(0.0f, 0.5f, 0.0f));
-//  matB = generate_color_material(cryo::Color4f(0.0f, 0.0f, 0.5f));
+//  matR = generate_color_material(cs::Color4f(0.5f, 0.0f, 0.0f));
+//  matG = generate_color_material(cs::Color4f(0.0f, 0.5f, 0.0f));
+//  matB = generate_color_material(cs::Color4f(0.0f, 0.0f, 0.5f));
 
-  cryo::s_material_names[matR] = "DefaultRed";
-  cryo::s_material_names[matG] = "DefaultGreen";
-  cryo::s_material_names[matB] = "DefaultBlue";
+  cs::s_material_names[matR] = "DefaultRed";
+  cs::s_material_names[matG] = "DefaultGreen";
+  cs::s_material_names[matB] = "DefaultBlue";
 
-  auto meshR = new cryo::csMesh();
-  auto meshG = new cryo::csMesh();
-  auto meshB = new cryo::csMesh();
+  auto meshR = new cs::csMesh();
+  auto meshG = new cs::csMesh();
+  auto meshB = new cs::csMesh();
   meshR->AddMaterialSlot("Default", matR);
   meshG->AddMaterialSlot("Default", matG);
   meshB->AddMaterialSlot("Default", matB);
@@ -848,8 +848,8 @@ void generate_axis_grid(cryo::csWorld *world)
   for (int i        = 0; i < gridSize; i++)
   {
     {
-      auto entity          = new cryo::csEntity();
-      auto meshStateSphere = new cryo::csStaticMeshState("Mesh");
+      auto entity          = new cs::csEntity();
+      auto meshStateSphere = new cs::csStaticMeshState("Mesh");
       meshStateSphere->SetStatic(true);
       meshStateSphere->GetTransform().SetTranslation((float) (i + 1) * 0.5f, 0.0f, 0.0f).Finish();
       meshStateSphere->SetMesh(meshR);
@@ -857,8 +857,8 @@ void generate_axis_grid(cryo::csWorld *world)
       world->Attach(entity);
     }
     {
-      auto entity          = new cryo::csEntity();
-      auto meshStateSphere = new cryo::csStaticMeshState("Mesh");
+      auto entity          = new cs::csEntity();
+      auto meshStateSphere = new cs::csStaticMeshState("Mesh");
       meshStateSphere->SetStatic(true);
       meshStateSphere->GetTransform().SetTranslation(0.0f, (float) (i + 1) * 0.5f, 0.0f).Finish();
       meshStateSphere->SetMesh(meshG);
@@ -866,8 +866,8 @@ void generate_axis_grid(cryo::csWorld *world)
       world->Attach(entity);
     }
     {
-      auto entity          = new cryo::csEntity();
-      auto meshStateSphere = new cryo::csStaticMeshState("Mesh");
+      auto entity          = new cs::csEntity();
+      auto meshStateSphere = new cs::csStaticMeshState("Mesh");
       meshStateSphere->SetStatic(true);
       meshStateSphere->GetTransform().SetTranslation(0.0f, 0.0f, (float) (i + 1) * 0.5f).Finish();
       meshStateSphere->SetMesh(meshB);
@@ -878,25 +878,25 @@ void generate_axis_grid(cryo::csWorld *world)
   }
 }
 
-void generate_cube_fbx(cryo::csWorld *world)
+void generate_cube_fbx(cs::csWorld *world)
 {
 
-  cryo::csMesh *mesh = cryo::csAssetManager::Get()->Get<cryo::csMesh>("/cube2.fbx");
+  cs::csMesh *mesh = cs::csAssetManager::Get()->Get<cs::csMesh>("/cube2.fbx");
 
-  mesh = new cryo::csMesh();
+  mesh = new cs::csMesh();
   mesh->AddSubMesh(create_sphere_mesh(3.0f, 32, 1.0f), 0);
   mesh->AddMaterialSlot("Default");
-  cryo::iMaterial *dustMaterial = cryo::csAssetManager::Get()->Get<cryo::iMaterial>("/materials/Dust.sg");
-//  cryo::iMaterial *dustMaterial = cryo::AssetManager::Get()->Get<cryo::iMaterial>("/materials/Dust.mat");
-  cryo::s_material_names[dustMaterial] = "Dust";
+  cs::iMaterial *dustMaterial = cs::csAssetManager::Get()->Get<cs::iMaterial>("/materials/Dust.sg");
+//  cs::iMaterial *dustMaterial = cs::AssetManager::Get()->Get<cs::iMaterial>("/materials/Dust.mat");
+  cs::s_material_names[dustMaterial] = "Dust";
 
   for (int i = 0; i < mesh->GetNumberOfMaterialSlots(); ++i)
   {
     mesh->SetDefaultMaterial(i, dustMaterial);
   }
 
-  auto entity          = new cryo::csEntity();
-  auto meshStateSphere = new cryo::csStaticMeshState("Mesh");
+  auto entity          = new cs::csEntity();
+  auto meshStateSphere = new cs::csStaticMeshState("Mesh");
   meshStateSphere->SetStatic(true);
   meshStateSphere->GetTransform().SetTranslation(5.0f, 0.0f, 0.4f).Finish();
   meshStateSphere->SetMesh(mesh);
@@ -906,21 +906,21 @@ void generate_cube_fbx(cryo::csWorld *world)
   world->Attach(entity);
 }
 
-void generate_exit_game(cryo::csWorld *world)
+void generate_exit_game(cs::csWorld *world)
 {
-  cryo::csEntity * entity = new cryo::csEntity();
+  cs::csEntity * entity = new cs::csEntity();
   entity->Attach(new ExitGameState);
   world->Attach(entity);
 }
 
-void setup_world(cryo::csWorld *world)
+void setup_world(cs::csWorld *world)
 {
 
-  auto assetMan        = cryo::csAssetManager::Get();
-  auto material        = assetMan->Get<cryo::iMaterial>("/materials/Default.mat");
-  auto skinnedMaterial = assetMan->Get<cryo::iMaterial>("/materials/DefaultSkinned.mat");
-  cryo::s_material_names[material] = "Default";
-  cryo::s_material_names[skinnedMaterial] = "Skinned";
+  auto assetMan        = cs::csAssetManager::Get();
+  auto material        = assetMan->Get<cs::iMaterial>("/materials/Default.mat");
+  auto skinnedMaterial = assetMan->Get<cs::iMaterial>("/materials/DefaultSkinned.mat");
+  cs::s_material_names[material] = "Default";
+  cs::s_material_names[skinnedMaterial] = "Skinned";
 
 
   generate_exit_game(world);
@@ -941,61 +941,61 @@ void setup_world(cryo::csWorld *world)
 
 #if 1
   shadowLightState = add_directional_light(world,
-                                           cryo::csVector3f(1.0f, 0.2f, 0.0f),
-                                           cryo::ceDeg2Rad(-45.0f),
-                                           cryo::csColor4f(1.0f, 1.0f, 1.0f, 1.0f) * 0.9f,
+                                           cs::csVector3f(1.0f, 0.2f, 0.0f),
+                                           cs::ceDeg2Rad(-45.0f),
+                                           cs::csColor4f(1.0f, 1.0f, 1.0f, 1.0f) * 0.9f,
                                            true,
                                            true);
 
   add_directional_light(world,
-                        cryo::csVector3f(1.0f, 0.2f, 0.0f),
-                        cryo::ceDeg2Rad(-45.0f),
-                        cryo::csColor4f(1.0f, 1.0f, 1.0f, 1.0f) * 0.1f,
+                        cs::csVector3f(1.0f, 0.2f, 0.0f),
+                        cs::ceDeg2Rad(-45.0f),
+                        cs::csColor4f(1.0f, 1.0f, 1.0f, 1.0f) * 0.1f,
                         true,
                         false);
 #endif
 
-//  add_point_light(world, cryo::Vector3f(0.0f, 5.0f, 0.0f), 50.0f, cryo::Color4f(1.0, 1.0f, 1.0f), false);
+//  add_point_light(world, cs::Vector3f(0.0f, 5.0f, 0.0f), 50.0f, cs::Color4f(1.0, 1.0f, 1.0f), false);
 
 #if 0
   for (int i=-5; i<=5; i+= 1) {
     for (int j=-5; j<=5; j+= 1) {
 
       add_point_light(world,
-                      cryo::Vector3f((float)i, 2.0f, (float)j), 5.0f, cryo::Color4f(1.0, 0.8f, 0.4f) * 0.1f, false);
+                      cs::Vector3f((float)i, 2.0f, (float)j), 5.0f, cs::Color4f(1.0, 0.8f, 0.4f) * 0.1f, false);
     }
 
   }
-//  add_point_light(world, cryo::Vector3f(10.0f, 10.0f, 10.0f), 10.0f, cryo::Color4f(1.0, 0.0f, 1.0f), false);
-//  add_point_light(world, cryo::Vector3f(0.0f, 10.0f, 10.0f), 10.0f, cryo::Color4f(0.5, 0.0f, 1.0f), false);
-//  add_point_light(world, cryo::Vector3f(-10.0f, 10.0f, 10.0f), 10.0f, cryo::Color4f(0.0, 0.0f, 1.0f), false);
+//  add_point_light(world, cs::Vector3f(10.0f, 10.0f, 10.0f), 10.0f, cs::Color4f(1.0, 0.0f, 1.0f), false);
+//  add_point_light(world, cs::Vector3f(0.0f, 10.0f, 10.0f), 10.0f, cs::Color4f(0.5, 0.0f, 1.0f), false);
+//  add_point_light(world, cs::Vector3f(-10.0f, 10.0f, 10.0f), 10.0f, cs::Color4f(0.0, 0.0f, 1.0f), false);
 //
-//  add_point_light(world, cryo::Vector3f(10.0f, 10.0f, -10.0f), 25.0f, cryo::Color4f(1.0, 1.0f, 0.0f), false);
-//  add_point_light(world, cryo::Vector3f(0.0f, 10.0f, -10.0f), 25.0f, cryo::Color4f(0.5, 1.0f, 0.0f), false);
-//  add_point_light(world, cryo::Vector3f(-10.0f, 10.0f, -10.0f), 25.0f, cryo::Color4f(0.0, 1.0f, 0.0f), false);
+//  add_point_light(world, cs::Vector3f(10.0f, 10.0f, -10.0f), 25.0f, cs::Color4f(1.0, 1.0f, 0.0f), false);
+//  add_point_light(world, cs::Vector3f(0.0f, 10.0f, -10.0f), 25.0f, cs::Color4f(0.5, 1.0f, 0.0f), false);
+//  add_point_light(world, cs::Vector3f(-10.0f, 10.0f, -10.0f), 25.0f, cs::Color4f(0.0, 1.0f, 0.0f), false);
 #endif
 }
 
 
-cryo::iMaterial *create_sg_material ()
+cs::iMaterial *create_sg_material ()
 {
-  auto sg = new cryo::csShaderGraph();
-  sg->SetAlphaDiscard(0.5f, cryo::eCF_Never);
+  auto sg = new cs::csShaderGraph();
+  sg->SetAlphaDiscard(0.5f, cs::eCF_Never);
 
-  auto color = sg->Add<cryo::csSGConstColor4>("diffuse");
+  auto color = sg->Add<cs::csSGConstColor4>("diffuse");
   sg->BindDiffuse(color);
 
   color->SetValue(0.5f, 0.0f, 0.0f, 1.0f);
 
-  cryo::iShaderGraphCompilerFactory *compilerFactory = cryo::csObjectRegistry::Get<cryo::iShaderGraphCompilerFactory>();
+  cs::iShaderGraphCompilerFactory *compilerFactory = cs::csObjectRegistry::Get<cs::iShaderGraphCompilerFactory>();
   if (compilerFactory)
   {
-    cryo::iShaderGraphCompiler* compiler = compilerFactory->Create();
+    cs::iShaderGraphCompiler* compiler = compilerFactory->Create();
     if (compiler)
     {
-      cryo::iShaderGraphCompiler::Parameters parameters {};
+      cs::iShaderGraphCompiler::Parameters parameters {};
       memset (&parameters, 0, sizeof(parameters));
-      cryo::csMaterial * material = compiler->Compile(sg, parameters);
+      cs::csMaterial * material = compiler->Compile(sg, parameters);
       return material;
     }
   }
@@ -1003,10 +1003,10 @@ cryo::iMaterial *create_sg_material ()
   return nullptr;
 }
 
-bool Game::Initialize(cryo::csEngine *engine)
+bool Game::Initialize(cs::csEngine *engine)
 {
 
-  cryo::csAssetManager::Get()->Get<cryo::csMaterial>("/materials/Default.sg");
+  cs::csAssetManager::Get()->Get<cs::csMaterial>("/materials/Default.sg");
 
 
 

@@ -4,7 +4,7 @@
 #include <csCore/csClass.hh>
 #include <csCore/resource/iFile.hh>
 
-namespace cryo
+namespace cs
 {
 
 class csResourceLocator;

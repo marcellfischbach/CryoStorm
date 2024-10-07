@@ -13,7 +13,7 @@
 #include <csCore/csObjectRegistry.hh>
 #include <csCore/resource/csAssetManager.hh>
 
-namespace cryo
+namespace cs
 {
 
 void csSkyboxMesh::Render(iDevice *device, float size, iTextureCube *texture, iTexture2D *depth)
@@ -33,7 +33,7 @@ void csSkyboxMesh::Render(iDevice *device, float size, iTextureCube *texture, iT
   }
 }
 
-void csSkyboxMesh::RenderDeferred(cryo::iDevice *device, float size, cryo::iTextureCube *texture, cryo::iTexture2D *depth)
+void csSkyboxMesh::RenderDeferred(cs::iDevice *device, float size, cs::iTextureCube *texture, cs::iTexture2D *depth)
 {
   iRenderMesh *renderMesh = RenderMesh(device);
   iShader     *shader     = ShaderDeferred(device);
@@ -61,7 +61,7 @@ void csSkyboxMesh::RenderDeferred(cryo::iDevice *device, float size, cryo::iText
   }
 }
 
-void csSkyboxMesh::RenderForward(cryo::iDevice *device, float size, cryo::iTextureCube *texture)
+void csSkyboxMesh::RenderForward(cs::iDevice *device, float size, cs::iTextureCube *texture)
 {
   iRenderMesh *renderMesh = RenderMesh(device);
   iShader     *shader     = ShaderForward(device);
@@ -85,7 +85,7 @@ void csSkyboxMesh::RenderForward(cryo::iDevice *device, float size, cryo::iTextu
 }
 
 
-iRenderMesh *csSkyboxMesh::RenderMesh(cryo::iDevice *device)
+iRenderMesh *csSkyboxMesh::RenderMesh(cs::iDevice *device)
 {
   if (!m_renderMesh)
   {

@@ -11,7 +11,7 @@
 #include <csCore/math/csVector4f.hh>
 
 
-namespace cryo
+namespace cs
 {
 
 
@@ -674,11 +674,11 @@ public:
   {
     if (message)
     {
-      printf("cryo::Matrix4f: %s\n", message);
+      printf("cs::Matrix4f: %s\n", message);
     }
     else
     {
-      printf("cryo::Matrix4f:\n");
+      printf("cs::Matrix4f:\n");
     }
 
     printf("  %.2f %.2f %.2f %.2f\n", m00, m01, m02, m03);

@@ -10,7 +10,7 @@
 
 
 #define CS_NOT_NULL(e) if (e == nullptr) return
-namespace cryo
+namespace cs
 {
 
 
@@ -45,7 +45,7 @@ void csVFSConfigReader::ReadVFS(const csCryoFileElement* vfsElement)
 
 }
 
-void csVFSConfigReader::ReadArchives(const cryo::csCryoFileElement *archivesElement)
+void csVFSConfigReader::ReadArchives(const cs::csCryoFileElement *archivesElement)
 {
   CS_NOT_NULL(archivesElement);
   for (int i = 0, in=archivesElement->GetNumberOfChildren(); i<in; ++i)
@@ -55,7 +55,7 @@ void csVFSConfigReader::ReadArchives(const cryo::csCryoFileElement *archivesElem
   }
 }
 
-void csVFSConfigReader::ReadArchive(const cryo::csCryoFileElement *archiveElement)
+void csVFSConfigReader::ReadArchive(const cs::csCryoFileElement *archiveElement)
 {
   if (archiveElement->GetTagName() == "filesystem" || archiveElement->GetTagName() == "fs")
   {

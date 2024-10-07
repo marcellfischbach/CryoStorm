@@ -5,7 +5,7 @@
 #include <csCore/csFPS.hh>
 #include <csCore/csTicker.hh>
 
-namespace cryo
+namespace cs
 {
 csFPS::csFPS()
     : m_nextFrame(csTicker::Tick() + 1000)

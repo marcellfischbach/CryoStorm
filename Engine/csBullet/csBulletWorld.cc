@@ -4,7 +4,7 @@
 #include <csBullet/csBulletStaticCollider.hh>
 #include <btBulletDynamicsCommon.h>
 
-namespace cryo::bullet
+namespace cs::bullet
 {
 
 

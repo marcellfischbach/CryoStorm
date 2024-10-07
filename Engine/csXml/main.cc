@@ -3,7 +3,7 @@
 #include <Windows.h>
 
 
-using namespace cryo;
+using namespace cs;
 
 int64_t tick()
 {

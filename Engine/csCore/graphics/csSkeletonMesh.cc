@@ -1,7 +1,7 @@
 
 #include <csCore/graphics/csSkeletonMesh.hh>
 
-namespace cryo
+namespace cs
 {
 
 csSkeletonMesh::csSkeletonMesh()

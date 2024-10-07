@@ -9,7 +9,7 @@
 #include <csCore/resource/iAssetLoader.hh>
 #include <vector>
 
-namespace cryo
+namespace cs
 {
 
 

@@ -3,7 +3,7 @@
 #include <csCore/graphics/shadergraph/csSGNodes.hh>
 #include <algorithm>
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 void csGL4ShaderGraphCompiler::GenerateVariables()
@@ -86,8 +86,8 @@ std::string stream_name(eVertexStream stream)
 }
 
 void csGL4ShaderGraphCompiler::AddStream(std::vector<StreamInput> &streams,
-                                         cryo::eVertexStream stream,
-                                         cryo::eSGValueType type)
+                                         cs::eVertexStream stream,
+                                         cs::eSGValueType type)
 {
   for (auto it = streams.begin(); it != streams.end(); it++)
   {
@@ -130,7 +130,7 @@ std::vector<csGL4ShaderGraphCompiler::StreamInput> csGL4ShaderGraphCompiler::Fin
 void csGL4ShaderGraphCompiler::AddResource(std::vector<ResourceInput> &resources,
                                            const std::string &resourceName,
                                            const std::string &resourceType,
-                                           cryo::eMaterialAttributeType matType)
+                                           cs::eMaterialAttributeType matType)
 {
   for (auto it = resources.begin(); it != resources.end(); it++)
   {

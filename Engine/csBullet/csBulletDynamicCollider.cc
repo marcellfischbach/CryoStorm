@@ -7,7 +7,7 @@
 #include <csBullet/csBulletUtils.hh>
 #include <algorithm>
 
-namespace cryo::bullet
+namespace cs::bullet
 {
 
 csBulletDynamicCollider::csBulletDynamicCollider()

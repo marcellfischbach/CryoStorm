@@ -4,7 +4,7 @@
 #include <csCore/input/iKeyboard.hh>
 #include <SDL.h>
 
-namespace cryo::launcher
+namespace cs::launcher
 {
 
 class csSDLKeyboard : public iKeyboard

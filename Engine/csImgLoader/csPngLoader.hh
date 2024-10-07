@@ -4,7 +4,7 @@
 #include <csImgLoader/csImgLoaderExport.hh>
 #include <csCore/resource/iAssetLoader.hh>
 
-namespace cryo::img
+namespace cs::img
 {
 
 

@@ -7,7 +7,7 @@
 #include <string>
 
 
-namespace cryo
+namespace cs
 {
 
 class csResourceLocator;

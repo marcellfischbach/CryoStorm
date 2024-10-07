@@ -4,7 +4,7 @@
 #include <GL/glew.h>
 #include <stdexcept>
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 

@@ -6,7 +6,7 @@
 #include <csCore/math/csMath.hh>
 #include <GL/glew.h>
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 csGL4Texture2DArray::csGL4Texture2DArray()
   : iTexture2DArray()

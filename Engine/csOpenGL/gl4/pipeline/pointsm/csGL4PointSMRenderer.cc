@@ -18,7 +18,7 @@
 #include <csCore/graphics/shading/iShaderAttribute.hh>
 
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 csGL4PointSMRenderer::csGL4PointSMRenderer()
@@ -94,9 +94,9 @@ csGL4RenderTarget2D *csGL4PointSMRenderer::GetShadowMap()
   return m_pointLightShadowMap;
 }
 
-void csGL4PointSMRenderer::RenderShadow(const cryo::opengl::csGL4PointLight *pointLight,
-                                        const cryo::csCamera &camera,
-                                        const cryo::csProjector &projector)
+void csGL4PointSMRenderer::RenderShadow(const cs::opengl::csGL4PointLight *pointLight,
+                                        const cs::csCamera &camera,
+                                        const cs::csProjector &projector)
 {
   RenderShadowBuffer(pointLight, camera, projector);
   RenderShadowMap(pointLight, camera, projector);

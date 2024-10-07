@@ -3,7 +3,7 @@
 #include <csOpenGL/gl4/csGL4TextureCube.hh>
 #include <GL/glew.h>
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 csGL4RenderTargetCube::csGL4RenderTargetCube()

@@ -1,7 +1,7 @@
 
 #include <csCore/graphics/pp/csPPScaleDown.hh>
 
-namespace cryo
+namespace cs
 {
 
 csPPScaleDown::csPPScaleDown()
@@ -9,7 +9,7 @@ csPPScaleDown::csPPScaleDown()
   DeclareInput(ePPImageType::Color, "Color");
   DeclareOutput(ePPImageType::Color, "Color");
 
-  m_shader               = cryo::csAssetManager::Get()->Get<cryo::iShader>("${shaders}/pp/scale_down/scale_down.shader");
+  m_shader               = cs::csAssetManager::Get()->Get<cs::iShader>("${shaders}/pp/scale_down/scale_down.shader");
   m_attribColor          = m_shader ? m_shader->GetShaderAttribute("Color") : nullptr;
   m_attribTextureSizeInv = m_shader ? m_shader->GetShaderAttribute("TextureSizeInv") : nullptr;
 }
@@ -23,7 +23,7 @@ csPPScaleDown::~csPPScaleDown()
 }
 
 
-bool csPPScaleDown::RefreshOutputTexture(cryo::iDevice *device)
+bool csPPScaleDown::RefreshOutputTexture(cs::iDevice *device)
 {
   if (!m_inputs[0])
   {
@@ -38,7 +38,7 @@ bool csPPScaleDown::RefreshOutputTexture(cryo::iDevice *device)
                             m_inputs[0]->GetFormat(),
                             false,
                             0,
-                            cryo::ePF_Depth);
+                            cs::ePF_Depth);
 }
 
 void csPPScaleDown::Process(iDevice *device, iRenderTarget2D *finalTarget)
@@ -46,14 +46,14 @@ void csPPScaleDown::Process(iDevice *device, iRenderTarget2D *finalTarget)
   if (m_shader && m_attribColor && RefreshOutputTexture(device))
   {
     device->SetRenderTarget(m_renderTarget);
-    device->Clear(false, cryo::csColor4f(0, 0, 0, 0), false, 1.0f, false, 0);
+    device->Clear(false, cs::csColor4f(0, 0, 0, 0), false, 1.0f, false, 0);
     device->SetBlending(false);
     device->SetDepthTest(false);
     device->SetShader(m_shader);
     device->ResetTextures();
     if (m_attribColor)
     {
-      cryo::eTextureUnit unit = device->BindTexture(m_inputs[0]);
+      cs::eTextureUnit unit = device->BindTexture(m_inputs[0]);
       m_attribColor->Bind(unit);
     }
     if (m_attribTextureSizeInv && m_outputs[0])

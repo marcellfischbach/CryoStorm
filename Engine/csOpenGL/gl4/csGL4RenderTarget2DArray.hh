@@ -4,7 +4,7 @@
 #include <csOpenGL/csOpenGLExport.hh>
 #include <csCore/graphics/iRenderTarget2DArray.hh>
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 class csGL4Texture2D;

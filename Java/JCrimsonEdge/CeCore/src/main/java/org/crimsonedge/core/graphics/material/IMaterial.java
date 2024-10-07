@@ -8,7 +8,7 @@ import org.crimsonedge.core.graphics.EShadingMode;
 import org.crimsonedge.core.graphics.ITexture;
 import org.crimsonedge.core.math.*;
 
-@CeClass("cryo::iMaterial")
+@CeClass("cs::iMaterial")
 public interface IMaterial extends ICoreObject {
 
       EFillMode getFillMode()  ;

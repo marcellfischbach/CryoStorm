@@ -4,7 +4,7 @@
 #include <csCore/resource/csVFS.hh>
 #
 
-namespace cryo
+namespace cs
 {
 
 csSettingsFile::csSettingsFile(const std::string& locator)

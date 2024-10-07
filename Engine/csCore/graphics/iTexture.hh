@@ -7,7 +7,7 @@
 #include <csCore/graphics/eTextureType.hh>
 #include <csCore/graphics/ePixelFormat.hh>
 
-namespace cryo
+namespace cs
 {
 
 struct iSampler;

@@ -7,7 +7,7 @@
 #include <csCore/resource/eOpenMode.hh>
 #include <csCore/resource/eSeekMode.hh>
 
-namespace cryo
+namespace cs
 {
 
 

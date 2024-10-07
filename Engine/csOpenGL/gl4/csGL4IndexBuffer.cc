@@ -3,7 +3,7 @@
 #include <gl/glew.h>
 
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 csGL4IndexBuffer::csGL4IndexBuffer()

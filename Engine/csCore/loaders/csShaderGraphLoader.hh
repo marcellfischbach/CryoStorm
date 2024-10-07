@@ -7,7 +7,7 @@
 #include <csCore/csCoreExport.hh>
 #include <csCore/resource/csBaseCSFAssetLoader.hh>
 
-namespace cryo
+namespace cs
 {
 
 class csSGNode;

@@ -1,7 +1,7 @@
 #ifndef KEY_HH
 #define KEY_HH
 
-namespace cryo
+namespace cs
 {
 
 enum eKey

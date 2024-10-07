@@ -7,7 +7,7 @@
 #include <csCore/math/csVector3f.hh>
 #include <csCore/csTypes.hh>
 
-namespace cryo
+namespace cs
 {
 
 struct iLight;

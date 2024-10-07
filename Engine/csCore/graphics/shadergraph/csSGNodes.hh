@@ -6,7 +6,7 @@
 #include <csCore/graphics/material/eMaterialAttributeType.hh>
 #include <csCore/graphics/eVertexStream.hh>
 
-namespace cryo
+namespace cs
 {
 
 CS_CLASS()

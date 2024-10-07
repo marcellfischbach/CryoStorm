@@ -13,8 +13,8 @@ ExitGameState::ExitGameState()
 
 void ExitGameState::Update(float tpf)
 {
-  if (cryo::csInput::IsKeyPressed(cryo::eKey::eK_Escape))
+  if (cs::csInput::IsKeyPressed(cs::eKey::eK_Escape))
   {
-    cryo::csEngine::Get()->Exit(0);
+    cs::csEngine::Get()->Exit(0);
   }
 }

@@ -3,7 +3,7 @@
 #include <csCore/graphics/scene/csGfxMesh.hh>
 #include <csCore/graphics/material/iMaterial.hh>
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 

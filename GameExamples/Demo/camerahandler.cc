@@ -4,8 +4,9 @@
 #include <csCore/math/csVector3f.hh>
 #include <csCore/entity/csTransform.hh>
 #include <csCore/entity/csSpatialState.hh>
+#include <csCore/graphics/csSkeleton.hh>
 
-using namespace cryo;
+using namespace cs;
 
 CameraHandler::CameraHandler()
 //        : EntityState(), m_speed(4.0f), m_rotSpeed(0.0025f), m_rotY(1.88), m_rotX(-0.96)

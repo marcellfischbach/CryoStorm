@@ -5,7 +5,7 @@
 #include <csCore/graphics/shading/iShaderAttribute.hh>
 #include <csCore/resource/csAssetManager.hh>
 
-namespace cryo
+namespace cs
 {
 
 void csSimpleSkybox::Render(iDevice *device)
@@ -47,7 +47,7 @@ bool csSimpleSkybox::PrepShader()
   return m_prepShader;
 }
 
-bool csSimpleSkybox::PrepRenderTarget(cryo::iDevice *device)
+bool csSimpleSkybox::PrepRenderTarget(cs::iDevice *device)
 {
   if (m_skyboxTexture && m_skyboxTarget)
   {

@@ -8,7 +8,7 @@
 #include <csCore/resource/csAssetManager.hh>
 #include <csCore/graphics/csImage.hh>
 
-namespace cryo::img
+namespace cs::img
 {
 
 bool csImgLoaderModule::Register(const std::vector<std::string> &args, csEngine *engine)
@@ -33,5 +33,5 @@ bool csImgLoaderModule::Initialize(const std::vector<std::string> &args, csEngin
 CS_DEFINE_LIBRARY(csImgLoader)
 {
   printf ("Load library: ceImgLoader\n");
-  return new cryo::img::csImgLoaderModule;
+  return new cs::img::csImgLoaderModule;
 }

@@ -4,7 +4,7 @@
 
 #include <csCore/graphics/csPostProcessing.hh>
 
-namespace cryo
+namespace cs
 {
 struct iRenderTarget2D;
 struct iShader;
@@ -12,17 +12,17 @@ struct iShaderAttribute;
 }
 
 CS_CLASS()
-class DemoPostProcess : public CS_SUPER(cryo::csSimplePostProcess)
+class DemoPostProcess : public CS_SUPER(cs::csSimplePostProcess)
 {
 CS_CLASS_GEN_OBJECT;
 public:
   DemoPostProcess();
 
-  void Process(cryo::iDevice *device, cryo::iRenderTarget2D *finalTarget) override;
+  void Process(cs::iDevice *device, cs::iRenderTarget2D *finalTarget) override;
 
 private:
-  bool RefreshOutputTexture (cryo::iDevice* device);
+  bool RefreshOutputTexture (cs::iDevice* device);
 
-  cryo::iShader *m_shader;
-  cryo::iShaderAttribute *m_attribColor;
+  cs::iShader *m_shader;
+  cs::iShaderAttribute *m_attribColor;
 };

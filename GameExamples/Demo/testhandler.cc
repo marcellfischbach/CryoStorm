@@ -1,10 +1,10 @@
 
 #include "testhandler.hh"
 
-using namespace cryo;
+using namespace cs;
 
-BaseTestHandler::BaseTestHandler(const cryo::csVector3f &basePosition, float distance, float animationSpeed)
-    : cryo::csEntityState()
+BaseTestHandler::BaseTestHandler(const cs::csVector3f &basePosition, float distance, float animationSpeed)
+    : cs::csEntityState()
     , m_basePosition(basePosition)
     , m_distance(distance)
     , m_animationSpeed(animationSpeed)
@@ -33,28 +33,28 @@ void BaseTestHandler::Update(float tpf)
 }
 
 
-TestHandler01::TestHandler01(const cryo::csVector3f &basePosition, float distance, float animationSpeed)
+TestHandler01::TestHandler01(const cs::csVector3f &basePosition, float distance, float animationSpeed)
     : BaseTestHandler(basePosition, distance, animationSpeed)
 {
 
 }
 
 
-TestHandler02::TestHandler02(const cryo::csVector3f &basePosition, float distance, float animationSpeed)
+TestHandler02::TestHandler02(const cs::csVector3f &basePosition, float distance, float animationSpeed)
     : BaseTestHandler(basePosition, distance, animationSpeed)
 {
 
 }
 
 
-TestHandler03::TestHandler03(const cryo::csVector3f &basePosition, float distance, float animationSpeed)
+TestHandler03::TestHandler03(const cs::csVector3f &basePosition, float distance, float animationSpeed)
     : BaseTestHandler(basePosition, distance, animationSpeed)
 {
 
 }
 
 
-TestHandler04::TestHandler04(const cryo::csVector3f &basePosition, float distance, float animationSpeed)
+TestHandler04::TestHandler04(const cs::csVector3f &basePosition, float distance, float animationSpeed)
     : BaseTestHandler(basePosition, distance, animationSpeed)
 {
 

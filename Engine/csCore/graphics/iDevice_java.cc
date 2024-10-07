@@ -15,15 +15,15 @@ JNIEXPORT jobject JNICALL Java_org_crimsonedge_core_graphics_IDevice_nCreateText
                                                                                       jboolean mipMaps,
                                                                                       jint multiSamples)
 {
-  auto                       device   = reinterpret_cast<cryo::iDevice *>(ref);
-  cryo::iTexture2D::Descriptor desc {
-      (cryo::ePixelFormat) pixelFormat,
-      (cryo::uint16_t) width,
-      (cryo::uint16_t) height,
+  auto                       device   = reinterpret_cast<cs::iDevice *>(ref);
+  cs::iTexture2D::Descriptor desc {
+      (cs::ePixelFormat) pixelFormat,
+      (cs::uint16_t) width,
+      (cs::uint16_t) height,
       (bool) mipMaps,
-      (cryo::uint16_t) multiSamples
+      (cs::uint16_t) multiSamples
   };
-  cryo::iTexture2D             *texture = device->CreateTexture(desc);
+  cs::iTexture2D             *texture = device->CreateTexture(desc);
   return texture ? texture->GetJObject() : nullptr;
 }
 

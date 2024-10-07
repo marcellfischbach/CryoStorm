@@ -2,7 +2,7 @@
 #include <csCore/graphics/csSamplers.hh>
 #include <csCore/resource/csAssetManager.hh>
 
-namespace cryo
+namespace cs
 {
 
 

@@ -1,7 +1,7 @@
 
 #include <csOpenGL/gl4/shading/csGL4ShaderSourceFragment.hh>
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 csGL4ShaderSourceFragment::csGL4ShaderSourceFragment()

@@ -1,7 +1,7 @@
 
 #include <csOpenGL/gl4/csGL4Exceptions.hh>
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 csGL4ShaderCompileException::csGL4ShaderCompileException(const std::string &message, const std::string &source)

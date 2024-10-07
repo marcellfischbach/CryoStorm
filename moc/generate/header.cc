@@ -3,7 +3,7 @@
 #include <generate/ioutput.hh>
 #include <ast.hh>
 
-namespace cryo::moc
+namespace cs::moc
 {
 
 
@@ -55,12 +55,12 @@ std::string HeaderGenerator::OutputClass(ClassNode* clsNode)
     source += "{\n";
   }
 
-  source += "\nclass " + clsName + " : public cryo::csClass\n";
+  source += "\nclass " + clsName + " : public cs::csClass\n";
   source += "{\n";
   source += "public:\n";
   source += " " + clsName + "();\n";
   source += " static " + clsName  + " *Get();\n";
-  source += " virtual cryo::iObject *CreateInstance() const;\n";
+  source += " virtual cs::iObject *CreateInstance() const;\n";
   source += "};\n";
 
 

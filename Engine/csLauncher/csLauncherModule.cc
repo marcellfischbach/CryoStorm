@@ -7,7 +7,7 @@
 
 #include <master.refl.cc>
 
-namespace cryo::launcher
+namespace cs::launcher
 {
 
 bool csLauncherModule::Register(const std::vector<std::string> &args, csEngine *engine)

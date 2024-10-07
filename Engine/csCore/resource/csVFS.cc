@@ -8,7 +8,7 @@
 
 #include <regex>
 
-namespace cryo
+namespace cs
 {
 
 
@@ -33,7 +33,7 @@ const std::string& csVFS::GetRootPath() const
   return m_rootPath;
 }
 
-void csVFS::AddArchive(cryo::iArchive *archive)
+void csVFS::AddArchive(cs::iArchive *archive)
 {
   if (archive)
   {

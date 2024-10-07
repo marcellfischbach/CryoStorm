@@ -5,7 +5,7 @@
 #include <csCore/csClass.hh>
 #include <csCore/graphics/scene/csGfxMesh.hh>
 
-namespace cryo
+namespace cs
 {
 
 CS_CLASS()

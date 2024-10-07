@@ -7,7 +7,7 @@
 #include <csCore/graphics/iTexture2DArray.hh>
 #include <csCore/graphics/iTextureCube.hh>
 
-namespace cryo
+namespace cs
 {
 
 CS_CLASS()

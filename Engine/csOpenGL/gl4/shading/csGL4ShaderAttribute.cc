@@ -1,7 +1,7 @@
 #include <csOpenGL/gl4/shading/csGL4ShaderAttribute.hh>
 #include <csOpenGL/csGLError.hh>
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 csGL4ShaderAttribute::csGL4ShaderAttribute(GLint location, const std::string& name)

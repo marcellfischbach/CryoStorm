@@ -2,7 +2,7 @@
 
 #include <csCore/csCoreExport.hh>
 
-namespace cryo
+namespace cs
 {
 
 class csCamera;

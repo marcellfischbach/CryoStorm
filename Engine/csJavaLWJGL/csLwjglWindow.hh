@@ -8,7 +8,7 @@
 
 #include <jni.h>
 
-namespace cryo::java
+namespace cs::java
 {
 
 CS_CLASS(jclass="org.crimsonedge.launcher.LwjglWindow")

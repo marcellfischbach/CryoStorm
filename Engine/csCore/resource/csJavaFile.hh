@@ -9,7 +9,7 @@
 #include <csCore/resource/iFile.hh>
 
 
-namespace cryo
+namespace cs
 {
 
 

@@ -3,7 +3,7 @@
 
 #include <generate/generator.hh>
 
-namespace cryo::moc
+namespace cs::moc
 {
 
 struct iOutput;

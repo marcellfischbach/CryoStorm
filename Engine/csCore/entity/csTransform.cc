@@ -2,7 +2,7 @@
 #include <csCore/entity/csTransform.hh>
 #include <csCore/entity/csSpatialState.hh>
 
-namespace cryo
+namespace cs
 {
 
 

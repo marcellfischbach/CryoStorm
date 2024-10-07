@@ -9,7 +9,7 @@
 #include <vector>
 
 
-namespace cryo::xml
+namespace cs::xml
 {
 
 class CS_XML_API csAttribute

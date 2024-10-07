@@ -9,12 +9,12 @@ struct aiMesh;
 struct aiNode;
 struct aiMaterial;
 
-namespace cryo
+namespace cs
 {
 struct iMaterial;
 }
 
-namespace cryo::assimp
+namespace cs::assimp
 {
 
 struct StaticLoaderData;

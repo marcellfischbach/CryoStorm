@@ -7,7 +7,7 @@
 #include <csCore/graphics/material/csMaterialInstance.hh>
 #include <assimp/scene.h>
 
-namespace cryo::assimp
+namespace cs::assimp
 {
 
 iMaterial *csAssimpMaterialLoader::Read(aiMaterial *material)

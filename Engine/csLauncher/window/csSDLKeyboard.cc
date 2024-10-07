@@ -1,7 +1,7 @@
 #include <csLauncher/window/csSDLKeyboard.hh>
 #include <csLauncher/window/csSDLKeyMap.hh>
 
-namespace cryo::launcher
+namespace cs::launcher
 {
 
 csSDLKeyboard::csSDLKeyboard()

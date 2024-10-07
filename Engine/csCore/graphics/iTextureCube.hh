@@ -8,7 +8,7 @@
 #include <csCore/csTypes.hh>
 #include <csCore/graphics/eCubeFace.hh>
 
-namespace cryo
+namespace cs
 {
 
 class csImage;

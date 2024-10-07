@@ -5,7 +5,7 @@
 #include <csCore/csDefs.hh>
 #include <functional>
 
-namespace cryo
+namespace cs
 {
 
 class csGfxCamera;

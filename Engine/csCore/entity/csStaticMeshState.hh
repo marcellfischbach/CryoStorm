@@ -7,7 +7,7 @@
 #include <csCore/entity/csSpatialState.hh>
 
 
-namespace cryo
+namespace cs
 {
 
 class csMesh;

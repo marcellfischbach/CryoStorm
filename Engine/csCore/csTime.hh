@@ -4,7 +4,7 @@
 #include <csCore/csTypes.hh>
 #include <stdint.h>
 
-namespace cryo
+namespace cs
 {
 
 class CS_CORE_API csTime

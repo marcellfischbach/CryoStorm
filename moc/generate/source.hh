@@ -6,7 +6,7 @@
 #include <vector>
 #include <list>
 
-namespace cryo::moc
+namespace cs::moc
 {
 
 struct iOutput;

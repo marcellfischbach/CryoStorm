@@ -4,7 +4,7 @@
 #include <csAssimpLoader/csAssimpExport.hh>
 #include <csCore/iModule.hh>
 
-namespace cryo::assimp
+namespace cs::assimp
 {
 
 class CS_ASSIMP_API csAssimpLoaderModule : public iModule

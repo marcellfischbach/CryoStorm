@@ -9,7 +9,7 @@
 #include <map>
 #include <array>
 
-namespace cryo
+namespace cs
 {
 struct iShaderAttribute;
 

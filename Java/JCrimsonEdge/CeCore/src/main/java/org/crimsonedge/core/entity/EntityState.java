@@ -3,7 +3,7 @@ package org.crimsonedge.core.entity;
 import org.crimsonedge.core.CeClass;
 import org.crimsonedge.core.CoreObject;
 
-@CeClass("cryo::csEntityState")
+@CeClass("cs::csEntityState")
 public abstract class csEntityState extends CoreObject  {
 
 

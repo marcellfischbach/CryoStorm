@@ -3,7 +3,7 @@
 #include <csCore/graphics/csCamera.hh>
 #include <csCore/graphics/csProjector.hh>
 
-namespace cryo
+namespace cs
 {
 
 

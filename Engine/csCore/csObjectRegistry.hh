@@ -5,7 +5,7 @@
 #include <map>
 #include <csCore/csClass.hh>
 
-namespace cryo
+namespace cs
 {
 
 CS_CLASS()

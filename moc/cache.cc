@@ -11,7 +11,7 @@
 #include <Windows.h>
 
 
-namespace cryo::moc
+namespace cs::moc
 {
 
 

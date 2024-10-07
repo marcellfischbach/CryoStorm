@@ -2,7 +2,7 @@ package org.crimsonedge.core.window;
 
 import org.crimsonedge.core.CeClass;
 
-@CeClass("cryo::iWindow")
+@CeClass("cs::iWindow")
 public interface IWindow {
 
     void setTitle (String title);

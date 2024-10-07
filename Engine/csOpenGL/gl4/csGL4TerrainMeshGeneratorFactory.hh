@@ -4,7 +4,7 @@
 #include <csOpenGL/csOpenGLExport.hh>
 #include <csCore/graphics/iTerrainMesh.hh>
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 

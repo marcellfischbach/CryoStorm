@@ -8,7 +8,7 @@
 
 
 
-namespace cryo {
+namespace cs {
 
 
 static CS_FORCEINLINE double ceCos(double v)

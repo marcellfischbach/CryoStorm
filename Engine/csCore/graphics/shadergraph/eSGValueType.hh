@@ -2,7 +2,7 @@
 
 #include <csCore/csBitMask.hh>
 
-namespace cryo
+namespace cs
 {
 
 enum class eSGValueType

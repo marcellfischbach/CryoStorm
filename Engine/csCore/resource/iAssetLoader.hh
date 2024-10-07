@@ -7,7 +7,7 @@
 #include <csCore/resource/csCryoFile.hh>
 #include <csCore/resource/csResourceLocator.hh>
 
-namespace cryo
+namespace cs
 {
 
 const int16_t DefaultPriority = 0;

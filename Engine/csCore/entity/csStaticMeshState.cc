@@ -7,7 +7,7 @@
 #include <csCore/graphics/scene/csGfxMesh.hh>
 
 
-namespace cryo
+namespace cs
 {
 
 

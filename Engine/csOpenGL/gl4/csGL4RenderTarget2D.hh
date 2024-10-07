@@ -5,7 +5,7 @@
 #include <csCore/graphics/iRenderTarget2D.hh>
 #include <csCore/graphics/eCubeFace.hh>
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 class csGL4Texture2D;

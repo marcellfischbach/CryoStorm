@@ -6,7 +6,7 @@
 #include <csCore/graphics/iSampler.hh>
 
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 

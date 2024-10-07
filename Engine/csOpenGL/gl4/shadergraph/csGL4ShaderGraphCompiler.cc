@@ -9,11 +9,11 @@
 #include <csCore/resource/csTextFile.hh>
 #include <csCore/csSettings.hh>
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 
-csMaterial *csGL4ShaderGraphCompiler::Compile(cryo::csShaderGraph *shaderGraph, const Parameters &parameters)
+csMaterial *csGL4ShaderGraphCompiler::Compile(cs::csShaderGraph *shaderGraph, const Parameters &parameters)
 {
   m_shaderGraph = shaderGraph;
   m_errorString = "";
@@ -609,7 +609,7 @@ bool csGL4ShaderGraphCompiler::IsNeedingTangent(const std::vector<csSGNode *> &n
 }
 
 
-void csGL4ShaderGraphCompiler::SetMaterialDefaults(cryo::csMaterial *material)
+void csGL4ShaderGraphCompiler::SetMaterialDefaults(cs::csMaterial *material)
 {
   std::vector<csSGNode *> nodes;
   for (int              i = 0; i < m_shaderGraph->GetNumberOfNodes(); ++i)

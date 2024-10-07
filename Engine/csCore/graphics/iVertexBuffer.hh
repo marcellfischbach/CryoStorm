@@ -7,7 +7,7 @@
 #include <csCore/graphics/eBufferUsage.hh>
 
 
-namespace cryo
+namespace cs
 {
 
 CS_CLASS()

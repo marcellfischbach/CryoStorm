@@ -6,7 +6,7 @@
 #include <csCore/csJava.hh>
 
 
-namespace cryo
+namespace cs
 {
 
 csGameJava::csGameJava(jobject gameObject)
@@ -16,7 +16,7 @@ csGameJava::csGameJava(jobject gameObject)
 }
 
 
-bool csGameJava::Initialize(cryo::csEngine *engine)
+bool csGameJava::Initialize(cs::csEngine *engine)
 {
   static jclass cls = csJava::Get()->FindClass("org/crimsonedge/core/IGame");
   if (cls)

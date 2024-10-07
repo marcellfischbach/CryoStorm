@@ -7,7 +7,7 @@
 #include <csCore/graphics/eShaderAttribute.hh>
 #include <string>
 
-namespace cryo
+namespace cs
 {
 
 struct iShaderAttribute;

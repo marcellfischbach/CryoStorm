@@ -12,7 +12,7 @@
 #include <csCore/graphics/csVertexDeclaration.hh>
 #include <vector>
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 class csGL4VertexBuffer;

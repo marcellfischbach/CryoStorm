@@ -7,7 +7,7 @@
 #include <csCore/input/iKeyboard.hh>
 
 
-namespace cryo::java
+namespace cs::java
 {
 
 class csLwjglKeyboard : public iKeyboard

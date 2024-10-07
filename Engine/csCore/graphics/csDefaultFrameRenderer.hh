@@ -4,7 +4,7 @@
 #include <csCore/csClass.hh>
 #include <csCore/graphics/iFrameRenderer.hh>
 
-namespace cryo
+namespace cs
 {
 
 struct iRenderPipeline;

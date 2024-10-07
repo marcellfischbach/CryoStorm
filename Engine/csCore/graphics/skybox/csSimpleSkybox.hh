@@ -9,7 +9,7 @@
 #include <csCore/graphics/iRenderTargetCube.hh>
 #include <csCore/graphics/iSkyboxRenderer.hh>
 
-namespace cryo
+namespace cs
 {
 
 struct iShader;
@@ -29,7 +29,7 @@ public:
 private:
   bool Prep(iDevice *device);
   bool PrepShader();
-  bool PrepRenderTarget(cryo::iDevice *device);
+  bool PrepRenderTarget(cs::iDevice *device);
 
 private:
   iShader           *m_prepShader    = nullptr;

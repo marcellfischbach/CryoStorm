@@ -6,7 +6,7 @@
 #include <csCore/graphics/iVertexBuffer.hh>
 
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 CS_CLASS()
 class CS_OGL_API csGL4VertexBuffer : public CS_SUPER(iVertexBuffer)

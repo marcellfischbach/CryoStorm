@@ -4,7 +4,7 @@
 #include <csCore/graphics/material/csMaterial.hh>
 #include <csCore/graphics/shadergraph/csShaderGraph.hh>
 
-namespace cryo
+namespace cs
 {
 
 

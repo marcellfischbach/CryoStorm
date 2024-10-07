@@ -12,7 +12,7 @@
 
 using namespace tinyxml2;
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 csGL4ProgramLoader::csGL4ProgramLoader()
   : csBaseCSFAssetLoader()

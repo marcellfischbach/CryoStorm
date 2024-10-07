@@ -12,7 +12,7 @@
 #include <csCore/graphics/shading/iShaderAttribute.hh>
 #include <csCore/math/csMath.hh>
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 
@@ -64,7 +64,7 @@ void csGL4DeferredPointLightRenderer::SetDevice(iDevice *device)
   m_device = csQueryClass<csGL4Device>(device);
 }
 
-void csGL4DeferredPointLightRenderer::SetScene(cryo::iGfxScene *scene)
+void csGL4DeferredPointLightRenderer::SetScene(cs::iGfxScene *scene)
 {
   m_scene = scene;
 }

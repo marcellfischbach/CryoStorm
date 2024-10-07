@@ -4,7 +4,7 @@
 #include <csCore/csCoreExport.hh>
 #include <csCore/iModule.hh>
 
-namespace cryo
+namespace cs
 {
 class CS_CORE_API csCoreModule : public iModule
 {

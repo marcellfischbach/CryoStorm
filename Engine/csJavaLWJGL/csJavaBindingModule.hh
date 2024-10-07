@@ -8,10 +8,10 @@
 #include <csCore/iModule.hh>
 
 
-namespace cryo::java
+namespace cs::java
 {
 
-class csJavaBindingModule : public cryo::iModule
+class csJavaBindingModule : public cs::iModule
 {
 public:
   bool Register(const std::vector<std::string> &args, csEngine *engine);

@@ -6,21 +6,21 @@ shaderGraph {
     blending Alpha,
 
     nodes {
-        resource "cryo::csSGResourceFloat" roughness "Roughness",
+        resource "cs::csSGResourceFloat" roughness "Roughness",
 
-        resource "cryo::csSGTexture2D" diffuse "Diffuse",
+        resource "cs::csSGTexture2D" diffuse "Diffuse",
 
-        node "cryo::csSGDecomposeVec4" decDiffuse {
+        node "cs::csSGDecomposeVec4" decDiffuse {
             binding 0 diffuse
         }
 
-        node "cryo::csSGVec3" vecDiffuse {
+        node "cs::csSGVec3" vecDiffuse {
             binding "X" decDiffuse "X",
             binding "Y" decDiffuse "Y",
             binding "Z" decDiffuse "Z",
         }
 
-        node "cryo::csSGConstColor3" normal {
+        node "cs::csSGConstColor3" normal {
             value 0 0.5,
             value 1 0.5,
             value 2 1.0,

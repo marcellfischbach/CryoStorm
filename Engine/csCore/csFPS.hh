@@ -7,7 +7,7 @@
 #include <csCore/csCoreExport.hh>
 #include <csCore/csTypes.hh>
 
-namespace cryo
+namespace cs
 {
 
 class CS_CORE_API csFPS

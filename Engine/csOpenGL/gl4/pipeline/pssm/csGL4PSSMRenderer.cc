@@ -20,7 +20,7 @@
 #include <algorithm>
 #include <csCore/csTime.hh>
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 csGL4PSSMRenderer::csGL4PSSMRenderer()
@@ -137,8 +137,8 @@ csGL4RenderTarget2D *csGL4PSSMRenderer::GetShadowBuffer(size_t splitLayer)
 
 
 void csGL4PSSMRenderer::RenderShadow(const csGL4DirectionalLight *directionalLight,
-                                     const cryo::csCamera &camera,
-                                     const cryo::csProjector &projector)
+                                     const cs::csCamera &camera,
+                                     const cs::csProjector &projector)
 {
 
   RenderShadowBuffer(directionalLight, camera, projector);
@@ -221,8 +221,8 @@ static void calc_center_position(csVector3f near[4], csVector3f far[4], csVector
 
 
 void csGL4PSSMRenderer::RenderShadowBuffer(const csGL4DirectionalLight *directionalLight,
-                                           const cryo::csCamera &camera,
-                                           const cryo::csProjector &projector)
+                                           const cs::csCamera &camera,
+                                           const cs::csProjector &projector)
 {
 
   csVector3f splitPoints[5][4];
@@ -354,8 +354,8 @@ void csGL4PSSMRenderer::RenderShadowBuffer(const csGL4DirectionalLight *directio
 
 
 void csGL4PSSMRenderer::RenderShadowMap(const csGL4DirectionalLight *directionalLight,
-                                        const cryo::csCamera &camera,
-                                        const cryo::csProjector &projector)
+                                        const cs::csCamera &camera,
+                                        const cs::csProjector &projector)
 {
   m_device->ResetTextures();
   csGL4RenderTarget2D *target = GetDirectionalLightShadowMapTemp();// m_directionalLightShadowMap;

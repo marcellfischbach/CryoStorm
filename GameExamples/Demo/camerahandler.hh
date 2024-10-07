@@ -4,14 +4,14 @@
 #include <csCore/entity/csEntitySystem.hh>
 
 CS_CLASS()
-class CameraHandler : public CS_SUPER(cryo::csEntityState)
+class CameraHandler : public CS_SUPER(cs::csEntityState)
 {
 CS_CLASS_GEN_OBJECT;
 public:
   CameraHandler();
   ~CameraHandler() override = default;
 
-  void OnAttachedToWorld(cryo::csWorld *world) override;
+  void OnAttachedToWorld(cs::csWorld *world) override;
   void Update(float tpf) override;
 private:
   float m_speed;
@@ -23,7 +23,7 @@ private:
 
 
 CS_CLASS()
-class CameraHandlerMotion : public CS_SUPER(cryo::csEntityState)
+class CameraHandlerMotion : public CS_SUPER(cs::csEntityState)
 {
   CS_CLASS_GEN_OBJECT;
 public:
@@ -32,8 +32,8 @@ public:
 
   void Update(float tpf) override;
 private:
-  cryo::csVector3f m_position;
-  cryo::csVector3f m_target;
+  cs::csVector3f m_position;
+  cs::csVector3f m_target;
   float            m_distance;
   float m_time;
 };

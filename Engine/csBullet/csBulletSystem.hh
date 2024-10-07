@@ -4,7 +4,7 @@
 #include <csBullet/csBulletExport.hh>
 #include <csCore/physics/iPhysicsSystem.hh>
 
-namespace cryo::bullet
+namespace cs::bullet
 {
 
 CS_CLASS()

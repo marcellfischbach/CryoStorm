@@ -5,7 +5,7 @@
 #include <csCore/resource/iAssetLoader.hh>
 #include <png.h>
 
-namespace cryo::img
+namespace cs::img
 {
 
 

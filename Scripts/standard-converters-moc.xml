@@ -2,7 +2,7 @@
     <converter>
         <types>
             <type>csColor4f</type>
-            <type>cryo::csColor4f</type>
+            <type>cs::csColor4f</type>
         </types>
         <in-arguments>
             <argument jtype="jfloat" id="r"/>
@@ -14,9 +14,9 @@
             <argument jtype="jfloatArray" id="out"/>
         </out-arguments>
         <in-conversion>
-            cryo::csColor4f ${csArg} (${r}, ${g}, ${b}, ${a});
+            cs::csColor4f ${csArg} (${r}, ${g}, ${b}, ${a});
         </in-conversion>
-        <out-conversion returnType="void" fullQualifiedType="cryo::csColor4f">
+        <out-conversion returnType="void" fullQualifiedType="cs::csColor4f">
             jfloat *${csTmp} = env->GetFloatArrayElements(${out}, 0);
             ${csTmp}[0] = ${csRet}.r;
             ${csTmp}[1] = ${csRet}.g;
@@ -24,6 +24,5 @@
             ${csTmp}[3] = ${csRet}.a;
             env->ReleaseFloatArrayElements(${out}, ${csTmp}, 0);
         </out-conversion>
-
     </converter>
 </converters>

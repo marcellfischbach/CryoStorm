@@ -5,7 +5,7 @@
 #include <csCore/graphics/iRenderTarget.hh>
 #include <csCore/graphics/iTextureCube.hh>
 
-namespace cryo
+namespace cs
 {
 
 CS_CLASS()

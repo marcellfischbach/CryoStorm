@@ -4,7 +4,7 @@
 #include <csCore/input/iMouse.hh>
 #include <SDL.h>
 
-namespace cryo::launcher
+namespace cs::launcher
 {
 
 

@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-namespace cryo
+namespace cs
 {
 
 class csEngine;
@@ -15,8 +15,8 @@ struct iModule
 
 };
 
-#define CS_DECLARE_LIBRARY(name) extern "C" __declspec(dllexport) cryo::iModule* name##_load_library()
-#define CS_DEFINE_LIBRARY(name) cryo::iModule* name##_load_library()
+#define CS_DECLARE_LIBRARY(name) extern "C" __declspec(dllexport) cs::iModule* name##_load_library()
+#define CS_DEFINE_LIBRARY(name) cs::iModule* name##_load_library()
 
 
 }

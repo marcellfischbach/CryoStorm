@@ -3,7 +3,7 @@
 #include <csCore/animation/csSkeletonAnimation.hh>
 #include <csCore/graphics/csSkeleton.hh>
 
-namespace cryo
+namespace cs
 {
 
 csSkeletonAnimationPlayer::csSkeletonAnimationPlayer()
@@ -25,12 +25,12 @@ csSkeletonAnimationPlayer::~csSkeletonAnimationPlayer()
   m_animation = nullptr;
 }
 
-void csSkeletonAnimationPlayer::SetSkeleton(cryo::csSkeleton *skeleton)
+void csSkeletonAnimationPlayer::SetSkeleton(cs::csSkeleton *skeleton)
 {
   CS_SET(m_skeleton, skeleton);
 }
 
-void csSkeletonAnimationPlayer::SetAnimation(cryo::csSkeletonAnimation *animation)
+void csSkeletonAnimationPlayer::SetAnimation(cs::csSkeletonAnimation *animation)
 {
   CS_SET(m_animation, animation);
 }

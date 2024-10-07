@@ -12,7 +12,7 @@
 #include <array>
 #include <vector>
 
-namespace cryo
+namespace cs
 {
 
 struct iDevice;
@@ -29,7 +29,7 @@ class csSettings;
 
 }
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 class csGL4Device;

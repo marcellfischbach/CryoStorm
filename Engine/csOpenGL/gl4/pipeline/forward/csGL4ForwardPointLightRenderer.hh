@@ -10,7 +10,7 @@
 #include <vector>
 #include <array>
 
-namespace cryo
+namespace cs
 {
 
 struct iDevice;
@@ -26,7 +26,7 @@ class csProjector;
 
 }
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 class csGL4Device;

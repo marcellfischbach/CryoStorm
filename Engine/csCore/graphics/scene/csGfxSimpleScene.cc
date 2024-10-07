@@ -7,7 +7,7 @@
 #include <algorithm>
 
 
-namespace cryo
+namespace cs
 {
 
 GfxSimpleScene::GfxSimpleScene()

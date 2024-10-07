@@ -6,7 +6,7 @@
 #include <csCore/math/csVector3f.hh>
 #include <csCore/math/csQuaternion.hh>
 
-namespace cryo
+namespace cs
 {
 
 class csSkeleton;
@@ -62,7 +62,7 @@ public:
   float GetDuration() const;
 
 
-  void PushSkeleton(cryo::csSkeleton *skeleton, float frame, float blendFactor) const;
+  void PushSkeleton(cs::csSkeleton *skeleton, float frame, float blendFactor) const;
 
   void AddRotationFrame(const std::string &channelName,
                         float frame,

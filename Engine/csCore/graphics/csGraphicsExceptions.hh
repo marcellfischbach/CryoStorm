@@ -6,7 +6,7 @@
 #include <exception>
 #include <string>
 
-namespace cryo
+namespace cs
 {
 
 class csNoSuchStreamException : public std::exception

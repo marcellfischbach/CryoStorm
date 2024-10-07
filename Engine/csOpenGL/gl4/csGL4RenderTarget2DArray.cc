@@ -3,7 +3,7 @@
 #include <csOpenGL/gl4/csGL4Texture2DArray.hh>
 #include <GL/glew.h>
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 csGL4RenderTarget2DArray::csGL4RenderTarget2DArray()

@@ -6,7 +6,7 @@
 #include <csCore/graphics/eVertexStream.hh>
 #include <csCore/graphics/shadergraph/csSGNodes.hh>
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 std::string stream_name(eVertexStream stream);
 std::string get_gl_type(eSGValueType type);

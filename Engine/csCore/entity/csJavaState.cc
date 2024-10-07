@@ -6,7 +6,7 @@
 
 #define THIS_CLASS_NAME  "org/crimsonedge/core/entity/JavaState"
 
-namespace cryo
+namespace cs
 {
 
 
@@ -16,14 +16,14 @@ csJavaState::csJavaState()
   SetNeedUpdate(true);
 }
 
-void csJavaState::OnAttachedToWorld(cryo::csWorld *world)
+void csJavaState::OnAttachedToWorld(cs::csWorld *world)
 {
   static csJavaCallVoid1<jobject> onAttachedToWorld (csJava::Get(), this, THIS_CLASS_NAME, "onAttachedToWorld", "Lorg/crimsonedge/core/entity/World;");
   onAttachedToWorld.call(csJava::Get(), world->GetJObject());
 }
 
 
-void csJavaState::OnDetachedFromWorld(cryo::csWorld *world)
+void csJavaState::OnDetachedFromWorld(cs::csWorld *world)
 {
   static csJavaCallVoid1<jobject> onDetachedFromWorld (csJava::Get(), this, THIS_CLASS_NAME, "onDetachedFromWorld", "Lorg/crimsonedge/core/entity/World;");
   onDetachedFromWorld.call(csJava::Get(), world->GetJObject());

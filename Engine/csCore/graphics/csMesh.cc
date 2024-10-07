@@ -3,7 +3,7 @@
 #include <csCore/graphics/csMesh.hh>
 #include <csCore/csOutOfBoundsException.hh>
 
-namespace cryo
+namespace cs
 {
 
 csMesh::csMesh()

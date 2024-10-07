@@ -1,7 +1,7 @@
 
 #include <csCore/graphics/pp/csPPCombine.hh>
 
-namespace cryo
+namespace cs
 {
 
 csPPCombine::csPPCombine()
@@ -10,7 +10,7 @@ csPPCombine::csPPCombine()
   DeclareInput(ePPImageType::Color, "Color1");
   DeclareOutput(ePPImageType::Color, "Color");
 
-  m_shader               = cryo::csAssetManager::Get()->Get<cryo::iShader>("${shaders}/pp/combine/combine.shader");
+  m_shader               = cs::csAssetManager::Get()->Get<cs::iShader>("${shaders}/pp/combine/combine.shader");
   m_attribColor0          = m_shader ? m_shader->GetShaderAttribute("Color0") : nullptr;
   m_attribColor1          = m_shader ? m_shader->GetShaderAttribute("Color1") : nullptr;
 }
@@ -24,7 +24,7 @@ csPPCombine::~csPPCombine()
 }
 
 
-bool csPPCombine::RefreshOutputTexture(cryo::iDevice *device, iRenderTarget2D *finalTarget)
+bool csPPCombine::RefreshOutputTexture(cs::iDevice *device, iRenderTarget2D *finalTarget)
 {
   if (finalTarget)
   {
@@ -46,7 +46,7 @@ bool csPPCombine::RefreshOutputTexture(cryo::iDevice *device, iRenderTarget2D *f
                             m_inputs[0]->GetFormat(),
                             false,
                             0,
-                            cryo::ePF_Depth);
+                            cs::ePF_Depth);
 }
 
 void csPPCombine::Process(iDevice *device, iRenderTarget2D *finalTarget)
@@ -54,19 +54,19 @@ void csPPCombine::Process(iDevice *device, iRenderTarget2D *finalTarget)
   if (m_shader && m_attribColor0 && m_attribColor1 && RefreshOutputTexture(device, finalTarget))
   {
     device->SetRenderTarget(m_renderTarget);
-    device->Clear(false, cryo::csColor4f(0, 0, 0, 0), false, 1.0f, false, 0);
+    device->Clear(false, cs::csColor4f(0, 0, 0, 0), false, 1.0f, false, 0);
     device->SetBlending(false);
     device->SetDepthTest(false);
     device->SetShader(m_shader);
     device->ResetTextures();
     if (m_attribColor0)
     {
-      cryo::eTextureUnit unit = device->BindTexture(m_inputs[0]);
+      cs::eTextureUnit unit = device->BindTexture(m_inputs[0]);
       m_attribColor0->Bind(unit);
     }
     if (m_attribColor1)
     {
-      cryo::eTextureUnit unit = device->BindTexture(m_inputs[1]);
+      cs::eTextureUnit unit = device->BindTexture(m_inputs[1]);
       m_attribColor1->Bind(unit);
     }
     device->RenderFullscreen();

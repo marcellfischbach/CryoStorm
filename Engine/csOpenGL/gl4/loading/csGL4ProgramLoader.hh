@@ -2,7 +2,7 @@
 #include <csOpenGL/csOpenGLExport.hh>
 #include <csCore/resource/csBaseCSFAssetLoader.hh>
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 

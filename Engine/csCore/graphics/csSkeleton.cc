@@ -1,7 +1,7 @@
 
 #include <csCore/graphics/csSkeleton.hh>
 
-namespace cryo
+namespace cs
 {
 
 
@@ -32,7 +32,7 @@ void csSkeleton::Clear()
   m_rootBones.clear();
 }
 
-void csSkeleton::InitializeFrom(const cryo::csSkeleton &skeleton)
+void csSkeleton::InitializeFrom(const cs::csSkeleton &skeleton)
 {
   Clear();
 
@@ -49,7 +49,7 @@ void csSkeleton::InitializeFrom(const cryo::csSkeleton &skeleton)
   UpdateBones();
 }
 
-csSkeleton &csSkeleton::operator=(const cryo::csSkeleton &skeleton)
+csSkeleton &csSkeleton::operator=(const cs::csSkeleton &skeleton)
 {
   Clear();
 
@@ -105,7 +105,7 @@ size_t csSkeleton::AddChild(const std::string &name, size_t parent)
   return idx;
 }
 
-void csSkeleton::SetBase(const cryo::csMatrix4f &base)
+void csSkeleton::SetBase(const cs::csMatrix4f &base)
 {
   m_base = base;
 }
@@ -161,7 +161,7 @@ void csSkeleton::UpdateBones()
   }
 }
 
-void csSkeleton::UpdateBone(size_t idx, const cryo::csMatrix4f &parent)
+void csSkeleton::UpdateBone(size_t idx, const cs::csMatrix4f &parent)
 {
   Bone &bone = m_bones[idx];
 

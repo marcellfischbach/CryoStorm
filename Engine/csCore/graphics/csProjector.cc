@@ -2,7 +2,7 @@
 #include <csCore/graphics/csProjector.hh>
 #include <csCore/graphics/iDevice.hh>
 
-namespace cryo
+namespace cs
 {
 
 csProjector::csProjector()

@@ -2,7 +2,7 @@
 
 #include <csCore/resource/csBinaryData.hh>
 
-namespace cryo
+namespace cs
 {
     
  

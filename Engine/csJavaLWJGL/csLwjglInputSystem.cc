@@ -1,7 +1,7 @@
 #include <csJavaLWJGL/csLwjglInputSystem.hh>
 
 
-namespace cryo::java
+namespace cs::java
 {
 
 csLwjglInputSystem::csLwjglInputSystem(csLwjglKeyboard* keyboard, csLwjglMouse* mouse)

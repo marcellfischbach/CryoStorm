@@ -16,7 +16,7 @@
 #include <csOpenGL/gl4/pipeline/deferred/csGL4DeferredPipeline.hh>
 #include <csOpenGL/gl4/shadergraph/csGL4ShaderGraphCompiler.hh>
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 bool csOpenGLModule::Register(const std::vector<std::string> &args, csEngine *engine)
@@ -80,5 +80,5 @@ bool csOpenGLModule::Initialize(const std::vector<std::string> &args, csEngine *
 CS_DEFINE_LIBRARY(csOpenGL)
 {
   printf ("Load library: csOpenGL\n");
-  return new cryo::opengl::csOpenGLModule;
+  return new cs::opengl::csOpenGLModule;
 }

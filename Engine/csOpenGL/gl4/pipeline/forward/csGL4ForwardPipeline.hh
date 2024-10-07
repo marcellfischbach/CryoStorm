@@ -15,7 +15,7 @@
 #include <map>
 #include <vector>
 
-namespace cryo
+namespace cs
 {
 
 class csGfxLight;
@@ -64,7 +64,7 @@ private:
   void Cleanup ();
 
 
-  iRenderTarget2D *UpdateRenderTarget(cryo::iDevice *device, cryo::iRenderTarget2D *target);
+  iRenderTarget2D *UpdateRenderTarget(cs::iDevice *device, cs::iRenderTarget2D *target);
 
   void LightScanned(csGfxLight * light);
   void RenderUnlitDepthMesh(csGfxMesh * mesh);

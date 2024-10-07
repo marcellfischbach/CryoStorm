@@ -6,13 +6,13 @@
 
 #include <csCore/iGame.hh>
 
-class Game : public cryo::iGame
+class Game : public cs::iGame
 {
 public:
   ~Game() override = default;
 
 
-  bool Initialize(cryo::csEngine *engine) override;
+  bool Initialize(cs::csEngine *engine) override;
 
 };
 

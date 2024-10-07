@@ -8,7 +8,7 @@
 #include <csCore/math/csMatrix4f.hh>
 #include <vector>
 
-namespace cryo
+namespace cs
 {
 
 

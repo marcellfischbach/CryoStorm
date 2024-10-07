@@ -4,7 +4,7 @@
 #include <csCore/csCoreExport.hh>
 #include <csCore/csClass.hh>
 
-namespace cryo
+namespace cs
 {
 
 struct iDevice;

@@ -23,7 +23,7 @@
 
 #define CS_MAX_LIGHTS 4
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 csGL4Device::csGL4Device()
@@ -401,7 +401,7 @@ void csGL4Device::SetShadowMapProjectionMatrices(const csMatrix4f *matrices, Siz
   m_shadowMapViewProjectionMatrixDirty = true;
 }
 
-void csGL4Device::SetSkeletonMatrices(const cryo::csMatrix4f *skeletonMatrices, Size numMatrices)
+void csGL4Device::SetSkeletonMatrices(const cs::csMatrix4f *skeletonMatrices, Size numMatrices)
 {
   Size cappedNumMatrices = ceMin(numMatrices, (Size) 256);
   memcpy(m_skeletonMatrices, skeletonMatrices, cappedNumMatrices * sizeof(csMatrix4f));
@@ -552,7 +552,7 @@ csMatrix4f &csGL4Device::GetOrthographicProjectionInv(float l, float r, float b,
 }
 
 
-void csGL4Device::SetRenderLayer(cryo::int8_t renderLayer)
+void csGL4Device::SetRenderLayer(cs::int8_t renderLayer)
 {
   m_renderLayer = renderLayer;
 }
@@ -1019,7 +1019,7 @@ eTextureUnit csGL4Device::BindTexture(iTexture *texture)
 #endif
 }
 
-void csGL4Device::SetActiveTexture(cryo::uint32_t activeTexture)
+void csGL4Device::SetActiveTexture(cs::uint32_t activeTexture)
 {
   if (m_activeTexture != activeTexture)
   {

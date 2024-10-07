@@ -9,7 +9,7 @@
 #include <csCore/graphics/scene/iGfxScene.hh>
 #include <csCore/csObjectRegistry.hh>
 
-namespace cryo
+namespace cs
 {
 
 

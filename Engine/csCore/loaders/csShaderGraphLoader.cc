@@ -12,7 +12,7 @@
 #include <csCore/csClassRegistry.hh>
 #include <csCore/resource/csAssetManager.hh>
 
-namespace cryo
+namespace cs
 {
 
 csShaderGraphLoader::csShaderGraphLoader()
@@ -100,7 +100,7 @@ iObject *csShaderGraphLoader::Load(const csCryoFile *file, const csClass *cls, c
   //
   // Now compile the shader graph to a material
 
-  auto compilerFactory = cryo::csObjectRegistry::Get<cryo::iShaderGraphCompilerFactory>();
+  auto compilerFactory = cs::csObjectRegistry::Get<cs::iShaderGraphCompilerFactory>();
   if (compilerFactory)
   {
     auto compiler = compilerFactory->Create();
@@ -125,7 +125,7 @@ iObject *csShaderGraphLoader::Load(const csCryoFile *file, const csClass *cls, c
   return nullptr;
 }
 
-void csShaderGraphLoader::LoadQueue(const cryo::csCryoFileElement *shaderGraphElement, csShaderGraph *sg) const
+void csShaderGraphLoader::LoadQueue(const cs::csCryoFileElement *shaderGraphElement, csShaderGraph *sg) const
 {
   auto queueElement = shaderGraphElement->GetChild("queue");
   if (queueElement)
@@ -179,7 +179,7 @@ void csShaderGraphLoader::LoadBlendingMode(const csCryoFileElement *shaderGraphE
 }
 
 
-csSGNode *csShaderGraphLoader::CreateNode(const cryo::csCryoFileElement *nodeElement, cryo::csShaderGraph *sg) const
+csSGNode *csShaderGraphLoader::CreateNode(const cs::csCryoFileElement *nodeElement, cs::csShaderGraph *sg) const
 {
   const std::string &nodeTypeName = nodeElement->GetAttribute(0, "");
   if (nodeTypeName.empty())
@@ -205,7 +205,7 @@ csSGNode *csShaderGraphLoader::CreateNode(const cryo::csCryoFileElement *nodeEle
 
 
 csSGResourceNode *
-csShaderGraphLoader::CreateResourceNode(const cryo::csCryoFileElement *nodeElement, cryo::csShaderGraph *sg) const
+csShaderGraphLoader::CreateResourceNode(const cs::csCryoFileElement *nodeElement, cs::csShaderGraph *sg) const
 {
   const std::string &nodeTypeName = nodeElement->GetAttribute(0, "");
   if (nodeTypeName.empty())
@@ -395,8 +395,8 @@ bool csShaderGraphLoader::LoadBinding(const csCryoFileElement *valueElement,
 }
 
 
-void csShaderGraphLoader::LoadAttributes(const cryo::csCryoFileElement *attributesElement,
-                                         cryo::csShaderGraph *sg,
+void csShaderGraphLoader::LoadAttributes(const cs::csCryoFileElement *attributesElement,
+                                         cs::csShaderGraph *sg,
                                          const csResourceLocator &locator) const
 {
   if (!attributesElement)
@@ -413,8 +413,8 @@ void csShaderGraphLoader::LoadAttributes(const cryo::csCryoFileElement *attribut
   }
 }
 
-void csShaderGraphLoader::LoadAttribute(const cryo::csCryoFileElement *attributeElement,
-                                        cryo::csShaderGraph *sg,
+void csShaderGraphLoader::LoadAttribute(const cs::csCryoFileElement *attributeElement,
+                                        cs::csShaderGraph *sg,
                                         const csResourceLocator &locator) const
 {
   if (attributeElement->GetNumberOfAttributes() < 2)

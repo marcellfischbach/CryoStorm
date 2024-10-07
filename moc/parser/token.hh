@@ -4,7 +4,7 @@
 #include <string>
 #include <stdint.h>
 
-namespace cryo::moc
+namespace cs::moc
 {
 
 enum TokenType

@@ -20,17 +20,17 @@
 #define CS_FUNCTION(...)
 #ifdef CS_JAVA
 #define CS_CLASS_GEN public: \
-    const cryo::csClass *GetClass () const override; \
-    static const cryo::csClass *GetStaticClass (); \
-    void *QueryClass(const cryo::csClass *clazz) override; \
-    const void *QueryClass(const cryo::csClass *clazz) const override; \
+    const cs::csClass *GetClass () const override; \
+    static const cs::csClass *GetStaticClass (); \
+    void *QueryClass(const cs::csClass *clazz) override; \
+    const void *QueryClass(const cs::csClass *clazz) const override; \
     jobject CreateJObject () const
 #else
 #define CS_CLASS_GEN public: \
-    const cryo::csClass *GetClass () const override; \
-    static const cryo::csClass *GetStaticClass (); \
-    void *QueryClass(const cryo::csClass *clazz) override; \
-    const void *QueryClass(const cryo::csClass *clazz) const override;
+    const cs::csClass *GetClass () const override; \
+    static const cs::csClass *GetStaticClass (); \
+    void *QueryClass(const cs::csClass *clazz) override; \
+    const void *QueryClass(const cs::csClass *clazz) const override;
 #endif
 
 #ifdef CS_JAVA
@@ -47,7 +47,7 @@
       {                     \
         if (m_jobject)        \
         {                     \
-          cryo::csJava::Get()->DeleteGlobalRef(m_jobject);          \
+          cs::csJava::Get()->DeleteGlobalRef(m_jobject);          \
           m_jobject = nullptr; \
         }                   \
         delete this;\
@@ -85,16 +85,16 @@ public:                                \
     {                       \
       if (!m_jobject && !m_jobjectChecked)       \
       {                                \
-          static jclass cls = cryo::csJava::Get() ? cryo::csJava::Get()->FindClass (fqcn) : nullptr; \
+          static jclass cls = cs::csJava::Get() ? cs::csJava::Get()->FindClass (fqcn) : nullptr; \
           if (cls) \
           { \
-            static jmethodID ctor = cryo::csJava::Get()->GetMethodID(cls, "<init>", "(J)V"); \
+            static jmethodID ctor = cs::csJava::Get()->GetMethodID(cls, "<init>", "(J)V"); \
             if (ctor) \
             { \
-              jobject obj = cryo::csJava::Get()->NewObject(cls, ctor, reinterpret_cast<jlong>(this)); \
+              jobject obj = cs::csJava::Get()->NewObject(cls, ctor, reinterpret_cast<jlong>(this)); \
               if (obj) \
               { \
-                m_jobject = cryo::csJava::Get()->NewGlobalRef(obj);                              \
+                m_jobject = cs::csJava::Get()->NewGlobalRef(obj);                              \
                 if (!m_jobject)        \
                 {                      \
                   return nullptr;\
@@ -152,7 +152,7 @@ public:                                \
 #include <csCore/csCoreExport.hh>
 #include <exception>
 
-namespace cryo
+namespace cs
 {
 
 
@@ -274,7 +274,7 @@ public:
 
 
 template<typename T>
-T *csQueryClass(cryo::iObject *object)
+T *csQueryClass(cs::iObject *object)
 {
   if (!object)
   {
@@ -284,7 +284,7 @@ T *csQueryClass(cryo::iObject *object)
 }
 
 template<typename T>
-const T *csQueryClass(const cryo::iObject *object)
+const T *csQueryClass(const cs::iObject *object)
 {
   if (!object)
   {
@@ -344,7 +344,7 @@ public:
   const std::string &GetName() const;
 
   template<typename T>
-  void Set(cryo::iObject *object, T &t) const
+  void Set(cs::iObject *object, T &t) const
   {
     const void *const_value = reinterpret_cast<const void *>(&t);
     SetValue(object, const_cast<void *>(const_value));
@@ -352,14 +352,14 @@ public:
 
 
   template<typename T>
-  T Get(cryo::iObject *object) const
+  T Get(cs::iObject *object) const
   {
     void *data = GetValue(object);
     return *reinterpret_cast<T *>(data);
   }
 
   template<typename T>
-  T Get(const cryo::iObject *object) const
+  T Get(const cs::iObject *object) const
   {
     const void *data = GetValue(object);
     return *reinterpret_cast<const T *>(data);
@@ -375,9 +375,9 @@ protected:
   csProperty(const csValueDeclaration &containerDecl, const std::string &name, const csValueDeclaration &decl);
 
   void SetProperty(const std::string &key, const std::string &value = "");
-  virtual void SetValue(cryo::iObject *object, void *data) const = 0;
-  virtual const void *GetValue(const cryo::iObject *object) const = 0;
-  virtual void *GetValue(cryo::iObject *object) const = 0;
+  virtual void SetValue(cs::iObject *object, void *data) const = 0;
+  virtual const void *GetValue(const cs::iObject *object) const = 0;
+  virtual void *GetValue(cs::iObject *object) const = 0;
 
 
 private:
@@ -419,24 +419,24 @@ public:
   //
   // Invoke void 
   template<typename ... Type>
-  void InvokeVoid(cryo::iObject *obj, Type ... args) const
+  void InvokeVoid(cs::iObject *obj, Type ... args) const
   { InvokeVoidImpl(obj, &args...); }
   template<typename ... Type>
-  void InvokeVoid(const cryo::iObject *obj, Type ... args) const
+  void InvokeVoid(const cs::iObject *obj, Type ... args) const
   { InvokeVoidImpl(obj, &args...); }
 
 
   //
   // Invoke value
   template<typename R, typename ... Type>
-  R InvokeValue(cryo::iObject *obj, Type ... args) const
+  R InvokeValue(cs::iObject *obj, Type ... args) const
   {
     R r;
     InvokeValueImpl(obj, &args...);
     return r;
   }
   template<typename R, typename ... Type>
-  R InvokeValue(const cryo::iObject *obj, Type ... args) const
+  R InvokeValue(const cs::iObject *obj, Type ... args) const
   {
     R r;
     InvokeValueImpl(obj, &args...);
@@ -447,38 +447,38 @@ public:
   //
   // Invoke reference 
   template<typename R, typename ... Types>
-  R &InvokeReference(cryo::iObject *obj, Types ... args) const
+  R &InvokeReference(cs::iObject *obj, Types ... args) const
   { return *reinterpret_cast<R *>(InvokeReferenceImpl(obj, &args...)); }
   template<typename R, typename ... Types>
-  R &InvokeReference(const cryo::iObject *obj, Types ... args) const
+  R &InvokeReference(const cs::iObject *obj, Types ... args) const
   { return *reinterpret_cast<R *>(InvokeReferenceImpl(obj, &args...)); }
 
   //
   // Invoke const-reference 
   template<typename R, typename ... Types>
-  const R &InvokeConstReference(cryo::iObject *obj, Types ... args) const
+  const R &InvokeConstReference(cs::iObject *obj, Types ... args) const
   { return *reinterpret_cast<const R *>(InvokeConstReferenceImpl(obj, &args...)); }
   template<typename R, typename ... Types>
-  const R &InvokeConstReference(const cryo::iObject *obj, Types ... args) const
+  const R &InvokeConstReference(const cs::iObject *obj, Types ... args) const
   { return *reinterpret_cast<const R *>(InvokeConstReferenceImpl(obj, &args...)); }
 
 
   //
   // Invoke pointer 
   template<typename R, typename ... Types>
-  R *InvokePointer(cryo::iObject *obj, Types ... args) const
+  R *InvokePointer(cs::iObject *obj, Types ... args) const
   { return reinterpret_cast<R *>(InvokePointerImpl(obj, &args...)); }
   template<typename R, typename ... Types>
-  R *InvokePointer(const cryo::iObject *obj, Types ... args) const
+  R *InvokePointer(const cs::iObject *obj, Types ... args) const
   { return reinterpret_cast<R *>(InvokePointerImpl(obj, &args...)); }
 
   //
   // Invoke const-pointer 
   template<typename R, typename ... Types>
-  const R *InvokeConstPointer(cryo::iObject *obj, Types ... args) const
+  const R *InvokeConstPointer(cs::iObject *obj, Types ... args) const
   { return reinterpret_cast<const R *>(InvokeConstPointerImpl(obj, &args...)); }
   template<typename R, typename ... Types>
-  const R *InvokeConstPointer(const cryo::iObject *obj, Types ... args) const
+  const R *InvokeConstPointer(const cs::iObject *obj, Types ... args) const
   { return reinterpret_cast<const R *>(InvokeConstPointerImpl(obj, &args...)); }
 
 
@@ -490,18 +490,18 @@ protected:
 
   void AddAttribute(const csFunctionAttribute &attribute);
 
-  virtual void InvokeVoidImpl(cryo::iObject *obj, ...) const = 0;
-  virtual void InvokeVoidImpl(const cryo::iObject *obj, ...) const = 0;
-  virtual void InvokeValueImpl(cryo::iObject *obj, ...) const = 0;
-  virtual void InvokeValueImpl(const cryo::iObject *obj, ...) const = 0;
-  virtual void *InvokeReferenceImpl(cryo::iObject *obj, ...) const = 0;
-  virtual void *InvokeReferenceImpl(const cryo::iObject *obj, ...) const = 0;
-  virtual const void *InvokeConstReferenceImpl(cryo::iObject *obj, ...) const = 0;
-  virtual const void *InvokeConstReferenceImpl(const cryo::iObject *obj, ...) const = 0;
-  virtual void *InvokePointerImpl(cryo::iObject *obj, ...) const = 0;
-  virtual void *InvokePointerImpl(const cryo::iObject *obj, ...) const = 0;
-  virtual const void *InvokeConstPointerImpl(cryo::iObject *obj, ...) const = 0;
-  virtual const void *InvokeConstPointerImpl(const cryo::iObject *obj, ...) const = 0;
+  virtual void InvokeVoidImpl(cs::iObject *obj, ...) const = 0;
+  virtual void InvokeVoidImpl(const cs::iObject *obj, ...) const = 0;
+  virtual void InvokeValueImpl(cs::iObject *obj, ...) const = 0;
+  virtual void InvokeValueImpl(const cs::iObject *obj, ...) const = 0;
+  virtual void *InvokeReferenceImpl(cs::iObject *obj, ...) const = 0;
+  virtual void *InvokeReferenceImpl(const cs::iObject *obj, ...) const = 0;
+  virtual const void *InvokeConstReferenceImpl(cs::iObject *obj, ...) const = 0;
+  virtual const void *InvokeConstReferenceImpl(const cs::iObject *obj, ...) const = 0;
+  virtual void *InvokePointerImpl(cs::iObject *obj, ...) const = 0;
+  virtual void *InvokePointerImpl(const cs::iObject *obj, ...) const = 0;
+  virtual const void *InvokeConstPointerImpl(cs::iObject *obj, ...) const = 0;
+  virtual const void *InvokeConstPointerImpl(const cs::iObject *obj, ...) const = 0;
 
 private:
   eFunctionVirtuality m_virtuality;
@@ -518,17 +518,17 @@ class CS_CORE_API csClass
 {
 public:
   virtual ~csClass();
-  virtual cryo::iObject *CreateInstance() const = 0;
+  virtual cs::iObject *CreateInstance() const = 0;
   template<typename T>
   T *CreateInstance() const
   {
-    cryo::iObject *obj = CreateInstance();
+    cs::iObject *obj = CreateInstance();
     if (!obj)
     {
       return 0;
     }
 
-    T *t = cryo::csQueryClass<T>(obj);
+    T *t = cs::csQueryClass<T>(obj);
     if (!t)
     {
       obj->Release();
@@ -610,7 +610,7 @@ public:
 
   static iObjectClass *Get();
 
-  virtual cryo::iObject *CreateInstance() const;
+  virtual cs::iObject *CreateInstance() const;
 
 };
 
@@ -627,7 +627,7 @@ bool iObject::IsInstanceOf() const
 
 #include <csCore/csJava.hh>
 
-namespace cryo
+namespace cs
 {
 #endif
 

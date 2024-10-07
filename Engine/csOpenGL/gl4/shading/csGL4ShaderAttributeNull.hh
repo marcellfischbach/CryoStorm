@@ -4,7 +4,7 @@
 #include <csCore/graphics/shading/iShaderAttribute.hh>
 #include <GL/glew.h>
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 

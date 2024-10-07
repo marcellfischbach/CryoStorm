@@ -4,7 +4,7 @@
 #include <csCore/math/csVector3f.hh>
 #include <string.h>
 
-namespace cryo
+namespace cs
 {
 
 
@@ -221,7 +221,7 @@ void csImage::GenerateMipMapsNormal()
 }
 
 
-void csImage::ColorCorrection(cryo::csImage::eColorCorrection correctionMode)
+void csImage::ColorCorrection(cs::csImage::eColorCorrection correctionMode)
 {
   if (m_numberOfLayers == 0 || !m_layers[0].buffer)
   {

@@ -5,7 +5,7 @@
 #include <string>
 
 
-namespace cryo
+namespace cs
 {
 
 std::string to_lower(const std::string& str);

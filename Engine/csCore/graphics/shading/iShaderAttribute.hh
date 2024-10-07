@@ -7,7 +7,7 @@
 #include <csCore/math/csVector.hh>
 #include <csCore/math/csMatrix.hh>
 
-namespace cryo
+namespace cs
 {
 
 struct iShaderAttribute

@@ -7,7 +7,7 @@
 #include <csCore/physics/iPhysicsWorld.hh>
 #include <csCore/csObjectRegistry.hh>
 
-namespace cryo
+namespace cs
 {
 
 

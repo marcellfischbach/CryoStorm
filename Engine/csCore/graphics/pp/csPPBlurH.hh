@@ -4,7 +4,7 @@
 #include <csCore/csCoreExport.hh>
 #include <csCore/graphics/csPostProcessing.hh>
 
-namespace cryo
+namespace cs
 {
 
 
@@ -19,16 +19,16 @@ public:
   void Process(iDevice *device, iRenderTarget2D *finalTarget) override;
 
 private:
-  bool RefreshOutputTexture (cryo::iDevice* device);
+  bool RefreshOutputTexture (cs::iDevice* device);
 
   size_t m_sampleCount;
   float m_sampleScale;
 
-  cryo::iShader *m_shader;
-  cryo::iShaderAttribute *m_attribColor;
-  cryo::iShaderAttribute *m_attribTextureSizeInv;
-  cryo::iShaderAttribute *m_attribSampleCount;
-  cryo::iShaderAttribute *m_attribSampleScale;
+  cs::iShader *m_shader;
+  cs::iShaderAttribute *m_attribColor;
+  cs::iShaderAttribute *m_attribTextureSizeInv;
+  cs::iShaderAttribute *m_attribSampleCount;
+  cs::iShaderAttribute *m_attribSampleScale;
 };
 
 } // ce

@@ -4,7 +4,7 @@
 #include <csCore/csCoreExport.hh>
 #include <csCore/entity/csEntityState.hh>
 
-namespace cryo
+namespace cs
 {
 
 CS_CLASS(jclass = "org.crimsonedge.core.entity.JavaState")

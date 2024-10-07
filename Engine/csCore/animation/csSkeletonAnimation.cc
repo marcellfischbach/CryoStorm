@@ -1,7 +1,7 @@
 #include <csCore/animation/csSkeletonAnimation.hh>
 #include <csCore/graphics/csSkeleton.hh>
 
-namespace cryo
+namespace cs
 {
 
 csSkeletonAnimation::csSkeletonAnimation()
@@ -119,12 +119,12 @@ void skeleton_animation_update_bone(const csSkeletonAnimation::Channel &channel,
 }
 
 
-void csSkeletonAnimation::PushSkeleton(cryo::csSkeleton *skeleton, float frame, float blendFactor) const
+void csSkeletonAnimation::PushSkeleton(cs::csSkeleton *skeleton, float frame, float blendFactor) const
 {
   for (const auto &channel: m_channels)
   {
     csSkeleton::Bone &bone = skeleton->GetBone(skeleton->IndexOf(channel.name));
-    cryo::skeleton_animation_update_bone(channel, bone, frame, blendFactor);
+    cs::skeleton_animation_update_bone(channel, bone, frame, blendFactor);
   }
 }
 
@@ -149,7 +149,7 @@ void csSkeletonAnimation::AddRotationFrame(const std::string &channelName,
   channel.rotations.push_back(rotFrame);
 }
 
-void csSkeletonAnimation::AddPositionFrame(const std::string &channelName, float frame, const cryo::csVector3f &position)
+void csSkeletonAnimation::AddPositionFrame(const std::string &channelName, float frame, const cs::csVector3f &position)
 {
   FramePosition posFrame {
       frame,
@@ -169,7 +169,7 @@ void csSkeletonAnimation::AddPositionFrame(const std::string &channelName, float
 }
 
 
-void csSkeletonAnimation::AddScaleFrame(const std::string &channelName, float time, const cryo::csVector3f &scale)
+void csSkeletonAnimation::AddScaleFrame(const std::string &channelName, float time, const cs::csVector3f &scale)
 {
   FrameScale scaleFrame {
       time,

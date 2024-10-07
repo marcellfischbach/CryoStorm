@@ -5,7 +5,7 @@
 #include <csCore/csClass.hh>
 #include <vector>
 
-namespace cryo
+namespace cs
 {
 
 class csEntity;
@@ -28,8 +28,10 @@ public:
   const std::string& GetName() const;
 
   CS_FUNCTION()
-  void SetEntity(csEntity* entity);
-  csEntity* GetEntity();
+  void SetEntity(cs::csEntity* entity);
+
+  CS_FUNCTION()
+  cs::csEntity* GetEntity();
   const csEntity* GetEntity() const;
 
   template<typename ES>
@@ -62,16 +64,22 @@ public:
   std::vector<csEntityState*> GetStates(const csClass* cls);
   std::vector<const csEntityState*> GetStates(const csClass* cls) const;
 
-  csSpatialState* GetRoot();
+  CS_FUNCTION()
+  cs::csSpatialState* GetRoot();
   const csSpatialState* GetRoot() const;
 
-  csWorld* GetWorld();
+  CS_FUNCTION()
+  cs::csWorld* GetWorld();
   const csWorld* GetWorld() const;
 
-  void AttachToWorld(csWorld* world);
-  void DetachFromWorld(csWorld* world);
+  CS_FUNCTION()
+  void AttachToWorld(cs::csWorld* world);
+  CS_FUNCTION()
+  void DetachFromWorld(cs::csWorld* world);
 
+  CS_FUNCTION()
   void SetNeedUpdate(bool needUpdate);
+  CS_FUNCTION()
   bool IsNeedUpdate() const;
 
   /**

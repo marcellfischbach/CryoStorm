@@ -5,7 +5,7 @@
 #include <vector>
 #include <csCore/graphics/eRenderQueue.hh>
 
-namespace cryo
+namespace cs
 {
 
 class csGfxMesh;

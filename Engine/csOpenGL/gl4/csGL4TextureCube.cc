@@ -6,7 +6,7 @@
 #include <csCore/math/csMath.hh>
 #include <GL/glew.h>
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 csGL4TextureCube::csGL4TextureCube()
         : iTextureCube()

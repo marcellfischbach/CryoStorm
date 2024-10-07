@@ -11,7 +11,7 @@
 #include <csCore/graphics/scene/iGfxScene.hh>
 #include <csCore/resource/csAssetManager.hh>
 
-namespace cryo
+namespace cs
 {
 
 
@@ -279,7 +279,7 @@ void csTerrainMeshState::UpdateMaterial()
   if (!m_material)
   {
     m_material = csAssetManager::Get()->Get<iMaterial>(csResourceLocator("/materials/terrain/terrain4.mat"));
-    cryo::s_material_names[m_material] = "Terrain4";
+    cs::s_material_names[m_material] = "Terrain4";
     if (!m_material)
     {
       return;

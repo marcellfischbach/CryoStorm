@@ -6,7 +6,7 @@
 #include <csCore/csDefs.hh>
 #include <csCore/math/csPlane.hh>
 
-namespace cryo
+namespace cs
 {
 
 

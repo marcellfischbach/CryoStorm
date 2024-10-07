@@ -1,7 +1,7 @@
 
 #pragma  once
 
-namespace cryo
+namespace cs
 {
 
 enum class eClippingResult

@@ -7,7 +7,7 @@
 #include <csCore/physics/iCollider.hh>
 #include <csCore/csObjectRegistry.hh>
 
-namespace cryo
+namespace cs
 {
 
 

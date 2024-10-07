@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-namespace cryo::moc
+namespace cs::moc
 {
 
 struct SourceLine {

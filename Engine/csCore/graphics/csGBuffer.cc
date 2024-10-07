@@ -5,7 +5,7 @@
 #include <csCore/graphics/iDevice.hh>
 
 
-namespace cryo
+namespace cs
 {
 
 csGBuffer::csGBuffer()
@@ -23,7 +23,7 @@ csGBuffer::csGBuffer()
 }
 
 
-bool csGBuffer::Update(cryo::iDevice *device, uint16_t width, uint16_t height)
+bool csGBuffer::Update(cs::iDevice *device, uint16_t width, uint16_t height)
 {
   if (m_diffuseRoughness)
   {
@@ -87,7 +87,7 @@ bool csGBuffer::Update(cryo::iDevice *device, uint16_t width, uint16_t height)
 }
 
 
-void csGBuffer::UpdateSamplers(cryo::iDevice *device)
+void csGBuffer::UpdateSamplers(cs::iDevice *device)
 {
   if (m_diffuseRoughnessSampler != nullptr)
   {

@@ -6,7 +6,7 @@
 #include <csCore/csClass.hh>
 #include <csCore/graphics/iSampler.hh>
 
-namespace cryo
+namespace cs
 {
 
 CS_CLASS()

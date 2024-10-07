@@ -7,7 +7,7 @@
 #include <csOpenGL/gl4/csGL4RenderTarget2D.hh>
 #include <csCore/resource/csAssetManager.hh>
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 

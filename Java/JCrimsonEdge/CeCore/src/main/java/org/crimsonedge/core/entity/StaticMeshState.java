@@ -5,7 +5,7 @@ import org.crimsonedge.core.graphics.csMesh;
 import org.crimsonedge.core.graphics.material.IMaterial;
 import org.crimsonedge.core.graphics.material.csMaterial;
 
-@CeClass("cryo::csStaticMeshState")
+@CeClass("cs::csStaticMeshState")
 public class csStaticMeshState extends csSpatialState {
 
     public csStaticMeshState() {

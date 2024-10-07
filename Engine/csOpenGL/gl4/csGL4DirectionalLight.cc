@@ -2,7 +2,7 @@
 #include <csOpenGL/gl4/csGL4DirectionalLight.hh>
 
 
-namespace cryo::opengl
+namespace cs::opengl
 {
 
 csGL4DirectionalLight::csGL4DirectionalLight()
