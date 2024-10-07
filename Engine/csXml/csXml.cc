@@ -1,13 +1,47 @@
 #include <csXml/csXml.hh>
 #include <cstdio>
 #include <vector>
+#include <Windows.h>
 
 namespace cryo::xml
 {
 
+static int64_t tick()
+{
+  LARGE_INTEGER c, f;
+  if (QueryPerformanceCounter(&c) && QueryPerformanceFrequency(&f))
+  {
+    c.QuadPart *= 1000000;
+    c.QuadPart /= f.QuadPart;
+    c.QuadPart /= 1000;
+    return c.QuadPart;
+  }
+
+  return GetTickCount64();
+}
+
+
+
+csParseException::csParseException(const std::string &message, size_t line, size_t column)
+    : std::exception(message.c_str())
+    , m_line(line)
+    , m_column(column)
+{
+}
+
+size_t csParseException::GetLine() const
+{
+  return m_line;
+}
+
+size_t csParseException::GetColumn() const
+{
+  return m_column;
+}
 
 csDocument *csParser::ParseFilename(const std::string &filename)
 {
+  int64_t startReadFile = tick();
   FILE *fs;
   auto error = fopen_s(&fs, filename.c_str(), "rt");
   if (error)
@@ -28,6 +62,9 @@ csDocument *csParser::ParseFilename(const std::string &filename)
   std::string content(buffer, size);
   delete[] buffer;
 
+  int64_t endReadFile = tick();
+  printf ("Read file: %lld\n", endReadFile - startReadFile);
+
   return ParseContent(content);
 }
 
@@ -36,6 +73,7 @@ csDocument *csParser::ParseContent(const std::string &content)
   csParser parser(content);
   return parser.Parse();
 }
+
 
 csParser::csParser(const std::string &content)
     : m_content(content)
@@ -46,154 +84,263 @@ csParser::csParser(const std::string &content)
 
 csDocument *csParser::Parse()
 {
+  int64_t startTokenize = tick();
   Tokenize();
+  int64_t endTokenize = tick();
+  printf ("Tokenize: %lld\n", endTokenize - startTokenize);
 
-  std::string m_error;
 
   auto document = new csDocument();
 
-  csElement *currentParent = nullptr;
+  try
+  {
+    csElement *currentParent = nullptr;
 
-  csElement *currentElement = nullptr;
 
 #define SKIP_WHITE_SPACE while (m_tokens[i].type == eWhiteSpace) i++
-  size_t i = 0;
-  while (true)
-  {
-    if (i >= m_tokens.size())
+    size_t i = 0;
+    while (true)
     {
-      if (currentParent)
+      if (i >= m_tokens.size())
       {
-        m_error = "Invalid hierarchy";
-        delete document;
-        return nullptr;
+        if (currentParent)
+        {
+          throw csParseException("Last tag not closed", 0, 0);
+        }
+        break;
       }
-      break;
-    }
-    if (m_tokens[i].type == eAngleBracketOpen)
-    {
-      i++;
-      SKIP_WHITE_SPACE;
-      if (m_tokens[i].type == eIdent)
-      {
-        std::string ident = ReadFullIdent(i);
-        if (!currentParent)
-        {
-          currentElement = document->CreateRoot(ident);
-        }
-        else
-        {
-          currentElement = currentParent->CreateChildElement(ident);
-        }
-
-        while (true)
-        {
-          SKIP_WHITE_SPACE;
-          if (m_tokens[i].type == eSlash)
-          {
-            i++;
-            if (m_tokens[i].type == eAngleBracketClose)
-            {
-              currentElement = nullptr;
-              break;
-            }
-            else
-            {
-              m_error = "Expected '>'";
-              delete document;
-              return nullptr;
-            }
-          }
-          else if (m_tokens[i].type == eAngleBracketClose)
-          {
-            currentParent = currentElement;
-            currentElement = nullptr;
-            break;
-          }
-          if (m_tokens[i].type == eIdent)
-          {
-            std::string key = ReadFullIdent(i);
-            SKIP_WHITE_SPACE;
-            if (m_tokens[i].type == eEquals)
-            {
-              i++;
-              SKIP_WHITE_SPACE;
-              if (m_tokens[i].type == eString)
-              {
-                currentElement->AddAttribute(key, m_tokens[i].content);
-                i++;
-              }
-              else
-              {
-                m_error = "Expected string";
-                delete document;
-                return nullptr;
-              }
-            }
-            else
-            {
-              currentElement->AddAttribute(key, "");
-            }
-          }
-
-        }
-      }
-      else if (m_tokens[i].type == eSlash)
+      if (m_tokens[i].type == eAngleBracketOpen)
       {
         i++;
         SKIP_WHITE_SPACE;
-        std::string tag = ReadFullIdent(i);
-        if (!currentParent)
+        if (m_tokens[i].type == eIdent)
         {
-          m_error = "Invalid hierarchy";
-          delete document;
-          return nullptr;
-        }
-        if (currentParent->GetTagName() != tag)
-        {
-          m_error = "Expected " + currentParent->GetTagName() + " but got " + tag;
-          delete document;
-          return nullptr;
-        }
+          std::string ident = ReadFullIdent(i);
 
-        currentParent = currentParent->GetParent();
-      }
-    }
-    else
-    {
-      if (!currentParent)
-      {
-        m_error = "Invalid hierarchy";
-        delete document;
-        return nullptr;
+          csElement *currentElement = nullptr;
+          if (!currentParent)
+          {
+            currentElement = document->CreateRoot(ident);
+          }
+          else
+          {
+            currentElement = currentParent->CreateChildElement(ident);
+          }
+
+          while (true)
+          {
+            SKIP_WHITE_SPACE;
+            if (m_tokens[i].type == eSlash)
+            {
+              i++;
+              if (m_tokens[i].type == eAngleBracketClose)
+              {
+                currentElement = nullptr;
+                break;
+              }
+              else
+              {
+                throw csParseException("Expected '>'", m_tokens[i].line, m_tokens[i].column);
+              }
+            }
+            else if (m_tokens[i].type == eAngleBracketClose)
+            {
+              currentParent  = currentElement;
+              currentElement = nullptr;
+              break;
+            }
+            if (m_tokens[i].type == eIdent)
+            {
+              std::string key = ReadFullIdent(i);
+              SKIP_WHITE_SPACE;
+              if (m_tokens[i].type == eEquals)
+              {
+                i++;
+                SKIP_WHITE_SPACE;
+                if (m_tokens[i].type == eString)
+                {
+                  currentElement->AddAttribute(key, m_tokens[i].content);
+                  i++;
+                }
+                else
+                {
+                  throw csParseException("Expected string starting with'\"'", m_tokens[i].line, m_tokens[i].column);
+                }
+              }
+              else
+              {
+                currentElement->AddAttribute(key, "");
+              }
+            }
+
+          }
+        }
+        else if (m_tokens[i].type == eSlash)
+        {
+          size_t openBrackets = i-1;
+          i++;
+          SKIP_WHITE_SPACE;
+          std::string tag = ReadFullIdent(i);
+          if (!currentParent)
+          {
+            throw csParseException("Found invalid closing tag '" + tag + "'. No parent",
+                                   m_tokens[openBrackets].line,
+                                   m_tokens[openBrackets].column);
+          }
+          if (currentParent->GetTagName() != tag)
+          {
+            throw csParseException(
+                "Found invalid closing tag '" + tag + "'. '" + currentParent->GetTagName() + "' was expected.",
+                m_tokens[openBrackets].line,
+                m_tokens[openBrackets].column);
+          }
+
+          currentParent = currentParent->GetParent();
+        }
+        else if (m_tokens[i].type == eExclamationMark)
+        {
+          if ((i + 1) >= m_tokens.size())
+          {
+            throw csParseException("Expected '[' or '-'", m_tokens[i].line, m_tokens[i].column + 1);
+          }
+
+          if (m_tokens[i + 1].type == eSquareBracketsOpen)
+          {
+            if ((i + 2) >= m_tokens.size())
+            {
+              throw csParseException("Expected 'CDATA'", m_tokens[i + 1].line, m_tokens[i + 1].column + 1);
+            }
+            if (m_tokens[i + 2].type != eIdent || m_tokens[i + 2].content != std::string("CDATA"))
+            {
+              throw csParseException("Expected 'CDATA'", m_tokens[i + 1].line, m_tokens[i + 1].column);
+            }
+            if ((i + 3) >= m_tokens.size())
+            {
+              throw csParseException("Expected '['", m_tokens[i].line, m_tokens[i].column + 1);
+            }
+            if (m_tokens[i + 3].type != eSquareBracketsOpen)
+            {
+              throw csParseException("Expected '['", m_tokens[i + 1].line, m_tokens[i + 1].column);
+            }
+            if (!currentParent)
+            {
+              throw csParseException("Found CDATA at the beginning", m_tokens[i].line, m_tokens[i].column);
+            }
+
+            i += 4;
+            std::string cdata;
+            while (true)
+            {
+              if (i >= m_tokens.size())
+              {
+                throw csParseException("No ending CDATA ']]>' found", m_tokens[i - 1].line, m_tokens[i - 1].column + 1);
+              }
+              if (i + 2 < m_tokens.size()
+                  && m_tokens[i].type == eSquareBracketsClose
+                  && m_tokens[i + 1].type == eSquareBracketsClose
+                  && m_tokens[i + 2].type == eAngleBracketClose)
+              {
+                // end of cdata
+                currentParent->CreateChildText(cdata, false);
+                i += 2;
+                break;
+              }
+              cdata += m_tokens[i].content;
+              i++;
+            }
+          }
+          else if (m_tokens[i + 1].type == eDash)
+          {
+            if ((i + 2) >= m_tokens.size())
+            {
+              throw csParseException("Expected '-'", m_tokens[i + 1].line, m_tokens[i + 1].column + 1);
+            }
+            if (m_tokens[i + 2].type != eDash)
+            {
+              throw csParseException("Expected '-'", m_tokens[i + 1].line, m_tokens[i + 1].column);
+            }
+            if (!currentParent)
+            {
+              throw csParseException("Found comment at the beginning", m_tokens[i].line, m_tokens[i].column);
+            }
+
+            i += 3;
+            std::string comment;
+            while (true)
+            {
+              if (i >= m_tokens.size())
+              {
+                throw csParseException("No ending '-->' found", m_tokens[i - 1].line, m_tokens[i - 1].column + 1);
+              }
+              if (i + 2 < m_tokens.size()
+                  && m_tokens[i].type == eDash
+                  && m_tokens[i + 1].type == eDash
+                  && m_tokens[i + 2].type == eAngleBracketClose)
+              {
+                // end of comment
+                currentParent->CreateChildComment(comment);
+                i += 2;
+                break;
+              }
+              comment += m_tokens[i].content;
+              i++;
+            }
+          }
+          else
+          {
+            throw csParseException("Expected '[' or '-'", m_tokens[i].line, m_tokens[i].column + 1);
+          }
+
+
+        }
+        else
+        {
+          throw csParseException("Invalid character found. Expected 'IDENT', '/' or '!'",
+                                 m_tokens[i].line,
+                                 m_tokens[i].column);
+        }
       }
       else
       {
-        std::string text;
-        while (true)
+        if (!currentParent)
         {
-          if (i >= m_tokens.size())
+          if (m_tokens[i].type != eWhiteSpace)
           {
-            m_error = "Invalid hierarchy";
-            delete document;
-            return nullptr;
+            throw csParseException("Found non white space before the first tag",
+                                   m_tokens[i].line,
+                                   m_tokens[i].column);
           }
-
-          if (m_tokens[i].type == eAngleBracketOpen)
+        }
+        else
+        {
+          std::string text;
+          while (true)
           {
-            currentParent->CreateChildText(text);
-            i--;
-            break;
-          }
+            if (i >= m_tokens.size())
+            {
+              throw csParseException("Tag '" + currentParent->GetTagName() + "' not closed. ", 0, 0);
+            }
 
-          text += m_tokens[i].content;
-          i++;
+            if (m_tokens[i].type == eAngleBracketOpen)
+            {
+              currentParent->CreateChildText(text, true);
+              i--;
+              break;
+            }
+
+            text += m_tokens[i].content;
+            i++;
+          }
         }
       }
+      i++;
     }
-    i++;
   }
-
+  catch (const csParseException &e)
+  {
+    delete document;
+    throw e;
+  }
 
   return document;
 }
@@ -221,52 +368,101 @@ std::string csParser::ReadFullIdent(size_t &tokenIdx)
 
 void csParser::Tokenize()
 {
+  size_t line   = 0;
+  size_t column = 0;
   m_tokens.clear();
   while (!IsEOF())
   {
-    char ch = Pick();
+    size_t nextLine   = line;
+    size_t nextColumn = column + 1;
+    char   ch         = Pick();
     if (ch == '=')
     {
-      m_tokens.emplace_back(eEquals, std::string(1, ch));
+      m_tokens.emplace_back(eEquals, std::string(1, ch), line, column);
     }
     else if (ch == '<')
     {
-      m_tokens.emplace_back(eAngleBracketOpen, std::string(1, ch));
+      m_tokens.emplace_back(eAngleBracketOpen, std::string(1, ch), line, column);
     }
     else if (ch == '>')
     {
-      m_tokens.emplace_back(eAngleBracketClose, std::string(1, ch));
+      m_tokens.emplace_back(eAngleBracketClose, std::string(1, ch), line, column);
     }
     else if (ch == '/')
     {
-      m_tokens.emplace_back(eSlash, std::string(1, ch));
+      m_tokens.emplace_back(eSlash, std::string(1, ch), line, column);
     }
     else if (ch == '!')
     {
-      m_tokens.emplace_back(eExclamationMark, std::string(1, ch));
+      m_tokens.emplace_back(eExclamationMark, std::string(1, ch), line, column);
+    }
+    else if (ch == '-')
+    {
+      m_tokens.emplace_back(eDash, std::string(1, ch), line, column);
     }
     else if (ch == '[')
     {
-      m_tokens.emplace_back(eSquareBracketsOpen, std::string(1, ch));
+      m_tokens.emplace_back(eSquareBracketsOpen, std::string(1, ch), line, column);
     }
     else if (ch == ']')
     {
-      m_tokens.emplace_back(eSquareBracketsClose, std::string(1, ch));
+      m_tokens.emplace_back(eSquareBracketsClose, std::string(1, ch), line, column);
     }
     else
     {
       Put();
-      ReadOtherToken();
+      nextColumn--;
+      ReadOtherToken(line, column, nextLine, nextColumn);
     }
+
+    line = nextLine;
+    column = nextColumn;
+  }
+}
+
+static void update_column_line (char ch, bool &pendingNewLine, bool &pendingReturn, size_t  &nextLine, size_t &nextColumn)
+{
+  if (ch == '\n')
+  {
+    if (pendingReturn)
+    {
+      pendingReturn = false;
+      return;
+    }
+    nextLine++;
+    nextColumn = 0;
+    pendingNewLine = true;
+  }
+  else if (ch == '\r')
+  {
+    if (pendingNewLine)
+    {
+      pendingNewLine = false;
+      return;
+    }
+    nextLine++;
+    nextColumn = 0;
+    pendingReturn = true;
+  }
+  else
+  {
+    pendingReturn = false;
+    pendingNewLine = false;
+    nextColumn++;
   }
 }
 
 
-void csParser::ReadOtherToken()
+void csParser::ReadOtherToken(size_t line, size_t column, size_t &nextLine, size_t &nextColumn)
 {
+  bool pendingNewLine = false;
+  bool pendingReturn = false;
+
+
   char ch = Pick();
   if (ch == '"')
   {
+    update_column_line(ch, pendingNewLine, pendingReturn, nextLine, nextColumn);
     std::string content;
     while (true)
     {
@@ -276,6 +472,7 @@ void csParser::ReadOtherToken()
       }
 
       ch = Pick();
+      update_column_line(ch, pendingNewLine, pendingReturn, nextLine, nextColumn);
       if (ch == '"')
       {
         break;
@@ -287,12 +484,13 @@ void csParser::ReadOtherToken()
           return;
         }
         ch = Pick();
+        update_column_line(ch, pendingNewLine, pendingReturn, nextLine, nextColumn);
       }
       content += ch;
 
     }
 
-    m_tokens.emplace_back(eString, content);
+    m_tokens.emplace_back(eString, content, line, column);
   }
   else if (ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z' || ch == '_')
   {
@@ -311,10 +509,11 @@ void csParser::ReadOtherToken()
         Put();
         break;
       }
+      update_column_line(ch, pendingNewLine, pendingReturn, nextLine, nextColumn);
       content += ch;
     }
 
-    m_tokens.emplace_back(eIdent, content);
+    m_tokens.emplace_back(eIdent, content, line, column);
   }
   else if (ch == ' ' || ch == '\t' || ch == '\r' || ch == '\n')
   {
@@ -333,16 +532,18 @@ void csParser::ReadOtherToken()
         Put();
         break;
       }
+      update_column_line(ch, pendingNewLine, pendingReturn, nextLine, nextColumn);
       content += ch;
     }
 
-    m_tokens.emplace_back(eWhiteSpace, content);
+    m_tokens.emplace_back(eWhiteSpace, content, line, column);
   }
   else
   {
     if (ch != 0)
     {
-      m_tokens.emplace_back(eOther, std::string(1, ch));
+      update_column_line(ch, pendingNewLine, pendingReturn, nextLine, nextColumn);
+      m_tokens.emplace_back(eOther, std::string(1, ch), line, column);
     }
   }
 }
@@ -449,15 +650,47 @@ csElement *csElement::CreateChildElement(const std::string &tagName)
   return child;
 }
 
+inline void ltrim(std::string &s) {
+  s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {
+    return !std::isspace(ch);
+  }));
+}
 
-csText *csElement::CreateChildText(const std::string &text)
+// trim from end (in place)
+inline void rtrim(std::string &s) {
+  s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) {
+    return !std::isspace(ch);
+  }).base(), s.end());
+}
+
+void csElement::CreateChildText(const std::string &text, bool trim)
 {
+  std::string copy = text;
+  if (trim)
+  {
+    ltrim(copy);
+    rtrim(copy);
+  }
+
+  if (copy.empty())
+  {
+    return;
+  }
   auto child = new csText();
+  child->SetContent(copy);
+  child->m_parent = this;
+  m_children.push_back(child);
+}
+
+
+void csElement::CreateChildComment(const std::string &text)
+{
+  auto child = new csComment();
   child->SetContent(text);
   child->m_parent = this;
   m_children.push_back(child);
-  return child;
 }
+
 
 void csElement::AddAttribute(const std::string &key, const std::string &value)
 {
@@ -488,6 +721,24 @@ void csText::SetContent(const std::string &content)
 }
 
 const std::string &csText::GetContent() const
+{
+  return m_content;
+}
+
+
+
+csComment::csComment()
+    : csNode(eNT_Comment)
+{
+
+}
+
+void csComment::SetContent(const std::string &content)
+{
+  m_content = content;
+}
+
+const std::string &csComment::GetContent() const
 {
   return m_content;
 }

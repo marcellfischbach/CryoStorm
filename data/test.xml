@@ -1,4 +1,7 @@
 <template>
+    <!--
+        Hier gibts einen kommentar
+    -->
     <types>
         <type>csVector2f</type>
         <type>cryo::csVector2f</type>

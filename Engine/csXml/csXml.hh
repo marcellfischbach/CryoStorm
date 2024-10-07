@@ -2,8 +2,10 @@
 #pragma once
 
 #include <csXml/csXmlExport.hh>
-#include <string>
+
 #include <cstdint>
+#include <exception>
+#include <string>
 #include <vector>
 
 
@@ -43,14 +45,14 @@ public:
   [[nodiscard]] eNodeType GetType() const;
 
 
-  [[nodiscard]] const csElement *GetParent () const;
-  [[nodiscard]] csElement *GetParent () ;
+  [[nodiscard]] const csElement *GetParent() const;
+  [[nodiscard]] csElement *GetParent();
 
 protected:
   explicit csNode(eNodeType type);
 
 protected:
-  csElement * m_parent;
+  csElement *m_parent;
 
 private:
   eNodeType m_type;
@@ -59,6 +61,7 @@ private:
 };
 
 class csText;
+class csComment;
 class CS_XML_API csElement : public csNode
 {
   friend class csDocument;
@@ -68,8 +71,8 @@ public:
   [[nodiscard]] const std::string &GetTagName() const;
 
   csElement *CreateChildElement(const std::string &tagName);
-  csText *CreateChildText(const std::string &text);
-
+  void CreateChildText(const std::string &text, bool trim);
+  void CreateChildComment(const std::string &text);
 
 
   void AddAttribute(const std::string &key, const std::string &value);
@@ -79,7 +82,7 @@ private:
   explicit csElement(std::string tagName);
 
 private:
-  std::string m_tagName;
+  std::string           m_tagName;
   std::vector<csNode *> m_children;
 
   std::vector<csAttribute *> m_attributes;
@@ -99,6 +102,33 @@ private:
   std::string m_content;
 };
 
+class CS_XML_API csComment : public csNode
+{
+public:
+  csComment();
+  ~csComment() override = default;
+
+  void SetContent(const std::string &content);
+  [[nodiscard]] const std::string &GetContent() const;
+private:
+private:
+  std::string m_content;
+};
+
+
+
+class CS_XML_API csParseException : public std::exception
+{
+public:
+  csParseException(const std::string &message, size_t line, size_t column);
+  size_t GetLine () const;
+  size_t GetColumn () const;
+
+private:
+  size_t m_line;
+  size_t m_column;
+};
+
 class CS_XML_API csDocument
 {
   friend class csParser;
@@ -111,7 +141,7 @@ public:
   [[nodiscard]] const csElement *GetRoot() const;
 
 private:
-  csDocument () = default;
+  csDocument() = default;
 
   csElement *m_root = nullptr;
 };
@@ -127,7 +157,7 @@ private:
   explicit csParser(const std::string &content);
   csDocument *Parse();
 
-  void ReadOtherToken();
+  void ReadOtherToken(size_t line, size_t column, size_t &nextLine, size_t &nextColumn);
 
   char Pick();
   void Put();
@@ -147,6 +177,7 @@ private:
     eAngleBracketClose,
     eSlash,
     eExclamationMark,
+    eDash,
     eSquareBracketsOpen,
     eSquareBracketsClose,
     eOther
@@ -154,15 +185,18 @@ private:
 
   struct Token
   {
-    eTokenType type;
+    eTokenType  type;
     std::string content;
+    size_t      line;
+    size_t      column;
   };
 
-  std::string ReadFullIdent (size_t &tokenIdx);
+  std::string ReadFullIdent(size_t &tokenIdx);
 
-  std::string m_content;
-  uint32_t m_idx;
+  std::string        m_content;
+  uint32_t           m_idx;
   std::vector<Token> m_tokens;
+
 };
 
 
