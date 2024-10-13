@@ -123,9 +123,9 @@ void JavaSourceGenerator::EndClass()
   }
 
 
-  std::cout << begin << std::endl
-            << m_nativeCodeFragments << std::endl
-            << end << std::endl;
+//  std::cout << begin << std::endl
+//            << m_nativeCodeFragments << std::endl
+//            << end << std::endl;
 
 
   std::string packagePath = package_to_path(m_package);
@@ -253,6 +253,10 @@ std::string map_jni_type(const std::string &jniType)
   else if (jniType == "jdoubleArray")
   {
     return "double[]";
+  }
+  else if (jniType == "jobject")
+  {
+    return "Object";
   }
   if (!jniType.empty() && jniType[0] == 'j')
   {

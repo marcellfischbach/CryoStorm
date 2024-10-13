@@ -112,7 +112,7 @@ target_link_libraries(csOpenGL
         )
 
 add_dependencies(csOpenGL csMOC)
-CS_MOC(csOpenGL)
+CS_MOC(csOpenGL "")
 
 
 install(TARGETS csOpenGL

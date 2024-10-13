@@ -29,7 +29,7 @@ add_dependencies(csJavaLWJGL csBullet)
 add_dependencies(csJavaLWJGL csImgLoader)
 add_dependencies(csJavaLWJGL csOpenGL)
 
-CS_MOC(csJavaLWJGL csJavaLWJGL)
+CS_MOC(csJavaLWJGL "")
 
 
 target_link_libraries(csJavaLWJGL

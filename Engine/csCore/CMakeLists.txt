@@ -328,7 +328,7 @@ if (${JAVA_BINDINGS})
 endif ()
 
 add_dependencies(csCore csMOC)
-CS_MOC(csCore)
+CS_MOC(csCore "${CryoStorm_SOURCE_DIR}/Java/JCryoStorm/CsCore/src/main/java")
 
 
 install(TARGETS csCore

@@ -11,7 +11,7 @@
 namespace cs::java
 {
 
-CS_CLASS(jclass="org.crimsonedge.launcher.LwjglWindow")
+CS_CLASS(jclass="org.cryo.launcher.LwjglWindow")
 class CS_JAVA_API csLwjglWindow : public CS_SUPER(iWindow)
 {
   CS_CLASS_GEN_OBJECT;

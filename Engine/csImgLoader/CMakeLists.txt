@@ -26,7 +26,7 @@ target_link_libraries(csImgLoader
         )
 
 add_dependencies(csImgLoader csMOC)
-CS_MOC(csImgLoader)
+CS_MOC(csImgLoader "")
 
 
 install(TARGETS csImgLoader

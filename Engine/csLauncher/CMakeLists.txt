@@ -29,7 +29,7 @@ add_dependencies(csLauncher
 )
 
 
-CS_MOC(csLauncher csLauncher)
+CS_MOC(csLauncher "")
 
 
 target_link_libraries(csLauncher

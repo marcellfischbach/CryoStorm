@@ -31,7 +31,7 @@ target_link_libraries(csBullet
         )
 
 add_dependencies(csBullet csMOC)
-CS_MOC(csBullet)
+CS_MOC(csBullet "")
 
 
 install(TARGETS csBullet

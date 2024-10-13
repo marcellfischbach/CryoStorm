@@ -28,7 +28,7 @@ target_link_libraries(csGame
         )
 
 add_dependencies(csGame csMOC)
-CS_MOC(csGame)
+CS_MOC(csGame "")
 
 
 install(TARGETS csGame

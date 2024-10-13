@@ -12,7 +12,7 @@ namespace cs
 
 struct iShaderAttribute;
 
-CS_CLASS(jclass="org.crimsonedge.core.graphics.shading.IShader")
+CS_CLASS(jclass="org.cryo.core.graphics.shading.IShader")
 struct CS_CORE_API iShader : public CS_SUPER(iObject)
 {
 CS_CLASS_GEN;

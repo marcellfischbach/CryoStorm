@@ -11,7 +11,7 @@ namespace cs
 {
 
 class csImage;
-CS_CLASS(jclass="org.crimsonedge.core.graphics.ITexture2D")
+CS_CLASS(jclass="org.cryo.core.graphics.ITexture2D")
 struct CS_CORE_API iTexture2D : public CS_SUPER(iTexture)
 {
 

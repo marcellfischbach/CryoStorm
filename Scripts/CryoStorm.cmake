@@ -1,12 +1,13 @@
 
 
 
-function(CS_MOC trgt)
+
+function(CS_MOC trgt javaPath)
 
 	set(MOC_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/__cmake__build__moc__")
 
-	message("MOC: ${CMAKE_CURRENT_SOURCE_DIR}")
-	message("MOC: ${CMAKE_SOURCE_DIR}")
+	#message("MOC: ${CMAKE_CURRENT_SOURCE_DIR}")
+	#message("MOC: ${CMAKE_SOURCE_DIR}")
 
 	set (EXEC_PATH "")
 	if (CryoStorm_BINARY_DIR)
@@ -17,10 +18,19 @@ function(CS_MOC trgt)
 
 	string(MAKE_C_IDENTIFIER ${trgt} TARGET_IDENTIFIER)
 
+	# construct java path parameter when parameter javaPath is not empty
+	set(CMD_JAVA_PATH "")
+	set(CMD_JAVA_PATH_VALUE "")
+	#string(COMPARE NOTEQUAL ${javaPath} "" JAVA_PATH_EMPTY)
+	if (javaPath)
+		set (CMD_JAVA_PATH --javaPath ${javaPath})
+	endif()
+	#message ("JavaPathCmd: ${CMD_JAVA_PATH}")
+
 
 	set(TARGET_NAME "${trgt}-MOC")
 	add_custom_target(${TARGET_NAME}
-                            COMMAND ${EXEC_PATH}csMOC  --path ${MOC_DIRECTORY} --sourcepath ${CMAKE_CURRENT_SOURCE_DIR} --javaConverter ${CryoStorm_SOURCE_DIR}/Scripts\;${CryoStorm_SOURCE_DIR}/data
+                            COMMAND ${EXEC_PATH}csMOC  --path ${MOC_DIRECTORY} --sourcepath ${CMAKE_CURRENT_SOURCE_DIR} --javaConverter ${CryoStorm_SOURCE_DIR}/Scripts\;${CryoStorm_SOURCE_DIR}/data ${CMD_JAVA_PATH}
 			WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 			BYPRODUCTS "${MOC_DIRECTORY}/.csCache"
 	)

@@ -28,7 +28,7 @@ struct iShaderAttribute;
 struct iTexture;
 
 
-CS_CLASS(jclass="org.crimsonedge.core.graphics.material.Material")
+CS_CLASS(jclass="org.cryo.core.graphics.material.Material")
 class CS_CORE_API csMaterial : public CS_SUPER(iMaterial)
 {
   friend class csMaterialInstance;

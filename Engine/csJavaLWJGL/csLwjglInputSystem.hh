@@ -8,7 +8,7 @@
 namespace cs::java
 {
 
-CS_CLASS(jclass="org.crimsonedge.lwjgl.LwjglInputSystem")
+CS_CLASS(jclass="org.cryo.lwjgl.LwjglInputSystem")
 class  csLwjglInputSystem : public CS_SUPER(iInputSystem)
 {
 CS_CLASS_GEN_OBJECT;

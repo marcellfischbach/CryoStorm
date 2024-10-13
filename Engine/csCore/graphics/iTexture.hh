@@ -12,7 +12,7 @@ namespace cs
 
 struct iSampler;
 
-CS_CLASS(virtual, jclass="org.crimsonedge.core.graphics.ITexture")
+CS_CLASS(virtual, jclass="org.cryo.core.graphics.ITexture")
 struct CS_CORE_API iTexture : public CS_SUPER(iObject)
 {
   CS_CLASS_GEN;

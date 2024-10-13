@@ -17,7 +17,7 @@ namespace cs
 struct iDevice;
 class csVertexDeclaration;
 
-CS_CLASS(jclass="org.crimsonedge.core.graphics.IRenderMesh")
+CS_CLASS(jclass="org.cryo.core.graphics.IRenderMesh")
 struct CS_CORE_API iRenderMesh : public CS_SUPER(iObject)
 {
   CS_CLASS_GEN;
@@ -35,7 +35,7 @@ struct CS_CORE_API iRenderMesh : public CS_SUPER(iObject)
 };
 
 
-CS_CLASS(jclass="org.crimsonedge.core.graphics.IRenderMeshGenerator")
+CS_CLASS(jclass="org.cryo.core.graphics.IRenderMeshGenerator")
 struct CS_CORE_API iRenderMeshGenerator : CS_SUPER(iObject)
 {
   CS_CLASS_GEN;
@@ -61,7 +61,7 @@ struct CS_CORE_API iRenderMeshGenerator : CS_SUPER(iObject)
 };
 
 
-CS_CLASS(jclass="org.crimsonedge.core.graphics.IRenderMeshGeneratorFactory")
+CS_CLASS(jclass="org.cryo.core.graphics.IRenderMeshGeneratorFactory")
 struct CS_CORE_API iRenderMeshGeneratorFactory : CS_SUPER(iObject)
 {
   CS_CLASS_GEN;

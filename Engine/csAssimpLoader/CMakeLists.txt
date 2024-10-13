@@ -29,7 +29,7 @@ target_link_libraries(csAssimpLoader
         )
 
 add_dependencies(csAssimpLoader csMOC)
-CS_MOC(csAssimpLoader)
+CS_MOC(csAssimpLoader "")
 
 
 install(TARGETS csAssimpLoader

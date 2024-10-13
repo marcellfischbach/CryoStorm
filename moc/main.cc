@@ -412,6 +412,7 @@ int main(int argc, char** argv)
   {
     JavaSourceGenerator::SetBasePath(javaBasePath);
   }
+  printf ("JavaBasePath '%s'\n", javaBasePath.c_str());
 
   if (!file.empty() && !source.empty() && !header.empty())
   {

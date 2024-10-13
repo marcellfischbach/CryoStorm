@@ -142,7 +142,7 @@ convert_function_input_parameter_to_jni_type(const Argument &argument,
 
   if (def.IsPointer() || def.IsReference())
   {
-    sourceGenerator.AddParameter("jlong", "arg" + std::to_string(jniArgCount), "");
+    sourceGenerator.AddParameter("jlong", "arg" + std::to_string(jniArgCount), "ptr " + typeName);
     return ", jlong jniArg" + std::to_string(jniArgCount);
   }
   return "";

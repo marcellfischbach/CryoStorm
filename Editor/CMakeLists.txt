@@ -49,4 +49,4 @@ target_link_libraries(EdLauncher
         Qt6::Xml
         )
 
-CS_MOC(EdLauncher)
+CS_MOC(EdLauncher "")
