@@ -8,8 +8,8 @@ namespace cs::moc
 {
 
 ASTNode::ASTNode(ASTNodeType type)
-  : m_type(type)
-  , m_parent(nullptr)
+    : m_type(type)
+    , m_parent(nullptr)
 {
 
 }
@@ -19,9 +19,9 @@ ASTNodeType ASTNode::GetType() const
   return m_type;
 }
 
-ASTNode* ASTNode::FindChildNode(ASTNodeType type)
+ASTNode *ASTNode::FindChildNode(ASTNodeType type)
 {
-  for (auto child : m_children)
+  for (auto child: m_children)
   {
     if (child->GetType() == type)
     {
@@ -32,9 +32,9 @@ ASTNode* ASTNode::FindChildNode(ASTNodeType type)
 }
 
 
-ASTNode* ASTNode::FindParentNode(ASTNodeType type)
+ASTNode *ASTNode::FindParentNode(ASTNodeType type)
 {
-  ASTNode* testNode = this;
+  ASTNode *testNode = this;
   while (testNode)
   {
     if (testNode->GetType() == type)
@@ -46,14 +46,15 @@ ASTNode* ASTNode::FindParentNode(ASTNodeType type)
   return nullptr;
 }
 
-ASTNode* ASTNode::FindPrevSibling(ASTNodeType type)
+ASTNode *ASTNode::FindPrevSibling(ASTNodeType type)
 {
   if (!m_parent)
   {
     return nullptr;
   }
 
-  std::vector<ASTNode*>::iterator it = std::ranges::find(m_parent->m_children.begin(), m_parent->m_children.end(), this);
+  std::vector<ASTNode *>::iterator it = std::ranges::find(m_parent->m_children.begin(), m_parent->m_children.end(),
+                                                          this);
   if (it != m_parent->m_children.begin())
   {
     --it;
@@ -74,14 +75,15 @@ ASTNode* ASTNode::FindPrevSibling(ASTNodeType type)
   return nullptr;
 }
 
-ASTNode* ASTNode::FindNextSibling(ASTNodeType type)
+ASTNode *ASTNode::FindNextSibling(ASTNodeType type)
 {
   if (!m_parent)
   {
     return nullptr;
   }
 
-  std::vector<ASTNode*>::iterator it = std::ranges::find(m_parent->m_children.begin(), m_parent->m_children.end(), this);
+  std::vector<ASTNode *>::iterator it = std::ranges::find(m_parent->m_children.begin(), m_parent->m_children.end(),
+                                                          this);
   if (it != m_parent->m_children.end())
   {
     for (++it; it != m_parent->m_children.end(); it++)
@@ -99,14 +101,15 @@ ASTNode* ASTNode::FindNextSibling(ASTNodeType type)
 }
 
 
-ASTNode* ASTNode::FindPrevSibling()
+ASTNode *ASTNode::FindPrevSibling()
 {
   if (!m_parent)
   {
     return nullptr;
   }
 
-  std::vector<ASTNode*>::iterator it = std::ranges::find(m_parent->m_children.begin(), m_parent->m_children.end(), this);
+  std::vector<ASTNode *>::iterator it = std::ranges::find(m_parent->m_children.begin(), m_parent->m_children.end(),
+                                                          this);
   if (it == m_parent->m_children.end() || it == m_parent->m_children.begin())
   {
     return nullptr;
@@ -116,14 +119,15 @@ ASTNode* ASTNode::FindPrevSibling()
   return *it;
 }
 
-ASTNode* ASTNode::FindNextSibling()
+ASTNode *ASTNode::FindNextSibling()
 {
   if (!m_parent)
   {
     return nullptr;
   }
 
-  std::vector<ASTNode*>::iterator it = std::ranges::find(m_parent->m_children.begin(), m_parent->m_children.end(), this);
+  std::vector<ASTNode *>::iterator it = std::ranges::find(m_parent->m_children.begin(), m_parent->m_children.end(),
+                                                          this);
   if (it == m_parent->m_children.end())
   {
     return nullptr;
@@ -140,7 +144,7 @@ ASTNode* ASTNode::FindNextSibling()
 }
 
 
-void ASTNode::Add(ASTNode* node)
+void ASTNode::Add(ASTNode *node)
 {
   if (node)
   {
@@ -149,17 +153,17 @@ void ASTNode::Add(ASTNode* node)
   }
 }
 
-ASTNode* ASTNode::GetParent()
+ASTNode *ASTNode::GetParent()
 {
   return m_parent;
 }
 
-const ASTNode* ASTNode::GetParent() const
+const ASTNode *ASTNode::GetParent() const
 {
   return m_parent;
 }
 
-const std::vector<ASTNode*>& ASTNode::GetChildren() const
+const std::vector<ASTNode *> &ASTNode::GetChildren() const
 {
   return m_children;
 }
@@ -174,14 +178,14 @@ void ASTNode::DebugNode(int ind)
   Debug();
   printf("\n");
 
-  for (auto child : m_children)
+  for (auto child: m_children)
   {
     child->DebugNode(ind + 1);
   }
 }
 
 BlockNode::BlockNode()
-  : ASTNode(eANT_Block)
+    : ASTNode(eANT_Block)
 {
 
 }
@@ -192,27 +196,27 @@ void BlockNode::Debug()
 }
 
 NamespaceNode::NamespaceNode()
-  : ASTNode(eANT_Namespace)
+    : ASTNode(eANT_Namespace)
 {
 
 }
 
-void NamespaceNode::SetName(const std::string & name)
+void NamespaceNode::SetName(const std::string &name)
 {
   m_name = name;
 }
 
-const std::string& NamespaceNode::GetName() const
+const std::string &NamespaceNode::GetName() const
 {
   return m_name;
 }
 
-void NamespaceNode::SetAlias(const std::string & alias)
+void NamespaceNode::SetAlias(const std::string &alias)
 {
   m_alias = alias;
 }
 
-const std::string& NamespaceNode::GetAlias() const
+const std::string &NamespaceNode::GetAlias() const
 {
   return m_alias;
 }
@@ -230,15 +234,12 @@ void NamespaceNode::Debug()
 }
 
 
-
-
-
-
-ClassSuperDefinition::ClassSuperDefinition(bool csSuper, const TypeDef & type, const std::string & visibility, bool virtuality)
-  : m_csSuper(csSuper)
-  , m_type(type)
-  , m_visibility(visibility)
-  , m_virtual(virtuality)
+ClassSuperDefinition::ClassSuperDefinition(bool csSuper, const TypeDef &type, const std::string &visibility,
+                                           bool virtuality)
+    : m_csSuper(csSuper)
+    , m_type(type)
+    , m_visibility(visibility)
+    , m_virtual(virtuality)
 {
 
 }
@@ -248,12 +249,12 @@ bool ClassSuperDefinition::IsCSSuper() const
   return m_csSuper;
 }
 
-const TypeDef& ClassSuperDefinition::GetType() const
+const TypeDef &ClassSuperDefinition::GetType() const
 {
   return m_type;
 }
 
-const std::string& ClassSuperDefinition::GetVisibility() const
+const std::string &ClassSuperDefinition::GetVisibility() const
 {
   return m_visibility;
 }
@@ -264,20 +265,36 @@ bool ClassSuperDefinition::IsVirtual() const
 }
 
 CSMetaNode::CSMetaNode(CSMetaNode::MetaType type)
-  : ASTNode(eANT_CSMeta)
-  , m_type(type)
+    : ASTNode(eANT_CSMeta)
+    , m_type(type)
 {
 
 }
 
-void CSMetaNode::Add(const CSMetaNode::Attribute & attribute)
+std::string stripString (const std::string &str)
+{
+  if (!str.empty() && str[0] == '"' && str[str.length()-1] == '"')
+  {
+    return str.substr(1, str.length()-2);
+  }
+  return str;
+}
+
+CSMetaNode::Attribute::Attribute(const std::string &lkey, const std::string &lvalue)
+    : key(lkey.empty() ? lvalue : lkey)
+    , value(lkey.empty() ? "" : stripString(lvalue))
+{
+
+}
+
+void CSMetaNode::Add(const CSMetaNode::Attribute &attribute)
 {
   m_attributes.push_back(attribute);
 }
 
-bool CSMetaNode::Has(const std::string& key) const
+bool CSMetaNode::Has(const std::string &key) const
 {
-  for (auto attribute : m_attributes)
+  for (auto attribute: m_attributes)
   {
     if (attribute.key == key)
     {
@@ -287,9 +304,9 @@ bool CSMetaNode::Has(const std::string& key) const
   return false;
 }
 
-std::string CSMetaNode::Get(const std::string& key) const
+std::string CSMetaNode::Get(const std::string &key) const
 {
-  for (auto attribute : m_attributes)
+  for (auto attribute: m_attributes)
   {
     if (attribute.key == key)
     {
@@ -303,17 +320,17 @@ void CSMetaNode::Debug()
 {
   switch (m_type)
   {
-  case eMT_Class:
-    printf("CS_CLASS(");
-    break;
-  case eMT_Property:
-    printf("CS_PROPERTY(");
-    break;
-  case eMT_Function:
-    printf("CS_FUNCTION(");
-    break;
+    case eMT_Class:
+      printf("CS_CLASS(");
+      break;
+    case eMT_Property:
+      printf("CS_PROPERTY(");
+      break;
+    case eMT_Function:
+      printf("CS_FUNCTION(");
+      break;
   }
-  for (auto attribute : m_attributes)
+  for (auto attribute: m_attributes)
   {
     printf("[");
     if (!attribute.key.empty())
@@ -326,8 +343,8 @@ void CSMetaNode::Debug()
 }
 
 ClassNode::ClassNode()
-  : ASTNode(eANT_Class)
-  , m_struct(false)
+    : ASTNode(eANT_Class)
+    , m_struct(false)
 {
 
 }
@@ -342,71 +359,71 @@ bool ClassNode::IsStruct() const
   return m_struct;
 }
 
-void ClassNode::SetName(const std::string & name)
+void ClassNode::SetName(const std::string &name)
 {
   m_name = name;
 }
 
-const std::string& ClassNode::GetName() const
+const std::string &ClassNode::GetName() const
 {
   return m_name;
 }
 
-void ClassNode::AddSuper(const ClassSuperDefinition & super)
+void ClassNode::AddSuper(const ClassSuperDefinition &super)
 {
   m_supers.push_back(super);
 }
 
-const std::vector<ClassSuperDefinition>& ClassNode::GetSupers() const
+const std::vector<ClassSuperDefinition> &ClassNode::GetSupers() const
 {
   return m_supers;
 }
 
 bool ClassNode::HasPureVirtualMethod()
 {
-  BlockNode* blockNode = static_cast<BlockNode*>(FindChildNode(eANT_Block));
+  BlockNode *blockNode = static_cast<BlockNode *>(FindChildNode(eANT_Block));
   if (!blockNode)
   {
     return false;
   }
 
-  FunctionNode* functionNode = static_cast<FunctionNode*>(blockNode->FindChildNode(eANT_Function));
+  FunctionNode *functionNode = static_cast<FunctionNode *>(blockNode->FindChildNode(eANT_Function));
   while (functionNode)
   {
     if (functionNode->IsVirtual() && functionNode->IsPureVirtual())
     {
       return true;
     }
-    functionNode = static_cast<FunctionNode*>(functionNode->FindNextSibling(eANT_Function));
+    functionNode = static_cast<FunctionNode *>(functionNode->FindNextSibling(eANT_Function));
   }
   return false;
 }
 
 bool ClassNode::HasPublicDefaultConstructor()
 {
-  BlockNode* blockNode = static_cast<BlockNode*>(FindChildNode(eANT_Block));
+  BlockNode *blockNode = static_cast<BlockNode *>(FindChildNode(eANT_Block));
   if (!blockNode)
   {
     return false;
   }
 
   bool hasConstructor = false;
-  FunctionNode* functionNode = static_cast<FunctionNode*>(blockNode->FindChildNode(eANT_Function));
+  FunctionNode *functionNode = static_cast<FunctionNode *>(blockNode->FindChildNode(eANT_Function));
   while (functionNode)
   {
     if (!functionNode->GetReturnValue().IsValid() &&
-      functionNode->GetName() == GetName())
+        functionNode->GetName() == GetName())
     {
 
       hasConstructor = true;
 
-      VisibilityNode* visNode = static_cast<VisibilityNode*>(functionNode->FindPrevSibling(eANT_Visibility));
-      if (visNode == nullptr && m_struct || visNode != nullptr &&  visNode->GetVisibility() == "public")
+      VisibilityNode *visNode = static_cast<VisibilityNode *>(functionNode->FindPrevSibling(eANT_Visibility));
+      if (visNode == nullptr && m_struct || visNode != nullptr && visNode->GetVisibility() == "public")
       {
 
         // this is a constructor .. but is it a default constructor???
         bool hasParameter = false;
-        for (auto argument : functionNode->GetArguments())
+        for (auto argument: functionNode->GetArguments())
         {
           if (!argument.HasDefaultValue())
           {
@@ -420,7 +437,7 @@ bool ClassNode::HasPublicDefaultConstructor()
         }
       }
     }
-    functionNode = static_cast<FunctionNode*>(functionNode->FindNextSibling(eANT_Function));
+    functionNode = static_cast<FunctionNode *>(functionNode->FindNextSibling(eANT_Function));
   }
 
   return !hasConstructor;
@@ -430,22 +447,22 @@ bool ClassNode::HasPublicDefaultConstructor()
 void ClassNode::Debug()
 {
   printf("%s[%s", m_struct ? "STRCT" : "CLS", m_name.c_str());
-  for (auto super : m_supers)
+  for (auto super: m_supers)
   {
     if (super.IsCSSuper())
     {
       printf(" CS_SUPER(%s%s%s)",
-        super.IsVirtual() ? "virtual " : "",
-        super.GetVisibility().empty() ? "" : (super.GetVisibility() + " ").c_str(),
-        super.GetType().GetText().c_str());
+             super.IsVirtual() ? "virtual " : "",
+             super.GetVisibility().empty() ? "" : (super.GetVisibility() + " ").c_str(),
+             super.GetType().GetText().c_str());
     }
     else
     {
 
       printf(" native(%s%s%s)",
-        super.IsVirtual() ? "virtual " : "",
-        super.GetVisibility().empty() ? "" : (super.GetVisibility() + " ").c_str(),
-        super.GetType().GetText().c_str()
+             super.IsVirtual() ? "virtual " : "",
+             super.GetVisibility().empty() ? "" : (super.GetVisibility() + " ").c_str(),
+             super.GetType().GetText().c_str()
       );
     }
   }
@@ -453,15 +470,15 @@ void ClassNode::Debug()
 }
 
 
-VisibilityNode::VisibilityNode(const std::string & visibility)
-  : ASTNode(eANT_Visibility)
-  , m_visibility(visibility)
+VisibilityNode::VisibilityNode(const std::string &visibility)
+    : ASTNode(eANT_Visibility)
+    , m_visibility(visibility)
 {
 
 
 }
 
-const std::string& VisibilityNode::GetVisibility() const
+const std::string &VisibilityNode::GetVisibility() const
 {
   return m_visibility;
 }
@@ -472,20 +489,20 @@ void VisibilityNode::Debug()
 }
 
 
-Argument::Argument(const TypeDef & type, const std::string & name, bool defaultValue)
-  : m_type(type)
-  , m_name(name)
-  , m_defaultValue(defaultValue)
+Argument::Argument(const TypeDef &type, const std::string &name, bool defaultValue)
+    : m_type(type)
+    , m_name(name)
+    , m_defaultValue(defaultValue)
 {
 
 }
 
-const TypeDef& Argument::GetType() const
+const TypeDef &Argument::GetType() const
 {
   return m_type;
 }
 
-const std::string& Argument::GetName() const
+const std::string &Argument::GetName() const
 {
   return m_name;
 }
@@ -506,31 +523,31 @@ std::string Argument::GetText() const
 }
 
 FunctionNode::FunctionNode()
-  : ASTNode(eANT_Function)
-  , m_name("")
-  , m_virtual(false)
-  , m_pureVirtual(false)
-  , m_const(false)
+    : ASTNode(eANT_Function)
+    , m_name("")
+    , m_virtual(false)
+    , m_pureVirtual(false)
+    , m_const(false)
 {
 
 }
 
-void FunctionNode::SetName(const std::string & name)
+void FunctionNode::SetName(const std::string &name)
 {
   m_name = name;
 }
 
-const std::string& FunctionNode::GetName() const
+const std::string &FunctionNode::GetName() const
 {
   return m_name;
 }
 
-void FunctionNode::SetReturnValue(const TypeDef & returnValue)
+void FunctionNode::SetReturnValue(const TypeDef &returnValue)
 {
   m_returnValue = returnValue;
 }
 
-const TypeDef& FunctionNode::GetReturnValue() const
+const TypeDef &FunctionNode::GetReturnValue() const
 {
   return m_returnValue;
 }
@@ -565,12 +582,12 @@ bool FunctionNode::IsConst() const
   return m_const;
 }
 
-void FunctionNode::Add(const Argument & argument)
+void FunctionNode::Add(const Argument &argument)
 {
   m_arguments.push_back(argument);
 }
 
-const std::vector<Argument>& FunctionNode::GetArguments() const
+const std::vector<Argument> &FunctionNode::GetArguments() const
 {
   return m_arguments;
 }
@@ -588,40 +605,40 @@ void FunctionNode::Debug()
   }
 
   printf("FNCTN[%s%s%s%s(%s)]: %s",
-    m_virtual ? "VIRTUAL " : "",
-    m_name.c_str(),
-    m_const ? " CONST" : "",
-    m_pureVirtual ? " PURE " : "",
-    arguments.c_str(),
-    m_returnValue.GetText().c_str());
+         m_virtual ? "VIRTUAL " : "",
+         m_name.c_str(),
+         m_const ? " CONST" : "",
+         m_pureVirtual ? " PURE " : "",
+         arguments.c_str(),
+         m_returnValue.GetText().c_str());
 
 
 }
 
 
 MemberNode::MemberNode()
-  : ASTNode(eANT_Member)
+    : ASTNode(eANT_Member)
 {
 
 }
 
 
-void MemberNode::SetName(const std::string & name)
+void MemberNode::SetName(const std::string &name)
 {
   m_name = name;
 }
 
-const std::string& MemberNode::GetName() const
+const std::string &MemberNode::GetName() const
 {
   return m_name;
 }
 
-void MemberNode::SetType(const TypeDef & type)
+void MemberNode::SetType(const TypeDef &type)
 {
   m_type = type;
 }
 
-const TypeDef& MemberNode::GetType() const
+const TypeDef &MemberNode::GetType() const
 {
   return m_type;
 }
@@ -629,68 +646,67 @@ const TypeDef& MemberNode::GetType() const
 void MemberNode::Debug()
 {
   printf("MMBR [%s:%s]",
-    m_name.c_str(), m_type.GetText().c_str());
+         m_name.c_str(), m_type.GetText().c_str());
 }
-
 
 
 TypeDef::TypeDef()
-  : m_const(false)
-  , m_constPtr(false)
+    : m_const(false)
+    , m_constPtr(false)
 {
 
 }
 
-void TypeDef::Add(const Token & token)
+void TypeDef::Add(const Token &token)
 {
   switch (token.GetType())
   {
-  case eTT_Const:
-    if (m_mems.empty())
-    {
-      m_const = true;
-    }
-    else
-    {
-      m_constPtr = true;
-    }
-    break;
-  case eTT_Ampersand:
-  case eTT_Asterisk:
-  case eTT_DoubleAsterisk:
-    m_mems.push_back(token);
-    break;
-  default:
-    m_tokens.push_back(token);
-    break;
+    case eTT_Const:
+      if (m_mems.empty())
+      {
+        m_const = true;
+      }
+      else
+      {
+        m_constPtr = true;
+      }
+      break;
+    case eTT_Ampersand:
+    case eTT_Asterisk:
+    case eTT_DoubleAsterisk:
+      m_mems.push_back(token);
+      break;
+    default:
+      m_tokens.push_back(token);
+      break;
   }
 }
 
-void TypeDef::Add(const TypeDef & subType)
+void TypeDef::Add(const TypeDef &subType)
 {
   m_subTypes.push_back(subType);
 }
 
-void TypeDef::AddFront(const Token & token)
+void TypeDef::AddFront(const Token &token)
 {
   switch (token.GetType())
   {
-  case eTT_Const:
-    m_const = true;
-    break;
-  case eTT_Ampersand:
-  case eTT_Asterisk:
-  case eTT_DoubleAsterisk:
-    m_constPtr = m_constPtr || m_const;
-    m_const = false;
-    m_mems.insert(m_mems.begin(), token);
-    break;
-  default:
-    m_tokens.insert(m_tokens.begin(), token);
+    case eTT_Const:
+      m_const = true;
+      break;
+    case eTT_Ampersand:
+    case eTT_Asterisk:
+    case eTT_DoubleAsterisk:
+      m_constPtr = m_constPtr || m_const;
+      m_const = false;
+      m_mems.insert(m_mems.begin(), token);
+      break;
+    default:
+      m_tokens.insert(m_tokens.begin(), token);
   }
 }
 
-void TypeDef::AddFront(const TypeDef & subType)
+void TypeDef::AddFront(const TypeDef &subType)
 {
   m_subTypes.insert(m_subTypes.begin(), subType);
 }
@@ -711,7 +727,7 @@ bool TypeDef::IsValue() const
 
 bool TypeDef::IsReference() const
 {
-  for (auto mem : m_mems)
+  for (auto mem: m_mems)
   {
     if (mem.GetType() == eTT_Ampersand)
     {
@@ -723,7 +739,7 @@ bool TypeDef::IsReference() const
 
 bool TypeDef::IsPointer() const
 {
-  for (auto mem : m_mems)
+  for (auto mem: m_mems)
   {
     if (mem.GetType() == eTT_Asterisk)
     {
@@ -735,7 +751,7 @@ bool TypeDef::IsPointer() const
 
 bool TypeDef::IsPointerToPointer() const
 {
-  for (auto mem : m_mems)
+  for (auto mem: m_mems)
   {
     if (mem.GetType() == eTT_DoubleAsterisk)
     {
@@ -755,7 +771,7 @@ bool TypeDef::IsValid() const
   return !m_tokens.empty();
 }
 
-const std::vector<TypeDef>& TypeDef::GetSubTypes() const
+const std::vector<TypeDef> &TypeDef::GetSubTypes() const
 {
   return m_subTypes;
 }
@@ -763,7 +779,7 @@ const std::vector<TypeDef>& TypeDef::GetSubTypes() const
 std::string TypeDef::GetTypeName(bool withSubTypes) const
 {
   std::string typeName;
-  for (auto tkn : m_tokens)
+  for (auto tkn: m_tokens)
   {
     typeName += tkn.Get();
   }
@@ -784,7 +800,6 @@ std::string TypeDef::GetTypeName(bool withSubTypes) const
 }
 
 
-
 std::string TypeDef::GetText() const
 {
   std::string text;
@@ -792,7 +807,7 @@ std::string TypeDef::GetText() const
   {
     text += "const ";
   }
-  for (auto tkn : m_tokens)
+  for (auto tkn: m_tokens)
   {
     text += tkn.Get();
   }
@@ -809,7 +824,7 @@ std::string TypeDef::GetText() const
     }
     text += ">";
   }
-  for (auto tkn : m_mems)
+  for (auto tkn: m_mems)
   {
     text += tkn.Get();
   }
@@ -821,26 +836,24 @@ std::string TypeDef::GetText() const
 }
 
 
-
-
 TokenNode::TokenNode()
-  : ASTNode(eANT_Token)
+    : ASTNode(eANT_Token)
 {
 
 }
-TokenNode::TokenNode(const Token & token)
-  : ASTNode(eANT_Token)
-  , m_token(token)
+TokenNode::TokenNode(const Token &token)
+    : ASTNode(eANT_Token)
+    , m_token(token)
 {
 
 }
 
-void TokenNode::SetToken(const Token & token)
+void TokenNode::SetToken(const Token &token)
 {
   m_token = token;
 }
 
-const Token& TokenNode::GetToken() const
+const Token &TokenNode::GetToken() const
 {
   return m_token;
 }

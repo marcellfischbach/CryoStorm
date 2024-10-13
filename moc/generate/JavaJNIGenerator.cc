@@ -1,24 +1,27 @@
-#include <generate/java.hh>
 #include <ast.hh>
 #include <generate/generator.hh>
 #include <generate/javaconverter.hh>
+#include <generate/JavaSourceGenerator.hh>
+#include <generate/JavaJNIGenerator.hh>
 
 namespace cs::moc
 {
 
-std::string JavaGenerator::OutputClass(ClassNode *classNode, std::list<NamespaceNode *> &nss, CSMetaNode *classMeta)
+std::string JavaJNIGenerator::OutputClass(ClassNode *classNode, std::list<NamespaceNode *> &nss, CSMetaNode *classMeta)
 {
-  std::string source;
   if (!classMeta->Has("jclass"))
   {
-    return source;
+    return "";
   }
 
+  std::string javaFQClass = classMeta->Get("jclass");
+  m_sourceGenerator.BeginClass(javaFQClass);
+
+  std::string source;
   source += "#ifdef CS_JAVA\n\n";
   source += "#include <jni.h>\n";
   source += "#include <csCore/csClass.hh>\n\n";
 
-  std::string javaFQClass = classMeta->Get("jclass");
 
   ASTNode *childBlock = classNode->GetChildren().size() >= 1 ? classNode->GetChildren()[0] : nullptr;
   if (!childBlock || childBlock->GetType() != eANT_Block)
@@ -28,7 +31,7 @@ std::string JavaGenerator::OutputClass(ClassNode *classNode, std::list<Namespace
 
 
   CSMetaNode *lastMeta = nullptr;
-  for (auto  child: childBlock->GetChildren())
+  for (auto child: childBlock->GetChildren())
   {
     if (child->GetType() == eANT_CSMeta)
     {
@@ -43,6 +46,8 @@ std::string JavaGenerator::OutputClass(ClassNode *classNode, std::list<Namespace
       }
     }
   }
+
+  m_sourceGenerator.EndClass();
 
   source += "#endif CS_JAVA\n\n";
 
@@ -82,8 +87,8 @@ static std::string convert_to_jni_method_name(const std::string &javaFQClass, co
 
 std::string convert_return_type_to_jni_type(FunctionNode *function, CSMetaNode *meta)
 {
-  const TypeDef       &def       = function->GetReturnValue();
-  std::string         typeName   = def.GetTypeName();
+  const TypeDef &def = function->GetReturnValue();
+  std::string typeName = def.GetTypeName();
   const JavaConverter *converter = JavaConverters::Get()->FindConverter(typeName);
   if (converter)
   {
@@ -115,43 +120,50 @@ std::string
 convert_function_input_parameter_to_jni_type(const Argument &argument,
                                              CSMetaNode *meta,
                                              uint32_t jniArgCount,
-                                             uint32_t &numJniArgCount)
+                                             uint32_t &numJniArgCount,
+                                             JavaSourceGenerator &sourceGenerator)
 {
-  const TypeDef &def     = argument.GetType();
-  std::string   typeName = def.GetTypeName();
+  const TypeDef &def = argument.GetType();
+  std::string typeName = def.GetTypeName();
   numJniArgCount = 1;
   const JavaConverter *converter = JavaConverters::Get()->FindConverter(typeName);
   if (converter)
   {
     numJniArgCount = converter->GetInputArguments().size();
-    std::string     arguments;
+    std::string arguments;
     for (const auto &arg: converter->GetInputArguments())
     {
-      arguments += ", " + arg.GetJType() + " jniArg" + std::to_string(jniArgCount++);
+      sourceGenerator.AddParameter(arg.GetJType(), "arg" + std::to_string(jniArgCount), typeName);
+      arguments += ", " + arg.GetJType() + " jniArg" + std::to_string(jniArgCount);
+      jniArgCount++;
     }
     return arguments;
   }
 
   if (def.IsPointer() || def.IsReference())
   {
+    sourceGenerator.AddParameter("jlong", "arg" + std::to_string(jniArgCount), "");
     return ", jlong jniArg" + std::to_string(jniArgCount);
   }
   return "";
 }
 
 std::string
-convert_function_output_parameter_to_jni_type(const FunctionNode *function, CSMetaNode *meta)
+convert_function_output_parameter_to_jni_type(const FunctionNode *function, CSMetaNode *meta,
+                                              JavaSourceGenerator &sourceGenerator)
 {
-  const TypeDef       &def        = function->GetReturnValue();
-  std::string         typeName    = def.GetTypeName();
-  size_t              jniArgCount = 0;
-  const JavaConverter *converter  = JavaConverters::Get()->FindConverter(typeName);
+  const TypeDef &def = function->GetReturnValue();
+  std::string typeName = def.GetTypeName();
+  size_t jniArgCount = 0;
+  const JavaConverter *converter = JavaConverters::Get()->FindConverter(typeName);
   if (converter)
   {
-    std::string     arguments;
+    std::string arguments;
     for (const auto &arg: converter->GetOutputArguments())
     {
-      arguments += ", " + arg.GetJType() + " jniOutArg" + std::to_string(jniArgCount++);
+      sourceGenerator.AddParameter(arg.GetJType(), "outArg" + std::to_string(jniArgCount), typeName + " (output return value)");
+      arguments += ", " + arg.GetJType() + " jniOutArg" + std::to_string(jniArgCount);
+      jniArgCount++;
     }
     return arguments;
   }
@@ -165,8 +177,8 @@ convert_input_parameter_to_jni(const Argument &argument,
                                uint32_t csMethodArgCount,
                                uint32_t &numCsMethodArgCount)
 {
-  const TypeDef &def     = argument.GetType();
-  std::string   typeName = def.GetTypeName();
+  const TypeDef &def = argument.GetType();
+  std::string typeName = def.GetTypeName();
   numCsMethodArgCount = 1;
   const JavaConverter *converter = JavaConverters::Get()->FindConverter(typeName);
   if (converter)
@@ -191,8 +203,8 @@ convert_input_parameter_to_jni(const Argument &argument,
 
 std::string convert_result(const FunctionNode *function, CSMetaNode *functionMeta)
 {
-  const TypeDef &def     = function->GetReturnValue();
-  std::string   typeName = def.GetTypeName();
+  const TypeDef &def = function->GetReturnValue();
+  std::string typeName = def.GetTypeName();
 
   const JavaConverter *converter = JavaConverters::Get()->FindConverter(typeName);
   if (converter)
@@ -202,7 +214,7 @@ std::string convert_result(const FunctionNode *function, CSMetaNode *functionMet
 
   if (def.IsPointer())
   {
-    if(functionMeta->Has("jrawPtr"))
+    if (functionMeta->Has("jrawPtr"))
     {
       return "return reinterpret_cast<jlong>(csReturnValue);";
     }
@@ -219,8 +231,9 @@ std::string convert_result(const FunctionNode *function, CSMetaNode *functionMet
 }
 
 
-std::string JavaGenerator::GenerateFunction(ClassNode *classNode, std::list<NamespaceNode *> &nss, CSMetaNode *clsMeta,
-                                            FunctionNode *functionNode, CSMetaNode *functionMeta)
+std::string
+JavaJNIGenerator::GenerateFunction(ClassNode *classNode, std::list<NamespaceNode *> &nss, CSMetaNode *clsMeta,
+                                   FunctionNode *functionNode, CSMetaNode *functionMeta)
 {
   std::string source;
   if (functionMeta->Has("noJava"))
@@ -229,19 +242,22 @@ std::string JavaGenerator::GenerateFunction(ClassNode *classNode, std::list<Name
   }
 
   std::string javaFQClass = clsMeta->Get("jclass");
-  std::string fns         = Generator::GetFullNamespaceName(nss);
+  std::string fns = Generator::GetFullNamespaceName(nss);
 
   std::string methodName = convert_to_jni_method_name(javaFQClass, functionNode->GetName());
+  const std::string &jniReturnType = convert_return_type_to_jni_type(functionNode, functionMeta);
+  m_sourceGenerator.BeginFunction(functionNode->GetName(), jniReturnType);
 
 
   std::string argConversion;
   std::string functionArguments;
-  uint32_t    jniArgCount      = 0;
-  uint32_t    csMethodArgCount = 0;
-  for (auto   &arg: functionNode->GetArguments())
+  uint32_t jniArgCount = 0;
+  uint32_t csMethodArgCount = 0;
+  for (auto &arg: functionNode->GetArguments())
   {
     uint32_t numJniArgCount, numCsMethodArgCount;
-    functionArguments += convert_function_input_parameter_to_jni_type(arg, functionMeta, jniArgCount, numJniArgCount);
+    functionArguments += convert_function_input_parameter_to_jni_type(arg, functionMeta, jniArgCount, numJniArgCount,
+                                                                      m_sourceGenerator);
     argConversion += convert_input_parameter_to_jni(arg, jniArgCount, csMethodArgCount, numCsMethodArgCount);
 
 
@@ -249,9 +265,9 @@ std::string JavaGenerator::GenerateFunction(ClassNode *classNode, std::list<Name
     csMethodArgCount += numCsMethodArgCount;
   }
 
-  functionArguments += convert_function_output_parameter_to_jni_type(functionNode, functionMeta);
+  functionArguments += convert_function_output_parameter_to_jni_type(functionNode, functionMeta, m_sourceGenerator);
 
-  source += "JNIEXPORT " + convert_return_type_to_jni_type(functionNode, functionMeta) + "\n";
+  source += "JNIEXPORT " + jniReturnType + "\n";
   source += "JNICALL " + methodName + "(JNIEnv* env, jclass cls, jlong ref" + functionArguments + ")\n"
             + "{\n"
             + "  auto csRef = reinterpret_cast<" + fns + classNode->GetName() + "*>(ref);\n"
@@ -277,6 +293,7 @@ std::string JavaGenerator::GenerateFunction(ClassNode *classNode, std::list<Name
   }
   source += "}\n\n";
 
+  m_sourceGenerator.EndFunction();
 
   return source;
 }

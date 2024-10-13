@@ -18,6 +18,7 @@
 #include <parser/parser.hh>
 #include <parser/parseexception.hh>
 #include <generate/javaconverter.hh>
+#include <generate/JavaSourceGenerator.hh>
 
 //class StackWalkerToConsole : public StackWalker
 //{
@@ -37,7 +38,8 @@ void print_usage(char* name)
   printf("    --header <header>      the hh file when a single file is processed\n");
   printf("    --path   <path>        base path that contains the moc file and where to put the files\n");
   printf("    --prefix <prefix>      the include prefix where include files are located\n");
-  printf("    --javaConverter <path> path, where *-moc.xml files are located");
+  printf("    --javaConverter <path> path, where *-moc.xml files are located\n");
+  printf("    --javaPath <path>      base path where java native bindings should be located\n");
 }
 
 class StdOutOutput : public cs::moc::iOutput
@@ -307,6 +309,7 @@ int main(int argc, char** argv)
   std::string sourcePath;
   std::string path;
   std::string javaConverter;
+  std::string javaBasePath;
 
   header = "header";
   source = "source";
@@ -383,6 +386,16 @@ int main(int argc, char** argv)
       javaConverter = std::string(argv[++i]);
       // std::cout << " path: '" << path << "'";
     }
+    else if (arg == "--javaPath")
+    {
+      if (i + 1 >= argc)
+      {
+        print_usage(argv[0]);
+        return -1;
+      }
+
+      javaBasePath = std::string(argv[++i]);
+    }
     else
     {
       printf("Invalid arg %s\n", arg.c_str());
@@ -394,6 +407,10 @@ int main(int argc, char** argv)
   if (!javaConverter.empty())
   {
     JavaConverters::Get()->ReadConverters (javaConverter);
+  }
+  if (!javaBasePath.empty())
+  {
+    JavaSourceGenerator::SetBasePath(javaBasePath);
   }
 
   if (!file.empty() && !source.empty() && !header.empty())

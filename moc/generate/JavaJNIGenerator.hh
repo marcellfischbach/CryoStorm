@@ -1,8 +1,10 @@
+//
 
 #pragma once
 
-#include <list>
 #include <string>
+#include <list>
+#include <generate/JavaSourceGenerator.hh>
 
 namespace cs::moc
 {
@@ -12,10 +14,9 @@ class CSMetaNode;
 class FunctionNode;
 class NamespaceNode;
 
-class JavaGenerator
+class JavaJNIGenerator
 {
 public:
-
   std::string OutputClass(ClassNode *classNode,std::list<NamespaceNode *> &nss,  CSMetaNode *classMeta);
 
 private:
@@ -25,6 +26,7 @@ private:
                                 FunctionNode *functionNode,
                                 CSMetaNode *functionMeta);
 
+  JavaSourceGenerator m_sourceGenerator;
 };
 
 

@@ -148,12 +148,7 @@ public:
   {
     std::string key;
     std::string value;
-    Attribute(const std::string& lkey, const std::string& lvalue)
-      : key(lkey.empty () ? lvalue : lkey)
-      , value(lkey.empty () ? "" : lvalue)
-    {
-
-    }
+    Attribute(const std::string& lkey, const std::string& lvalue);
   };
 
   enum MetaType

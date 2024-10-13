@@ -1,7 +1,7 @@
 
 #include <generate/source.hh>
-#include <generate/java.hh>
 #include <generate/ioutput.hh>
+#include <generate/JavaJNIGenerator.hh>
 #include <ast.hh>
 
 
@@ -43,7 +43,7 @@ void SourceGenerator::Output(iOutput *output)
     source += classGenerator.OutputClass(cls, nss, meta);
 
 
-    JavaGenerator javaGenerator;
+    JavaJNIGenerator javaGenerator;
     source += javaGenerator.OutputClass(cls, nss, meta);
 
 

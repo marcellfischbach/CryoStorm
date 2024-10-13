@@ -20,7 +20,7 @@ class csWorld;
 
 
 
-CS_CLASS(jclass=org.cryo.core.entity.LightState)
+CS_CLASS(jclass="org.cryo.core.entity.LightState")
 class CS_CORE_API csLightState : public CS_SUPER(csSpatialState)
 {
   CS_CLASS_GEN_OBJECT;

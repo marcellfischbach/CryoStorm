@@ -1,3 +1,0 @@
-terrainLayer "GreenGrass" {
-    diffuseRoughness "/textures/fieldstone_diffuse.tex2d"
-}
