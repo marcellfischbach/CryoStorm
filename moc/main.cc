@@ -83,7 +83,6 @@ void put_classes_to_cache(cs::moc::Cache& cache, const std::string& sourceName, 
   {
     std::list<cs::moc::NamespaceNode*> nss = cs::moc::Generator::GetAllNamespaces(cls);
     std::string nsName = cs::moc::Generator::GetFullNamespaceName(nss);
-    std::cout << "  " << nsName + cls->GetName() << std::endl;
 
     cache.Put(sourceName, nsName + cls->GetName());
   }
@@ -412,7 +411,6 @@ int main(int argc, char** argv)
   {
     JavaSourceGenerator::SetBasePath(javaBasePath);
   }
-  printf ("JavaBasePath '%s'\n", javaBasePath.c_str());
 
   if (!file.empty() && !source.empty() && !header.empty())
   {

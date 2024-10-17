@@ -7,7 +7,7 @@
 namespace cs
 {
 
-CS_CLASS(jclass = "org.crimsonedge.core.entity.JavaState")
+CS_CLASS(jclass = "org.cryo.core.entity.JavaState")
 class CS_CORE_API csJavaState : public CS_SUPER(csEntityState)
 {
 CS_CLASS_GEN;

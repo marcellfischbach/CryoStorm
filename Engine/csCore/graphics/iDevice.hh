@@ -31,7 +31,7 @@ namespace cs
 
 struct iShader;
 
-CS_CLASS(jclass = "org.crimsonedge.core.graphics.IDevice")
+CS_CLASS(jclass = "org.cryo.core.graphics.IDevice")
 struct CS_CORE_API iDevice : public CS_SUPER(iObject)
 {
 CS_CLASS_GEN;

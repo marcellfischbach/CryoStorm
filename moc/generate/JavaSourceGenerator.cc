@@ -36,7 +36,7 @@ std::string class_to_file_name(const std::string &fqClassName)
     }
   }
 
-  return res + ".java";
+  return res + "Native.java";
 }
 
 
@@ -63,13 +63,14 @@ std::string package_to_path(const std::string &package)
 }
 
 
-void JavaSourceGenerator::BeginClass(const std::string &fqClassName)
+void JavaSourceGenerator::BeginClass(const std::string &cppClassName, const std::string &fqClassName)
 {
   if (!ShouldGenerate())
   {
     return;
   }
   m_fqClassName = fqClassName;
+  m_cppClassName = cppClassName;
   Parse();
 }
 
@@ -87,11 +88,9 @@ void JavaSourceGenerator::Parse()
     m_className = m_fqClassName.substr(i + 1);
   }
 
-  m_absFileName = s_basePath + "/" + class_to_file_name(m_fqClassName);
+  m_relFileName = class_to_file_name(m_fqClassName);
+  m_absFileName = s_basePath + "/" + m_relFileName;
   m_nativeCodeFragments = "";
-  std::cout << "Filename: " << m_absFileName << std::endl;
-  std::cout << "Package : " << m_package << std::endl;
-  std::cout << "Class   : " << m_className << std::endl;
 }
 
 inline bool exists(const std::string &name)
@@ -108,19 +107,11 @@ void JavaSourceGenerator::EndClass()
     return;
   }
 
-  std::string begin, end;
-  if (exists(m_absFileName))
-  {
-    std::string content = ReadFile();
-    begin = ReadClassBegin(content);
-    end = ReadClassEnd(content);
-  }
+  std::cout << "  >> " << m_relFileName;
 
-  if (begin.empty() || end.empty())
-  {
-    begin = GenerateClassBegin();
-    end = GenerateClassEnd();
-  }
+  std::string begin, end;
+  begin = GenerateClassBegin();
+  end = GenerateClassEnd();
 
 
 //  std::cout << begin << std::endl
@@ -158,16 +149,17 @@ std::string JavaSourceGenerator::GenerateClassBegin()
     source += "package " + m_package + ";\n\n";
   }
 
-  source += "public class " + m_className + "\n";
+
+  source += "public abstract class " + m_className + "Native\n";
   source += "{\n";
-  source += s_beginMarker;
+  source += "  private " + m_className + "Native () {\n";
+  source += "  }\n";
   return source;
 }
 
 std::string JavaSourceGenerator::GenerateClassEnd()
 {
   std::string source;
-  source += s_endMarker + "\n";
   source += "}\n";
   source += "\n";
   return source;
@@ -238,11 +230,11 @@ std::string map_jni_type(const std::string &jniType)
   {
     return "short[]";
   }
-  else if (jniType == "intArray")
+  else if (jniType == "jintArray")
   {
     return "int[]";
   }
-  else if (jniType == "longArray")
+  else if (jniType == "jlongArray")
   {
     return "long[]";
   }
@@ -257,6 +249,10 @@ std::string map_jni_type(const std::string &jniType)
   else if (jniType == "jobject")
   {
     return "Object";
+  }
+  else if (jniType == "jstring")
+  {
+    return "String";
   }
   if (!jniType.empty() && jniType[0] == 'j')
   {
@@ -287,7 +283,7 @@ void JavaSourceGenerator::EndFunction()
 {
   std::string functionDeclaration;
 
-  std::string decl = "  private static native " + m_functionType + " " + m_functionName + "(";
+  std::string decl = "  public static native " + m_functionType + " " + m_functionName + "(";
   std::string space (decl.size(), ' ');
   m_nativeCodeFragments += decl;
   m_nativeCodeFragments += "long ref /* this ptr */";

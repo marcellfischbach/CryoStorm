@@ -14,8 +14,11 @@ std::string JavaJNIGenerator::OutputClass(ClassNode *classNode, std::list<Namesp
     return "";
   }
 
+  std::string fns = Generator::GetFullNamespaceName(nss);
+  std::string className      = classNode->GetName();
+
   std::string javaFQClass = classMeta->Get("jclass");
-  m_sourceGenerator.BeginClass(javaFQClass);
+  m_sourceGenerator.BeginClass(fns + className, javaFQClass);
 
   std::string source;
   source += "#ifdef CS_JAVA\n\n";
@@ -81,7 +84,7 @@ static std::string convert_to_jni_method_name(const std::string &javaFQClass, co
   }
 
 
-  return "Java_" + name + "_n" + methodName;
+  return "Java_" + name + "Native_n" + methodName;
 }
 
 
