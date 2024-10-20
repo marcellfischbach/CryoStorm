@@ -19,7 +19,6 @@ class csGfxLight;
 class csWorld;
 
 
-
 CS_CLASS(jclass="org.cryo.core.entity.LightState")
 class CS_CORE_API csLightState : public CS_SUPER(csSpatialState)
 {
