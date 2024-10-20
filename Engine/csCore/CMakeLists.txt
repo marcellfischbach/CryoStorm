@@ -30,6 +30,8 @@ set(SOURCES
         csTime.cc
         csTime.hh
         csTypes.hh
+        csViewport.cc
+        csViewport.hh
 
         animation/csSkeletonAnimation.cc
         animation/csSkeletonAnimation.hh

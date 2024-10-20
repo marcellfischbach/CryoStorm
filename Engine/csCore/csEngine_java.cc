@@ -25,11 +25,11 @@ JNICALL Java_org_crimsonedge_core_Engine_nGetWorld(JNIEnv *env, jclass cls)
 }
 
 
-JNIEXPORT jobject
-JNICALL Java_org_crimsonedge_core_Engine_nGetDevice(JNIEnv *env, jclass cls)
-{
-  return cs::csEngine::Get()->GetDevice()->GetJObject();
-}
+//JNIEXPORT jobject
+//JNICALL Java_org_crimsonedge_core_Engine_nGetDevice(JNIEnv *env, jclass cls)
+//{
+//  return cs::csEngine::Get()->GetDevice()->GetJObject();
+//}
 
 
 JNIEXPORT jboolean
@@ -64,7 +64,7 @@ JNICALL Java_org_crimsonedge_core_Engine_nInitialize(JNIEnv *env, jclass cls, jo
 extern "C" JNIEXPORT void JNICALL Java_org_crimsonedge_core_Engine_nProcessFrame(JNIEnv *env, jclass cls)
 {
   cs::csJava::Set(env);
-  cs::csEngine::Get()->ProcessFrame();
+  cs::csEngine::Get()->ProcessFrame(nullptr);
 }
 }
 

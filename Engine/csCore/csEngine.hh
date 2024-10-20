@@ -27,9 +27,9 @@ public:
   void SetWindow(iWindow *window);
   iWindow *GetWindow();
 
-  void SetDevice(iDevice *device);
-  iDevice *GetDevice();
-
+//  void SetDevice(iDevice *device);
+//  iDevice *GetDevice();
+//
 //  void SetFrameRenderer(iFrameRenderer *frameRenderer);
 //  iFrameRenderer *GetFrameRenderer();
 //
@@ -46,12 +46,12 @@ public:
   bool InitializeGame();
 
   int Run();
-  bool ProcessFrame();
+  bool ProcessFrame(iDevice* device);
   void Exit(int returnValue = 0);
 
 private:
   iWindow         *m_window         = nullptr;
-  iDevice         *m_device         = nullptr;
+//  iDevice         *m_device         = nullptr;
   iFrameRenderer  *m_frameRenderer  = nullptr;
   iSkyboxRenderer *m_skyboxRenderer = nullptr;
   iRenderTarget2D *m_renderTarget = nullptr;

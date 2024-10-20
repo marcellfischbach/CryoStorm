@@ -31,15 +31,15 @@ namespace cs
 {
 
 
-void csEngine::SetDevice(cs::iDevice *device)
-{
-  CS_SET(m_device, device);
-}
-
-iDevice *csEngine::GetDevice()
-{
-  return m_device;
-}
+//void csEngine::SetDevice(cs::iDevice *device)
+//{
+//  CS_SET(m_device, device);
+//}
+//
+//iDevice *csEngine::GetDevice()
+//{
+//  return m_device;
+//}
 
 //void csEngine::SetFrameRenderer(cs::iFrameRenderer *frameRenderer)
 //{
@@ -334,14 +334,17 @@ int csEngine::Run()
   size_t numShaderStateChanges = 0;
 #endif
 
+  iDevice* device = csObjectRegistry::Get<iDevice>();
+
+
   while (m_active)
   {
 #if _DEBUG
-    m_device->ResetDebug();
+    device->ResetDebug();
 #endif
 
     m_window->ProcessUpdates();
-    if (!ProcessFrame())
+    if (!ProcessFrame(device))
     {
       m_active = false;
       m_exitValue = -1;
@@ -350,21 +353,21 @@ int csEngine::Run()
     m_window->Present();
 
 #if _DEBUG
-    numDrawCallsPerSec += m_device->GetNumberOfDrawCalls();
-    numTrianglesPerSec += m_device->GetNumberOfTriangles();
-    numShaderStateChanges += m_device->GetNumberOfShaderStateChanges();
+    numDrawCallsPerSec += device->GetNumberOfDrawCalls();
+    numTrianglesPerSec += device->GetNumberOfTriangles();
+    numShaderStateChanges += device->GetNumberOfShaderStateChanges();
 #endif
 
   }
   return m_exitValue;
 }
 
-bool csEngine::ProcessFrame()
+bool csEngine::ProcessFrame(iDevice* device)
 {
   if (!m_renderTarget || m_renderTarget->GetWidth() != m_window->GetWidth() || m_renderTarget->GetHeight() != m_window->GetHeight())
   {
     CS_RELEASE(m_renderTarget);
-    m_renderTarget = create_render_target(m_device, m_window->GetWidth(), m_window->GetHeight(), m_multiSamples);
+    m_renderTarget = create_render_target(device, m_window->GetWidth(), m_window->GetHeight(), m_multiSamples);
     if (m_renderTarget == nullptr)
     {
       return false;
@@ -391,16 +394,16 @@ bool csEngine::ProcessFrame()
   }
 
 
-  m_frameRenderer->Render(m_renderTarget, m_device, m_world->GetScene());
+  m_frameRenderer->Render(m_renderTarget, device, m_world->GetScene());
 
   cs::iTexture2D *finalColor = m_renderTarget->GetColorTexture(0);
 
-  m_device->SetRenderTarget(nullptr);
-  m_device->SetViewport(0, 0, m_window->GetWidth(), m_window->GetHeight());
-  m_device->SetDepthTest(false);
-  m_device->SetBlending(false);
-  m_device->RenderFullscreen(finalColor);
-  m_device->SetDepthTest(true);
+  device->SetRenderTarget(nullptr);
+  device->SetViewport(0, 0, m_window->GetWidth(), m_window->GetHeight());
+  device->SetDepthTest(false);
+  device->SetBlending(false);
+  device->RenderFullscreen(finalColor);
+  device->SetDepthTest(true);
 
   return true;
 }

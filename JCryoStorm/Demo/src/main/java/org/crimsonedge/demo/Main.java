@@ -5,9 +5,29 @@ import org.cryo.core.CsCoreLibrary;
 import org.cryo.core.resource.VFS;
 import org.cryo.core.resource.VFSConfigReader;
 
+import javax.swing.*;
+import java.awt.*;
+
 public class Main {
 
+
     public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+
+            JFrame frame = new JFrame();
+            frame.setLayout(new BorderLayout());
+            frame.add(new TestCanvas(), BorderLayout.CENTER);
+
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(1024, 768);
+            frame.setLocation(100, 100);
+            frame.setVisible(true);
+
+        });
+    }
+
+
+    public static void main2(String[] args) {
         CsCoreLibrary.load();
 
         String rootPath = "../data";

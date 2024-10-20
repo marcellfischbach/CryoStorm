@@ -26,16 +26,14 @@ bool csOpenGLModule::Register(const std::vector<std::string> &args, csEngine *en
   csAssetManager::Get()->RegisterLoader(new csGL4ProgramLoader());
   csAssetManager::Get()->RegisterLoader(new csGL4ShaderLoader());
 
-  csGL4Device *device = new csGL4Device();
-  csObjectRegistry::Register<iDevice>(device);
-  engine->SetDevice(device);
+  csObjectRegistry::Register<iDevice>(new csGL4Device());
 
-  std::string renderPipline = csSettings::Get().Graphics().GetText("pipeline", "forward");
-  if (renderPipline == std::string("forward"))
+  std::string renderPipeline = csSettings::Get().Graphics().GetText("pipeline", "forward");
+  if (renderPipeline == std::string("forward"))
   {
     csObjectRegistry::Register<iRenderPipeline>(new csGL4ForwardPipeline());
   }
-  else if (renderPipline == std::string("deferred"))
+  else if (renderPipeline == std::string("deferred"))
   {
     csObjectRegistry::Register<iRenderPipeline>(new csGL4DeferredPipeline());
   }
@@ -53,11 +51,11 @@ bool csOpenGLModule::Register(const std::vector<std::string> &args, csEngine *en
 
 bool csOpenGLModule::Initialize(const std::vector<std::string> &args, csEngine *engine)
 {
-  csGL4Device * gl4Graphics = (csGL4Device*)engine->GetDevice();
+  auto gl4Graphics = (csGL4Device*)csObjectRegistry::Get<iDevice>();
   bool initialized = gl4Graphics->Initialize();
   if (initialized) 
   {
-    csSamplers * samplers = new csSamplers();
+    auto samplers = new csSamplers();
     samplers->Load();
 
     csObjectRegistry::Register<csSamplers>(samplers);
@@ -65,7 +63,7 @@ bool csOpenGLModule::Initialize(const std::vector<std::string> &args, csEngine *
   }
 
 
-  iRenderPipeline* pipeline = csObjectRegistry::Get<iRenderPipeline>();
+  auto pipeline = csObjectRegistry::Get<iRenderPipeline>();
   if (pipeline)
   {
     pipeline->Initialize();
