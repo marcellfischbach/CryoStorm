@@ -17,42 +17,44 @@ class csElement;
 class JavaConverterArgument
 {
 public:
-  JavaConverterArgument(const std::string &jtype, const std::string &id);
-  [[nodiscard]] const std::string &GetJType () const;
-  [[nodiscard]] const std::string &GetID () const;
+  JavaConverterArgument(std::string jtype, std::string id, std::string suffix);
+  [[nodiscard]] const std::string &GetJType() const;
+  [[nodiscard]] const std::string &GetID() const;
+  [[nodiscard]] const std::string &GetSuffix() const;
 private:
   std::string m_jtype;
   std::string m_id;
+  std::string m_suffix;
 };
 
 class JavaConverter
 {
 public:
-  void AddType (const std::string &type);
-  void AddInputArgument (const JavaConverterArgument &argument);
-  void AddOutputArgument (const JavaConverterArgument &argument);
+  void AddType(const std::string &type);
+  void AddInputArgument(const JavaConverterArgument &argument);
+  void AddOutputArgument(const JavaConverterArgument &argument);
 
-  void SetInputScript (const std::string &inputScript);
-  void SetOutputScript (const std::string &outputScript);
-  void SetOutputReturnType (const std::string &outputReturnType);
+  void SetInputScript(const std::string &inputScript);
+  void SetOutputScript(const std::string &outputScript);
+  void SetOutputReturnType(const std::string &outputReturnType);
 
-  void SetFullQualifiedType (const std::string &fullQualifiedType);
+  void SetFullQualifiedType(const std::string &fullQualifiedType);
   const std::string &GetFullQualifiedType() const;
 
-  bool IsValidForType (const std::string &type) const;
+  bool IsValidForType(const std::string &type) const;
 
-  const std::vector<JavaConverterArgument> &GetInputArguments () const;
-  const std::vector<JavaConverterArgument> &GetOutputArguments () const;
+  const std::vector<JavaConverterArgument> &GetInputArguments() const;
+  const std::vector<JavaConverterArgument> &GetOutputArguments() const;
 
-  const std::string &GetOutputReturnType () const;
+  const std::string &GetOutputReturnType() const;
 
 
-  std::string ConvertInput (size_t jniArgIdx, size_t csArgIdx) const;
-  std::string ConvertOutput () const;
+  std::string ConvertInput(size_t jniArgIdx, size_t csArgIdx) const;
+  std::string ConvertOutput() const;
 
 private:
 
-  std::set<std::string>              m_types;
+  std::set<std::string> m_types;
   std::vector<JavaConverterArgument> m_inputArguments;
   std::vector<JavaConverterArgument> m_outputArguments;
   std::string m_outputReturnType;
@@ -71,7 +73,7 @@ public:
   static JavaConverters *Get();
 
   void ReadConverters(const std::string &path);
-  const JavaConverter *FindConverter (const std::string &type) const;
+  const JavaConverter *FindConverter(const std::string &type) const;
 
 private:
   JavaConverters() = default;
@@ -81,11 +83,11 @@ private:
   void ReadConvertersFile(const std::string &filename);
 
   void ReadConverter(const cs::xml::csElement *converterElement);
-  void ReadConverters (const cs::xml::csElement *element);
+  void ReadConverters(const cs::xml::csElement *element);
 
-  void ReadTypes (JavaConverter &converter, const cs::xml::csElement* typesElement);
-  void ReadInputArguments (JavaConverter &converter, const cs::xml::csElement* inputArgumentsElement);
-  void ReadOutputArguments (JavaConverter &converter, const cs::xml::csElement* outputArgumentsElement);
+  void ReadTypes(JavaConverter &converter, const cs::xml::csElement *typesElement);
+  void ReadInputArguments(JavaConverter &converter, const cs::xml::csElement *inputArgumentsElement);
+  void ReadOutputArguments(JavaConverter &converter, const cs::xml::csElement *outputArgumentsElement);
 
 private:
 

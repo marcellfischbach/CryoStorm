@@ -11,7 +11,6 @@ namespace cs
 {
 
 
-
 class csWorld;
 class csEntityState;
 class csSpatialState;

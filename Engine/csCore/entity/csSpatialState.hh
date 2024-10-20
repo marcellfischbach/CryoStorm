@@ -12,7 +12,7 @@ namespace cs
 {
 
 
-CS_CLASS()
+CS_CLASS(jclass="org.cryo.core.entity.SpatialState")
 class CS_CORE_API csSpatialState : public CS_SUPER(csEntityState)
 {
   CS_CLASS_GEN;
@@ -20,18 +20,26 @@ public:
   csSpatialState(const std::string &name = std::string(""));
   virtual ~csSpatialState();
 
+  CS_FUNCTION()
   void SetStatic(bool _static);
+  CS_FUNCTION()
   bool IsStatic() const;
-  
-  bool Attach(csSpatialState *child);
+
+  CS_FUNCTION()
+  bool Attach(cs::csSpatialState *child);
+  CS_FUNCTION()
   bool DetachSelf();
-  bool Detach(csSpatialState *child);
-  csSpatialState* GetParent();
+  CS_FUNCTION()
+  bool Detach(cs::csSpatialState *child);
+  CS_FUNCTION()
+  cs::csSpatialState* GetParent();
   const csSpatialState* GetParent() const;
 
-  Size GetNumberOfChildren() const;
-  csSpatialState* GetChild(Size idx);
-  const csSpatialState* GetChild(Size idx) const;
+  CS_FUNCTION()
+  size_t GetNumberOfChildren() const;
+  CS_FUNCTION()
+  cs::csSpatialState* GetChild(size_t idx);
+  const csSpatialState* GetChild(size_t idx) const;
 
   /**
    * @name Transformation

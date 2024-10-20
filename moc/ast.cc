@@ -316,6 +316,64 @@ std::string CSMetaNode::Get(const std::string &key) const
   return "";
 }
 
+static std::string trim (const std::string &text)
+{
+  size_t start = 0;
+  size_t end = text.length();
+  bool testStart = true;
+  bool testEnd = true;
+  for (size_t i=0, in=text.length(); i<in && (testStart || testEnd); i++)
+  {
+    if (testStart && text[i] != ' ' && text[i] != '\t')
+    {
+      start = i;
+      testStart = false;
+    }
+    if (testEnd && text[in - i - 1] != ' ' && text[in - i - 1] != '\t')
+    {
+      end = in - i;
+      testEnd = false;
+    }
+  }
+  
+  return text.substr(0, end - start);
+}
+
+static std::vector<std::string> separate(const std::string &text, char delimiter)
+{
+  std::vector<std::string> res;
+  std::string v;
+  for (const auto &ch: text)
+  {
+    if (ch == delimiter)
+    {
+      res.push_back(trim(v));
+      v = "";
+    }
+    else
+    {
+      v += ch;
+    }
+  }
+  if (!v.empty())
+  {
+    res.push_back(trim(v));
+  }
+  return res;
+}
+
+std::vector<std::string> CSMetaNode::GetList(const std::string &key) const
+{
+  std::string value = Get(key);
+  return separate(value, ',');
+}
+
+bool CSMetaNode::HasListValue(const std::string &key, const std::string &searchValue) const
+{
+  const std::vector<std::string> &values = GetList(key);
+  return std::find(values.begin(), values.end(), searchValue) != values.end();
+}
+
 void CSMetaNode::Debug()
 {
   switch (m_type)
@@ -353,6 +411,7 @@ void ClassNode::SetStruct(bool strct)
 {
   m_struct = strct;
 }
+
 
 bool ClassNode::IsStruct() const
 {
@@ -834,6 +893,7 @@ std::string TypeDef::GetText() const
   }
   return text;
 }
+
 
 
 TokenNode::TokenNode()

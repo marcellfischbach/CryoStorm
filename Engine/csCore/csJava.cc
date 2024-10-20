@@ -28,11 +28,11 @@ extern "C"
 
 
 JNIEXPORT jlong
-JNICALL Java_org_crimsonedge_core_CoreObject_nCreateClass(JNIEnv *env, jobject coreObject, jstring classNameStr)
+JNICALL Java_org_cryo_core_CoreObject_nCreateClass(JNIEnv *env, jobject coreObject, jstring classNameStr)
 {
   try
   {
-    const char          *classNameChars = env->GetStringUTFChars(classNameStr, 0);
+    const char          *classNameChars = env->GetStringUTFChars(classNameStr, nullptr);
     const cs::csClass *pClass         = cs::csClassRegistry::Get()->GetClass(classNameChars);
     env->ReleaseStringUTFChars(classNameStr, classNameChars);
 
@@ -46,8 +46,6 @@ JNICALL Java_org_crimsonedge_core_CoreObject_nCreateClass(JNIEnv *env, jobject c
       return 0;
     }
 
-    fflush(stdout);
-    coreObject = env->NewGlobalRef(coreObject);
     obj->SetJObject(coreObject);
     return reinterpret_cast<jlong>(obj);
   }

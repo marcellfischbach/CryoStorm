@@ -39,6 +39,7 @@ CS_CLASS_GEN;
   virtual ~iDevice()
   {}
 
+  CS_FUNCTION()
   virtual void SetViewport(int16_t x, int16_t y, uint16_t width, uint16_t height) = 0;
   virtual void Clear(bool clearColor,
                      const csColor4f &color,
@@ -47,6 +48,7 @@ CS_CLASS_GEN;
                      bool clearStencil,
                      uint8_t stencil) = 0;
 
+  CS_FUNCTION()
   virtual void SetColorWrite(bool redMask, bool greenMask, bool blueMask, bool alphaMask) = 0;
   virtual void SetDepthWrite(bool depthMask) = 0;
   virtual void SetDepthTest(bool depthTest) = 0;

@@ -15,10 +15,10 @@ std::string JavaJNIGenerator::OutputClass(ClassNode *classNode, std::list<Namesp
   }
 
   std::string fns = Generator::GetFullNamespaceName(nss);
-  std::string className      = classNode->GetName();
+  std::string className = classNode->GetName();
 
   std::string javaFQClass = classMeta->Get("jclass");
-  m_sourceGenerator.BeginClass(fns + className, javaFQClass);
+  m_sourceGenerator.BeginClass(classNode, classMeta, fns + className, javaFQClass);
 
   std::string source;
   source += "#ifdef CS_JAVA\n\n";
@@ -52,7 +52,7 @@ std::string JavaJNIGenerator::OutputClass(ClassNode *classNode, std::list<Namesp
 
   m_sourceGenerator.EndClass();
 
-  source += "#endif CS_JAVA\n\n";
+  source += "#endif // CS_JAVA\n\n";
 
   return source;
 }
@@ -114,20 +114,27 @@ std::string convert_return_type_to_jni_type(FunctionNode *function, CSMetaNode *
     return "jlong";
   }
 
+  if (function->GetArguments().empty() && meta->Has("jenum")
+      || meta->HasListValue("jenum", typeName))
+  {
+    return "jint";
+  }
 
   return "void";
 }
 
 
 std::string
-convert_function_input_parameter_to_jni_type(const Argument &argument,
-                                             CSMetaNode *meta,
+convert_function_input_parameter_to_jni_type(const FunctionNode *function,
+                                             const CSMetaNode *meta,
+                                             const Argument &argument,
                                              uint32_t jniArgCount,
                                              uint32_t &numJniArgCount,
                                              JavaSourceGenerator &sourceGenerator)
 {
   const TypeDef &def = argument.GetType();
   std::string typeName = def.GetTypeName();
+  std::string prettyTypeName = def.GetText();
   numJniArgCount = 1;
   const JavaConverter *converter = JavaConverters::Get()->FindConverter(typeName);
   if (converter)
@@ -136,7 +143,9 @@ convert_function_input_parameter_to_jni_type(const Argument &argument,
     std::string arguments;
     for (const auto &arg: converter->GetInputArguments())
     {
-      sourceGenerator.AddParameter(arg.GetJType(), "arg" + std::to_string(jniArgCount), typeName);
+      sourceGenerator.AddParameter(arg.GetJType(),
+                                   argument.GetName() + arg.GetSuffix(),
+                                   argument.GetName() + " (" + prettyTypeName + ")");
       arguments += ", " + arg.GetJType() + " jniArg" + std::to_string(jniArgCount);
       jniArgCount++;
     }
@@ -145,9 +154,21 @@ convert_function_input_parameter_to_jni_type(const Argument &argument,
 
   if (def.IsPointer() || def.IsReference())
   {
-    sourceGenerator.AddParameter("jlong", "arg" + std::to_string(jniArgCount), "ptr " + typeName);
+    sourceGenerator.AddParameter("jlong",
+                                 argument.GetName(),
+                                 argument.GetName() + " (" + prettyTypeName + ")");
     return ", jlong jniArg" + std::to_string(jniArgCount);
   }
+
+  if (function->GetArguments().size() == 1 && meta->Has("jenum")
+    || meta->HasListValue("jenum", typeName))
+  {
+    sourceGenerator.AddParameter("jint",
+                                 argument.GetName(),
+                                 argument.GetName() + " (" + prettyTypeName + ")");
+    return ", jint jniArg" + std::to_string(jniArgCount);
+  }
+
   return "";
 }
 
@@ -164,7 +185,8 @@ convert_function_output_parameter_to_jni_type(const FunctionNode *function, CSMe
     std::string arguments;
     for (const auto &arg: converter->GetOutputArguments())
     {
-      sourceGenerator.AddParameter(arg.GetJType(), "outArg" + std::to_string(jniArgCount), typeName + " (output return value)");
+      sourceGenerator.AddParameter(arg.GetJType(), "outArg" + std::to_string(jniArgCount),
+                                   typeName + " (output return value)");
       arguments += ", " + arg.GetJType() + " jniOutArg" + std::to_string(jniArgCount);
       jniArgCount++;
     }
@@ -175,7 +197,9 @@ convert_function_output_parameter_to_jni_type(const FunctionNode *function, CSMe
 
 
 std::string
-convert_input_parameter_to_jni(const Argument &argument,
+convert_input_parameter_to_jni(FunctionNode *functionNode,
+                               CSMetaNode *functionMeta,
+                               const Argument &argument,
                                uint32_t jniArgCount,
                                uint32_t csMethodArgCount,
                                uint32_t &numCsMethodArgCount)
@@ -192,12 +216,18 @@ convert_input_parameter_to_jni(const Argument &argument,
   if (def.IsPointer())
   {
     return def.GetText() + " csArg" + std::to_string(csMethodArgCount)
-           + " = reinterpret_cast<" + def.GetText() + ">(jniArg" + std::to_string(jniArgCount) + ");";
+           + " = reinterpret_cast<" + def.GetText() + ">(jniArg" + std::to_string(jniArgCount) + ");\n";
   }
   else if (def.IsReference())
   {
     return def.GetText() + " csArg" + std::to_string(csMethodArgCount)
-           + " = *reinterpret_cast<" + def.GetText() + "*>(jniArg" + std::to_string(jniArgCount) + ");";
+           + " = *reinterpret_cast<" + def.GetText() + "*>(jniArg" + std::to_string(jniArgCount) + ");\n";
+  }
+  if (functionNode->GetArguments().size() == 1 && functionMeta->Has("jenum")
+      || functionMeta->HasListValue("jenum", typeName))
+  {
+    return def.GetText() + " csArg" + std::to_string(csMethodArgCount)
+           + " = static_cast<" + def.GetText() + ">(jniArg" + std::to_string(jniArgCount) + ");\n";
   }
 
   return "";
@@ -230,6 +260,12 @@ std::string convert_result(const FunctionNode *function, CSMetaNode *functionMet
   {
     return "return reinterpret_cast<jlong>(&csReturnValue);";
   }
+
+  if (function->GetArguments().empty() && functionMeta->Has("jenum")
+      || functionMeta->HasListValue("jenum", typeName))
+  {
+    return "return static_cast<jint>(csReturnValue);";
+  }
   return "";
 }
 
@@ -249,7 +285,7 @@ JavaJNIGenerator::GenerateFunction(ClassNode *classNode, std::list<NamespaceNode
 
   std::string methodName = convert_to_jni_method_name(javaFQClass, functionNode->GetName());
   const std::string &jniReturnType = convert_return_type_to_jni_type(functionNode, functionMeta);
-  m_sourceGenerator.BeginFunction(functionNode->GetName(), jniReturnType);
+  m_sourceGenerator.BeginFunction(functionNode, functionMeta, functionNode->GetName(), jniReturnType);
 
 
   std::string argConversion;
@@ -259,9 +295,18 @@ JavaJNIGenerator::GenerateFunction(ClassNode *classNode, std::list<NamespaceNode
   for (auto &arg: functionNode->GetArguments())
   {
     uint32_t numJniArgCount, numCsMethodArgCount;
-    functionArguments += convert_function_input_parameter_to_jni_type(arg, functionMeta, jniArgCount, numJniArgCount,
+    functionArguments += convert_function_input_parameter_to_jni_type(functionNode,
+                                                                      functionMeta,
+                                                                      arg,
+                                                                      jniArgCount,
+                                                                      numJniArgCount,
                                                                       m_sourceGenerator);
-    argConversion += convert_input_parameter_to_jni(arg, jniArgCount, csMethodArgCount, numCsMethodArgCount);
+    argConversion += convert_input_parameter_to_jni(functionNode,
+                                                    functionMeta,
+                                                    arg,
+                                                    jniArgCount,
+                                                    csMethodArgCount,
+                                                    numCsMethodArgCount);
 
 
     jniArgCount += numJniArgCount;

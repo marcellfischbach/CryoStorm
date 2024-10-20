@@ -4,15 +4,22 @@
 #include <string>
 #include <list>
 
+namespace cs::moc
+{
+class ClassNode;
+class CSMetaNode;
+class FunctionNode;
+}
+
 class JavaSourceGenerator
 {
 public:
   static void SetBasePath (std::string basePath);
   static bool ShouldGenerate ();
 
-  void BeginClass (const std::string &cppClassName, const std::string &fqClassName);
+  void BeginClass (cs::moc::ClassNode* classNode, cs::moc::CSMetaNode *classMeta, const std::string &cppClassName, const std::string &fqClassName);
 
-  void BeginFunction (const std::string &cppFunctionName, const std::string &jniReturnType);
+  void BeginFunction (cs::moc::FunctionNode *functionNode, cs::moc::CSMetaNode *functionMeta, const std::string &cppFunctionName, const std::string &jniReturnType);
   void AddParameter (const std::string &type, const std::string &name, const std::string &comment);
   void EndFunction ();
 
@@ -20,6 +27,9 @@ public:
 
 private:
   void Parse();
+  cs::moc::ClassNode* m_classNode;
+  cs::moc::CSMetaNode *m_classMeta;
+
   std::string GenerateClassBegin();
   std::string GenerateClassEnd();
 
@@ -37,7 +47,8 @@ private:
   std::string m_className;
   static std::string s_basePath;
 
-
+  cs::moc::FunctionNode *m_functionNode;
+  cs::moc::CSMetaNode *m_functionMeta;
   std::string m_functionType;
   std::string m_functionName;
   struct Argument

@@ -1,22 +1,21 @@
 package org.cryo.core;
 
-public class CoreObject implements ICoreObject{
+public class CsObject implements ICoreObject {
 
     private long ref;
 
-    private native long nCreateClass (String className);
+    private native long nCreateClass(String className);
 
-    public CoreObject() {
+    public CsObject() {
         CsClass cls = getCsClass(getClass());
         if (cls != null) {
             ref = nCreateClass(cls.value());
-        }
-        else {
-            ref = 0;
+        } else {
+            throw new CsClassInstantiationException(getClass() + " is not annotated with @CsClass(\"...\")");
         }
     }
 
-    public CoreObject(long ref) {
+    public CsObject(long ref) {
         this.ref = ref;
     }
 

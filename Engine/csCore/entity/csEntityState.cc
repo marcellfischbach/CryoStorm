@@ -14,10 +14,6 @@ csEntityState::csEntityState(const std::string &name)
   CS_CLASS_GEN_CONSTR;
 }
 
-csEntityState::~csEntityState()
-{
-
-}
 
 void csEntityState::SetName(const std::string &name)
 {

@@ -5,10 +5,10 @@
             <type>cs::csColor4f</type>
         </types>
         <in-arguments>
-            <argument jtype="jfloat" id="r"/>
-            <argument jtype="jfloat" id="g"/>
-            <argument jtype="jfloat" id="b"/>
-            <argument jtype="jfloat" id="a"/>
+            <argument jtype="jfloat" id="r" suffix="R"/>
+            <argument jtype="jfloat" id="g" suffix="G"/>
+            <argument jtype="jfloat" id="b" suffix="B"/>
+            <argument jtype="jfloat" id="a" suffix="A"/>
         </in-arguments>
         <out-arguments>
             <argument jtype="jfloatArray" id="out"/>

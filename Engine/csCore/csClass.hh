@@ -59,13 +59,15 @@
     }                       \
     void SetJObject(jobject object) const override \
     {                       \
-      m_jobject = object; \
+      jobject tmp = cs::csJava::Get()->NewGlobalRef(object); \
+      if (m_jobject) cs::csJava::Get()->DeleteGlobalRef(m_jobject);\
+      m_jobject = tmp; \
     }                       \
     CS_NODISCARD jobject GetJObject() const override\
     {                       \
       if (!m_jobject && !m_jobjectChecked)       \
       {                     \
-        m_jobject = CreateJObject();                \
+        SetJObject(CreateJObject());                \
         m_jobjectChecked = true; \
       }                     \
       return m_jobject;\
@@ -84,17 +86,18 @@ public:                                \
     CS_NODISCARD jobject GetJObject() const\
     {                       \
       if (!m_jobject && !m_jobjectChecked)       \
-      {                                \
-          static jclass cls = cs::csJava::Get() ? cs::csJava::Get()->FindClass (fqcn) : nullptr; \
+      {                       \
+          JNIEnv* java = cs::csJava::Get();\
+          static jclass cls = java ? java->FindClass (fqcn) : nullptr; \
           if (cls) \
           { \
-            static jmethodID ctor = cs::csJava::Get()->GetMethodID(cls, "<init>", "(J)V"); \
+            static jmethodID ctor = java->GetMethodID(cls, "<init>", "(J)V"); \
             if (ctor) \
             { \
-              jobject obj = cs::csJava::Get()->NewObject(cls, ctor, reinterpret_cast<jlong>(this)); \
+              jobject obj = java->NewObject(cls, ctor, reinterpret_cast<jlong>(this)); \
               if (obj) \
               { \
-                m_jobject = cs::csJava::Get()->NewGlobalRef(obj);                              \
+                m_jobject = java->NewGlobalRef(obj);                              \
                 if (!m_jobject)        \
                 {                      \
                   return nullptr;\
@@ -265,7 +268,8 @@ class csAutoRelease
 private:
   iObject *obj;
 public:
-  explicit csAutoRelease(iObject *obj) : obj(obj)
+  explicit csAutoRelease(iObject *obj)
+      : obj(obj)
   {}
   ~csAutoRelease()
   { CS_RELEASE(obj); }
@@ -328,8 +332,8 @@ public:
 
   bool operator==(const csValueDeclaration &other) const;
 private:
-  eConstness       m_constness;
-  std::string      m_type;
+  eConstness m_constness;
+  std::string m_type;
   eValueMemoryMode m_mode;
 };
 
@@ -381,9 +385,9 @@ protected:
 
 
 private:
-  std::string                        m_name;
-  csValueDeclaration                 m_containerDecl;
-  csValueDeclaration                 m_decl;
+  std::string m_name;
+  csValueDeclaration m_containerDecl;
+  csValueDeclaration m_decl;
   std::map<std::string, std::string> m_properties;
 
 };
@@ -399,7 +403,7 @@ public:
 
 private:
   csValueDeclaration m_type;
-  std::string        m_name;
+  std::string m_name;
 };
 
 class CS_CORE_API csFunction
@@ -505,12 +509,12 @@ protected:
 
 private:
   eFunctionVirtuality m_virtuality;
-  eConstness          m_constness;
-  std::string        m_name;
+  eConstness m_constness;
+  std::string m_name;
   csValueDeclaration m_returnType;
 
   std::vector<csFunctionAttribute> m_attributes;
-  csFunctionAttribute              m_invalid;
+  csFunctionAttribute m_invalid;
 };
 
 
@@ -579,8 +583,8 @@ protected:
   void AddFunction(const csFunction *function);
   void AddMeta(const std::string &key, const std::string &value);
 private:
-  std::string                   m_name;
-  std::vector<const csClass *>    m_superClasses;
+  std::string m_name;
+  std::vector<const csClass *> m_superClasses;
   std::vector<const csProperty *> m_properties;
   std::vector<const csFunction *> m_functions;
   std::map<std::string, std::string> m_meta;

@@ -874,16 +874,16 @@ std::string ClassGenerator::GenerateCreateJObject(cs::moc::ClassNode *classNode,
   {
     std::string jclass = meta->Get("jclass");
     jclass = convert_java_class_path(jclass);
-    getter += "  static jclass cls = cs::csJava::Get() ? cs::csJava::Get()->FindClass (\"" + jclass + "\") : nullptr;\n";
+    getter += "  JNIEnv *java = cs::csJava::Get()\n";
+    getter += "  static jclass cls = java ? java->FindClass (\"" + jclass + "\") : nullptr;\n";
     getter += "  if (cls)\n";
     getter += "  {\n";
-    getter += "    static jmethodID ctor = cs::csJava::Get()->GetMethodID(cls, \"<init>\", \"(J)V\");\n";
+    getter += "    static jmethodID ctor = java->GetMethodID(cls, \"<init>\", \"(J)V\");\n";
     getter += "    if (ctor)\n";
     getter += "    {\n";
-    getter += "      jobject obj = cs::csJava::Get()->NewObject(cls, ctor, reinterpret_cast<jlong>(this));\n";
+    getter += "      jobject obj = java->NewObject(cls, ctor, reinterpret_cast<jlong>(this));\n";
     getter += "      if (obj)\n";
     getter += "      {\n";
-    getter += "        obj = cs::csJava::Get()->NewGlobalRef(obj);\n";
     getter += "        return obj;\n";
     getter += "      }\n";
     getter += "    }\n";

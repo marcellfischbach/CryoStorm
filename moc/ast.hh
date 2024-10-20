@@ -171,6 +171,8 @@ public:
 
   bool Has(const std::string& key) const;
   std::string Get(const std::string& key) const;
+  std::vector<std::string> GetList(const std::string &key) const;
+  bool HasListValue(const std::string &key, const std::string &searchValue) const;
 
 
 protected:

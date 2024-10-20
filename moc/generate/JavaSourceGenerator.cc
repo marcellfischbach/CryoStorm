@@ -1,5 +1,7 @@
 
 #include <generate/JavaSourceGenerator.hh>
+#include <generate/generator.hh>
+#include <ast.hh>
 #include <list>
 #include <iostream>
 #include <fstream>
@@ -36,7 +38,7 @@ std::string class_to_file_name(const std::string &fqClassName)
     }
   }
 
-  return res + "Native.java";
+  return res + ".java";
 }
 
 
@@ -63,7 +65,8 @@ std::string package_to_path(const std::string &package)
 }
 
 
-void JavaSourceGenerator::BeginClass(const std::string &cppClassName, const std::string &fqClassName)
+void JavaSourceGenerator::BeginClass(cs::moc::ClassNode *classNode, cs::moc::CSMetaNode *classMeta,
+                                     const std::string &cppClassName, const std::string &fqClassName)
 {
   if (!ShouldGenerate())
   {
@@ -71,6 +74,8 @@ void JavaSourceGenerator::BeginClass(const std::string &cppClassName, const std:
   }
   m_fqClassName = fqClassName;
   m_cppClassName = cppClassName;
+  m_classNode = classNode;
+  m_classMeta = classMeta;
   Parse();
 }
 
@@ -110,8 +115,18 @@ void JavaSourceGenerator::EndClass()
   std::cout << "  >> " << m_relFileName;
 
   std::string begin, end;
-  begin = GenerateClassBegin();
-  end = GenerateClassEnd();
+  if (exists(m_absFileName))
+  {
+    std::string content = ReadFile();
+    begin = ReadClassBegin(content);
+    end = ReadClassEnd(content);
+  }
+
+  if (begin.empty() || end.empty())
+  {
+    begin = GenerateClassBegin();
+    end = GenerateClassEnd();
+  }
 
 
 //  std::cout << begin << std::endl
@@ -125,9 +140,9 @@ void JavaSourceGenerator::EndClass()
   std::ofstream outputFile(m_absFileName);
   if (outputFile.is_open())
   {
-    outputFile << begin << std::endl
-               << m_nativeCodeFragments << std::endl
-               << end << std::endl;
+    outputFile << begin << std::endl << std::endl
+               << m_nativeCodeFragments
+               << "    " << end << std::endl;
     outputFile.close();
   }
   else
@@ -140,6 +155,26 @@ void JavaSourceGenerator::EndClass()
 static std::string s_beginMarker = "//##BEGIN-csMOC # Don't remove";
 static std::string s_endMarker = "//##END-csMOC # Don't remove";
 
+
+bool is_of_type(cs::moc::ClassNode *classNode, const std::string &csTypeName)
+{
+  std::string fqCsTypeName = "cs::" + csTypeName;
+
+  for (const auto &superDef: classNode->GetSupers())
+  {
+    if (superDef.IsCSSuper())
+    {
+      const std::string &typeName = superDef.GetType().GetTypeName();
+      if (typeName == csTypeName || typeName == fqCsTypeName)
+      {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
 std::string JavaSourceGenerator::GenerateClassBegin()
 {
   std::string source;
@@ -149,17 +184,52 @@ std::string JavaSourceGenerator::GenerateClassBegin()
     source += "package " + m_package + ";\n\n";
   }
 
+  source += "import org.cryo.core.CsClass;\n";
 
-  source += "public abstract class " + m_className + "Native\n";
-  source += "{\n";
-  source += "  private " + m_className + "Native () {\n";
-  source += "  }\n";
+  std::string extendsClass;
+  if (is_of_type(m_classNode, "csSpatialState"))
+  {
+    extendsClass = "SpatialState";
+    source += "import org.cryo.core.entity.SpatialState;\n";
+  }
+  else if (is_of_type(m_classNode, "csCollisionState"))
+  {
+    extendsClass = "CollisionState";
+    source += "import org.cryo.core.entity.CollisionState;\n";
+  }
+  else if (is_of_type(m_classNode, "csEntityState"))
+  {
+    extendsClass = "EntityState";
+    source += "import org.cryo.core.entity.EntityState;\n";
+  }
+  else
+  {
+    extendsClass = "CsObject";
+    source += "import org.cryo.core.CsObject;\n";
+  }
+
+  source += "\n";
+  source += "@CsClass(\"" + m_cppClassName + "\")\n";
+  source += "public class " + m_className + " extends " + extendsClass + " {\n\n";
+  if (!m_classNode->HasPureVirtualMethod()
+      && m_classNode->HasPublicDefaultConstructor()
+      && !m_classMeta->Has("Virtual"))
+  {
+    source += "    public " + m_className + "() {\n";
+    source += "        super();\n";
+    source += "    }\n\n";
+  }
+  source += "    public " + m_className + "(long ref) {\n";
+  source += "        super(ref);\n";
+  source += "    }\n\n";
+  source += "    " + s_beginMarker;
   return source;
 }
 
 std::string JavaSourceGenerator::GenerateClassEnd()
 {
   std::string source;
+  source += s_endMarker + "\n";
   source += "}\n";
   source += "\n";
   return source;
@@ -261,17 +331,20 @@ std::string map_jni_type(const std::string &jniType)
   return jniType;
 }
 
-std::string map_cpp_functionName (const std::string &cppFunctionName)
+std::string map_cpp_functionName(const std::string &cppFunctionName)
 {
   return "n" + cppFunctionName;
 }
 
 
-void JavaSourceGenerator::BeginFunction(const std::string &cppFunctionName, const std::string &jniReturnType)
+void JavaSourceGenerator::BeginFunction(cs::moc::FunctionNode *functionNode, cs::moc::CSMetaNode *functionMeta,
+                                        const std::string &cppFunctionName, const std::string &jniReturnType)
 {
 
   m_functionType = map_jni_type(jniReturnType);
   m_functionName = map_cpp_functionName(cppFunctionName);
+  m_functionNode = functionNode;
+  m_functionMeta = functionMeta;
 }
 
 void JavaSourceGenerator::AddParameter(const std::string &type, const std::string &name, const std::string &comment)
@@ -283,13 +356,13 @@ void JavaSourceGenerator::EndFunction()
 {
   std::string functionDeclaration;
 
-  std::string decl = "  public static native " + m_functionType + " " + m_functionName + "(";
-  std::string space (decl.size(), ' ');
+  std::string decl = "    private static native " + m_functionType + " " + m_functionName + "(";
+  std::string space(decl.size()-1, ' ');
   m_nativeCodeFragments += decl;
   m_nativeCodeFragments += "long ref /* this ptr */";
   for (const auto &item: m_functionArguments)
   {
-    m_nativeCodeFragments += ",\n" + space + item.typeName + " " + item.name;
+    m_nativeCodeFragments += ",\n" + space + " " +  item.typeName + " " + item.name;
     if (!item.comment.empty())
     {
       m_nativeCodeFragments += " /* " + item.comment + " */";

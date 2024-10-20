@@ -12,29 +12,42 @@ namespace cs
 {
 
 
-CS_CLASS()
+CS_CLASS(jclass="org.cryo.core.graphics.ILight")
 struct CS_CORE_API iLight : public CS_SUPER(iObject)
 {
   CS_CLASS_GEN;
+  ~iLight () override = default;
 
-  virtual ~iLight () { }
+  CS_FUNCTION(jenum)
+  CS_NODISCARD virtual cs::eLightType GetType() const = 0;
 
-  virtual CS_NODISCARD eLightType GetType() const = 0;
+  CS_FUNCTION(jenum)
+  virtual void SetChangeMode(cs::eLightChangeMode changeMode) = 0;
+  CS_FUNCTION(jenum)
+  CS_NODISCARD virtual cs::eLightChangeMode GetChangeMode() const = 0;
 
-  virtual void SetChangeMode(eLightChangeMode changeMode) = 0;
-  virtual CS_NODISCARD eLightChangeMode GetChangeMode() const = 0;
+  CS_FUNCTION(jenum="cs::eLightChangeMode,cs::eLightType")
+  virtual void SetValue(cs::eLightChangeMode changeMode, cs::eLightType type) {}
 
+  CS_FUNCTION()
   virtual void SetCastShadow(bool castShadow) = 0;
-  virtual CS_NODISCARD bool IsCastShadow() const = 0;
+  CS_FUNCTION()
+  CS_NODISCARD virtual bool IsCastShadow() const = 0;
 
+  CS_FUNCTION()
   virtual void SetShadowMapBias(float bias) = 0;
-  virtual CS_NODISCARD float GetShadowMapBias() const = 0;
+  CS_FUNCTION()
+  CS_NODISCARD virtual float GetShadowMapBias() const = 0;
 
-  virtual void SetColor(const csColor4f& color) = 0;
-  virtual CS_NODISCARD const csColor4f& GetColor() const = 0;
+  CS_FUNCTION()
+  virtual void SetColor(const cs::csColor4f& color) = 0;
+  CS_FUNCTION()
+  CS_NODISCARD virtual const cs::csColor4f& GetColor() const = 0;
 
+  CS_FUNCTION()
   virtual void SetIntensity(float intensity) = 0;
-  virtual CS_NODISCARD float GetIntensity() const = 0;
+  CS_FUNCTION()
+  CS_NODISCARD virtual float GetIntensity() const = 0;
 
 };
 

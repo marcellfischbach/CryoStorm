@@ -154,6 +154,22 @@
         </out-conversion>
     </converter>
 
+    <converter>
+        <types>
+            <type>size_t</type>
+        </types>
+        <in-arguments>
+            <argument jtype="jlong" id="int"/>
+        </in-arguments>
+        <out-arguments>
+        </out-arguments>
+        <in-conversion>
+            uint64_t ${csArg} = (uint64_t)${int};
+        </in-conversion>
+        <out-conversion returnType="jlong" fullQualifiedType="uint64_t">
+            return (jlong)${csRet};
+        </out-conversion>
+    </converter>
 
     <converter>
         <types>
