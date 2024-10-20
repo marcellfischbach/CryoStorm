@@ -3,6 +3,7 @@
 #include <generate/ioutput.hh>
 #include <generate/JavaJNIGenerator.hh>
 #include <ast.hh>
+#include <iostream>
 
 
 namespace cs::moc
@@ -39,13 +40,21 @@ void SourceGenerator::Output(iOutput *output)
     std::list<NamespaceNode *> nss = GetAllNamespaces(cls);
 
 
+    std::string clsSource;
     ClassGenerator classGenerator;
-    source += classGenerator.OutputClass(cls, nss, meta);
+    clsSource += classGenerator.OutputClass(cls, nss, meta);
 
 
     JavaJNIGenerator javaGenerator;
-    source += javaGenerator.OutputClass(cls, nss, meta);
+    clsSource += javaGenerator.OutputClass(cls, nss, meta);
 
+    if (!clsSource.empty())
+    {
+      std::cout << std::endl;
+    }
+
+
+    source += clsSource;
 
   }
 
@@ -66,6 +75,10 @@ std::string ClassGenerator::OutputClass(ClassNode *classNode, std::list<Namespac
   {
     return source;
   }
+
+  std::string fns = Generator::GetFullNamespaceName(nss);
+  std::string className      = classNode->GetName();
+  std::cout << "  >> " << fns + className;
 
   std::string visibility = "private";
 

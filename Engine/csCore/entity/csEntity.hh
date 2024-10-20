@@ -11,6 +11,7 @@ namespace cs
 {
 
 
+
 class csWorld;
 class csEntityState;
 class csSpatialState;
@@ -32,7 +33,7 @@ public:
   csWorld *GetWorld();
   const csWorld *GetWorld() const;
 
-  bool Attach(csEntity *entity, csSpatialState *parentState = nullptr);
+  bool Attach(cs::csEntity *entity, cs::csSpatialState *parentState = nullptr);
   bool Detach(csEntity *entity);
   csEntity *GetParent();
   const csEntity *GetParent() const;
@@ -71,8 +72,10 @@ public:
   std::vector<csEntityState *> GetStates(const csClass *cls);
   std::vector<const csEntityState *> GetStates(const csClass *cls) const;
 
-  bool Attach(csEntityState *entityState);
-  bool Detach(csEntityState *entityState);
+  CS_FUNCTION()
+  bool Attach(cs::csEntityState *entityState);
+  CS_FUNCTION()
+  bool Detach(cs::csEntityState *entityState);
 
   void SetRoot(csSpatialState *rootState);
   csSpatialState *GetRoot();
