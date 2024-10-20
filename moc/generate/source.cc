@@ -574,7 +574,7 @@ std::string ClassGenerator::GenerateAttribute(ClassNode *classNode,
     prop += "      throw cs::csBadMethodInvokation(\"Object is not instance of " + classNode->GetName() + "\");\n";
     prop += "    }\n\n";
 
-    if (!type.IsPointer() || meta->Has("Native"))
+    if (!type.IsPointer() || meta->Has("RawPtr"))
     {
       prop +=
           "    d->" + member->GetName() + " = *reinterpret_cast<" + GenerateInputTypeForAttribute(type) + ">(data);\n";
@@ -874,7 +874,7 @@ std::string ClassGenerator::GenerateCreateJObject(cs::moc::ClassNode *classNode,
   {
     std::string jclass = meta->Get("jclass");
     jclass = convert_java_class_path(jclass);
-    getter += "  JNIEnv *java = cs::csJava::Get()\n";
+    getter += "  JNIEnv *java = cs::csJava::Get();\n";
     getter += "  static jclass cls = java ? java->FindClass (\"" + jclass + "\") : nullptr;\n";
     getter += "  if (cls)\n";
     getter += "  {\n";

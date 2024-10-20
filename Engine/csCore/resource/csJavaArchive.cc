@@ -6,7 +6,7 @@
 #include <csCore/csJava.hh>
 #include <csCore/csJavaCalls.hh>
 
-#define THIS_JAVA_CLASS "org/crimsonedge/core/resource/JavaArchive"
+#define THIS_JAVA_CLASS "org/cryo/core/resource/JavaArchive"
 
 namespace cs
 {
@@ -51,7 +51,7 @@ iFile *csJavaArchive::Open(const std::string &locator, eAccessMode accessMode, e
                                                               this,
                                                               THIS_JAVA_CLASS,
                                                               "open",
-                                                              "Lorg/crimsonedge/core/resource/IFile;",
+                                                              "Lorg/cryo/core/resource/IFile;",
                                                               JAVA_STRING,
                                                               JAVA_INT,
                                                               JAVA_INT);

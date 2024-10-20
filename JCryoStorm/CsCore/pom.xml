@@ -16,10 +16,7 @@
 
 
     <dependencies>
-        <dependency>
-            <groupId>org.cryo</groupId>
-            <artifactId>CsCoreNative</artifactId>
-        </dependency>
+
     </dependencies>
 
 </project>
