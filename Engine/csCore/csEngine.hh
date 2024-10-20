@@ -30,11 +30,11 @@ public:
   void SetDevice(iDevice *device);
   iDevice *GetDevice();
 
-  void SetFrameRenderer(iFrameRenderer *frameRenderer);
-  iFrameRenderer *GetFrameRenderer();
-
-  void SetSkyboxRenderer(iSkyboxRenderer *skyboxRenderer);
-  iSkyboxRenderer *GetSkyboxRenderer();
+//  void SetFrameRenderer(iFrameRenderer *frameRenderer);
+//  iFrameRenderer *GetFrameRenderer();
+//
+//  void SetSkyboxRenderer(iSkyboxRenderer *skyboxRenderer);
+//  iSkyboxRenderer *GetSkyboxRenderer();
 
   void SetWorld(csWorld *world);
   csWorld *GetWorld();

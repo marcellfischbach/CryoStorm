@@ -15,4 +15,11 @@
     <version>0.0.1-SNAPSHOT</version>
 
 
+    <dependencies>
+        <dependency>
+            <groupId>org.cryo</groupId>
+            <artifactId>CsCore</artifactId>
+        </dependency>
+    </dependencies>
+
 </project>

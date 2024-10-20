@@ -271,11 +271,11 @@ CSMetaNode::CSMetaNode(CSMetaNode::MetaType type)
 
 }
 
-std::string stripString (const std::string &str)
+std::string stripString(const std::string &str)
 {
-  if (!str.empty() && str[0] == '"' && str[str.length()-1] == '"')
+  if (!str.empty() && str[0] == '"' && str[str.length() - 1] == '"')
   {
-    return str.substr(1, str.length()-2);
+    return str.substr(1, str.length() - 2);
   }
   return str;
 }
@@ -316,13 +316,13 @@ std::string CSMetaNode::Get(const std::string &key) const
   return "";
 }
 
-static std::string trim (const std::string &text)
+static std::string trim(const std::string &text)
 {
   size_t start = 0;
   size_t end = text.length();
   bool testStart = true;
   bool testEnd = true;
-  for (size_t i=0, in=text.length(); i<in && (testStart || testEnd); i++)
+  for (size_t i = 0, in = text.length(); i < in && (testStart || testEnd); i++)
   {
     if (testStart && text[i] != ' ' && text[i] != '\t')
     {
@@ -335,7 +335,7 @@ static std::string trim (const std::string &text)
       testEnd = false;
     }
   }
-  
+
   return text.substr(0, end - start);
 }
 
@@ -651,6 +651,22 @@ const std::vector<Argument> &FunctionNode::GetArguments() const
   return m_arguments;
 }
 
+std::string FunctionNode::PrettyPrint()
+{
+  std::string pretty;
+  pretty += GetName() + "(";
+  for (size_t i = 0, in = m_arguments.size(); i < in; ++i)
+  {
+    pretty += m_arguments[i].GetText();
+    if (i + 1 < m_arguments.size())
+    {
+      pretty += ", ";
+    }
+  }
+  pretty += ")";
+  return pretty;
+}
+
 void FunctionNode::Debug()
 {
   std::string arguments = "";
@@ -893,7 +909,6 @@ std::string TypeDef::GetText() const
   }
   return text;
 }
-
 
 
 TokenNode::TokenNode()

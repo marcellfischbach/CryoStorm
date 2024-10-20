@@ -264,6 +264,8 @@ public:
 
   void Add(const Argument& argument);
   const std::vector<Argument>& GetArguments() const;
+
+  std::string PrettyPrint();
 protected:
   virtual void Debug();
 

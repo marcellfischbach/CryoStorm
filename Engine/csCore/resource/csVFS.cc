@@ -25,6 +25,7 @@ csVFS* csVFS::Get()
 
 void csVFS::SetRootPath(const std::string &rootPath)
 {
+  printf ("csVFS::SetRootPath: '%s'\n", rootPath.c_str());
   m_rootPath = rootPath;
 }
 
@@ -110,3 +111,32 @@ std::string csVFS::ReplaceAliases(const std::string& str) const
 }
 
 }
+
+#ifdef CS_JAVA
+#include <jni.h>
+
+extern "C"
+{
+
+JNIEXPORT void
+JNICALL Java_org_cryo_core_resource_VFS_nSetRootPath(JNIEnv *env, jclass cls, jstring rootPath)
+{
+  cs::csJava::Set(env);
+
+  const char *ptr = env->GetStringUTFChars(rootPath, nullptr);
+  cs::csVFS::Get()->SetRootPath(std::string(ptr));
+  env->ReleaseStringUTFChars(rootPath, ptr);
+}
+
+
+JNIEXPORT jstring
+JNICALL Java_org_cryo_core_resource_VFS_nGetRootPath(JNIEnv *env, jclass cls)
+{
+  cs::csJava::Set(env);
+  const std::string &rootPath = cs::csVFS::Get()->GetRootPath();
+  return env->NewStringUTF(rootPath.c_str());
+}
+
+}
+
+#endif

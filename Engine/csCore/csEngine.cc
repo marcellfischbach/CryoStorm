@@ -41,25 +41,25 @@ iDevice *csEngine::GetDevice()
   return m_device;
 }
 
-void csEngine::SetFrameRenderer(cs::iFrameRenderer *frameRenderer)
-{
-  CS_SET(m_frameRenderer, frameRenderer);
-}
-
-iFrameRenderer *csEngine::GetFrameRenderer()
-{
-  return m_frameRenderer;
-}
-
-void csEngine::SetSkyboxRenderer(cs::iSkyboxRenderer *skyboxRenderer)
-{
-  CS_SET(m_skyboxRenderer, skyboxRenderer);
-}
-
-iSkyboxRenderer *csEngine::GetSkyboxRenderer()
-{
-  return m_skyboxRenderer;
-}
+//void csEngine::SetFrameRenderer(cs::iFrameRenderer *frameRenderer)
+//{
+//  CS_SET(m_frameRenderer, frameRenderer);
+//}
+//
+//iFrameRenderer *csEngine::GetFrameRenderer()
+//{
+//  return m_frameRenderer;
+//}
+//
+//void csEngine::SetSkyboxRenderer(cs::iSkyboxRenderer *skyboxRenderer)
+//{
+//  CS_SET(m_skyboxRenderer, skyboxRenderer);
+//}
+//
+//iSkyboxRenderer *csEngine::GetSkyboxRenderer()
+//{
+//  return m_skyboxRenderer;
+//}
 
 void csEngine::SetWindow(cs::iWindow *window)
 {
@@ -278,9 +278,9 @@ bool csEngine::InitializeEngine(const std::vector<std::string> &args,
     }
   }
 
-  if (std::find(moduleNames.begin(), moduleNames.end(), "ceGame") == moduleNames.end())
+  if (std::find(moduleNames.begin(), moduleNames.end(), "csGame") == moduleNames.end())
   {
-    iModule *gameModule = open_module("ceGame");
+    iModule *gameModule = open_module("csGame");
     if (gameModule)
     {
       modules.emplace_back(gameModule);

@@ -131,3 +131,28 @@ csCryoFile* csVFSConfigReader::OpenConfigFile(const std::string& configPath, con
 }
 
 } // ce
+
+#ifdef  CS_JAVA
+
+#include <jni.h>
+
+extern "C"
+{
+
+JNIEXPORT void
+JNICALL Java_org_cryo_core_resource_VFSConfigReader_nRead(JNIEnv *env, jclass cls, jstring configPath, jstring fileName)
+{
+  const char *ptrConfigPath = env->GetStringUTFChars(configPath, nullptr);
+  const char *ptrFileName = env->GetStringUTFChars(fileName, nullptr);
+
+  cs::csVFSConfigReader::Read(std::string(ptrConfigPath), std::string(ptrFileName));
+
+  env->ReleaseStringUTFChars(configPath, ptrConfigPath);
+  env->ReleaseStringUTFChars(fileName, ptrFileName);
+
+}
+
+
+}
+
+#endif

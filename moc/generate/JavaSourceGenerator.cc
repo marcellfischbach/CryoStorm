@@ -38,7 +38,7 @@ std::string class_to_file_name(const std::string &fqClassName)
     }
   }
 
-  return res + ".java";
+  return res + "Native.java";
 }
 
 
@@ -115,18 +115,8 @@ void JavaSourceGenerator::EndClass()
   std::cout << "  >> " << m_relFileName;
 
   std::string begin, end;
-  if (exists(m_absFileName))
-  {
-    std::string content = ReadFile();
-    begin = ReadClassBegin(content);
-    end = ReadClassEnd(content);
-  }
-
-  if (begin.empty() || end.empty())
-  {
-    begin = GenerateClassBegin();
-    end = GenerateClassEnd();
-  }
+  begin = GenerateClassBegin();
+  end = GenerateClassEnd();
 
 
 //  std::cout << begin << std::endl
@@ -184,45 +174,17 @@ std::string JavaSourceGenerator::GenerateClassBegin()
     source += "package " + m_package + ";\n\n";
   }
 
-  source += "import org.cryo.core.CsClass;\n";
-
-  std::string extendsClass;
-  if (is_of_type(m_classNode, "csSpatialState"))
-  {
-    extendsClass = "SpatialState";
-    source += "import org.cryo.core.entity.SpatialState;\n";
-  }
-  else if (is_of_type(m_classNode, "csCollisionState"))
-  {
-    extendsClass = "CollisionState";
-    source += "import org.cryo.core.entity.CollisionState;\n";
-  }
-  else if (is_of_type(m_classNode, "csEntityState"))
-  {
-    extendsClass = "EntityState";
-    source += "import org.cryo.core.entity.EntityState;\n";
-  }
-  else
-  {
-    extendsClass = "CsObject";
-    source += "import org.cryo.core.CsObject;\n";
-  }
 
   source += "\n";
-  source += "@CsClass(\"" + m_cppClassName + "\")\n";
-  source += "public class " + m_className + " extends " + extendsClass + " {\n\n";
-  if (!m_classNode->HasPureVirtualMethod()
-      && m_classNode->HasPublicDefaultConstructor()
-      && !m_classMeta->Has("Virtual"))
-  {
-    source += "    public " + m_className + "() {\n";
-    source += "        super();\n";
-    source += "    }\n\n";
-  }
-  source += "    public " + m_className + "(long ref) {\n";
-  source += "        super(ref);\n";
+  source += "/**\n";
+  source += " * " + m_cppClassName + "\n";
+  source += " */\n";
+  source += "public abstract class " + m_className + "Native {\n";
+  source += "    \n";
+  source += "    public static final String CS_CLASS_NAME = \"" + m_cppClassName + "\";\n";
+  source += "    \n";
+  source += "    private " + m_className + "Native() {\n";
   source += "    }\n\n";
-  source += "    " + s_beginMarker;
   return source;
 }
 
@@ -356,19 +318,32 @@ void JavaSourceGenerator::EndFunction()
 {
   std::string functionDeclaration;
 
-  std::string decl = "    private static native " + m_functionType + " " + m_functionName + "(";
-  std::string space(decl.size()-1, ' ');
-  m_nativeCodeFragments += decl;
-  m_nativeCodeFragments += "long ref /* this ptr */";
+  std::string fullFunctionName = m_functionNode->GetReturnValue().GetText() + " " + m_cppClassName + "::" + m_functionNode->PrettyPrint();
+
+  std::string decl = "    public static native " + m_functionType + " " + m_functionName + "(";
+  std::string space(decl.size() - 1, ' ');
+  m_nativeCodeFragments += "    /**\n";
+  m_nativeCodeFragments += "     * " + fullFunctionName + "\n";
+  m_nativeCodeFragments += "     *\n";
+  m_nativeCodeFragments += "     * @param ref Reference pointer to this object: Usually getRef()\n";
   for (const auto &item: m_functionArguments)
   {
-    m_nativeCodeFragments += ",\n" + space + " " +  item.typeName + " " + item.name;
-    if (!item.comment.empty())
-    {
-      m_nativeCodeFragments += " /* " + item.comment + " */";
-    }
+    m_nativeCodeFragments += "     * @param " + item.name + " " + item.comment + "\n";
   }
-  m_nativeCodeFragments += "\n" + space + ");\n\n";
+  m_nativeCodeFragments += "     */\n";
+  m_nativeCodeFragments += decl;
+  m_nativeCodeFragments += "long ref";
+  for (const auto &item: m_functionArguments)
+  {
+//    m_nativeCodeFragments += ",\n" + space + " " + item.typeName + " " + item.name;
+    m_nativeCodeFragments += ", " + item.typeName + " " + item.name;
+//    if (!item.comment.empty())
+//    {
+//      m_nativeCodeFragments += " /* " + item.comment + " */";
+//    }
+  }
+//  m_nativeCodeFragments += "\n" + space + ");\n\n";
+  m_nativeCodeFragments += ");\n\n";
 
   // cleanup
   m_functionName = "";

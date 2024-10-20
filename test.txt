@@ -1,0 +1,13 @@
+D:/DEV/CryoStorm/cmake-build-debug/Engine/csCore/__cmake__build__moc__
+C:/Program Files/Java/jdk-19/include
+C:/Program Files/Java/jdk-19/include/win32
+C:/Program Files/Java/jdk-19/include
+D:/DEV/CryoStorm/3rdparty
+D:/DEV/VC/include/SDL
+D:/DEV/VC/include
+D:/DEV/VC/include
+D:/DEV/VC/include
+D:/DEV/VC/include/bullet
+D:/DEV/VC/include/bullet/bullet
+D:/DEV/CryoStorm/Engine
+D:/DEV/CryoStorm/Editor
