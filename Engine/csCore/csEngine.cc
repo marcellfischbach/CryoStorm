@@ -30,6 +30,11 @@
 namespace cs
 {
 
+csEngine::csEngine()
+{
+  csCoreModule::RegisterClasses();
+}
+
 void csEngine::Exit(int returnValue)
 {
   m_exitValue = returnValue;
@@ -46,6 +51,7 @@ int csEngine::ExitValue() const
   return m_exitValue;
 }
 
+
 bool csEngine::InitializeEngine(const std::vector<std::string> &args,
                                 const csModuleConfig &config)
 {
@@ -54,11 +60,13 @@ bool csEngine::InitializeEngine(const std::vector<std::string> &args,
   {
     csAssetManager::Set(new csAssetManager());
   }
-
+  printf ("here\n");
   const std::vector<iModule *> &modules = config.GetModules();
 
+  printf ("Modules: %d\n", modules.size());
   for (auto module: modules)
   {
+
     if (!module->Register(args, this))
     {
       return false;
@@ -207,6 +215,7 @@ void csModuleConfig::AddModule(cs::iModule *module)
 
 const std::vector<iModule *> &csModuleConfig::GetModules() const
 {
+  printf ("narf %p\n", this);
   return m_modules;
 }
 

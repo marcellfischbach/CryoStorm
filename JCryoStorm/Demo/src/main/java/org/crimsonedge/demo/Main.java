@@ -2,6 +2,8 @@ package org.crimsonedge.demo;
 
 
 import org.cryo.core.CsCoreLibrary;
+import org.cryo.core.Engine;
+import org.cryo.core.ModuleConfig;
 import org.cryo.core.resource.VFS;
 import org.cryo.core.resource.VFSConfigReader;
 
@@ -11,7 +13,7 @@ import java.awt.*;
 public class Main {
 
 
-    public static void main(String[] args) {
+    public static void main2(String[] args) {
         SwingUtilities.invokeLater(() -> {
 
             JFrame frame = new JFrame();
@@ -27,7 +29,7 @@ public class Main {
     }
 
 
-    public static void main2(String[] args) {
+    public static void main(String[] args) {
         CsCoreLibrary.load();
 
         String rootPath = "../data";
@@ -44,6 +46,19 @@ public class Main {
 
         VFS.instance().setRootPath(rootPath);
         VFSConfigReader.read(rootPath, configFileName);
+
+        Engine engine = Engine.get();
+
+        ModuleConfig moduleConfig = new ModuleConfig();
+        TestModule module = new TestModule();
+        moduleConfig.addModule(module);
+        System.out.println("Module: Ref: " + module.getRef());
+
+        String[] nArgs = new String[] {
+                "Value 0",
+                "Value 1"
+        };
+        engine.initializeEngine(nArgs, moduleConfig);
 
         System.out.println("Hello World!");
 //        CeLWJGL.initialize();

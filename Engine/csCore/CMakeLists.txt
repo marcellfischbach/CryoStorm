@@ -282,6 +282,8 @@ if (${JAVA_BINDINGS})
             csJava.cc
             csJava.hh
             csJavaCalls.hh
+            csJavaModule.cc
+            csJavaModule.hh
             csJavaGame.cc
             csJavaGame.hh
             csObjectRegistry_java.cc

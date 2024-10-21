@@ -177,7 +177,9 @@ void JavaConverters::ReadInputArguments(JavaConverter &converter, const cs::xml:
     {
       JavaConverterArgument argument(inputArgumentElement->GetAttribute("jtype"),
                                      inputArgumentElement->GetAttribute("id"),
-                                     inputArgumentElement->GetAttribute("suffix"));
+                                     inputArgumentElement->GetAttribute("suffix"),
+                                     inputArgumentElement->GetAttribute("javaType")
+                                     );
       converter.AddInputArgument(argument);
     }
   }
@@ -195,17 +197,20 @@ void JavaConverters::ReadOutputArguments(JavaConverter &converter, const cs::xml
     {
       JavaConverterArgument argument(outputArgumentElement->GetAttribute("jtype"),
                                      outputArgumentElement->GetAttribute("id"),
-                                     outputArgumentElement->GetAttribute("suffix"));
+                                     outputArgumentElement->GetAttribute("suffix"),
+                                     outputArgumentElement->GetAttribute("javaType")
+                                     );
       converter.AddOutputArgument(argument);
     }
   }
 }
 
 
-JavaConverterArgument::JavaConverterArgument(std::string jtype, std::string id, std::string suffix)
+JavaConverterArgument::JavaConverterArgument(std::string jtype, std::string id, std::string suffix, std::string javaType)
     : m_jtype(std::move(jtype))
     , m_id(std::move(id))
     , m_suffix(std::move(suffix))
+    , m_javaType(std::move(javaType))
 {
 
 }
@@ -223,6 +228,11 @@ const std::string &JavaConverterArgument::GetID() const
 const std::string &JavaConverterArgument::GetSuffix() const
 {
   return m_suffix;
+}
+
+const std::string &JavaConverterArgument::GetJavaType() const
+{
+  return m_javaType;
 }
 
 void JavaConverter::AddType(const std::string &type)

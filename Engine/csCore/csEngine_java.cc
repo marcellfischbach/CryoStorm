@@ -1,13 +1,23 @@
-//
-//#include <csCore/csEngine.hh>
-//#include <csCore/csJavaGame.hh>
-//#include <csCore/csJava.hh>
-//#include <csCore/entity/csWorld.hh>
-//#include <csCore/graphics/iDevice.hh>
-//
-//
-//extern "C"
-//{
+
+#include <csCore/csEngine.hh>
+#include <csCore/csJavaGame.hh>
+#include <csCore/csJava.hh>
+#include <csCore/entity/csWorld.hh>
+#include <csCore/graphics/iDevice.hh>
+
+
+extern "C"
+{
+
+JNIEXPORT jobject JNICALL Java_org_cryo_core_Engine_nGet(JNIEnv *env, jclass cls)
+{
+  cs::csJava::Set(env);
+  return cs::csEngine::Get()->GetJObject();
+}
+
+
+
+}
 //
 //
 //JNIEXPORT void JNICALL Java_org_crimsonedge_core_Engine_nSetEnv(JNIEnv *env, jclass cls)

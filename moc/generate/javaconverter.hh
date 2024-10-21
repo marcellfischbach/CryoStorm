@@ -17,14 +17,16 @@ class csElement;
 class JavaConverterArgument
 {
 public:
-  JavaConverterArgument(std::string jtype, std::string id, std::string suffix);
+  JavaConverterArgument(std::string jtype, std::string id, std::string suffix, std::string javaType);
   [[nodiscard]] const std::string &GetJType() const;
   [[nodiscard]] const std::string &GetID() const;
   [[nodiscard]] const std::string &GetSuffix() const;
+  [[nodiscard]] const std::string &GetJavaType() const;
 private:
   std::string m_jtype;
   std::string m_id;
   std::string m_suffix;
+  std::string m_javaType;
 };
 
 class JavaConverter

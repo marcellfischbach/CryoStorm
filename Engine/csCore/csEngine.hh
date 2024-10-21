@@ -21,7 +21,7 @@ struct iWindow;
 
 class csWorld;
 
-CS_CLASS()
+CS_CLASS(jclass="org.cryo.core.ModuleConfig")
 class CS_CORE_API csModuleConfig : public CS_SUPER(iObject)
 {
 CS_CLASS_GEN_OBJECT;
@@ -36,7 +36,7 @@ public:
   bool LoadModuleConfigEx(const std::string &configFilename);
 
   CS_FUNCTION()
-  void AddModule(iModule *module);
+  void AddModule(cs::iModule *module);
 
   CS_FUNCTION()
   void AddModuleByName(const std::string &moduleName);
@@ -48,10 +48,16 @@ private:
 
 };
 
-class CS_CORE_API  csEngine
+
+
+CS_CLASS(jclass="org.cryo.core.Engine")
+class CS_CORE_API csEngine : public CS_SUPER(iObject)
 {
+  CS_CLASS_GEN_OBJECT;
 public:
-  bool InitializeEngine(const std::vector<std::string> &args, const csModuleConfig &moduleConfig);
+
+  CS_FUNCTION()
+  bool InitializeEngine(const std::vector<std::string> &args, const cs::csModuleConfig &moduleConfig);
 
   CS_NODISCARD bool ShouldExit() const;
   void Exit(int returnValue = 0);
@@ -65,7 +71,7 @@ public:
   static csEngine *Get();
 
 private:
-  csEngine() = default;
+  csEngine();
 
   static csEngine *s_instance;
 };

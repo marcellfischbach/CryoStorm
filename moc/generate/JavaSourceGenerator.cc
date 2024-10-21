@@ -244,8 +244,12 @@ std::string JavaSourceGenerator::ReadClassEnd(const std::string &content)
   return content.substr(i);
 }
 
-std::string map_jni_type(const std::string &jniType)
+std::string map_jni_type(const std::string &jniType, const std::string &javaType)
 {
+  if (!javaType.empty())
+  {
+    return javaType;
+  }
   if (jniType == "jbooleanArray")
   {
     return "boolean[]";
@@ -303,15 +307,15 @@ void JavaSourceGenerator::BeginFunction(cs::moc::FunctionNode *functionNode, cs:
                                         const std::string &cppFunctionName, const std::string &jniReturnType)
 {
 
-  m_functionType = map_jni_type(jniReturnType);
+  m_functionType = map_jni_type(jniReturnType, "");
   m_functionName = map_cpp_functionName(cppFunctionName);
   m_functionNode = functionNode;
   m_functionMeta = functionMeta;
 }
 
-void JavaSourceGenerator::AddParameter(const std::string &type, const std::string &name, const std::string &comment)
+void JavaSourceGenerator::AddParameter(const std::string &type, const std::string &javaType, const std::string &name, const std::string &comment)
 {
-  m_functionArguments.emplace_back(map_jni_type(type), name, comment);
+  m_functionArguments.emplace_back(map_jni_type(type, javaType), name, comment);
 }
 
 void JavaSourceGenerator::EndFunction()

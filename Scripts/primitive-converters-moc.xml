@@ -227,5 +227,32 @@
             return env->NewStringUTF(${csRet}.c_str());
         </out-conversion>
     </converter>
+
+    <converter>
+        <types>
+            <type><![CDATA[std::vector<std::string>]]></type>
+            <type><![CDATA[vector<string>]]></type>
+        </types>
+        <in-arguments>
+            <argument jtype="jobjectArray" id="stringArray" javaType="String[]"/>
+        </in-arguments>
+        <out-arguments>
+        </out-arguments>
+        <in-conversion><![CDATA[
+  size_t ${csTmp}Length = env->GetArrayLength(${stringArray});
+  std::vector<std::string> ${csArg};
+  for (size_t ${csTmp}_i=0, ${csTmp}_in=${csTmp}Length; ${csTmp}_i<${csTmp}_in; ${csTmp}_i++)
+  {
+    jstring ${csTmp}_string = (jstring)env->GetObjectArrayElement(${stringArray}, (jsize)${csTmp}_i);
+    const char* ${csTmp}_stringChar = env->GetStringUTFChars(${csTmp}_string, nullptr);
+    ${csArg}.push_back(std::string(${csTmp}_stringChar));
+    env->ReleaseStringUTFChars(${csTmp}_string, ${csTmp}_stringChar);
+  }
+]]>
+        </in-conversion>
+        <out-conversion returnType="jstring" fullQualifiedType="std::string">
+            return env->NewStringUTF(${csRet}.c_str());
+        </out-conversion>
+    </converter>
     
 </converters>

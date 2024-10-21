@@ -911,6 +911,46 @@ std::string TypeDef::GetText() const
 }
 
 
+
+std::string TypeDef::GetTextStripMem(const std::string &mem) const
+{
+  std::string text;
+  if (m_const)
+  {
+    text += "const ";
+  }
+  for (auto tkn: m_tokens)
+  {
+    text += tkn.Get();
+  }
+  if (!m_subTypes.empty())
+  {
+    text += "<";
+    for (size_t i = 0, in = m_subTypes.size(); i < in; ++i)
+    {
+      text += m_subTypes[i].GetText();
+      if (i + 1 < in)
+      {
+        text += ", ";
+      }
+    }
+    text += ">";
+  }
+  for (auto tkn: m_mems)
+  {
+    if (tkn.Get() != mem)
+    {
+      text += tkn.Get();
+    }
+  }
+  if (m_constPtr)
+  {
+    text += " const";
+  }
+  return text;
+}
+
+
 TokenNode::TokenNode()
     : ASTNode(eANT_Token)
 {

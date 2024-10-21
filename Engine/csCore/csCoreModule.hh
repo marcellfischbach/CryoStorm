@@ -12,6 +12,8 @@ class CS_CORE_API csCoreModule : public CS_SUPER(iModule)
 {
 CS_CLASS_GEN_OBJECT;
 public:
+  static void RegisterClasses ();
+
   bool Register(const std::vector<std::string> &args, csEngine *engine);
   bool Initialize(const std::vector<std::string> &args, csEngine *engine);
 };

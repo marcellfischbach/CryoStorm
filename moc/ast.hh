@@ -77,6 +77,7 @@ public:
   bool IsPointerToPointer() const;
 
   std::string GetText() const;
+  std::string GetTextStripMem(const std::string &mem) const;
   std::string GetTypeName(bool withSubTypes = true) const;
 
   bool IsVoid() const;

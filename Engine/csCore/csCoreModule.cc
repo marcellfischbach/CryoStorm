@@ -19,10 +19,13 @@ void initialize_core_module()
 namespace cs
 {
 
-bool csCoreModule::Register(const std::vector<std::string> &args, csEngine *engine)
+void csCoreModule::RegisterClasses()
 {
   register_classes();
+}
 
+bool csCoreModule::Register(const std::vector<std::string> &args, csEngine *engine)
+{
 
   csObjectRegistry::Register<iFrameRenderer>(new csDefaultFrameRenderer);
   csAssetManager * assetMan = csAssetManager::Get();

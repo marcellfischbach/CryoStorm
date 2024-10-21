@@ -20,7 +20,7 @@ public:
   void BeginClass (cs::moc::ClassNode* classNode, cs::moc::CSMetaNode *classMeta, const std::string &cppClassName, const std::string &fqClassName);
 
   void BeginFunction (cs::moc::FunctionNode *functionNode, cs::moc::CSMetaNode *functionMeta, const std::string &cppFunctionName, const std::string &jniReturnType);
-  void AddParameter (const std::string &type, const std::string &name, const std::string &comment);
+  void AddParameter (const std::string &type, const std::string &javaType, const std::string &name, const std::string &comment);
   void EndFunction ();
 
   void EndClass();

@@ -28,7 +28,7 @@ extern "C"
 
 
 JNIEXPORT jlong
-JNICALL Java_org_cryo_core_CoreObject_nCreateClass(JNIEnv *env, jobject coreObject, jstring classNameStr)
+JNICALL Java_org_cryo_core_CsObject_nCreateClass(JNIEnv *env, jobject coreObject, jstring classNameStr)
 {
   try
   {
