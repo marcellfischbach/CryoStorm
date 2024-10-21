@@ -17,7 +17,7 @@ class CS_CORE_API csGameJava : public iGame
 public:
   csGameJava(jobject gameObject);
 
-  bool Initialize(cs::csEngine* engine) override;
+  bool Initialize(cs::csWorld* engine) override;
 
 private:
   jobject  m_gameObject;

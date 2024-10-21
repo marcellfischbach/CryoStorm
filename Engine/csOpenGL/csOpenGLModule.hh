@@ -7,8 +7,10 @@
 namespace cs::opengl
 {
 
-class CS_OGL_API csOpenGLModule : public iModule
+CS_CLASS()
+class CS_OGL_API csOpenGLModule : public CS_SUPER(iModule)
 {
+CS_CLASS_GEN_OBJECT;
 public:
   bool Register(const std::vector<std::string> &args, csEngine *engine) override;
   bool Initialize(const std::vector<std::string> &args, csEngine *engine) override;

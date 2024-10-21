@@ -6,13 +6,13 @@
 namespace cs
 {
 
-class csEngine;
+class csWorld;
 
 struct iGame
 {
   virtual ~iGame ()  = default;
 
-  virtual bool Initialize(cs::csEngine* engine) = 0;
+  virtual bool Initialize(cs::csWorld* world) = 0;
 };
 
 

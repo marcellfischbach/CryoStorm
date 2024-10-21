@@ -18,14 +18,13 @@ bool csLauncherModule::Register(const std::vector<std::string> &args, csEngine *
   csSDLInputSystem *inputSystem = new csSDLInputSystem(window->GetKeyboard(), window->GetMouse());
   csObjectRegistry::Register<iInputSystem>(inputSystem);
   csObjectRegistry::Register<iWindow>(window);
-  engine->SetWindow(window);
 
   return true;
 }
 
 bool csLauncherModule::Initialize(const std::vector<std::string> &args, csEngine *engine)
 {
-  csSDLWindow *window = (csSDLWindow*)engine->GetWindow();
+  csSDLWindow *window = (csSDLWindow*)csObjectRegistry::Get<iWindow>();
   window->Initialize();
 
   const std::string &iconName = csSettings::Get().Display().GetText("icon");

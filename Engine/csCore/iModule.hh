@@ -1,5 +1,7 @@
 #pragma once
 
+#include <csCore/csCoreExport.hh>
+#include <csCore/csClass.hh>
 #include <string>
 #include <vector>
 
@@ -7,8 +9,11 @@ namespace cs
 {
 
 class csEngine;
-struct iModule
+CS_CLASS()
+struct CS_CORE_API iModule : public CS_SUPER(iObject)
 {
+  CS_CLASS_GEN;
+  ~iModule () override  = default;
 
   virtual bool Register(const std::vector<std::string> &args, csEngine *engine) = 0;
   virtual bool Initialize(const std::vector<std::string> &args, csEngine *engine) = 0;

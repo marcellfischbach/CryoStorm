@@ -3,6 +3,7 @@
 //
 
 #include <csCore/csViewport.hh>
+#include <csCore/csSettings.hh>
 #include <csCore/entity/csWorld.hh>
 #include <csCore/graphics/iDevice.hh>
 #include <csCore/graphics/iFrameRenderer.hh>
@@ -13,6 +14,11 @@
 
 namespace cs
 {
+
+csViewport::csViewport()
+{
+  m_multiSamples = csSettings::Get().Graphics().GetInt("multisamples", 1);
+}
 
 csViewport::~csViewport()
 {
@@ -109,5 +115,102 @@ const cs::iWindow *csViewport::GetWindow() const
 {
   return m_window;
 }
+
+
+static cs::iRenderTarget2D *
+create_render_target(cs::iDevice *device, uint32_t width, uint32_t height, uint16_t multiSamples)
+{
+  cs::iSampler *colorSampler = device->CreateSampler();
+  colorSampler->SetFilterMode(cs::eFM_MinMagNearest);
+
+  cs::iSampler *depthSampler = device->CreateSampler();
+  depthSampler->SetFilterMode(cs::eFM_MinMagNearest);
+  depthSampler->SetTextureCompareFunc(cs::eCF_LessOrEqual);
+  depthSampler->SetTextureCompareMode(cs::eTCM_None);
+
+  cs::iTexture2D::Descriptor rt_col_desc = {};
+  rt_col_desc.Width = width;
+  rt_col_desc.Height = height;
+  rt_col_desc.Format = cs::ePF_RGBA;
+  rt_col_desc.MipMaps = false;
+  rt_col_desc.MultiSamples = multiSamples;
+  cs::iTexture2D *color_texture = device->CreateTexture(rt_col_desc);
+  color_texture->SetSampler(colorSampler);
+
+  cs::iTexture2D::Descriptor rt_dpth_desc = {};
+  rt_dpth_desc.Width = width;
+  rt_dpth_desc.Height = height;
+  rt_dpth_desc.Format = cs::ePF_DepthStencil;
+  rt_dpth_desc.MipMaps = false;
+  rt_dpth_desc.MultiSamples = multiSamples;
+  cs::iTexture2D *depth_texture = device->CreateTexture(rt_dpth_desc);
+  depth_texture->SetSampler(depthSampler);
+
+
+  cs::iRenderTarget2D::Descriptor rt_desc = {};
+  rt_desc.Width = width;
+  rt_desc.Height = height;
+
+  cs::iRenderTarget2D *renderTarget = device->CreateRenderTarget(rt_desc);
+  renderTarget->AddColorTexture(color_texture);
+//  renderTarget->SetDepthBuffer(cs::ePF_Depth);
+  renderTarget->SetDepthTexture(depth_texture);
+  if (!renderTarget->Compile())
+  {
+    printf("Unable to compile render target: %s\n", renderTarget->GetCompileLog().c_str());
+    return nullptr;
+  }
+  return renderTarget;
+}
+
+
+
+bool csViewport::ProcessFrame()
+{
+  if (!m_renderTarget || m_renderTarget->GetWidth() != m_window->GetWidth() ||
+      m_renderTarget->GetHeight() != m_window->GetHeight())
+  {
+    CS_RELEASE(m_renderTarget);
+    m_renderTarget = create_render_target(m_device, m_window->GetWidth(), m_window->GetHeight(), m_multiSamples);
+    if (m_renderTarget == nullptr)
+    {
+      return false;
+    }
+  }
+
+  int64_t frameTime = m_fps.Tick();
+  if (frameTime != 0)
+  {
+    uint32_t currentFPS = m_fps.Get();
+    if (currentFPS != m_lastFPS)
+    {
+      m_lastFPS = currentFPS;
+
+      std::string title = std::string("CryoStorm ") + std::to_string(currentFPS) + std::string(" FPS");
+      printf("%s\n", title.c_str());
+      fflush(stdout);
+      m_window->SetTitle(title);
+    }
+
+    float tpf = (float) frameTime / 1000.0f;
+
+    m_world->Update(tpf);
+  }
+
+
+  m_frameRenderer->Render(m_renderTarget, m_device, m_world->GetScene());
+
+  cs::iTexture2D *finalColor = m_renderTarget->GetColorTexture(0);
+
+  m_device->SetRenderTarget(nullptr);
+  m_device->SetViewport(0, 0, m_window->GetWidth(), m_window->GetHeight());
+  m_device->SetDepthTest(false);
+  m_device->SetBlending(false);
+  m_device->RenderFullscreen(finalColor);
+  m_device->SetDepthTest(true);
+
+  return true;
+}
+
 
 } // cs

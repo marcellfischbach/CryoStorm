@@ -6,6 +6,7 @@
 
 #include <csCore/csCoreExport.hh>
 #include <csCore/csClass.hh>
+#include <csCore/csFPS.hh>
 
 namespace cs
 {
@@ -18,18 +19,18 @@ struct iRenderTarget2D;
 struct iWindow;
 
 
-CS_CLASS()
-class csViewport : public CS_SUPER(cs::iObject)
+CS_CLASS(jclass="org.cryo.core.Viewport")
+class CS_CORE_API csViewport : public CS_SUPER(cs::iObject)
 {
 CS_CLASS_GEN_OBJECT;
 public:
-  csViewport() = default;
+  csViewport();
   ~csViewport() override;
 
   CS_FUNCTION()
   void SetDevice(cs::iDevice *device);
   CS_FUNCTION()
-  CS_NODISCARD iDevice *GetDevice();
+  CS_NODISCARD cs::iDevice *GetDevice();
   CS_NODISCARD const iDevice *GetDevice() const;
 
   CS_FUNCTION()
@@ -60,13 +61,23 @@ public:
   CS_FUNCTION()
   CS_NODISCARD cs::iWindow *GetWindow();
   CS_NODISCARD const cs::iWindow *GetWindow() const;
+
+
+  CS_FUNCTION()
+  bool ProcessFrame ();
+
 private:
+  csFPS    m_fps;
+  uint32_t m_lastFPS;
+
   iDevice *m_device = nullptr;
   csWorld *m_world = nullptr;
   iFrameRenderer *m_frameRenderer = nullptr;
   iSkyboxRenderer *m_skyboxRenderer = nullptr;
   iRenderTarget2D *m_renderTarget = nullptr;
   iWindow *m_window = nullptr;
+
+  uint8_t m_multiSamples = 1;
 };
 
 } // cs

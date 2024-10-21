@@ -1003,14 +1003,14 @@ cs::iMaterial *create_sg_material ()
   return nullptr;
 }
 
-bool Game::Initialize(cs::csEngine *engine)
+bool Game::Initialize(cs::csWorld *world)
 {
 
   cs::csAssetManager::Get()->Get<cs::csMaterial>("/materials/Default.sg");
 
 
 
-  setup_world(engine->GetWorld());
+  setup_world(world);
   return true;
 }
 

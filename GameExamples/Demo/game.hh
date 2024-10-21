@@ -12,7 +12,7 @@ public:
   ~Game() override = default;
 
 
-  bool Initialize(cs::csEngine *engine) override;
+  bool Initialize(cs::csWorld *world) override;
 
 };
 

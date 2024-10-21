@@ -1,6 +1,5 @@
 
 #include <csAssimpLoader/csAssimpLoaderModule.hh>
-#include <master.refl.cc>
 #include <csAssimpLoader/csAssimpMeshLoader.hh>
 #include <csAssimpLoader/csAssimpSkeletonAnimationLoader.hh>
 #include <csAssimpLoader/csAssimpSkeletonMeshLoader.hh>
@@ -8,6 +7,7 @@
 #include <csCore/csObjectRegistry.hh>
 #include <csCore/resource/csAssetManager.hh>
 
+#include <master.refl.cc>
 
 namespace cs::assimp
 {

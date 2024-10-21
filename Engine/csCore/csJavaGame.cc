@@ -16,9 +16,9 @@ csGameJava::csGameJava(jobject gameObject)
 }
 
 
-bool csGameJava::Initialize(cs::csEngine *engine)
+bool csGameJava::Initialize(cs::csWorld *world)
 {
-  static jclass cls = csJava::Get()->FindClass("org/crimsonedge/core/IGame");
+  static jclass cls = csJava::Get()->FindClass("org/cryo/core/IGame");
   if (cls)
   {
     static jmethodID initialize = csJava::Get()->GetMethodID(cls, "initialize", "()Z");

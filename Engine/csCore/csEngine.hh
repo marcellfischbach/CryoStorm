@@ -21,55 +21,51 @@ struct iWindow;
 
 class csWorld;
 
+CS_CLASS()
+class CS_CORE_API csModuleConfig : public CS_SUPER(iObject)
+{
+CS_CLASS_GEN_OBJECT;
+public:
+  csModuleConfig();
+  ~csModuleConfig() override = default;
+
+  CS_FUNCTION()
+  bool LoadModuleConfig();
+
+  CS_FUNCTION()
+  bool LoadModuleConfigEx(const std::string &configFilename);
+
+  CS_FUNCTION()
+  void AddModule(iModule *module);
+
+  CS_FUNCTION()
+  void AddModuleByName(const std::string &moduleName);
+
+  const std::vector<iModule *> &GetModules() const;
+
+private:
+  std::vector<iModule *> m_modules;
+
+};
+
 class CS_CORE_API  csEngine
 {
 public:
-  void SetWindow(iWindow *window);
-  iWindow *GetWindow();
+  bool InitializeEngine(const std::vector<std::string> &args, const csModuleConfig &moduleConfig);
 
-//  void SetDevice(iDevice *device);
-//  iDevice *GetDevice();
-//
-//  void SetFrameRenderer(iFrameRenderer *frameRenderer);
-//  iFrameRenderer *GetFrameRenderer();
-//
-//  void SetSkyboxRenderer(iSkyboxRenderer *skyboxRenderer);
-//  iSkyboxRenderer *GetSkyboxRenderer();
-
-  void SetWorld(csWorld *world);
-  csWorld *GetWorld();
-
-
-  bool InitializeEngine(const std::vector<std::string> &args, iModule *externalModule);
-  bool InitializeEngine (const std::vector<std::string> &args, const std::vector<std::string> &moduleNames, iModule *externalModule);
-
-  bool InitializeGame();
-
-  int Run();
-  bool ProcessFrame(iDevice* device);
+  CS_NODISCARD bool ShouldExit() const;
   void Exit(int returnValue = 0);
+  CS_NODISCARD int ExitValue() const;
 
 private:
-  iWindow         *m_window         = nullptr;
-//  iDevice         *m_device         = nullptr;
-  iFrameRenderer  *m_frameRenderer  = nullptr;
-  iSkyboxRenderer *m_skyboxRenderer = nullptr;
-  iRenderTarget2D *m_renderTarget = nullptr;
-  csWorld         *m_world        = nullptr;
 
-  bool m_active       = true;
-  int  m_exitValue    = 0;
-  int  m_multiSamples = 1;
-
-
-  // Frame counting stuff
-  csFPS    m_fps;
-  uint32_t m_lastFPS;
+  bool shouldExit = false;
+  int m_exitValue = 0;
 public:
   static csEngine *Get();
 
 private:
-  csEngine();
+  csEngine() = default;
 
   static csEngine *s_instance;
 };
