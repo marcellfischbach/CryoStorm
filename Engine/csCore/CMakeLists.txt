@@ -278,7 +278,6 @@ set(SOURCES
 
 if (${JAVA_BINDINGS})
     SET(SOURCES ${SOURCES}
-            csEngine_java.cc
             csJava.cc
             csJava.hh
             csJavaCalls.hh
@@ -286,16 +285,10 @@ if (${JAVA_BINDINGS})
             csJavaModule.hh
             csJavaGame.cc
             csJavaGame.hh
-            csObjectRegistry_java.cc
 
 
-            entity/csEntity_java.cc
-            entity/csEntityState_java.cc
             entity/csJavaState.cc
             entity/csJavaState.hh
-            entity/csSpatialState_java.cc
-            entity/csStaticMeshState_java.cc
-            entity/csWorld_java.cc
 
             graphics/iDevice_java.cc
             graphics/iRenderMesh_java.cc
@@ -314,6 +307,9 @@ if (${JAVA_BINDINGS})
             resource/csJavaArchive.hh
             resource/csJavaFile.cc
             resource/csJavaFile.hh
+
+            window/csJavaWindow.cc
+            window/csJavaWindow.hh
     )
 
 endif ()

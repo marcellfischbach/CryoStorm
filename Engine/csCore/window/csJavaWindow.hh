@@ -1,26 +1,24 @@
+//
+// Created by Marcell on 22.10.2024.
+//
 
 #pragma once
 
-#include <csJavaLWJGL/csJavaExport.hh>
-#include <csJavaLWJGL/csLwjglKeyboard.hh>
-#include <csJavaLWJGL/csLwjglMouse.hh>
+#include <csCore/csCoreExport.hh>
 #include <csCore/window/iWindow.hh>
 
-#include <jni.h>
-
-namespace cs::java
+namespace cs
 {
 
-CS_CLASS(jclass="org.cryo.launcher.LwjglWindow")
-class CS_JAVA_API csLwjglWindow : public CS_SUPER(iWindow)
+
+CS_CLASS(jclass="org.cryo.core.window.JavaWindow")
+class CS_CORE_API csJavaWindow : public CS_SUPER(cs::iWindow)
 {
   CS_CLASS_GEN_OBJECT;
 public:
-  csLwjglWindow();
-  ~csLwjglWindow() override = default;
+  csJavaWindow () = default;
+  ~csJavaWindow() = default;
 
-  static csLwjglWindow* Get();
-  
   void SetTitle(const std::string& title) override;
   const std::string &GetTitle() const override;
 
@@ -46,18 +44,9 @@ public:
 
   void ProcessUpdates() override;
 
-
-  csLwjglMouse *GetMouse();
-  csLwjglKeyboard *GetKeyboard();
 private:
   mutable std::string m_title;
 
-  csLwjglKeyboard m_keyboard;
-  csLwjglMouse    m_mouse;
-
-  static csLwjglWindow * s_instance;
-
 };
 
-}
-
+} // cs

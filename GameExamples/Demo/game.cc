@@ -379,8 +379,8 @@ void generate_camera(cs::csWorld *world)
 
 
   auto cameraHandler = new CameraHandler();
-  cameraEntity->Attach(cameraState);
-  cameraEntity->Attach(cameraHandler);
+  cameraEntity->AttachState(cameraState);
+  cameraEntity->AttachState(cameraHandler);
   cameraEntity->GetRoot()->GetTransform()
               .SetTranslation(cs::csVector3f(-5, 5, -5))
               .LookAt(cs::csVector3f(0, 0, 0))
@@ -423,7 +423,7 @@ void generate_terrain(cs::csWorld *world)
               .SetTranslation(cs::csVector3f(0, 0, 0))
               .Finish();
   terrainState->SetStatic(true);
-  entity0->Attach(terrainState);
+  entity0->AttachState(terrainState);
   world->Attach(entity0);
 }
 
@@ -453,7 +453,7 @@ void generate_test_grid(cs::csWorld *world, cs::iMaterial *material)
                      .SetTranslation(i - start, 0.25f, j - start)
                      .Finish();
       meshStateSphere->SetMesh(mesh);
-      entity->Attach(meshStateSphere);
+      entity->AttachState(meshStateSphere);
 #if 0
       auto rnd = (float) rand() / (float) RAND_MAX;
       int   ma  = a % 4;
@@ -514,7 +514,7 @@ cs::csEntity *add_bone(cs::csWorld *world, cs::iMaterial *material)
   cs::csStaticMeshState *meshState = new cs::csStaticMeshState();
   meshState->SetMesh(mesh);
   meshState->SetMaterial(0, material);
-  entity->Attach(meshState);
+  entity->AttachState(meshState);
   entity->GetRoot()->SetLocalMatrix(cs::csMatrix4f());
 
   world->Attach(entity);
@@ -529,7 +529,7 @@ void add_skeleton_mesh(cs::csWorld *world, cs::iMaterial *material)
   cs::csSkeletonMeshState *meshState = new cs::csSkeletonMeshState();
   meshState->SetMesh(mesh);
   meshState->SetMaterial(0, material);
-  entity->Attach(meshState);
+  entity->AttachState(meshState);
 
 //  entity->GetRoot()->GetTransform()
 //        .SetRotation(cs::Quaternion::FromAxisAngle(0.0f, 1.0f, 0.0f, M_PI / 1.0f * 1.0f))
@@ -606,7 +606,7 @@ void generate_batched_test_grid(cs::csWorld *world, cs::iMaterial *material)
                      .SetTranslation(i - start + 2, 0.25f, j - start + 2)
                      .Finish();
       meshStateSphere->SetMesh(mesh);
-      entity->Attach(meshStateSphere);
+      entity->AttachState(meshStateSphere);
 
 
       world->Attach(entity);
@@ -634,8 +634,8 @@ void generate_physics(cs::csWorld *world, cs::iMaterial *material)
   cs::csBoxColliderState    *floorBoxCollider    = new cs::csBoxColliderState();
   cs::csStaticColliderState *floorStaticCollider = new cs::csStaticColliderState();
   floorBoxCollider->SetHalfExtends(cs::csVector3f(100.0f, 1.0f, 100.0f));
-  floorEntity->Attach(floorBoxCollider);
-  floorEntity->Attach(floorStaticCollider);
+  floorEntity->AttachState(floorBoxCollider);
+  floorEntity->AttachState(floorStaticCollider);
   floorEntity->GetRoot()->GetTransform().SetTranslation(cs::csVector3f(0.0f, -1.0f, 0.0f)).Finish();
   world->Attach(floorEntity);
 
@@ -658,8 +658,8 @@ void generate_physics(cs::csWorld *world, cs::iMaterial *material)
         meshSphere->AddSubMesh(renderMeshSphere, 0);
         sphereColliderState->SetRadius(sphereRadius);
 
-        entitySphere->Attach(sphereColliderState);
-        entitySphere->Attach(rigidBodyState);
+        entitySphere->AttachState(sphereColliderState);
+        entitySphere->AttachState(rigidBodyState);
         rigidBodyState->Attach(meshStateSphere);
 
         rigidBodyState->GetTransform()
@@ -688,7 +688,7 @@ void generate_physics(cs::csWorld *world, cs::iMaterial *material)
                        .SetTranslation(cs::csVector3f(i * sphereRadius * 0.5, 0.0f, 0.0f))
                        .Finish();
         meshStateSphere->SetMesh(meshSphere);
-        entitySphere->Attach(meshStateSphere);
+        entitySphere->AttachState(meshStateSphere);
         world->Attach(entitySphere);
       }
       {
@@ -701,7 +701,7 @@ void generate_physics(cs::csWorld *world, cs::iMaterial *material)
                        .SetTranslation(cs::csVector3f(0.0f, i * sphereRadius, 0.0f))
                        .Finish();
         meshStateSphere->SetMesh(meshSphere);
-        entitySphere->Attach(meshStateSphere);
+        entitySphere->AttachState(meshStateSphere);
         world->Attach(entitySphere);
       }
       {
@@ -714,7 +714,7 @@ void generate_physics(cs::csWorld *world, cs::iMaterial *material)
                        .SetTranslation(cs::csVector3f(0.0f, 0.0f, i * 2.0f * sphereRadius))
                        .Finish();
         meshStateSphere->SetMesh(meshSphere);
-        entitySphere->Attach(meshStateSphere);
+        entitySphere->AttachState(meshStateSphere);
         world->Attach(entitySphere);
       }
     }
@@ -734,7 +734,7 @@ cs::csLightState *add_directional_light(cs::csWorld *world,
 {
   cs::csEntity     *entity     = new cs::csEntity("Directional");
   cs::csLightState *lightState = new cs::csLightState("DirectionalLight");
-  entity->Attach(lightState);
+  entity->AttachState(lightState);
   lightState->SetType(cs::eLT_Directional);
   lightState->SetColor(color);
   lightState->SetShadowMapBias(0.003f);
@@ -761,7 +761,7 @@ cs::csLightState *add_point_light(cs::csWorld *world,
   auto entity     = new cs::csEntity("Point");
   auto lightState = new cs::csLightState("PointLight");
 //  auto testState  = new TestHandler01(position, range * 0.25f, 0.5f * rnd);
-  entity->Attach(lightState);
+  entity->AttachState(lightState);
 //  entity->Attach(testState);
   lightState->SetType(cs::eLT_Point);
   lightState->SetColor(color);
@@ -853,7 +853,7 @@ void generate_axis_grid(cs::csWorld *world)
       meshStateSphere->SetStatic(true);
       meshStateSphere->GetTransform().SetTranslation((float) (i + 1) * 0.5f, 0.0f, 0.0f).Finish();
       meshStateSphere->SetMesh(meshR);
-      entity->Attach(meshStateSphere);
+      entity->AttachState(meshStateSphere);
       world->Attach(entity);
     }
     {
@@ -862,7 +862,7 @@ void generate_axis_grid(cs::csWorld *world)
       meshStateSphere->SetStatic(true);
       meshStateSphere->GetTransform().SetTranslation(0.0f, (float) (i + 1) * 0.5f, 0.0f).Finish();
       meshStateSphere->SetMesh(meshG);
-      entity->Attach(meshStateSphere);
+      entity->AttachState(meshStateSphere);
       world->Attach(entity);
     }
     {
@@ -871,7 +871,7 @@ void generate_axis_grid(cs::csWorld *world)
       meshStateSphere->SetStatic(true);
       meshStateSphere->GetTransform().SetTranslation(0.0f, 0.0f, (float) (i + 1) * 0.5f).Finish();
       meshStateSphere->SetMesh(meshB);
-      entity->Attach(meshStateSphere);
+      entity->AttachState(meshStateSphere);
       world->Attach(entity);
     }
 
@@ -902,14 +902,14 @@ void generate_cube_fbx(cs::csWorld *world)
   meshStateSphere->SetMesh(mesh);
 
 
-  entity->Attach(meshStateSphere);
+  entity->AttachState(meshStateSphere);
   world->Attach(entity);
 }
 
 void generate_exit_game(cs::csWorld *world)
 {
   cs::csEntity * entity = new cs::csEntity();
-  entity->Attach(new ExitGameState);
+  entity->AttachState(new ExitGameState);
   world->Attach(entity);
 }
 
@@ -1005,12 +1005,29 @@ cs::iMaterial *create_sg_material ()
 
 bool Game::Initialize(cs::csWorld *world)
 {
+  auto cameraEntity = new cs::csEntity("Camera");
 
-  cs::csAssetManager::Get()->Get<cs::csMaterial>("/materials/Default.sg");
+  auto cameraState  = new cs::csCameraState();
+  cameraState->SetClearMode(cs::eClearMode::Color);
+  cameraState->SetClearColor(cs::csColor4f(0.0f, 0.0f, 0.5f));
+  cameraState->SetClearColorMode(cs::eClearColorMode::PlainColor);
+//  cameraState->SetSkyboxRenderer(new cs::csSimpleSkybox());
+
+//  auto postProcessing = setup_post_processing ();
+//  cameraState->SetPostProcessing(postProcessing);
 
 
+//  auto cameraHandler = new CameraHandler();
+  cameraEntity->AttachState(cameraState);
+//  cameraEntity->AttachState(cameraHandler);
+//  cameraEntity->GetRoot()->GetTransform()
+//      .SetTranslation(cs::csVector3f(-5, 5, -5))
+//      .LookAt(cs::csVector3f(0, 0, 0))
+//      .Finish();
+  world->Attach(cameraEntity);
+  world->SetMainCamera(cameraState);
 
-  setup_world(world);
+
   return true;
 }
 

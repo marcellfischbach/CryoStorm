@@ -9,12 +9,12 @@ public class ModuleConfig extends CsObject {
         super(ref);
     }
 
-    public void loadModuleConfig () {
-        ModuleConfigNative.nLoadModuleConfig(getRef());
+    public boolean loadModuleConfig () {
+        return ModuleConfigNative.nLoadModuleConfig(getRef());
     }
 
-    public void loadModuleConfigEx (String filename) {
-        ModuleConfigNative.nLoadModuleConfigEx(getRef(), filename);
+    public boolean loadModuleConfigEx (String filename) {
+        return ModuleConfigNative.nLoadModuleConfigEx(getRef(), filename);
     }
 
     public void addModule(JavaModule module) {

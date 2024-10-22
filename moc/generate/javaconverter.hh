@@ -17,22 +17,33 @@ class csElement;
 class JavaConverterArgument
 {
 public:
-  JavaConverterArgument(std::string jtype, std::string id, std::string suffix, std::string javaType);
+  JavaConverterArgument(std::string jtype,
+                        std::string id,
+                        std::string suffix,
+                        std::string javaType,
+                        std::string jniTypeSig);
   [[nodiscard]] const std::string &GetJType() const;
   [[nodiscard]] const std::string &GetID() const;
   [[nodiscard]] const std::string &GetSuffix() const;
   [[nodiscard]] const std::string &GetJavaType() const;
+  [[nodiscard]] const std::string &GetJniTypeSig() const;
+  [[nodiscard]] const std::string &GetJniTypeSigMangled() const;
 private:
   std::string m_jtype;
   std::string m_id;
   std::string m_suffix;
   std::string m_javaType;
+  std::string m_jniTypeSig;
+  std::string m_jniTypeSigMangled;
 };
 
 class JavaConverter
 {
 public:
   void AddType(const std::string &type);
+  void SetJniName(const std::string &jniName);
+  const std::string &GetJniName() const;
+  const std::string &GetJniNameMangled() const;
   void AddInputArgument(const JavaConverterArgument &argument);
   void AddOutputArgument(const JavaConverterArgument &argument);
 
@@ -55,7 +66,6 @@ public:
   std::string ConvertOutput() const;
 
 private:
-
   std::set<std::string> m_types;
   std::vector<JavaConverterArgument> m_inputArguments;
   std::vector<JavaConverterArgument> m_outputArguments;

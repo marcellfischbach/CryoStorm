@@ -27,12 +27,12 @@ public:
   const std::string &GetTitle() const override;
   
   void SetPosition(int16_t x, int16_t y) override;
-  int GetPositionX() const override;
-  int GetPositionY() const override;
+  int16_t GetPositionX() const override;
+  int16_t GetPositionY() const override;
 
   void SetResolution(uint16_t width, uint16_t height) override;
-  int GetWidth() const override;
-  int GetHeight() const override;
+  int16_t GetWidth() const override;
+  int16_t GetHeight() const override;
 
   void SetWindowIcon(const csResourceLocator &locator) override;
 

@@ -149,6 +149,7 @@ std::string ClassGenerator::GenerateFunctionClass(ClassNode *classNode,
   {
     fnctClassName += "_Const";
   }
+  fnctClassName += "_" + std::to_string(m_functionCounter++);
 
   m_functionClasses.push_back(fnctClassName);
 

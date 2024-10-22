@@ -49,7 +49,6 @@ private:
 };
 
 
-
 CS_CLASS(jclass="org.cryo.core.Engine")
 class CS_CORE_API csEngine : public CS_SUPER(iObject)
 {

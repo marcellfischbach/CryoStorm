@@ -13,7 +13,7 @@ class CS_CORE_API csDebugCache : public CS_SUPER(iObject)
 {
   CS_CLASS_GEN_OBJECT;
 public:
-  csDebugCache();
+  csDebugCache() = default;
   ~csDebugCache() override = default;
 
   void SetDebug(bool debug)
@@ -49,11 +49,10 @@ public:
     static iObject* Get(const csClass* cls);
 
 private:
-    csObjectRegistry();
+    csObjectRegistry() = default;
 
 private:
-  static csObjectRegistry* Get();
-  std::map<const csClass*, iObject*> m_registry;
+  static std::map<const csClass*, iObject*> m_registry;
 };
 
 }

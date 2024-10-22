@@ -87,13 +87,13 @@ void csLwjglWindow::SetPosition(int16_t x, int16_t y)
   setPosition.call(csJava::Get(), x, y);
 }
 
-int csLwjglWindow::GetPositionX() const
+int16_t csLwjglWindow::GetPositionX() const
 {
   static csJavaCallInt getPositionX (csJava::Get(), this, THIS_CLASS_NAME, "getPositionX");
 
   return (int)getPositionX.call(csJava::Get(), 0);
 }
-int csLwjglWindow::GetPositionY() const
+int16_t csLwjglWindow::GetPositionY() const
 {
   static csJavaCallInt getPositionY (csJava::Get(), this, THIS_CLASS_NAME, "getPositionY");
 
@@ -105,12 +105,12 @@ void csLwjglWindow::SetResolution(uint16_t width, uint16_t height)
   static csJavaCallVoid2<jint, jint> setResolution (csJava::Get(), this, THIS_CLASS_NAME, "setResoluation", JAVA_INT, JAVA_INT);
   setResolution.call(csJava::Get(), width, height);
 }
-int csLwjglWindow::GetWidth() const
+int16_t csLwjglWindow::GetWidth() const
 {
   static csJavaCallInt getWidth (csJava::Get(), this, THIS_CLASS_NAME, "getWidth");
   return getWidth.call(csJava::Get(), 100);
 }
-int csLwjglWindow::GetHeight() const
+int16_t csLwjglWindow::GetHeight() const
 {
   static csJavaCallInt getHeight (csJava::Get(), this, THIS_CLASS_NAME, "getHeight");
   return getHeight.call(csJava::Get(), 100);

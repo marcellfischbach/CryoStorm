@@ -3,11 +3,11 @@
 namespace cs
 {
 
-class csSpatialStateClass : public cs::csClass
+class csCameraStateClass : public cs::csClass
 {
 public:
- csSpatialStateClass();
- static csSpatialStateClass *Get();
+ csCameraStateClass();
+ static csCameraStateClass *Get();
  virtual cs::iObject *CreateInstance() const;
 };
 }

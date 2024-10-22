@@ -115,7 +115,8 @@ CS_CLASS_GEN;
 //  virtual void SetLightShadowMap(iLight *light, iTexture2D *shadowMap) = 0;
 
   virtual iSampler *CreateSampler() = 0;
-  virtual iTexture2D *CreateTexture(const iTexture2D::Descriptor &descriptor) = 0;
+  CS_FUNCTION()
+  virtual cs::iTexture2D *CreateTexture(const cs::iTexture2D::Descriptor &descriptor) = 0;
   virtual iTexture2DArray *CreateTexture(const iTexture2DArray::Descriptor &descriptor) = 0;
   virtual iTextureCube *CreateTexture(const iTextureCube::Descriptor &descriptor) = 0;
   virtual iRenderTarget2D *CreateRenderTarget(const iRenderTarget2D::Descriptor &descriptor) = 0;

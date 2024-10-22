@@ -60,8 +60,50 @@ std::string JavaJNIGenerator::OutputClass(ClassNode *classNode, std::list<Namesp
   return source;
 }
 
-static std::string convert_to_jni_method_name(const std::string &javaFQClass, const std::string &methodName)
+static std::string mangle_function_arguments_types (FunctionNode *functionNode, CSMetaNode *functionMeta)
 {
+  std::string res = "__J";
+  for (const auto &argument: functionNode->GetArguments())
+  {
+    const TypeDef &def = argument.GetType();
+    std::string typeName = def.GetTypeName();
+    const JavaConverter *converter = JavaConverters::Get()->FindConverter(typeName);
+    if (converter)
+    {
+      for (const auto &inArg: converter->GetInputArguments())
+      {
+        res += inArg.GetJniTypeSigMangled();
+      }
+    }
+    else if (def.IsPointer() || def.IsReference())
+    {
+      res += "J";
+    }
+
+    else if (functionNode->GetArguments().size() == 1 && functionMeta->Has("jenum")
+        || functionMeta->HasListValue("jenum", typeName))
+    {
+      res += "I";
+    }
+
+
+  }
+
+  std::string typeName = functionNode->GetReturnValue().GetTypeName();
+  const JavaConverter *converter = JavaConverters::Get()->FindConverter(typeName);
+  if (converter)
+  {
+    for (const auto &inArg: converter->GetOutputArguments())
+    {
+      res += inArg.GetJniTypeSigMangled();
+    }
+  }
+  return res;
+}
+
+static std::string convert_to_jni_method_name(const std::string &javaFQClass, FunctionNode *functionNode, CSMetaNode *functionMeta)
+{
+  const std::string &methodName = functionNode->GetName();
   std::string name = javaFQClass;
 
   if (name[0] == '"')
@@ -87,7 +129,7 @@ static std::string convert_to_jni_method_name(const std::string &javaFQClass, co
   }
 
 
-  return "Java_" + name + "Native_n" + methodName;
+  return "Java_" + name + "Native_n" + methodName + mangle_function_arguments_types(functionNode, functionMeta);
 }
 
 
@@ -290,7 +332,7 @@ JavaJNIGenerator::GenerateFunction(ClassNode *classNode, std::list<NamespaceNode
   std::string javaFQClass = clsMeta->Get("jclass");
   std::string fns = Generator::GetFullNamespaceName(nss);
 
-  std::string methodName = convert_to_jni_method_name(javaFQClass, functionNode->GetName());
+  std::string methodName = convert_to_jni_method_name(javaFQClass, functionNode, functionMeta);
   const std::string &jniReturnType = convert_return_type_to_jni_type(functionNode, functionMeta);
   m_sourceGenerator.BeginFunction(functionNode, functionMeta, functionNode->GetName(), jniReturnType);
 

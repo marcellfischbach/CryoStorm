@@ -1,6 +1,79 @@
 <converters>
     <converter>
         <types>
+            <type>csVector2f</type>
+            <type>cs::csVector2f</type>
+        </types>
+        <in-arguments>
+            <argument jtype="jfloat" id="x" suffix="X"/>
+            <argument jtype="jfloat" id="y" suffix="Y"/>
+        </in-arguments>
+        <out-arguments>
+            <argument jtype="jfloatArray" id="out"/>
+        </out-arguments>
+        <in-conversion>
+            cs::csVector2f ${csArg} (${x}, ${y});
+        </in-conversion>
+        <out-conversion returnType="void" fullQualifiedType="cs::csVector2f">
+            jfloat *${csTmp} = env->GetFloatArrayElements(${out}, 0);
+            ${csTmp}[0] = ${csRet}.x;
+            ${csTmp}[1] = ${csRet}.y;
+            env->ReleaseFloatArrayElements(${out}, ${csTmp}, 0);
+        </out-conversion>
+    </converter>
+    <converter>
+        <types>
+            <type>csVector3f</type>
+            <type>cs::csVector3f</type>
+        </types>
+        <in-arguments>
+            <argument jtype="jfloat" id="x" suffix="X"/>
+            <argument jtype="jfloat" id="y" suffix="Y"/>
+            <argument jtype="jfloat" id="z" suffix="Z"/>
+        </in-arguments>
+        <out-arguments>
+            <argument jtype="jfloatArray" id="out"/>
+        </out-arguments>
+        <in-conversion>
+            cs::csVector3f ${csArg} (${x}, ${y}, ${z});
+        </in-conversion>
+        <out-conversion returnType="void" fullQualifiedType="cs::csVector3f">
+            jfloat *${csTmp} = env->GetFloatArrayElements(${out}, 0);
+            ${csTmp}[0] = ${csRet}.x;
+            ${csTmp}[1] = ${csRet}.y;
+            ${csTmp}[2] = ${csRet}.z;
+            env->ReleaseFloatArrayElements(${out}, ${csTmp}, 0);
+        </out-conversion>
+    </converter>
+    <converter>
+        <types>
+            <type>csVector4f</type>
+            <type>cs::csVector4f</type>
+        </types>
+        <in-arguments>
+            <argument jtype="jfloat" id="x" suffix="X"/>
+            <argument jtype="jfloat" id="y" suffix="Y"/>
+            <argument jtype="jfloat" id="z" suffix="Z"/>
+            <argument jtype="jfloat" id="w" suffix="W"/>
+        </in-arguments>
+        <out-arguments>
+            <argument jtype="jfloatArray" id="out"/>
+        </out-arguments>
+        <in-conversion>
+            cs::csVector4f ${csArg} (${x}, ${y}, ${z}, ${w});
+        </in-conversion>
+        <out-conversion returnType="void" fullQualifiedType="cs::csVector4f">
+            jfloat *${csTmp} = env->GetFloatArrayElements(${out}, 0);
+            ${csTmp}[0] = ${csRet}.x;
+            ${csTmp}[1] = ${csRet}.y;
+            ${csTmp}[2] = ${csRet}.z;
+            ${csTmp}[3] = ${csRet}.w;
+            env->ReleaseFloatArrayElements(${out}, ${csTmp}, 0);
+        </out-conversion>
+    </converter>
+    
+    <converter>
+        <types>
             <type>csColor4f</type>
             <type>cs::csColor4f</type>
         </types>
@@ -13,7 +86,7 @@
         <out-arguments>
             <argument jtype="jfloatArray" id="out"/>
         </out-arguments>
-        <in-conversion>
+        <in-conversion >
             cs::csColor4f ${csArg} (${r}, ${g}, ${b}, ${a});
         </in-conversion>
         <out-conversion returnType="void" fullQualifiedType="cs::csColor4f">
@@ -23,6 +96,36 @@
             ${csTmp}[2] = ${csRet}.b;
             ${csTmp}[3] = ${csRet}.a;
             env->ReleaseFloatArrayElements(${out}, ${csTmp}, 0);
+        </out-conversion>
+    </converter>
+
+    <converter>
+        <types>
+            <type>iTexture2D::Descriptor</type>
+            <type>cs::iTexture2D::Descriptor</type>
+        </types>
+        <in-arguments>
+            <argument jtype="jint" id="format" suffix="Format"/>
+            <argument jtype="jint" id="width" suffix="Width"/>
+            <argument jtype="jint" id="height" suffix="Height"/>
+            <argument jtype="jboolean" id="mipMaps" suffix="MipMaps"/>
+            <argument jtype="jint" id="multiSamples" suffix="MultiSamples"/>
+        </in-arguments>
+        <out-arguments>
+        </out-arguments>
+        <in-conversion><![CDATA[
+    cs::iTexture2D::Descriptor ${csArg} {
+        static_cast<cs::ePixelFormat>(${format}),
+        static_cast<uint16_t>(${width}),
+        static_cast<uint16_t>(${height}),
+        static_cast<bool>(${mipMaps}),
+        static_cast<uint16_t>(${multiSamples})
+    };
+            ]]>
+        </in-conversion>
+        <out-conversion returnType="void" fullQualifiedType="cs::iTexture2D::Descriptor">
+            // fail for now
+            #error "Not clear how to convert that"
         </out-conversion>
     </converter>
 </converters>

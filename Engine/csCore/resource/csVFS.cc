@@ -7,7 +7,7 @@
 #include <csCore/resource/iArchive.hh>
 
 #include <regex>
-
+#include <iostream>
 namespace cs
 {
 
@@ -67,6 +67,7 @@ iFile* csVFS::Open(const csResourceLocator& resourceLocator, eAccessMode accessM
   for (const auto &archive: m_archives)
   {
     iFile* file = archive->Open(resourcePathWithReplacedAliases, accessMode, openMode);
+    std::cout << "Open file " << resourceLocator.Encoded() << " @ " << archive->GetName() << " -> " << file << std::endl;
     if (file)
     {
       return file;

@@ -4,7 +4,7 @@
 #include <csCore/csJavaCalls.hh>
 #include <csCore/entity/csWorld.hh>
 
-#define THIS_CLASS_NAME  "org/crimsonedge/core/entity/JavaState"
+#define THIS_CLASS_NAME  "org/cryo/core/entity/JavaState"
 
 namespace cs
 {

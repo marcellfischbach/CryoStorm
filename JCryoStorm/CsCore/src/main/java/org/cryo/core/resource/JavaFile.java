@@ -8,7 +8,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 
-@CsClass("cs::JavaFile")
+@CsClass(JavaFileNative.CS_CLASS_NAME)
 public class JavaFile extends CsObject implements IFile {
 
     private final String name;

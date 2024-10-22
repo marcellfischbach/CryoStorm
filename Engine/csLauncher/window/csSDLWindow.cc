@@ -104,12 +104,12 @@ void csSDLWindow::SetPosition(int16_t x, int16_t y)
   }
 }
 
-int csSDLWindow::GetPositionX() const
+int16_t csSDLWindow::GetPositionX() const
 {
   return m_posX;
 }
 
-int csSDLWindow::GetPositionY() const
+int16_t csSDLWindow::GetPositionY() const
 {
   return m_posY;
 }
@@ -124,13 +124,13 @@ void csSDLWindow::SetResolution(uint16_t width, uint16_t height)
   }
 }
 
-int csSDLWindow::GetWidth() const
+int16_t csSDLWindow::GetWidth() const
 {
   return m_width;
 }
 
 
-int csSDLWindow::GetHeight() const
+int16_t csSDLWindow::GetHeight() const
 {
   return m_height;
 }

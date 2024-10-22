@@ -15,28 +15,18 @@ public class Entity extends CsObject {
     }
 
 
-    public void setName (String name) {
+    public void setName(String name) {
         EntityNative.nSetName(getRef(), name);
     }
 
-    //##BEGIN-csMOC # Don't remove
+    public void attachState(EntityState state) {
+        EntityNative.nAttachState(getRef(), state.getRef());
+    }
 
-    private static native void nSetName(long ref /* this ptr */,
-                                        String name /* name (const std::string&) */
-                                       );
+    public void detachState(EntityState state) {
+        EntityNative.nDetachState(getRef(), state.getRef());
+    }
 
-    private static native String nGetName(long ref /* this ptr */
-                                         );
-
-    private static native boolean nAttach(long ref /* this ptr */,
-                                          long entityState /* entityState (cs::csEntityState*) */
-                                         );
-
-    private static native boolean nDetach(long ref /* this ptr */,
-                                          long entityState /* entityState (cs::csEntityState*) */
-                                         );
-
-    //##END-csMOC # Don't remove
 }
 
 

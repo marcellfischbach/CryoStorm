@@ -58,6 +58,7 @@ private:
 
 
 private:
+  uint32_t m_functionCounter = 0;
   std::vector<std::string> m_propertyClasses;
   std::vector<std::string> m_functionClasses;
 };

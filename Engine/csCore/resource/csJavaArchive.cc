@@ -60,7 +60,7 @@ iFile *csJavaArchive::Open(const std::string &locator, eAccessMode accessMode, e
   jobject res  = open.call(env, arg0, accessMode, openMode, nullptr);
   IF_NULL(res);
 
-  static jclass coreObjectClass = env->FindClass("org/crimsonedge/core/CoreObject");
+  static jclass coreObjectClass = env->FindClass("org/cryo/core/ICsObject");
   IF_NULL(coreObjectClass);
 
   static jmethodID getRefMethod = env->GetMethodID(coreObjectClass, "getRef", "()J");

@@ -204,6 +204,11 @@ const csProjector &csCameraState::GetProjector() const
 }
 
 
+void csCameraState::Update(cs::uint32_t width, cs::uint32_t height)
+{
+  // what should that do???
+}
+
 void csCameraState::OnAttachedToWorld(csWorld *world)
 {
   iGfxScene *scene = world->GetScene();

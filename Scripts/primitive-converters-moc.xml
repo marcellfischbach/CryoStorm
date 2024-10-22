@@ -87,6 +87,23 @@
 
     <converter>
         <types>
+            <type>int</type>
+        </types>
+        <in-arguments>
+            <argument jtype="jint" id="int"/>
+        </in-arguments>
+        <out-arguments>
+        </out-arguments>
+        <in-conversion>
+            int ${csArg} = (int)${int};
+        </in-conversion>
+        <out-conversion returnType="jint" fullQualifiedType="int">
+            return (jint)${csRet};
+        </out-conversion>
+    </converter>
+
+    <converter>
+        <types>
             <type>int32_t</type>
         </types>
         <in-arguments>
@@ -207,7 +224,6 @@
     </converter>
 
 
-
     <converter>
         <types>
             <type>string</type>
@@ -234,7 +250,7 @@
             <type><![CDATA[vector<string>]]></type>
         </types>
         <in-arguments>
-            <argument jtype="jobjectArray" id="stringArray" javaType="String[]"/>
+            <argument jtype="jobjectArray" id="stringArray" javaType="String[]" jniTypeSig="[Ljava/lang/String;"/>
         </in-arguments>
         <out-arguments>
         </out-arguments>
@@ -254,5 +270,5 @@
             return env->NewStringUTF(${csRet}.c_str());
         </out-conversion>
     </converter>
-    
+
 </converters>

@@ -18,7 +18,7 @@ class csCamera;
 
 class csProjector;
 
-CS_CLASS()
+CS_CLASS(jclass="org.cryo.core.graphics.IFrameRenderer")
 struct CS_CORE_API iFrameRenderer : public CS_SUPER(iObject)
 {
   CS_CLASS_GEN;

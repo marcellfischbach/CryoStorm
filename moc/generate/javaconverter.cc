@@ -33,7 +33,7 @@ const JavaConverter *JavaConverters::FindConverter(const std::string &type) cons
 void JavaConverters::ReadConverters(const std::string &paths)
 {
   std::stringstream stream(paths);
-  std::string       path;
+  std::string path;
 
   while (std::getline(stream, path, ';'))
   {
@@ -47,7 +47,7 @@ void JavaConverters::ReadPath(const std::string &path)
   for (const auto &entry: std::filesystem::directory_iterator(path))
   {
     const std::filesystem::path &file_path = entry.path();
-    const std::string           name       = file_path.string();
+    const std::string name = file_path.string();
 
 
     // file ending -moc.xml
@@ -68,7 +68,7 @@ void JavaConverters::ReadConvertersFile(const std::string &filename)
 {
   try
   {
-    xml::csDocument      *doc  = xml::csParser::ParseFilename(filename);
+    xml::csDocument *doc = xml::csParser::ParseFilename(filename);
     const xml::csElement *root = doc->GetRoot();
 
     if (root->GetTagName() == "converter")
@@ -105,10 +105,10 @@ void JavaConverters::ReadConverters(const cs::xml::csElement *convertersElement)
 
 void JavaConverters::ReadConverter(const cs::xml::csElement *converterElement)
 {
-  JavaConverter        converter;
+  JavaConverter converter;
   const xml::csElement *inputConversionElement;
   const xml::csElement *outputConversionElement;
-  for (int             i = 0; i < converterElement->GetNumberOfChildren(); ++i)
+  for (int i = 0; i < converterElement->GetNumberOfChildren(); ++i)
   {
     const xml::csElement *childElement = converterElement->GetChild(i)->AsElement();
     if (!childElement)
@@ -139,7 +139,6 @@ void JavaConverters::ReadConverter(const cs::xml::csElement *converterElement)
       converter.SetOutputScript(childElement->GetContent());
     }
   }
-
 
 
   m_converters.push_back(converter);
@@ -178,8 +177,9 @@ void JavaConverters::ReadInputArguments(JavaConverter &converter, const cs::xml:
       JavaConverterArgument argument(inputArgumentElement->GetAttribute("jtype"),
                                      inputArgumentElement->GetAttribute("id"),
                                      inputArgumentElement->GetAttribute("suffix"),
-                                     inputArgumentElement->GetAttribute("javaType")
-                                     );
+                                     inputArgumentElement->GetAttribute("javaType"),
+                                     inputArgumentElement->GetAttribute("jniTypeSig")
+      );
       converter.AddInputArgument(argument);
     }
   }
@@ -198,21 +198,120 @@ void JavaConverters::ReadOutputArguments(JavaConverter &converter, const cs::xml
       JavaConverterArgument argument(outputArgumentElement->GetAttribute("jtype"),
                                      outputArgumentElement->GetAttribute("id"),
                                      outputArgumentElement->GetAttribute("suffix"),
-                                     outputArgumentElement->GetAttribute("javaType")
-                                     );
+                                     outputArgumentElement->GetAttribute("javaType"),
+                                     outputArgumentElement->GetAttribute("jniTypeSig")
+      );
       converter.AddOutputArgument(argument);
     }
   }
 }
 
 
-JavaConverterArgument::JavaConverterArgument(std::string jtype, std::string id, std::string suffix, std::string javaType)
+JavaConverterArgument::JavaConverterArgument(std::string jtype,
+                                             std::string id,
+                                             std::string suffix,
+                                             std::string javaType,
+                                             std::string jniTypeSig)
     : m_jtype(std::move(jtype))
     , m_id(std::move(id))
     , m_suffix(std::move(suffix))
     , m_javaType(std::move(javaType))
+    , m_jniTypeSig(std::move(jniTypeSig))
 {
-
+  if (m_jniTypeSig.empty())
+  {
+    if (m_jtype == std::string("jboolean"))
+    {
+      m_jniTypeSig = "Z";
+    }
+    else if (m_jtype == std::string("jbyte"))
+    {
+      m_jniTypeSig = "B";
+    }
+    else if (m_jtype == std::string("jchar"))
+    {
+      m_jniTypeSig = "C";
+    }
+    else if (m_jtype == std::string("jshort"))
+    {
+      m_jniTypeSig = "S";
+    }
+    else if (m_jtype == std::string("jint"))
+    {
+      m_jniTypeSig = "I";
+    }
+    else if (m_jtype == std::string("jlong"))
+    {
+      m_jniTypeSig = "J";
+    }
+    else if (m_jtype == std::string("jfloat"))
+    {
+      m_jniTypeSig = "F";
+    }
+    else if (m_jtype == std::string("jdouble"))
+    {
+      m_jniTypeSig = "D";
+    }
+    else if (m_jtype == std::string("jstring"))
+    {
+      m_jniTypeSig = "Ljava/lang/String;";
+    }
+    else if (m_jtype == std::string("jbooleanArray"))
+    {
+      m_jniTypeSig = "[Z";
+    }
+    else if (m_jtype == std::string("jbyteArray"))
+    {
+      m_jniTypeSig = "[B";
+    }
+    else if (m_jtype == std::string("jcharArray"))
+    {
+      m_jniTypeSig = "[C";
+    }
+    else if (m_jtype == std::string("jshortArray"))
+    {
+      m_jniTypeSig = "[S";
+    }
+    else if (m_jtype == std::string("jintArray"))
+    {
+      m_jniTypeSig = "[I";
+    }
+    else if (m_jtype == std::string("jlongArray"))
+    {
+      m_jniTypeSig = "[J";
+    }
+    else if (m_jtype == std::string("jfloatArray"))
+    {
+      m_jniTypeSig = "[F";
+    }
+    else if (m_jtype == std::string("jdoubleArray"))
+    {
+      m_jniTypeSig = "[D";
+    }
+  }
+  for (const char &ch: m_jniTypeSig)
+  {
+    if (ch == '/')
+    {
+      m_jniTypeSigMangled += '_';
+    }
+    else if (ch == '_')
+    {
+      m_jniTypeSigMangled += "_1";
+    }
+    else if (ch == ';')
+    {
+      m_jniTypeSigMangled += "_2";
+    }
+    else if (ch == '[')
+    {
+      m_jniTypeSigMangled += "_3";
+    }
+    else
+    {
+      m_jniTypeSigMangled += ch;
+    }
+  }
 }
 
 const std::string &JavaConverterArgument::GetJType() const
@@ -235,10 +334,22 @@ const std::string &JavaConverterArgument::GetJavaType() const
   return m_javaType;
 }
 
+const std::string &JavaConverterArgument::GetJniTypeSig() const
+{
+  return m_jniTypeSig;
+}
+
+
+const std::string &JavaConverterArgument::GetJniTypeSigMangled() const
+{
+  return m_jniTypeSigMangled;
+}
+
 void JavaConverter::AddType(const std::string &type)
 {
   m_types.insert(type);
 }
+
 
 void JavaConverter::AddInputArgument(const JavaConverterArgument &argument)
 {
@@ -296,7 +407,7 @@ const std::string &JavaConverter::GetOutputReturnType() const
   return m_outputReturnType;
 }
 
-std::string replace (const std::string &text, const std::string &ref, const std::string &replacement)
+std::string replace(const std::string &text, const std::string &ref, const std::string &replacement)
 {
   std::string result = text;
   while (true)
@@ -306,7 +417,7 @@ std::string replace (const std::string &text, const std::string &ref, const std:
     {
       break;
     }
-    
+
     result = result.replace(i, ref.size(), replacement.c_str(), replacement.length());
   }
   return result;
@@ -315,10 +426,10 @@ std::string replace (const std::string &text, const std::string &ref, const std:
 
 std::string JavaConverter::ConvertInput(size_t jniArgIdx, size_t csArgIdx) const
 {
-  std::string script = m_inputScript; 
-  script = replace (script, "${csArg}", "csArg" + std::to_string(csArgIdx));
-  script = replace (script, "${csTmp}", "csTmp" + std::to_string(csArgIdx));
-  for (size_t i=0; i<m_inputArguments.size(); i++)
+  std::string script = m_inputScript;
+  script = replace(script, "${csArg}", "csArg" + std::to_string(csArgIdx));
+  script = replace(script, "${csTmp}", "csTmp" + std::to_string(csArgIdx));
+  for (size_t i = 0; i < m_inputArguments.size(); i++)
   {
     const JavaConverterArgument &argument = m_inputArguments[i];
     script = replace(script, "${" + argument.GetID() + "}", "jniArg" + std::to_string(jniArgIdx + i));
@@ -330,9 +441,9 @@ std::string JavaConverter::ConvertInput(size_t jniArgIdx, size_t csArgIdx) const
 std::string JavaConverter::ConvertOutput() const
 {
   std::string script = m_outputScript;
-  script = replace (script, "${csRet}", "csReturnValue");
-  script = replace (script, "${csTmp}", "csReturnTmp");
-  for (size_t i=0; i<m_outputArguments.size(); i++)
+  script = replace(script, "${csRet}", "csReturnValue");
+  script = replace(script, "${csTmp}", "csReturnTmp");
+  for (size_t i = 0; i < m_outputArguments.size(); i++)
   {
     const JavaConverterArgument &argument = m_outputArguments[i];
     script = replace(script, "${" + argument.GetID() + "}", "jniOutArg" + std::to_string(i));

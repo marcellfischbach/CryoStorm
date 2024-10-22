@@ -26,7 +26,7 @@ bool csJavaBindingModule::Register(const std::vector<std::string> &args, csEngin
   csLwjglInputSystem *inputSystem = new csLwjglInputSystem(window->GetKeyboard(), window->GetMouse());
   csObjectRegistry::Register<iInputSystem>(inputSystem);
   csObjectRegistry::Register<iWindow>(window);
-  engine->SetWindow(window);
+//  engine->SetWindow(window);
 
   return true;
 }

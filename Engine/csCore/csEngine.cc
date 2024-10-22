@@ -21,6 +21,7 @@
 #include <csCore/iModule.hh>
 #include <csCore/iGame.hh>
 
+#include <iostream>
 #ifdef CS_WIN32
 
 #include <Windows.h>
@@ -60,10 +61,8 @@ bool csEngine::InitializeEngine(const std::vector<std::string> &args,
   {
     csAssetManager::Set(new csAssetManager());
   }
-  printf ("here\n");
   const std::vector<iModule *> &modules = config.GetModules();
 
-  printf ("Modules: %d\n", modules.size());
   for (auto module: modules)
   {
 
@@ -177,6 +176,7 @@ static iModule *open_module(const std::string &moduleName)
   HMODULE handle = load_module(dll_name);
   if (!handle)
   {
+    std::cout << "Unable to load library: " << dll_name << std::endl;
     return nullptr;
   }
 
@@ -184,6 +184,7 @@ static iModule *open_module(const std::string &moduleName)
   load_library_func_ptr load_library_func = (load_library_func_ptr) GetProcAddress(handle, load_library_name.c_str());
   if (!load_library_func)
   {
+    std::cout << "Library " << dll_name << " has no exported " << load_library_name << " entry point." << std::endl;
     return nullptr;
   }
 
@@ -215,8 +216,26 @@ void csModuleConfig::AddModule(cs::iModule *module)
 
 const std::vector<iModule *> &csModuleConfig::GetModules() const
 {
-  printf ("narf %p\n", this);
   return m_modules;
 }
 
 } // ce
+
+
+#ifdef CS_JAVA
+
+extern "C"
+{
+
+JNIEXPORT jobject JNICALL Java_org_cryo_core_Engine_nGet(JNIEnv *env, jclass cls)
+{
+  cs::csJava::Set(env);
+  return cs::csEngine::Get()->GetJObject();
+}
+
+
+
+}
+
+
+#endif

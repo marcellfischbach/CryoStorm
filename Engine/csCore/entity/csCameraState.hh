@@ -17,7 +17,7 @@ struct iRenderTarget2D;
 struct iSkyboxRenderer;
 class csPostProcessing;
 
-CS_CLASS()
+CS_CLASS(jclass="org.cryo.core.entity.CameraState")
 class CS_CORE_API csCameraState : public CS_SUPER(csSpatialState)
 {
 CS_CLASS_GEN_OBJECT;
@@ -26,38 +26,61 @@ public:
   ~csCameraState() override;
 
 
+  CS_FUNCTION()
   void SetNear(float near);
+  CS_FUNCTION()
   float GetNear() const;
 
+  CS_FUNCTION()
   void SetFar(float near);
+  CS_FUNCTION()
   float GetFar() const;
 
+  CS_FUNCTION()
   void SetAngle(float angle);
+  CS_FUNCTION()
   float GetAngle() const;
 
+  CS_FUNCTION()
   void SetAngleWidthHeight(float angleWidtHeight);
+  CS_FUNCTION()
   float GetAngleWidthHeight() const;
 
+
+  CS_FUNCTION()
   void SetOrder(int order);
+  CS_FUNCTION()
   int GetOrder() const;
 
-  void SetRenderTarget(iRenderTarget2D *renderTarget);
-  iRenderTarget2D *GetRenderTarget();
+  CS_FUNCTION()
+  void SetRenderTarget(cs::iRenderTarget2D *renderTarget);
+  CS_FUNCTION()
+  cs::iRenderTarget2D *GetRenderTarget();
   const iRenderTarget2D *GetRenderTarget() const;
 
-  void SetClearMode(eClearMode clearMode);
-  eClearMode GetClearMode() const;
+  CS_FUNCTION(jenum)
+  void SetClearMode(cs::eClearMode clearMode);
+  CS_FUNCTION(jenum)
+  cs::eClearMode GetClearMode() const;
 
-  void SetClearColorMode(eClearColorMode clearMode);
-  eClearColorMode GetClearColorMode() const;
+  CS_FUNCTION(jenum)
+  void SetClearColorMode(cs::eClearColorMode clearMode);
+  CS_FUNCTION(jenum)
+  cs::eClearColorMode GetClearColorMode() const;
 
-  void SetClearColor(const csColor4f &clearColor);
-  const csColor4f &GetClearColor() const;
+  CS_FUNCTION()
+  void SetClearColor(const cs::csColor4f &clearColor);
+  CS_FUNCTION()
+  const cs::csColor4f &GetClearColor() const;
 
+  CS_FUNCTION()
   void SetClearDepth(float clearDepth);
+  CS_FUNCTION()
   float GetClearDepth() const;
 
+  CS_FUNCTION()
   void SetRenderShadows(bool renderShadows);
+  CS_FUNCTION()
   bool IsRenderShadows() const;
 
   void SetPostProcessing(csPostProcessing *postProcessing);
@@ -69,7 +92,8 @@ public:
   const csCamera &GetCamera() const;
   const csProjector &GetProjector() const;
 
-  void Update(u32 width, u32 height);
+  CS_FUNCTION()
+  void Update(uint32_t width, uint32_t height);
 
   void OnAttachedToWorld(csWorld *world) override;
   void OnDetachedFromWorld(csWorld *world) override;
@@ -78,36 +102,25 @@ protected:
   void TransformationUpdatedPreChildren() override;
 
 private:
-  CS_PROPERTY()
   float m_near;
-  CS_PROPERTY()
   float m_far;
 
-  CS_PROPERTY()
   float m_angle;
 
-  CS_PROPERTY()
   float m_angleWidthHeight;
 
-  CS_PROPERTY()
   int m_order;
 
-  CS_PROPERTY()
   iRenderTarget2D *m_renderTarget;
 
-  CS_PROPERTY()
   eClearMode m_clearMode = eClearMode::DepthColor;
 
-  CS_PROPERTY()
   eClearColorMode m_clearColorMode = eClearColorMode::PlainColor;
 
-  CS_PROPERTY()
   csColor4f m_clearColor = csColor4f();
 
-  CS_PROPERTY()
   float m_clearDepth = 1.0f;
 
-  CS_PROPERTY()
   bool m_renderShadows = true;
 
 

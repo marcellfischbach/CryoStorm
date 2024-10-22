@@ -15,6 +15,7 @@ class csWorld;
 class csEntityState;
 class csSpatialState;
 
+
 CS_CLASS(jclass = "org.cryo.core.entity.Entity")
 class CS_CORE_API csEntity : public CS_SUPER(iObject)
 {
@@ -28,17 +29,25 @@ public:
   CS_FUNCTION()
   const std::string &GetName() const;
 
-  void SetWorld(csWorld *world);
-  csWorld *GetWorld();
+  CS_FUNCTION()
+  void SetWorld(cs::csWorld *world);
+  CS_FUNCTION()
+  cs::csWorld *GetWorld();
   const csWorld *GetWorld() const;
 
-  bool Attach(cs::csEntity *entity, cs::csSpatialState *parentState = nullptr);
-  bool Detach(csEntity *entity);
-  csEntity *GetParent();
+
+  CS_FUNCTION()
+  bool AttachEntity(cs::csEntity *entity, cs::csSpatialState *parentState = nullptr);
+  CS_FUNCTION()
+  bool DetachEntity(cs::csEntity *entity);
+  CS_FUNCTION()
+  cs::csEntity *GetParent();
   const csEntity *GetParent() const;
-  Size GetNumberOfChildren() const;
-  csEntity *GetChild(Size idx);
-  const csEntity *GetChild(Size idx) const;
+  CS_FUNCTION()
+  size_t GetNumberOfChildren() const;
+  CS_FUNCTION()
+  cs::csEntity *GetChild(size_t idx);
+  const csEntity *GetChild(size_t idx) const;
 
 
   template<typename ES>
@@ -72,12 +81,14 @@ public:
   std::vector<const csEntityState *> GetStates(const csClass *cls) const;
 
   CS_FUNCTION()
-  bool Attach(cs::csEntityState *entityState);
+  bool AttachState(cs::csEntityState *entityState);
   CS_FUNCTION()
-  bool Detach(cs::csEntityState *entityState);
+  bool DetachState(cs::csEntityState *entityState);
 
-  void SetRoot(csSpatialState *rootState);
-  csSpatialState *GetRoot();
+  CS_FUNCTION()
+  void SetRoot(cs::csSpatialState *rootState);
+  CS_FUNCTION()
+  cs::csSpatialState *GetRoot();
   const csSpatialState *GetRoot() const;
 
   /**

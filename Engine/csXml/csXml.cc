@@ -29,7 +29,7 @@ size_t csParseException::GetColumn() const
 csDocument *csParser::ParseFilename(const std::string &filename)
 {
   FILE *fs;
-  auto error = fopen_s(&fs, filename.c_str(), "rt");
+  auto error = fopen_s(&fs, filename.c_str(), "rb");
   if (error)
   {
     return {};
@@ -315,7 +315,7 @@ csDocument *csParser::Parse()
       i++;
     }
   }
-  catch (const csParseException &e)
+  catch (csParseException &e)
   {
     delete document;
     throw e;

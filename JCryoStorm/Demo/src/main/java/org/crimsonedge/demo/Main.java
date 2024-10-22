@@ -1,11 +1,13 @@
 package org.crimsonedge.demo;
 
 
-import org.cryo.core.CsCoreLibrary;
-import org.cryo.core.Engine;
-import org.cryo.core.ModuleConfig;
+import org.cryo.core.*;
+import org.cryo.core.entity.World;
+import org.cryo.core.graphics.IDevice;
+import org.cryo.core.graphics.IFrameRenderer;
 import org.cryo.core.resource.VFS;
 import org.cryo.core.resource.VFSConfigReader;
+import org.cryo.core.window.IWindow;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,12 +15,34 @@ import java.awt.*;
 public class Main {
 
 
-    public static void main2(String[] args) {
+    public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
+
+            CsCoreLibrary.load();
+
+            String rootPath = "d:/dev/cryostorm/data";
+            String configFileName = "vfs_java.config";
+
+            for (int i = 0; i < args.length; i++) {
+                if (args[i].equals("--data") && args.length > (i + 1)) {
+                    rootPath = args[++i];
+                }
+                if (args[i].equals("--config") && args.length > (i + 1)) {
+                    configFileName = args[++i];
+                }
+            }
+
+            VFS.instance().setRootPath(rootPath);
+            VFSConfigReader.read(rootPath, configFileName);
+
+            // this causes on c++ side to initialize the reflection system
+            // without this call no connection between java and c++ is handled
+            Engine.get();
 
             JFrame frame = new JFrame();
             frame.setLayout(new BorderLayout());
-            frame.add(new TestCanvas(), BorderLayout.CENTER);
+            TestCanvas testCanvas = new TestCanvas();
+            frame.add(testCanvas, BorderLayout.CENTER);
 
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setSize(1024, 768);
@@ -29,50 +53,16 @@ public class Main {
     }
 
 
-    public static void main(String[] args) {
-        CsCoreLibrary.load();
+    public static void initializeEngine(String[] args, TestCanvas canvas) {
 
-        String rootPath = "../data";
-        String configFileName = "vfs_java.config";
-
-        for (int i=0; i<args.length; i++) {
-            if (args[i].equals("--data") && args.length>(i+1)) {
-                rootPath = args[++i];
-            }
-            if (args[i].equals("--config") && args.length>(i+1)) {
-                configFileName = args[++i];
-            }
-        }
-
-        VFS.instance().setRootPath(rootPath);
-        VFSConfigReader.read(rootPath, configFileName);
-
-        Engine engine = Engine.get();
 
         ModuleConfig moduleConfig = new ModuleConfig();
-        TestModule module = new TestModule();
-        moduleConfig.addModule(module);
-        System.out.println("Module: Ref: " + module.getRef());
+        if (!moduleConfig.loadModuleConfig()) {
+            System.out.println("Failed to load module config");
+            return;
+        }
 
-        String[] nArgs = new String[] {
-                "Value 0",
-                "Value 1"
-        };
-        engine.initializeEngine(nArgs, moduleConfig);
+        Engine.get().initializeEngine(args, moduleConfig);
 
-        System.out.println("Hello World!");
-//        CeLWJGL.initialize();
-//
-//        SwingUtilities.invokeLater(() -> {
-//
-//            JFrame frame = new JFrame();
-//            frame.setSize(1024, 768);
-//            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-//            frame.setLocation(100, 100);
-//            frame.setLayout(new BorderLayout());
-//            frame.add(new LwjglWindowCanvas(args, new LauncherGame()), BorderLayout.CENTER);
-//            frame.setVisible(true);
-//
-//        });
     }
 }

@@ -1,25 +1,33 @@
 package org.cryo.core;
 
-public class CsObject implements ICoreObject {
+public class CsObject implements ICsObject {
 
     private long ref;
 
-    private native long nCreateClass(String className);
+    private static native long nCreateClass(Object obj, String className);
 
     public CsObject() {
-        CsClass cls = getCsClass(getClass());
-        if (cls != null) {
-            ref = nCreateClass(cls.value());
-        } else {
-            throw new CsClassInstantiationException(getClass() + " is not annotated with @CsClass(\"...\")");
-        }
+        ref = createRef(this, getClass());
     }
 
     public CsObject(long ref) {
         this.ref = ref;
     }
 
-    private static CsClass getCsClass(Class<?> cls) {
+    public static long createRef (ICsObject obj, Class<? extends ICsObject> cls) {
+        if (obj == null) {
+            throw new NullPointerException("ICsObject must not be null");
+        }
+
+        CsClass csClass = getCsClass(cls);
+        if (csClass != null) {
+            return nCreateClass(obj, csClass.value());
+        } else {
+            throw new CsClassInstantiationException(obj.getClass() + " is not annotated with @CsClass(\"...\")");
+        }
+    }
+
+    public static CsClass getCsClass(Class<?> cls) {
         while (cls != null) {
             CsClass ceClass = cls.getAnnotation(CsClass.class);
             if (ceClass != null) {
@@ -33,6 +41,9 @@ public class CsObject implements ICoreObject {
 
     @Override
     public long getRef() {
+        if (ref == 0) {
+            throw new NullPointerException("This object [" + getClass().getName() + "] has no reference");
+        }
         return ref;
     }
 

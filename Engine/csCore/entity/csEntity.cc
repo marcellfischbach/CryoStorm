@@ -69,7 +69,7 @@ const csWorld *csEntity::GetWorld() const
 }
 
 
-bool csEntity::Attach(csEntity *entity, csSpatialState *parentState)
+bool csEntity::AttachEntity(cs::csEntity *entity, csSpatialState *parentState)
 {
   if (!entity)
   {
@@ -103,7 +103,7 @@ bool csEntity::Attach(csEntity *entity, csSpatialState *parentState)
   return true;
 }
 
-bool csEntity::Detach(csEntity *entity)
+bool csEntity::DetachEntity(cs::csEntity *entity)
 {
   if (!entity)
   {
@@ -145,12 +145,12 @@ const csEntity *csEntity::GetParent() const
   return m_parent;
 }
 
-Size csEntity::GetNumberOfChildren() const
+size_t csEntity::GetNumberOfChildren() const
 {
   return m_children.size();
 }
 
-const csEntity *csEntity::GetChild(Size idx) const
+const csEntity *csEntity::GetChild(size_t idx) const
 {
   if (idx >= m_children.size())
   {
@@ -159,7 +159,7 @@ const csEntity *csEntity::GetChild(Size idx) const
   return m_children[idx];
 }
 
-csEntity *csEntity::GetChild(Size idx)
+csEntity *csEntity::GetChild(size_t idx)
 {
   return const_cast<csEntity *>(static_cast<const csEntity *>(this)->GetChild(idx));
 }
@@ -208,7 +208,7 @@ std::vector<csEntityState *> csEntity::GetStates(const csClass *cls)
   return result;
 }
 
-bool csEntity::Attach(csEntityState *entityState)
+bool csEntity::AttachState(cs::csEntityState *entityState)
 {
   if (!entityState)
   {
@@ -237,7 +237,7 @@ bool csEntity::Attach(csEntityState *entityState)
   return true;
 }
 
-bool csEntity::Detach(csEntityState *entityState)
+bool csEntity::DetachState(cs::csEntityState *entityState)
 {
   if (!entityState)
   {
