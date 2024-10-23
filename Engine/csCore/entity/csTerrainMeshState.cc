@@ -286,7 +286,7 @@ void csTerrainMeshState::UpdateMaterial()
     }
   }
 
-  m_material->Set(m_material->IndexOf("Layer"), m_layerMask->GetLayerTexture());
+  m_material->SetTexture(m_material->IndexOf("Layer"), m_layerMask->GetLayerTexture());
 
   for (size_t i=0; i<4; i++)
   {
@@ -295,8 +295,8 @@ void csTerrainMeshState::UpdateMaterial()
       std::string strDiffuseRoughness = std::string("DiffuseRoughness") + std::to_string(i);
       std::string strNormal           = std::string("Normal") + std::to_string(i);
       csTerrainLayer *& layer = m_layers[i];
-      m_material->Set(m_material->IndexOf(strDiffuseRoughness), layer->GetDiffuseRoughness());
-      m_material->Set(m_material->IndexOf(strNormal), layer->GetNormal());
+      m_material->SetTexture(m_material->IndexOf(strDiffuseRoughness), layer->GetDiffuseRoughness());
+      m_material->SetTexture(m_material->IndexOf(strNormal), layer->GetNormal());
 
     }
   }

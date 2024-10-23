@@ -28,7 +28,7 @@ iMaterial *csAssimpMaterialLoader::Read(aiMaterial *material)
     Size idx = result->IndexOf("Color");
     if (idx != csMaterial::UndefinedIndex)
     {
-      result->Set(idx, csColor4f(diffuse.r, diffuse.g, diffuse.b, 1.0f));
+      result->SetColor4f(idx, csColor4f(diffuse.r, diffuse.g, diffuse.b, 1.0f));
     }
   }
   return result;

@@ -266,8 +266,16 @@
   }
 ]]>
         </in-conversion>
-        <out-conversion returnType="jstring" fullQualifiedType="std::string">
-            return env->NewStringUTF(${csRet}.c_str());
+        <out-conversion returnType="jobjectArray" javaType="String[]" fullQualifiedType="std::vector<std::string>"><![CDATA[
+    jclass ${csTmp}stringClass = env->FindClass("java/lang/String");
+    jobjectArray ${csTmp}returnArray = env->NewObjectArray(${csRet}.size(), ${csTmp}stringClass, nullptr);
+    for (size_t ${csTmp}i=0, ${csTmp}in=${csRet}.size(); ${csTmp}i<${csTmp}in; ${csTmp}i++)
+    {
+        env->SetObjectArrayElement(${csTmp}returnArray, ${csTmp}i, env->NewStringUTF(${csRet}[${csTmp}i].c_str()));
+    }
+
+    return ${csTmp}returnArray;
+]]>
         </out-conversion>
     </converter>
 

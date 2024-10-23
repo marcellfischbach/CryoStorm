@@ -9,7 +9,9 @@ import org.cryo.core.graphics.EClearColorMode;
 import org.cryo.core.graphics.EClearMode;
 import org.cryo.core.graphics.IDevice;
 import org.cryo.core.graphics.IFrameRenderer;
+import org.cryo.core.graphics.material.IMaterial;
 import org.cryo.core.math.Color4f;
+import org.cryo.core.resource.AssetManager;
 import org.cryo.core.window.JavaWindow;
 import org.lwjgl.opengl.awt.AWTGLCanvas;
 import org.lwjgl.opengl.awt.GLData;
@@ -48,7 +50,7 @@ public class TestCanvas extends AWTGLCanvas {
 
         Entity cameraEntity = new Entity();
         CameraState cameraState = new CameraState();
-        cameraState.setClearMode(EClearMode.DEPTH);
+        cameraState.setClearMode(EClearMode.DEPTH_COLOR);
         cameraState.setClearColor(new Color4f(0.5f, 0.0f, 0.0f, 1.0f));
         cameraState.setClearColorMode(EClearColorMode.PLAIN_COLOR);
 
@@ -63,7 +65,10 @@ public class TestCanvas extends AWTGLCanvas {
         viewport.setFrameRenderer(ObjectRegistry.get(IFrameRenderer.class));
 
 
+        IMaterial defaultMat = AssetManager.instance().get(IMaterial.class, "materials/Default.mat");
+        IMaterial defaultMatBlue = AssetManager.instance().get(IMaterial.class, "materials/DefaultBlue.matinstance");
 
+        System.out.println();
     }
 
     @Override

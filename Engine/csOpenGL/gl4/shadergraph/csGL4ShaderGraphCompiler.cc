@@ -127,7 +127,7 @@ csMaterial *csGL4ShaderGraphCompiler::Compile(cs::csShaderGraph *shaderGraph, co
   size_t receiveShadowIndex = material->IndexOf("ReceiveShadow");
   if (receiveShadowIndex != csMaterial::UndefinedIndex)
   {
-    material->Set(receiveShadowIndex, m_shaderGraph->IsReceiveShadow() ? 1 : 0);
+    material->SetInt(receiveShadowIndex, m_shaderGraph->IsReceiveShadow() ? 1 : 0);
   }
 
 
@@ -637,31 +637,31 @@ void csGL4ShaderGraphCompiler::SetMaterialDefaults(cs::csMaterial *material)
     switch (resource.MatType)
     {
       case eMAT_Float:
-        material->Set(idx, def->floats[0]);
+        material->SetFloat(idx, def->floats[0]);
         break;
       case eMAT_Vec2:
-        material->Set(idx, csVector2f(def->floats[0], def->floats[1]));
+        material->SetVector2f(idx, csVector2f(def->floats[0], def->floats[1]));
         break;
       case eMAT_Vec3:
-        material->Set(idx, csVector3f(def->floats[0], def->floats[1], def->floats[2]));
+        material->SetVector3f(idx, csVector3f(def->floats[0], def->floats[1], def->floats[2]));
         break;
       case eMAT_Vec4:
-        material->Set(idx, csVector4f(def->floats[0], def->floats[1], def->floats[2], def->floats[3]));
+        material->SetVector4f(idx, csVector4f(def->floats[0], def->floats[1], def->floats[2], def->floats[3]));
         break;
 
       case eMAT_Matrix3:
-        material->Set(idx, csMatrix3f(def->floats.data()));
+        material->SetMatrix3f(idx, csMatrix3f(def->floats.data()));
         break;
       case eMAT_Matrix4:
-        material->Set(idx, csMatrix4f(def->floats.data()));
+        material->SetMatrix4f(idx, csMatrix4f(def->floats.data()));
         break;
 
       case eMAT_Int:
-        material->Set(idx, def->ints[0]);
+        material->SetInt(idx, def->ints[0]);
         break;
 
       case eMAT_Texture:
-        material->Set(idx, def->texture);
+        material->SetTexture(idx, def->texture);
         break;
 
       default:

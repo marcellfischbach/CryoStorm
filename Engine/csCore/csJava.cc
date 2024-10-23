@@ -26,7 +26,7 @@ JNIEnv *csJava::Get()
 extern "C"
 {
 
-void throwNoClassDefFoundError( JNIEnv *env, const char *message )
+void csJavaThrowNoClassDefFoundError(JNIEnv *env, const char *message )
 {
   const char *className = "java/lang/NoClassDefFoundError";
   jclass exClass = env->FindClass( className);
@@ -39,7 +39,7 @@ void throwNoClassDefFoundError( JNIEnv *env, const char *message )
 }
 
 
-void throwRuntimeException( JNIEnv *env, const char *message )
+void csJavaThrowRuntimeException(JNIEnv *env, const char *message )
 {
   const char *className = "java/lang/RuntimeException";
   jclass exClass = env->FindClass( className);
@@ -52,12 +52,12 @@ void throwRuntimeException( JNIEnv *env, const char *message )
 }
 
 
-void throwNoCsClassFoundException( JNIEnv *env, const char *message )
+void csJavaThrowNoCsClassFoundException(JNIEnv *env, const char *message )
 {
   const char *className = "org/cryo/core/NoCsClassFoundException";
   jclass exClass = env->FindClass( className);
   if (!exClass) {
-    throwNoClassDefFoundError( env, className );
+    csJavaThrowNoClassDefFoundError(env, className);
     return;
   }
 
@@ -65,12 +65,12 @@ void throwNoCsClassFoundException( JNIEnv *env, const char *message )
 }
 
 
-void throwCsClassInstantiationException( JNIEnv *env, const char *message )
+void csJAvaThrowCsClassInstantiationException(JNIEnv *env, const char *message )
 {
   const char *className = "org/cryo/core/CsClassInstantiationException";
   jclass exClass = env->FindClass( className);
   if (!exClass) {
-    throwNoClassDefFoundError( env, className );
+    csJavaThrowNoClassDefFoundError(env, className);
     return;
   }
 
@@ -90,13 +90,13 @@ JNICALL Java_org_cryo_core_CsObject_nCreateClass(JNIEnv *env, jclass cls, jobjec
 
     if (!pClass)
     {
-      throwNoCsClassFoundException(env, className.c_str());
+      csJavaThrowNoCsClassFoundException(env, className.c_str());
       return 0;
     }
     cs::iObject *obj = pClass->CreateInstance();
     if (!obj)
     {
-      throwCsClassInstantiationException(env, className.c_str());
+      csJAvaThrowCsClassInstantiationException(env, className.c_str());
       return 0;
     }
 
@@ -105,7 +105,7 @@ JNICALL Java_org_cryo_core_CsObject_nCreateClass(JNIEnv *env, jclass cls, jobjec
   }
   catch (std::exception &e)
   {
-    throwRuntimeException(env, e.what());
+    csJavaThrowRuntimeException(env, e.what());
     return 0;
   }
 }

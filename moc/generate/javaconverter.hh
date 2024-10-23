@@ -50,6 +50,8 @@ public:
   void SetInputScript(const std::string &inputScript);
   void SetOutputScript(const std::string &outputScript);
   void SetOutputReturnType(const std::string &outputReturnType);
+  void SetOutputJavaType (const std::string &outputJavaType);
+  const std::string &GetOutputJavaType () const;
 
   void SetFullQualifiedType(const std::string &fullQualifiedType);
   const std::string &GetFullQualifiedType() const;
@@ -70,6 +72,7 @@ private:
   std::vector<JavaConverterArgument> m_inputArguments;
   std::vector<JavaConverterArgument> m_outputArguments;
   std::string m_outputReturnType;
+  std::string m_outputJavaType;
   std::string m_fullQualifiedType;
 
   std::string m_inputScript;

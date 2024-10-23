@@ -263,14 +263,16 @@ convert_input_parameter_to_jni(FunctionNode *functionNode,
 
   if (def.IsPointer())
   {
+    std::string _const = def.IsConst() ? "const " : "";
     return def.GetText() + " csArg" + std::to_string(csMethodArgCount)
-           + " = reinterpret_cast<" + def.GetText() + ">(jniArg" + std::to_string(jniArgCount) + ");\n";
+           + " = reinterpret_cast<" + _const + def.GetText() + ">(jniArg" + std::to_string(jniArgCount) + ");\n";
   }
   else if (def.IsReference())
   {
+    std::string _const = def.IsConst() ? "const " : "";
     // need to strip the reference out because reinterpret_cast<some_type&*> is invalid it must be reinterpret_cast<some_type*>
     return def.GetText() + " csArg" + std::to_string(csMethodArgCount)
-           + " = *reinterpret_cast<" + def.GetTextStripMem("&") + "*>(jniArg" + std::to_string(jniArgCount) + ");\n";
+           + " = *reinterpret_cast<" + _const + def.GetTextStripMem("&") + "*>(jniArg" + std::to_string(jniArgCount) + ");\n";
   }
   if (functionNode->GetArguments().size() == 1 && functionMeta->Has("jenum")
       || functionMeta->HasListValue("jenum", typeName))
@@ -302,7 +304,8 @@ std::string convert_result(const FunctionNode *function, CSMetaNode *functionMet
     }
     else
     {
-      return "return csReturnValue ? reinterpret_cast<cs::iObject*>(csReturnValue)->GetJObject() : nullptr;";
+      std::string _const = def.IsConst() ? "const " : "";
+      return "return csReturnValue ? reinterpret_cast<" + _const + "cs::iObject*>(csReturnValue)->GetJObject() : nullptr;";
     }
   }
   else if (def.IsReference())

@@ -224,7 +224,15 @@ csDocument *csParser::Parse()
                 i += 2;
                 break;
               }
+              if (m_tokens[i].type == eString)
+              {
+                cdata += '"';
+              }
               cdata += m_tokens[i].content;
+              if (m_tokens[i].type == eString)
+              {
+                cdata += '"';
+              }
               i++;
             }
           }

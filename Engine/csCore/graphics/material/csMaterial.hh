@@ -34,60 +34,95 @@ class CS_CORE_API csMaterial : public CS_SUPER(iMaterial)
   friend class csMaterialInstance;
   CS_CLASS_GEN_OBJECT;
 public:
-  static const Size UndefinedIndex = ~0x00;
+  static const size_t UndefinedIndex = ~0x00;
 
   csMaterial();
   ~csMaterial() override;
 
-  bool Bind(iDevice * device, eRenderPass pass) override;
+  CS_FUNCTION(jenum="cs::eRenderPass")
+  bool Bind(cs::iDevice * device, cs::eRenderPass pass) override;
 
-  void SetFillMode (eFillMode fillMode);
-  CS_NODISCARD eFillMode GetFillMode () const override;
+  CS_FUNCTION(jenum)
+  void SetFillMode (cs::eFillMode fillMode);
+  CS_FUNCTION(jenum)
+  CS_NODISCARD cs::eFillMode GetFillMode () const override;
 
-  void SetRenderQueue(eRenderQueue queue);
-  CS_NODISCARD eRenderQueue GetRenderQueue() const override;
+  CS_FUNCTION(jenum)
+  void SetRenderQueue(cs::eRenderQueue queue);
+  CS_FUNCTION(jenum)
+  CS_NODISCARD cs::eRenderQueue GetRenderQueue() const override;
 
+  CS_FUNCTION()
   void SetBlending(bool  blending);
+  CS_FUNCTION()
   CS_NODISCARD bool IsBlending () const;
-  void SetBlendFactor (eBlendFactor srcFactor, eBlendFactor dstFactor);
-  void SetBlendFactor (eBlendFactor srcFactorColor, eBlendFactor srcFactorAlpha, eBlendFactor dstFactorColor, eBlendFactor dstFactorAlpha);
-  CS_NODISCARD eBlendFactor GetBlendFactorSrcColor () const;
-  CS_NODISCARD eBlendFactor GetBlendFactorSrcAlpha () const;
-  CS_NODISCARD eBlendFactor GetBlendFactorDstColor () const;
-  CS_NODISCARD eBlendFactor GetBlendFactorDstAlpha () const;
 
+  CS_FUNCTION(jenum="cs::eBlendFactor")
+  void SetBlendFactor (cs::eBlendFactor srcFactor, cs::eBlendFactor dstFactor);
+  CS_FUNCTION(jenum="cs::eBlendFactor")
+  void SetBlendFactor (cs::eBlendFactor srcFactorColor, cs::eBlendFactor srcFactorAlpha, cs::eBlendFactor dstFactorColor, cs::eBlendFactor dstFactorAlpha);
+  CS_FUNCTION(jenum)
+  CS_NODISCARD cs::eBlendFactor GetBlendFactorSrcColor () const;
+  CS_FUNCTION(jenum)
+  CS_NODISCARD cs::eBlendFactor GetBlendFactorSrcAlpha () const;
+  CS_FUNCTION(jenum)
+  CS_NODISCARD cs::eBlendFactor GetBlendFactorDstColor () const;
+  CS_FUNCTION(jenum)
+  CS_NODISCARD cs::eBlendFactor GetBlendFactorDstAlpha () const;
+
+  CS_FUNCTION()
   void SetDepthWrite (bool depthWrite);
+  CS_FUNCTION()
   CS_NODISCARD bool IsDepthWrite() const;
+  CS_FUNCTION()
   void SetDepthTest (bool depthTest);
+  CS_FUNCTION()
   CS_NODISCARD bool IsDepthTest() const;
-  void SetDepthFunc (eCompareFunc depthFun);
-  CS_NODISCARD eCompareFunc GetDepthFunc() const;
-  void SetShadingMode (eShadingMode shadingMode);
-  CS_NODISCARD eShadingMode GetShadingMode () const override;
+  CS_FUNCTION(jenum)
+  void SetDepthFunc (cs::eCompareFunc depthFun);
+  CS_FUNCTION(jenum)
+  CS_NODISCARD cs::eCompareFunc GetDepthFunc() const;
+  CS_FUNCTION(jenum)
+  void SetShadingMode (cs::eShadingMode shadingMode);
+  CS_FUNCTION(jenum)
+  CS_NODISCARD cs::eShadingMode GetShadingMode () const override;
 
 
-  void SetShader(eRenderPass pass, iShader * shader);
-  CS_NODISCARD iShader* GetShader(eRenderPass pass);
+  CS_FUNCTION(jenum="cs::eRenderPass")
+  void SetShader(cs::eRenderPass pass, cs::iShader * shader);
+  CS_FUNCTION(jenum="cs::eRenderPass")
+  CS_NODISCARD cs::iShader* GetShader(cs::eRenderPass pass);
   CS_NODISCARD const iShader* GetShader(eRenderPass pass) const override;
 
-  void RegisterAttribute(const std::string & attributeName, eMaterialAttributeType attributeType);
-  CS_NODISCARD uint16_t GetNumberOfAttributes() const;
+  CS_FUNCTION(jenum="cs::eMaterialAttributeType")
+  void RegisterAttribute(const std::string & attributeName, cs::eMaterialAttributeType attributeType);
+  CS_FUNCTION()
+  CS_NODISCARD size_t GetNumberOfAttributes() const;
 
+
+  CS_FUNCTION()
   CS_NODISCARD std::vector<std::string> GetAttributeNames() const;
 
-  Size IndexOf(const std::string & attributeName) override;
-  void Debug(Size idx) override;
+  CS_FUNCTION()
+  size_t IndexOf(const std::string & attributeName) override;
+  void Debug(size_t idx) override;
 
-  void Set(Size idx, float value) override;
-  void Set(Size idx, const csVector2f & v) override;
-  void Set(Size idx, const csVector3f & v) override;
-  void Set(Size idx, const csVector4f & v) override;
-  void Set(Size idx, const csColor4f & v) override;
-  void Set(Size idx, int value) override;
-  void Set(Size idx, const csMatrix3f & m) override;
-  void Set(Size idx, const csMatrix4f & m) override;
-  void Set(Size idx, iTexture * texture) override;
-
+  CS_FUNCTION()
+  void SetFloat(size_t idx, float value) override;
+  CS_FUNCTION()
+  void SetVector2f(size_t idx, const cs::csVector2f &v) override;
+  CS_FUNCTION()
+  void SetVector3f(size_t idx, const cs::csVector3f &v) override;
+  CS_FUNCTION()
+  void SetVector4f(size_t idx, const cs::csVector4f &v) override;
+  CS_FUNCTION()
+  void SetColor4f(size_t idx, const cs::csColor4f &v) override;
+  CS_FUNCTION()
+  void SetInt(size_t idx, int value) override;
+  void SetMatrix3f(size_t idx, const cs::csMatrix3f &m) override;
+  void SetMatrix4f(size_t idx, const cs::csMatrix4f &m) override;
+  CS_FUNCTION()
+  void SetTexture(size_t idx, cs::iTexture *texture) override;
 
 private:
   bool BindShader(iDevice * device, eRenderPass pass) const;

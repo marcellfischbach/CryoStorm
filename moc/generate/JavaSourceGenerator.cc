@@ -6,6 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include <filesystem>
+#include <generate/javaconverter.hh>
 
 std::string JavaSourceGenerator::s_basePath;
 
@@ -306,8 +307,10 @@ std::string map_cpp_functionName(const std::string &cppFunctionName)
 void JavaSourceGenerator::BeginFunction(cs::moc::FunctionNode *functionNode, cs::moc::CSMetaNode *functionMeta,
                                         const std::string &cppFunctionName, const std::string &jniReturnType)
 {
+  const cs::moc::TypeDef &def = functionNode->GetReturnValue();
+  const JavaConverter *converter = JavaConverters::Get()->FindConverter(def.GetTypeName());
 
-  m_functionType = map_jni_type(jniReturnType, "");
+  m_functionType = map_jni_type(jniReturnType, converter ? converter->GetOutputJavaType() : "");
   m_functionName = map_cpp_functionName(cppFunctionName);
   m_functionNode = functionNode;
   m_functionMeta = functionMeta;

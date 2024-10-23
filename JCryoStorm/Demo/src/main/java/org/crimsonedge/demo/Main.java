@@ -2,17 +2,14 @@ package org.crimsonedge.demo;
 
 
 import org.cryo.core.*;
-import org.cryo.core.entity.World;
-import org.cryo.core.graphics.IDevice;
-import org.cryo.core.graphics.IFrameRenderer;
 import org.cryo.core.resource.VFS;
 import org.cryo.core.resource.VFSConfigReader;
-import org.cryo.core.window.IWindow;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class Main {
+
 
 
     public static void main(String[] args) {
@@ -39,6 +36,7 @@ public class Main {
             // without this call no connection between java and c++ is handled
             Engine.get();
 
+
             JFrame frame = new JFrame();
             frame.setLayout(new BorderLayout());
             TestCanvas testCanvas = new TestCanvas();
@@ -48,7 +46,6 @@ public class Main {
             frame.setSize(1024, 768);
             frame.setLocation(100, 100);
             frame.setVisible(true);
-
         });
     }
 

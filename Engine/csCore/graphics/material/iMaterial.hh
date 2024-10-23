@@ -23,33 +23,48 @@ namespace cs
 struct iDevice;
 struct iShader;
 
-CS_CLASS()
+CS_CLASS(jclass="org.cryo.core.graphics.material.IMaterial")
 struct CS_CORE_API iMaterial : public CS_SUPER(iObject)
 {
   CS_CLASS_GEN;
 
   ~iMaterial() override = default;
 
-  CS_NODISCARD virtual const iShader *GetShader (eRenderPass pass) const = 0;
 
-  CS_NODISCARD virtual eFillMode GetFillMode() const = 0;
-  CS_NODISCARD virtual eRenderQueue GetRenderQueue() const = 0;
-  CS_NODISCARD virtual eShadingMode GetShadingMode () const = 0;
+  CS_FUNCTION(jenum)
+  CS_NODISCARD virtual const cs::iShader *GetShader (cs::eRenderPass pass) const = 0;
 
-  virtual bool Bind(iDevice * device, eRenderPass pass) = 0;
+  CS_FUNCTION(jenum)
+  CS_NODISCARD virtual cs::eFillMode GetFillMode() const = 0;
+  CS_FUNCTION(jenum)
+  CS_NODISCARD virtual cs::eRenderQueue GetRenderQueue() const = 0;
+  CS_FUNCTION(jenum)
+  CS_NODISCARD virtual cs::eShadingMode GetShadingMode () const = 0;
 
-  virtual Size IndexOf(const std::string & attributeName) = 0;
-  virtual void Debug (Size idx) {}
+  CS_FUNCTION(jenum="cs::eRenderPass")
+  virtual bool Bind(cs::iDevice * device, cs::eRenderPass pass) = 0;
 
-  virtual void Set(Size idx, float value) = 0;
-  virtual void Set(Size idx, const csVector2f & v) = 0;
-  virtual void Set(Size idx, const csVector3f & v) = 0;
-  virtual void Set(Size idx, const csVector4f & v) = 0;
-  virtual void Set(Size idx, const csColor4f & v) = 0;
-  virtual void Set(Size idx, int value) = 0;
-  virtual void Set(Size idx, const csMatrix3f & m) = 0;
-  virtual void Set(Size idx, const csMatrix4f & m) = 0;
-  virtual void Set(Size idx, iTexture * texture) = 0;
+  CS_FUNCTION()
+  virtual size_t IndexOf(const std::string & attributeName) = 0;
+  CS_FUNCTION()
+  virtual void Debug (size_t idx) {}
+
+  CS_FUNCTION()
+  virtual void SetFloat(size_t idx, float value) = 0;
+  CS_FUNCTION()
+  virtual void SetVector2f(size_t idx, const cs::csVector2f & v) = 0;
+  CS_FUNCTION()
+  virtual void SetVector3f(size_t idx, const cs::csVector3f & v) = 0;
+  CS_FUNCTION()
+  virtual void SetVector4f(size_t idx, const cs::csVector4f & v) = 0;
+  CS_FUNCTION()
+  virtual void SetColor4f(size_t idx, const cs::csColor4f & v) = 0;
+  CS_FUNCTION()
+  virtual void SetInt(size_t idx, int value) = 0;
+  virtual void SetMatrix3f(size_t idx, const cs::csMatrix3f & m) = 0;
+  virtual void SetMatrix4f(size_t idx, const cs::csMatrix4f & m) = 0;
+  CS_FUNCTION()
+  virtual void SetTexture(size_t idx, cs::iTexture * texture) = 0;
 };
 
 

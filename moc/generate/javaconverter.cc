@@ -136,6 +136,7 @@ void JavaConverters::ReadConverter(const cs::xml::csElement *converterElement)
     {
       converter.SetFullQualifiedType(childElement->GetAttribute("fullQualifiedType"));
       converter.SetOutputReturnType(childElement->GetAttribute("returnType"));
+      converter.SetOutputJavaType(childElement->GetAttribute("javaType"));
       converter.SetOutputScript(childElement->GetContent());
     }
   }
@@ -374,6 +375,16 @@ void JavaConverter::SetOutputScript(const std::string &outputScript)
 void JavaConverter::SetOutputReturnType(const std::string &outputReturnType)
 {
   m_outputReturnType = outputReturnType;
+}
+
+void JavaConverter::SetOutputJavaType(const std::string &outputJavaType)
+{
+  m_outputJavaType = outputJavaType;
+}
+
+const std::string &JavaConverter::GetOutputJavaType() const
+{
+  return m_outputJavaType;
 }
 
 void JavaConverter::SetFullQualifiedType(const std::string &fullQualifiedType)

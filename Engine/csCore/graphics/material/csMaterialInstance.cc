@@ -77,7 +77,7 @@ Size csMaterialInstance::IndexOf(const std::string& attributeName)
 
 
 
-void csMaterialInstance::Set(Size idx, float value)
+void csMaterialInstance::SetFloat(size_t idx, float value)
 {
   if (idx >= m_attributes.size())
   {
@@ -89,7 +89,7 @@ void csMaterialInstance::Set(Size idx, float value)
 }
 
 
-void csMaterialInstance::Set(Size idx, const csVector2f& v)
+void csMaterialInstance::SetVector2f(size_t idx, const cs::csVector2f &v)
 {
   if (idx >= m_attributes.size())
   {
@@ -102,7 +102,7 @@ void csMaterialInstance::Set(Size idx, const csVector2f& v)
 }
 
 
-void csMaterialInstance::Set(Size idx, const csVector3f& v)
+void csMaterialInstance::SetVector3f(size_t idx, const cs::csVector3f &v)
 {
   if (idx >= m_attributes.size())
   {
@@ -115,7 +115,7 @@ void csMaterialInstance::Set(Size idx, const csVector3f& v)
   attr.Floats[2] = v.z;
 }
 
-void csMaterialInstance::Set(Size idx, const csVector4f& v)
+void csMaterialInstance::SetVector4f(size_t idx, const cs::csVector4f &v)
 {
   if (idx >= m_attributes.size())
   {
@@ -130,7 +130,7 @@ void csMaterialInstance::Set(Size idx, const csVector4f& v)
 }
 
 
-void csMaterialInstance::Set(Size idx, const csColor4f& v)
+void csMaterialInstance::SetColor4f(size_t idx, const cs::csColor4f &v)
 {
   if (idx >= m_attributes.size())
   {
@@ -144,7 +144,7 @@ void csMaterialInstance::Set(Size idx, const csColor4f& v)
   attr.Floats[3] = v.a;
 }
 
-void csMaterialInstance::Set(Size idx, int value)
+void csMaterialInstance::SetInt(size_t idx, int value)
 {
   if (idx >= m_attributes.size())
   {
@@ -156,7 +156,7 @@ void csMaterialInstance::Set(Size idx, int value)
 }
 
 
-void csMaterialInstance::Set(Size idx, const csMatrix3f& m)
+void csMaterialInstance::SetMatrix3f(size_t idx, const cs::csMatrix3f &m)
 {
   if (idx >= m_attributes.size())
   {
@@ -167,7 +167,7 @@ void csMaterialInstance::Set(Size idx, const csMatrix3f& m)
   memcpy(attr.Floats.data(), &m, sizeof(float) * 9);
 }
 
-void csMaterialInstance::Set(Size idx, const csMatrix4f& m)
+void csMaterialInstance::SetMatrix4f(size_t idx, const cs::csMatrix4f &m)
 {
   if (idx >= m_attributes.size())
   {
@@ -178,7 +178,7 @@ void csMaterialInstance::Set(Size idx, const csMatrix4f& m)
   memcpy(attr.Floats.data(), &m, sizeof(float) * 16);
 }
 
-void csMaterialInstance::Set(Size idx, iTexture* texture)
+void csMaterialInstance::SetTexture(size_t idx, cs::iTexture *texture)
 {
   if (idx >= m_attributes.size())
   {

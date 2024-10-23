@@ -295,14 +295,11 @@ if (${JAVA_BINDINGS})
             graphics/iTexture_java.cc
             graphics/iTexture2D_java.cc
             graphics/csMesh_java.cc
-            graphics/material/csMaterial_java.cc
-            graphics/material/csMaterialInstance_java.cc
             graphics/shading/iShader_java.cc
             graphics/shading/iShaderAttribute_java.cc
 
             input/csInput_java.cc
 
-            resource/csAssetManager_java.cc
             resource/csJavaArchive.cc
             resource/csJavaArchive.hh
             resource/csJavaFile.cc

@@ -6,6 +6,8 @@ set(SOURCES
         csLauncherModule.cc
         csLauncherModule.hh
         main.cc
+        Test.cc
+        Test.hh
         window/csSDLButtonMap.hh
         window/csSDLInputSystem.cc
         window/csSDLInputSystem.hh

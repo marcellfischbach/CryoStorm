@@ -18,8 +18,11 @@
 #include <csCore/graphics/iDevice.hh>
 #include <csCore/graphics/iFrameRenderer.hh>
 #include <csCore/window/iWindow.hh>
+#include <csLauncher/Test.hh>
+
 
 using namespace cs;
+using namespace cs::launcher;
 
 static HMODULE load_library(const std::string &libraryName)
 {
@@ -72,8 +75,60 @@ cs::iGame *open_game(const std::string &moduleName)
 }
 
 
+struct base_t
+{
+  base_t()
+  {
+    printf("base_t::base_t\n");
+  }
+};
+
+struct derive_a_t : public virtual base_t
+{
+
+  derive_a_t()
+  {
+    printf("derive_a_t::derive_a_t\n");
+  }
+
+};
+
+
+struct derive_b_t : public virtual derive_a_t
+{
+
+
+  derive_b_t()
+  {
+    printf("derive_b_t::derive_b_t\n");
+  }
+};
+
+
+struct derive_c_t : public virtual derive_b_t
+{
+
+  derive_c_t()
+  {
+    printf("derive_c_t::derive_c_t\n");
+  }
+};
+
+
+
+
+
 int main(int argc, char **argv)
 {
+
+  derive_c_t *deriveC = new derive_c_t();
+  derive_b_t *deriveB = (derive_b_t*)deriveC;
+
+  if (true)
+  {
+    return 0;
+  }
+
   std::vector<std::string> args;
   for (int i = 0; i < argc; i++)
   {
@@ -115,7 +170,7 @@ int main(int argc, char **argv)
   };
 
 
-  iWindow* window = csObjectRegistry::Get<iWindow>();
+  iWindow *window = csObjectRegistry::Get<iWindow>();
 
   csViewport *viewport = new csViewport();
   viewport->SetWindow(window);
@@ -124,7 +179,7 @@ int main(int argc, char **argv)
   viewport->SetFrameRenderer(csObjectRegistry::Get<iFrameRenderer>());
 
 
-  cs::iGame* game = open_game("csGame");
+  cs::iGame *game = open_game("csGame");
   if (game)
   {
     game->Initialize(viewport->GetWorld());

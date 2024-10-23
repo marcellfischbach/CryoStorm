@@ -22,7 +22,7 @@ csMaterial::csMaterial()
 
 csMaterial::~csMaterial()
 {
-  for (Size i = 0; i < eRP_COUNT; i++)
+  for (size_t i = 0; i < eRP_COUNT; i++)
   {
     CS_RELEASE(m_shader[i]);
     m_shader[i] = nullptr;
@@ -155,7 +155,7 @@ bool csMaterial::Bind(iDevice *device, eRenderPass pass)
   BindDepthMode(device);
   BindFillMode(device);
   device->ResetTextures();
-  for (Size i = 0, in = m_attributes.size(); i < in; ++i)
+  for (size_t i = 0, in = m_attributes.size(); i < in; ++i)
   {
     BindAttribute(device, pass, i);
   }
@@ -306,6 +306,10 @@ void csMaterial::RegisterAttribute(const std::string &attributeName, eMaterialAt
   m_attributes.push_back(attribute);
 }
 
+size_t csMaterial::GetNumberOfAttributes() const
+{
+  return m_attributes.size();
+}
 
 void csMaterial::UpdateShaderAttributes(eRenderPass pass)
 {
@@ -326,9 +330,9 @@ std::vector<std::string> csMaterial::GetAttributeNames() const
   return names;
 }
 
-Size csMaterial::IndexOf(const std::string &attributeName)
+size_t csMaterial::IndexOf(const std::string &attributeName)
 {
-  for (Size i = 0, in = m_attributes.size(); i < in; ++i)
+  for (size_t i = 0, in = m_attributes.size(); i < in; ++i)
   {
     if (m_attributes[i].Name == attributeName)
     {
@@ -338,7 +342,7 @@ Size csMaterial::IndexOf(const std::string &attributeName)
   return UndefinedIndex;
 }
 
-void csMaterial::Set(Size idx, float value)
+void csMaterial::SetFloat(size_t idx, float value)
 {
   if (idx >= m_attributes.size())
   {
@@ -350,7 +354,7 @@ void csMaterial::Set(Size idx, float value)
 }
 
 
-void csMaterial::Set(Size idx, const csVector2f &v)
+void csMaterial::SetVector2f(size_t idx, const cs::csVector2f &v)
 {
   if (idx >= m_attributes.size())
   {
@@ -363,7 +367,7 @@ void csMaterial::Set(Size idx, const csVector2f &v)
 }
 
 
-void csMaterial::Set(Size idx, const csVector3f &v)
+void csMaterial::SetVector3f(size_t idx, const cs::csVector3f &v)
 {
   if (idx >= m_attributes.size())
   {
@@ -376,7 +380,7 @@ void csMaterial::Set(Size idx, const csVector3f &v)
   attr.Floats[2] = v.z;
 }
 
-void csMaterial::Set(Size idx, const csVector4f &v)
+void csMaterial::SetVector4f(size_t idx, const cs::csVector4f &v)
 {
   if (idx >= m_attributes.size())
   {
@@ -390,7 +394,7 @@ void csMaterial::Set(Size idx, const csVector4f &v)
   attr.Floats[3] = v.w;
 }
 
-void csMaterial::Set(Size idx, const csColor4f &v)
+void csMaterial::SetColor4f(size_t idx, const cs::csColor4f &v)
 {
   if (idx >= m_attributes.size())
   {
@@ -405,7 +409,7 @@ void csMaterial::Set(Size idx, const csColor4f &v)
 }
 
 
-void csMaterial::Set(Size idx, int value)
+void csMaterial::SetInt(size_t idx, int value)
 {
   if (idx >= m_attributes.size())
   {
@@ -417,7 +421,7 @@ void csMaterial::Set(Size idx, int value)
 }
 
 
-void csMaterial::Set(Size idx, const csMatrix3f &m)
+void csMaterial::SetMatrix3f(size_t idx, const cs::csMatrix3f &m)
 {
   if (idx >= m_attributes.size())
   {
@@ -428,7 +432,7 @@ void csMaterial::Set(Size idx, const csMatrix3f &m)
   memcpy(attr.Floats.data(), &m, sizeof(float) * 9);
 }
 
-void csMaterial::Set(Size idx, const csMatrix4f &m)
+void csMaterial::SetMatrix4f(size_t idx, const cs::csMatrix4f &m)
 {
   if (idx >= m_attributes.size())
   {
@@ -439,7 +443,7 @@ void csMaterial::Set(Size idx, const csMatrix4f &m)
   memcpy(attr.Floats.data(), &m, sizeof(float) * 16);
 }
 
-void csMaterial::Set(Size idx, iTexture *texture)
+void csMaterial::SetTexture(size_t idx, cs::iTexture *texture)
 {
   if (idx >= m_attributes.size())
   {
@@ -450,7 +454,7 @@ void csMaterial::Set(Size idx, iTexture *texture)
   CS_SET(attr.Texture, texture);
 
 }
-void csMaterial::Debug(Size idx)
+void csMaterial::Debug(size_t idx)
 {
   if (idx >= m_attributes.size())
   {

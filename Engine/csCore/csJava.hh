@@ -27,6 +27,14 @@ private:
 }
 
 
+extern "C"
+{
+void csJavaThrowNoClassDefFoundError(JNIEnv *env, const char *message);
+void csJavaThrowRuntimeException(JNIEnv *env, const char *message);
+void csJavaThrowNoCsClassFoundException(JNIEnv *env, const char *message);
+void csJAvaThrowCsClassInstantiationException(JNIEnv *env, const char *message);
+}
+
 #define CS_JCALL_VOID(env, cls, method) \
   static jclass jcls = (env)->FindClass(cls); \
   if (!cls) return;                                     \

@@ -549,7 +549,7 @@ bool csMaterialLoader::LoadAttributeFloat(iMaterial *material,
   }
 
   auto v0 = (float) attributeElement->GetAttribute(2, 0.0);
-  material->Set(attributeIdx, (float) v0);
+  material->SetFloat(attributeIdx, (float) v0);
   return true;
 }
 
@@ -564,7 +564,7 @@ bool csMaterialLoader::LoadAttributeVec2(iMaterial *material,
 
   auto v0 = (float) attributeElement->GetAttribute(2, 0.0);
   auto v1 = (float) attributeElement->GetAttribute(3, 0.0);
-  material->Set(attributeIdx, csVector2f(v0, v1));
+  material->SetVector2f(attributeIdx, csVector2f(v0, v1));
   return true;
 }
 
@@ -580,7 +580,7 @@ bool csMaterialLoader::LoadAttributeVec3(iMaterial *material,
   auto v0 = (float) attributeElement->GetAttribute(2, 0.0);
   auto v1 = (float) attributeElement->GetAttribute(3, 0.0);
   auto v2 = (float) attributeElement->GetAttribute(4, 0.0);
-  material->Set(attributeIdx, csVector3f(v0, v1, v2));
+  material->SetVector3f(attributeIdx, csVector3f(v0, v1, v2));
   return true;
 }
 
@@ -597,7 +597,7 @@ bool csMaterialLoader::LoadAttributeVec4(iMaterial *material,
   auto v1 = (float) attributeElement->GetAttribute(3, 0.0);
   auto v2 = (float) attributeElement->GetAttribute(4, 0.0);
   auto v3 = (float) attributeElement->GetAttribute(5, 0.0);
-  material->Set(attributeIdx, csVector4f(v0, v1, v2, v3));
+  material->SetVector4f(attributeIdx, csVector4f(v0, v1, v2, v3));
   return true;
 }
 
@@ -611,7 +611,7 @@ bool csMaterialLoader::LoadAttributeInt(iMaterial *material,
   }
 
   int v0 = attributeElement->GetAttribute(2, 0);
-  material->Set(attributeIdx, v0);
+  material->SetInt(attributeIdx, v0);
   return true;
 }
 
@@ -642,7 +642,7 @@ bool csMaterialLoader::LoadAttributeMatrix3(iMaterial *material,
   auto m20 = (float) attributeElement->GetAttribute("m20", 0.0);
   auto m21 = (float) attributeElement->GetAttribute("m21", 0.0);
   auto m22 = (float) attributeElement->GetAttribute("m22", 1.0);
-  material->Set(attributeIdx, csMatrix3f(
+  material->SetMatrix3f(attributeIdx, csMatrix3f(
       m00, m01, m02,
       m10, m11, m12,
       m20, m21, m22
@@ -691,7 +691,7 @@ bool csMaterialLoader::LoadAttributeMatrix4(iMaterial *material,
   float m31 = (float) attributeElement->GetAttribute("m31", 0.0);
   float m32 = (float) attributeElement->GetAttribute("m32", 0.0);
   float m33 = (float) attributeElement->GetAttribute("m33", 1.0);
-  material->Set(attributeIdx, csMatrix4f(
+  material->SetMatrix4f(attributeIdx, csMatrix4f(
       m00, m01, m02, m03,
       m10, m11, m12, m13,
       m20, m21, m22, m23,
@@ -707,14 +707,14 @@ bool csMaterialLoader::LoadAttributeTexture(iMaterial *material,
 {
   if (attributeElement->GetNumberOfAttributes() < 3)
   {
-    material->Set(attributeIdx, nullptr);
+    material->SetTexture(attributeIdx, nullptr);
     return true;
   }
 
   std::string textureLoc = attributeElement->GetAttribute(2, "");
   if (textureLoc.empty())
   {
-    material->Set(attributeIdx, nullptr);
+    material->SetTexture(attributeIdx, nullptr);
     return true;
   }
 
@@ -724,7 +724,7 @@ bool csMaterialLoader::LoadAttributeTexture(iMaterial *material,
     return false;
   }
 
-  material->Set(attributeIdx, texture);
+  material->SetTexture(attributeIdx, texture);
   return true;
 }
 
