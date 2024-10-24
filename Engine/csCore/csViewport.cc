@@ -164,7 +164,6 @@ create_render_target(cs::iDevice *device, uint32_t width, uint32_t height, uint1
 }
 
 
-
 bool csViewport::ProcessFrame()
 {
   if (!m_renderTarget || m_renderTarget->GetWidth() != m_window->GetWidth() ||
@@ -214,3 +213,30 @@ bool csViewport::ProcessFrame()
 
 
 } // cs
+
+
+#ifdef CS_JAVA
+
+#include <jni.h>
+#include <jawt.h>
+#include <jawt_md.h>
+
+extern "C"
+{
+JNIEXPORT void
+JNICALL Java_org_cryo_demo_TestView_paint(JNIEnv *env, jclass, jintArray buffer)
+{
+  int length = env->GetArrayLength(buffer);
+  jboolean isCopy = false;
+  jint* intS = env->GetIntArrayElements(buffer, &isCopy);
+
+  for (int i=0; i<length; i++)
+  {
+    intS[i] = 0xff008000;
+  }
+  env->ReleaseIntArrayElements(buffer, intS, 0);
+}
+
+
+};
+#endif

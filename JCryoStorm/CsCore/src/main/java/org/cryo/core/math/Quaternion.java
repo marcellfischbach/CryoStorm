@@ -1,13 +1,13 @@
 package org.cryo.core.math;
 
-public class Vector4f {
+public class Quaternion {
 
-    public float x;
-    public float y;
-    public float z;
-    public float w;
+    float x;
+    float y;
+    float z;
+    float w;
 
-    public Vector4f set (float[] mem) {
+    public Quaternion set (float[] mem) {
         this.x = mem[0];
         this.y = mem[1];
         this.z = mem[2];
@@ -21,4 +21,6 @@ public class Vector4f {
         mem[2] = z;
         mem[3] = w;
     }
+
+
 }

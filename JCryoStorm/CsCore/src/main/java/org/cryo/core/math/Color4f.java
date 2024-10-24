@@ -25,4 +25,12 @@ public class Color4f {
         this.a = mem[3];
         return this;
     }
+
+    public void get (float[] mem) {
+        mem[0] = r;
+        mem[1] = g;
+        mem[2] = b;
+        mem[3] = a;
+    }
+
 }

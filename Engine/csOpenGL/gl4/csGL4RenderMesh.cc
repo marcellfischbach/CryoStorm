@@ -562,6 +562,9 @@ iRenderMesh *csGL4RenderMeshGenerator::Generate()
   glGenVertexArrays(1, &vao);
   glBindVertexArray(vao);
 
+  printf ("VAO: %d\n", vao);
+  fflush(stdout);
+
   ib->Bind();
   vb->Bind();
   const std::vector<csVertexDeclaration::Attribute> &vdAttributes = vd.GetAttributes(0);

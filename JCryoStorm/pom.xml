@@ -14,13 +14,13 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <lwjgl.version>3.3.3</lwjgl.version>
         <lwjgl.natives>natives-windows</lwjgl.natives>
-        <lwjgx.version>0.1.8</lwjgx.version>
+        <lwjgx.version>0.2.1</lwjgx.version>
     </properties>
 
 
     <modules>
         <module>CsCore</module>
-        <module>CsLWJGLWindow</module>
+        <module>CsLwjglWindow</module>
         <module>Demo</module>
     </modules>
 
@@ -35,7 +35,7 @@
 
             <dependency>
                 <groupId>org.cryo</groupId>
-                <artifactId>CsLWJGLWindow</artifactId>
+                <artifactId>CsLwjglWindow</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
 

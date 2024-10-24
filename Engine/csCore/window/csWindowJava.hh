@@ -11,13 +11,13 @@ namespace cs
 {
 
 
-CS_CLASS(jclass="org.cryo.core.window.JavaWindow")
-class CS_CORE_API csJavaWindow : public CS_SUPER(cs::iWindow)
+CS_CLASS(jclass="org.cryo.core.window.WindowJava")
+class CS_CORE_API csWindowJava : public CS_SUPER(cs::iWindow)
 {
   CS_CLASS_GEN_OBJECT;
 public:
-  csJavaWindow () = default;
-  ~csJavaWindow() = default;
+  csWindowJava () = default;
+  ~csWindowJava() = default;
 
   void SetTitle(const std::string& title) override;
   const std::string &GetTitle() const override;

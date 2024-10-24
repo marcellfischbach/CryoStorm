@@ -305,8 +305,8 @@ if (${JAVA_BINDINGS})
             resource/csJavaFile.cc
             resource/csJavaFile.hh
 
-            window/csJavaWindow.cc
-            window/csJavaWindow.hh
+            window/csWindowJava.cc
+            window/csWindowJava.hh
     )
 
 endif ()

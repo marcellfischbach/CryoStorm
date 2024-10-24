@@ -1,4 +1,4 @@
-package org.crimsonedge.demo;
+package org.cryo.demo;
 
 import org.cryo.core.Engine;
 import org.cryo.core.JavaModule;

@@ -2,15 +2,15 @@
 // Created by Marcell on 22.10.2024.
 //
 
-#include <csCore/window/csJavaWindow.hh>
+#include <csCore/window/csWindowJava.hh>
 #include <csCore/csJavaCalls.hh>
 
-#define DEF_ARGS env, GetJObject(), "org/cryo/core/window/JavaWindow"
+#define DEF_ARGS env, GetJObject(), "org/cryo/core/window/WindowJava"
 
 namespace cs
 {
 
-void csJavaWindow::SetTitle(const std::string &title)
+void csWindowJava::SetTitle(const std::string &title)
 {
   JNIEnv *env = csJava::Get();
   static csJavaCallVoid1<jstring> setTitle(DEF_ARGS, "setTitle", JAVA_STRING);
@@ -18,7 +18,7 @@ void csJavaWindow::SetTitle(const std::string &title)
 }
 
 
-const std::string &csJavaWindow::GetTitle() const
+const std::string &csWindowJava::GetTitle() const
 {
   JNIEnv *env = csJava::Get();
   static csJavaCallObject<jstring> getTitle (DEF_ARGS, "getTitle", JAVA_STRING);
@@ -36,39 +36,39 @@ const std::string &csJavaWindow::GetTitle() const
   return m_title;
 }
 
-void csJavaWindow::SetPosition(int16_t x, int16_t y)
+void csWindowJava::SetPosition(int16_t x, int16_t y)
 {
   JNIEnv *env = csJava::Get();
   static csJavaCallVoid2<jint, jint> setPosition (DEF_ARGS, "setPosition", JAVA_SHORT, JAVA_SHORT);
   setPosition.call(env, x, y);
 }
-int16_t csJavaWindow::GetPositionX() const
+int16_t csWindowJava::GetPositionX() const
 {
   JNIEnv *env = csJava::Get();
   static csJavaCallInt getPositionX (DEF_ARGS, "getPositionX");
   return getPositionX.call(env, 0);
 }
-int16_t csJavaWindow::GetPositionY() const
+int16_t csWindowJava::GetPositionY() const
 {
   JNIEnv *env = csJava::Get();
   static csJavaCallInt getPositionY (DEF_ARGS, "getPositionY");
   return getPositionY.call(env, 0);
 }
 
-void csJavaWindow::SetResolution(uint16_t width, uint16_t height)
+void csWindowJava::SetResolution(uint16_t width, uint16_t height)
 {
   JNIEnv *env = csJava::Get();
   static csJavaCallVoid2<jint, jint> setResolution (DEF_ARGS, "setResolution", JAVA_INT, JAVA_INT);
   setResolution.call(env, width, height);
 }
-int16_t csJavaWindow::GetWidth() const
+int16_t csWindowJava::GetWidth() const
 {
   JNIEnv *env = csJava::Get();
   static csJavaCallInt getWidth (DEF_ARGS, "getWidth");
   return getWidth.call(env, 0);
 
 }
-int16_t csJavaWindow::GetHeight() const
+int16_t csWindowJava::GetHeight() const
 {
   JNIEnv *env = csJava::Get();
   static csJavaCallInt getHeight (DEF_ARGS, "getHeight");
@@ -80,19 +80,19 @@ int16_t csJavaWindow::GetHeight() const
  * Optional.
  * @param iconName
  */
-void csJavaWindow::SetWindowIcon(const csResourceLocator &iconName)
+void csWindowJava::SetWindowIcon(const csResourceLocator &iconName)
 {
 
 }
 
-void csJavaWindow::Show()
+void csWindowJava::Show()
 {
   JNIEnv *env = csJava::Get();
   static csJavaCallVoid show (DEF_ARGS, "show");
   return show.call(env);
 }
 
-void csJavaWindow::Hide()
+void csWindowJava::Hide()
 {
   JNIEnv *env = csJava::Get();
   static csJavaCallVoid hide (DEF_ARGS, "hide");
@@ -100,7 +100,7 @@ void csJavaWindow::Hide()
 
 }
 
-void csJavaWindow::Present()
+void csWindowJava::Present()
 {
   JNIEnv *env = csJava::Get();
   static csJavaCallVoid present (DEF_ARGS, "present");
@@ -108,7 +108,7 @@ void csJavaWindow::Present()
 
 }
 
-void csJavaWindow::ProcessUpdates()
+void csWindowJava::ProcessUpdates()
 {
   JNIEnv *env = csJava::Get();
   static csJavaCallVoid processUpdates (DEF_ARGS, "processUpdates");

@@ -18,7 +18,6 @@
 #include <csCore/graphics/iDevice.hh>
 #include <csCore/graphics/iFrameRenderer.hh>
 #include <csCore/window/iWindow.hh>
-#include <csLauncher/Test.hh>
 
 
 using namespace cs;

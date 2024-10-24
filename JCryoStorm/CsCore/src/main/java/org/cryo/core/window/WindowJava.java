@@ -2,15 +2,14 @@ package org.cryo.core.window;
 
 
 import org.cryo.core.CsClass;
-import org.cryo.core.ICsObject;
 
-@CsClass(JavaWindowNative.CS_CLASS_NAME)
-public class JavaWindow extends IWindow {
+@CsClass(WindowJavaNative.CS_CLASS_NAME)
+public class WindowJava extends IWindow {
 
-    public JavaWindow() {
+    public WindowJava() {
     }
 
-    public JavaWindow(long ref) {
+    public WindowJava(long ref) {
         super(ref);
     }
 

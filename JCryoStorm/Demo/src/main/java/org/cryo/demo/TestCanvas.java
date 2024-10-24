@@ -1,4 +1,4 @@
-package org.crimsonedge.demo;
+package org.cryo.demo;
 
 import org.cryo.core.ObjectRegistry;
 import org.cryo.core.Viewport;
@@ -12,7 +12,7 @@ import org.cryo.core.graphics.IFrameRenderer;
 import org.cryo.core.graphics.material.IMaterial;
 import org.cryo.core.math.Color4f;
 import org.cryo.core.resource.AssetManager;
-import org.cryo.core.window.JavaWindow;
+import org.cryo.core.window.WindowJava;
 import org.lwjgl.opengl.awt.AWTGLCanvas;
 import org.lwjgl.opengl.awt.GLData;
 
@@ -38,13 +38,13 @@ public class TestCanvas extends AWTGLCanvas {
         SwingUtilities.invokeLater(loop);
     }
 
-    public JavaWindow getWindow() {
+    public WindowJava getWindow() {
         return this.window;
     }
 
     @Override
     public void initGL() {
-        Main.initializeEngine(new String[0], this);
+        Main.initializeEngine(new String[0]);
 
         World world = new World();
 
@@ -90,7 +90,7 @@ public class TestCanvas extends AWTGLCanvas {
     }
 
 
-    private class Window extends JavaWindow {
+    private class Window extends WindowJava {
 
 
         @Override
