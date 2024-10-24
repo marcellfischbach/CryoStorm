@@ -14,7 +14,7 @@ struct iTexture2D;
 
 
 
-CS_CLASS()
+CS_CLASS(jclass="org.cryo.core.entity.TerrainLayerMask")
 class CS_CORE_API csTerrainLayerMask : public CS_SUPER(csObject)
 {
 CS_CLASS_GEN;
@@ -35,7 +35,7 @@ private:
   iTexture2D *m_maskTexture = nullptr;
 };
 
-CS_CLASS()
+CS_CLASS(jclass="org.cryo.core.entity.TerrainLayer")
 class CS_CORE_API csTerrainLayer : public CS_SUPER(csObject)
 {
 CS_CLASS_GEN;
@@ -57,7 +57,7 @@ private:
 };
 
 
-CS_CLASS()
+CS_CLASS(jclass="org.cryo.core.entity.TerrainMeshState")
 class CS_CORE_API csTerrainMeshState : public CS_SUPER(csSpatialState)
 {
   CS_CLASS_GEN;

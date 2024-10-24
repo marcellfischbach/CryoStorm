@@ -95,7 +95,7 @@ bool csEntity::AttachEntity(cs::csEntity *entity, csSpatialState *parentState)
   }
   if (childRoot && parentState)
   {
-    parentState->Attach(childRoot);
+    parentState->AttachSpatial(childRoot);
   }
   entity->AddRef();
   // increment our own reference cound because the parent-to-this relation is set
@@ -316,7 +316,7 @@ void csEntity::SetRoot(csSpatialState *rootState)
   csSpatialState *parentRoot = GetAbsolutParentRoot();
   if (parentRoot)
   {
-    parentRoot->Attach(m_rootState);
+    parentRoot->AttachSpatial(m_rootState);
   }
 
   if (replace && m_rootState)
@@ -327,7 +327,7 @@ void csEntity::SetRoot(csSpatialState *rootState)
       if (childRoot)
       {
         childRoot->DetachSelf();
-        m_rootState->Attach(childRoot);
+        m_rootState->AttachSpatial(childRoot);
       }
     }
   }

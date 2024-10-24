@@ -10,9 +10,6 @@ public class IRenderMesh extends CsObject {
         super(ref);
     }
 
-    //##BEGIN-csMOC # Don't remove
-
-    //##END-csMOC # Don't remove
 }
 
 

@@ -660,7 +660,7 @@ void generate_physics(cs::csWorld *world, cs::iMaterial *material)
 
         entitySphere->AttachState(sphereColliderState);
         entitySphere->AttachState(rigidBodyState);
-        rigidBodyState->Attach(meshStateSphere);
+        rigidBodyState->AttachSpatial(meshStateSphere);
 
         rigidBodyState->GetTransform()
                       .SetTranslation(cs::csVector3f(0.0f, sphereRadius * 2.5f, 0.0f) * ((float) i + 2.0f))

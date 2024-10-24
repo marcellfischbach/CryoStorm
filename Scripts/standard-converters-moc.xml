@@ -101,6 +101,82 @@
 
     <converter>
         <types>
+            <type>csMatrix3f</type>
+            <type>cs::csMatrix3f</type>
+        </types>
+        <in-arguments>
+            <argument jtype="jfloatArray" id="in"/>
+        </in-arguments>
+        <out-arguments>
+            <argument jtype="jfloatArray" id="out"/>
+        </out-arguments>
+        <in-conversion>
+            jfloat *${csTmp} = env->GetFloatArrayElements(${in}, 0);
+            cs::csMatrix3f ${csArg} (${csTmp}[0], ${csTmp}[1], ${csTmp}[2],
+                                     ${csTmp}[3], ${csTmp}[4], ${csTmp}[5],
+                                     ${csTmp}[6], ${csTmp}[7], ${csTmp}[8]);
+            env->ReleaseFloatArrayElements(${in}, ${csTmp}, 0);
+
+        </in-conversion>
+        <out-conversion returnType="void" fullQualifiedType="cs::csMatrix3f">
+            jfloat *${csTmp} = env->GetFloatArrayElements(${out}, 0);
+            ${csTmp}[0] = ${csRet}.m00;
+            ${csTmp}[1] = ${csRet}.m01;
+            ${csTmp}[2] = ${csRet}.m02;
+            ${csTmp}[3] = ${csRet}.m10;
+            ${csTmp}[4] = ${csRet}.m11;
+            ${csTmp}[5] = ${csRet}.m12;
+            ${csTmp}[6] = ${csRet}.m20;
+            ${csTmp}[7] = ${csRet}.m21;
+            ${csTmp}[8] = ${csRet}.m22;
+            env->ReleaseFloatArrayElements(${out}, ${csTmp}, 0);
+        </out-conversion>
+    </converter>
+
+    <converter>
+        <types>
+            <type>csMatrix4f</type>
+            <type>cs::csMatrix4f</type>
+        </types>
+        <in-arguments>
+            <argument jtype="jfloatArray" id="in"/>
+        </in-arguments>
+        <out-arguments>
+            <argument jtype="jfloatArray" id="out"/>
+        </out-arguments>
+        <in-conversion>
+            jfloat *${csTmp} = env->GetFloatArrayElements(${in}, 0);
+            cs::csMatrix4f ${csArg} (${csTmp}[0], ${csTmp}[1], ${csTmp}[2],${csTmp}[3],
+                                     ${csTmp}[4], ${csTmp}[5], ${csTmp}[6], ${csTmp}[7],
+                                     ${csTmp}[8], ${csTmp}[9], ${csTmp}[10], ${csTmp}[11],
+                                     ${csTmp}[12], ${csTmp}[13], ${csTmp}[14], ${csTmp}[15]);
+            env->ReleaseFloatArrayElements(${in}, ${csTmp}, 0);
+
+        </in-conversion>
+        <out-conversion returnType="void" fullQualifiedType="cs::csMatrix3f">
+            jfloat *${csTmp} = env->GetFloatArrayElements(${out}, 0);
+            ${csTmp}[0] = ${csRet}.m00;
+            ${csTmp}[1] = ${csRet}.m01;
+            ${csTmp}[2] = ${csRet}.m02;
+            ${csTmp}[3] = ${csRet}.m03;
+            ${csTmp}[4] = ${csRet}.m10;
+            ${csTmp}[5] = ${csRet}.m11;
+            ${csTmp}[6] = ${csRet}.m12;
+            ${csTmp}[7] = ${csRet}.m13;
+            ${csTmp}[8] = ${csRet}.m20;
+            ${csTmp}[9] = ${csRet}.m21;
+            ${csTmp}[10] = ${csRet}.m22;
+            ${csTmp}[11] = ${csRet}.m23;
+            ${csTmp}[12] = ${csRet}.m30;
+            ${csTmp}[13] = ${csRet}.m31;
+            ${csTmp}[14] = ${csRet}.m32;
+            ${csTmp}[15] = ${csRet}.m33;
+            env->ReleaseFloatArrayElements(${out}, ${csTmp}, 0);
+        </out-conversion>
+    </converter>
+
+    <converter>
+        <types>
             <type>iTexture2D::Descriptor</type>
             <type>cs::iTexture2D::Descriptor</type>
         </types>

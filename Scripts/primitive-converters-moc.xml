@@ -246,6 +246,33 @@
 
     <converter>
         <types>
+            <type><![CDATA[std::vector<float>]]></type>
+            <type><![CDATA[vector<float>]]></type>
+        </types>
+        <in-arguments>
+            <argument jtype="jfloatArray" id="floatArray" javaType="float[]" jniTypeSig="[F"/>
+        </in-arguments>
+        <out-arguments>
+        </out-arguments>
+        <in-conversion><![CDATA[
+  size_t ${csTmp}Length = env->GetArrayLength(${floatArray});
+  float* ${csTmp}Floats = env->GetFloatArrayElements (${floatArray}, 0);
+  std::vector<float> ${csArg};
+  ${csArg}.resize(${csTmp}Length);
+  memcpy(${csArg}.data(), ${csTmp}Floats, sizeof(float) * ${csTmp}Length);
+  env->ReleaseFloatArrayElements (${floatArray}, ${csTmp}Floats, JNI_ABORT);
+]]>
+        </in-conversion>
+        <out-conversion returnType="jfloatArray" javaType="float[]" fullQualifiedType="std::vector<float>"><![CDATA[
+  jfloatArray ${csTmp}returnArray = env->NewFloatArray(${csRet}.length());
+  env->SetFloatArrayRegion(${csTmp}returnArray, 0, ${csRet}.length(), ${csRet}.data());
+  return ${csTmp}returnArray;
+]]>
+        </out-conversion>
+    </converter>
+
+    <converter>
+        <types>
             <type><![CDATA[std::vector<std::string>]]></type>
             <type><![CDATA[vector<string>]]></type>
         </types>

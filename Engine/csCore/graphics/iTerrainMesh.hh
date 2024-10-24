@@ -26,43 +26,50 @@ enum class eTerrainSize
 
 
 
-CS_CLASS()
+CS_CLASS(jclass="org.cryo.core.graphics.ITerrainMesh")
 struct CS_CORE_API iTerrainMesh : public CS_SUPER(iRenderMesh)
 {
 CS_CLASS_GEN;
   ~iTerrainMesh() override = default;
 
-
-
-  virtual void SetReferencePoint(const csVector3f& pos) = 0;
+  CS_FUNCTION()
+  virtual void SetReferencePoint(const cs::csVector3f& pos) = 0;
 };
 
 
-CS_CLASS()
+CS_CLASS(jclass="org.cryo.core.graphics.ITerrainMeshGenerator")
 struct CS_CORE_API iTerrainMeshGenerator : CS_SUPER(iObject)
 {
 CS_CLASS_GEN;
 
   ~iTerrainMeshGenerator() override = default;
 
-  virtual void SetSize (eTerrainSize size) = 0;
-  virtual void SetPatchSize (eTerrainSize size) = 0;
-  virtual void SetSize(const csVector3f &min, const csVector3f& max) = 0;
+
+  CS_FUNCTION(jenum)
+  virtual void SetSize (cs::eTerrainSize size) = 0;
+  CS_FUNCTION(jenum)
+  virtual void SetPatchSize (cs::eTerrainSize size) = 0;
+  CS_FUNCTION()
+  virtual void SetSize(const cs::csVector3f &min, const cs::csVector3f& max) = 0;
+  CS_FUNCTION()
   virtual void SetNormalizedHeightData (const std::vector<float> &heightData) = 0;
+  CS_FUNCTION()
   virtual void SetHeightData (const std::vector<float> &heightData) = 0;
 
 
-  CS_NODISCARD virtual iTerrainMesh* Generate() = 0;
+  CS_FUNCTION()
+  CS_NODISCARD virtual cs::iTerrainMesh* Generate() = 0;
 };
 
 
-CS_CLASS()
+CS_CLASS(jclass="org.cryo.core.graphics.ITerrainMeshGeneratorFactory")
 struct CS_CORE_API iTerrainMeshGeneratorFactory : CS_SUPER(iObject)
 {
 CS_CLASS_GEN;
   ~iTerrainMeshGeneratorFactory() override = default;
 
-  CS_NODISCARD virtual iTerrainMeshGenerator* Create() = 0;
+  CS_FUNCTION()
+  CS_NODISCARD virtual cs::iTerrainMeshGenerator* Create() = 0;
 };
 
 

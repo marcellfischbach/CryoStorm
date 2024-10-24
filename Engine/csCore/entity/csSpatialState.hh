@@ -26,11 +26,11 @@ public:
   bool IsStatic() const;
 
   CS_FUNCTION()
-  bool Attach(cs::csSpatialState *child);
+  bool AttachSpatial(cs::csSpatialState *child);
   CS_FUNCTION()
   bool DetachSelf();
   CS_FUNCTION()
-  bool Detach(cs::csSpatialState *child);
+  bool DetachSpatial(cs::csSpatialState *child);
   CS_FUNCTION()
   cs::csSpatialState* GetParent();
   const csSpatialState* GetParent() const;
@@ -47,10 +47,14 @@ public:
    */
   csTransform GetTransform();
   void SetTransform(const csTransform &transform);
-  const csMatrix4f& GetGlobalMatrix() const;
-  const csMatrix4f& GetLocalMatrix() const;
-  void SetLocalMatrix(const csMatrix4f &matrix);
+  CS_FUNCTION()
+  const cs::csMatrix4f& GetGlobalMatrix() const;
+  CS_FUNCTION()
+  const cs::csMatrix4f& GetLocalMatrix() const;
+  CS_FUNCTION()
+  void SetLocalMatrix(const cs::csMatrix4f &matrix);
 //  void LookAt(const Vector3f & from, const Vector3f & at, const Vector3f & up = Vector3f(0.0f, 1.0f, 0.0f));
+  CS_FUNCTION()
   void UpdateTransformation();
   /**
    * @}

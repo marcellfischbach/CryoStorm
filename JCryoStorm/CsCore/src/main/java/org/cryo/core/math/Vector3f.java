@@ -6,6 +6,17 @@ public class Vector3f {
     public float y;
     public float z;
 
+    public static final Vector3f ZERO = new Vector3f(0, 0, 0);
+    public static final Vector3f ONE = new Vector3f(1, 1, 1);
+    public static final Vector3f X = new Vector3f(1, 0, 0);
+    public static final Vector3f Y = new Vector3f(0, 1, 0);
+    public static final Vector3f Z = new Vector3f(0, 0, 1);
+    public static final Vector3f NEG_X = new Vector3f(-1, 0, 0);
+    public static final Vector3f NEG_Y = new Vector3f(0, -1, 0);
+    public static final Vector3f NEG_Z = new Vector3f(0, 0, -1);
+
+
+
     public Vector3f() {
         this(0.0f, 0.0f, 0.0f);
     }

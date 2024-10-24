@@ -28,7 +28,7 @@ bool csSpatialState::IsStatic() const
   return m_static;
 }
 
-bool csSpatialState::Attach(csSpatialState* child)
+bool csSpatialState::AttachSpatial(cs::csSpatialState *child)
 {
   if (!child)
   {
@@ -55,10 +55,10 @@ bool csSpatialState::Attach(csSpatialState* child)
 
 bool csSpatialState::DetachSelf()
 {
-  return m_parent && m_parent->Detach(this);
+  return m_parent && m_parent->DetachSpatial(this);
 }
 
-bool csSpatialState::Detach(csSpatialState* child)
+bool csSpatialState::DetachSpatial(cs::csSpatialState *child)
 {
   if (!child)
   {
