@@ -499,4 +499,12 @@ public class Matrix4f {
         m33 = lm33;
         return this;
     }
+
+    public void debug (String msg) {
+        System.out.printf ("Matrix: " + msg + "\n");
+        System.out.printf ("  %.2f %.2f %.2f %.2f\n", m00, m01, m02, m03);
+        System.out.printf ("  %.2f %.2f %.2f %.2f\n", m10, m11, m12, m13);
+        System.out.printf ("  %.2f %.2f %.2f %.2f\n", m20, m21, m22, m23);
+        System.out.printf ("  %.2f %.2f %.2f %.2f\n", m30, m31, m32, m33);
+    }
 }

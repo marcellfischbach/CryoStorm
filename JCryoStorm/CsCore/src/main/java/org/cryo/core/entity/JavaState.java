@@ -1,9 +1,10 @@
 package org.cryo.core.entity;
 
 import org.cryo.core.CsClass;
-import org.cryo.core.entity.EntityState;
+import static org.cryo.core.entity.JavaStateNative.*;
 
-@CsClass("cs::csJavaState")
+
+@CsClass(CS_CLASS_NAME)
 public class JavaState extends EntityState {
 
     public JavaState() {
@@ -14,10 +15,18 @@ public class JavaState extends EntityState {
         super(ref);
     }
 
-    //##BEGIN-csMOC # Don't remove
 
-    //##END-csMOC # Don't remove
+    public void onAttachedToWorld (World world) {
+
+    }
+
+    public void onDetachedFromWorld (World world) {
+
+    }
+
+    public void update (float deltaTime) {
+
+    }
 }
-
 
 

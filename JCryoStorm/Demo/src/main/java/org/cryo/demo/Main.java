@@ -67,19 +67,8 @@ public class Main {
         World world = new World();
         canvas.getViewport().setWorld(world);
 
-        Entity cameraEntity = new Entity();
-        CameraState cameraState = new CameraState();
-        cameraState.setClearMode(EClearMode.DEPTH_COLOR);
-        cameraState.setClearColor(new Color4f(0.5f, 0.0f, 0.0f, 1.0f));
-        cameraState.setClearColorMode(EClearColorMode.PLAIN_COLOR);
+        DemoWorld.create(world);
 
-        cameraEntity.attachState(cameraState);
-        world.attach(cameraEntity);
-        world.setMainCamera(cameraState);
-
-
-        IMaterial defaultMat = AssetManager.instance().get(IMaterial.class, "materials/Default.mat");
-        IMaterial defaultMatBlue = AssetManager.instance().get(IMaterial.class, "materials/DefaultBlue.matinstance");
 
 
 

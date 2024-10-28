@@ -13,6 +13,7 @@ namespace cs
 {
 
 
+
 csLightState::csLightState(const std::string& name)
   : csSpatialState(name)
   , m_light(nullptr)

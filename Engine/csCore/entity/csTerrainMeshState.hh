@@ -14,6 +14,7 @@ struct iTexture2D;
 
 
 
+
 CS_CLASS(jclass="org.cryo.core.entity.TerrainLayerMask")
 class CS_CORE_API csTerrainLayerMask : public CS_SUPER(csObject)
 {
@@ -22,12 +23,16 @@ public:
   csTerrainLayerMask() = default;
   ~csTerrainLayerMask() override;
 
-  void SetLayerTexture (iTexture2D *layerTexture);
-  CS_NODISCARD iTexture2D *GetLayerTexture ();
+  CS_FUNCTION()
+  void SetLayerTexture (cs::iTexture2D *layerTexture);
+  CS_FUNCTION()
+  CS_NODISCARD cs::iTexture2D *GetLayerTexture ();
   CS_NODISCARD const iTexture2D *GetLayerTexture () const;
 
-  void SetMaskTexture (iTexture2D *maskTexture);
-  CS_NODISCARD iTexture2D *GetMaskTexture ();
+  CS_FUNCTION()
+  void SetMaskTexture (cs::iTexture2D *maskTexture);
+  CS_FUNCTION()
+  CS_NODISCARD cs::iTexture2D *GetMaskTexture ();
   CS_NODISCARD const iTexture2D *GetMaskTexture () const;
 
 private:
@@ -43,12 +48,16 @@ public:
   csTerrainLayer() = default;
   ~csTerrainLayer() override;
 
-  void SetDiffuseRoughness (iTexture2D *diffuseRoughness);
-  CS_NODISCARD iTexture2D *GetDiffuseRoughness ();
+  CS_FUNCTION()
+  void SetDiffuseRoughness (cs::iTexture2D *diffuseRoughness);
+  CS_FUNCTION()
+  CS_NODISCARD cs::iTexture2D *GetDiffuseRoughness ();
   CS_NODISCARD const iTexture2D *GetDiffuseRoughness () const;
 
-  void SetNormal (iTexture2D *normal);
-  CS_NODISCARD iTexture2D *GetNormal ();
+  CS_FUNCTION()
+  void SetNormal (cs::iTexture2D *normal);
+  CS_FUNCTION()
+  CS_NODISCARD cs::iTexture2D *GetNormal ();
   CS_NODISCARD const iTexture2D *GetNormal () const;
 
 private:
@@ -67,23 +76,33 @@ public:
   ~csTerrainMeshState() override;
 
 
-  void SetTerrainMesh (iTerrainMesh *terrainMesh);
-  CS_NODISCARD iTerrainMesh *GetTerrainMesh ();
+  CS_FUNCTION()
+  void SetTerrainMesh (cs::iTerrainMesh *terrainMesh);
+  CS_FUNCTION()
+  CS_NODISCARD cs::iTerrainMesh *GetTerrainMesh ();
   CS_NODISCARD const iTerrainMesh *GetTerrainMesh () const;
 
-  virtual void SetLayerMask(csTerrainLayerMask *mask);
-  virtual void AddLayer(csTerrainLayer *layer);
+  CS_FUNCTION()
+  virtual void SetLayerMask(cs::csTerrainLayerMask *mask);
+  CS_FUNCTION()
+  virtual void AddLayer(cs::csTerrainLayer *layer);
 
 
+  CS_FUNCTION()
   void SetReceiveShadow (bool receiveShadow);
+  CS_FUNCTION()
   CS_NODISCARD bool IsReceiveShadow () const;
 
+  CS_FUNCTION()
   void SetCastShadow (bool castShadow);
+  CS_FUNCTION()
   CS_NODISCARD bool IsCastShadow () const;
 
 
-  void SetReference(csSpatialState *reference);
-  CS_NODISCARD csSpatialState *GetReference();
+  CS_FUNCTION()
+  void SetReference(cs::csSpatialState *reference);
+  CS_FUNCTION()
+  CS_NODISCARD cs::csSpatialState *GetReference();
   CS_NODISCARD const csSpatialState *GetReference() const;
 
   /**

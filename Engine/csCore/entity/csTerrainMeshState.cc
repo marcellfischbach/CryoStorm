@@ -286,6 +286,8 @@ void csTerrainMeshState::UpdateMaterial()
     }
   }
 
+  printf ("m_layerMask: %p\n", m_layerMask);
+  fflush(stdout);
   m_material->SetTexture(m_material->IndexOf("Layer"), m_layerMask->GetLayerTexture());
 
   for (size_t i=0; i<4; i++)

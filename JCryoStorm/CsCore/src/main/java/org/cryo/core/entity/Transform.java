@@ -45,7 +45,7 @@ public class Transform {
     }
 
     public Transform setTranslation(Vector3f translation) {
-        translation.set(translation);
+        this.translation.set(translation);
         dirty = true;
         return this;
     }
@@ -63,7 +63,7 @@ public class Transform {
 
 
     public Transform setRotation(Quaternion rotation) {
-        rotation.set(rotation);
+        this.rotation.set(rotation);
         dirty = true;
         return this;
     }
@@ -75,13 +75,13 @@ public class Transform {
     }
 
     public Transform setScale(Vector3f scale) {
-        scale.set(scale);
+        this.scale.set(scale);
         dirty = true;
         return this;
     }
 
     public Transform setScale(float x, float y, float z) {
-        scale.set(x, y, z);
+        this.scale.set(x, y, z);
         dirty = true;
         return this;
     }

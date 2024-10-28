@@ -84,6 +84,7 @@ csTransform &csTransform::LookAt(const csVector3f &at, const csVector3f &up)
   csMatrix4f matrix;
   matrix.SetLookAtInv(from, at, up);
 
+
   csMatrix4f parent = m_parentMatrix;
   parent.Invert();
   m_matrix = matrix * parent;

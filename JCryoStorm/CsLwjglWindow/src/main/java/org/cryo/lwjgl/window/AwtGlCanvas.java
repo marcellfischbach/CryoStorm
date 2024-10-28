@@ -2,16 +2,8 @@ package org.cryo.lwjgl.window;
 
 import org.cryo.core.ObjectRegistry;
 import org.cryo.core.Viewport;
-import org.cryo.core.entity.CameraState;
-import org.cryo.core.entity.Entity;
-import org.cryo.core.entity.World;
-import org.cryo.core.graphics.EClearColorMode;
-import org.cryo.core.graphics.EClearMode;
 import org.cryo.core.graphics.IDevice;
 import org.cryo.core.graphics.IFrameRenderer;
-import org.cryo.core.graphics.material.IMaterial;
-import org.cryo.core.math.Color4f;
-import org.cryo.core.resource.AssetManager;
 import org.cryo.core.window.IWindow;
 import org.lwjgl.opengl.awt.AWTGLCanvas;
 import org.lwjgl.opengl.awt.GLData;

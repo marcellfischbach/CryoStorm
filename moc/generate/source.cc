@@ -860,6 +860,23 @@ std::string convert_java_class_path(const std::string &jclass)
   return classPath;
 }
 
+std::string encode_class_name_as_identifier (const std::string &fcn)
+{
+  std::string id = "";
+  for (const auto &ch: fcn)
+  {
+    if (ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z' || ch >= '0' && ch <= '9')
+    {
+      id += ch;
+    }
+    else
+    {
+      id += "_";
+    }
+  }
+  return id;
+}
+
 std::string ClassGenerator::GenerateCreateJObject(cs::moc::ClassNode *classNode,
                                                   std::list<NamespaceNode *> &nss,
                                                   cs::moc::CSMetaNode *meta)
@@ -868,6 +885,9 @@ std::string ClassGenerator::GenerateCreateJObject(cs::moc::ClassNode *classNode,
   std::string className = classNode->GetName();
   std::string getter;
   getter += "#ifdef CS_JAVA\n";
+//  std::string id = encode_class_name_as_identifier(fns + className);
+
+
   getter += "jobject " + fns + className + "::CreateJObject() const\n";
   getter += "{\n";
 
@@ -876,10 +896,11 @@ std::string ClassGenerator::GenerateCreateJObject(cs::moc::ClassNode *classNode,
     std::string jclass = meta->Get("jclass");
     jclass = convert_java_class_path(jclass);
     getter += "  JNIEnv *java = cs::csJava::Get();\n";
-    getter += "  static jclass cls = java ? java->FindClass (\"" + jclass + "\") : nullptr;\n";
+    getter += "  if (!java) return nullptr;\n";
+    getter += "  jclass cls = java->FindClass (\"" + jclass + "\");\n";
     getter += "  if (cls)\n";
     getter += "  {\n";
-    getter += "    static jmethodID ctor = java->GetMethodID(cls, \"<init>\", \"(J)V\");\n";
+    getter += "    jmethodID ctor = java->GetMethodID(cls, \"<init>\", \"(J)V\");\n";
     getter += "    if (ctor)\n";
     getter += "    {\n";
     getter += "      jobject obj = java->NewObject(cls, ctor, reinterpret_cast<jlong>(this));\n";

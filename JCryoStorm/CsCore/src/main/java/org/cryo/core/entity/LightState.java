@@ -1,50 +1,56 @@
 package org.cryo.core.entity;
 
 import org.cryo.core.CsClass;
-import org.cryo.core.entity.SpatialState;
+import org.cryo.core.graphics.ELightType;
+import org.cryo.core.math.Color4f;
 
-@CsClass(LightStateNative.CS_CLASS_NAME)
+
+import static org.cryo.core.entity.LightStateNative.*;
+
+@CsClass(CS_CLASS_NAME)
 public class LightState extends SpatialState {
+
+    public LightState() {
+    }
 
     public LightState(long ref) {
         super(ref);
     }
 
-    //##BEGIN-csMOC # Don't remove
+    public void setType (ELightType lightType) {
+        nSetType(getRef(), lightType.ordinal());
+    }
 
-    private static native void nSetCastShadow(long ref /* this ptr */,
-                                              boolean castShadow /* castShadow (bool) */
-                                             );
+    public ELightType getType () {
+        return ELightType.values()[nGetType(getRef())];
+    }
 
-    private static native boolean nIsCastShadow(long ref /* this ptr */
-                                               );
+    public void setColor(Color4f color) {
+        nSetColor(getRef(), color.r, color.g, color.b, color.a);
+    }
 
-    private static native void nSetShadowMapBias(long ref /* this ptr */,
-                                                 float bias /* bias (float) */
-                                                );
+    private static float[] colorBuf = new float[4];
+    private final Color4f color = new Color4f();
+    public Color4f getColor () {
+        nGetColor(getRef(), colorBuf);
+        color.set(colorBuf);
+        return color;
+    }
 
-    private static native float nGetShadowMapBias(long ref /* this ptr */
-                                                 );
+    public void setShadowMapBias(float bias) {
+        nSetShadowMapBias(getRef(), bias);
+    }
 
-    private static native void nSetColor(long ref /* this ptr */,
-                                         float colorR /* color (const cs::csColor4f&) */,
-                                         float colorG /* color (const cs::csColor4f&) */,
-                                         float colorB /* color (const cs::csColor4f&) */,
-                                         float colorA /* color (const cs::csColor4f&) */
-                                        );
+    public float getShadowMapBias () {
+        return nGetShadowMapBias(getRef());
+    }
 
-    private static native void nGetColor(long ref /* this ptr */,
-                                         float[] outArg0 /* cs::csColor4f (output return value) */
-                                        );
-
-    private static native void nSetRange(long ref /* this ptr */,
-                                         float range /* range (float) */
-                                        );
-
-    private static native float nGetRange(long ref /* this ptr */
-                                         );
-
-    //##END-csMOC # Don't remove
+    public void setCastShadow (boolean castShadow) {
+        nSetCastShadow(getRef(), castShadow);
+    }
+    public boolean isCastShadow () {
+        return nIsCastShadow(getRef());
+    }
 }
 
 

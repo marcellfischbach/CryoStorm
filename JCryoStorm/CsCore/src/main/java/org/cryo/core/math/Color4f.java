@@ -33,4 +33,12 @@ public class Color4f {
         mem[3] = a;
     }
 
+    public Color4f mul(float f) {
+        this.r *= f;
+        this.g *= f;
+        this.b *= f;
+        this.a *= f;
+        return this;
+    }
+
 }

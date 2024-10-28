@@ -18,14 +18,14 @@ csJavaState::csJavaState()
 
 void csJavaState::OnAttachedToWorld(cs::csWorld *world)
 {
-  static csJavaCallVoid1<jobject> onAttachedToWorld (csJava::Get(), this, THIS_CLASS_NAME, "onAttachedToWorld", "Lorg/crimsonedge/core/entity/World;");
+  static csJavaCallVoid1<jobject> onAttachedToWorld (csJava::Get(), this, THIS_CLASS_NAME, "onAttachedToWorld", "Lorg/cryo/core/entity/World;");
   onAttachedToWorld.call(csJava::Get(), world->GetJObject());
 }
 
 
 void csJavaState::OnDetachedFromWorld(cs::csWorld *world)
 {
-  static csJavaCallVoid1<jobject> onDetachedFromWorld (csJava::Get(), this, THIS_CLASS_NAME, "onDetachedFromWorld", "Lorg/crimsonedge/core/entity/World;");
+  static csJavaCallVoid1<jobject> onDetachedFromWorld (csJava::Get(), this, THIS_CLASS_NAME, "onDetachedFromWorld", "Lorg/cryo/core/entity/World;");
   onDetachedFromWorld.call(csJava::Get(), world->GetJObject());
 }
 

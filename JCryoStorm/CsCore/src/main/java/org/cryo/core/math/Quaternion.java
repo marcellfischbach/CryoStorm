@@ -72,7 +72,7 @@ public class Quaternion {
         w /= l;
     }
 
-    public void SetAxisAngle(float axisX, float axisY, float axisZ, float angle) {
+    public void setAxisAngle(float axisX, float axisY, float axisZ, float angle) {
         float angle2 = angle / 2.0f;
         float c = (float) Math.cos(angle2);
         float s = (float) Math.sin(angle2);
@@ -84,7 +84,7 @@ public class Quaternion {
 
 
     public void setAxisAngle(Vector3f v, float angle) {
-        SetAxisAngle(v.x, v.y, v.z, angle);
+        setAxisAngle(v.x, v.y, v.z, angle);
     }
 
 

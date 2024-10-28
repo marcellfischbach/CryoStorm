@@ -370,15 +370,15 @@ void generate_camera(cs::csWorld *world)
 
   auto cameraState  = new cs::csCameraState();
   cameraState->SetClearMode(cs::eClearMode::DepthColor);
-  cameraState->SetClearColor(cs::csColor4f(0.0f, 0.0f, 0.5f));
-  cameraState->SetClearColorMode(cs::eClearColorMode::Skybox);
+  cameraState->SetClearColor(cs::csColor4f(0.0f, 0.0f, 0.0f));
+  cameraState->SetClearColorMode(cs::eClearColorMode::PlainColor);
   cameraState->SetSkyboxRenderer(new cs::csSimpleSkybox());
 
   auto postProcessing = setup_post_processing ();
   cameraState->SetPostProcessing(postProcessing);
 
 
-  auto cameraHandler = new CameraHandler();
+  auto cameraHandler = new CameraHandlerMotion();
   cameraEntity->AttachState(cameraState);
   cameraEntity->AttachState(cameraHandler);
   cameraEntity->GetRoot()->GetTransform()
@@ -1005,6 +1005,8 @@ cs::iMaterial *create_sg_material ()
 
 bool Game::Initialize(cs::csWorld *world)
 {
+  setup_world(world);
+  /*
   auto cameraEntity = new cs::csEntity("Camera");
 
   auto cameraState  = new cs::csCameraState();
@@ -1026,6 +1028,7 @@ bool Game::Initialize(cs::csWorld *world)
 //      .Finish();
   world->Attach(cameraEntity);
   world->SetMainCamera(cameraState);
+   */
 
 
   return true;

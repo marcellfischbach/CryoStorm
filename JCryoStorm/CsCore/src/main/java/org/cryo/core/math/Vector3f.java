@@ -124,9 +124,9 @@ public class Vector3f {
     }
 
     public Vector3f cross (Vector3f vector) {
-        float x = y * vector.z - z * vector.y;
-        float y = z * vector.x - x * vector.z;
-        float z = x * vector.y - y * vector.x;
+        float x = this.y * vector.z - this.z * vector.y;
+        float y = this.z * vector.x - this.x * vector.z;
+        float z = this.x * vector.y - this.y * vector.x;
         return set(x, y, z);
     }
 
@@ -140,5 +140,14 @@ public class Vector3f {
 
     public Vector3f normalize() {
         return div(length());
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                x +
+                "," + y +
+                ", " + z +
+                '}';
     }
 }

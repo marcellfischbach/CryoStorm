@@ -120,13 +120,6 @@ struct derive_c_t : public virtual derive_b_t
 int main(int argc, char **argv)
 {
 
-  derive_c_t *deriveC = new derive_c_t();
-  derive_b_t *deriveB = (derive_b_t*)deriveC;
-
-  if (true)
-  {
-    return 0;
-  }
 
   std::vector<std::string> args;
   for (int i = 0; i < argc; i++)

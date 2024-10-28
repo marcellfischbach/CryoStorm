@@ -24,7 +24,7 @@
     static const cs::csClass *GetStaticClass (); \
     void *QueryClass(const cs::csClass *clazz) override; \
     const void *QueryClass(const cs::csClass *clazz) const override; \
-    jobject CreateJObject () const
+    virtual jobject CreateJObject () const
 #else
 #define CS_CLASS_GEN public: \
     const cs::csClass *GetClass () const override; \

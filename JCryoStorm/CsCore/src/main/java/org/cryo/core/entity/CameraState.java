@@ -8,7 +8,7 @@ import org.cryo.core.math.Color4f;
 import static org.cryo.core.entity.CameraStateNative.*;
 
 @CsClass(CS_CLASS_NAME)
-public class CameraState extends EntityState {
+public class CameraState extends SpatialState {
 
     public CameraState() {
     }

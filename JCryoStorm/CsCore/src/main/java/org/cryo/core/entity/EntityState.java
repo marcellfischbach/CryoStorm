@@ -3,7 +3,9 @@ package org.cryo.core.entity;
 import org.cryo.core.CsClass;
 import org.cryo.core.CsObject;
 
-@CsClass("cs::csEntityState")
+import static org.cryo.core.entity.EntityStateNative.*;
+
+@CsClass(CS_CLASS_NAME)
 public class EntityState extends CsObject {
 
     public EntityState() {
@@ -14,44 +16,33 @@ public class EntityState extends CsObject {
         super(ref);
     }
 
-    //##BEGIN-csMOC # Don't remove
+    public void setName(String name) {
+        nSetName(getRef(), name);
+    }
 
-    private static native void nSetName(long ref /* this ptr */,
-                                        String name /* name (const std::string&) */
-                                       );
+    public String getName() {
+        return nGetName(getRef());
+    }
 
-    private static native String nGetName(long ref /* this ptr */
-                                         );
+    public void setEntity(Entity entity) {
+        nSetEntity(getRef(), entity != null ? entity.getRef() : 0);
+    }
 
-    private static native void nSetEntity(long ref /* this ptr */,
-                                          long entity /* entity (cs::csEntity*) */
-                                         );
+    public Entity getEntity() {
+        return (Entity) nGetEntity(getRef());
+    }
 
-    private static native Object nGetEntity(long ref /* this ptr */
-                                           );
+    public void setNeedUpdate(boolean needUpdate) {
+        nSetNeedUpdate(getRef(), needUpdate);
+    }
 
-    private static native Object nGetRoot(long ref /* this ptr */
-                                         );
+    public boolean isNeedUpdate() {
+        return nIsNeedUpdate(getRef());
+    }
 
-    private static native Object nGetWorld(long ref /* this ptr */
-                                          );
-
-    private static native void nAttachToWorld(long ref /* this ptr */,
-                                              long world /* world (cs::csWorld*) */
-                                             );
-
-    private static native void nDetachFromWorld(long ref /* this ptr */,
-                                                long world /* world (cs::csWorld*) */
-                                               );
-
-    private static native void nSetNeedUpdate(long ref /* this ptr */,
-                                              boolean needUpdate /* needUpdate (bool) */
-                                             );
-
-    private static native boolean nIsNeedUpdate(long ref /* this ptr */
-                                               );
-
-    //##END-csMOC # Don't remove
+    public SpatialState getRoot () {
+        return (SpatialState) nGetRoot(getRef());
+    }
 }
 
 

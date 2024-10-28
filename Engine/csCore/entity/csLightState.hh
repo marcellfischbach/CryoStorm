@@ -25,11 +25,13 @@ class CS_CORE_API csLightState : public CS_SUPER(csSpatialState)
   CS_CLASS_GEN_OBJECT;
 
 public:
-  csLightState(const std::string &name);
+  csLightState(const std::string &name = std::string (""));
   ~csLightState() override;
 
-  void SetType(eLightType type);
-  CS_NODISCARD eLightType GetType() const;
+  CS_FUNCTION(jenum)
+  void SetType(cs::eLightType type);
+  CS_FUNCTION(jenum)
+  CS_NODISCARD cs::eLightType GetType() const;
 
   CS_FUNCTION()
   void SetCastShadow(bool castShadow);
