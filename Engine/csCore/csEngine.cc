@@ -112,6 +112,11 @@ bool csModuleConfig::LoadModuleConfig()
   return LoadModuleConfigEx("/modules.config");
 }
 
+/**
+ * A change
+ * @param configFilename
+ * @return
+ */
 bool csModuleConfig::LoadModuleConfigEx(const std::string &configFilename)
 {
   iFile *modulesConfig = csVFS::Get()->Open(csResourceLocator(configFilename), eAM_Read, eOM_Binary);
