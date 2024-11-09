@@ -95,10 +95,32 @@ const csVertexDeclaration &csGL4RenderMesh::GetVertexDeclaration() const
 void csGL4RenderMesh::Render(iDevice *graphics, eRenderPass pass)
 {
   CS_GL_ERROR();
-  glBindVertexArray(m_vao);
-  CS_GL_ERROR();
+  if (m_vao)
+  {
+    glBindVertexArray(m_vao);
+    CS_GL_ERROR();
+  }
+  else
+  {
+    m_indexBuffer->Bind();
+    m_vertexBuffer->Bind();
+    const std::vector<csVertexDeclaration::Attribute> &vdAttributes = m_vertexDeclaration.GetAttributes(0);
+    for (const csVertexDeclaration::Attribute &attribute: vdAttributes)
+    {
+      glVertexAttribPointer(attribute.Location,
+                            attribute.Size,
+                            DataTypeMap[attribute.Type],
+                            false,
+                            attribute.Stride,
+                            reinterpret_cast<const void *>(attribute.Offset)
+      );
+      glEnableVertexAttribArray(attribute.Location);
+    }
+    CS_GL_ERROR();
+  }
   glDrawElements(m_primType, (GLsizei) m_count, m_indexType, nullptr);
   CS_GL_ERROR();
+
 
 #if _DEBUG
   auto gl4Device = graphics->Query<csGL4Device>();
@@ -114,8 +136,9 @@ Size csGL4RenderMesh::GetNumberOfTriangles() const
 }
 #endif
 
-csGL4RenderMeshGenerator::csGL4RenderMeshGenerator()
+csGL4RenderMeshGenerator::csGL4RenderMeshGenerator(bool compatMode)
     : iRenderMeshGenerator()
+    , m_compatMode(compatMode)
     , m_primitiveType(ePT_Triangles)
 {
   CS_CLASS_GEN_CONSTR;
@@ -279,9 +302,12 @@ size_t csGL4RenderMeshGenerator::GetNumberOfVertices() const
 
 iRenderMesh *csGL4RenderMeshGenerator::Generate()
 {
-  glBindVertexArray(0);
+  if (!m_compatMode)
+  {
+    glBindVertexArray(0);
+  }
   int numVertexDefs = 0;
-  int numUV0Defs    = 0;
+  int numUV0Defs = 0;
   numVertexDefs += m_vertices2.empty() ? 0 : 1;
   numVertexDefs += m_vertices3.empty() ? 0 : 1;
   numVertexDefs += m_vertices4.empty() ? 0 : 1;
@@ -293,9 +319,9 @@ iRenderMesh *csGL4RenderMeshGenerator::Generate()
   }
 
   std::vector<csVertexDeclaration::Attribute> attributes;
-  uint16_t                                    offset      = 0;
-  uint16_t                                  count       = 0;
-  Size                                      vertexCount = 0;
+  uint16_t offset = 0;
+  uint16_t count = 0;
+  Size vertexCount = 0;
   if (!m_vertices2.empty())
   {
     attributes.emplace_back(0, eVS_Vertices, 2, eDT_Float, 0, 0);
@@ -427,7 +453,7 @@ iRenderMesh *csGL4RenderMeshGenerator::Generate()
   csBoundingBox bbox;
   bbox.Clear();
   csVertexDeclaration vd(attributes);
-  auto                vBuffer = new float[count * vertexCount];
+  auto vBuffer = new float[count * vertexCount];
 
   for (Size i = 0, c = 0; i < vertexCount; ++i)
   {
@@ -534,7 +560,7 @@ iRenderMesh *csGL4RenderMeshGenerator::Generate()
   vb->Copy(vBuffer, vertexCount * offset);
   delete[] vBuffer;
 
-  auto      ib = new csGL4IndexBuffer();
+  auto ib = new csGL4IndexBuffer();
   eDataType indexType;
   if (vertexCount >= 65536)
   {
@@ -545,8 +571,8 @@ iRenderMesh *csGL4RenderMeshGenerator::Generate()
   }
   else
   {
-    auto      iBuffer = new uint16_t[m_indices.size()];
-    for (Size i       = 0, in = m_indices.size(); i < in; ++i)
+    auto iBuffer = new uint16_t[m_indices.size()];
+    for (Size i = 0, in = m_indices.size(); i < in; ++i)
     {
       iBuffer[i] = static_cast<uint16_t>(m_indices[i]);
     }
@@ -558,29 +584,32 @@ iRenderMesh *csGL4RenderMeshGenerator::Generate()
     indexType = eDT_UnsignedShort;
   }
 
-  GLuint vao;
-  glGenVertexArrays(1, &vao);
-  glBindVertexArray(vao);
-
-  printf ("VAO: %d\n", vao);
-  fflush(stdout);
+  GLuint vao = 0;
+  if (!m_compatMode)
+  {
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
+  }
 
   ib->Bind();
   vb->Bind();
-  const std::vector<csVertexDeclaration::Attribute> &vdAttributes = vd.GetAttributes(0);
-  for (const csVertexDeclaration::Attribute         &attribute: vdAttributes)
+  if (!m_compatMode)
   {
-    glVertexAttribPointer(
-        attribute.Location,
-        attribute.Size,
-        DataTypeMap[attribute.Type],
-        false,
-        attribute.Stride,
-        reinterpret_cast<const void *>(attribute.Offset)
-    );
-    glEnableVertexAttribArray(attribute.Location);
+    const std::vector<csVertexDeclaration::Attribute> &vdAttributes = vd.GetAttributes(0);
+    for (const csVertexDeclaration::Attribute &attribute: vdAttributes)
+    {
+      glVertexAttribPointer(
+          attribute.Location,
+          attribute.Size,
+          DataTypeMap[attribute.Type],
+          false,
+          attribute.Stride,
+          reinterpret_cast<const void *>(attribute.Offset)
+      );
+      glEnableVertexAttribArray(attribute.Location);
+    }
+    glBindVertexArray(0);
   }
-  glBindVertexArray(0);
 
   auto mesh = new csGL4RenderMesh(
       vao,
@@ -600,27 +629,40 @@ iRenderMesh *csGL4RenderMeshGenerator::Generate()
 }
 
 
-csGL4RenderMeshGeneratorFactory::csGL4RenderMeshGeneratorFactory()
-    :
-    iRenderMeshGeneratorFactory()
+csGL4RenderMeshGeneratorFactory::csGL4RenderMeshGeneratorFactory(bool compatMode)
+    : iRenderMeshGeneratorFactory()
+    , m_compatMode(compatMode)
 {
   CS_CLASS_GEN_CONSTR;
 }
 
 iRenderMeshGenerator *csGL4RenderMeshGeneratorFactory::Create()
 {
-  return new csGL4RenderMeshGenerator();
+  return new csGL4RenderMeshGenerator(m_compatMode);
 }
 
 
+csGL4RenderMeshBatchGenerator::csGL4RenderMeshBatchGenerator(bool compatMode)
+    : iRenderMeshBatchGenerator()
+    , m_generator(new csGL4RenderMeshGenerator(compatMode))
+{
+
+}
+
+csGL4RenderMeshBatchGenerator::~csGL4RenderMeshBatchGenerator()
+{
+  delete m_generator;
+  m_generator = nullptr;
+}
+
 void csGL4RenderMeshBatchGenerator::Add(const iRenderMesh *mesh, const csMatrix4f &matrix)
 {
-  auto                    gl4Mesh = static_cast<const csGL4RenderMesh *>(mesh);
+  auto gl4Mesh = dynamic_cast<const csGL4RenderMesh *>(mesh);
   std::vector<csVector2f> vertices2;
   std::vector<csVector3f> vertices3;
   std::vector<csVector4f> vertices4;
   std::vector<csVector3f> normals;
-  std::vector<csColor4f>  colors;
+  std::vector<csColor4f> colors;
   std::vector<csVector3f> tangents;
   std::vector<csVector2f> uv02;
   std::vector<csVector3f> uv03;
@@ -629,15 +671,15 @@ void csGL4RenderMeshBatchGenerator::Add(const iRenderMesh *mesh, const csMatrix4
   std::vector<csVector2f> uv3;
   std::vector<csVector4i> boneIndices;
   std::vector<csVector4f> boneWeights;
-  std::vector<uint32_t>   indices;
+  std::vector<uint32_t> indices;
 
-  size_t vertexOffset = m_generator.GetNumberOfVertices();
-  auto   rotMat       = (csMatrix3f) matrix;
-  size_t numVertices  = gl4Mesh->GetNumberOfVertices();
+  size_t vertexOffset = m_generator->GetNumberOfVertices();
+  auto rotMat = (csMatrix3f) matrix;
+  size_t numVertices = gl4Mesh->GetNumberOfVertices();
   void *buffer = nullptr;
   Size bufferSize = 0;
   gl4Mesh->m_vertexBuffer->Map(&buffer, bufferSize);
-  auto            *b8 = reinterpret_cast<uint8_t *>(buffer);
+  auto *b8 = reinterpret_cast<uint8_t *>(buffer);
   for (const auto &attribute: mesh->GetVertexDeclaration().GetAttributes(0))
   {
     for (size_t i = 0; i < numVertices; i++)
@@ -742,8 +784,8 @@ void csGL4RenderMeshBatchGenerator::Add(const iRenderMesh *mesh, const csMatrix4
   {
     case eDT_UnsignedShort:
     {
-      auto          *s16 = reinterpret_cast<uint16_t *>(buffer);
-      for (unsigned i    = 0; i < gl4Mesh->GetNumberOfIndices(); i++)
+      auto *s16 = reinterpret_cast<uint16_t *>(buffer);
+      for (unsigned i = 0; i < gl4Mesh->GetNumberOfIndices(); i++)
       {
         uint16_t idx = *s16++;
         indices.push_back(idx + (uint32_t) vertexOffset);
@@ -752,8 +794,8 @@ void csGL4RenderMeshBatchGenerator::Add(const iRenderMesh *mesh, const csMatrix4
     }
     case eDT_UnsignedInt:
     {
-      auto          *s32 = reinterpret_cast<uint32_t *>(buffer);
-      for (unsigned i    = 0; i < gl4Mesh->GetNumberOfIndices(); i++)
+      auto *s32 = reinterpret_cast<uint32_t *>(buffer);
+      for (unsigned i = 0; i < gl4Mesh->GetNumberOfIndices(); i++)
       {
         uint32_t idx = *s32++;
         indices.push_back(idx + (uint32_t) vertexOffset);
@@ -769,51 +811,51 @@ void csGL4RenderMeshBatchGenerator::Add(const iRenderMesh *mesh, const csMatrix4
 
   if (!vertices2.empty())
   {
-    m_generator.AddVertices(vertices2);
+    m_generator->AddVertices(vertices2);
   }
   if (!vertices3.empty())
   {
-    m_generator.AddVertices(vertices3);
+    m_generator->AddVertices(vertices3);
   }
   if (!vertices4.empty())
   {
-    m_generator.AddVertices(vertices4);
+    m_generator->AddVertices(vertices4);
   }
   if (!normals.empty())
   {
-    m_generator.AddNormals(normals);
+    m_generator->AddNormals(normals);
   }
   if (!tangents.empty())
   {
-    m_generator.AddTangents(tangents);
+    m_generator->AddTangents(tangents);
   }
   if (!colors.empty())
   {
-    m_generator.AddColors(colors);
+    m_generator->AddColors(colors);
   }
   if (!uv02.empty())
   {
-    m_generator.AddUV0(uv02);
+    m_generator->AddUV0(uv02);
   }
   if (!uv03.empty())
   {
-    m_generator.AddUV0(uv03);
+    m_generator->AddUV0(uv03);
   }
   if (!uv1.empty())
   {
-    m_generator.AddUV1(uv1);
+    m_generator->AddUV1(uv1);
   }
   if (!uv2.empty())
   {
-    m_generator.AddUV2(uv2);
+    m_generator->AddUV2(uv2);
   }
   if (!uv3.empty())
   {
-    m_generator.AddUV3(uv3);
+    m_generator->AddUV3(uv3);
   }
   if (!indices.empty())
   {
-    m_generator.AddIndices(indices);
+    m_generator->AddIndices(indices);
   }
 
 
@@ -821,20 +863,20 @@ void csGL4RenderMeshBatchGenerator::Add(const iRenderMesh *mesh, const csMatrix4
 
 iRenderMesh *csGL4RenderMeshBatchGenerator::Generate()
 {
-  return m_generator.Generate();
+  return m_generator->Generate();
 }
 
 
-csGL4RenderMeshBatchGeneratorFactory::csGL4RenderMeshBatchGeneratorFactory()
-    :
-    iRenderMeshBatchGeneratorFactory()
+csGL4RenderMeshBatchGeneratorFactory::csGL4RenderMeshBatchGeneratorFactory(bool compatMode)
+    : iRenderMeshBatchGeneratorFactory()
+    , m_compatMode(compatMode)
 {
   CS_CLASS_GEN_CONSTR;
 }
 
 iRenderMeshBatchGenerator *csGL4RenderMeshBatchGeneratorFactory::Create()
 {
-  return new csGL4RenderMeshBatchGenerator();
+  return new csGL4RenderMeshBatchGenerator(m_compatMode);
 }
 
 }

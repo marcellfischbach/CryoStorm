@@ -42,10 +42,23 @@ bool csOpenGLModule::Register(const std::vector<std::string> &args, csEngine *en
     return false;
   }
 
+  bool compatMode = false;
+  for (size_t i=0, in=args.size(); i<in; i++)
+  {
+    if (args[i] == "--glProfile" && (i+1) < in)
+    {
+      i++;
+      if (args[i] == "compat" || args[i] == "compatibility")
+      {
+        compatMode = true;
+      }
+    }
+  }
+
   csObjectRegistry::Register<iShaderGraphCompilerFactory>(new csGL4ShaderGraphCompilerFactory());
-  csObjectRegistry::Register<iRenderMeshGeneratorFactory>(new csGL4RenderMeshGeneratorFactory());
-  csObjectRegistry::Register<iRenderMeshBatchGeneratorFactory>(new csGL4RenderMeshBatchGeneratorFactory());
-  csObjectRegistry::Register<iTerrainMeshGeneratorFactory>(new csGL4TerrainMeshGeneratorFactory());
+  csObjectRegistry::Register<iRenderMeshGeneratorFactory>(new csGL4RenderMeshGeneratorFactory(compatMode));
+  csObjectRegistry::Register<iRenderMeshBatchGeneratorFactory>(new csGL4RenderMeshBatchGeneratorFactory(compatMode));
+  csObjectRegistry::Register<iTerrainMeshGeneratorFactory>(new csGL4TerrainMeshGeneratorFactory(compatMode));
   return true;
 }
 

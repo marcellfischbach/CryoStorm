@@ -53,14 +53,47 @@ void csGL4TerrainMeshCPU::SetReferencePoint(const csVector3f &refPoint)
   m_referencePoint = refPoint;
 }
 
+static GLenum DataTypeMap[] = {
+    GL_BYTE,
+    GL_UNSIGNED_BYTE,
+    GL_SHORT,
+    GL_UNSIGNED_SHORT,
+    GL_INT,
+    GL_UNSIGNED_INT,
+    GL_FLOAT,
+    GL_DOUBLE
+};
+
 
 void csGL4TerrainMeshCPU::Render(iDevice *graphics, eRenderPass pass)
 {
   CS_GL_ERROR();
   Update();
+
   CS_GL_ERROR();
-  glBindVertexArray(m_vao);
-  CS_GL_ERROR();
+  if (m_vao)
+  {
+    glBindVertexArray(m_vao);
+    CS_GL_ERROR();
+  }
+  else
+  {
+    m_ib->Bind();
+    m_vb->Bind();
+    const std::vector<csVertexDeclaration::Attribute> &vdAttributes = m_vd.GetAttributes(0);
+    for (const csVertexDeclaration::Attribute &attribute: vdAttributes)
+    {
+      glVertexAttribPointer(attribute.Location,
+                            attribute.Size,
+                            DataTypeMap[attribute.Type],
+                            false,
+                            attribute.Stride,
+                            reinterpret_cast<const void *>(attribute.Offset)
+      );
+      glEnableVertexAttribArray(attribute.Location);
+    }
+    CS_GL_ERROR();
+  }
 
   glDrawElements(GL_TRIANGLES, (GLsizei) m_indexBufferSize, GL_UNSIGNED_INT, nullptr);
 
@@ -85,8 +118,8 @@ Size csGL4TerrainMeshCPU::GetNumberOfTriangles() const
 
 bool csGL4TerrainMeshCPU::Line::UpdateStepSize(const csVector3f &refPoint, size_t override)
 {
-  csVector3f delta    = center - refPoint;
-  float      distance = delta.Length();
+  csVector3f delta = center - refPoint;
+  float distance = delta.Length();
 
   float minDistance = 5.0f;
   float maxDistance = 30.0f;
@@ -97,9 +130,9 @@ bool csGL4TerrainMeshCPU::Line::UpdateStepSize(const csVector3f &refPoint, size_
   size_t stepSize = override;
   size_t patchSize2 = (patchSize - 1) / 2;
 
-  float dfact = 1.0f + distFact * static_cast<float>(patchSize2-1);
+  float dfact = 1.0f + distFact * static_cast<float>(patchSize2 - 1);
   float log = log2(dfact);
-  int logi = (int)log;
+  int logi = (int) log;
 
   stepSize = static_cast<size_t>(1 << logi);
   if (stepSize < 1)
@@ -151,10 +184,10 @@ void csGL4TerrainMeshCPU::Patch::RegenerateIndices(eTerrainSize size)
   bufferCount += GenerateGeneric(tSize, 1, lineTop.useStepSize, lineRight.useStepSize, false, bufferCount);
   bufferCount += GenerateGeneric(-tSize, -1, lineBottom.useStepSize, lineLeft.useStepSize, false, bufferCount);
   bufferCount += GenerateGeneric(-tSize, 1, lineBottom.useStepSize, lineRight.useStepSize, true, bufferCount);
-  bufferCount += GenerateGeneric( -1, tSize, lineLeft.useStepSize, lineTop.useStepSize, false, bufferCount);
-  bufferCount += GenerateGeneric( -1, -tSize, lineLeft.useStepSize, lineBottom.useStepSize, true, bufferCount);
-  bufferCount += GenerateGeneric( 1, tSize, lineRight.useStepSize, lineTop.useStepSize, true, bufferCount);
-  bufferCount += GenerateGeneric( 1, -tSize, lineRight.useStepSize, lineBottom.useStepSize, false, bufferCount);
+  bufferCount += GenerateGeneric(-1, tSize, lineLeft.useStepSize, lineTop.useStepSize, false, bufferCount);
+  bufferCount += GenerateGeneric(-1, -tSize, lineLeft.useStepSize, lineBottom.useStepSize, true, bufferCount);
+  bufferCount += GenerateGeneric(1, tSize, lineRight.useStepSize, lineTop.useStepSize, true, bufferCount);
+  bufferCount += GenerateGeneric(1, -tSize, lineRight.useStepSize, lineBottom.useStepSize, false, bufferCount);
 
 }
 
@@ -256,7 +289,10 @@ bool csGL4TerrainMeshCPU::UpdatePatches()
 
 void csGL4TerrainMeshCPU::RebuildIndices()
 {
-  glBindVertexArray(0);
+  if (m_vao)
+  {
+    glBindVertexArray(0);
+  }
 
   m_ib->Bind();
   size_t offset = 0;
@@ -271,8 +307,9 @@ void csGL4TerrainMeshCPU::RebuildIndices()
 }
 
 
-csGL4TerrainMeshGeneratorCPU::csGL4TerrainMeshGeneratorCPU()
+csGL4TerrainMeshGeneratorCPU::csGL4TerrainMeshGeneratorCPU(bool compat)
     : iTerrainMeshGenerator()
+    , m_compat(compat)
 {
   CS_CLASS_GEN_CONSTR;
 }
@@ -320,8 +357,8 @@ void csGL4TerrainMeshGeneratorCPU::SetHeightData(const std::vector<float> &heigh
 
 void csGL4TerrainMeshGeneratorCPU::GenerateVerticesUVs(std::vector<csVector3f> &vertices, std::vector<csVector2f> &uv)
 {
-  auto       size = static_cast<size_t>(m_size);
-  csVector3f d    = m_max - m_min;
+  auto size = static_cast<size_t>(m_size);
+  csVector3f d = m_max - m_min;
 
 
   for (size_t iz = 0, idx = 0; iz < size; iz++)
@@ -356,7 +393,7 @@ void csGL4TerrainMeshGeneratorCPU::GenerateNormals(std::vector<csVector3f> &vert
       bool haveLeft = ix != 0;
       bool haveRight = ix != (size - 1);
 
-      const csVector3f &v  = vertices[idx];
+      const csVector3f &v = vertices[idx];
       const csVector3f &vl = haveLeft ? vertices[idx - 1] : vertices[idx];
       const csVector3f &vr = haveRight ? vertices[idx + 1] : vertices[idx];
       const csVector3f &vt = haveTop ? vertices[idx + size] : vertices[idx];
@@ -398,9 +435,9 @@ void csGL4TerrainMeshGeneratorCPU::EvalLine(std::vector<csVector3f> &vertices,
                                             size_t patchSize,
                                             csGL4TerrainMeshCPU::Line &line)
 {
-  csVector3f  min = vertices[v0];
-  csVector3f  max = vertices[v0];
-  for (size_t i   = v0; i <= v1; i += stepSize)
+  csVector3f min = vertices[v0];
+  csVector3f max = vertices[v0];
+  for (size_t i = v0; i <= v1; i += stepSize)
   {
     csVector3f &v = vertices[i];
     min.x = min.x < v.x ? min.x : v.x;
@@ -435,9 +472,9 @@ void csGL4TerrainMeshGeneratorCPU::GeneratePatches(std::vector<csVector3f> &vert
     for (size_t j = 0; j < numPatches; ++j, ++idx)
     {
       size_t v00 = v0 + j * (patchSize - 1);
-      size_t v01 = v00 + patchSize-1;
-      size_t v10 = v1 + j * (patchSize-1);
-      size_t v11 = v10 + (patchSize-1);
+      size_t v01 = v00 + patchSize - 1;
+      size_t v10 = v1 + j * (patchSize - 1);
+      size_t v11 = v10 + (patchSize - 1);
 
       size_t halfPatchSize = (patchSize - 1) / 2;
       size_t center = v00 + halfPatchSize * terrainSize + halfPatchSize;
@@ -472,7 +509,7 @@ iTerrainMesh *csGL4TerrainMeshGeneratorCPU::Generate()
 
   std::vector<csVector3f> vertices(vertexCount);
   std::vector<csVector3f> normals(vertexCount);
-  std::vector<csVector2f>                 uvs(vertexCount);
+  std::vector<csVector2f> uvs(vertexCount);
   std::vector<csGL4TerrainMeshCPU::Patch> patches(numPatches * numPatches);
 
   GenerateVerticesUVs(vertices, uvs);
@@ -480,7 +517,10 @@ iTerrainMesh *csGL4TerrainMeshGeneratorCPU::Generate()
   GeneratePatches(vertices, patches);
 
 
-  glBindVertexArray(0);
+  if (!m_compat)
+  {
+    glBindVertexArray(0);
+  }
 
   uint16_t vertexSize = sizeof(float) * 8;
 
@@ -508,7 +548,7 @@ iTerrainMesh *csGL4TerrainMeshGeneratorCPU::Generate()
   {
     const csVector3f vertex = vertices[i];
     const csVector3f normal = normals[i];
-    const csVector2f uv     = uvs[i];
+    const csVector2f uv = uvs[i];
     *vptr++ = vertex.x;
     *vptr++ = vertex.y;
     *vptr++ = vertex.z;
@@ -530,28 +570,33 @@ iTerrainMesh *csGL4TerrainMeshGeneratorCPU::Generate()
   ib->CreateForRendering((size - 1) * (size - 1) * 6 * 4);
 
 
-  GLuint vao;
-  glGenVertexArrays(1, &vao);
-  glBindVertexArray(vao);
+  GLuint vao = 0;
+  if (!m_compat)
+  {
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
+  }
 
 
   ib->Bind();
   vb->Bind();
 
-  for (auto &attribute: attributes)
+  if (!m_compat)
   {
-    glVertexAttribPointer(
-        attribute.Location,
-        attribute.Size,
-        GL_FLOAT,
-        false,
-        attribute.Stride,
-        reinterpret_cast<const void *>(attribute.Offset)
-    );
-    glEnableVertexAttribArray(attribute.Location);
+    for (auto &attribute: attributes)
+    {
+      glVertexAttribPointer(
+          attribute.Location,
+          attribute.Size,
+          GL_FLOAT,
+          false,
+          attribute.Stride,
+          reinterpret_cast<const void *>(attribute.Offset)
+      );
+      glEnableVertexAttribArray(attribute.Location);
+    }
+    glBindVertexArray(0);
   }
-  glBindVertexArray(0);
-
 
   return new csGL4TerrainMeshCPU(
       vao,

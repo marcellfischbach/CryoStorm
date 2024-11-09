@@ -13,10 +13,11 @@ class csGL4TerrainMeshGeneratorFactory : public CS_SUPER(iTerrainMeshGeneratorFa
 {
 CS_CLASS_GEN_OBJECT;
 public:
-  csGL4TerrainMeshGeneratorFactory();
+  csGL4TerrainMeshGeneratorFactory(bool compat);
   virtual ~csGL4TerrainMeshGeneratorFactory() override = default;
 
 private:
+  bool m_compat;
   iTerrainMeshGenerator* Create() override;
 };
 

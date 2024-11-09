@@ -10,7 +10,7 @@
 namespace cs::launcher
 {
 
-bool csSDLWindow::Initialize()
+bool csSDLWindow::Initialize(bool compat)
 {
   const cs::csSettingsFile &settings = cs::csSettings::Get().Display();
 
@@ -28,8 +28,14 @@ bool csSDLWindow::Initialize()
 
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 4);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-
+  if (compat)
+  {
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
+  }
+  else
+  {
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+  }
   uint32_t     flags    = SDL_WINDOW_OPENGL;
   // flags |= SDL_WINDOW_BORDERLESS;
   std::string      title = settings.GetText("title");

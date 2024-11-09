@@ -103,7 +103,7 @@ class csGL4TerrainMeshGeneratorCPU : public CS_SUPER(iTerrainMeshGenerator)
 {
 CS_CLASS_GEN_OBJECT;
 public:
-  csGL4TerrainMeshGeneratorCPU();
+  csGL4TerrainMeshGeneratorCPU(bool compat);
   ~csGL4TerrainMeshGeneratorCPU() override = default;
 
   void SetSize(eTerrainSize size) override;
@@ -124,6 +124,7 @@ private:
                        size_t patchSize,
                        csGL4TerrainMeshCPU::Line& line);
 
+  bool m_compat;
   eTerrainSize       m_size      = eTerrainSize::TS_1025;
   eTerrainSize       m_patchSize = eTerrainSize::TS_65;
   csVector3f         m_min       = csVector3f(-1000.0f, 0.0f, -1000.0f);

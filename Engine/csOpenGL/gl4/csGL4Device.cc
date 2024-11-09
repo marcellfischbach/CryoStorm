@@ -159,7 +159,7 @@ void csGL4Device::Clear(bool clearColor,
                         float depth,
                         bool clearStencil,
                         uint8_t stencil
-                       )
+)
 {
   GLenum flags = 0;
   if (clearColor)
@@ -294,7 +294,7 @@ void csGL4Device::SetBlendFactor(eBlendFactor srcFactorColor,
                                  eBlendFactor srcFactorAlpha,
                                  eBlendFactor dstFactorColor,
                                  eBlendFactor dstFactorAlpha
-                                )
+)
 {
   if (srcFactorColor != m_srcFactorColor
       || srcFactorAlpha != m_srcFactorAlpha
@@ -317,11 +317,11 @@ void csGL4Device::SetModelMatrix(const csMatrix4f &modelMatrix)
 {
   m_modelMatrix = modelMatrix;
 
-  m_modelViewMatrixDirty           = true;
+  m_modelViewMatrixDirty = true;
   m_modelViewProjectionMatrixDirty = true;
 
-  m_modelMatrixInvDirty               = true;
-  m_modelViewMatrixInvDirty           = true;
+  m_modelMatrixInvDirty = true;
+  m_modelViewMatrixInvDirty = true;
   m_modelViewProjectionMatrixInvDirty = true;
 }
 
@@ -329,12 +329,12 @@ void csGL4Device::SetViewMatrix(const csMatrix4f &viewMatrix)
 {
   m_viewMatrix = viewMatrix;
 
-  m_modelViewMatrixDirty      = true;
+  m_modelViewMatrixDirty = true;
   m_viewProjectionMatrixDirty = true;
 
 
-  m_viewMatrixInvDirty           = true;
-  m_modelViewMatrixInvDirty      = true;
+  m_viewMatrixInvDirty = true;
+  m_modelViewMatrixInvDirty = true;
   m_viewProjectionMatrixInvDirty = true;
 }
 
@@ -342,48 +342,48 @@ void csGL4Device::SetProjectionMatrix(const csMatrix4f &projectionMatrix)
 {
   m_projectionMatrix = projectionMatrix;
 
-  m_viewProjectionMatrixDirty      = true;
+  m_viewProjectionMatrixDirty = true;
   m_modelViewProjectionMatrixDirty = true;
 
-  m_projectionMatrixInvDirty          = true;
-  m_viewProjectionMatrixInvDirty      = true;
+  m_projectionMatrixInvDirty = true;
+  m_viewProjectionMatrixInvDirty = true;
   m_modelViewProjectionMatrixInvDirty = true;
 }
 
 void csGL4Device::SetModelMatrix(const csMatrix4f &modelMatrix, const csMatrix4f &modelMatrixInv)
 {
-  m_modelMatrix    = modelMatrix;
+  m_modelMatrix = modelMatrix;
   m_modelMatrixInv = modelMatrixInv;
 
-  m_modelViewMatrixDirty           = true;
+  m_modelViewMatrixDirty = true;
   m_modelViewProjectionMatrixDirty = true;
 
-  m_modelViewMatrixInvDirty           = true;
+  m_modelViewMatrixInvDirty = true;
   m_modelViewProjectionMatrixInvDirty = true;
 }
 
 void csGL4Device::SetViewMatrix(const csMatrix4f &viewMatrix, const csMatrix4f &viewMatrixInv)
 {
-  m_viewMatrix    = viewMatrix;
+  m_viewMatrix = viewMatrix;
   m_viewMatrixInv = viewMatrixInv;
 
-  m_modelViewMatrixDirty      = true;
+  m_modelViewMatrixDirty = true;
   m_viewProjectionMatrixDirty = true;
 
 
-  m_modelViewMatrixInvDirty      = true;
+  m_modelViewMatrixInvDirty = true;
   m_viewProjectionMatrixInvDirty = true;
 }
 
 void csGL4Device::SetProjectionMatrix(const csMatrix4f &projectionMatrix, const csMatrix4f &projectionMatrixInv)
 {
-  m_projectionMatrix    = projectionMatrix;
+  m_projectionMatrix = projectionMatrix;
   m_projectionMatrixInv = projectionMatrixInv;
 
-  m_viewProjectionMatrixDirty      = true;
+  m_viewProjectionMatrixDirty = true;
   m_modelViewProjectionMatrixDirty = true;
 
-  m_viewProjectionMatrixInvDirty      = true;
+  m_viewProjectionMatrixInvDirty = true;
   m_modelViewProjectionMatrixInvDirty = true;
 }
 
@@ -461,15 +461,16 @@ csMatrix4f &csGL4Device::GetPerspectiveProjection(float l, float r, float b, flo
   return m;
 }
 
-csMatrix4f &csGL4Device::GetPerspectiveProjectionInv(float l, float r, float b, float t, float n, float f, csMatrix4f &m)
+csMatrix4f &
+csGL4Device::GetPerspectiveProjectionInv(float l, float r, float b, float t, float n, float f, csMatrix4f &m)
 {
-  float z2  = 2.0f * n;
-  float dx  = r - l;
-  float dy  = t - b;
-  float dz  = f - n;
-  float sx  = r + l;
-  float sy  = t + b;
-  float sz  = n + f;
+  float z2 = 2.0f * n;
+  float dx = r - l;
+  float dy = t - b;
+  float dz = f - n;
+  float sx = r + l;
+  float sy = t + b;
+  float sz = n + f;
   float nf2 = z2 * f;
 
 
@@ -522,7 +523,8 @@ csMatrix4f &csGL4Device::GetOrthographicProjection(float l, float r, float b, fl
   return m;
 }
 
-csMatrix4f &csGL4Device::GetOrthographicProjectionInv(float l, float r, float b, float t, float n, float f, csMatrix4f &m)
+csMatrix4f &
+csGL4Device::GetOrthographicProjectionInv(float l, float r, float b, float t, float n, float f, csMatrix4f &m)
 {
   float dx = r - l;
   float dy = t - b;
@@ -650,7 +652,7 @@ void csGL4Device::SetRenderBuffer(uint32_t buffer)
 }
 void csGL4Device::SetRenderBuffer(const std::vector<uint32_t> &buffer)
 {
-  GLenum   glBuffer[16];
+  GLenum glBuffer[16];
   for (int i = 0; i < buffer.size(); ++i)
   {
     glBuffer[i] = GL_COLOR_ATTACHMENT0 + buffer[i];
@@ -691,20 +693,20 @@ void csGL4Device::SetPointLightShadowMap(size_t lightIdx,
                                          float near,
                                          float far,
                                          float bias
-                                        )
+)
 {
   if (m_shadowDataSize >= 4)
   {
     return;
   }
   LightShadowData &lsd = m_lightShadowData[m_shadowDataSize++];
-  lsd.LightType                    = eLT_Point;
-  lsd.Light                        = light;
+  lsd.LightType = eLT_Point;
+  lsd.Light = light;
   lsd.PointLight.ShadowBufferDepth = shadowBufferDepth;
   lsd.PointLight.ShadowBufferColor = shadowBufferColor;
-  lsd.PointLight.Near              = near;
-  lsd.PointLight.Far               = far;
-  lsd.PointLight.Bias              = bias;
+  lsd.PointLight.Near = near;
+  lsd.PointLight.Far = far;
+  lsd.PointLight.Bias = bias;
 }
 
 void csGL4Device::AddDirectionalLightShadow(iDirectionalLight *light,
@@ -719,9 +721,9 @@ void csGL4Device::AddDirectionalLightShadow(iDirectionalLight *light,
     return;
   }
   LightShadowData &lsd = m_lightShadowData[m_shadowDataSize++];
-  lsd.LightType                          = eLT_Directional;
-  lsd.Light                              = light;
-  lsd.ShadowMap                          = shadowMap;
+  lsd.LightType = eLT_Directional;
+  lsd.Light = light;
+  lsd.ShadowMap = shadowMap;
   lsd.DirectionalLight.ShadowBufferDepth = shadowBuffersDepth;
   lsd.DirectionalLight.ShadowBufferColor = shadowBuffersColor;
   memcpy(lsd.DirectionalLight.Matrices, matrices.data(), sizeof(csMatrix4f) * 4);
@@ -869,7 +871,7 @@ void csGL4Device::MarkTexture()
 void csGL4Device::ResetTexturesToMark()
 {
   m_nextTextureUnit = m_markTextureUnit;
-  for (size_t i=m_nextTextureUnit; i<eTU_COUNT; i++)
+  for (size_t i = m_nextTextureUnit; i < eTU_COUNT; i++)
   {
     m_texturesUsed[i] = false;
   }
@@ -884,7 +886,7 @@ eTextureUnit csGL4Device::ShiftTextureUnit()
 
   eTextureUnit unit = m_nextTextureUnit;
   m_nextTextureUnit = static_cast<eTextureUnit>(m_nextTextureUnit + 1);
-  while(m_texturesUsed[unit] && unit < eTU_COUNT)
+  while (m_texturesUsed[unit] && unit < eTU_COUNT)
   {
     unit = m_nextTextureUnit;
     m_nextTextureUnit = static_cast<eTextureUnit>(m_nextTextureUnit + 1);
@@ -979,7 +981,7 @@ eTextureUnit csGL4Device::BindTexture(iTexture *texture)
   }
 
 
-  for (size_t i=0; i<eTU_COUNT; i++)
+  for (size_t i = 0; i < eTU_COUNT; i++)
   {
     if (m_textures[i] == texture)
     {
@@ -997,8 +999,8 @@ eTextureUnit csGL4Device::BindTexture(iTexture *texture)
   }
 
 
-  eTextureUnit unit        = ShiftTextureUnit();
-  iTexture     *oldTexture = m_textures[unit];
+  eTextureUnit unit = ShiftTextureUnit();
+  iTexture *oldTexture = m_textures[unit];
   m_textures[unit] = texture;
   m_texturesUsed[unit] = true;
 //    CS_ADDREF(texture);
@@ -1033,7 +1035,7 @@ bool csGL4Device::BindMaterial(iMaterial *material, eRenderPass pass)
 #ifndef CS_DISABLE_RENDERING
   if (!material && pass == eRP_COUNT)
   {
-    m_material     = nullptr;
+    m_material = nullptr;
     m_materialPass = pass;
     ResetTextures();
     return false;
@@ -1046,7 +1048,7 @@ bool csGL4Device::BindMaterial(iMaterial *material, eRenderPass pass)
     return m_materialSuccessfull;
   }
 
-  m_material     = material;
+  m_material = material;
   m_materialPass = pass;
   m_materialSuccessfull = material && material->Bind(this, pass);
   CS_GL_ERROR()
@@ -1095,13 +1097,13 @@ void csGL4Device::RenderFullscreen(iTexture2D *texture)
   { return; }
 #ifndef CS_DISABLE_RENDERING
   SetFillMode(eFillMode::Fill);
-  bool     multiSampling = texture->IsMultiSampling();
-  uint16_t samples       = texture->GetSamples();
+  bool multiSampling = texture->IsMultiSampling();
+  uint16_t samples = texture->GetSamples();
 
   csGL4Program *prog = multiSampling ? FullscreenBlitMSProgram() : FullscreenBlitProgram();
   SetShader(prog);
   ResetTextures();
-  eTextureUnit     unit    = BindTexture(texture);
+  eTextureUnit unit = BindTexture(texture);
   iShaderAttribute *attrib = prog->GetShaderAttribute("Diffuse");
   if (attrib)
   {
@@ -1125,7 +1127,7 @@ void csGL4Device::RenderFullscreen(iTexture2DArray *texture, int layer)
   csGL4Program *prog = FullscreenBlitArrayProgram();
   SetShader(prog);
   ResetTextures();
-  eTextureUnit     unit    = BindTexture(texture);
+  eTextureUnit unit = BindTexture(texture);
   iShaderAttribute *attrib = prog->GetShaderAttribute("Diffuse");
   if (attrib)
   {
@@ -1141,11 +1143,11 @@ void csGL4Device::RenderFullscreen(iTexture2DArray *texture, int layer)
 }
 
 void csGL4Device::RenderFullscreen(iTextureCube
-                                 *texture,
+                                   *texture,
                                    eCubeFace face,
                                    const csVector2f &scale,
                                    const csVector2f &translation
-                                  )
+)
 {
 #ifndef CS_DISABLE_RENDERING
   SetFillMode(eFillMode::Fill);
@@ -1153,7 +1155,7 @@ void csGL4Device::RenderFullscreen(iTextureCube
   SetDepthWrite(false);
   SetColorWrite(true, true, true, true);
   SetBlending(false);
-  iRenderMesh  *mesh = FullscreenBlitCubeRenderMesh((int) face);
+  iRenderMesh *mesh = FullscreenBlitCubeRenderMesh((int) face);
   csGL4Program *prog = FullscreenBlitCubeProgram();
   SetShader(prog);
   ResetTextures();
@@ -1186,19 +1188,18 @@ void csGL4Device::BindForwardLight(const iLight *light, Size idx)
 
   CS_GL_ERROR();
 
-  iShaderAttribute *lightColor      = m_shader->GetShaderAttribute(eSA_LightColor);
-  iShaderAttribute *lightVector     = m_shader->GetShaderAttribute(eSA_LightVector);
-  iShaderAttribute *lightRange      = m_shader->GetShaderAttribute(eSA_LightRange);
+  iShaderAttribute *lightColor = m_shader->GetShaderAttribute(eSA_LightColor);
+  iShaderAttribute *lightVector = m_shader->GetShaderAttribute(eSA_LightVector);
+  iShaderAttribute *lightRange = m_shader->GetShaderAttribute(eSA_LightRange);
   iShaderAttribute *lightCastShadow = m_shader->GetShaderAttribute(eSA_LightCastShadow);
-  iShaderAttribute *lightShadowMap  = m_shader->GetShaderAttribute(eSA_LightShadowMap);
+  iShaderAttribute *lightShadowMap = m_shader->GetShaderAttribute(eSA_LightShadowMap);
 
 
   iShaderAttribute *dlsSplitLayers = m_shader->GetShaderAttribute(eSA_DirectionalLightShadowMapSplitLayers);
-  iShaderAttribute *dlsViewProj    = m_shader->GetShaderAttribute(eSA_DirectionalLightShadowMapViewProjectionMatrix);
-  iShaderAttribute *dlsDepth       = m_shader->GetShaderAttribute(eSA_DirectionalLightShadowMapDepth);
-  iShaderAttribute *dlsColor       = m_shader->GetShaderAttribute(eSA_DirectionalLightShadowMapColor);
-  iShaderAttribute *dlsLayersBias  = m_shader->GetShaderAttribute(eSA_DirectionalLightShadowMapLayersBias);
-
+  iShaderAttribute *dlsViewProj = m_shader->GetShaderAttribute(eSA_DirectionalLightShadowMapViewProjectionMatrix);
+  iShaderAttribute *dlsDepth = m_shader->GetShaderAttribute(eSA_DirectionalLightShadowMapDepth);
+  iShaderAttribute *dlsColor = m_shader->GetShaderAttribute(eSA_DirectionalLightShadowMapColor);
+  iShaderAttribute *dlsLayersBias = m_shader->GetShaderAttribute(eSA_DirectionalLightShadowMapLayersBias);
 
 
   if (lightColor)
@@ -1223,12 +1224,10 @@ void csGL4Device::BindForwardLight(const iLight *light, Size idx)
   }
 
 
-
-
   if (light)
   {
-    LightShadowData *lsd          = light->IsCastShadow() ? FindLightShadowData(light) : nullptr;
-    bool            haveShadowMap = lsd != nullptr;
+    LightShadowData *lsd = light->IsCastShadow() ? FindLightShadowData(light) : nullptr;
+    bool haveShadowMap = lsd != nullptr;
 
 
     if (lightColor)
@@ -1240,7 +1239,7 @@ void csGL4Device::BindForwardLight(const iLight *light, Size idx)
     int lightCastShadowValue = 0;
     if (haveShadowMap)
     {
-      lightCastShadowValue         = 1;
+      lightCastShadowValue = 1;
       iTexture2D *shadowMapTexture = lsd->ShadowMap;
       if (lightShadowMap)
       {
@@ -1524,13 +1523,13 @@ void csGL4Device::BindStandardValues()
 
 void csGL4Device::UpdateModelViewMatrix()
 {
-  m_modelViewMatrix      = m_viewMatrix * m_modelMatrix;
+  m_modelViewMatrix = m_viewMatrix * m_modelMatrix;
   m_modelViewMatrixDirty = false;
 }
 
 void csGL4Device::UpdateViewProjectionMatrix()
 {
-  m_viewProjectionMatrix      = m_projectionMatrix * m_viewMatrix;
+  m_viewProjectionMatrix = m_projectionMatrix * m_viewMatrix;
   m_viewProjectionMatrixDirty = false;
 }
 
@@ -1540,25 +1539,25 @@ void csGL4Device::UpdateModelViewProjectionMatrix()
   {
     UpdateModelViewMatrix();
   }
-  m_modelViewProjectionMatrix      = m_projectionMatrix * m_modelViewMatrix;
+  m_modelViewProjectionMatrix = m_projectionMatrix * m_modelViewMatrix;
   m_modelViewProjectionMatrixDirty = false;
 }
 
 void csGL4Device::UpdateModelMatrixInv()
 {
-  m_modelMatrixInv      = m_modelMatrix.Inverted();
+  m_modelMatrixInv = m_modelMatrix.Inverted();
   m_modelMatrixInvDirty = false;
 }
 
 void csGL4Device::UpdateViewMatrixInv()
 {
-  m_viewMatrixInv      = m_viewMatrix.Inverted();
+  m_viewMatrixInv = m_viewMatrix.Inverted();
   m_viewMatrixInvDirty = false;
 }
 
 void csGL4Device::UpdateProjectionMatrixInv()
 {
-  m_projectionMatrixInv      = m_projectionMatrix.Inverted();
+  m_projectionMatrixInv = m_projectionMatrix.Inverted();
   m_projectionMatrixInvDirty = false;
 }
 
@@ -1568,7 +1567,7 @@ void csGL4Device::UpdateModelViewMatrixInv()
   {
     UpdateModelViewMatrix();
   }
-  m_modelViewMatrixInv      = m_modelViewMatrix.Inverted();
+  m_modelViewMatrixInv = m_modelViewMatrix.Inverted();
   m_modelViewMatrixInvDirty = false;
 }
 
@@ -1578,7 +1577,7 @@ void csGL4Device::UpdateViewProjectionMatrixInv()
   {
     UpdateViewProjectionMatrix();
   }
-  m_viewProjectionMatrixInv      = m_viewProjectionMatrix.Inverted();
+  m_viewProjectionMatrixInv = m_viewProjectionMatrix.Inverted();
   m_viewProjectionMatrixInvDirty = false;
 }
 
@@ -1588,7 +1587,7 @@ void csGL4Device::UpdateModelViewProjectionMatrixInv()
   {
     UpdateModelViewProjectionMatrix();
   }
-  m_modelViewProjectionMatrixInv      = m_modelViewProjectionMatrix.Inverted();
+  m_modelViewProjectionMatrixInv = m_modelViewProjectionMatrix.Inverted();
   m_modelViewProjectionMatrixInvDirty = false;
 }
 
@@ -1606,7 +1605,8 @@ csGL4Program *csGL4Device::FullscreenBlitProgram()
 {
   if (!m_fullscreenBlitProgram)
   {
-    m_fullscreenBlitProgram = csAssetManager::Get()->Load<csGL4Program>("file:///engine/opengl/gl4/fullscreen_blit.shader");
+    m_fullscreenBlitProgram = csAssetManager::Get()->Load<csGL4Program>(
+        "file:///engine/opengl/gl4/fullscreen_blit.shader");
   }
   return m_fullscreenBlitProgram;
 }
@@ -1636,7 +1636,8 @@ iRenderMesh *csGL4Device::FullscreenBlitRenderMesh()
 {
   if (!m_fullscreenBlitRenderMesh)
   {
-    csGL4RenderMeshGenerator gen;
+    iRenderMeshGenerator *gen = csObjectRegistry::Get<iRenderMeshGeneratorFactory>()->Create();
+    csAutoRelease relGen(gen);
 
     std::vector<csVector4f> vertices4;
     vertices4.push_back(csVector4f(-1.0f, -1.0f, 0.0f, 1.0f));
@@ -1657,10 +1658,10 @@ iRenderMesh *csGL4Device::FullscreenBlitRenderMesh()
     indices.push_back(2);
 
 
-    gen.SetVertices(vertices4);
-    gen.SetUV0(uv);
-    gen.SetIndices(indices);
-    m_fullscreenBlitRenderMesh = gen.Generate();
+    gen->SetVertices(vertices4);
+    gen->SetUV0(uv);
+    gen->SetIndices(indices);
+    m_fullscreenBlitRenderMesh = gen->Generate();
   }
   return m_fullscreenBlitRenderMesh;
 }
@@ -1670,18 +1671,18 @@ iRenderMesh *csGL4Device::PixelRenderMesh()
 {
   if (!m_fullscreenBlitRenderMesh)
   {
-    csGL4RenderMeshGenerator gen;
-
+    iRenderMeshGenerator *gen = csObjectRegistry::Get<iRenderMeshGeneratorFactory>()->Create();
+    csAutoRelease relGen(gen);
     std::vector<csVector4f> vertices4;
     vertices4.push_back(csVector4f(0.0f, 0.0f, 0.0f, 1.0f));
     std::vector<uint32_t> indices;
     indices.push_back(0);
 
 
-    gen.SetVertices(vertices4);
-    gen.SetIndices(indices);
-    gen.SetPrimitiveType(ePT_Points);
-    m_fullscreenBlitRenderMesh = gen.Generate();
+    gen->SetVertices(vertices4);
+    gen->SetIndices(indices);
+    gen->SetPrimitiveType(ePT_Points);
+    m_fullscreenBlitRenderMesh = gen->Generate();
   }
   return m_fullscreenBlitRenderMesh;
 }
@@ -1696,14 +1697,17 @@ csGL4Program *csGL4Device::FullscreenBlitCubeProgram()
     );
     if (m_fullscreenBlitCubeProgram)
     {
-      m_fullscreenBlitCubeDiffuse     = m_fullscreenBlitCubeProgram->GetShaderAttribute("Diffuse");
-      m_fullscreenBlitCubeScale       = m_fullscreenBlitCubeProgram->GetShaderAttribute("Scale");
+      m_fullscreenBlitCubeDiffuse = m_fullscreenBlitCubeProgram->GetShaderAttribute("Diffuse");
+      m_fullscreenBlitCubeScale = m_fullscreenBlitCubeProgram->GetShaderAttribute("Scale");
       m_fullscreenBlitCubeTranslation = m_fullscreenBlitCubeProgram->GetShaderAttribute("Translation");
     }
 
   }
   return m_fullscreenBlitCubeProgram;
 }
+
+
+
 
 iRenderMesh *csGL4Device::FullscreenBlitCubeRenderMesh(int layer)
 {
@@ -1744,8 +1748,10 @@ iRenderMesh *csGL4Device::FullscreenBlitCubeRenderMesh(int layer)
   }
 
 
-  csGL4RenderMeshGenerator gen;
-  std::vector<csVector4f>  vertices4;
+  iRenderMeshGenerator *gen = csObjectRegistry::Get<iRenderMeshGeneratorFactory>()->Create();
+  csAutoRelease relGen(gen);
+
+  std::vector<csVector4f> vertices4;
   vertices4.push_back(csVector4f(-1.0f, -1.0f, 0.0f, 1.0f));
   vertices4.push_back(csVector4f(-1.0f, 1.0f, 0.0f, 1.0f));
   vertices4.push_back(csVector4f(1.0f, -1.0f, 0.0f, 1.0f));
@@ -1757,8 +1763,8 @@ iRenderMesh *csGL4Device::FullscreenBlitCubeRenderMesh(int layer)
   indices.push_back(0);
   indices.push_back(3);
   indices.push_back(2);
-  gen.SetVertices(vertices4);
-  gen.SetIndices(indices);
+  gen->SetVertices(vertices4);
+  gen->SetIndices(indices);
 
   std::vector<csVector3f> uv;
   switch (layer)
@@ -1768,43 +1774,43 @@ iRenderMesh *csGL4Device::FullscreenBlitCubeRenderMesh(int layer)
       uv.push_back(csVector3f(1.0f, 1.0f, 1.0f));
       uv.push_back(csVector3f(1.0f, -1.0f, -1.0f));
       uv.push_back(csVector3f(1.0f, 1.0f, -1.0f));
-      gen.SetUV0(uv);
-      return (m_fullscreenBlitCubePosXRenderMesh = gen.Generate());
+      gen->SetUV0(uv);
+      return (m_fullscreenBlitCubePosXRenderMesh = gen->Generate());
     case 1: // Negative X
       uv.push_back(csVector3f(-1.0f, -1.0f, -1.0f));
       uv.push_back(csVector3f(-1.0f, 1.0f, -1.0f));
       uv.push_back(csVector3f(-1.0f, -1.0f, 1.0f));
       uv.push_back(csVector3f(-1.0f, 1.0f, 1.0f));
-      gen.SetUV0(uv);
-      return (m_fullscreenBlitCubeNegXRenderMesh = gen.Generate());
+      gen->SetUV0(uv);
+      return (m_fullscreenBlitCubeNegXRenderMesh = gen->Generate());
     case 2: // Positive Y
       uv.push_back(csVector3f(-1.0f, 1.0f, -1.0f));
       uv.push_back(csVector3f(-1.0f, 1.0f, 1.0f));
       uv.push_back(csVector3f(1.0f, 1.0f, -1.0f));
       uv.push_back(csVector3f(1.0f, 1.0f, 1.0f));
-      gen.SetUV0(uv);
-      return (m_fullscreenBlitCubePosYRenderMesh = gen.Generate());
+      gen->SetUV0(uv);
+      return (m_fullscreenBlitCubePosYRenderMesh = gen->Generate());
     case 3: // Negative Y
       uv.push_back(csVector3f(-1.0f, -1.0f, -1.0f));
       uv.push_back(csVector3f(-1.0f, -1.0f, 1.0f));
       uv.push_back(csVector3f(1.0f, -1.0f, -1.0f));
       uv.push_back(csVector3f(1.0f, -1.0f, 1.0f));
-      gen.SetUV0(uv);
-      return (m_fullscreenBlitCubeNegYRenderMesh = gen.Generate());
+      gen->SetUV0(uv);
+      return (m_fullscreenBlitCubeNegYRenderMesh = gen->Generate());
     case 4: // Positive Z
       uv.push_back(csVector3f(-1.0f, -1.0f, 1.0f));
       uv.push_back(csVector3f(-1.0f, 1.0f, 1.0f));
       uv.push_back(csVector3f(1.0f, -1.0f, 1.0f));
       uv.push_back(csVector3f(1.0f, 1.0f, 1.0f));
-      gen.SetUV0(uv);
-      return (m_fullscreenBlitCubePosZRenderMesh = gen.Generate());
+      gen->SetUV0(uv);
+      return (m_fullscreenBlitCubePosZRenderMesh = gen->Generate());
     case 5: // Negative Z
       uv.push_back(csVector3f(1.0f, -1.0f, -1.0f));
       uv.push_back(csVector3f(1.0f, 1.0f, -1.0f));
       uv.push_back(csVector3f(-1.0f, -1.0f, -1.0f));
       uv.push_back(csVector3f(-1.0f, 1.0f, -1.0f));
-      gen.SetUV0(uv);
-      return (m_fullscreenBlitCubeNegZRenderMesh = gen.Generate());
+      gen->SetUV0(uv);
+      return (m_fullscreenBlitCubeNegZRenderMesh = gen->Generate());
 
   }
   return nullptr;
@@ -1824,8 +1830,8 @@ void csGL4Device::IncTriangles(Size num)
 
 void csGL4Device::ResetDebug()
 {
-  m_numDrawCalls           = 0;
-  m_numTriangles           = 0;
+  m_numDrawCalls = 0;
+  m_numTriangles = 0;
   m_numShaderStatesChanges = 0;
 }
 

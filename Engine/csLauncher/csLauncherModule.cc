@@ -24,8 +24,21 @@ bool csLauncherModule::Register(const std::vector<std::string> &args, csEngine *
 
 bool csLauncherModule::Initialize(const std::vector<std::string> &args, csEngine *engine)
 {
+  bool compat = false;
+  for (size_t i=0, in=args.size(); i<in; i++)
+  {
+    if (args[i] == "--glProfile" && (i+1) < in)
+    {
+      i++;
+      if (args[i] == "compat" || args[i] == "compatibility")
+      {
+        compat = true;
+      }
+    }
+  }
+
   csSDLWindow *window = (csSDLWindow*)csObjectRegistry::Get<iWindow>();
-  window->Initialize();
+  window->Initialize(compat);
 
   const std::string &iconName = csSettings::Get().Display().GetText("icon");
   if (!iconName.empty())

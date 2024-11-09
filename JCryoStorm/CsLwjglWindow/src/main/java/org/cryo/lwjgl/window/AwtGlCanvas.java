@@ -149,7 +149,7 @@ public class AwtGlCanvas extends AWTGLCanvas {
         data.majorVersion = 4;
         data.minorVersion = 4;
         data.api = GLData.API.GL;
-        data.profile = GLData.Profile.CORE;
+        data.profile = GLData.Profile.COMPATIBILITY;
         data.swapInterval = 0;
         data.shareContext = sharedCanvas;
         data.robustness = true;

@@ -21,7 +21,7 @@ class csSDLWindow : public CS_SUPER(iWindow)
 CS_CLASS_GEN_OBJECT;
 
 public:
-  bool Initialize ();
+  bool Initialize (bool compat);
 
   void SetTitle(const std::string &title) override;
   const std::string &GetTitle() const override;
