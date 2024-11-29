@@ -4,7 +4,30 @@
 #include <mainwindow.hh>
 #include <csCore/resource/csVFS.hh>
 #include <csCore/resource/csVFSConfigReader.hh>
+#include <Project.hh>
 
+void print_usage()
+{
+  printf ("Usage: EdLauncher <project-path>\n");
+  printf ("---------\n");
+  printf ("  <project-path>   folder of the cryo-project.xml file\n");
+}
+
+std::string extract_path (const std::string &projectDesc)
+{
+  std::string path = projectDesc;
+  if (path.ends_with("/cryo-project.xml") || path.ends_with("\\cryo-project.xml"))
+  {
+      path = path.substr(0, path.size() - 10);
+  }
+
+  if (path.ends_with("/") || path.ends_with("\\"))
+  {
+    path = path.substr(0, path.size()-1);
+  }
+
+  return path;
+}
 
 int main(int argc, char** argv)
 {
@@ -17,6 +40,16 @@ int main(int argc, char** argv)
   {
     args.emplace_back(argv[i]);
   }
+
+  if (args.size() < 2)
+  {
+    print_usage();
+    return -1;
+  }
+
+  std::string projectPath = extract_path(args[1]);
+  Project::Get()->Open(projectPath);
+  cs::csVFS *vfs = cs::csVFS::Get();
 
 
   std::string dataPath("../");

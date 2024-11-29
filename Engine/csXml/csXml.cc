@@ -751,6 +751,28 @@ const csNode* csElement::GetChild(size_t idx) const
   return m_children[idx];
 }
 
+csElement* csElement::FindElement(const std::string &tagName)
+{
+  return const_cast<csElement*>(static_cast<const csElement*>(this)->FindElement(tagName));
+}
+
+const csElement *csElement::FindElement(const std::string &tagName) const
+{
+  for (auto child : m_children)
+  {
+    if (child->IsElement())
+    {
+      csElement* element = child->AsElement();
+      if (element && element->GetTagName() == tagName)
+      {
+        return element;
+      }
+    }
+  }
+  return nullptr;
+}
+
+
 
 bool csElement::HasAttribute(const std::string &key) const
 {

@@ -1,0 +1,18 @@
+<CryoProject>
+    <vfs>
+        <root>.</root>
+        <archives>
+            <archive type="filesystem" name="Root" prio="1">${vfs::root}</archive>
+            <archive type="filesystem" name="Engine" prio="0">${vfs::root}</archive>
+        </archives>
+
+        <aliases>
+            <alias name="config">config</alias>
+            <alias name="shaders">shaders/gl4</alias>
+            <alias name="engine">engine</alias>
+            <alias name="engine_shaders">engine/opengl/gl4</alias>
+        </aliases>
+
+
+    </vfs>
+</CryoProject>

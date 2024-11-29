@@ -15,6 +15,8 @@ set(ALL_SOURCES
         mainwindow.cc
         mainwindow.hh
         mainwindow.ui
+        Project.cc
+        Project.hh
 
         assetbrowser/assetbrowserdockwidget.cc
         assetbrowser/assetbrowserdockwidget.hh
@@ -42,6 +44,7 @@ target_link_libraries(EdLauncher
         PRIVATE
         csCore
         csOpenGL
+        csXml
         Qt6::Core
         Qt6::Widgets
         Qt6::OpenGL

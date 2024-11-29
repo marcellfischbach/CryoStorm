@@ -94,6 +94,8 @@ public:
   [[nodiscard]] size_t GetNumberOfChildren() const;
   [[nodiscard]] csNode* GetChild (size_t idx);
   [[nodiscard]] const csNode* GetChild (size_t idx) const;
+  [[nodiscard]] csElement *FindElement (const std::string &tagName);
+  [[nodiscard]] const csElement *FindElement (const std::string &tagName) const;
 
 
   bool HasAttribute (const std::string &key) const;
