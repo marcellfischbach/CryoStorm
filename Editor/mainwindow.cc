@@ -7,7 +7,9 @@
 #include "mainwindow.hh"
 #include "ui_MainWindow.h"
 #include <assetbrowser/assetbrowserdockwidget.hh>
-#include <sceneview/sceneviewwidget.hh>
+#include <sceneview/SceneViewWidget.hh>
+#include <editors/shadergraph/ShaderGraphEditorDialog.hh>
+#include <QTimer>
 
 MainWindow::MainWindow(QWidget* parent)
   : QMainWindow(parent)
@@ -21,6 +23,19 @@ MainWindow::MainWindow(QWidget* parent)
   addDockWidget(Qt::DockWidgetArea::BottomDockWidgetArea, m_assetBrowser);
 
   setCentralWidget(m_sceneViewWidget);
+
+
+  QTimer::singleShot(250, [this] (){ on_actionCreateShaderGraph_triggered(false);});
+}
+
+void MainWindow::showEvent(QShowEvent *event)
+{
+  printf ("Show\n");
+}
+void MainWindow::on_actionCreateShaderGraph_triggered(bool checked)
+{
+  ShaderGraphEditorDialog *dlg = new ShaderGraphEditorDialog (this);
+  dlg->show();
 }
 
 MainWindow::~MainWindow()

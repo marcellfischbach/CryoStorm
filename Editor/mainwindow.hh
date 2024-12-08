@@ -23,6 +23,11 @@ public:
   explicit MainWindow(QWidget* parent = nullptr);
   ~MainWindow() override;
 
+  void showEvent (QShowEvent* event) override;
+
+public slots:
+  void on_actionCreateShaderGraph_triggered(bool checked);
+
 private:
   Ui::MainWindow* ui;
 

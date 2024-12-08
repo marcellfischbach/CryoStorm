@@ -1,5 +1,4 @@
-message ("CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH}")
-set (CMAKE_PREFIX_PATH "${CMAKE_PREFIX_PATH};D:/DEV/Qt/6.8.0/msvc2019_64")
+set (CMAKE_PREFIX_PATH "${CMAKE_PREFIX_PATH};$ENV{QT_PATH}")
 
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets OpenGL OpenGLWidgets Xml )
 include_directories(${Qt6Core_INCLUDE_DIRS} ${Qt6Widgets_INCLUDE_DIRS} ${Qt6OpenGL_INCLUDE_DIRS} ${Qt6OpenGLWidgets_INCLUDE_DIRS} ${Qt6Xml_INCLUDE_DIRS})
@@ -29,8 +28,14 @@ set(ALL_SOURCES
         assetbrowser/assetbrowserwidget.ui
 
 
-        sceneview/sceneviewwidget.cc
-        sceneview/sceneviewwidget.hh
+        editors/shadergraph/ShaderGraphEditorDialog.cc
+        editors/shadergraph/ShaderGraphEditorDialog.hh
+        editors/shadergraph/ShaderGraphEditorWidget.ui
+        editors/shadergraph/ShaderGraphNodeItem.cc
+        editors/shadergraph/ShaderGraphNodeItem.hh
+
+        sceneview/SceneViewWidget.cc
+        sceneview/SceneViewWidget.hh
         )
 
 

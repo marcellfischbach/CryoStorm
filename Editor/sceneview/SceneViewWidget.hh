@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <QtOpenGLWidgets>
+#include <QOpenGLWidget>
 
 class SceneViewWidget : public QOpenGLWidget
 {

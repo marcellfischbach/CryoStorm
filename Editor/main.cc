@@ -31,6 +31,7 @@ std::string extract_path (const std::string &projectDesc)
 
 int main(int argc, char** argv)
 {
+  QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
   QApplication::setStyle ("Fusion");
   QApplication app(argc, argv);
 
@@ -49,35 +50,33 @@ int main(int argc, char** argv)
 
   std::string projectPath = extract_path(args[1]);
   Project::Get()->Open(projectPath);
-  cs::csVFS *vfs = cs::csVFS::Get();
-
-
-  std::string dataPath("../");
-  std::string configFilename = "vfs.config";
-  for (size_t i = 0, in = args.size(); i < in; i++)
-  {
-    const std::string &arg(args[i]);
-    if (arg == std::string("--data") && i + 1 < in)
-    {
-      dataPath = std::string(args[++i]);
-    }
-    else if (arg == std::string("--config") && i + 1 < in)
-    {
-      configFilename = std::string(args[++i]);
-    }
-  }
-
-
-  printf("Starting with data-path: '%s'\n", dataPath.c_str()); fflush(stdout);
-  cs::csVFS::Get()->SetRootPath(dataPath);
-  cs::csVFSConfigReader::Read(dataPath, configFilename);
+//  cs::csVFS *vfs = cs::csVFS::Get();
+//  std::string dataPath("../");
+//  std::string configFilename = "vfs.config";
+//  for (size_t i = 0, in = args.size(); i < in; i++)
+//  {
+//    const std::string &arg(args[i]);
+//    if (arg == std::string("--data") && i + 1 < in)
+//    {
+//      dataPath = std::string(args[++i]);
+//    }
+//    else if (arg == std::string("--config") && i + 1 < in)
+//    {
+//      configFilename = std::string(args[++i]);
+//    }
+//  }
+//
+//
+//  printf("Starting with data-path: '%s'\n", dataPath.c_str()); fflush(stdout);
+//  cs::csVFS::Get()->SetRootPath(dataPath);
+//  cs::csVFSConfigReader::Read(dataPath, configFilename);
 
   MainWindow wnd;
   wnd.resize(1024, 768);
   wnd.move(100, 100);
   wnd.setVisible(true);
 
-  return app.exec();
+  return QApplication::exec();
 }
 
 

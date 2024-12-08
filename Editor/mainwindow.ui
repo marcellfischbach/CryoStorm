@@ -20,7 +20,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>26</height>
+     <height>33</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -29,12 +29,24 @@
     </property>
     <addaction name="actionE_xit"/>
    </widget>
+   <widget class="QMenu" name="menuCreate">
+    <property name="title">
+     <string>Create</string>
+    </property>
+    <addaction name="actionCreateShaderGraph"/>
+   </widget>
    <addaction name="menu_File"/>
+   <addaction name="menuCreate"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionE_xit">
    <property name="text">
     <string>E&amp;xit</string>
+   </property>
+  </action>
+  <action name="actionCreateShaderGraph">
+   <property name="text">
+    <string>ShaderGraph</string>
    </property>
   </action>
  </widget>

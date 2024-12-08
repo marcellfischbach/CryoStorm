@@ -16,11 +16,11 @@ Project *Project::Get()
   return &project;
 }
 
-bool read_vfs_alias (const xml::csElement* aliasElement)
+bool read_vfs_alias(const xml::csElement *aliasElement)
 {
   if (!aliasElement->HasAttribute("name"))
   {
-    fprintf (stderr, "<vfs><aliases><alias> has no name.\n");
+    fprintf(stderr, "<vfs><aliases><alias> has no name.\n");
     return false;
   }
 
@@ -33,7 +33,7 @@ bool read_vfs_alias (const xml::csElement* aliasElement)
   return true;
 }
 
-bool read_vfs_aliases (const xml::csElement *vfsElement)
+bool read_vfs_aliases(const xml::csElement *vfsElement)
 {
   const xml::csElement *aliasesElement = vfsElement->FindElement("aliases");
   if (!aliasesElement)
@@ -44,13 +44,13 @@ bool read_vfs_aliases (const xml::csElement *vfsElement)
 
   for (int i = 0; i < aliasesElement->GetNumberOfChildren(); ++i)
   {
-    const xml::csElement* aliasElement =aliasesElement->GetChild(i)->AsElement();
+    const xml::csElement *aliasElement = aliasesElement->GetChild(i)->AsElement();
     if (!aliasElement || aliasElement->GetTagName() != "alias")
     {
       continue;
     }
 
-    if (!read_vfs_alias (aliasElement))
+    if (!read_vfs_alias(aliasElement))
     {
       return false;
     }
@@ -61,11 +61,6 @@ bool read_vfs_aliases (const xml::csElement *vfsElement)
 
 bool read_vfs_archive(const xml::csElement *archiveElement)
 {
-  std::string type = "filesystem";
-  if (archiveElement->HasAttribute("type"))
-  {
-    type = archiveElement->GetAttribute("type");
-  }
 
   int prio = 0;
   if (archiveElement->HasAttribute("prio"))
@@ -82,13 +77,11 @@ bool read_vfs_archive(const xml::csElement *archiveElement)
   std::string name = archiveElement->GetAttribute("name");
   std::string path = archiveElement->GetContent();
 
-  if (type == "filesystem" || type == "fs")
-  {
-    printf("Add filesystem archive '%s' [%d] -> '%s'\n", name.c_str(), prio, path.c_str());
+  printf("Add archive '%s' [%d] -> '%s'\n", name.c_str(), prio, path.c_str());
 
-    csFileSystemArchive *fsArchive = new csFileSystemArchive(name, path, prio);
-    csVFS::Get()->AddArchive(fsArchive);
-  }
+  auto fsArchive = new csFileSystemArchive(name, path, prio);
+  csVFS::Get()->AddArchive(fsArchive);
+  return true;
 }
 
 bool read_vfs_archives(const xml::csElement *vfsElement)
@@ -116,15 +109,28 @@ bool read_vfs_archives(const xml::csElement *vfsElement)
   return true;
 }
 
-void set_root_path(const std::string &rootPath, const std::string &projectFolder)
+bool is_absolute_path (const std::string &rootPath)
 {
 #ifdef WIN32
   if (rootPath.size() > 2 && rootPath[1] == ':' && (rootPath[2] == '\\' || rootPath[2] == '/'))
   {
-    csVFS::Get()->SetRootPath(rootPath);
-    return;
+    return true;
+  }
+#else
+  if (!rootPath.empty() && rootPath[0] == '/')
+  {
+    return true;
   }
 #endif
+  return false;
+}
+
+void set_root_path(const std::string &rootPath, const std::string &projectFolder)
+{
+  if (is_absolute_path(rootPath))
+  {
+    csVFS::Get()->SetRootPath(rootPath);
+  }
   csVFS::Get()->SetRootPath(projectFolder + "/" + rootPath);
 }
 
@@ -146,7 +152,7 @@ bool read_vfs(const xml::csElement *rootElement, const std::string &projectFolde
 
   const std::string &rootPath = root->GetContent();
   printf("Open project. Set root: '%s'\n", rootPath.c_str());
-  set_root_path (rootPath, projectFolder);
+  set_root_path(rootPath, projectFolder);
 
   if (!read_vfs_archives(vfsElement))
   {

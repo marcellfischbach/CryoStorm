@@ -1,4 +1,5 @@
 <CryoProject>
+
     <vfs>
         <root>.</root>
         <archives>
@@ -12,7 +13,7 @@
             <alias name="engine">engine</alias>
             <alias name="engine_shaders">engine/opengl/gl4</alias>
         </aliases>
-
-
     </vfs>
+
+
 </CryoProject>
