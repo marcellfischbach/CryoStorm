@@ -791,7 +791,7 @@ WARN_LOGFILE           =
 # spaces. See also FILE_PATTERNS and EXTENSION_MAPPING
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = ../csEngine
+INPUT                  = ../Engine/csCore ../Engine/csLauncher ../Engine/csXml
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses
@@ -1125,7 +1125,7 @@ COLS_IN_ALPHA_INDEX    = 3
 # while generating the index headers.
 # This tag requires that the tag ALPHABETICAL_INDEX is set to YES.
 
-IGNORE_PREFIX          = i GL4
+IGNORE_PREFIX          = i GL4 cs
 
 #---------------------------------------------------------------------------
 # Configuration options related to the HTML output
