@@ -16,6 +16,7 @@ class QGraphicsTextItem;
 namespace cs
 {
 class csSGNodeInput;
+class csSGNodeIO;
 class csSGNodeOutput;
 class csSGNode;
 }
@@ -29,6 +30,12 @@ public:
   ShaderGraphNodeItem(cs::csSGNode *node, ShaderGraphEditorDialog *dlg);
   ~ShaderGraphNodeItem() override;
 
+  cs::csSGNode *GetNode ();
+
+  QRectF IoRectAt (const QPointF &scenePos) const;
+  cs::csSGNodeIO* IoAt (const QPointF &scenePos);
+  const cs::csSGNodeIO* IoAt (const QPointF &scenePos) const;
+
   enum
   {
     CUSTOM_DATA_IS_NODE_ITEM = 1
@@ -39,6 +46,8 @@ public:
   void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 
 private:
+  struct InputOutputHandle;
+  const InputOutputHandle* IoHandleAt (const QPointF &scenePos) const;
   void GenerateSurroundingRect();
   void GenerateInputsAndOutputs();
   void CalculateSizes();

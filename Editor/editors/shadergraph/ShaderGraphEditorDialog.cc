@@ -30,6 +30,8 @@ ShaderGraphEditorDialog::ShaderGraphEditorDialog(QWidget *parent)
   ShaderGraphNodeItem *sgNode1 = new ShaderGraphNodeItem(new csSGDecomposeVec4(), this);
   m_scene->addItem(sgNode0);
   m_scene->addItem(sgNode1);
+  m_nodes.push_back(sgNode0);
+  m_nodes.push_back(sgNode1);
 
 
   sgNode0->setPos(0, 0);
@@ -60,10 +62,13 @@ size_t ShaderGraphEditorDialog::StartConnectionInput(ShaderGraphNodeItem *item, 
   m_currentDragConnection = new QGraphicsPathItem();
   m_currentDragConnection->setPen(QPen(QColor(255, 255, 255)));
 
+  m_wireStartIO = input;
+
   QPainterPath path;
-  path.moveTo(pos);
-  path.lineTo(pos);
+  path.moveTo(QPointF());
+  path.lineTo(QPointF());
   m_currentDragConnection->setPath(path);
+  m_currentDragConnection->setPos(pos);
 
   m_scene->addItem(m_currentDragConnection);
   return ++m_currentDragIdx;
@@ -81,24 +86,66 @@ size_t ShaderGraphEditorDialog::StartConnectionOutput(ShaderGraphNodeItem *item,
   m_currentDragConnection = new QGraphicsPathItem();
   m_currentDragConnection->setPen(QPen(QColor(255, 255, 255), 2.0));
 
+  m_wireStartIO = output;
+
   QPainterPath path;
   path.moveTo(QPointF());
   path.lineTo(QPointF());
   m_currentDragConnection->setPath(path);
-
   m_currentDragConnection->setPos(pos);
+
   m_scene->addItem(m_currentDragConnection);
   return ++m_currentDragIdx;
 }
 
-void ShaderGraphEditorDialog::UpdateConnection(size_t idx, QPointF pos)
+ShaderGraphNodeItem *ShaderGraphEditorDialog::At(const QPointF &scenePoint)
+{
+  for (auto node: m_nodes)
+  {
+    QPointF local = node->mapFromScene(scenePoint);
+    if (node->contains(local))
+    {
+      return node;
+    }
+  }
+  return nullptr;
+}
+
+static bool is_valid_binding(cs::csSGNodeIO *io0, cs::csSGNodeIO *io1)
+{
+  return io0->GetNode() != io1->GetNode()
+         && (io0->IsInstanceOf<cs::csSGNodeInput>() && io1->IsInstanceOf<cs::csSGNodeOutput>()
+             || io0->IsInstanceOf<cs::csSGNodeOutput>() && io1->IsInstanceOf<cs::csSGNodeInput>()
+         );
+}
+
+void ShaderGraphEditorDialog::UpdateConnection(size_t idx, QPointF scenePos)
 {
   if (m_currentDragIdx != idx)
   {
     return;
   }
 
-  QPointF delta = pos - m_currentDragConnection->pos();
+
+  ShaderGraphNodeItem *nodeItem = At(scenePos);
+  if (nodeItem)
+  {
+    cs::csSGNodeIO *io = nodeItem->IoAt(scenePos);
+    if (io)
+    {
+
+      if (is_valid_binding(m_wireStartIO, io))
+      {
+        QRectF rect = nodeItem->IoRectAt(scenePos);
+        if (rect.isValid())
+        {
+          scenePos = rect.center();
+        }
+      }
+    }
+  }
+
+  QPointF delta = scenePos - m_currentDragConnection->pos();
 
   QPainterPath path;
   path.moveTo(QPointF());
@@ -108,7 +155,67 @@ void ShaderGraphEditorDialog::UpdateConnection(size_t idx, QPointF pos)
   m_currentDragConnection->setPath(path);
 }
 
-void ShaderGraphEditorDialog::CommitConnection(size_t idx)
+
+static void bind (cs::csSGNodeIO *io0, cs::csSGNodeIO *io1)
+{
+  if (is_valid_binding(io0, io1))
+  {
+    if (io0->IsInstanceOf<cs::csSGNodeInput>())
+    {
+      cs::csSGNodeInput* input = csQueryClass<cs::csSGNodeInput>(io0);
+      cs::csSGNodeOutput* output = csQueryClass<cs::csSGNodeOutput>(io1);
+      input->SetSource(output);
+      output->Add(input);
+    }
+    if (io1->IsInstanceOf<cs::csSGNodeInput>())
+    {
+      cs::csSGNodeInput* input = csQueryClass<cs::csSGNodeInput>(io1);
+      cs::csSGNodeOutput* output = csQueryClass<cs::csSGNodeOutput>(io0);
+      input->SetSource(output);
+      output->Add(input);
+    }
+  }
+}
+
+static std::string name(cs::csSGNodeIO *io)
+{
+  return io->GetNode()->GetName() + "[" + io->GetName() + "]";
+}
+
+void ShaderGraphEditorDialog::CommitConnection(size_t idx, QPointF scenePos)
+{
+  if (m_currentDragIdx != idx)
+  {
+    return;
+  }
+
+  if (m_wireStartIO)
+  {
+    ShaderGraphNodeItem *nodeItem = At(scenePos);
+    if (nodeItem)
+    {
+      cs::csSGNodeIO *io = nodeItem->IoAt(scenePos);
+      if (io)
+      {
+
+        if (is_valid_binding(m_wireStartIO, io))
+        {
+          bind (m_wireStartIO, io);
+          printf("Bind %s -> %s\n",
+                 name(m_wireStartIO).c_str(),
+                 name(io).c_str());
+        }
+      }
+    }
+  }
+
+  m_scene->removeItem(m_currentDragConnection);
+  delete m_currentDragConnection;
+  m_currentDragConnection = nullptr;
+  m_currentDragIdx = 0;
+}
+
+void ShaderGraphEditorDialog::RollbackConnection(size_t idx)
 {
   if (m_currentDragIdx != idx)
   {
@@ -118,4 +225,5 @@ void ShaderGraphEditorDialog::CommitConnection(size_t idx)
   m_scene->removeItem(m_currentDragConnection);
   delete m_currentDragConnection;
   m_currentDragConnection = nullptr;
+  m_currentDragIdx = 0;
 }

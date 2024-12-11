@@ -18,7 +18,9 @@ class QGraphicsPathItem;
 namespace cs
 {
 class csShaderGraph;
+class csSGNode;
 class csSGNodeInput;
+class csSGNodeIO;
 class csSGNodeOutput;
 }
 
@@ -33,11 +35,12 @@ public:
 
   size_t StartConnectionInput (ShaderGraphNodeItem *item, cs::csSGNodeInput *input, QPointF pos);
   size_t StartConnectionOutput (ShaderGraphNodeItem *item, cs::csSGNodeOutput *output, QPointF pos);
-  void UpdateConnection (size_t idx, QPointF pos);
-  void CommitConnection (size_t idx);
+  void UpdateConnection (size_t idx, QPointF scenePos);
+  void CommitConnection (size_t idx, QPointF scenePos);
   void RollbackConnection (size_t idx);
 
 private:
+  ShaderGraphNodeItem* At(const QPointF &scenePoint);
   Ui::ShaderGraphEditorWidget *m_gui;
 
   QGraphicsScene *m_scene;
@@ -46,4 +49,8 @@ private:
 
   size_t m_currentDragIdx;
   QGraphicsPathItem* m_currentDragConnection;
+
+  std::vector<ShaderGraphNodeItem*> m_nodes;
+
+  cs::csSGNodeIO *m_wireStartIO;
 };

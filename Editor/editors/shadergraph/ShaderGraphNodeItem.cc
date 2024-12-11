@@ -36,6 +36,55 @@ ShaderGraphNodeItem::ShaderGraphNodeItem(csSGNode *node, ShaderGraphEditorDialog
   UpdateSizeAndPositions();
 }
 
+cs::csSGNode *ShaderGraphNodeItem::GetNode()
+{
+  return m_node;
+}
+
+cs::csSGNodeIO *ShaderGraphNodeItem::IoAt(const QPointF &scenePos)
+{
+  return const_cast<cs::csSGNodeIO*>(static_cast<const ShaderGraphNodeItem*>(this)->IoAt(scenePos));
+}
+
+const cs::csSGNodeIO *ShaderGraphNodeItem::IoAt(const QPointF &scenePos) const
+{
+  const InputOutputHandle *handle = IoHandleAt(scenePos);
+  if (handle && handle->Input)
+  {
+    return handle->Input;
+  }
+  if (handle && handle->Output)
+  {
+    return handle->Output;
+  }
+  return nullptr;
+}
+
+ QRectF ShaderGraphNodeItem::IoRectAt(const QPointF &scenePos) const
+{
+  const InputOutputHandle *handle = IoHandleAt(scenePos);
+  if (!handle)
+  {
+
+    return QRectF();
+  }
+
+  const QRectF &rect = handle->Handle->rect();
+  return mapRectToScene(rect);
+}
+
+const ShaderGraphNodeItem::InputOutputHandle *ShaderGraphNodeItem::IoHandleAt(const QPointF &scenePos) const
+{
+  QPointF localPos = mapFromScene(scenePos);
+  for (const auto &handle: m_handles)
+  {
+    if (handle.Handle->contains(localPos))
+    {
+      return &handle;
+    }
+  }
+  return nullptr;
+}
 
 void ShaderGraphNodeItem::GenerateSurroundingRect()
 {
@@ -158,48 +207,69 @@ void ShaderGraphNodeItem::UpdateSizeAndPositions()
 
 void ShaderGraphNodeItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-  printf ("eventPos: %.2f %.2f\n", event->pos().x(), event->pos().y());
-  if (m_titleRect->contains(event->pos()))
+  if (event->button() == Qt::LeftButton)
   {
-    printf ("  on title rect\n");
-    event->accept();
-
-    m_dragNode                 = true;
-    m_dragNodeMoveStartPointer  = mapToScene(event->pos());
-    m_dragNodeMoveStartPosition = pos();
-    return;
-  }
-  else
-  {
-    size_t i=0;
-    for (const auto &handle: m_handles)
+    printf("eventPos: %.2f %.2f\n", event->pos().x(), event->pos().y());
+    if (m_titleRect->contains(event->pos()))
     {
-      QPointF pos = mapToItem(handle.Handle, event->pos());
-      if (handle.Handle->contains(pos))
-      {
-        event->accept();
+      printf("  on title rect\n");
+      event->accept();
 
-        m_dragHandleIdx = i;
-        m_dragHandle = true;
-        m_dragHandleMoveStartPointer = mapToScene(handle.Handle->rect().center());
-
-        if (handle.Input)
-        {
-          m_dragHandleConnectionIdx = m_dlg->StartConnectionInput(this, handle.Input, m_dragNodeMoveStartPointer);
-        }
-        else if (handle.Output)
-        {
-          m_dragHandleConnectionIdx = m_dlg->StartConnectionOutput(this, handle.Output, m_dragHandleMoveStartPointer);
-        }
-
-        if (m_dragHandleConnectionIdx)
-        {
-          handle.Handle->setBrush(QBrush(QColor(255, 255, 255)));
-        }
-        return;
-      }
-      i++;
+      m_dragNode = true;
+      m_dragNodeMoveStartPointer = mapToScene(event->pos());
+      m_dragNodeMoveStartPosition = pos();
+      return;
     }
+    else
+    {
+      size_t i = 0;
+      for (const auto &handle: m_handles)
+      {
+        QPointF pos = mapToItem(handle.Handle, event->pos());
+        if (handle.Handle->contains(pos))
+        {
+          event->accept();
+
+          m_dragHandleIdx = i;
+          m_dragHandle = true;
+          m_dragHandleMoveStartPointer = mapToScene(handle.Handle->rect().center());
+
+          if (handle.Input)
+          {
+            m_dragHandleConnectionIdx = m_dlg->StartConnectionInput(this, handle.Input, m_dragHandleMoveStartPointer);
+          }
+          else if (handle.Output)
+          {
+            m_dragHandleConnectionIdx = m_dlg->StartConnectionOutput(this, handle.Output, m_dragHandleMoveStartPointer);
+          }
+
+          if (m_dragHandleConnectionIdx)
+          {
+            handle.Handle->setBrush(QBrush(QColor(255, 255, 255)));
+          }
+          return;
+        }
+        i++;
+      }
+    }
+  }
+  else if (event->button() == Qt::RightButton)
+  {
+    if (m_dragNode)
+    {
+      setPos(m_dragNodeMoveStartPosition);
+      m_dragNode = false;
+    }
+    if (m_dragHandle)
+    {
+      m_dlg->RollbackConnection(m_dragHandleConnectionIdx);
+      if (m_dragHandleIdx < m_handles.size())
+      {
+        m_handles[m_dragHandleIdx].Handle->setBrush(Qt::NoBrush);
+      }
+      m_dragHandle = false;
+    }
+    event->accept();
   }
   QGraphicsRectItem::mousePressEvent(event);
 }
@@ -236,8 +306,9 @@ void ShaderGraphNodeItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
   }
   if (m_dragHandle)
   {
+    QPointF scenePos = mapToScene(event->pos());
     m_dragHandle = false;
-    m_dlg->CommitConnection(m_dragHandleConnectionIdx);
+    m_dlg->CommitConnection(m_dragHandleConnectionIdx, scenePos);
     m_dragHandleConnectionIdx = 0;
 
     if (m_dragHandleIdx < m_handles.size())
