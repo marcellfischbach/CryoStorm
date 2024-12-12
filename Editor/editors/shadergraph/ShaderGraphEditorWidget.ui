@@ -26,7 +26,7 @@
       <widget class="SceneViewWidget" name="preview"/>
       <widget class="QTreeView" name="properties"/>
      </widget>
-     <widget class="QGraphicsView" name="graph">
+     <widget class="ShaderGraphGraphicsView" name="graph">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
         <horstretch>0</horstretch>
@@ -34,7 +34,23 @@
        </sizepolicy>
       </property>
      </widget>
-     <widget class="QTreeView" name="nodes"/>
+     <widget class="QTreeView" name="pallet">
+      <property name="dragEnabled">
+       <bool>true</bool>
+      </property>
+      <property name="dragDropMode">
+       <enum>QAbstractItemView::DragDropMode::DragOnly</enum>
+      </property>
+      <property name="alternatingRowColors">
+       <bool>true</bool>
+      </property>
+      <property name="rootIsDecorated">
+       <bool>false</bool>
+      </property>
+      <property name="allColumnsShowFocus">
+       <bool>true</bool>
+      </property>
+     </widget>
     </widget>
    </item>
   </layout>
@@ -44,6 +60,11 @@
    <class>SceneViewWidget</class>
    <extends>QOpenGLWidget</extends>
    <header location="global">sceneview/SceneViewWidget.hh</header>
+  </customwidget>
+  <customwidget>
+   <class>ShaderGraphGraphicsView</class>
+   <extends>QGraphicsView</extends>
+   <header location="global">editors/shadergraph/ShaderGraphGraphicsView.hh</header>
   </customwidget>
  </customwidgets>
  <resources/>

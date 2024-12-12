@@ -21,20 +21,24 @@ class csSGNodeOutput;
 class csSGNode;
 }
 
-class ShaderGraphEditorDialog;
+class ShaderGraphEditorWidget;
 
 class ShaderGraphNodeItem : public QGraphicsRectItem
 {
 public:
 
-  ShaderGraphNodeItem(cs::csSGNode *node, ShaderGraphEditorDialog *dlg);
+  ShaderGraphNodeItem(cs::csSGNode *node, ShaderGraphEditorWidget *editorWidget);
   ~ShaderGraphNodeItem() override;
 
-  cs::csSGNode *GetNode ();
+  void UpdateHandles ();
 
-  QRectF IoRectAt (const QPointF &scenePos) const;
-  cs::csSGNodeIO* IoAt (const QPointF &scenePos);
-  const cs::csSGNodeIO* IoAt (const QPointF &scenePos) const;
+  cs::csSGNode *GetNode();
+
+  QRectF IoRectAt(const QPointF &scenePos) const;
+  cs::csSGNodeIO *IoAt(const QPointF &scenePos);
+  const cs::csSGNodeIO *IoAt(const QPointF &scenePos) const;
+
+  QPointF ScenePosOf(const cs::csSGNodeIO *io) const;
 
   enum
   {
@@ -47,39 +51,40 @@ public:
 
 private:
   struct InputOutputHandle;
-  const InputOutputHandle* IoHandleAt (const QPointF &scenePos) const;
+  const InputOutputHandle *IoHandleAt(const QPointF &scenePos) const;
   void GenerateSurroundingRect();
   void GenerateInputsAndOutputs();
   void CalculateSizes();
   void UpdateSizeAndPositions();
   QRectF CalculateTotalSize();
 
+  struct InputOutputHandle;
+  void UpdateHandle (InputOutputHandle &handle);
 
-  ShaderGraphEditorDialog *m_dlg;
-  cs::csSGNode            *m_node;
-  QGraphicsRectItem       *m_titleRect;
-  QGraphicsTextItem       *m_title;
 
-  bool    m_dragNode;
+  ShaderGraphEditorWidget *m_editorWidget;
+  cs::csSGNode *m_node;
+  QGraphicsRectItem *m_titleRect;
+  QGraphicsTextItem *m_title;
+
+  bool m_dragNode;
   QPointF m_dragNodeMoveStartPointer;
   QPointF m_dragNodeMoveStartPosition;
 
-  bool m_dragHandle;
+  struct InputOutputHandle;
+  const InputOutputHandle *m_dragHandle;
   QPointF m_dragHandleMoveStartPointer;
-  size_t m_dragHandleIdx;
   size_t m_dragHandleConnectionIdx;
-
 
 
   struct InputOutputHandle
   {
-    cs::csSGNodeInput    *Input  = nullptr;
-    cs::csSGNodeOutput   *Output = nullptr;
+    cs::csSGNodeIO *IO = nullptr;
     QGraphicsEllipseItem *Handle = nullptr;
-    QGraphicsTextItem    *Text   = nullptr;
-    QRectF               Size;
+    QGraphicsEllipseItem *HandleDot = nullptr;
+    QGraphicsTextItem *Text = nullptr;
+    QRectF Size;
   };
-
 
   std::vector<InputOutputHandle> m_handles;
 };

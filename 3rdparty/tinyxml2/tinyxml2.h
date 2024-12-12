@@ -1538,7 +1538,7 @@ public:
     	@endverbatim
 
     	then the value of str would be null. The first child node isn't a text node, it is
-    	another element. From this XML:
+    	another element. ClsFrom this XML:
     	@verbatim
     		<foo>This is <b>text</b></foo>
     	@endverbatim

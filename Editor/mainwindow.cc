@@ -8,7 +8,7 @@
 #include "ui_MainWindow.h"
 #include <assetbrowser/assetbrowserdockwidget.hh>
 #include <sceneview/SceneViewWidget.hh>
-#include <editors/shadergraph/ShaderGraphEditorDialog.hh>
+#include <editors/shadergraph/ShaderGraphEditorWidget.hh>
 #include <QTimer>
 
 MainWindow::MainWindow(QWidget* parent)
@@ -34,7 +34,7 @@ void MainWindow::showEvent(QShowEvent *event)
 }
 void MainWindow::on_actionCreateShaderGraph_triggered(bool checked)
 {
-  ShaderGraphEditorDialog *dlg = new ShaderGraphEditorDialog (this);
+  ShaderGraphEditorWidget *dlg = new ShaderGraphEditorWidget (this);
   dlg->show();
 }
 

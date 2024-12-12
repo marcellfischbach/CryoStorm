@@ -28,11 +28,15 @@ set(ALL_SOURCES
         assetbrowser/assetbrowserwidget.ui
 
 
-        editors/shadergraph/ShaderGraphEditorDialog.cc
-        editors/shadergraph/ShaderGraphEditorDialog.hh
+        editors/shadergraph/ShaderGraphEditorWidget.cc
+        editors/shadergraph/ShaderGraphEditorWidget.hh
         editors/shadergraph/ShaderGraphEditorWidget.ui
+        editors/shadergraph/ShaderGraphGraphicsView.cc
+        editors/shadergraph/ShaderGraphGraphicsView.hh
         editors/shadergraph/ShaderGraphNodeItem.cc
         editors/shadergraph/ShaderGraphNodeItem.hh
+        editors/shadergraph/ShaderGraphNodePalletTreeModel.cc
+        editors/shadergraph/ShaderGraphNodePalletTreeModel.hh
 
         sceneview/SceneViewWidget.cc
         sceneview/SceneViewWidget.hh
