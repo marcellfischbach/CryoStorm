@@ -30,13 +30,18 @@ public:
   ShaderGraphNodeItem(cs::csSGNode *node, ShaderGraphEditorWidget *editorWidget);
   ~ShaderGraphNodeItem() override;
 
+  void SetSelected (bool  selected);
+  bool IsHeader (const QPointF &scenePos);
+  cs::csSGNodeIO *IoAt(const QPointF &scenePos);
+  const cs::csSGNodeIO *IoAt(const QPointF &scenePos) const;
+
+
   void UpdateHandles ();
+
 
   cs::csSGNode *GetNode();
 
-  QRectF IoRectAt(const QPointF &scenePos) const;
-  cs::csSGNodeIO *IoAt(const QPointF &scenePos);
-  const cs::csSGNodeIO *IoAt(const QPointF &scenePos) const;
+  QRectF IoSceneRectAt(const QPointF &scenePos) const;
 
   QPointF ScenePosOf(const cs::csSGNodeIO *io) const;
 
@@ -62,7 +67,7 @@ private:
   void UpdateHandle (InputOutputHandle &handle);
 
 
-  ShaderGraphEditorWidget *m_editorWidget;
+  ShaderGraphEditorWidget *m_edito2rWidget;
   cs::csSGNode *m_node;
   QGraphicsRectItem *m_titleRect;
   QGraphicsTextItem *m_title;
