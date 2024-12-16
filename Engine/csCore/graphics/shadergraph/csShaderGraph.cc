@@ -12,7 +12,6 @@ static const size_t IDX_METALLIC = 4;
 
 csShaderGraph::csShaderGraph()
     : csSGNode("Shader Graph")
-
 {
   SetKey("Shader Graph");
   m_diffuse = DefineInput("Diffuse", eSGValueType::Float | eSGValueType::Vector3 | eSGValueType::Vector4);
@@ -81,6 +80,44 @@ csSGResourceNode *csShaderGraph::AddResource(const cs::csClass *nodeClass,
   node->SetResourceName(resourceName);
   m_nodes.push_back(node);
   return node;
+}
+
+bool csShaderGraph::Remove(cs::csSGNode *node)
+{
+  auto it = std::find(m_nodes.begin(), m_nodes.end(), node);
+  if (it == m_nodes.end())
+  {
+    return false;
+  }
+
+  m_nodes.erase(it);
+
+
+  for (int i = 0; i < node->GetNumberOfInputs(); ++i)
+  {
+    csSGNodeInput *pInput = node->GetInput(i);
+    if (pInput && pInput->GetSource())
+    {
+      pInput->GetSource()->Remove(pInput);
+      pInput->SetSource(nullptr);
+    }
+  }
+
+  for (int i = 0; i < node->GetNumberOfOutputs(); ++i)
+  {
+    csSGNodeOutput *pOutput = node->GetOutput(i);
+    if (pOutput)
+    {
+      for (auto outInput: std::set<csSGNodeInput *>(pOutput->GetInputs()))
+      {
+        outInput->SetSource(nullptr);
+        pOutput->Remove(outInput);
+      }
+    }
+  }
+
+  node->Release();
+  return true;
 }
 
 void csShaderGraph::BindDiffuse(csSGNode *node, size_t outputIdx)
@@ -247,7 +284,7 @@ void csShaderGraph::SetDefault(const std::string &attribute, cs::iTexture *textu
 
 const csShaderGraph::Default *csShaderGraph::GetDefault(const std::string &name) const
 {
-  for (auto &def : m_defaults)
+  for (auto &def: m_defaults)
   {
     if (def.name == name)
     {

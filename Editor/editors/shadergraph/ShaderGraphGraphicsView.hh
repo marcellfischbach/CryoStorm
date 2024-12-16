@@ -42,6 +42,7 @@ private:
 
 
 
+  ShaderGraphNodeItem *FindNode(csSGN);
   ShaderGraphNodeItem *FindNode(const QPointF &scenePoint);
 
 
@@ -84,6 +85,7 @@ private:
   void UpdateWiresOfSelectedNodes();
   void UpdateWire(Wire &wire);
   void UpdateWireHandles (Wire &wire);
+  void RegenerateWires ();
 
   void ClearAll();
   void RemoveWire(Wire &wire);

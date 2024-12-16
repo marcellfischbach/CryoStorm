@@ -27,11 +27,10 @@ ShaderGraphGraphicsView::ShaderGraphGraphicsView(QWidget *parent)
 
 void ShaderGraphGraphicsView::SetShaderGraph(cs::csShaderGraph *shaderGraph)
 {
-  ClearAll ();
+  ClearAll();
   CS_SET(m_shaderGraph, shaderGraph);
   InsertNode(shaderGraph, QPointF(0.0, 0.0));
 }
-
 
 
 void ShaderGraphGraphicsView::mousePressEvent(QMouseEvent *event)
@@ -126,13 +125,12 @@ void ShaderGraphGraphicsView::mouseReleaseEvent(QMouseEvent *event)
 }
 
 
-
 void ShaderGraphGraphicsView::keyReleaseEvent(QKeyEvent *event)
 {
   if (event->key() == Qt::Key_Delete)
   {
-    std::set<ShaderGraphNodeItem*> selectedNodes (m_selectedNodes);
-    for (auto *selectedNode : selectedNodes)
+    std::set<ShaderGraphNodeItem *> selectedNodes(m_selectedNodes);
+    for (auto *selectedNode: selectedNodes)
     {
       RemoveNode(selectedNode);
     }
@@ -301,7 +299,7 @@ void ShaderGraphGraphicsView::ConnectDragIO()
   {
     if (IsDragIOClearSource())
     {
-      RemoveWireToInput (m_ioDrag.srcNode, csQueryClass<csSGNodeInput>(m_ioDrag.srcIO));
+      RemoveWireToInput(m_ioDrag.srcNode, csQueryClass<csSGNodeInput>(m_ioDrag.srcIO));
     }
     return;
   }
@@ -360,23 +358,13 @@ void ShaderGraphGraphicsView::CreateWire(ShaderGraphNodeItem *outputNode,
 
 void ShaderGraphGraphicsView::RemoveWireToNode(ShaderGraphNodeItem *node)
 {
-  // we have to reiterate over the wires because RemoveWire will change the m_wires list so that would
-  // lead to a concurrency problem
-  bool foundOne;
-  do
+  for (auto &wire: std::vector<Wire>(m_wires))
   {
-    foundOne = false;
-    for (auto &wire: m_wires)
+    if (wire.Source == node || wire.Destination == node)
     {
-      if (wire.Source == node || wire.Destination == node)
-      {
-        RemoveWire(wire);
-        foundOne = true;
-        break;
-      }
+      RemoveWire(wire);
     }
   }
-  while (foundOne);
 }
 
 
@@ -439,7 +427,7 @@ void ShaderGraphGraphicsView::UpdateWire(ShaderGraphGraphicsView::Wire &wire)
 
 }
 
-void ShaderGraphGraphicsView::UpdateWireHandles (ShaderGraphGraphicsView::Wire &wire)
+void ShaderGraphGraphicsView::UpdateWireHandles(ShaderGraphGraphicsView::Wire &wire)
 {
   if (wire.Source)
   {
@@ -448,6 +436,37 @@ void ShaderGraphGraphicsView::UpdateWireHandles (ShaderGraphGraphicsView::Wire &
   if (wire.Destination)
   {
     wire.Destination->UpdateHandles();
+  }
+
+}
+
+void ShaderGraphGraphicsView::RegenerateWires()
+{
+  for (const auto &wire: m_wires)
+  {
+    m_scene->removeItem(wire.Path);
+    delete wire.Path;
+  }
+  m_wires.clear();
+
+  for (int n = 0; n < m_shaderGraph->GetNumberOfNodes(); ++n)
+  {
+    csSGNode* inputNode = m_shaderGraph->GetNode(n);
+    for (int i = 0; i < inputNode->GetNumberOfInputs(); ++i)
+    {
+      csSGNodeInput* input = inputNode->GetInput(i);
+
+      csSGNodeOutput *output = input->GetSource();
+      if (output)
+      {
+        csSGNode* outputNode = output->GetNode();
+
+        Wire wire;
+        wire.Path = new QGraphicsPathItem();
+        wire.Source
+
+      }
+    }
   }
 
 }
@@ -629,20 +648,20 @@ void ShaderGraphGraphicsView::InsertNode(cs::csSGNode *node, const QPointF &scen
 
 void ShaderGraphGraphicsView::ClearAll()
 {
-  for (auto &wire : m_wires)
+  for (auto &wire: m_wires)
   {
     RemoveWire(wire);
   }
 
 
-  for (auto node : m_nodes)
+  for (auto node: m_nodes)
   {
-    RemoveNode (node);
+    RemoveNode(node);
   }
 
 }
 
-std::string name (ShaderGraphNodeItem *node, cs::csSGNodeIO *io)
+std::string name(ShaderGraphNodeItem *node, cs::csSGNodeIO *io)
 {
   std::string name;
   name += node->GetNode()->GetName().c_str();
@@ -653,6 +672,14 @@ std::string name (ShaderGraphNodeItem *node, cs::csSGNodeIO *io)
 
 void ShaderGraphGraphicsView::RemoveWire(ShaderGraphGraphicsView::Wire &wire)
 {
+
+  const auto it = std::find(m_wires.begin(), m_wires.end(), wire);
+  if (it != m_wires.end())
+  {
+    m_wires.erase(it);
+  }
+
+
   m_scene->removeItem(wire.Path);
 
 
@@ -661,11 +688,6 @@ void ShaderGraphGraphicsView::RemoveWire(ShaderGraphGraphicsView::Wire &wire)
   UpdateWireHandles(wire);
 
   delete wire.Path;
-  const auto it = std::find(m_wires.begin(), m_wires.end(), wire);
-  if (it != m_wires.end())
-  {
-    m_wires.erase(it);
-  }
 
 
 
@@ -692,8 +714,8 @@ void ShaderGraphGraphicsView::RemoveNode(ShaderGraphNodeItem *node)
   }
 
 
-
-  m_shaderGraph->GetNode()NumberOfInputs()
+  m_shaderGraph->GetNode()
+  NumberOfInputs()
   m_scene->removeItem(node);
   delete node;
 }

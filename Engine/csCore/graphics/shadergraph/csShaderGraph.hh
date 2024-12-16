@@ -31,6 +31,8 @@ public:
   T *AddResource(const std::string &key, const std::string &resourceName);
   csSGResourceNode *AddResource(const csClass *nodeClass, const std::string &key, const std::string &resourceName);
 
+  bool Remove(csSGNode *node);
+
   void BindDiffuse(csSGNode *node, size_t outputIdx = 0);
   void BindAlpha(csSGNode *node, size_t outputIdx = 0);
   void BindRoughness(csSGNode *node, size_t outputIdx = 0);
