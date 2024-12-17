@@ -103,6 +103,12 @@ const ShaderGraphNodeItem::InputOutputHandle *ShaderGraphNodeItem::IoHandleAt(co
   return nullptr;
 }
 
+void ShaderGraphNodeItem::SyncPosition()
+{
+  QPointF pos = scenePos();
+  m_node->SetPosition(csVector2f(pos.x(), pos.y()));
+}
+
 QPointF ShaderGraphNodeItem::ScenePosOf(const cs::csSGNodeIO *io) const
 {
   for (const auto &handle: m_handles)

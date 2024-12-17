@@ -5,6 +5,7 @@
 #pragma once
 
 #include <QGraphicsView>
+#include <map>
 #include <vector>
 #include <set>
 
@@ -42,7 +43,7 @@ private:
 
 
 
-  ShaderGraphNodeItem *FindNode(csSGN);
+  ShaderGraphNodeItem *FindNode(const cs::csSGNode *node);
   ShaderGraphNodeItem *FindNode(const QPointF &scenePoint);
 
 
@@ -86,10 +87,11 @@ private:
   void UpdateWire(Wire &wire);
   void UpdateWireHandles (Wire &wire);
   void RegenerateWires ();
+  void RegenerateInputWires(cs::csSGNode* node);
 
   void ClearAll();
   void RemoveWire(Wire &wire);
-  void RemoveNode (ShaderGraphNodeItem* node);
+  void DeleteNode (ShaderGraphNodeItem* node);
 
 
   bool m_leftButtonDown = false;
@@ -141,6 +143,7 @@ private:
     ShaderGraphNodeItem *Destination;
     cs::csSGNodeInput *DestinationIO;
     bool operator==(const Wire &wire) const;
+    bool IsValid () const;
   };
 
   cs::csShaderGraph *m_shaderGraph;
@@ -151,5 +154,6 @@ private:
 
   QGraphicsScene *m_scene;
 
+  std::map<const cs::csClass*, size_t> m_defaultIdx;
 
 };

@@ -29,7 +29,16 @@ void ShaderGraphGraphicsView::SetShaderGraph(cs::csShaderGraph *shaderGraph)
 {
   ClearAll();
   CS_SET(m_shaderGraph, shaderGraph);
-  InsertNode(shaderGraph, QPointF(0.0, 0.0));
+  const csVector2f &sgPos = m_shaderGraph->GetPosition();
+  InsertNode(shaderGraph, QPointF(sgPos.x, sgPos.y));
+  for (int i = 0; i < shaderGraph->GetNumberOfNodes(); ++i)
+  {
+    csSGNode *node = shaderGraph->GetNode(i);
+    const csVector2f &pos = node->GetPosition();
+    InsertNode(node, QPointF(pos.x, pos.y));
+  }
+
+  RegenerateWires();
 }
 
 
@@ -132,7 +141,7 @@ void ShaderGraphGraphicsView::keyReleaseEvent(QKeyEvent *event)
     std::set<ShaderGraphNodeItem *> selectedNodes(m_selectedNodes);
     for (auto *selectedNode: selectedNodes)
     {
-      RemoveNode(selectedNode);
+      DeleteNode(selectedNode);
     }
   }
 }
@@ -156,6 +165,7 @@ void ShaderGraphGraphicsView::UpdateDragSelectedNodes(const QPointF &scenePos)
     ShaderGraphNodeItem *node = it->first;
     QPointF p = it->second + delta;
     node->setPos(p);
+    node->SyncPosition();
   }
 
   UpdateWiresOfSelectedNodes();
@@ -171,6 +181,7 @@ void ShaderGraphGraphicsView::RollbackDragSelectedNodes()
   for (const auto &node: m_selectedNodes)
   {
     node->setPos(m_nodeDrag.startPosNodes[node]);
+    node->SyncPosition();
   }
   m_nodeDrag.startPosNodes.clear();
 
@@ -451,23 +462,55 @@ void ShaderGraphGraphicsView::RegenerateWires()
 
   for (int n = 0; n < m_shaderGraph->GetNumberOfNodes(); ++n)
   {
-    csSGNode* inputNode = m_shaderGraph->GetNode(n);
-    for (int i = 0; i < inputNode->GetNumberOfInputs(); ++i)
+    csSGNode *inputNode = m_shaderGraph->GetNode(n);
+    RegenerateInputWires(inputNode);
+  }
+  RegenerateInputWires(m_shaderGraph);
+
+  UpdateWires();
+}
+
+void ShaderGraphGraphicsView::RegenerateInputWires(cs::csSGNode *inputNode)
+{
+  for (int i = 0; i < inputNode->GetNumberOfInputs(); ++i)
+  {
+    csSGNodeInput *input = inputNode->GetInput(i);
+
+    csSGNodeOutput *output = input->GetSource();
+    if (output)
     {
-      csSGNodeInput* input = inputNode->GetInput(i);
+      csSGNode *outputNode = output->GetNode();
 
-      csSGNodeOutput *output = input->GetSource();
-      if (output)
+      Wire wire{};
+      wire.Path = new QGraphicsPathItem();
+      wire.Source = FindNode(outputNode);
+      wire.SourceIO = output;
+      wire.Destination = FindNode(inputNode);
+      wire.DestinationIO = input;
+      if (!wire.IsValid())
       {
-        csSGNode* outputNode = output->GetNode();
-
-        Wire wire;
-        wire.Path = new QGraphicsPathItem();
-        wire.Source
-
+        delete wire.Path;
+      }
+      else
+      {
+        m_wires.push_back(wire);
+        m_scene->addItem(wire.Path);
       }
     }
   }
+
+}
+
+ShaderGraphNodeItem *ShaderGraphGraphicsView::FindNode(const cs::csSGNode *node)
+{
+  for (const auto &item: m_nodes)
+  {
+    if (item->GetNode() == node)
+    {
+      return item;
+    }
+  }
+  return nullptr;
 
 }
 
@@ -626,9 +669,26 @@ void ShaderGraphGraphicsView::InsertNode(const csClass *cls, const QPointF &posi
 {
   try
   {
-    csSGNode *node = cls->CreateInstance<csSGNode>();
-    const QPointF &scenePos = mapToScene(position.toPoint());
+    if (!cls->IsInstanceOf<csSGNode>())
+    {
+      return;
+    }
 
+    size_t idx = m_defaultIdx[cls];
+    m_defaultIdx[cls] = ++idx;
+
+    std::string name = cls->GetName() + "_" + std::to_string(idx);
+
+    csSGNode *node;
+    if (cls->IsInstanceOf<csSGResourceNode>())
+    {
+      node = m_shaderGraph->AddResource(cls, name, name);
+    }
+    else
+    {
+      node = m_shaderGraph->Add(cls,name);
+    }
+    const QPointF &scenePos = mapToScene(position.toPoint());
     InsertNode(node, scenePos);
   }
   catch (std::exception &e)
@@ -641,6 +701,7 @@ void ShaderGraphGraphicsView::InsertNode(cs::csSGNode *node, const QPointF &scen
 {
   ShaderGraphNodeItem *nodeItem = new ShaderGraphNodeItem(node, nullptr);
   nodeItem->setPos(scenePos);
+  nodeItem->SyncPosition();
 
   m_nodes.push_back(nodeItem);
   m_scene->addItem(nodeItem);
@@ -656,7 +717,7 @@ void ShaderGraphGraphicsView::ClearAll()
 
   for (auto node: m_nodes)
   {
-    RemoveNode(node);
+    DeleteNode(node);
   }
 
 }
@@ -690,10 +751,9 @@ void ShaderGraphGraphicsView::RemoveWire(ShaderGraphGraphicsView::Wire &wire)
   delete wire.Path;
 
 
-
 }
 
-void ShaderGraphGraphicsView::RemoveNode(ShaderGraphNodeItem *node)
+void ShaderGraphGraphicsView::DeleteNode(ShaderGraphNodeItem *node)
 {
   RemoveWireToNode(node);
 
@@ -713,11 +773,13 @@ void ShaderGraphGraphicsView::RemoveNode(ShaderGraphNodeItem *node)
     }
   }
 
+  m_shaderGraph->Remove(node->GetNode());
 
-  m_shaderGraph->GetNode()
-  NumberOfInputs()
   m_scene->removeItem(node);
   delete node;
+
+
+  RegenerateWires();
 }
 
 bool ShaderGraphGraphicsView::Wire::operator==(const ShaderGraphGraphicsView::Wire &wire) const
@@ -727,4 +789,12 @@ bool ShaderGraphGraphicsView::Wire::operator==(const ShaderGraphGraphicsView::Wi
          && wire.SourceIO == SourceIO
          && wire.Destination == Destination
          && wire.DestinationIO == DestinationIO;
+}
+bool ShaderGraphGraphicsView::Wire::IsValid() const
+{
+  return Path
+         && Source
+         && SourceIO
+         && Destination
+         && DestinationIO;
 }

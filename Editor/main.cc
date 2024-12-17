@@ -5,6 +5,8 @@
 #include <csCore/resource/csVFS.hh>
 #include <csCore/resource/csVFSConfigReader.hh>
 #include <Project.hh>
+#include <master.refl.cc>
+
 
 void print_usage()
 {
@@ -31,6 +33,8 @@ std::string extract_path (const std::string &projectDesc)
 
 int main(int argc, char** argv)
 {
+  register_classes();
+
   QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
   QApplication::setStyle ("Fusion");
   QApplication app(argc, argv);

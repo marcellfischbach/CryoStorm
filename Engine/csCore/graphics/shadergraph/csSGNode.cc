@@ -154,6 +154,16 @@ int csSGNode::IndexOfOutput(const std::string &inputName) const
   return -1;
 }
 
+void csSGNode::SetPosition(const cs::csVector2f &pos)
+{
+  m_position = pos;
+}
+
+const csVector2f &csSGNode::GetPosition() const
+{
+  return m_position;
+}
+
 eSGValueType csSGNodeInput::GetInputValueType() const
 {
   if (m_source)

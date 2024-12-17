@@ -143,6 +143,9 @@ public:
   const csSGNodeOutput* GetOutput(size_t idx = 0) const;
   int IndexOfOutput (const std::string &inputName) const;
 
+  void SetPosition (const csVector2f &pos);
+  const csVector2f &GetPosition () const;
+
 protected:
   explicit csSGNode(const std::string &name);
 
@@ -157,6 +160,8 @@ private:
 
   std::vector<csSGNodeInput*>  m_inputs;
   std::vector<csSGNodeOutput*> m_outputs;
+
+  csVector2f m_position;
 };
 
 

@@ -94,19 +94,23 @@ const csVertexDeclaration &csGL4RenderMesh::GetVertexDeclaration() const
 
 void csGL4RenderMesh::Render(iDevice *graphics, eRenderPass pass)
 {
-  CS_GL_ERROR();
   if (m_vao)
   {
+    CS_GL_ERROR();
     glBindVertexArray(m_vao);
     CS_GL_ERROR();
   }
   else
   {
+    CS_GL_ERROR();
     m_indexBuffer->Bind();
+    CS_GL_ERROR();
     m_vertexBuffer->Bind();
+    CS_GL_ERROR();
     const std::vector<csVertexDeclaration::Attribute> &vdAttributes = m_vertexDeclaration.GetAttributes(0);
     for (const csVertexDeclaration::Attribute &attribute: vdAttributes)
     {
+      CS_GL_ERROR();
       glVertexAttribPointer(attribute.Location,
                             attribute.Size,
                             DataTypeMap[attribute.Type],
@@ -114,9 +118,10 @@ void csGL4RenderMesh::Render(iDevice *graphics, eRenderPass pass)
                             attribute.Stride,
                             reinterpret_cast<const void *>(attribute.Offset)
       );
+      CS_GL_ERROR();
       glEnableVertexAttribArray(attribute.Location);
+      CS_GL_ERROR();
     }
-    CS_GL_ERROR();
   }
   glDrawElements(m_primType, (GLsizei) m_count, m_indexType, nullptr);
   CS_GL_ERROR();

@@ -150,7 +150,9 @@ bool csGL4Device::Initialize()
 
 void csGL4Device::SetViewport(int16_t x, int16_t y, uint16_t width, uint16_t height)
 {
+  CS_GL_ERROR()
   glViewport(x, y, width, height);
+  CS_GL_ERROR()
 }
 
 void csGL4Device::Clear(bool clearColor,
@@ -161,6 +163,7 @@ void csGL4Device::Clear(bool clearColor,
                         uint8_t stencil
 )
 {
+  CS_GL_ERROR()
   GLenum flags = 0;
   if (clearColor)
   {
@@ -196,10 +199,12 @@ void csGL4Device::Clear(bool clearColor,
   {
     glClear(flags);
   }
+  CS_GL_ERROR()
 }
 
 void csGL4Device::SetColorWrite(bool redWrite, bool greenWrite, bool blueWrite, bool alphaWrite)
 {
+  CS_GL_ERROR()
   uint8_t colorWrite = 0x00
                        | (redWrite ? 0x08 : 0x00)
                        | (greenWrite ? 0x04 : 0x00)
@@ -211,19 +216,23 @@ void csGL4Device::SetColorWrite(bool redWrite, bool greenWrite, bool blueWrite, 
     glColorMask(redWrite, greenWrite, blueWrite, alphaWrite);
   }
 
+  CS_GL_ERROR()
 }
 
 void csGL4Device::SetDepthWrite(bool depthWrite)
 {
+  CS_GL_ERROR()
   if (m_depthWrite != depthWrite)
   {
     m_depthWrite = depthWrite;
     glDepthMask(depthWrite);
   }
+  CS_GL_ERROR()
 }
 
 void csGL4Device::SetDepthTest(bool depthTest)
 {
+  CS_GL_ERROR()
   if (m_depthTest != depthTest)
   {
     m_depthTest = depthTest;
@@ -236,10 +245,12 @@ void csGL4Device::SetDepthTest(bool depthTest)
       glDisable(GL_DEPTH_TEST);
     }
   }
+  CS_GL_ERROR()
 }
 
 void csGL4Device::SetFillMode(eFillMode fillMode)
 {
+  CS_GL_ERROR()
   if (m_fillMode != fillMode)
   {
     m_fillMode = fillMode;
@@ -253,15 +264,18 @@ void csGL4Device::SetFillMode(eFillMode fillMode)
         break;
     }
   }
+  CS_GL_ERROR()
 }
 
 void csGL4Device::SetDepthFunc(eCompareFunc func)
 {
+  CS_GL_ERROR()
   if (m_depthFunc != func)
   {
     m_depthFunc = func;
     glDepthFunc(csGL4CompareFuncMap[m_depthFunc]);
   }
+  CS_GL_ERROR()
 }
 
 void csGL4Device::SetBlending(bool blending)
@@ -604,23 +618,29 @@ void csGL4Device::SetRenderTarget(iRenderTarget *renderTarget)
     {
       case eTextureType::Texture2D:
       {
+        CS_GL_ERROR()
         csGL4RenderTarget2D *rt2d = static_cast<csGL4RenderTarget2D *>(renderTarget);
         rt2d->Bind();
         SetViewport(0, 0, rt2d->GetWidth(), rt2d->GetHeight());
+        CS_GL_ERROR()
         break;
       }
       case eTextureType::Texture2DArray:
       {
+        CS_GL_ERROR()
         csGL4RenderTarget2DArray *rt2dArray = static_cast<csGL4RenderTarget2DArray *>(renderTarget);
         rt2dArray->Bind();
         SetViewport(0, 0, rt2dArray->GetWidth(), rt2dArray->GetHeight());
+        CS_GL_ERROR()
         break;
       }
       case eTextureType::TextureCube:
       {
+        CS_GL_ERROR()
         csGL4RenderTargetCube *rtcube = static_cast<csGL4RenderTargetCube *>(renderTarget);
         rtcube->Bind();
         SetViewport(0, 0, rtcube->GetSize(), rtcube->GetSize());
+        CS_GL_ERROR()
         break;
       }
       default:
@@ -629,7 +649,9 @@ void csGL4Device::SetRenderTarget(iRenderTarget *renderTarget)
   }
   else
   {
+    CS_GL_ERROR()
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    CS_GL_ERROR()
   }
 
   /*
@@ -648,7 +670,9 @@ void csGL4Device::SetRenderTarget(iRenderTarget *renderTarget)
 
 void csGL4Device::SetRenderBuffer(uint32_t buffer)
 {
+  CS_GL_ERROR()
   glDrawBuffer(GL_COLOR_ATTACHMENT0 + buffer);
+  CS_GL_ERROR()
 }
 void csGL4Device::SetRenderBuffer(const std::vector<uint32_t> &buffer)
 {
@@ -657,7 +681,9 @@ void csGL4Device::SetRenderBuffer(const std::vector<uint32_t> &buffer)
   {
     glBuffer[i] = GL_COLOR_ATTACHMENT0 + buffer[i];
   }
+  CS_GL_ERROR()
   glDrawBuffers(buffer.size(), glBuffer);
+  CS_GL_ERROR()
 }
 
 void csGL4Device::ClearShadowMaps()
@@ -768,6 +794,7 @@ iTexture2D *csGL4Device::CreateTexture(const iTexture2D::Descriptor &descriptor)
       descriptor.MipMaps,
       descriptor.MultiSamples
   );
+  CS_GL_ERROR()
   texture->SetSampler(csObjectRegistry::Get<csSamplers>()->GetDefault());
   m_tempTexture = texture;
   return texture;
@@ -788,6 +815,7 @@ iTexture2DArray *csGL4Device::CreateTexture(const iTexture2DArray::Descriptor &d
       descriptor.Format,
       descriptor.MipMaps
   );
+  CS_GL_ERROR()
   texture->SetSampler(csObjectRegistry::Get<csSamplers>()->GetDefault());
   m_tempTexture = texture;
   return texture;
@@ -806,6 +834,7 @@ iTextureCube *csGL4Device::CreateTexture(const iTextureCube::Descriptor &descrip
       descriptor.Format,
       descriptor.MipMaps
   );
+  CS_GL_ERROR()
   texture->SetSampler(csObjectRegistry::Get<csSamplers>()->GetDefault());
   m_tempTexture = texture;
   return texture;
@@ -813,24 +842,30 @@ iTextureCube *csGL4Device::CreateTexture(const iTextureCube::Descriptor &descrip
 
 iRenderTarget2D *csGL4Device::CreateRenderTarget(const iRenderTarget2D::Descriptor &descriptor)
 {
+  CS_GL_ERROR()
   csGL4RenderTarget2D *target = new csGL4RenderTarget2D();
   target->Initialize(descriptor.Width, descriptor.Height);
+  CS_GL_ERROR()
   // reset the rendertarget
   return target;
 }
 
 iRenderTarget2DArray *csGL4Device::CreateRenderTarget(const iRenderTarget2DArray::Descriptor &descriptor)
 {
+  CS_GL_ERROR()
   csGL4RenderTarget2DArray *target = new csGL4RenderTarget2DArray();
   target->Initialize(descriptor.Width, descriptor.Height, descriptor.Layer);
+  CS_GL_ERROR()
   // reset the rendertarget
   return target;
 }
 
 iRenderTargetCube *csGL4Device::CreateRenderTarget(const iRenderTargetCube::Descriptor &descriptor)
 {
+  CS_GL_ERROR()
   csGL4RenderTargetCube *target = new csGL4RenderTargetCube();
   target->Initialize(descriptor.Size);
+  CS_GL_ERROR()
   // reset the rendertarget
   return target;
 }
@@ -897,7 +932,6 @@ eTextureUnit csGL4Device::ShiftTextureUnit()
 
 void csGL4Device::SetSampler(eTextureUnit unit, iSampler *sampler)
 {
-  CS_GL_ERROR()
   if (m_samplers[unit] != sampler)
   {
     m_samplers[unit] = sampler;
@@ -907,20 +941,21 @@ void csGL4Device::SetSampler(eTextureUnit unit, iSampler *sampler)
     }
     else
     {
+      CS_GL_ERROR()
       glBindSampler(unit, 0);
+      CS_GL_ERROR()
     }
   }
-  CS_GL_ERROR()
 }
 
 
 void csGL4Device::BindUnsafe(iTexture *texture)
 {
-  CS_GL_ERROR()
   if (!texture)
   {
     return;
   }
+  CS_GL_ERROR()
   switch (texture->GetType())
   {
     case eTextureType::Texture1D:
@@ -944,11 +979,11 @@ void csGL4Device::BindUnsafe(iTexture *texture)
 
 void csGL4Device::UnbindUnsafe(iTexture *texture)
 {
-  CS_GL_ERROR()
   if (!texture)
   {
     return;
   }
+  CS_GL_ERROR()
   switch (texture->GetType())
   {
     case eTextureType::Texture1D:
@@ -974,7 +1009,6 @@ void csGL4Device::UnbindUnsafe(iTexture *texture)
 eTextureUnit csGL4Device::BindTexture(iTexture *texture)
 {
 #ifndef CS_DISABLE_RENDERING
-  CS_GL_ERROR()
   if (!texture)
   {
     return eTU_Invalid;
@@ -987,8 +1021,10 @@ eTextureUnit csGL4Device::BindTexture(iTexture *texture)
     {
       m_texturesUsed[i] = true;
       auto unit = static_cast<eTextureUnit>(i);
+      CS_GL_ERROR()
       SetActiveTexture(unit);
       SetSampler(unit, texture->GetSampler());
+      CS_GL_ERROR()
       return unit;
     }
   }
@@ -1025,7 +1061,9 @@ void csGL4Device::SetActiveTexture(cs::uint32_t activeTexture)
 {
   if (m_activeTexture != activeTexture)
   {
+    CS_GL_ERROR()
     glActiveTexture(GL_TEXTURE0 + activeTexture);
+    CS_GL_ERROR()
     m_activeTexture = activeTexture;
   }
 }
@@ -1041,7 +1079,6 @@ bool csGL4Device::BindMaterial(iMaterial *material, eRenderPass pass)
     return false;
   }
 
-  CS_GL_ERROR()
   if (m_material == material && m_materialPass == pass)
   {
     ResetTexturesToMark();
@@ -1051,7 +1088,6 @@ bool csGL4Device::BindMaterial(iMaterial *material, eRenderPass pass)
   m_material = material;
   m_materialPass = pass;
   m_materialSuccessfull = material && material->Bind(this, pass);
-  CS_GL_ERROR()
   return m_materialSuccessfull;
 #else
   return true;
@@ -1064,12 +1100,9 @@ void csGL4Device::Render(iRenderMesh *mesh, eRenderPass pass)
 #ifndef CS_DISABLE_RENDERING
   if (mesh)
   {
-    CS_GL_ERROR();
     BindMatrices();
     BindStandardValues();
-    CS_GL_ERROR();
     mesh->Render(this, pass);
-    CS_GL_ERROR();
   }
 #endif
 }
@@ -1100,22 +1133,31 @@ void csGL4Device::RenderFullscreen(iTexture2D *texture)
   bool multiSampling = texture->IsMultiSampling();
   uint16_t samples = texture->GetSamples();
 
+  CS_GL_ERROR();
   csGL4Program *prog = multiSampling ? FullscreenBlitMSProgram() : FullscreenBlitProgram();
+  CS_GL_ERROR();
   SetShader(prog);
+  CS_GL_ERROR();
   ResetTextures();
   eTextureUnit unit = BindTexture(texture);
+  CS_GL_ERROR();
   iShaderAttribute *attrib = prog->GetShaderAttribute("Diffuse");
   if (attrib)
   {
+    CS_GL_ERROR();
     attrib->Bind(unit);
+    CS_GL_ERROR();
   }
 
   attrib = prog->GetShaderAttribute("Samples");
   if (attrib)
   {
+    CS_GL_ERROR();
     attrib->Bind(samples);
+    CS_GL_ERROR();
   }
 
+  CS_GL_ERROR();
   return RenderFullscreen();
 #endif
 }

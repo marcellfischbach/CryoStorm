@@ -35,6 +35,7 @@ public:
   cs::csSGNodeIO *IoAt(const QPointF &scenePos);
   const cs::csSGNodeIO *IoAt(const QPointF &scenePos) const;
 
+  void SyncPosition ();
 
   void UpdateHandles ();
 
