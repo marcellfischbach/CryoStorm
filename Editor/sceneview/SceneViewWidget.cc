@@ -1,6 +1,7 @@
 //
 // Created by Marcell on 22.09.2024.
 //
+#include <GL/glew.h>
 
 #include <sceneview/SceneViewWidget.hh>
 #include <QCoreApplication>
@@ -11,6 +12,7 @@
 #include <csCore/graphics/iDevice.hh>
 #include <csCore/graphics/iFrameRenderer.hh>
 #include <csCore/window/iWindow.hh>
+#include <csOpenGL/gl4/csGL4RenderTarget2D.hh>
 
 using namespace cs;
 
@@ -91,13 +93,25 @@ void SceneViewWidget::resizeGL(int w, int h)
 
 void SceneViewWidget::paintGL()
 {
+  // drain the error state.... it looks like Qt leaves the openGL context in an error state
+  glGetError();
+
   if (!m_world)
   {
     m_world = new csWorld();
     emit initialize(m_world);
   }
-  // drain the error state.... it looks like Qt leaves the openGL context in an error state
-  glGetError();
+  int fb = 0;
+  glGetIntegerv(GL_RENDERBUFFER_BINDING, &fb);
+  if (!glIsFramebuffer(fb))
+  {
+    fb = 0;
+  }
+
+
+  opengl::csGL4RenderTarget2D rt (fb, QWidget::width(), QWidget::height());
+
+
   if (!m_viewport)
   {
     m_viewport = new csViewport();
@@ -107,7 +121,7 @@ void SceneViewWidget::paintGL()
     m_viewport->SetFrameRenderer(csObjectRegistry::Get<iFrameRenderer>());
   }
 
-  m_viewport->ProcessFrame();
+  m_viewport->ProcessFrame(&rt);
 }
 
 

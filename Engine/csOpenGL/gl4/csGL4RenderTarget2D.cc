@@ -4,6 +4,7 @@
 #include <csOpenGL/gl4/csGL4Texture2DArray.hh>
 #include <csOpenGL/gl4/csGL4TextureCube.hh>
 #include <csOpenGL/csGLError.hh>
+#include <csCore/graphics/eTextureUnit.hh>
 #include <GL/glew.h>
 
 namespace cs::opengl
@@ -21,6 +22,57 @@ csGL4RenderTarget2D::csGL4RenderTarget2D()
   CS_GL_ERROR();
   glGenFramebuffers(1, &m_name);
   CS_GL_ERROR();
+}
+
+csGL4RenderTarget2D::csGL4RenderTarget2D(uint32_t name)
+    : iRenderTarget2D()
+    , m_name(name)
+    , m_width(0)
+    , m_height(0)
+    , m_depthBuffer(0)
+    , m_depthTexture(nullptr)
+{
+  CS_CLASS_GEN_CONSTR;
+
+
+  // get the current bindings
+  GLint currentFBO, currentTexture, currentActiveTexture;
+  glGetIntegerv(GL_FRAMEBUFFER_BINDING, &currentFBO);
+  glGetIntegerv(GL_ACTIVE_TEXTURE, &currentActiveTexture);
+  glActiveTexture(GL_TEXTURE0 + eTextureUnit::eTU_Invalid);
+  glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture);
+
+
+  GLint texture;
+  glBindFramebuffer(GL_FRAMEBUFFER, m_name);
+  glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER,
+                                        GL_COLOR_ATTACHMENT0,
+                                        GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME,
+                                        &texture);
+  glBindTexture(GL_TEXTURE_2D, texture);
+  GLint width, height;
+  glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &width);
+  glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &height);
+  m_width = width;
+  m_height = height;
+
+
+  // reset the old binding
+  glBindTexture(GL_TEXTURE_2D, currentTexture);
+  glActiveTexture(currentActiveTexture);
+  glBindFramebuffer(GL_FRAMEBUFFER, currentFBO);
+
+}
+
+csGL4RenderTarget2D::csGL4RenderTarget2D(uint32_t name, uint16_t width, uint16_t height)
+    : iRenderTarget2D()
+    , m_name(name)
+    , m_width(width)
+    , m_height(height)
+    , m_depthBuffer(0)
+    , m_depthTexture(nullptr)
+{
+  CS_CLASS_GEN_CONSTR;
 }
 
 csGL4RenderTarget2D::~csGL4RenderTarget2D()

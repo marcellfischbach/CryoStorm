@@ -64,7 +64,7 @@ public:
 
 
   CS_FUNCTION()
-  bool ProcessFrame ();
+  bool ProcessFrame (cs::iRenderTarget2D *target);
 
 private:
   csFPS    m_fps;

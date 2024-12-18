@@ -164,11 +164,10 @@ create_render_target(cs::iDevice *device, uint32_t width, uint32_t height, uint1
 }
 
 
-bool csViewport::ProcessFrame()
+bool csViewport::ProcessFrame(iRenderTarget2D *renderTarget)
 {
   m_device->CheckError();
 
-  printf ("Render %dx%d\n", m_window->GetWidth(), m_window->GetHeight());
   if (!m_renderTarget || m_renderTarget->GetWidth() != m_window->GetWidth() ||
       m_renderTarget->GetHeight() != m_window->GetHeight())
   {
@@ -205,8 +204,15 @@ bool csViewport::ProcessFrame()
 
   cs::iTexture2D *finalColor = m_renderTarget->GetColorTexture(0);
 
-  m_device->SetRenderTarget(nullptr);
-  m_device->SetViewport(0, 0, m_window->GetWidth(), m_window->GetHeight());
+  if (renderTarget)
+  {
+    m_device->SetRenderTarget(renderTarget);
+  }
+  else
+  {
+    m_device->SetRenderTarget(nullptr);
+    m_device->SetViewport(0, 0, m_window->GetWidth(), m_window->GetHeight());
+  }
   m_device->SetDepthTest(false);
   m_device->SetBlending(false);
   m_device->RenderFullscreen(finalColor);

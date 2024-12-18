@@ -183,7 +183,7 @@ int main(int argc, char **argv)
   while (active)
   {
     window->ProcessUpdates();
-    if (!viewport->ProcessFrame())
+    if (!viewport->ProcessFrame(nullptr))
     {
       active = false;
       exitValue = -1;

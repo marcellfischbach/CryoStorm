@@ -16,6 +16,9 @@ class CS_OGL_API csGL4RenderTarget2D : public CS_SUPER(iRenderTarget2D)
   CS_CLASS_GEN_OBJECT;
 public:
   csGL4RenderTarget2D();
+  explicit csGL4RenderTarget2D(uint32_t name);
+  csGL4RenderTarget2D(uint32_t name, uint16_t width, uint16_t height);
+
   virtual ~csGL4RenderTarget2D() override;
 
   void Bind();

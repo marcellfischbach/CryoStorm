@@ -6,6 +6,9 @@
 #include <editors/shadergraph/ShaderGraphNodeItem.hh>
 #include <editors/shadergraph/ShaderGraphNodePalletTreeModel.hh>
 #include <csCore/graphics/shadergraph/csShaderGraph.hh>
+#include <csCore/entity/csCameraState.hh>
+#include <csCore/entity/csEntity.hh>
+#include <csCore/entity/csWorld.hh>
 #include <QGraphicsScene>
 #include <QGraphicsPathItem>
 #include "ui_ShaderGraphEditorWidget.h"
@@ -29,6 +32,8 @@ ShaderGraphEditorWidget::ShaderGraphEditorWidget(QWidget *parent)
   m_gui->graph->SetShaderGraph(m_shaderGraph);
 
 
+
+
 //  InsertNode(m_shaderGraph, QPointF(0.0, 0.0));
 
 
@@ -40,6 +45,7 @@ ShaderGraphEditorWidget::ShaderGraphEditorWidget(QWidget *parent)
 
 }
 
+
 ShaderGraphEditorWidget::~ShaderGraphEditorWidget()
 {
   CS_RELEASE(m_shaderGraph);
@@ -50,3 +56,21 @@ ShaderGraphEditorWidget::~ShaderGraphEditorWidget()
 
 
 
+
+
+void ShaderGraphEditorWidget::on_graph_initialize(cs::csWorld *world)
+{
+  CS_SET(m_world, world);
+
+
+  m_camera = new csCameraState();
+  m_camera->SetClearColor(csColor4f(0.0f, 0.0f, 0.0f, 1.0f));
+  m_camera->SetClearMode(eClearMode::DepthColor);
+  m_camera->SetClearColorMode(eClearColorMode::PlainColor);
+
+  m_cameraEntity = new csEntity("Camera");
+  m_cameraEntity->AttachState(m_camera);
+
+  m_world->Attach(m_cameraEntity);
+
+}

@@ -80,7 +80,6 @@ bool csGBuffer::Update(cs::iDevice *device, uint16_t width, uint16_t height)
       printf ("Unable to compile GBuffer: %s\n", log.c_str());
       return false;
     }
-    printf ("GBuffer compiled successfully\n");
   }
   device->ClearTextureCache();
   return true;
