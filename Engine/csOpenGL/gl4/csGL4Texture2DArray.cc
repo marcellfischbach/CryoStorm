@@ -4,6 +4,7 @@
 #include <csCore/graphics/csImage.hh>
 #include <csCore/graphics/iSampler.hh>
 #include <csCore/math/csMath.hh>
+#include <csOpenGL/csGLError.hh>
 #include <GL/glew.h>
 
 namespace cs::opengl
@@ -16,23 +17,31 @@ csGL4Texture2DArray::csGL4Texture2DArray()
   , m_sampler(nullptr)
 {
   CS_CLASS_GEN_CONSTR;
+  CS_GL_ERROR()
   glGenTextures(1, &m_name);
+  CS_GL_ERROR()
 }
 
 csGL4Texture2DArray::~csGL4Texture2DArray()
 {
+  CS_GL_ERROR()
   glDeleteTextures(1, &m_name);
+  CS_GL_ERROR()
   m_name = 0;
 }
 
 void csGL4Texture2DArray::Bind()
 {
+  CS_GL_ERROR()
   glBindTexture(GL_TEXTURE_2D_ARRAY, m_name);
+  CS_GL_ERROR()
 }
 
 void csGL4Texture2DArray::Unbind()
 {
+  CS_GL_ERROR()
   glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
+  CS_GL_ERROR()
 }
 
 
@@ -44,10 +53,12 @@ bool csGL4Texture2DArray::Initialize(uint16_t width, uint16_t height, uint16_t l
   m_format = format;
   Bind();
 
+  CS_GL_ERROR()
   glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  CS_GL_ERROR()
 
   uint8_t level = 0;
 
@@ -58,6 +69,7 @@ bool csGL4Texture2DArray::Initialize(uint16_t width, uint16_t height, uint16_t l
     lvl.Height = height;
     m_level.push_back(lvl);
 
+    CS_GL_ERROR()
     glTexImage3D(
         GL_TEXTURE_2D_ARRAY,
         level,
@@ -70,6 +82,7 @@ bool csGL4Texture2DArray::Initialize(uint16_t width, uint16_t height, uint16_t l
         csGL4PixelFormatClientDataType[format],
         nullptr
     );
+    CS_GL_ERROR()
     if (!generateMipMaps || width == 1 && height == 1)
     {
       break;
@@ -104,6 +117,7 @@ void csGL4Texture2DArray::Data(uint16_t layer, uint16_t level, ePixelFormat form
 
 
   Level& lvl = m_level[level];
+  CS_GL_ERROR()
   glTexSubImage3D(
       GL_TEXTURE_2D_ARRAY,
       level,
@@ -113,6 +127,7 @@ void csGL4Texture2DArray::Data(uint16_t layer, uint16_t level, ePixelFormat form
       csGL4PixelFormatClientDataType[format],
       data
   );
+  CS_GL_ERROR()
 }
 
 void csGL4Texture2DArray::Data(uint16_t layer, uint16_t level, uint16_t x, uint16_t y, uint16_t width, uint16_t height, ePixelFormat format, const void* data)
@@ -122,6 +137,7 @@ void csGL4Texture2DArray::Data(uint16_t layer, uint16_t level, uint16_t x, uint1
     return;
   }
 
+  CS_GL_ERROR()
   glTexSubImage3D(
       GL_TEXTURE_2D_ARRAY,
       level,
@@ -131,6 +147,7 @@ void csGL4Texture2DArray::Data(uint16_t layer, uint16_t level, uint16_t x, uint1
       csGL4PixelFormatClientDataType[format],
       data
   );
+  CS_GL_ERROR()
 }
 
 

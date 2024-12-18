@@ -25,7 +25,10 @@ public:
   csGL4Device();
   virtual ~csGL4Device();
 
+
   bool Initialize();
+
+  void CheckError() const override;
 
   void SetViewport(int16_t x, int16_t y, uint16_t width, uint16_t height) override;
   void Clear(bool clearColor,

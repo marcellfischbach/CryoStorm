@@ -47,6 +47,10 @@ add_executable(
         EdLauncher
         ${ALL_SOURCES}
 )
+add_dependencies(EdLauncher csAssimpLoader)
+add_dependencies(EdLauncher csBullet)
+add_dependencies(EdLauncher csImgLoader)
+add_dependencies(EdLauncher csOpenGL)
 
 
 target_link_libraries(EdLauncher

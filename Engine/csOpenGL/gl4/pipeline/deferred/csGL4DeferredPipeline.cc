@@ -321,9 +321,7 @@ void csGL4DeferredPipeline::RenderForwardMeshShaded(csGfxMesh *mesh,
         lights,
         offset
     );
-    CS_GL_ERROR();
     mesh->RenderForward(m_device, eRP_Forward, lights.data(), numLights);
-    CS_GL_ERROR();
   }
   else
   {
@@ -335,9 +333,7 @@ void csGL4DeferredPipeline::RenderForwardMeshShaded(csGfxMesh *mesh,
         lights,
         offset
     );
-    CS_GL_ERROR();
     mesh->RenderForward(m_device, eRP_Forward, lights.data(), numLights);
-    CS_GL_ERROR();
   }
 
 

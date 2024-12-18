@@ -61,7 +61,6 @@ void csGL4ForwardPipeline::Render(iRenderTarget2D *target,
                                   iGfxScene *scene
                                  )
 {
-  CS_GL_ERROR();
   ++m_frame;
   if (SetupVariables(target, camera, device, scene))
   {
@@ -232,7 +231,6 @@ void csGL4ForwardPipeline::CollectLightsAndShadows(iClipper *clipper)
                       }
   );
 
-  CS_GL_ERROR();
 
   //
   // collect the "normal" static and dynamic lights
@@ -489,9 +487,7 @@ void csGL4ForwardPipeline::RenderMesh(csGfxMesh *mesh, std::array<const csGfxLig
         lights,
         offset
     );
-    CS_GL_ERROR();
     mesh->RenderForward(m_device, eRP_Forward, lights.data(), numLights);
-    CS_GL_ERROR();
   }
   else
   {
@@ -503,9 +499,7 @@ void csGL4ForwardPipeline::RenderMesh(csGfxMesh *mesh, std::array<const csGfxLig
         lights,
         offset
     );
-    CS_GL_ERROR();
     mesh->RenderForward(m_device, eRP_Forward, lights.data(), numLights);
-    CS_GL_ERROR();
   }
 
 

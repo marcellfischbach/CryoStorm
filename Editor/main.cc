@@ -36,6 +36,21 @@ int main(int argc, char** argv)
   register_classes();
 
   QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
+
+  QSurfaceFormat format;
+  format.setRedBufferSize(8);
+  format.setGreenBufferSize(8);
+  format.setBlueBufferSize(8);
+  format.setAlphaBufferSize(8);
+  format.setDepthBufferSize(24);
+  format.setStencilBufferSize(8);
+  format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);
+  format.setSwapInterval(0);
+  format.setMajorVersion(4);
+  format.setMinorVersion(4);
+  format.setProfile(QSurfaceFormat::CompatibilityProfile);
+  QSurfaceFormat::setDefaultFormat(format);
+
   QApplication::setStyle ("Fusion");
   QApplication app(argc, argv);
 

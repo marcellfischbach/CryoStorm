@@ -14,23 +14,31 @@ csGL4Texture2D::csGL4Texture2D()
     m_multiSampling(false)
 {
   CS_CLASS_GEN_CONSTR;
+  CS_GL_ERROR();
   glGenTextures(1, &m_name);
+  CS_GL_ERROR();
 }
 
 csGL4Texture2D::~csGL4Texture2D()
 {
+  CS_GL_ERROR();
   glDeleteTextures(1, &m_name);
+  CS_GL_ERROR();
   m_name = 0;
 }
 
 void csGL4Texture2D::Bind()
 {
+  CS_GL_ERROR();
   glBindTexture(m_target, m_name);
+  CS_GL_ERROR();
 }
 
 void csGL4Texture2D::Unbind()
 {
+  CS_GL_ERROR();
   glBindTexture(m_target, 0);
+  CS_GL_ERROR();
 }
 
 static size_t number_of_layers(uint16_t width, uint16_t height)
@@ -57,7 +65,6 @@ bool csGL4Texture2D::Initialize(uint16_t width,
                                 bool generateMipMaps,
                                 uint16_t multiSamples)
 {
-  CS_GL_ERROR()
   m_multiSampling = multiSamples > 1;
   m_target        = m_multiSampling ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D;
   m_width         = width;
@@ -68,10 +75,12 @@ bool csGL4Texture2D::Initialize(uint16_t width,
 
   if (!m_multiSampling)
   {
+    CS_GL_ERROR()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    CS_GL_ERROR()
   }
 
   uint16_t lvlWidth  = width;
@@ -110,8 +119,8 @@ bool csGL4Texture2D::Initialize(uint16_t width,
                    csGL4PixelFormatSizedInternal[format],
                    width, height
     );
-    CS_GL_ERROR()
   }
+  CS_GL_ERROR()
 
 
   return true;
@@ -146,6 +155,7 @@ void csGL4Texture2D::Data(uint16_t level, ePixelFormat format, const void* data)
 
 
   Level& lvl = m_level[level];
+  CS_GL_ERROR()
   glTexSubImage2D(
       GL_TEXTURE_2D,
       level,
@@ -155,6 +165,7 @@ void csGL4Texture2D::Data(uint16_t level, ePixelFormat format, const void* data)
       csGL4PixelFormatClientDataType[format],
       data
   );
+  CS_GL_ERROR()
 }
 
 void csGL4Texture2D::Data(uint16_t level,
@@ -170,6 +181,7 @@ void csGL4Texture2D::Data(uint16_t level,
     return;
   }
 
+  CS_GL_ERROR()
   glTexSubImage2D(
       GL_TEXTURE_2D,
       level,
@@ -179,6 +191,7 @@ void csGL4Texture2D::Data(uint16_t level,
       csGL4PixelFormatClientDataType[format],
       data
   );
+  CS_GL_ERROR()
 }
 
 void csGL4Texture2D::SetSampler(iSampler* sampler)

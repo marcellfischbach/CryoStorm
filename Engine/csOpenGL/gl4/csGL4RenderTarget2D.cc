@@ -3,6 +3,7 @@
 #include <csOpenGL/gl4/csGL4Texture2D.hh>
 #include <csOpenGL/gl4/csGL4Texture2DArray.hh>
 #include <csOpenGL/gl4/csGL4TextureCube.hh>
+#include <csOpenGL/csGLError.hh>
 #include <GL/glew.h>
 
 namespace cs::opengl
@@ -17,12 +18,16 @@ csGL4RenderTarget2D::csGL4RenderTarget2D()
     , m_depthTexture(nullptr)
 {
   CS_CLASS_GEN_CONSTR;
+  CS_GL_ERROR();
   glGenFramebuffers(1, &m_name);
+  CS_GL_ERROR();
 }
 
 csGL4RenderTarget2D::~csGL4RenderTarget2D()
 {
+  CS_GL_ERROR();
   glDeleteFramebuffers(1, &m_name);
+  CS_GL_ERROR();
   m_name = 0;
 
   CS_RELEASE(m_depthTexture.texture);
@@ -30,7 +35,9 @@ csGL4RenderTarget2D::~csGL4RenderTarget2D()
 
   if (m_depthBuffer)
   {
+    CS_GL_ERROR();
     glDeleteRenderbuffers(1, &m_depthBuffer);
+    CS_GL_ERROR();
     m_depthBuffer = 0;
   }
   for (auto color: m_colorTextures)
@@ -43,7 +50,9 @@ csGL4RenderTarget2D::~csGL4RenderTarget2D()
 
 void csGL4RenderTarget2D::Bind()
 {
+  CS_GL_ERROR();
   glBindFramebuffer(GL_FRAMEBUFFER, m_name);
+  CS_GL_ERROR();
 }
 
 uint16_t csGL4RenderTarget2D::GetWidth() const
@@ -100,11 +109,13 @@ void csGL4RenderTarget2D::SetDepthTexture(iTexture2D *depthTexture)
   CS_RELEASE(m_depthTexture.textureCube);
 
 
+  CS_GL_ERROR();
   glFramebufferTexture(GL_FRAMEBUFFER,
                        attachment,
                        txt->GetName(),
                        0);
 
+  CS_GL_ERROR();
 }
 
 void csGL4RenderTarget2D::SetDepthTexture(iTexture2DArray *depthTexture, size_t layer)
@@ -142,11 +153,13 @@ void csGL4RenderTarget2D::SetDepthTexture(iTexture2DArray *depthTexture, size_t 
 
 
   m_depthTexture.textureArrayLayer = layer;
+  CS_GL_ERROR();
   glFramebufferTextureLayer(GL_FRAMEBUFFER,
                             attachment,
                             txt->GetName(),
                             0,
                             static_cast<GLint>(layer));
+  CS_GL_ERROR();
 
 }
 
@@ -185,11 +198,13 @@ void csGL4RenderTarget2D::SetDepthTexture(iTextureCube *depthTexture, eCubeFace 
   CS_RELEASE(m_depthTexture.texture);
 
 
+  CS_GL_ERROR();
   glFramebufferTexture2D(GL_FRAMEBUFFER,
                          attachment,
                          GL_TEXTURE_CUBE_MAP_POSITIVE_X + face,
                          txt->GetName(),
                          0);
+  CS_GL_ERROR();
 
 }
 
@@ -212,10 +227,12 @@ void csGL4RenderTarget2D::SetDepthBuffer(ePixelFormat format)
     default:
       return;
   }
+  CS_GL_ERROR();
   glGenRenderbuffers(1, &m_depthBuffer);
   glBindRenderbuffer(GL_RENDERBUFFER, m_depthBuffer);
   glRenderbufferStorage(GL_RENDERBUFFER, internalFormat, m_width, m_height);
   glFramebufferRenderbuffer(GL_FRAMEBUFFER, attachment, GL_RENDERBUFFER, m_depthBuffer);
+  CS_GL_ERROR();
 
   CS_RELEASE(m_depthTexture.textureCube);
   CS_RELEASE(m_depthTexture.texture);
@@ -245,10 +262,12 @@ void csGL4RenderTarget2D::AddColorTexture(iTexture2D *colorTexture)
   }
 
 
+  CS_GL_ERROR();
   glFramebufferTexture(GL_FRAMEBUFFER,
                        (GLenum) (GL_COLOR_ATTACHMENT0 + m_colorTextures.size()),
                        txt->GetName(),
                        0);
+  CS_GL_ERROR();
   TextureBind textureBind {
       txt,
       nullptr,
@@ -282,11 +301,13 @@ void csGL4RenderTarget2D::AddColorTexture(iTexture2DArray *colorTexture, size_t 
   }
 
 
+  CS_GL_ERROR();
   glFramebufferTextureLayer(GL_FRAMEBUFFER,
                             (GLenum) (GL_COLOR_ATTACHMENT0 + m_colorTextures.size()),
                             txt->GetName(),
                             0,
                             static_cast<GLint>(layer));
+  CS_GL_ERROR();
   TextureBind textureBind {
       nullptr,
       txt,
@@ -320,11 +341,13 @@ void csGL4RenderTarget2D::AddColorTexture(iTextureCube *colorTexture, eCubeFace 
   }
 
 
+  CS_GL_ERROR();
   glFramebufferTexture2D(GL_FRAMEBUFFER,
                          (GLenum) (GL_COLOR_ATTACHMENT0 + m_colorTextures.size()),
                          (GLenum) (GL_TEXTURE_CUBE_MAP_POSITIVE_X + face),
                          txt->GetName(),
                          0);
+  CS_GL_ERROR();
   TextureBind textureBind {
       nullptr,
       nullptr,
@@ -344,7 +367,9 @@ eTextureType csGL4RenderTarget2D::GetType() const
 bool csGL4RenderTarget2D::Compile()
 {
   GLenum res = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+  CS_GL_ERROR();
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  CS_GL_ERROR();
   switch (res)
   {
     case GL_FRAMEBUFFER_COMPLETE:

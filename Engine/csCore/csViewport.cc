@@ -166,6 +166,9 @@ create_render_target(cs::iDevice *device, uint32_t width, uint32_t height, uint1
 
 bool csViewport::ProcessFrame()
 {
+  m_device->CheckError();
+
+  printf ("Render %dx%d\n", m_window->GetWidth(), m_window->GetHeight());
   if (!m_renderTarget || m_renderTarget->GetWidth() != m_window->GetWidth() ||
       m_renderTarget->GetHeight() != m_window->GetHeight())
   {
@@ -195,6 +198,7 @@ bool csViewport::ProcessFrame()
 
     m_world->Update(tpf);
   }
+  m_device->CheckError();
 
 
   m_frameRenderer->Render(m_renderTarget, m_device, m_world->GetScene());

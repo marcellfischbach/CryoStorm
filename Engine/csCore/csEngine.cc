@@ -181,7 +181,7 @@ static iModule *open_module(const std::string &moduleName)
   HMODULE handle = load_module(dll_name);
   if (!handle)
   {
-    std::cout << "Unable to load library: " << dll_name << std::endl;
+    std::cerr << "Unable to load library: " << dll_name << std::endl;
     return nullptr;
   }
 
@@ -189,11 +189,20 @@ static iModule *open_module(const std::string &moduleName)
   load_library_func_ptr load_library_func = (load_library_func_ptr) GetProcAddress(handle, load_library_name.c_str());
   if (!load_library_func)
   {
-    std::cout << "Library " << dll_name << " has no exported " << load_library_name << " entry point." << std::endl;
+    std::cerr << "Library " << dll_name << " has no exported " << load_library_name << " entry point." << std::endl;
     return nullptr;
   }
 
+
   iModule *module = load_library_func();
+  if (!module)
+  {
+    std::cerr << "Library " << dll_name << " was load successfully, but no module could be extracted." << std::endl;
+    return nullptr;
+  }
+
+  std::cout << "Library " << dll_name << " was loaded successfull." << std::endl;
+
 
   return module;
 #else

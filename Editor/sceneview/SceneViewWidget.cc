@@ -23,10 +23,27 @@ SceneViewWidget::SceneViewWidget(QWidget *parent)
     : QOpenGLWidget(parent)
     , m_viewport(nullptr)
     , m_window(new SceneViewWidget_WindowPriv(this))
+    , m_world(nullptr)
 {
 
 }
 
+SceneViewWidget::~SceneViewWidget()
+{
+  delete m_window;
+  m_window = nullptr;
+}
+
+csWorld* SceneViewWidget::GetWorld()
+{
+  return m_world;
+}
+
+
+const csWorld* SceneViewWidget::GetWorld() const
+{
+  return m_world;
+}
 
 std::vector<std::string> extract_args()
 {
@@ -61,21 +78,32 @@ void SceneViewWidget::initializeGL()
   {
     fprintf(stderr, "Unable to initialize engine\n");
   };
+  csObjectRegistry::Get<iDevice>()->CheckError();
+
 }
 
 void SceneViewWidget::resizeGL(int w, int h)
 {
+  csObjectRegistry::Get<iDevice>()->CheckError();
   glViewport(0, 0, w, h);
+  csObjectRegistry::Get<iDevice>()->CheckError();
 }
 
 void SceneViewWidget::paintGL()
 {
+  if (!m_world)
+  {
+    m_world = new csWorld();
+    emit initialize(m_world);
+  }
+  // drain the error state.... it looks like Qt leaves the openGL context in an error state
+  glGetError();
   if (!m_viewport)
   {
     m_viewport = new csViewport();
     m_viewport->SetWindow(m_window);
     m_viewport->SetDevice(csObjectRegistry::Get<iDevice>());
-    m_viewport->SetWorld(new csWorld());
+    m_viewport->SetWorld(m_world);
     m_viewport->SetFrameRenderer(csObjectRegistry::Get<iFrameRenderer>());
   }
 

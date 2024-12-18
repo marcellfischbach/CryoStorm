@@ -10,6 +10,7 @@
 namespace cs
 {
 class csViewport;
+class csWorld;
 }
 
 class SceneViewWidget;
@@ -17,7 +18,7 @@ class SceneViewWidget;
 CS_CLASS()
 class SceneViewWidget_WindowPriv : public cs::iWindow
 {
-  CS_CLASS_GEN_OBJECT;
+CS_CLASS_GEN_OBJECT;
 public:
   SceneViewWidget_WindowPriv(SceneViewWidget *window);
   ~SceneViewWidget_WindowPriv() override = default;
@@ -44,14 +45,25 @@ public:
   void ProcessUpdates() override;
 
 private:
-  std::string m_title;
+  std::string     m_title;
   SceneViewWidget *m_window;
+
+
 };
+
 
 class SceneViewWidget : public QOpenGLWidget
 {
+Q_OBJECT
 public:
-  explicit SceneViewWidget (QWidget* parent);
+  explicit SceneViewWidget(QWidget *parent);
+  ~SceneViewWidget() override;
+
+  cs::csWorld *GetWorld();
+  const cs::csWorld *GetWorld() const;
+
+signals:
+  void initialize(cs::csWorld *world);
 
 protected:
   void initializeGL() override;
@@ -59,9 +71,9 @@ protected:
   void paintGL() override;
 
 private:
-  cs::csViewport* m_viewport;
+  cs::csViewport *m_viewport;
+  cs::csWorld    *m_world;
 
   class WindowPriv;
   SceneViewWidget_WindowPriv *m_window;
-
 };

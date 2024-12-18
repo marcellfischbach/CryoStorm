@@ -1,6 +1,7 @@
 
 #include <csOpenGL/gl4/csGL4RenderTarget2DArray.hh>
 #include <csOpenGL/gl4/csGL4Texture2DArray.hh>
+#include <csOpenGL/csGLError.hh>
 #include <GL/glew.h>
 
 namespace cs::opengl
@@ -15,12 +16,16 @@ csGL4RenderTarget2DArray::csGL4RenderTarget2DArray()
       , m_depthTexture(nullptr)
 {
   CS_CLASS_GEN_CONSTR;
+  CS_GL_ERROR();
+  CS_GL_ERROR();
   glGenFramebuffers(1, &m_name);
 }
 
 csGL4RenderTarget2DArray::~csGL4RenderTarget2DArray()
 {
+  CS_GL_ERROR();
   glDeleteFramebuffers(1, &m_name);
+  CS_GL_ERROR();
   m_name = 0;
 
   CS_RELEASE(m_depthTexture);
@@ -32,7 +37,9 @@ csGL4RenderTarget2DArray::~csGL4RenderTarget2DArray()
 
 void csGL4RenderTarget2DArray::Bind()
 {
+  CS_GL_ERROR();
   glBindFramebuffer(GL_FRAMEBUFFER, m_name);
+  CS_GL_ERROR();
 }
 
 uint16_t csGL4RenderTarget2DArray::GetWidth() const
@@ -86,10 +93,12 @@ void csGL4RenderTarget2DArray::SetDepthTexture(iTexture2DArray *depthTexture)
   CS_SET(m_depthTexture, txt);
 
 
+  CS_GL_ERROR();
   glFramebufferTexture(GL_FRAMEBUFFER,
                        attachment,
                        txt->GetName(),
                        0);
+  CS_GL_ERROR();
 
 }
 
@@ -110,10 +119,12 @@ void csGL4RenderTarget2DArray::AddColorTexture(iTexture2DArray *colorTexture)
   }
 
 
+  CS_GL_ERROR();
   glFramebufferTexture(GL_FRAMEBUFFER,
                        (GLenum) (GL_COLOR_ATTACHMENT0 + m_colorTextures.size()),
                        txt->GetName(),
                        0);
+  CS_GL_ERROR();
   m_colorTextures.push_back(txt);
 }
 
@@ -126,7 +137,9 @@ eTextureType csGL4RenderTarget2DArray::GetType() const
 bool csGL4RenderTarget2DArray::Compile()
 {
   GLenum res = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+  CS_GL_ERROR();
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  CS_GL_ERROR();
   switch (res) {
     case GL_FRAMEBUFFER_COMPLETE:
       m_log = "Complete";

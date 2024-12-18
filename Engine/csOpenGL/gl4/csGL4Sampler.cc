@@ -3,6 +3,7 @@
 #include <csOpenGL/gl4/csGL4CompareFuncMap.hh>
 #include <csOpenGL/gl4/csGL4TextureCompareModeMap.hh>
 #include <csCore/math/csMath.hh>
+#include <csOpenGL/csGLError.hh>
 #include <GL/glew.h>
 
 
@@ -25,6 +26,7 @@ csGL4Sampler::csGL4Sampler()
 
 {
   CS_CLASS_GEN_CONSTR;
+  CS_GL_ERROR();
   glGenSamplers(1, &m_name);
   glSamplerParameteri(m_name, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glSamplerParameteri(m_name, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -38,24 +40,31 @@ csGL4Sampler::csGL4Sampler()
   glSamplerParameterfv(m_name, GL_TEXTURE_BORDER_COLOR, borderColor);
   glSamplerParameteri(m_name, GL_TEXTURE_COMPARE_MODE, GL_NONE);
   glSamplerParameteri(m_name, GL_TEXTURE_COMPARE_FUNC, GL_ALWAYS);
+  CS_GL_ERROR();
 
 }
 
 csGL4Sampler::~csGL4Sampler()
 {
+  CS_GL_ERROR();
   glDeleteSamplers(1, &m_name);
+  CS_GL_ERROR();
   m_name = 0;
 }
 
 void csGL4Sampler::Bind(eTextureUnit unit)
 {
+  CS_GL_ERROR();
   glBindSampler(unit, m_name);
+  CS_GL_ERROR();
 }
 
 
 void csGL4Sampler::Unbind(eTextureUnit unit)
 {
+  CS_GL_ERROR();
   glBindSampler(unit, 0);
+  CS_GL_ERROR();
 }
 
 
@@ -64,6 +73,7 @@ void csGL4Sampler::SetFilterMode(eFilterMode filterMode)
   if (m_filterMode != filterMode)
   {
     m_filterMode = filterMode;
+    CS_GL_ERROR();
     switch (m_filterMode)
     {
     case eFM_MinMagNearest:
@@ -117,6 +127,7 @@ void csGL4Sampler::SetFilterMode(eFilterMode filterMode)
       glSamplerParameteri(m_name, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
       break;
     }
+    CS_GL_ERROR();
   }
 }
 
@@ -131,7 +142,9 @@ void csGL4Sampler::SetAnisotropy(uint8_t anisotropy)
   if (m_anisotropy != anisotropy)
   {
     m_anisotropy = anisotropy;
+    CS_GL_ERROR();
     glSamplerParameteri(m_name, GL_TEXTURE_MAX_ANISOTROPY_EXT, m_anisotropy);
+    CS_GL_ERROR();
 
   }
 }
@@ -146,7 +159,9 @@ void csGL4Sampler::SetMinLOD(int16_t minLOD)
   if (m_minLOD != minLOD)
   {
     m_minLOD = minLOD;
+    CS_GL_ERROR();
     glSamplerParameteri(m_name, GL_TEXTURE_MIN_LOD, m_minLOD);
+    CS_GL_ERROR();
   }
 }
 
@@ -160,7 +175,9 @@ void csGL4Sampler::SetMaxLOD(int16_t maxLOD)
   if (m_maxLOD != maxLOD)
   {
     m_maxLOD = maxLOD;
+    CS_GL_ERROR();
     glSamplerParameteri(m_name, GL_TEXTURE_MAX_LOD, m_maxLOD);
+    CS_GL_ERROR();
   }
 }
 
@@ -186,7 +203,9 @@ void csGL4Sampler::SetAddressU(eTextureAddressMode mode)
   if (m_addressU != mode)
   {
     m_addressU = mode;
+    CS_GL_ERROR();
     glSamplerParameteri(m_name, GL_TEXTURE_WRAP_S, Address(mode));
+    CS_GL_ERROR();
   }
 }
 
@@ -201,7 +220,9 @@ void csGL4Sampler::SetAddressV(eTextureAddressMode mode)
   if (m_addressV != mode)
   {
     m_addressV = mode;
+    CS_GL_ERROR();
     glSamplerParameteri(m_name, GL_TEXTURE_WRAP_T, Address(mode));
+    CS_GL_ERROR();
   }
 }
 
@@ -215,7 +236,9 @@ void csGL4Sampler::SetAddressW(eTextureAddressMode mode)
   if (m_addressW != mode)
   {
     m_addressW = mode;
+    CS_GL_ERROR();
     glSamplerParameteri(m_name, GL_TEXTURE_WRAP_R, Address(mode));
+    CS_GL_ERROR();
   }
 }
 
@@ -229,7 +252,9 @@ void csGL4Sampler::SetBorderColor(const csColor4f& borderColor)
   if (m_borderColor != borderColor)
   {
     m_borderColor = borderColor;
+    CS_GL_ERROR();
     glSamplerParameterfv(m_name, GL_TEXTURE_BORDER_COLOR, &m_borderColor.r);
+    CS_GL_ERROR();
 
   }
 }
@@ -244,7 +269,9 @@ void csGL4Sampler::SetTextureCompareMode(eTextureCompareMode compareMode)
   if (m_textureCompareMode != compareMode)
   {
     m_textureCompareMode = compareMode;
+    CS_GL_ERROR();
     glSamplerParameteri(m_name, GL_TEXTURE_COMPARE_MODE, csGL4TextureCompareModeMap[m_textureCompareMode]);
+    CS_GL_ERROR();
 
   }
 }
@@ -259,7 +286,9 @@ void csGL4Sampler::SetTextureCompareFunc(eCompareFunc compareFunc)
   if (m_textureCompareFunc != compareFunc)
   {
     m_textureCompareFunc = compareFunc;
+    CS_GL_ERROR();
     glSamplerParameteri(m_name, GL_TEXTURE_COMPARE_FUNC, csGL4CompareFuncMap[m_textureCompareFunc]);
+    CS_GL_ERROR();
   }
 }
 

@@ -62,7 +62,9 @@ csGL4RenderMesh::~csGL4RenderMesh()
 {
   if (m_vao != 0)
   {
+    CS_GL_ERROR();
     glDeleteVertexArrays(1, &m_vao);
+    CS_GL_ERROR();
     m_vao = 0;
   }
   CS_RELEASE(m_vertexBuffer);
@@ -102,11 +104,8 @@ void csGL4RenderMesh::Render(iDevice *graphics, eRenderPass pass)
   }
   else
   {
-    CS_GL_ERROR();
     m_indexBuffer->Bind();
-    CS_GL_ERROR();
     m_vertexBuffer->Bind();
-    CS_GL_ERROR();
     const std::vector<csVertexDeclaration::Attribute> &vdAttributes = m_vertexDeclaration.GetAttributes(0);
     for (const csVertexDeclaration::Attribute &attribute: vdAttributes)
     {
@@ -309,7 +308,9 @@ iRenderMesh *csGL4RenderMeshGenerator::Generate()
 {
   if (!m_compatMode)
   {
+    CS_GL_ERROR();
     glBindVertexArray(0);
+    CS_GL_ERROR();
   }
   int numVertexDefs = 0;
   int numUV0Defs = 0;
@@ -592,8 +593,11 @@ iRenderMesh *csGL4RenderMeshGenerator::Generate()
   GLuint vao = 0;
   if (!m_compatMode)
   {
+    CS_GL_ERROR();
     glGenVertexArrays(1, &vao);
+    CS_GL_ERROR();
     glBindVertexArray(vao);
+    CS_GL_ERROR();
   }
 
   ib->Bind();
@@ -603,6 +607,7 @@ iRenderMesh *csGL4RenderMeshGenerator::Generate()
     const std::vector<csVertexDeclaration::Attribute> &vdAttributes = vd.GetAttributes(0);
     for (const csVertexDeclaration::Attribute &attribute: vdAttributes)
     {
+      CS_GL_ERROR();
       glVertexAttribPointer(
           attribute.Location,
           attribute.Size,
@@ -611,9 +616,12 @@ iRenderMesh *csGL4RenderMeshGenerator::Generate()
           attribute.Stride,
           reinterpret_cast<const void *>(attribute.Offset)
       );
+      CS_GL_ERROR();
       glEnableVertexAttribArray(attribute.Location);
+      CS_GL_ERROR();
     }
     glBindVertexArray(0);
+    CS_GL_ERROR();
   }
 
   auto mesh = new csGL4RenderMesh(

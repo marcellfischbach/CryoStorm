@@ -1,6 +1,7 @@
 
 #include <csOpenGL/gl4/csGL4RenderTargetCube.hh>
 #include <csOpenGL/gl4/csGL4TextureCube.hh>
+#include <csOpenGL/csGLError.hh>
 #include <GL/glew.h>
 
 namespace cs::opengl
@@ -13,14 +14,18 @@ csGL4RenderTargetCube::csGL4RenderTargetCube()
   , m_depthTexture(nullptr)
 {
   CS_CLASS_GEN_CONSTR;
+  CS_GL_ERROR();
   glGenFramebuffers(1, &m_name);
+  CS_GL_ERROR();
 }
 
 csGL4RenderTargetCube::~csGL4RenderTargetCube()
 {
   if (!m_external)
   {
+    CS_GL_ERROR();
     glDeleteFramebuffers(1, &m_name);
+    CS_GL_ERROR();
   }
   m_name = 0;
 
@@ -34,7 +39,9 @@ csGL4RenderTargetCube::~csGL4RenderTargetCube()
 
 void csGL4RenderTargetCube::Bind()
 {
+  CS_GL_ERROR();
   glBindFramebuffer(GL_FRAMEBUFFER, m_name);
+  CS_GL_ERROR();
 }
 
 uint16_t csGL4RenderTargetCube::GetSize() const
@@ -86,10 +93,12 @@ void csGL4RenderTargetCube::SetDepthTexture(iTextureCube* depthTexture)
   CS_SET(m_depthTexture, txt);
 
 
+  CS_GL_ERROR();
   glFramebufferTexture(GL_FRAMEBUFFER,
     attachment,
     txt->GetName(),
     0);
+  CS_GL_ERROR();
 
 }
 
@@ -110,10 +119,12 @@ void csGL4RenderTargetCube::AddColorTexture(iTextureCube* colorTexture)
   }
 
 
+  CS_GL_ERROR();
   glFramebufferTexture(GL_FRAMEBUFFER,
     (GLenum)(GL_COLOR_ATTACHMENT0 + m_colorTextures.size()),
     txt->GetName(),
     0);
+  CS_GL_ERROR();
   m_colorTextures.push_back(txt);
 }
 
@@ -126,7 +137,9 @@ eTextureType csGL4RenderTargetCube::GetType() const
 bool csGL4RenderTargetCube::Compile()
 {
   GLenum res = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+  CS_GL_ERROR();
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  CS_GL_ERROR();
   switch (res) {
   case GL_FRAMEBUFFER_COMPLETE:
     m_log = "Complete";

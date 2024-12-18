@@ -6,6 +6,7 @@
 #include <csCore/math/csColor4f.hh>
 #include <csCore/math/csVector.hh>
 #include <csCore/math/csMatrix.hh>
+#include <csCore/graphics/eTextureUnit.hh>
 
 namespace cs
 {
@@ -56,6 +57,8 @@ struct iShaderAttribute
 	virtual void Bind(const csMatrix4f& v) = 0;
 
 	virtual void Bind(const csMatrix4f* v, Size count) = 0;
+
+  virtual void Bind (eTextureUnit unit) = 0;
 };
 
 

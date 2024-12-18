@@ -12,6 +12,10 @@ class MainWindow;
 }
 QT_END_NAMESPACE
 
+namespace cs
+{
+class csWorld;
+}
 
 class AssetBrowserDockWidget;
 class SceneViewWidget;
@@ -25,9 +29,12 @@ public:
 
   void showEvent (QShowEvent* event) override;
 
+
 public slots:
   void on_actionCreateShaderGraph_triggered(bool checked);
 
+private slots:
+  void initializeScene (cs::csWorld* world);
 private:
   Ui::MainWindow* ui;
 

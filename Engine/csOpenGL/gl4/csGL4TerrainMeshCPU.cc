@@ -67,12 +67,11 @@ static GLenum DataTypeMap[] = {
 
 void csGL4TerrainMeshCPU::Render(iDevice *graphics, eRenderPass pass)
 {
-  CS_GL_ERROR();
   Update();
 
-  CS_GL_ERROR();
   if (m_vao)
   {
+    CS_GL_ERROR();
     glBindVertexArray(m_vao);
     CS_GL_ERROR();
   }
@@ -83,6 +82,7 @@ void csGL4TerrainMeshCPU::Render(iDevice *graphics, eRenderPass pass)
     const std::vector<csVertexDeclaration::Attribute> &vdAttributes = m_vd.GetAttributes(0);
     for (const csVertexDeclaration::Attribute &attribute: vdAttributes)
     {
+      CS_GL_ERROR();
       glVertexAttribPointer(attribute.Location,
                             attribute.Size,
                             DataTypeMap[attribute.Type],
@@ -90,11 +90,14 @@ void csGL4TerrainMeshCPU::Render(iDevice *graphics, eRenderPass pass)
                             attribute.Stride,
                             reinterpret_cast<const void *>(attribute.Offset)
       );
+      CS_GL_ERROR();
       glEnableVertexAttribArray(attribute.Location);
+      CS_GL_ERROR();
     }
     CS_GL_ERROR();
   }
 
+  CS_GL_ERROR();
   glDrawElements(GL_TRIANGLES, (GLsizei) m_indexBufferSize, GL_UNSIGNED_INT, nullptr);
 
   CS_GL_ERROR();
@@ -291,7 +294,9 @@ void csGL4TerrainMeshCPU::RebuildIndices()
 {
   if (m_vao)
   {
+    CS_GL_ERROR();
     glBindVertexArray(0);
+    CS_GL_ERROR();
   }
 
   m_ib->Bind();
@@ -519,7 +524,9 @@ iTerrainMesh *csGL4TerrainMeshGeneratorCPU::Generate()
 
   if (!m_compat)
   {
+    CS_GL_ERROR();
     glBindVertexArray(0);
+    CS_GL_ERROR();
   }
 
   uint16_t vertexSize = sizeof(float) * 8;
@@ -573,8 +580,11 @@ iTerrainMesh *csGL4TerrainMeshGeneratorCPU::Generate()
   GLuint vao = 0;
   if (!m_compat)
   {
+    CS_GL_ERROR();
     glGenVertexArrays(1, &vao);
+    CS_GL_ERROR();
     glBindVertexArray(vao);
+    CS_GL_ERROR();
   }
 
 
@@ -585,6 +595,7 @@ iTerrainMesh *csGL4TerrainMeshGeneratorCPU::Generate()
   {
     for (auto &attribute: attributes)
     {
+      CS_GL_ERROR();
       glVertexAttribPointer(
           attribute.Location,
           attribute.Size,
@@ -593,9 +604,12 @@ iTerrainMesh *csGL4TerrainMeshGeneratorCPU::Generate()
           attribute.Stride,
           reinterpret_cast<const void *>(attribute.Offset)
       );
+      CS_GL_ERROR();
       glEnableVertexAttribArray(attribute.Location);
+      CS_GL_ERROR();
     }
     glBindVertexArray(0);
+    CS_GL_ERROR();
   }
 
   return new csGL4TerrainMeshCPU(

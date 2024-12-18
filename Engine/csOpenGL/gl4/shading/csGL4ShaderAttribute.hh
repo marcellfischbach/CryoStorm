@@ -34,6 +34,7 @@ public:
 	void Bind(const csMatrix3f* v, Size count) override;
 	void Bind(const csMatrix4f& v) override;
 	void Bind(const csMatrix4f* v, Size count) override;
+  void Bind (eTextureUnit unit);
 
 private:
 	GLint m_location;

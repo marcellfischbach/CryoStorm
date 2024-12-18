@@ -1,6 +1,7 @@
 
 #include <csOpenGL/gl4/csGL4TextureCube.hh>
 #include <csOpenGL/gl4/csGL4PixelFormatMap.hh>
+#include <csOpenGL/csGLError.hh>
 #include <csCore/graphics/csImage.hh>
 #include <csCore/graphics/iSampler.hh>
 #include <csCore/math/csMath.hh>
@@ -14,23 +15,31 @@ csGL4TextureCube::csGL4TextureCube()
         , m_sampler(nullptr)
 {
   CS_CLASS_GEN_CONSTR;
+  CS_GL_ERROR()
   glGenTextures(1, &m_name);
+  CS_GL_ERROR()
 }
 
 csGL4TextureCube::~csGL4TextureCube()
 {
+  CS_GL_ERROR()
   glDeleteTextures(1, &m_name);
+  CS_GL_ERROR()
   m_name = 0;
 }
 
 void csGL4TextureCube::Bind()
 {
+  CS_GL_ERROR()
   glBindTexture(GL_TEXTURE_CUBE_MAP, m_name);
+  CS_GL_ERROR()
 }
 
 void csGL4TextureCube::Unbind()
 {
+  CS_GL_ERROR()
   glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+  CS_GL_ERROR()
 }
 
 bool csGL4TextureCube::Initialize(uint16_t size, ePixelFormat format, bool generateMipMaps)
@@ -39,11 +48,13 @@ bool csGL4TextureCube::Initialize(uint16_t size, ePixelFormat format, bool gener
   m_format = format;
   Bind();
 
+  CS_GL_ERROR()
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  CS_GL_ERROR()
 
   uint8_t level = 0;
 
@@ -54,6 +65,7 @@ bool csGL4TextureCube::Initialize(uint16_t size, ePixelFormat format, bool gener
     m_level.push_back(lvl);
     for (GLenum i=0; i<6; i++)
     {
+      CS_GL_ERROR()
       glTexImage2D(
               GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
               level,
@@ -65,6 +77,7 @@ bool csGL4TextureCube::Initialize(uint16_t size, ePixelFormat format, bool gener
               csGL4PixelFormatClientDataType[format],
               nullptr
       );
+      CS_GL_ERROR()
     }
     if (!generateMipMaps || size == 1)
     {
@@ -99,6 +112,7 @@ void csGL4TextureCube::Data(eCubeFace face, uint16_t level, ePixelFormat format,
 
 
   Level& lvl = m_level[level];
+  CS_GL_ERROR()
   glTexSubImage2D(
           GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLenum>(face),
           level,
@@ -108,6 +122,7 @@ void csGL4TextureCube::Data(eCubeFace face, uint16_t level, ePixelFormat format,
           csGL4PixelFormatClientDataType[format],
           data
   );
+  CS_GL_ERROR()
 }
 
 void csGL4TextureCube::Data(eCubeFace face, uint16_t level, uint16_t x, uint16_t y, uint16_t width, uint16_t height, ePixelFormat format, const void* data)
@@ -117,6 +132,7 @@ void csGL4TextureCube::Data(eCubeFace face, uint16_t level, uint16_t x, uint16_t
     return;
   }
 
+  CS_GL_ERROR()
   glTexSubImage2D(
           GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLenum>(face),
           level,
@@ -126,6 +142,7 @@ void csGL4TextureCube::Data(eCubeFace face, uint16_t level, uint16_t x, uint16_t
           csGL4PixelFormatClientDataType[format],
           data
   );
+  CS_GL_ERROR()
 }
 
 

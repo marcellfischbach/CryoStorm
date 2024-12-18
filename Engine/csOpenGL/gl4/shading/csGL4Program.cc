@@ -3,6 +3,7 @@
 #include <csOpenGL/gl4/shading/csGL4ShaderAttribute.hh>
 #include <csOpenGL/gl4/shading/csGL4ShaderAttributeNull.hh>
 #include <csOpenGL/gl4/csGL4Exceptions.hh>
+#include <csOpenGL/csGLError.hh>
 #include <GL/glew.h>
 
 
@@ -13,14 +14,18 @@ namespace cs::opengl
 csGL4Program::csGL4Program()
 {
   CS_CLASS_GEN_CONSTR;
+  CS_GL_ERROR();
   m_name = glCreateProgram();
+  CS_GL_ERROR();
 }
 
 csGL4Program::~csGL4Program()
 {
   if (m_name)
   {
+    CS_GL_ERROR();
     glDeleteProgram(m_name);
+    CS_GL_ERROR();
     m_name = 0;
   }
 
@@ -45,7 +50,9 @@ void csGL4Program::AttachShader(csGL4Shader *shader)
   shader->AddRef();
   m_shaders.push_back(shader);
 
+  CS_GL_ERROR();
   glAttachShader(m_name, shader->GetName());
+  CS_GL_ERROR();
 }
 
 void csGL4Program::DetachShader(csGL4Shader *shader)
@@ -61,21 +68,27 @@ void csGL4Program::DetachShader(csGL4Shader *shader)
   }
 
 
+  CS_GL_ERROR();
   glDetachShader(m_name, shader->GetName());
+  CS_GL_ERROR();
   m_shaders.erase(it);
   shader->Release();
 }
 
 void csGL4Program::Link()
 {
+  CS_GL_ERROR();
   glLinkProgram(m_name);
   GLint state;
+  CS_GL_ERROR();
   glGetProgramiv(m_name, GL_LINK_STATUS, &state);
+  CS_GL_ERROR();
   if (state == GL_FALSE)
   {
     GLchar  buffer[4096];
     GLsizei length;
     glGetProgramInfoLog(m_name, 4096, &length, buffer);
+    CS_GL_ERROR();
     buffer[length] = '\0';
     throw csGL4ProgramLinkException(std::string(buffer));
   }
