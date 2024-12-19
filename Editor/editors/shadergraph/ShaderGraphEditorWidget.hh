@@ -22,6 +22,8 @@ namespace cs
 class csCameraState;
 class csClass;
 class csEntity;
+class csMaterial;
+class csStaticMeshState;
 class csShaderGraph;
 class csSGNode;
 class csSGNodeInput;
@@ -41,9 +43,12 @@ public:
   ~ShaderGraphEditorWidget() override;
 
 private slots:
-  void on_graph_initialize(cs::csWorld* world);
+  void on_preview_initialize(cs::csWorld* world);
+  void on_btnCompile_clicked();
+  void CompileMaterial();
 
 private:
+
 
 
   Ui::ShaderGraphEditorWidget *m_gui;
@@ -53,8 +58,12 @@ private:
   cs::csEntity* m_cameraEntity = nullptr;
   cs::csCameraState *m_camera = nullptr;
 
-  cs::csShaderGraph *m_shaderGraph;
-  ShaderGraphNodePalletTreeModel *m_palletModel;
+  cs::csShaderGraph *m_shaderGraph = nullptr;
+  ShaderGraphNodePalletTreeModel *m_palletModel = nullptr;
 
+  cs::csStaticMeshState* m_cube = nullptr;
+  cs::csEntity* m_cubeEntity = nullptr;
+
+  cs::csMaterial* m_material = nullptr;
 
 };

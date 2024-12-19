@@ -255,7 +255,20 @@ in vec3 cs_vs_out_WorldTangent;
   auto roughness = GetInputValue(m_shaderGraph->GetRoughnessInput());
   auto metallic  = GetInputValue(m_shaderGraph->GetMetallicInput());
 
-  src += "  cs_FragDiffuseRoughness = vec4(" + diffuse.FullQualified() + ", " + roughness.FullQualified() + ");\n";
+  std::string diffuseValue;
+  if ((diffuse.Type & eSGValueType::Vector4) != eSGValueType::Invalid)
+  {
+    diffuseValue = diffuse.FullQualified() + ".xyz";
+  }
+  else if ((diffuse.Type & eSGValueType::Vector3) != eSGValueType::Invalid)
+  {
+    diffuseValue = diffuse.FullQualified();
+  }
+  else
+  {
+    diffuseValue += "vec3(" + diffuse.FullQualified() + ")";
+  }
+  src += "  cs_FragDiffuseRoughness = vec4(" + diffuseValue + ", " + roughness.FullQualified() + ");\n";
   src += "  cs_FragEmission = vec4(0, 0, 0, 0);\n";
 
   src += "}\n\n";

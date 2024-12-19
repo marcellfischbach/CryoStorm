@@ -317,7 +317,18 @@ in vec2 cs_vs_out_ScreenCoordinates;
 
   auto diffuse   = GetInputValue(m_shaderGraph->GetDiffuseInput());
   auto alpha     = GetInputValue(m_shaderGraph->GetAlphaInput());
-  src += "  vec3 diffuse = " + diffuse.FullQualified() + ";\n";
+  if ((diffuse.Type & eSGValueType::Vector4) != eSGValueType::Invalid)
+  {
+    src += "  vec3 diffuse = " + diffuse.FullQualified() + ".xyz;\n";
+  }
+  else if ((diffuse.Type & eSGValueType::Vector3) != eSGValueType::Invalid)
+  {
+    src += "  vec3 diffuse = " + diffuse.FullQualified() + ";\n";
+  }
+  else
+  {
+    src += "  vec3 diffuse = vec3(" + diffuse.FullQualified() + ");\n";
+  }
   src += "  float alpha = " + alpha.FullQualified() + ";\n";
   if (m_shaderGraph->GetLightingMode() == csShaderGraph::eLM_Default)
   {

@@ -71,6 +71,8 @@ set(SOURCES
         graphics/csCamera.hh
         graphics/csDefaultFrameRenderer.cc
         graphics/csDefaultFrameRenderer.hh
+        graphics/csDefaultMeshGenerators.cc
+        graphics/csDefaultMeshGenerators.hh
         graphics/eBufferUsage.hh
         graphics/eCompareFunc.hh
         graphics/eDataType.hh

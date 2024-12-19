@@ -606,6 +606,39 @@ csGL4ShaderGraphCompiler::OutputVariable csGL4ShaderGraphCompiler::GetInputValue
       return m_outputVariables[source];
     }
   }
+
+  std::string val = std::to_string(input->GetScalar());
+  size_t inputValueType = static_cast<size_t>(input->GetInputValueType());
+  if ((input->GetInputValueType() & eSGValueType::Vector4) != eSGValueType::Invalid)
+  {
+    return {
+        "vec4(" + val + ", " + val + ", " + val + ", 0.0)",
+        "",
+        eSGValueType::Vector4,
+        false
+    };
+
+  }
+  else if ((input->GetInputValueType() & eSGValueType::Vector3) != eSGValueType::Invalid)
+  {
+    return {
+        "vec3(" + val + ", " + val + ", " + val + ")",
+        "",
+        eSGValueType::Vector3,
+        false
+    };
+
+  }
+  else if ((input->GetInputValueType() & eSGValueType::Vector2) != eSGValueType::Invalid)
+  {
+    return {
+        "vec2(" + val + ", " + val + ")",
+        "",
+        eSGValueType::Vector3,
+        false
+    };
+
+  }
   return {
       std::to_string(input->GetScalar()),
       "",

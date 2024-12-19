@@ -88,7 +88,7 @@ class CS_CORE_API csSGNodeInput : public CS_SUPER(csSGNodeIO)
 {
   CS_CLASS_GEN;
 public:
-  csSGNodeInput(csSGNode *node, const std::string &name) : csSGNodeIO(node, name)
+  csSGNodeInput(csSGNode *node, const std::string &name) : csSGNodeIO(node, name), m_scalar(0.0f)
   {}
   ~csSGNodeInput() override = default;
 

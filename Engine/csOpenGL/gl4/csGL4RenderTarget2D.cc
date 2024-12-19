@@ -17,6 +17,7 @@ csGL4RenderTarget2D::csGL4RenderTarget2D()
     , m_height(0)
     , m_depthBuffer(0)
     , m_depthTexture(nullptr)
+    , m_externalRenderTarget(false)
 {
   CS_CLASS_GEN_CONSTR;
   CS_GL_ERROR();
@@ -31,6 +32,7 @@ csGL4RenderTarget2D::csGL4RenderTarget2D(uint32_t name)
     , m_height(0)
     , m_depthBuffer(0)
     , m_depthTexture(nullptr)
+    , m_externalRenderTarget(true)
 {
   CS_CLASS_GEN_CONSTR;
 
@@ -71,12 +73,18 @@ csGL4RenderTarget2D::csGL4RenderTarget2D(uint32_t name, uint16_t width, uint16_t
     , m_height(height)
     , m_depthBuffer(0)
     , m_depthTexture(nullptr)
+    , m_externalRenderTarget(true)
 {
   CS_CLASS_GEN_CONSTR;
 }
 
 csGL4RenderTarget2D::~csGL4RenderTarget2D()
 {
+  if (m_externalRenderTarget)
+  {
+    m_name = 0;
+    return;
+  }
   CS_GL_ERROR();
   glDeleteFramebuffers(1, &m_name);
   CS_GL_ERROR();

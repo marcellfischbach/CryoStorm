@@ -13,6 +13,7 @@ class csViewport;
 class csWorld;
 }
 
+class QTimer;
 class SceneViewWidget;
 
 CS_CLASS()
@@ -65,6 +66,7 @@ public:
 signals:
   void initialize(cs::csWorld *world);
 
+
 protected:
   void initializeGL() override;
   void resizeGL(int w, int h) override;
@@ -76,4 +78,5 @@ private:
 
   class WindowPriv;
   SceneViewWidget_WindowPriv *m_window;
+  QTimer *m_timer;
 };

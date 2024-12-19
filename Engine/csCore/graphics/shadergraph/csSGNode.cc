@@ -170,7 +170,7 @@ eSGValueType csSGNodeInput::GetInputValueType() const
   {
     return m_source->GetValueType();
   }
-  return eSGValueType::Float;
+  return GetTypes();
 }
 
 

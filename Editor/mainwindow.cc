@@ -26,6 +26,7 @@ MainWindow::MainWindow(QWidget* parent)
   m_assetBrowser = new AssetBrowserDockWidget(this);
   m_sceneViewWidget = new SceneViewWidget(this);
 
+  m_sceneViewWidget->setObjectName(QString ("Main sceneview"));
 
 
 
@@ -36,7 +37,6 @@ MainWindow::MainWindow(QWidget* parent)
 
   connect (m_sceneViewWidget, SIGNAL(initialize(cs::csWorld *)), this, SLOT(initializeScene(cs::csWorld *)));
 
-//  QTimer::singleShot(250, [this] (){ on_actionCreateShaderGraph_triggered(false);});
 }
 
 void MainWindow::showEvent(QShowEvent *event)
@@ -48,7 +48,6 @@ void MainWindow::on_actionCreateShaderGraph_triggered(bool checked)
   ShaderGraphEditorWidget *dlg = new ShaderGraphEditorWidget (this);
   dlg->show();
 }
-
 void MainWindow::initializeScene(cs::csWorld *world)
 {
 
@@ -58,7 +57,10 @@ void MainWindow::initializeScene(cs::csWorld *world)
   camera->SetClearColorMode(eClearColorMode::PlainColor);
   cameraEntity->AttachState(camera);
   world->Attach(cameraEntity);
+
+
 }
+
 
 MainWindow::~MainWindow()
 {

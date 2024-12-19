@@ -63,6 +63,8 @@ private:
 
   uint32_t  m_depthBuffer;
 
+  bool  m_externalRenderTarget;
+
   struct TextureBind
   {
     iTexture2D *texture = nullptr;

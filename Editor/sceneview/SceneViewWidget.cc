@@ -5,6 +5,7 @@
 
 #include <sceneview/SceneViewWidget.hh>
 #include <QCoreApplication>
+#include <QTimer>
 #include <csCore/csEngine.hh>
 #include <csCore/csViewport.hh>
 #include <csCore/csObjectRegistry.hh>
@@ -13,6 +14,7 @@
 #include <csCore/graphics/iFrameRenderer.hh>
 #include <csCore/window/iWindow.hh>
 #include <csOpenGL/gl4/csGL4RenderTarget2D.hh>
+
 
 using namespace cs;
 
@@ -28,6 +30,12 @@ SceneViewWidget::SceneViewWidget(QWidget *parent)
     , m_world(nullptr)
 {
 
+  m_timer = new QTimer(this);
+  connect (m_timer, SIGNAL(timeout()), this, SLOT(update()));
+  m_timer->setInterval(10);
+  m_timer->start();
+
+  setUpdateBehavior(QOpenGLWidget::PartialUpdate);
 }
 
 SceneViewWidget::~SceneViewWidget()
@@ -61,6 +69,7 @@ std::vector<std::string> extract_args()
 
   return args;
 }
+
 
 void SceneViewWidget::initializeGL()
 {
@@ -101,14 +110,7 @@ void SceneViewWidget::paintGL()
     m_world = new csWorld();
     emit initialize(m_world);
   }
-  int fb = 0;
-  glGetIntegerv(GL_RENDERBUFFER_BINDING, &fb);
-  if (!glIsFramebuffer(fb))
-  {
-    fb = 0;
-  }
-
-
+  GLuint fb = defaultFramebufferObject();
   opengl::csGL4RenderTarget2D rt (fb, QWidget::width(), QWidget::height());
 
 
