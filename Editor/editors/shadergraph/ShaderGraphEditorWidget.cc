@@ -4,7 +4,9 @@
 
 #include <editors/shadergraph/ShaderGraphEditorWidget.hh>
 #include <editors/shadergraph/ShaderGraphNodeItem.hh>
+#include <editors/shadergraph/ShaderGraphNodePropertiesWidget.hh>
 #include <editors/shadergraph/ShaderGraphNodePalletTreeModel.hh>
+#include <editors/shadergraph/ShaderGraphShaderGraphPropertiesWidget.hh>
 #include <csCore/graphics/shadergraph/csShaderGraph.hh>
 #include <csCore/graphics/shadergraph/iShaderGraphCompiler.hh>
 #include <csCore/graphics/iDevice.hh>
@@ -31,6 +33,10 @@ ShaderGraphEditorWidget::ShaderGraphEditorWidget(QWidget *parent)
     , m_palletModel(new ShaderGraphNodePalletTreeModel())
 {
   m_gui->setupUi(this);
+
+  m_gui->propertiesStack->setCurrentWidget(m_gui->noSelection);
+  m_gui->shaderGraphPage->SetShaderGraph(m_shaderGraph);
+
   m_gui->pallet->setModel(m_palletModel);
   connect(this, SIGNAL(finished(int)), this, SLOT(deleteLater()));
 
@@ -50,6 +56,7 @@ ShaderGraphEditorWidget::ShaderGraphEditorWidget(QWidget *parent)
         << 250;
   m_gui->mainSplitter->setSizes(sizes);
 
+  on_graph_SelectionChanged();
 }
 
 
@@ -83,6 +90,21 @@ void ShaderGraphEditorWidget::on_preview_initialize(cs::csWorld *world)
   m_world->Attach(m_cameraEntity);
 
 
+  m_light = new csLightState();
+  m_light->SetType(eLightType::eLT_Directional);
+  m_light->SetColor(csColor4f(1.0f, 1.0f, 1.0f, 1.0f));
+  m_light->SetCastShadow(true);
+  m_light->SetShadowMapBias(0.003);
+  m_lightEntity = new csEntity("Light");
+  m_lightEntity->AttachState(m_light);
+
+  m_light->GetTransform()
+      .SetRotation(csQuaternion::FromAxisAngle(cs::csVector3f(1.0f, 0.5f, 0.5f).Normalized(),
+                                               cs::ceDeg2Rad(45.0f)))
+      .Finish();
+  m_world->Attach(m_lightEntity);
+
+
   iRenderMesh *cubeRenderMesh = csCubeMeshGenerator().Generate();
   auto cubeMesh = new csMesh();
   cubeMesh->AddMaterialSlot("Slot0", nullptr);
@@ -101,6 +123,34 @@ void ShaderGraphEditorWidget::on_btnCompile_clicked()
   CompileMaterial();
 }
 
+void ShaderGraphEditorWidget::on_graph_SelectionChanged()
+{
+  std::vector<csSGNode *> nodes = m_gui->graph->GetSelection();
+
+  if (nodes.empty() || nodes.size() > 1)
+  {
+    m_gui->propertiesStack->setCurrentWidget(m_gui->noSelection);
+    return;
+  }
+
+  csSGNode *node = nodes[0];
+  if (csInstanceOf<csShaderGraph>(node))
+  {
+    m_gui->propertiesStack->setCurrentWidget(m_gui->shaderGraphPage);
+  }
+  else
+  {
+    m_gui->propertiesStack->setCurrentWidget(m_gui->nodePage);
+    m_gui->nodePage->SetNode(node);
+  }
+
+}
+
+void ShaderGraphEditorWidget::on_graph_ConnectionsChanged()
+{
+  m_gui->shaderGraphPage->UpdateState();
+  m_gui->nodePage->UpdateState();
+}
 
 void ShaderGraphEditorWidget::CompileMaterial()
 {
@@ -118,10 +168,10 @@ void ShaderGraphEditorWidget::CompileMaterial()
   csAutoRelease delCompiler(compiler);
 
 
-  iShaderGraphCompiler::Parameters params {};
+  iShaderGraphCompiler::Parameters params{};
   params.DebugSources = true;
-  auto material = compiler->Compile(m_shaderGraph, params);
-  CS_SET(m_material, material);
+  CS_RELEASE(m_material);
+  m_material = compiler->Compile(m_shaderGraph, params);
 
   if (m_cube)
   {

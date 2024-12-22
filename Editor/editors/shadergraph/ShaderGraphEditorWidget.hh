@@ -23,6 +23,7 @@ class csCameraState;
 class csClass;
 class csEntity;
 class csMaterial;
+class csLightState;
 class csStaticMeshState;
 class csShaderGraph;
 class csSGNode;
@@ -45,6 +46,8 @@ public:
 private slots:
   void on_preview_initialize(cs::csWorld* world);
   void on_btnCompile_clicked();
+  void on_graph_SelectionChanged ();
+  void on_graph_ConnectionsChanged ();
   void CompileMaterial();
 
 private:
@@ -57,6 +60,9 @@ private:
   cs::csWorld* m_world = nullptr;
   cs::csEntity* m_cameraEntity = nullptr;
   cs::csCameraState *m_camera = nullptr;
+
+  cs::csEntity* m_lightEntity = nullptr;
+  cs::csLightState *m_light = nullptr;
 
   cs::csShaderGraph *m_shaderGraph = nullptr;
   ShaderGraphNodePalletTreeModel *m_palletModel = nullptr;

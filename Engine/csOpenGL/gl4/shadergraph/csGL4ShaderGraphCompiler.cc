@@ -17,7 +17,7 @@ csMaterial *csGL4ShaderGraphCompiler::Compile(cs::csShaderGraph *shaderGraph, co
 {
   m_shaderGraph = shaderGraph;
   m_errorString = "";
-  m_parameters  = parameters;
+  m_parameters = parameters;
 
   if (!csGL4ShaderGraphLightData::Get().Valid)
   {
@@ -47,8 +47,8 @@ csMaterial *csGL4ShaderGraphCompiler::Compile(cs::csShaderGraph *shaderGraph, co
   GenerateDepth(depth);
   GenerateForward(forward);
 
-  iShader *depthShader   = Compile(depth);
-  iShader *forwardShader = Compile(forward);
+  iShader *depthShader = Compile(depth, "Depth");
+  iShader *forwardShader = Compile(forward, "Forward");
 
   csMaterial *material = new csMaterial();
   material->SetShader(eRP_Depth, depthShader);
@@ -59,7 +59,7 @@ csMaterial *csGL4ShaderGraphCompiler::Compile(cs::csShaderGraph *shaderGraph, co
   {
     SourceBundle gbuffer;
     GenerateGBuffer(gbuffer);
-    iShader *gbufferShader = Compile(gbuffer);
+    iShader *gbufferShader = Compile(gbuffer, "GBuffer");
     material->SetShader(eRP_GBuffer, gbufferShader);
   }
 
@@ -106,6 +106,7 @@ csMaterial *csGL4ShaderGraphCompiler::Compile(cs::csShaderGraph *shaderGraph, co
   }
   if (!m_errorString.empty())
   {
+    CS_RELEASE(material);
     return nullptr;
   }
 
@@ -146,9 +147,9 @@ static bool has_cycle(const csSGNode *node, const csSGNode *referenceNode)
 {
   for (size_t i = 0, in = node->GetNumberOfInputs(); i < in; i++)
   {
-    const csSGNodeInput  *input      = node->GetInput(i);
-    const csSGNodeOutput *source     = input->GetSource();
-    const csSGNode       *sourceNode = source ? source->GetNode() : nullptr;
+    const csSGNodeInput *input = node->GetInput(i);
+    const csSGNodeOutput *source = input->GetSource();
+    const csSGNode *sourceNode = source ? source->GetNode() : nullptr;
     if (sourceNode)
     {
       if (sourceNode == referenceNode)
@@ -194,7 +195,7 @@ static void linearize(std::set<csSGNode *> &untouched, csSGNodeInput *input, std
     return;
   }
   csSGNode *sourceNode = source->GetNode();
-  auto     it          = untouched.find(sourceNode);
+  auto it = untouched.find(sourceNode);
   if (it == untouched.end())
   {
     return;
@@ -213,7 +214,7 @@ static void linearize(std::set<csSGNode *> &untouched, csSGNodeInput *input, std
 void csGL4ShaderGraphCompiler::LinearizeNodes()
 {
   std::set<csSGNode *> untouchedNodes;
-  for (size_t        i = 0, in = m_shaderGraph->GetNumberOfNodes(); i < in; i++)
+  for (size_t i = 0, in = m_shaderGraph->GetNumberOfNodes(); i < in; i++)
   {
     untouchedNodes.insert(m_shaderGraph->GetNode(i));
   }
@@ -267,7 +268,7 @@ bool csGL4ShaderGraphCompiler::VerifyNodeType(csSGNode *node)
 
   for (size_t i = 0, in = node->GetNumberOfInputs(); i < in; i++)
   {
-    csSGNodeInput  *input  = node->GetInput(i);
+    csSGNodeInput *input = node->GetInput(i);
     csSGNodeOutput *source = input->GetSource();
 
     if (source)
@@ -303,9 +304,9 @@ bool csGL4ShaderGraphCompiler::VerifyNodeType(csSGNode *node)
 bool csGL4ShaderGraphCompiler::VerifyResources()
 {
   std::map<std::string, csSGResourceNode *> resources;
-  for (size_t                             i = 0, in = m_shaderGraph->GetNumberOfNodes(); i < in; ++i)
+  for (size_t i = 0, in = m_shaderGraph->GetNumberOfNodes(); i < in; ++i)
   {
-    csSGNode         *node         = m_shaderGraph->GetNode(i);
+    csSGNode *node = m_shaderGraph->GetNode(i);
     csSGResourceNode *resourceNode = node->Query<csSGResourceNode>();
     if (resourceNode)
     {
@@ -341,8 +342,8 @@ std::string line_number(size_t number)
 
 std::string replace_all(const std::string &input, const std::string &from, const std::string &to)
 {
-  std::string str       = input;
-  size_t      start_pos = 0;
+  std::string str = input;
+  size_t start_pos = 0;
   while ((start_pos = str.find(from, start_pos)) != std::string::npos)
   {
     str.replace(start_pos, from.length(), to);
@@ -357,9 +358,9 @@ std::string annotate_with_line_numbers(const std::string &code)
   std::string str = replace_all(code, "\r\n", "\n");
   str = replace_all(str, "\r", "\n");
 
-  size_t          line_no = 1;
-  bool            newLine = true;
-  bool            hadR    = false;
+  size_t line_no = 1;
+  bool newLine = true;
+  bool hadR = false;
   for (const auto &ch: str)
   {
     if (newLine)
@@ -409,6 +410,7 @@ static bool Attach(csGL4Program *program,
                    eGL4ShaderType type,
                    const std::string &src,
                    bool debugSources,
+                   const std::string &pathName,
                    const std::string &debugName)
 {
   if (src.empty())
@@ -418,7 +420,7 @@ static bool Attach(csGL4Program *program,
 
   if (debugSources)
   {
-    printf("%s [%s]:\n%s\n\n\n", ShaderTypeName[type].c_str(), debugName.c_str(), src.c_str());
+    printf("%s.%s [%s]:\n%s\n\n\n", pathName.c_str(), ShaderTypeName[type].c_str(), debugName.c_str(), src.c_str());
     fflush(stdout);
   }
 
@@ -434,7 +436,7 @@ static bool Attach(csGL4Program *program,
 }
 
 
-iShader *csGL4ShaderGraphCompiler::Compile(SourceBundle &bundle)
+iShader *csGL4ShaderGraphCompiler::Compile(SourceBundle &bundle, const std::string &pathName)
 {
 
   if (bundle.vert.empty() || bundle.frag.empty())
@@ -442,11 +444,11 @@ iShader *csGL4ShaderGraphCompiler::Compile(SourceBundle &bundle)
     return nullptr;
   }
   csGL4Program *program = new csGL4Program();
-  if (!Attach(program, eST_Vertex, bundle.vert, m_parameters.DebugSources, m_parameters.DebugName)
-      || !Attach(program, eST_TessEval, bundle.eval, m_parameters.DebugSources, m_parameters.DebugName)
-      || !Attach(program, eST_TessControl, bundle.ctrl, m_parameters.DebugSources, m_parameters.DebugName)
-      || !Attach(program, eST_Geometry, bundle.geom, m_parameters.DebugSources, m_parameters.DebugName)
-      || !Attach(program, eST_Fragment, bundle.frag, m_parameters.DebugSources, m_parameters.DebugName))
+  if (!Attach(program, eST_Vertex, bundle.vert, m_parameters.DebugSources, pathName, m_parameters.DebugName)
+      || !Attach(program, eST_TessEval, bundle.eval, m_parameters.DebugSources, pathName, m_parameters.DebugName)
+      || !Attach(program, eST_TessControl, bundle.ctrl, m_parameters.DebugSources, pathName, m_parameters.DebugName)
+      || !Attach(program, eST_Geometry, bundle.geom, m_parameters.DebugSources, pathName, m_parameters.DebugName)
+      || !Attach(program, eST_Fragment, bundle.frag, m_parameters.DebugSources, pathName, m_parameters.DebugName))
   {
     program->Release();
     return nullptr;
@@ -498,7 +500,7 @@ std::vector<csSGNode *> csGL4ShaderGraphCompiler::ScanNeededVariables(std::vecto
     return result;
   }
   std::set<csSGNode *> needs;
-  for (auto            input: inputs)
+  for (auto input: inputs)
   {
     ScanNeededVariables(needs, input);
   }
@@ -524,7 +526,8 @@ csGL4ShaderGraphLightData::csGL4ShaderGraphLightData()
   Valid = false;
   const csSettingsFile &gfxSettings = csSettings::Get().Graphics();
 
-  csTextFile *txt = csAssetManager::Get()->Get<csTextFile>("/shaders/gl4/shadergraph/diffuse/diffuse_default_lighting.glsl");
+  csTextFile *txt = csAssetManager::Get()->Get<csTextFile>(
+      "/shaders/gl4/shadergraph/diffuse/diffuse_default_lighting.glsl");
   if (!txt)
   {
     return;
@@ -612,7 +615,7 @@ bool csGL4ShaderGraphCompiler::IsNeedingTangent(const std::vector<csSGNode *> &n
 void csGL4ShaderGraphCompiler::SetMaterialDefaults(cs::csMaterial *material)
 {
   std::vector<csSGNode *> nodes;
-  for (int              i = 0; i < m_shaderGraph->GetNumberOfNodes(); ++i)
+  for (int i = 0; i < m_shaderGraph->GetNumberOfNodes(); ++i)
   {
     nodes.push_back(m_shaderGraph->GetNode(i));
   }

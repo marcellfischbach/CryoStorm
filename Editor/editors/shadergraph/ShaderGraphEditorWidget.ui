@@ -61,7 +61,45 @@
        <enum>Qt::Orientation::Vertical</enum>
       </property>
       <widget class="SceneViewWidget" name="preview"/>
-      <widget class="QTreeView" name="properties"/>
+      <widget class="QStackedWidget" name="propertiesStack">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="currentIndex">
+        <number>1</number>
+       </property>
+       <widget class="QWidget" name="noSelection">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_2">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>No or multiple node(s) selected</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="ShaderGraphNodePropertiesWidget" name="nodePage"/>
+       <widget class="ShaderGraphShaderGraphPropertiesWidget" name="shaderGraphPage"/>
+      </widget>
      </widget>
      <widget class="ShaderGraphGraphicsView" name="graph">
       <property name="sizePolicy">
@@ -102,6 +140,18 @@
    <class>ShaderGraphGraphicsView</class>
    <extends>QGraphicsView</extends>
    <header location="global">editors/shadergraph/ShaderGraphGraphicsView.hh</header>
+  </customwidget>
+  <customwidget>
+   <class>ShaderGraphShaderGraphPropertiesWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">editors/shadergraph/ShaderGraphShaderGraphPropertiesWidget.hh</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ShaderGraphNodePropertiesWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">editors/shadergraph/ShaderGraphNodePropertiesWidget.hh</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

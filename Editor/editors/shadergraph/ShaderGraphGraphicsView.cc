@@ -71,7 +71,7 @@ void ShaderGraphGraphicsView::mousePressEvent(QMouseEvent *event)
     }
     else
     {
-      ClearSelection();
+      ClearSelection(false);
     }
   }
   else if (event->button() == Qt::RightButton)
@@ -156,6 +156,17 @@ void ShaderGraphGraphicsView::BeginDragSelectedNodes(const QPointF &scenePos)
   }
 }
 
+std::vector<csSGNode*> ShaderGraphGraphicsView::GetSelection() const
+{
+  std::vector<csSGNode*> selection;
+
+  for (auto sel : m_selectedNodes)
+  {
+    selection.push_back(sel->GetNode());
+  }
+
+  return selection;
+}
 
 void ShaderGraphGraphicsView::UpdateDragSelectedNodes(const QPointF &scenePos)
 {
@@ -346,6 +357,8 @@ void ShaderGraphGraphicsView::ConnectDragIO()
   output->Add(input);
 
   CreateWire(outputNode, output, inputNode, input);
+
+  emit ConnectionsChanged();
 }
 
 void ShaderGraphGraphicsView::CreateWire(ShaderGraphNodeItem *outputNode,
@@ -376,6 +389,7 @@ void ShaderGraphGraphicsView::RemoveWireToNode(ShaderGraphNodeItem *node)
       RemoveWire(wire);
     }
   }
+  emit ConnectionsChanged();
 }
 
 
@@ -386,9 +400,11 @@ void ShaderGraphGraphicsView::RemoveWireToInput(ShaderGraphNodeItem *inputNode, 
     if (wire.Destination == inputNode && wire.DestinationIO == input)
     {
       RemoveWire(wire);
+      emit ConnectionsChanged();
       return;
     }
   }
+
 }
 
 
@@ -532,13 +548,13 @@ void ShaderGraphGraphicsView::HandleSelection(const QPointF &scenePos, QMouseEve
   ShaderGraphNodeItem *node = FindNode(scenePos);
   if (!node)
   {
-    ClearSelection();
+    ClearSelection(false);
   }
   else if (node->IsHeader(scenePos))
   {
     if ((event->modifiers() & (Qt::ShiftModifier | Qt::ControlModifier)) == 0)
     {
-      ClearSelection();
+      ClearSelection(true);
       AddSelection(node);
     }
     else if (IsSelected(node))
@@ -558,14 +574,14 @@ void ShaderGraphGraphicsView::LastMinuteSelection(const QPointF &scenePos, QMous
   ShaderGraphNodeItem *node = FindNode(scenePos);
   if (!node)
   {
-    ClearSelection();
+    ClearSelection(false);
     BeginDragSelectedNodes(m_nodeDrag.startPosClick); // clears the dragging nodes
   }
   else if (!IsSelected(node))
   {
     if ((event->modifiers() & (Qt::ShiftModifier | Qt::ControlModifier)) == 0)
     {
-      ClearSelection();
+      ClearSelection(true);
     }
     AddSelection(node);
     BeginDragSelectedNodes(m_nodeDrag.startPosClick);
@@ -573,7 +589,7 @@ void ShaderGraphGraphicsView::LastMinuteSelection(const QPointF &scenePos, QMous
 }
 
 
-void ShaderGraphGraphicsView::ClearSelection()
+void ShaderGraphGraphicsView::ClearSelection(bool  intermediate)
 {
   for (auto node: m_selectedNodes)
   {
@@ -581,6 +597,12 @@ void ShaderGraphGraphicsView::ClearSelection()
   }
 
   m_selectedNodes.clear();
+
+  if (!intermediate)
+  {
+    emit SelectionChanged();
+  }
+
 }
 
 void ShaderGraphGraphicsView::AddSelection(ShaderGraphNodeItem *node)
@@ -588,6 +610,8 @@ void ShaderGraphGraphicsView::AddSelection(ShaderGraphNodeItem *node)
   node->SetSelected(true);
 
   m_selectedNodes.insert(node);
+
+  emit SelectionChanged();
 }
 
 
@@ -600,6 +624,8 @@ void ShaderGraphGraphicsView::RemoveSelection(ShaderGraphNodeItem *node)
   {
     m_selectedNodes.erase(it);
   }
+
+  emit SelectionChanged();
 }
 
 

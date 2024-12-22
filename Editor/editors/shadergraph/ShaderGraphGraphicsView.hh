@@ -38,6 +38,11 @@ public:
   void dragMoveEvent(QDragMoveEvent *event) override;
   void dropEvent(QDropEvent *event) override;
 
+  std::vector<cs::csSGNode* > GetSelection () const;
+
+signals:
+  void SelectionChanged ();
+  void ConnectionsChanged ();
 
 private:
 
@@ -53,7 +58,7 @@ private:
 
   void HandleSelection(const QPointF &scenePos, QMouseEvent *event);
   void LastMinuteSelection(const QPointF &scenePos, QMouseEvent *event);
-  void ClearSelection();
+  void ClearSelection(bool intermediate);
   void AddSelection(ShaderGraphNodeItem *node);
   void RemoveSelection(ShaderGraphNodeItem *node);
 

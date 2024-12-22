@@ -33,10 +33,16 @@ set(ALL_SOURCES
         editors/shadergraph/ShaderGraphEditorWidget.ui
         editors/shadergraph/ShaderGraphGraphicsView.cc
         editors/shadergraph/ShaderGraphGraphicsView.hh
+        editors/shadergraph/ShaderGraphNodeInputWidget.ui
         editors/shadergraph/ShaderGraphNodeItem.cc
         editors/shadergraph/ShaderGraphNodeItem.hh
         editors/shadergraph/ShaderGraphNodePalletTreeModel.cc
         editors/shadergraph/ShaderGraphNodePalletTreeModel.hh
+        editors/shadergraph/ShaderGraphNodePropertiesWidget.cc
+        editors/shadergraph/ShaderGraphNodePropertiesWidget.hh
+        editors/shadergraph/ShaderGraphShaderGraphPropertiesWidget.cc
+        editors/shadergraph/ShaderGraphShaderGraphPropertiesWidget.hh
+        editors/shadergraph/ShaderGraphShaderGraphPropertiesWidget.ui
 
         sceneview/SceneViewWidget.cc
         sceneview/SceneViewWidget.hh

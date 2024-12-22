@@ -54,6 +54,12 @@ protected:
   void TransformationUpdatedPreChildren() override;
 
 private:
+  struct GfxMeshData
+  {
+    csGfxMesh* gfxMesh;
+    size_t materialSlot;
+  };
+
   void AddMeshToScene(csWorld* world);
   void RemoveMeshFromScene(csWorld* world);
 
@@ -62,7 +68,7 @@ private:
   csMesh * m_mesh;
   bool m_receiveShadow = true;
   bool                    m_castShadow = true;
-  std::vector<csGfxMesh*> m_gfxMeshes;
+  std::vector<GfxMeshData> m_gfxMeshes;
   std::vector<iMaterial*> m_materials;
 };
 
