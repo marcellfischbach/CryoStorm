@@ -47,7 +47,7 @@ void csGL4DeferredPipeline::Initialize()
   m_pointLightRenderer.Initialize();
 
   m_backMaskShader = csAssetManager::Get()->Get<iShader>(
-      csResourceLocator("file://${engine}/opengl/gl4/deferred/back_mask.shader"));
+      csResourceLocator("${engine}/opengl/gl4/deferred/back_mask.shader"));
   if (m_backMaskShader)
   {
     m_attrBackMaskDepth = m_backMaskShader->GetShaderAttribute("Depth");

@@ -63,9 +63,15 @@ void csVFS::InsertAlias(const std::string& alias, const std::string& replacement
 iFile* csVFS::Open(const csResourceLocator& resourceLocator, eAccessMode accessMode, eOpenMode openMode) const
 {
 
+  const std::string &archiveName = resourceLocator.GetArchive();
   std::string resourcePathWithReplacedAliases = ReplaceAliases(resourceLocator.Encoded());
   for (const auto &archive: m_archives)
   {
+    if (!archiveName.empty() && archive->GetName() != archiveName)
+    {
+      continue;
+    }
+
     iFile* file = archive->Open(resourcePathWithReplacedAliases, accessMode, openMode);
     if (file)
     {

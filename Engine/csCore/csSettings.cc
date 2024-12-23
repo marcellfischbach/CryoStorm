@@ -210,7 +210,7 @@ csSettings &csSettings::Get()
 
 csSettings::csSettings()
 {
-  csSettingsFile master ("file:///settings.config");
+  csSettingsFile master ("/settings.config");
 
   if (master.IsValid())
   {
@@ -219,8 +219,8 @@ csSettings::csSettings()
   }
   else
   {
-    m_graphics = new csSettingsFile("file:///${config}/graphics.config");
-    m_display = new csSettingsFile("file:///${config}/display.config");
+    m_graphics = new csSettingsFile("/${config}/graphics.config");
+    m_display = new csSettingsFile("/${config}/display.config");
   }
 }
 

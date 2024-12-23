@@ -6,6 +6,18 @@ namespace cs
 {
 
 
+std::string extract_archive(const std::string& locator)
+{
+  size_t endPos = locator.find_last_of('@');
+  if (endPos == std::string::npos)
+  {
+    return "";
+  }
+
+
+  return locator.substr(0, endPos);
+}
+
 
 std::string extract_path(const std::string& locator)
 {
@@ -15,20 +27,18 @@ std::string extract_path(const std::string& locator)
     return "";
   }
 
-  size_t startPos = 0;
-  if (locator.starts_with("file://"))
+  size_t startPos = locator.find_last_of('@');
+  if (startPos == std::string::npos)
   {
-    startPos = 7;
+    startPos = 0;
   }
-  else if (locator.starts_with("bundle://"))
+  else
   {
-    startPos = 9;
+    startPos++;
   }
 
-  if (startPos > endPos)
-  {
-    return "";
-  }
+
+
 
   return locator.substr(startPos, endPos - startPos + 1);
 }
@@ -60,15 +70,21 @@ std::string extract_extension(const std::string& locator)
 csResourceLocator::csResourceLocator(const std::string& encoded)
   : m_locator(encoded)
 {
+  m_archive = extract_archive(encoded);
   m_path = extract_path(encoded);
   m_filename = extract_filename(encoded);
   m_extension = extract_extension(encoded);
 
   m_encoded = m_path + m_filename;
+  if (!m_archive.empty())
+  {
+    m_encoded = m_archive + "@" + m_encoded;
+  }
 }
 
 csResourceLocator::csResourceLocator(const csResourceLocator& parent, const std::string& encoded)
 {
+  m_archive = extract_archive(encoded);
   m_path = extract_path(encoded);
   m_filename = extract_filename(encoded);
   m_extension = extract_extension(encoded);
@@ -79,6 +95,10 @@ csResourceLocator::csResourceLocator(const csResourceLocator& parent, const std:
   }
 
   m_encoded = m_path + m_filename;
+  if (!m_archive.empty())
+  {
+    m_encoded = m_archive + "@" + m_encoded;
+  }
 }
 
 
@@ -96,6 +116,10 @@ csResourceLocator::csResourceLocator(const csResourceLocator* parent, const std:
   m_encoded = m_path + m_filename;
 }
 
+const std::string& csResourceLocator::GetArchive() const
+{
+  return m_archive;
+}
 
 const std::string& csResourceLocator::GetLocator() const
 {

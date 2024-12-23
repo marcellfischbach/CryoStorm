@@ -13,6 +13,7 @@ public:
 	csResourceLocator(const csResourceLocator &parent, const std::string &encoded);
 	csResourceLocator(const csResourceLocator *parent, const std::string &encoded);
 
+  const std::string& GetArchive() const;
 	const std::string& GetLocator() const;
 	const std::string& GetPath() const;
 	const std::string& GetFilename() const;
@@ -25,7 +26,7 @@ public:
 private:
 	std::string m_locator;
 
-
+  std::string m_archive;
 	std::string m_path;
 	std::string m_filename;
 	std::string m_extension;

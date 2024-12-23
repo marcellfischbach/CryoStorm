@@ -12,7 +12,7 @@ namespace cs::assimp
 
 iMaterial *csAssimpMaterialLoader::Read(aiMaterial *material)
 {
-  csMaterial *baseMaterial = csAssetManager::Get()->Get<csMaterial>("file:///materials/Default.mat");
+  csMaterial *baseMaterial = csAssetManager::Get()->Get<csMaterial>("/materials/Default.mat");
   if (!baseMaterial)
   {
     return nullptr;

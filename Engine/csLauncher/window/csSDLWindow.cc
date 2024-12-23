@@ -146,7 +146,7 @@ void csSDLWindow::SetWindowIcon(const cs::csResourceLocator &locator)
   if (m_window)
   {
 
-    auto image = cs::csAssetManager::Get()->Load<cs::csImage>("file:///icons/cryo-stasis_64.png");
+    auto image = cs::csAssetManager::Get()->Load<cs::csImage>("/icons/cryo-stasis_64.png");
     if (!image)
     {
       return;
