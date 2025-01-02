@@ -38,6 +38,7 @@ private:
   void LoadAttributes(const csCryoFileElement *attributesElement, csShaderGraph *sg, const csResourceLocator &locator) const;
   void LoadAttribute(const csCryoFileElement *attributeElement, csShaderGraph *sg, const csResourceLocator &locator) const;
 
+  void LoadNodePositions(const csCryoFileElement *valueElement, csSGNode *node) const;
 
 };
 

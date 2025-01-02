@@ -6,7 +6,7 @@
 
 #include "mainwindow.hh"
 #include "ui_MainWindow.h"
-#include <assetbrowser/assetbrowserdockwidget.hh>
+#include <assetbrowser/AssetBrowserDockWidget.hh>
 #include <sceneview/SceneViewWidget.hh>
 #include <editors/shadergraph/ShaderGraphEditorWidget.hh>
 #include <QTimer>
@@ -14,6 +14,7 @@
 #include <csCore/entity/csWorld.hh>
 #include <csCore/entity/csEntity.hh>
 #include <csCore/entity/csCameraState.hh>
+#include <csCore/graphics/shadergraph/csShaderGraph.hh>
 
 using namespace cs;
 
@@ -45,8 +46,10 @@ void MainWindow::showEvent(QShowEvent *event)
 }
 void MainWindow::on_actionCreateShaderGraph_triggered(bool checked)
 {
-  ShaderGraphEditorWidget *dlg = new ShaderGraphEditorWidget (this);
-  dlg->show();
+//  csShaderGraph* shaderGraph = new csShaderGraph();
+//  ShaderGraphEditorWidget *dlg = new ShaderGraphEditorWidget (shaderGraph, this);
+//  shaderGraph->Release();
+//  dlg->show();
 }
 void MainWindow::initializeScene(cs::csWorld *world)
 {

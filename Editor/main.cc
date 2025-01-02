@@ -2,6 +2,7 @@
 #include <QMainWindow>
 #include <QApplication>
 #include <mainwindow.hh>
+#include <default_registries.hh>
 #include <csCore/resource/csResourceLocator.hh>
 #include <csCore/resource/csVFS.hh>
 #include <csCore/resource/csVFSConfigReader.hh>
@@ -98,6 +99,9 @@ int main(int argc, char** argv)
   wnd.resize(1024, 768);
   wnd.move(100, 100);
   wnd.setVisible(true);
+
+
+  register_defaults();
 
   return QApplication::exec();
 }

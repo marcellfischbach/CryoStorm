@@ -274,6 +274,11 @@ public:
   ~csAutoRelease()
   { CS_RELEASE(obj); }
 
+  void Clear ()
+  {
+    obj = nullptr;
+  }
+
 };
 
 

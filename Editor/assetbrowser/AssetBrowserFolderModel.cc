@@ -2,7 +2,7 @@
 // Created by mcel on 17.09.2024.
 //
 
-#include <assetbrowser/assetbrowserfoldermodel.hh>
+#include <assetbrowser/AssetBrowserFolderModel.hh>
 #include <QModelIndex>
 #include <QDir>
 #include <QFileInfo>
@@ -21,6 +21,21 @@ void AssetBrowserFolderModel::SetFolder(const std::string &folder)
   LoadFolder();
 
   endResetModel();
+}
+
+const std::string& AssetBrowserFolderModel::GetFolder() const
+{
+  return m_folder;
+}
+
+std::string AssetBrowserFolderModel::GetName(const QModelIndex &index) const
+{
+  if (!index.isValid() || index.row() >= m_items.size())
+  {
+    return std::string();
+  }
+
+  return m_items[index.row()].Name;
 }
 
 void AssetBrowserFolderModel::LoadFolder()

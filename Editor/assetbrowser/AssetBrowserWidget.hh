@@ -6,6 +6,12 @@
 #define CRIMSONEDGE_ASSETBROWSERWIDGET_HH
 
 #include <QWidget>
+#include <filesystem>
+
+namespace std
+{
+namespace fs = filesystem;
+}
 
 
 QT_BEGIN_NAMESPACE
@@ -16,8 +22,15 @@ class AssetBrowserWidget;
 QT_END_NAMESPACE
 
 
+namespace cs
+{
+class csFileSystemArchive;
+}
+
+class QMenu;
 class AssetBrowserTreeModel;
 class AssetBrowserFolderModel;
+struct iAssetBrowserNewItem;
 
 class AssetBrowserWidget : public QWidget
 {
@@ -28,14 +41,25 @@ public:
   ~AssetBrowserWidget() override;
 
 private:
+  void FillNewMenu (QMenu* menu);
+
+  void CreateNewItem (const QPoint& globalPoint, iAssetBrowserNewItem* item);
+
+private:
   Ui::AssetBrowserWidget *ui;
 
   AssetBrowserTreeModel *m_treeModel;
   AssetBrowserFolderModel *m_folderModel;
 
-private slots:
-  void on_treeView_activated(const QModelIndex &index);
-  void on_treeView_clicked(const QModelIndex &index);
+  const cs::csFileSystemArchive *m_archive;
+  std::fs::path m_currentPath;
+
+
+private:
+  void onTreeViewActivated(const QModelIndex &index);
+  void onTreeViewClicked(const QModelIndex &index);
+  void onFolderContentViewContextMenu (const QPoint &point);
+  void onFolderContentDoubleClicked (const QModelIndex &index);
 };
 
 

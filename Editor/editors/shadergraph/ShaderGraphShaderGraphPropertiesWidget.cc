@@ -91,7 +91,7 @@ void ShaderGraphShaderGraphPropertiesWidget::UpdateValues()
                                  static_cast<eCompareFunc>(m_gui->alphaDiscard->currentIndex()));
   m_shaderGraph->SetBlendingMode(static_cast<csShaderGraph::eBlendingMode>(m_gui->blending->currentIndex()));
   m_shaderGraph->SetLightingMode(static_cast<csShaderGraph::eLightingMode>(m_gui->lighting->currentIndex()));
-  m_shaderGraph->SetQueue(static_cast<eRenderQueue>(m_gui->blending->currentIndex()));
+  m_shaderGraph->SetQueue(static_cast<eRenderQueue>(m_gui->queue->currentIndex()));
 
   UpdateAlphaThreshold();
 }

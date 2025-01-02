@@ -13,7 +13,9 @@ class AssetBrowserFolderModel : public QAbstractItemModel
 public:
   AssetBrowserFolderModel(QObject* parent);
   void SetFolder (const std::string &folder);
+  const std::string &GetFolder () const;
 
+  std::string GetName (const QModelIndex &index) const;
 
 public:
   QModelIndex index(int row, int column, const QModelIndex &parent) const override;

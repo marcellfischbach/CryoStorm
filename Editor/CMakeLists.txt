@@ -10,6 +10,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 set(ALL_SOURCES
+        default_registries.cc
+        default_registries.hh
         main.cc
         mainwindow.cc
         mainwindow.hh
@@ -17,29 +19,44 @@ set(ALL_SOURCES
         Project.cc
         Project.hh
 
-        assetbrowser/assetbrowserdockwidget.cc
-        assetbrowser/assetbrowserdockwidget.hh
-        assetbrowser/assetbrowserfoldermodel.cc
-        assetbrowser/assetbrowserfoldermodel.hh
-        assetbrowser/assetbrowsertreemodel.cc
-        assetbrowser/assetbrowsertreemodel.hh
-        assetbrowser/assetbrowserwidget.cc
-        assetbrowser/assetbrowserwidget.hh
-        assetbrowser/assetbrowserwidget.ui
+        assetbrowser/AssetBrowserDockWidget.cc
+        assetbrowser/AssetBrowserDockWidget.hh
+        assetbrowser/AssetBrowserFolderModel.cc
+        assetbrowser/AssetBrowserFolderModel.hh
+        assetbrowser/AssetBrowserTreeModel.cc
+        assetbrowser/AssetBrowserTreeModel.hh
+        assetbrowser/AssetBrowserWidget.cc
+        assetbrowser/AssetBrowserWidget.hh
+        assetbrowser/AssetBrowserWidget.ui
+        assetbrowser/AssetBrowserNewItemDialog.cc
+        assetbrowser/AssetBrowserNewItemDialog.hh
+        assetbrowser/AssetBrowserNewItemDialog.ui
+        assetbrowser/AssetBrowserNewItemRegistry.cc
+        assetbrowser/AssetBrowserNewItemRegistry.hh
+        assetbrowser/iAssetBrowserNewItem.hh
 
+        editors/EditorRegistry.cc
+        editors/EditorRegistry.hh
+        editors/iEditorFactory.hh
 
+        editors/shadergraph/ShaderGraphEditorFactory.cc
+        editors/shadergraph/ShaderGraphEditorFactory.hh
         editors/shadergraph/ShaderGraphEditorWidget.cc
         editors/shadergraph/ShaderGraphEditorWidget.hh
         editors/shadergraph/ShaderGraphEditorWidget.ui
         editors/shadergraph/ShaderGraphGraphicsView.cc
         editors/shadergraph/ShaderGraphGraphicsView.hh
         editors/shadergraph/ShaderGraphNodeInputWidget.ui
+        editors/shadergraph/ShaderGraphNewItem.cc
+        editors/shadergraph/ShaderGraphNewItem.hh
         editors/shadergraph/ShaderGraphNodeItem.cc
         editors/shadergraph/ShaderGraphNodeItem.hh
         editors/shadergraph/ShaderGraphNodePalletTreeModel.cc
         editors/shadergraph/ShaderGraphNodePalletTreeModel.hh
         editors/shadergraph/ShaderGraphNodePropertiesWidget.cc
         editors/shadergraph/ShaderGraphNodePropertiesWidget.hh
+        editors/shadergraph/ShaderGraphSaver.cc
+        editors/shadergraph/ShaderGraphSaver.hh
         editors/shadergraph/ShaderGraphShaderGraphPropertiesWidget.cc
         editors/shadergraph/ShaderGraphShaderGraphPropertiesWidget.hh
         editors/shadergraph/ShaderGraphShaderGraphPropertiesWidget.ui

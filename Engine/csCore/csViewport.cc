@@ -188,8 +188,8 @@ bool csViewport::ProcessFrame(iRenderTarget2D *renderTarget)
       m_lastFPS = currentFPS;
 
       std::string title = std::string("CryoStorm ") + std::to_string(currentFPS) + std::string(" FPS");
-      printf("%s\n", title.c_str());
-      fflush(stdout);
+//      printf("%s\n", title.c_str());
+//      fflush(stdout);
       m_window->SetTitle(title);
     }
 

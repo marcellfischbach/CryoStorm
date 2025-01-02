@@ -18,6 +18,9 @@ namespace cs
 csShaderGraphLoader::csShaderGraphLoader()
     : csBaseCSFAssetLoader()
 {
+  AddValidFile<csShaderGraph>("SG");
+  AddValidFile<csShaderGraph>("SHADERGRAPH");
+
   AddValidFile<csMaterial>("SG");
   AddValidFile<csMaterial>("SHADERGRAPH");
 }
@@ -25,9 +28,9 @@ csShaderGraphLoader::csShaderGraphLoader()
 
 iObject *csShaderGraphLoader::Load(const csCryoFile *file, const csClass *cls, const csResourceLocator &locator) const
 {
-  const csCryoFileElement *root               = file->Root();
+  const csCryoFileElement *root = file->Root();
   const csCryoFileElement *shaderGraphElement = root->GetChild("shaderGraph");
-  auto          sg                  = new csShaderGraph();
+  auto sg = new csShaderGraph();
   csAutoRelease autoRelSG(sg);
 
 
@@ -63,7 +66,7 @@ iObject *csShaderGraphLoader::Load(const csCryoFile *file, const csClass *cls, c
       continue;
     }
 
-    csSGNode          *node    = nullptr;
+    csSGNode *node = nullptr;
     const std::string &tagName = childElement->GetTagName();
     if (tagName == "node")
     {
@@ -83,6 +86,8 @@ iObject *csShaderGraphLoader::Load(const csCryoFile *file, const csClass *cls, c
       return nullptr;
     }
 
+    LoadNodePositions(childElement, node);
+
     if (!LoadNodeBindingsAndValues(childElement, node, sg))
     {
       return nullptr;
@@ -97,29 +102,36 @@ iObject *csShaderGraphLoader::Load(const csCryoFile *file, const csClass *cls, c
   }
 
 
-  //
-  // Now compile the shader graph to a material
-
-  auto compilerFactory = cs::csObjectRegistry::Get<cs::iShaderGraphCompilerFactory>();
-  if (compilerFactory)
+  if (cls->IsInstanceOf<csMaterial>())
   {
-    auto compiler = compilerFactory->Create();
-    if (compiler)
+    // Now compile the shader graph to a material
+
+    auto compilerFactory = cs::csObjectRegistry::Get<cs::iShaderGraphCompilerFactory>();
+    if (compilerFactory)
     {
-      iShaderGraphCompiler::Parameters parameters {};
-      memset(&parameters, 0, sizeof(parameters));
-      parameters.DebugName = locator.Encoded();
-      parameters.DebugSources = true;
-
-      auto shader = compiler->Compile(sg, parameters);
-      if (!shader)
+      auto compiler = compilerFactory->Create();
+      if (compiler)
       {
-        printf ("Unable to compiler '%s'\n", locator.Encoded().c_str());
-        printf ("%s\n", compiler->GetError().c_str());
-      }
+        iShaderGraphCompiler::Parameters parameters{};
+        memset(&parameters, 0, sizeof(parameters));
+        parameters.DebugName = locator.Encoded();
+        parameters.DebugSources = true;
 
-      return shader;
+        auto shader = compiler->Compile(sg, parameters);
+        if (!shader)
+        {
+          printf("Unable to compiler '%s'\n", locator.Encoded().c_str());
+          printf("%s\n", compiler->GetError().c_str());
+        }
+
+        return shader;
+      }
     }
+  }
+  else if (cls->IsInstanceOf<csShaderGraph>())
+  {
+    autoRelSG.Clear(); // keep the sg alive
+    return sg;
   }
 
   return nullptr;
@@ -130,8 +142,8 @@ void csShaderGraphLoader::LoadQueue(const cs::csCryoFileElement *shaderGraphElem
   auto queueElement = shaderGraphElement->GetChild("queue");
   if (queueElement)
   {
-    eRenderQueue queue       = eRenderQueue::Default;
-    std::string  queueString = queueElement->GetAttribute(0, "Default");
+    eRenderQueue queue = eRenderQueue::Default;
+    std::string queueString = queueElement->GetAttribute(0, "Default");
     if (queueString == "Transparency")
     {
       queue = eRenderQueue::Transparency;
@@ -145,8 +157,8 @@ void csShaderGraphLoader::LoadLightingMode(const csCryoFileElement *shaderGraphE
   auto lightingElement = shaderGraphElement->GetChild("lighting");
   if (lightingElement)
   {
-    csShaderGraph::eLightingMode lighting       = csShaderGraph::eLM_Default;
-    std::string                  lightingString = lightingElement->GetAttribute(0, "Default");
+    csShaderGraph::eLightingMode lighting = csShaderGraph::eLM_Default;
+    std::string lightingString = lightingElement->GetAttribute(0, "Default");
     if (lightingString == "Attenuated")
     {
       lighting = csShaderGraph::eLM_Attenuated;
@@ -164,8 +176,8 @@ void csShaderGraphLoader::LoadBlendingMode(const csCryoFileElement *shaderGraphE
   auto blendingElement = shaderGraphElement->GetChild("blending");
   if (blendingElement)
   {
-    csShaderGraph::eBlendingMode blending       = csShaderGraph::eBM_Off;
-    std::string                  blendingString = blendingElement->GetAttribute(0, "Off");
+    csShaderGraph::eBlendingMode blending = csShaderGraph::eBM_Off;
+    std::string blendingString = blendingElement->GetAttribute(0, "Off");
     if (blendingString == "Alpha")
     {
       blending = csShaderGraph::eBM_Alpha;
@@ -315,7 +327,7 @@ bool csShaderGraphLoader::LoadBinding(const csCryoFileElement *valueElement,
                                       csSGNode *node,
                                       csShaderGraph *sg) const
 {
-  size_t      idx;
+  size_t idx;
   std::string idxName = valueElement->GetAttribute(0, "");
   if (is_uint(idxName))
   {
@@ -436,14 +448,14 @@ void csShaderGraphLoader::LoadAttribute(const cs::csCryoFileElement *attributeEl
   }
   else if (type == "Vec2")
   {
-    csVector2f v {};
+    csVector2f v{};
     v.x = attributeElement->GetAttribute(2, 0.0f);
     v.y = attributeElement->GetAttribute(3, 0.0f);
     sg->SetDefault(name, 2, &v.x);
   }
   else if (type == "Vec3")
   {
-    csVector3f v {};
+    csVector3f v{};
     v.x = attributeElement->GetAttribute(2, 0.0f);
     v.y = attributeElement->GetAttribute(3, 0.0f);
     v.z = attributeElement->GetAttribute(4, 0.0f);
@@ -451,7 +463,7 @@ void csShaderGraphLoader::LoadAttribute(const cs::csCryoFileElement *attributeEl
   }
   else if (type == "Vec4" || type == "Color4")
   {
-    csVector4f v {};
+    csVector4f v{};
     v.x = attributeElement->GetAttribute(2, 0.0f);
     v.y = attributeElement->GetAttribute(3, 0.0f);
     v.z = attributeElement->GetAttribute(4, 0.0f);
@@ -464,11 +476,18 @@ void csShaderGraphLoader::LoadAttribute(const cs::csCryoFileElement *attributeEl
     if (!locatorStr.empty())
     {
       csResourceLocator txtLocator(locator, locatorStr);
-      auto              texture = csAssetManager::Get()->Get<iTexture>(txtLocator);
+      auto texture = csAssetManager::Get()->Get<iTexture>(txtLocator);
       sg->SetDefault(name, texture);
     }
   }
 }
 
+void csShaderGraphLoader::LoadNodePositions(const csCryoFileElement *nodeElement, csSGNode *node) const
+{
+  float posX = nodeElement->GetAttribute("x", 0.0f);
+  float posY = nodeElement->GetAttribute("y", 0.0f);
+  node->SetPosition(csVector2f(posX, posY));
+
+}
 
 } // ce

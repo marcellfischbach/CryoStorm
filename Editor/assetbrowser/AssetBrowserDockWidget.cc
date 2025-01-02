@@ -2,8 +2,8 @@
 // Created by mcel on 17.09.2024.
 //
 
-#include <assetbrowser/assetbrowserdockwidget.hh>
-#include <assetbrowser/assetbrowserwidget.hh>
+#include <assetbrowser/AssetBrowserDockWidget.hh>
+#include <assetbrowser/AssetBrowserWidget.hh>
 
 
 AssetBrowserDockWidget::AssetBrowserDockWidget (QWidget* parent)

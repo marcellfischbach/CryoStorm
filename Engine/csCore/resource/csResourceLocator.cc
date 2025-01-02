@@ -76,10 +76,7 @@ csResourceLocator::csResourceLocator(const std::string& encoded)
   m_extension = extract_extension(encoded);
 
   m_encoded = m_path + m_filename;
-  if (!m_archive.empty())
-  {
-    m_encoded = m_archive + "@" + m_encoded;
-  }
+
 }
 
 csResourceLocator::csResourceLocator(const csResourceLocator& parent, const std::string& encoded)

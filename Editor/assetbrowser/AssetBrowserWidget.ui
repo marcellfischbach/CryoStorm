@@ -59,7 +59,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QListView" name="listView"/>
+     <widget class="QListView" name="folderContentView"/>
     </widget>
    </item>
   </layout>

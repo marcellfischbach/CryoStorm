@@ -2,11 +2,12 @@
 // Created by Marcell on 16.09.2024.
 //
 
-#include <assetbrowser/assetbrowsertreemodel.hh>
+#include <assetbrowser/AssetBrowserTreeModel.hh>
 #include <csCore/resource/csVFS.hh>
 #include <csCore/resource/csFileSystemArchive.hh>
 #include <QDir>
 #include <QFileInfo>
+
 
 AssetBrowserTreeModel::AssetBrowserTreeModel(QObject *parent)
     : QAbstractItemModel(parent)
@@ -46,12 +47,12 @@ void AssetBrowserTreeModel::LoadArchive(const cs::iArchive *archive)
   }
 
 
-  ArchiveItem *item = new ArchiveItem();
+  ArchiveItem *item = new ArchiveItem(fsArchive);
   item->Name = fsArchive->GetName();
   item->FullPath = root;
   m_archives.push_back(item);
 
-  QDir        dir(root.c_str());
+  QDir dir(root.c_str());
   QStringList dirs = dir.entryList(QStringList(), QDir::Filter::Dirs | QDir::NoDotAndDotDot);
 
   for (auto childDir: dirs)
@@ -64,7 +65,7 @@ void AssetBrowserTreeModel::LoadArchive(const cs::iArchive *archive)
 
 void AssetBrowserTreeModel::LoadPath(Item *parent, QDir parentDir, QString childDir)
 {
-  QString   path = parentDir.filePath(childDir);
+  QString path = parentDir.filePath(childDir);
   QFileInfo fileInfo(path);
   if (!fileInfo.isDir())
   {
@@ -72,15 +73,15 @@ void AssetBrowserTreeModel::LoadPath(Item *parent, QDir parentDir, QString child
   }
 
   PathItem *item = new PathItem();
-  item->Name   = childDir.toLatin1().data();
+  item->Name = childDir.toLatin1().data();
   item->Parent = parent;
   item->FullPath = path.toLatin1().data();
   parent->Children.push_back(item);
 
 
-  QDir        dir(path);
+  QDir dir(path);
   QStringList dirs = dir.entryList(QStringList(), QDir::Filter::Dirs | QDir::NoDotAndDotDot);
-  for (auto   childDir: dirs)
+  for (auto childDir: dirs)
   {
     LoadPath(item, dir, childDir);
   }
@@ -89,19 +90,56 @@ void AssetBrowserTreeModel::LoadPath(Item *parent, QDir parentDir, QString child
 
 std::string AssetBrowserTreeModel::GetPath(const QModelIndex &index) const
 {
-  if (!index.isValid())
-  {
-    return {};
-  }
-
-  const Item *item = reinterpret_cast<const Item*>(index.internalPointer());
-  if (!item )
+  const Item *item = GetItem(index);
+  if (!item)
   {
     return {};
   }
 
 
   return item->FullPath;
+}
+
+const AssetBrowserTreeModel::Item *AssetBrowserTreeModel::GetItem(const QModelIndex &index) const
+{
+  if (!index.isValid())
+  {
+    return {};
+  }
+
+  return reinterpret_cast<const Item *>(index.internalPointer());
+}
+
+std::string AssetBrowserTreeModel::ConstructArchivePath(const QModelIndex &index) const
+{
+  std::string path;
+  const Item *item = GetItem(index);
+  while (item)
+  {
+    if (item->IsArchive())
+    {
+      break;
+    }
+    path = item->Name + "/" + path;
+    item = item->Parent;
+  }
+  return path;
+
+}
+
+const cs::csFileSystemArchive *AssetBrowserTreeModel::ExtractArchive(const QModelIndex &index) const
+{
+  const Item *item = GetItem(index);
+  while (item)
+  {
+    if (item->IsArchive())
+    {
+      const ArchiveItem *archiveItem = dynamic_cast<const ArchiveItem *>(item);
+      return archiveItem->m_fsArchive;
+    }
+    item = item->Parent;
+  }
+  return nullptr;
 }
 
 QModelIndex AssetBrowserTreeModel::index(int row, int column, const QModelIndex &parent) const
@@ -215,4 +253,11 @@ int AssetBrowserTreeModel::SelfIndex(AssetBrowserTreeModel::Item *item) const
     }
   }
   return -1;
+}
+
+
+AssetBrowserTreeModel::ArchiveItem::ArchiveItem(const cs::csFileSystemArchive *fsArchive)
+    : m_fsArchive(fsArchive)
+{
+
 }

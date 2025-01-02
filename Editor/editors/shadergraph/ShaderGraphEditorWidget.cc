@@ -6,6 +6,7 @@
 #include <editors/shadergraph/ShaderGraphNodeItem.hh>
 #include <editors/shadergraph/ShaderGraphNodePropertiesWidget.hh>
 #include <editors/shadergraph/ShaderGraphNodePalletTreeModel.hh>
+#include <editors/shadergraph/ShaderGraphSaver.hh>
 #include <editors/shadergraph/ShaderGraphShaderGraphPropertiesWidget.hh>
 #include <csCore/graphics/shadergraph/csShaderGraph.hh>
 #include <csCore/graphics/shadergraph/iShaderGraphCompiler.hh>
@@ -18,7 +19,10 @@
 #include <csCore/entity/csLightState.hh>
 #include <csCore/entity/csStaticMeshState.hh>
 #include <csCore/entity/csWorld.hh>
+#include <csCore/resource/csVFS.hh>
+#include <csCore/resource/iFile.hh>
 #include <csCore/csObjectRegistry.hh>
+
 #include <QGraphicsScene>
 #include <QGraphicsPathItem>
 #include "ui_ShaderGraphEditorWidget.h"
@@ -26,12 +30,16 @@
 
 using namespace cs;
 
-ShaderGraphEditorWidget::ShaderGraphEditorWidget(QWidget *parent)
+ShaderGraphEditorWidget::ShaderGraphEditorWidget(csShaderGraph *shaderGraph, const csResourceLocator &locator,
+                                                 QWidget *parent)
     : QDialog(parent, Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint)
     , m_gui(new Ui::ShaderGraphEditorWidget)
-    , m_shaderGraph(new csShaderGraph())
+    , m_shaderGraph(shaderGraph)
+    , m_locator(locator)
     , m_palletModel(new ShaderGraphNodePalletTreeModel())
 {
+  CS_ADDREF(m_shaderGraph);
+
   m_gui->setupUi(this);
 
   m_gui->propertiesStack->setCurrentWidget(m_gui->noSelection);
@@ -39,6 +47,7 @@ ShaderGraphEditorWidget::ShaderGraphEditorWidget(QWidget *parent)
 
   m_gui->pallet->setModel(m_palletModel);
   connect(this, SIGNAL(finished(int)), this, SLOT(deleteLater()));
+  connect(m_gui->btnSave, &QPushButton::clicked, this, &ShaderGraphEditorWidget::onBtnSaveClicked);
 
 
 //  m_gui->graph->setScene(m_scene);
@@ -123,6 +132,13 @@ void ShaderGraphEditorWidget::on_btnCompile_clicked()
   CompileMaterial();
 }
 
+std::string generate_shader_graph_code(csShaderGraph *shaderGraph);
+
+void ShaderGraphEditorWidget::onBtnSaveClicked(bool)
+{
+  ShaderGraphSaver (m_shaderGraph).Save(m_locator);
+}
+
 void ShaderGraphEditorWidget::on_graph_SelectionChanged()
 {
   std::vector<csSGNode *> nodes = m_gui->graph->GetSelection();
@@ -178,4 +194,3 @@ void ShaderGraphEditorWidget::CompileMaterial()
     m_cube->SetMaterial(0, m_material);
   }
 }
-
