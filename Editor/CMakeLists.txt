@@ -55,6 +55,7 @@ set(ALL_SOURCES
         editors/shadergraph/ShaderGraphNodePalletTreeModel.hh
         editors/shadergraph/ShaderGraphNodePropertiesWidget.cc
         editors/shadergraph/ShaderGraphNodePropertiesWidget.hh
+        editors/shadergraph/ShaderGraphResourceNodeWidget.ui
         editors/shadergraph/ShaderGraphSaver.cc
         editors/shadergraph/ShaderGraphSaver.hh
         editors/shadergraph/ShaderGraphShaderGraphPropertiesWidget.cc

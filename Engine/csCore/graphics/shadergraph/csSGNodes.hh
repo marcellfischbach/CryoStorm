@@ -5,6 +5,8 @@
 #include <csCore/graphics/shadergraph/csSGNode.hh>
 #include <csCore/graphics/material/eMaterialAttributeType.hh>
 #include <csCore/graphics/eVertexStream.hh>
+#include <csCore/resource/csResourceLocator.hh>
+#include <array>
 
 namespace cs
 {
@@ -12,7 +14,7 @@ namespace cs
 CS_CLASS()
 class CS_CORE_API csSGConstFloat : public CS_SUPER(csSGNode)
 {
-CS_CLASS_GEN;
+  CS_CLASS_GEN;
 public:
   const static std::string OUT_V;
 
@@ -28,7 +30,7 @@ public:
 CS_CLASS()
 class CS_CORE_API csSGConstVec2 : public CS_SUPER(csSGNode)
 {
-CS_CLASS_GEN;
+  CS_CLASS_GEN;
 public:
   const static std::string OUT_V;
 
@@ -44,7 +46,7 @@ public:
 CS_CLASS()
 class CS_CORE_API csSGConstVec3 : public CS_SUPER(csSGNode)
 {
-CS_CLASS_GEN;
+  CS_CLASS_GEN;
 public:
   const static std::string OUT_V;
 
@@ -60,7 +62,7 @@ public:
 CS_CLASS()
 class CS_CORE_API csSGConstVec4 : public CS_SUPER(csSGNode)
 {
-CS_CLASS_GEN;
+  CS_CLASS_GEN;
 public:
   const static std::string OUT_V;
 
@@ -76,7 +78,7 @@ public:
 CS_CLASS()
 class CS_CORE_API csSGConstColor3 : public CS_SUPER(csSGNode)
 {
-CS_CLASS_GEN;
+  CS_CLASS_GEN;
 public:
   const static std::string OUT_V;
 
@@ -91,7 +93,7 @@ public:
 CS_CLASS()
 class CS_CORE_API csSGConstColor4 : public CS_SUPER(csSGNode)
 {
-CS_CLASS_GEN;
+  CS_CLASS_GEN;
 public:
   const static std::string OUT_V;
 
@@ -107,7 +109,7 @@ public:
 CS_CLASS()
 class CS_CORE_API csSGVec2 : public CS_SUPER(csSGNode)
 {
-CS_CLASS_GEN;
+  CS_CLASS_GEN;
 public:
   const static std::string IN_X;
   const static std::string IN_Y;
@@ -123,7 +125,7 @@ public:
 CS_CLASS()
 class CS_CORE_API csSGVec3 : public CS_SUPER(csSGNode)
 {
-CS_CLASS_GEN;
+  CS_CLASS_GEN;
 public:
   const static std::string IN_X;
   const static std::string IN_Y;
@@ -140,7 +142,7 @@ public:
 CS_CLASS()
 class CS_CORE_API csSGVec4 : public CS_SUPER(csSGNode)
 {
-CS_CLASS_GEN;
+  CS_CLASS_GEN;
 public:
   const static std::string IN_X;
   const static std::string IN_Y;
@@ -158,7 +160,7 @@ public:
 CS_CLASS()
 class CS_CORE_API csSGDecomposeVec2 : public CS_SUPER(csSGNode)
 {
-CS_CLASS_GEN;
+  CS_CLASS_GEN;
 public:
   const static std::string IN_V;
   const static std::string OUT_X;
@@ -175,7 +177,7 @@ public:
 CS_CLASS()
 class CS_CORE_API csSGDecomposeVec3 : public CS_SUPER(csSGNode)
 {
-CS_CLASS_GEN;
+  CS_CLASS_GEN;
 public:
   const static std::string IN_V;
   const static std::string OUT_X;
@@ -193,7 +195,7 @@ public:
 CS_CLASS()
 class CS_CORE_API csSGDecomposeVec4 : public CS_SUPER(csSGNode)
 {
-CS_CLASS_GEN;
+  CS_CLASS_GEN;
 public:
   const static std::string IN_V;
   const static std::string OUT_X;
@@ -212,7 +214,7 @@ public:
 CS_CLASS()
 class CS_CORE_API csSGBinaryOperator : public CS_SUPER(csSGNode)
 {
-CS_CLASS_GEN;
+  CS_CLASS_GEN;
 public:
   const static std::string OUT_V;
   enum eOperator
@@ -230,7 +232,7 @@ public:
   void CalcIOTypes() override;
 
 protected:
-  csSGBinaryOperator(const std::string &name, eOperator op);
+  csSGBinaryOperator(const std::string & name, eOperator op);
 
 
 private:
@@ -242,7 +244,7 @@ private:
 CS_CLASS()
 class CS_CORE_API csSGAdd : public CS_SUPER(csSGBinaryOperator)
 {
-CS_CLASS_GEN;
+  CS_CLASS_GEN;
 public:
   csSGAdd();
   ~csSGAdd() override = default;
@@ -252,7 +254,7 @@ public:
 CS_CLASS()
 class CS_CORE_API csSGSub : public CS_SUPER(csSGBinaryOperator)
 {
-CS_CLASS_GEN;
+  CS_CLASS_GEN;
 public:
   csSGSub();
   ~csSGSub() override = default;
@@ -262,7 +264,7 @@ public:
 CS_CLASS()
 class CS_CORE_API csSGMul : public CS_SUPER(csSGBinaryOperator)
 {
-CS_CLASS_GEN;
+  CS_CLASS_GEN;
 public:
   csSGMul();
   ~csSGMul() override = default;
@@ -272,7 +274,7 @@ public:
 CS_CLASS()
 class CS_CORE_API csSGDiv : public CS_SUPER(csSGBinaryOperator)
 {
-CS_CLASS_GEN;
+  CS_CLASS_GEN;
 public:
   csSGDiv();
   ~csSGDiv() override = default;
@@ -282,7 +284,7 @@ public:
 CS_CLASS()
 class CS_CORE_API csSGMod : public CS_SUPER(csSGBinaryOperator)
 {
-CS_CLASS_GEN;
+  CS_CLASS_GEN;
 public:
   csSGMod();
   ~csSGMod() override = default;
@@ -292,7 +294,7 @@ public:
 CS_CLASS()
 class CS_CORE_API csSGStreamNode : public CS_SUPER(csSGNode)
 {
-CS_CLASS_GEN;
+  CS_CLASS_GEN;
 public:
   ~csSGStreamNode() override = default;
 
@@ -301,7 +303,7 @@ public:
   void CalcIOTypes() override;
 
 protected:
-  csSGStreamNode(const std::string &name, eVertexStream stream, eSGValueType type);
+  csSGStreamNode(const std::string & name, eVertexStream stream, eSGValueType type);
 
 private:
   eVertexStream m_stream;
@@ -312,7 +314,7 @@ private:
 CS_CLASS()
 class CS_CORE_API csSGTexCoord : public CS_SUPER(csSGStreamNode)
 {
-CS_CLASS_GEN;
+  CS_CLASS_GEN;
 public:
   csSGTexCoord();
   ~csSGTexCoord() override = default;
@@ -321,28 +323,40 @@ public:
 CS_CLASS()
 class CS_CORE_API csSGResourceNode : public CS_SUPER(csSGNode)
 {
-CS_CLASS_GEN;
+  CS_CLASS_GEN;
 protected:
-  csSGResourceNode(const std::string &name, eMaterialAttributeType matType);
+  csSGResourceNode(const std::string & name, eMaterialAttributeType matType);
 
 public:
   ~csSGResourceNode() override = default;
 
-  void SetResourceName(const std::string &name);
-  const std::string &GetResourceName() const;
+  void SetResourceName(const std::string & name);
+  const std::string& GetResourceName() const;
 
   eMaterialAttributeType GetMatType() const;
+
+  void SetDefault(const std::array<float, 16> &v);
+  void SetDefault(int *v, size_t count);
+  void SetDefault(const csResourceLocator &locator);
+
+  const std::array<float, 16>& GetDefaultFloats() const;
+  const int* GetDefaultInts() const;
+  const csResourceLocator &GetDefaultLocator() const;
 
 private:
   eMaterialAttributeType m_matType;
   std::string            m_resourceName;
+
+  int m_defaultInts[4];
+  std::array<float, 16> m_defaultFloats;
+  csResourceLocator m_defaultLocator;
 
 };
 
 CS_CLASS()
 class CS_CORE_API csSGResourceFloat : public CS_SUPER(csSGResourceNode)
 {
-CS_CLASS_GEN;
+  CS_CLASS_GEN;
 public:
   csSGResourceFloat();
   ~csSGResourceFloat() override = default;
@@ -354,7 +368,7 @@ public:
 CS_CLASS()
 class CS_CORE_API csSGResourceColor3 : public CS_SUPER(csSGResourceNode)
 {
-CS_CLASS_GEN;
+  CS_CLASS_GEN;
 public:
   csSGResourceColor3();
   ~csSGResourceColor3() override = default;
@@ -368,7 +382,7 @@ public:
 CS_CLASS()
 class CS_CORE_API csSGTexture1D : public CS_SUPER(csSGResourceNode)
 {
-CS_CLASS_GEN;
+  CS_CLASS_GEN;
 public:
   csSGTexture1D();
   ~csSGTexture1D() override = default;
@@ -381,7 +395,7 @@ public:
 CS_CLASS()
 class CS_CORE_API csSGTexture2D : public CS_SUPER(csSGResourceNode)
 {
-CS_CLASS_GEN;
+  CS_CLASS_GEN;
 public:
   csSGTexture2D();
   ~csSGTexture2D() override = default;
@@ -394,7 +408,7 @@ public:
 CS_CLASS()
 class CS_CORE_API csSGTexture3D : public CS_SUPER(csSGResourceNode)
 {
-CS_CLASS_GEN;
+  CS_CLASS_GEN;
 public:
   csSGTexture3D();
   ~csSGTexture3D() override = default;

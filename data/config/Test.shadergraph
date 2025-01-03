@@ -1,0 +1,27 @@
+
+
+shaderGraph {
+
+    receiveShadow 1,
+    queue Default,
+    lighting Default,
+    blending Off,
+
+    nodes {
+
+        resource "cs::csSGResourceColor3" colorDiffuse "Diffuse" x:-200.0 y:0.0 {
+            defaultFloat 3 0.25 0.5 0.75,
+        },
+
+
+
+        shaderGraph {
+            binding "Diffuse" colorDiffuse,
+        }
+    },
+
+    attributes {
+    },
+
+},
+  

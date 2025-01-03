@@ -11,7 +11,7 @@ namespace cs
 
 const std::string csSGConstFloat::OUT_V = "V";
 csSGConstFloat::csSGConstFloat()
-    : csSGNode("Const Float")
+  : csSGNode("Const Float")
 {
   DefineInput("X", eSGValueType::Invalid);
   DefineOutput(OUT_V, eSGValueType::Float);
@@ -37,7 +37,7 @@ const std::string csSGConstVec2::OUT_V = "V";
 
 
 csSGConstVec2::csSGConstVec2()
-    : csSGNode("Const Vec2")
+  : csSGNode("Const Vec2")
 {
   DefineInput("X", eSGValueType::Invalid);
   DefineInput("Y", eSGValueType::Invalid);
@@ -64,7 +64,7 @@ void csSGConstVec2::CalcIOTypes()
 
 const std::string csSGConstVec3::OUT_V = "V";
 csSGConstVec3::csSGConstVec3()
-    : csSGNode("Const Vec3")
+  : csSGNode("Const Vec3")
 {
   DefineInput("X", eSGValueType::Invalid);
   DefineInput("Y", eSGValueType::Invalid);
@@ -91,7 +91,7 @@ void csSGConstVec3::CalcIOTypes()
 const std::string csSGConstVec4::OUT_V = "V";
 
 csSGConstVec4::csSGConstVec4()
-    : csSGNode("Const Vec4")
+  : csSGNode("Const Vec4")
 {
   DefineInput("X", eSGValueType::Invalid);
   DefineInput("Y", eSGValueType::Invalid);
@@ -124,7 +124,7 @@ void csSGConstVec4::CalcIOTypes()
 const std::string csSGConstColor3::OUT_V = "V";
 
 csSGConstColor3::csSGConstColor3()
-    : csSGNode("Const Color3")
+  : csSGNode("Const Color3")
 {
   DefineInput("R", eSGValueType::Invalid);
   DefineInput("G", eSGValueType::Invalid);
@@ -153,7 +153,7 @@ void csSGConstColor3::CalcIOTypes()
 const std::string csSGConstColor4::OUT_V = "V";
 
 csSGConstColor4::csSGConstColor4()
-    : csSGNode("Const Color4")
+  : csSGNode("Const Color4")
 {
   DefineInput("R", eSGValueType::Invalid);
   DefineInput("G", eSGValueType::Invalid);
@@ -180,12 +180,12 @@ void csSGConstColor4::CalcIOTypes()
 /*     Vec 2                                               */
 /* *********************************************************/
 
-const std::string csSGVec2::IN_X  = "X";
-const std::string csSGVec2::IN_Y  = "Y";
+const std::string csSGVec2::IN_X = "X";
+const std::string csSGVec2::IN_Y = "Y";
 const std::string csSGVec2::OUT_V = "V";
 
 csSGVec2::csSGVec2()
-    : csSGNode("Vec2")
+  : csSGNode("Vec2")
 {
   DefineInput(IN_X, eSGValueType::Float);
   DefineInput(IN_Y, eSGValueType::Float);
@@ -204,13 +204,13 @@ void csSGVec2::CalcIOTypes()
 /*     Vec 3                                               */
 /* *********************************************************/
 
-const std::string csSGVec3::IN_X  = "X";
-const std::string csSGVec3::IN_Y  = "Y";
-const std::string csSGVec3::IN_Z  = "Z";
+const std::string csSGVec3::IN_X = "X";
+const std::string csSGVec3::IN_Y = "Y";
+const std::string csSGVec3::IN_Z = "Z";
 const std::string csSGVec3::OUT_V = "V";
 
 csSGVec3::csSGVec3()
-    : csSGNode("Vec3")
+  : csSGNode("Vec3")
 {
   DefineInput(IN_X, eSGValueType::Float);
   DefineInput(IN_Y, eSGValueType::Float);
@@ -230,14 +230,14 @@ void csSGVec3::CalcIOTypes()
 /*     Vec 4                                               */
 /* *********************************************************/
 
-const std::string csSGVec4::IN_X  = "X";
-const std::string csSGVec4::IN_Y  = "Y";
-const std::string csSGVec4::IN_Z  = "Z";
-const std::string csSGVec4::IN_W  = "W";
+const std::string csSGVec4::IN_X = "X";
+const std::string csSGVec4::IN_Y = "Y";
+const std::string csSGVec4::IN_Z = "Z";
+const std::string csSGVec4::IN_W = "W";
 const std::string csSGVec4::OUT_V = "V";
 
 csSGVec4::csSGVec4()
-    : csSGNode("Vec4")
+  : csSGNode("Vec4")
 {
   DefineInput(IN_X, eSGValueType::Float);
   DefineInput(IN_Y, eSGValueType::Float);
@@ -255,12 +255,12 @@ void csSGVec4::CalcIOTypes()
 /*     Decompose Vec 2                                     */
 /* *********************************************************/
 
-const std::string csSGDecomposeVec2::IN_V  = "V";
+const std::string csSGDecomposeVec2::IN_V = "V";
 const std::string csSGDecomposeVec2::OUT_X = "X";
 const std::string csSGDecomposeVec2::OUT_Y = "Y";
 
 csSGDecomposeVec2::csSGDecomposeVec2()
-    : csSGNode("Decompose Vec2")
+  : csSGNode("Decompose Vec2")
 {
   DefineInput(IN_V, eSGValueType::Vector2);
   DefineOutput(OUT_X, eSGValueType::Float);
@@ -278,13 +278,13 @@ void csSGDecomposeVec2::CalcIOTypes()
 /*     Decompose Vec 3                                     */
 /* *********************************************************/
 
-const std::string csSGDecomposeVec3::IN_V  = "V";
+const std::string csSGDecomposeVec3::IN_V = "V";
 const std::string csSGDecomposeVec3::OUT_X = "X";
 const std::string csSGDecomposeVec3::OUT_Y = "Y";
 const std::string csSGDecomposeVec3::OUT_Z = "Z";
 
 csSGDecomposeVec3::csSGDecomposeVec3()
-    : csSGNode("Decompose Vec3")
+  : csSGNode("Decompose Vec3")
 {
   DefineInput(IN_V, eSGValueType::Vector3);
   DefineOutput(OUT_X, eSGValueType::Float);
@@ -304,14 +304,14 @@ void csSGDecomposeVec3::CalcIOTypes()
 /*     Decompose Vec 4                                     */
 /* *********************************************************/
 
-const std::string csSGDecomposeVec4::IN_V  = "V";
+const std::string csSGDecomposeVec4::IN_V = "V";
 const std::string csSGDecomposeVec4::OUT_X = "X";
 const std::string csSGDecomposeVec4::OUT_Y = "Y";
 const std::string csSGDecomposeVec4::OUT_Z = "Z";
 const std::string csSGDecomposeVec4::OUT_W = "W";
 
 csSGDecomposeVec4::csSGDecomposeVec4()
-    : csSGNode("Decompose Vec4")
+  : csSGNode("Decompose Vec4")
 {
   DefineInput(IN_V, eSGValueType::Vector4);
   DefineOutput(OUT_X, eSGValueType::Float);
@@ -337,9 +337,9 @@ void csSGDecomposeVec4::CalcIOTypes()
 
 const std::string csSGBinaryOperator::OUT_V = "V";
 
-csSGBinaryOperator::csSGBinaryOperator(const std::string &name, eOperator op)
-    : csSGNode(name)
-    , m_op(op)
+csSGBinaryOperator::csSGBinaryOperator(const std::string& name, eOperator op)
+  : csSGNode(name)
+  , m_op(op)
 {
   DefineInput("A", eSGValueType::All);
   DefineInput("B", eSGValueType::All);
@@ -354,8 +354,8 @@ csSGBinaryOperator::eOperator csSGBinaryOperator::GetOperator() const
 
 void csSGBinaryOperator::CalcIOTypes()
 {
-  auto s0  = GetInput(0)->GetInputValueType();
-  auto s1  = GetInput(1)->GetInputValueType();
+  auto s0 = GetInput(0)->GetInputValueType();
+  auto s1 = GetInput(1)->GetInputValueType();
   auto out = GetOutput(0);
 
   out->SetValueType(EvalValueType(s0, s1));
@@ -390,10 +390,10 @@ csSGMod::csSGMod() : csSGBinaryOperator("Mod", eOperator::Mod)
 /* *********************************************************/
 
 
-csSGStreamNode::csSGStreamNode(const std::string &name, eVertexStream stream, eSGValueType type)
-    : csSGNode(name)
-    , m_stream(stream)
-    , m_type(type)
+csSGStreamNode::csSGStreamNode(const std::string& name, eVertexStream stream, eSGValueType type)
+  : csSGNode(name)
+  , m_stream(stream)
+  , m_type(type)
 {
   DefineOutput("V", type);
 }
@@ -410,26 +410,27 @@ eVertexStream csSGStreamNode::GetStream() const
 
 
 csSGTexCoord::csSGTexCoord()
-    : csSGStreamNode("TexCoord", eVS_UV, eSGValueType::Vector2)
+  : csSGStreamNode("TexCoord", eVS_UV, eSGValueType::Vector2)
 {
 
 }
 
 
-csSGResourceNode::csSGResourceNode(const std::string &name, eMaterialAttributeType matType)
-    : csSGNode(name)
-    , m_matType(matType)
+csSGResourceNode::csSGResourceNode(const std::string& name, eMaterialAttributeType matType)
+  : csSGNode(name)
+  , m_matType(matType)
+  , m_defaultLocator("")
 {
 
 }
 
 
-void csSGResourceNode::SetResourceName(const std::string &name)
+void csSGResourceNode::SetResourceName(const std::string& name)
 {
   m_resourceName = name;
 }
 
-const std::string &csSGResourceNode::GetResourceName() const
+const std::string& csSGResourceNode::GetResourceName() const
 {
   return m_resourceName;
 }
@@ -439,9 +440,40 @@ eMaterialAttributeType csSGResourceNode::GetMatType() const
   return m_matType;
 }
 
+void csSGResourceNode::SetDefault(const std::array<float, 16> &v)
+{
+  m_defaultFloats = v;
+}
+
+void csSGResourceNode::SetDefault(int* v, size_t count)
+{
+  count = count > 4 ? 4 : count;
+  memcpy(m_defaultInts, v, sizeof(int) * count);
+}
+
+void csSGResourceNode::SetDefault(const csResourceLocator& locator)
+{
+  m_defaultLocator = locator;
+}
+
+const std::array<float, 16>& csSGResourceNode::GetDefaultFloats() const
+{
+  return m_defaultFloats;
+}
+
+const int* csSGResourceNode::GetDefaultInts() const
+{
+  return m_defaultInts;
+}
+
+const csResourceLocator& csSGResourceNode::GetDefaultLocator() const
+{
+  return m_defaultLocator;
+}
+
 
 csSGResourceFloat::csSGResourceFloat()
-: csSGResourceNode("Resource Float", eMAT_Float)
+  : csSGResourceNode("Resource Float", eMAT_Float)
 {
   DefineOutput("V", eSGValueType::Float);
 }
@@ -453,7 +485,7 @@ void csSGResourceFloat::CalcIOTypes()
 
 
 csSGResourceColor3::csSGResourceColor3()
-    : csSGResourceNode("Resource Color3", eMAT_Vec3)
+  : csSGResourceNode("Resource Color3", eMAT_Vec3)
 {
   DefineOutput("V", eSGValueType::Vector3);
 }
@@ -465,7 +497,7 @@ void csSGResourceColor3::CalcIOTypes()
 
 
 csSGTexture1D::csSGTexture1D()
-    : csSGResourceNode("Texture1D", eMAT_Texture)
+  : csSGResourceNode("Texture1D", eMAT_Texture)
 {
   DefineInput("UV", eSGValueType::Float);
   DefineOutput("Color", eSGValueType::Vector4);
@@ -478,7 +510,7 @@ void csSGTexture1D::CalcIOTypes()
 }
 
 csSGTexture2D::csSGTexture2D()
-    : csSGResourceNode("Texture2D", eMAT_Texture)
+  : csSGResourceNode("Texture2D", eMAT_Texture)
 {
   DefineInput("UV", eSGValueType::Vector2);
   DefineOutput("Color", eSGValueType::Vector4);
@@ -491,7 +523,7 @@ void csSGTexture2D::CalcIOTypes()
 }
 
 csSGTexture3D::csSGTexture3D()
-    : csSGResourceNode("Texture3D", eMAT_Texture)
+  : csSGResourceNode("Texture3D", eMAT_Texture)
 {
   DefineInput("UV", eSGValueType::Vector3);
   DefineOutput("Color", eSGValueType::Vector4);
