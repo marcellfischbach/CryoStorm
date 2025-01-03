@@ -617,54 +617,53 @@ void csGL4ShaderGraphCompiler::SetMaterialDefaults(cs::csMaterial *material)
   std::vector<csSGNode *> nodes;
   for (int i = 0; i < m_shaderGraph->GetNumberOfNodes(); ++i)
   {
-    nodes.push_back(m_shaderGraph->GetNode(i));
-  }
-
-  const std::vector<ResourceInput> &resources = FindResources(nodes);
-
-  for (const auto &resource: resources)
-  {
-
-    const csShaderGraph::Default *def = m_shaderGraph->GetDefault(resource.Name);
-    if (!def)
+    csSGNode* node = m_shaderGraph->GetNode(i);
+    if (!node || !node->IsInstanceOf<csSGResourceNode>())
     {
       continue;
     }
+    csSGResourceNode* resource = node->Query<csSGResourceNode>();
 
-    size_t idx = material->IndexOf(resource.Name);
+    size_t idx = material->IndexOf(resource->GetResourceName());
     if (idx == csMaterial::UndefinedIndex)
     {
       continue;
     }
 
-    switch (resource.MatType)
+    const std::array<float, 16>& floats = resource->GetDefaultFloats();
+    const std::array<int, 4>& ints = resource->GetDefaultInts();
+
+    switch (resource->GetMatType())
     {
       case eMAT_Float:
-        material->SetFloat(idx, def->floats[0]);
+        material->SetFloat(idx, floats[0]);
         break;
       case eMAT_Vec2:
-        material->SetVector2f(idx, csVector2f(def->floats[0], def->floats[1]));
+        material->SetVector2f(idx, csVector2f(floats[0], floats[1]));
         break;
       case eMAT_Vec3:
-        material->SetVector3f(idx, csVector3f(def->floats[0], def->floats[1], def->floats[2]));
+        material->SetVector3f(idx, csVector3f(floats[0], floats[1], floats[2]));
         break;
       case eMAT_Vec4:
-        material->SetVector4f(idx, csVector4f(def->floats[0], def->floats[1], def->floats[2], def->floats[3]));
+        material->SetVector4f(idx, csVector4f(floats[0], floats[1], floats[2], floats[3]));
         break;
 
       case eMAT_Matrix3:
-        material->SetMatrix3f(idx, csMatrix3f(def->floats.data()));
+        material->SetMatrix3f(idx, csMatrix3f(floats.data()));
         break;
       case eMAT_Matrix4:
-        material->SetMatrix4f(idx, csMatrix4f(def->floats.data()));
+        material->SetMatrix4f(idx, csMatrix4f(floats.data()));
         break;
 
       case eMAT_Int:
-        material->SetInt(idx, def->ints[0]);
+        material->SetInt(idx, ints[0]);
         break;
 
       case eMAT_Texture:
-        material->SetTexture(idx, def->texture);
+      {
+        iTexture* texture = csAssetManager::Get()->Get<iTexture>(resource->GetDefaultLocator());
+        material->SetTexture(idx, texture);
+      }
         break;
 
       default:

@@ -13,7 +13,7 @@ const std::string csSGConstFloat::OUT_V = "V";
 csSGConstFloat::csSGConstFloat()
   : csSGNode("Const Float")
 {
-  DefineInput("X", eSGValueType::Invalid);
+  DefineInput("X", eSGValueType::Float, csSGNodeInput::eM_Const);
   DefineOutput(OUT_V, eSGValueType::Float);
 }
 
@@ -39,8 +39,8 @@ const std::string csSGConstVec2::OUT_V = "V";
 csSGConstVec2::csSGConstVec2()
   : csSGNode("Const Vec2")
 {
-  DefineInput("X", eSGValueType::Invalid);
-  DefineInput("Y", eSGValueType::Invalid);
+  DefineInput("X", eSGValueType::Float, csSGNodeInput::eM_Const);
+  DefineInput("Y", eSGValueType::Float, csSGNodeInput::eM_Const);
   DefineOutput(OUT_V, eSGValueType::Vector2);
 }
 
@@ -66,9 +66,9 @@ const std::string csSGConstVec3::OUT_V = "V";
 csSGConstVec3::csSGConstVec3()
   : csSGNode("Const Vec3")
 {
-  DefineInput("X", eSGValueType::Invalid);
-  DefineInput("Y", eSGValueType::Invalid);
-  DefineInput("Z", eSGValueType::Invalid);
+  DefineInput("X", eSGValueType::Float, csSGNodeInput::eM_Const);
+  DefineInput("Y", eSGValueType::Float, csSGNodeInput::eM_Const);
+  DefineInput("Z", eSGValueType::Float, csSGNodeInput::eM_Const);
   DefineOutput(OUT_V, eSGValueType::Vector3);
 }
 
@@ -93,10 +93,10 @@ const std::string csSGConstVec4::OUT_V = "V";
 csSGConstVec4::csSGConstVec4()
   : csSGNode("Const Vec4")
 {
-  DefineInput("X", eSGValueType::Invalid);
-  DefineInput("Y", eSGValueType::Invalid);
-  DefineInput("Z", eSGValueType::Invalid);
-  DefineInput("W", eSGValueType::Invalid);
+  DefineInput("X", eSGValueType::Float, csSGNodeInput::eM_Const);
+  DefineInput("Y", eSGValueType::Float, csSGNodeInput::eM_Const);
+  DefineInput("Z", eSGValueType::Float, csSGNodeInput::eM_Const);
+  DefineInput("W", eSGValueType::Float, csSGNodeInput::eM_Const);
   DefineOutput(OUT_V, eSGValueType::Vector4);
 }
 
@@ -126,9 +126,9 @@ const std::string csSGConstColor3::OUT_V = "V";
 csSGConstColor3::csSGConstColor3()
   : csSGNode("Const Color3")
 {
-  DefineInput("R", eSGValueType::Invalid);
-  DefineInput("G", eSGValueType::Invalid);
-  DefineInput("B", eSGValueType::Invalid);
+  DefineInput("R", eSGValueType::Float, csSGNodeInput::eM_Const);
+  DefineInput("G", eSGValueType::Float, csSGNodeInput::eM_Const);
+  DefineInput("B", eSGValueType::Float, csSGNodeInput::eM_Const);
   DefineOutput(OUT_V, eSGValueType::Vector3);
 }
 
@@ -155,10 +155,10 @@ const std::string csSGConstColor4::OUT_V = "V";
 csSGConstColor4::csSGConstColor4()
   : csSGNode("Const Color4")
 {
-  DefineInput("R", eSGValueType::Invalid);
-  DefineInput("G", eSGValueType::Invalid);
-  DefineInput("B", eSGValueType::Invalid);
-  DefineInput("A", eSGValueType::Invalid);
+  DefineInput("R", eSGValueType::Float, csSGNodeInput::eM_Const);
+  DefineInput("G", eSGValueType::Float, csSGNodeInput::eM_Const);
+  DefineInput("B", eSGValueType::Float, csSGNodeInput::eM_Const);
+  DefineInput("A", eSGValueType::Float, csSGNodeInput::eM_Const);
   DefineOutput(OUT_V, eSGValueType::Vector3);
 }
 
@@ -187,8 +187,8 @@ const std::string csSGVec2::OUT_V = "V";
 csSGVec2::csSGVec2()
   : csSGNode("Vec2")
 {
-  DefineInput(IN_X, eSGValueType::Float);
-  DefineInput(IN_Y, eSGValueType::Float);
+  DefineInput(IN_X, eSGValueType::Float, csSGNodeInput::eM_Modifiable);
+  DefineInput(IN_Y, eSGValueType::Float, csSGNodeInput::eM_Modifiable);
   DefineOutput(OUT_V, eSGValueType::Vector2);
 }
 
@@ -212,9 +212,9 @@ const std::string csSGVec3::OUT_V = "V";
 csSGVec3::csSGVec3()
   : csSGNode("Vec3")
 {
-  DefineInput(IN_X, eSGValueType::Float);
-  DefineInput(IN_Y, eSGValueType::Float);
-  DefineInput(IN_Z, eSGValueType::Float);
+  DefineInput(IN_X, eSGValueType::Float, csSGNodeInput::eM_Modifiable);
+  DefineInput(IN_Y, eSGValueType::Float, csSGNodeInput::eM_Modifiable);
+  DefineInput(IN_Z, eSGValueType::Float, csSGNodeInput::eM_Modifiable);
   DefineOutput(OUT_V, eSGValueType::Vector3);
 }
 
@@ -239,10 +239,10 @@ const std::string csSGVec4::OUT_V = "V";
 csSGVec4::csSGVec4()
   : csSGNode("Vec4")
 {
-  DefineInput(IN_X, eSGValueType::Float);
-  DefineInput(IN_Y, eSGValueType::Float);
-  DefineInput(IN_Z, eSGValueType::Float);
-  DefineInput(IN_W, eSGValueType::Float);
+  DefineInput(IN_X, eSGValueType::Float, csSGNodeInput::eM_Modifiable);
+  DefineInput(IN_Y, eSGValueType::Float, csSGNodeInput::eM_Modifiable);
+  DefineInput(IN_Z, eSGValueType::Float, csSGNodeInput::eM_Modifiable);
+  DefineInput(IN_W, eSGValueType::Float, csSGNodeInput::eM_Modifiable);
   DefineOutput(OUT_V, eSGValueType::Vector4);
 }
 
@@ -262,7 +262,7 @@ const std::string csSGDecomposeVec2::OUT_Y = "Y";
 csSGDecomposeVec2::csSGDecomposeVec2()
   : csSGNode("Decompose Vec2")
 {
-  DefineInput(IN_V, eSGValueType::Vector2);
+  DefineInput(IN_V, eSGValueType::Vector2, csSGNodeInput::eM_Modifiable);
   DefineOutput(OUT_X, eSGValueType::Float);
   DefineOutput(OUT_Y, eSGValueType::Float);
 }
@@ -286,7 +286,7 @@ const std::string csSGDecomposeVec3::OUT_Z = "Z";
 csSGDecomposeVec3::csSGDecomposeVec3()
   : csSGNode("Decompose Vec3")
 {
-  DefineInput(IN_V, eSGValueType::Vector3);
+  DefineInput(IN_V, eSGValueType::Vector3, csSGNodeInput::eM_Modifiable);
   DefineOutput(OUT_X, eSGValueType::Float);
   DefineOutput(OUT_Y, eSGValueType::Float);
   DefineOutput(OUT_Z, eSGValueType::Float);
@@ -313,7 +313,7 @@ const std::string csSGDecomposeVec4::OUT_W = "W";
 csSGDecomposeVec4::csSGDecomposeVec4()
   : csSGNode("Decompose Vec4")
 {
-  DefineInput(IN_V, eSGValueType::Vector4);
+  DefineInput(IN_V, eSGValueType::Vector4, csSGNodeInput::eM_Modifiable);
   DefineOutput(OUT_X, eSGValueType::Float);
   DefineOutput(OUT_Y, eSGValueType::Float);
   DefineOutput(OUT_Z, eSGValueType::Float);
@@ -341,8 +341,8 @@ csSGBinaryOperator::csSGBinaryOperator(const std::string& name, eOperator op)
   : csSGNode(name)
   , m_op(op)
 {
-  DefineInput("A", eSGValueType::All);
-  DefineInput("B", eSGValueType::All);
+  DefineInput("A", eSGValueType::All, csSGNodeInput::eM_Modifiable);
+  DefineInput("B", eSGValueType::All, csSGNodeInput::eM_Modifiable);
   DefineOutput(OUT_V, eSGValueType::All);
 }
 
@@ -445,11 +445,11 @@ void csSGResourceNode::SetDefault(const std::array<float, 16> &v)
   m_defaultFloats = v;
 }
 
-void csSGResourceNode::SetDefault(int* v, size_t count)
+void csSGResourceNode::SetDefault(const std::array<int, 4>& v)
 {
-  count = count > 4 ? 4 : count;
-  memcpy(m_defaultInts, v, sizeof(int) * count);
+  m_defaultInts = v;
 }
+  
 
 void csSGResourceNode::SetDefault(const csResourceLocator& locator)
 {
@@ -461,7 +461,7 @@ const std::array<float, 16>& csSGResourceNode::GetDefaultFloats() const
   return m_defaultFloats;
 }
 
-const int* csSGResourceNode::GetDefaultInts() const
+const std::array<int, 4> &csSGResourceNode::GetDefaultInts() const
 {
   return m_defaultInts;
 }
@@ -499,7 +499,7 @@ void csSGResourceColor3::CalcIOTypes()
 csSGTexture1D::csSGTexture1D()
   : csSGResourceNode("Texture1D", eMAT_Texture)
 {
-  DefineInput("UV", eSGValueType::Float);
+  DefineInput("UV", eSGValueType::Float, csSGNodeInput::eM_Modifiable);
   DefineOutput("Color", eSGValueType::Vector4);
 }
 
@@ -512,7 +512,7 @@ void csSGTexture1D::CalcIOTypes()
 csSGTexture2D::csSGTexture2D()
   : csSGResourceNode("Texture2D", eMAT_Texture)
 {
-  DefineInput("UV", eSGValueType::Vector2);
+  DefineInput("UV", eSGValueType::Vector2, csSGNodeInput::eM_Modifiable);
   DefineOutput("Color", eSGValueType::Vector4);
 }
 
@@ -525,7 +525,7 @@ void csSGTexture2D::CalcIOTypes()
 csSGTexture3D::csSGTexture3D()
   : csSGResourceNode("Texture3D", eMAT_Texture)
 {
-  DefineInput("UV", eSGValueType::Vector3);
+  DefineInput("UV", eSGValueType::Vector3, csSGNodeInput::eM_Modifiable);
   DefineOutput("Color", eSGValueType::Vector4);
 }
 

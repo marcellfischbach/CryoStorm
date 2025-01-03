@@ -106,6 +106,7 @@ ShaderGraphResourceNodeWidget::ShaderGraphResourceNodeWidget(QWidget* parent)
   connect(m_gui->matMat432, &QDoubleSpinBox::valueChanged, this, &ShaderGraphResourceNodeWidget::SyncValuesDoubleSpinBox);
   connect(m_gui->matMat433, &QDoubleSpinBox::valueChanged, this, &ShaderGraphResourceNodeWidget::SyncValuesDoubleSpinBox);
 
+  connect(m_gui->resourceName, &QLineEdit::textChanged, this, &ShaderGraphResourceNodeWidget::SyncValuesLineEdit);
   connect(m_gui->matTextureLocator, &QLineEdit::textChanged, this, &ShaderGraphResourceNodeWidget::SyncValuesLineEdit);
 
 
@@ -136,7 +137,7 @@ void ShaderGraphResourceNodeWidget::UpdateValues()
   m_gui->mat->setCurrentIndex(m_resource->GetMatType());
 
   const std::array<float, 16> &floats = m_resource->GetDefaultFloats();
-  const int* ints = m_resource->GetDefaultInts();
+  const std::array<int, 4>& ints = m_resource->GetDefaultInts();
 
 
 
@@ -227,7 +228,7 @@ void ShaderGraphResourceNodeWidget::SyncValues()
   }
 
   std::array<float, 16> floats;
-  int ints[4] = {};
+  std::array<int, 4> ints;
   cs::csResourceLocator locator("");
   switch (m_resource->GetMatType())
   {
@@ -290,7 +291,7 @@ void ShaderGraphResourceNodeWidget::SyncValues()
 
   m_resource->SetResourceName(m_gui->resourceName->text().toStdString());
   m_resource->SetDefault(floats);
-  m_resource->SetDefault(ints, 4);
+  m_resource->SetDefault(ints);
   m_resource->SetDefault(locator);
 
 }

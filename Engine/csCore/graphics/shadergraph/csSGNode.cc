@@ -28,9 +28,11 @@ const std::string& csSGNode::GetName() const
   return m_name;
 }
 
-csSGNodeInput *csSGNode::DefineInput(const std::string &name, eSGValueType types)
+
+
+csSGNodeInput *csSGNode::DefineInput(const std::string &name, eSGValueType types, csSGNodeInput::eModifiable modifiable)
 {
-  auto input = new csSGNodeInput(this, name);
+  auto input = new csSGNodeInput(this, name, modifiable);
   input->SetTypes(types);
   m_inputs.push_back(input);
   return input;

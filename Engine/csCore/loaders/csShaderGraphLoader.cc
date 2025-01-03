@@ -95,12 +95,6 @@ iObject* csShaderGraphLoader::Load(const csCryoFile* file, const csClass* cls, c
 
   }
 
-  const csCryoFileElement* attributesElements = shaderGraphElement->GetChild("attributes");
-  if (attributesElements)
-  {
-    LoadAttributes(attributesElements, sg, locator);
-  }
-
 
   if (cls->IsInstanceOf<csMaterial>())
   {
@@ -277,7 +271,7 @@ bool csShaderGraphLoader::LoadResourceDefaults(const csCryoFileElement* nodeElem
     }
     const std::string& tagName = childElement->GetTagName();
     std::array<float, 16> floats;
-    int ints[4] = { };
+    std::array<int, 4> ints;
     csResourceLocator locator("");
     if (tagName == "defaultFloat")
     {
@@ -303,7 +297,7 @@ bool csShaderGraphLoader::LoadResourceDefaults(const csCryoFileElement* nodeElem
     }
 
     resourceNode->SetDefault(floats);
-    resourceNode->SetDefault(ints, 4);
+    resourceNode->SetDefault(ints);
     resourceNode->SetDefault(locator);
 
   }
@@ -466,80 +460,6 @@ bool csShaderGraphLoader::LoadBinding(const csCryoFileElement* valueElement,
 }
 
 
-void csShaderGraphLoader::LoadAttributes(const cs::csCryoFileElement* attributesElement,
-  cs::csShaderGraph* sg,
-  const csResourceLocator& locator) const
-{
-  if (!attributesElement)
-  {
-    return;
-  }
-  for (size_t i = 0, in = attributesElement->GetNumberOfChildren(); i < in; ++i)
-  {
-    const csCryoFileElement* attributeElement = attributesElement->GetChild(i);
-    if (attributeElement->GetTagName() == std::string("attribute"))
-    {
-      LoadAttribute(attributeElement, sg, locator);
-    }
-  }
-}
-
-void csShaderGraphLoader::LoadAttribute(const cs::csCryoFileElement* attributeElement,
-  cs::csShaderGraph* sg,
-  const csResourceLocator& locator) const
-{
-  if (attributeElement->GetNumberOfAttributes() < 2)
-  {
-    return;
-  }
-  std::string type = attributeElement->GetAttribute(0, "");
-  std::string name = attributeElement->GetAttribute(1, "");
-  if (type.empty() || name.empty())
-  {
-    return;
-  }
-
-
-  if (type == "Float")
-  {
-    float v = attributeElement->GetAttribute(2, 0.0f);
-    sg->SetDefault(name, 1, &v);
-  }
-  else if (type == "Vec2")
-  {
-    csVector2f v{};
-    v.x = attributeElement->GetAttribute(2, 0.0f);
-    v.y = attributeElement->GetAttribute(3, 0.0f);
-    sg->SetDefault(name, 2, &v.x);
-  }
-  else if (type == "Vec3")
-  {
-    csVector3f v{};
-    v.x = attributeElement->GetAttribute(2, 0.0f);
-    v.y = attributeElement->GetAttribute(3, 0.0f);
-    v.z = attributeElement->GetAttribute(4, 0.0f);
-    sg->SetDefault(name, 3, &v.x);
-  }
-  else if (type == "Vec4" || type == "Color4")
-  {
-    csVector4f v{};
-    v.x = attributeElement->GetAttribute(2, 0.0f);
-    v.y = attributeElement->GetAttribute(3, 0.0f);
-    v.z = attributeElement->GetAttribute(4, 0.0f);
-    v.w = attributeElement->GetAttribute(5, 0.0f);
-    sg->SetDefault(name, 4, &v.x);
-  }
-  else if (type == "Texture")
-  {
-    std::string locatorStr = attributeElement->GetAttribute(2, "");
-    if (!locatorStr.empty())
-    {
-      csResourceLocator txtLocator(locator, locatorStr);
-      auto texture = csAssetManager::Get()->Get<iTexture>(txtLocator);
-      sg->SetDefault(name, texture);
-    }
-  }
-}
 
 void csShaderGraphLoader::LoadNodePositions(const csCryoFileElement* nodeElement, csSGNode* node) const
 {

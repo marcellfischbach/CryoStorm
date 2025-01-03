@@ -143,6 +143,10 @@ void ShaderGraphNodeItem::GenerateInputsAndOutputs()
   for (int i = 0; i < m_node->GetNumberOfInputs(); i++)
   {
     csSGNodeInput *input = m_node->GetInput(i);
+    if (input->IsConst())
+    {
+      continue;
+    }
     QGraphicsEllipseItem *ellipseItem = new QGraphicsEllipseItem(0, 0, HANDLE_SIZE, HANDLE_SIZE, this);
     QGraphicsEllipseItem *ellipseItemDot = new QGraphicsEllipseItem(HANDLE_DOT_OFFSET, HANDLE_DOT_OFFSET,
                                                                     HANDLE_DOT_SIZE, HANDLE_DOT_SIZE,

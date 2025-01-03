@@ -14,11 +14,11 @@ csShaderGraph::csShaderGraph()
     : csSGNode("Shader Graph")
 {
   SetKey("Shader Graph");
-  m_diffuse = DefineInput("Diffuse", eSGValueType::Float | eSGValueType::Vector3 | eSGValueType::Vector4);
-  m_alpha = DefineInput("Alpha", eSGValueType::Float);
-  m_roughness = DefineInput("Roughness", eSGValueType::Float);
-  m_normal = DefineInput("Normal", eSGValueType::Vector3);
-  m_metallic = DefineInput("Metallic", eSGValueType::Float);
+  m_diffuse = DefineInput("Diffuse", eSGValueType::Float | eSGValueType::Vector3 | eSGValueType::Vector4, csSGNodeInput::eM_Modifiable);
+  m_alpha = DefineInput("Alpha", eSGValueType::Float, csSGNodeInput::eM_Modifiable);
+  m_roughness = DefineInput("Roughness", eSGValueType::Float, csSGNodeInput::eM_Modifiable);
+  m_normal = DefineInput("Normal", eSGValueType::Vector3, csSGNodeInput::eM_Modifiable);
+  m_metallic = DefineInput("Metallic", eSGValueType::Float, csSGNodeInput::eM_Modifiable);
 
 
   m_roughness->SetScalar(0.5f);
@@ -251,7 +251,7 @@ eCompareFunc csShaderGraph::GetAlphaDiscard_Func() const
   return m_alphaDiscard_Func;
 }
 
-
+/*
 void csShaderGraph::SetDefault(const std::string &attribute, size_t count, float *floats)
 {
   Default def{};
@@ -293,7 +293,7 @@ const csShaderGraph::Default *csShaderGraph::GetDefault(const std::string &name)
   }
   return nullptr;
 }
-
+*/
 void csShaderGraph::SetLightingMode(eLightingMode lightingMode)
 {
   m_lightingMode = lightingMode;

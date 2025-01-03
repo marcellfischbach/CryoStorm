@@ -88,7 +88,13 @@ class CS_CORE_API csSGNodeInput : public CS_SUPER(csSGNodeIO)
 {
   CS_CLASS_GEN;
 public:
-  csSGNodeInput(csSGNode *node, const std::string &name) : csSGNodeIO(node, name), m_scalar(0.0f)
+
+  enum eModifiable {
+    eM_Modifiable,
+    eM_Const,
+  };
+
+  csSGNodeInput(csSGNode *node, const std::string &name, eModifiable modifiable) : csSGNodeIO(node, name), m_scalar(0.0f), m_modifiable(modifiable)
   {}
   ~csSGNodeInput() override = default;
 
@@ -107,12 +113,18 @@ public:
     m_scalar = scalar;
   }
 
+  bool IsConst()
+  {
+    return m_modifiable == eM_Const;
+  }
+
   eSGValueType GetInputValueType() const;
 
 private:
   csSGNodeOutput *m_source = nullptr;
-
   float m_scalar;
+
+  eModifiable m_modifiable;
 };
 
 
@@ -149,7 +161,7 @@ public:
 protected:
   explicit csSGNode(const std::string &name);
 
-  csSGNodeInput* DefineInput(const std::string &name, eSGValueType types);
+  csSGNodeInput* DefineInput(const std::string &name, eSGValueType types, csSGNodeInput::eModifiable modifiable);
   csSGNodeOutput* DefineOutput(const std::string &name, eSGValueType types);
 
 

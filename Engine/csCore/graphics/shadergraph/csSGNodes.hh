@@ -336,18 +336,18 @@ public:
   eMaterialAttributeType GetMatType() const;
 
   void SetDefault(const std::array<float, 16> &v);
-  void SetDefault(int *v, size_t count);
+  void SetDefault(const std::array<int, 4> &v);
   void SetDefault(const csResourceLocator &locator);
 
   const std::array<float, 16>& GetDefaultFloats() const;
-  const int* GetDefaultInts() const;
+  const std::array<int, 4>& GetDefaultInts() const;
   const csResourceLocator &GetDefaultLocator() const;
 
 private:
   eMaterialAttributeType m_matType;
   std::string            m_resourceName;
 
-  int m_defaultInts[4];
+  std::array<int, 4> m_defaultInts;
   std::array<float, 16> m_defaultFloats;
   csResourceLocator m_defaultLocator;
 
