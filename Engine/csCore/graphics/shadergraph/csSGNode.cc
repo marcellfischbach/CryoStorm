@@ -7,18 +7,18 @@ namespace cs
 
 
 
-csSGNode::csSGNode(const std::string &name)
-    : m_name(name)
+csSGNode::csSGNode(const std::string& name)
+  : m_name(name)
 {
 
 }
 
-void csSGNode::SetKey(const std::string &key)
+void csSGNode::SetKey(const std::string& key)
 {
   m_key = key;
 }
 
-const std::string &csSGNode::GetKey() const
+const std::string& csSGNode::GetKey() const
 {
   return m_key;
 }
@@ -30,7 +30,7 @@ const std::string& csSGNode::GetName() const
 
 
 
-csSGNodeInput *csSGNode::DefineInput(const std::string &name, eSGValueType types, csSGNodeInput::eModifiable modifiable)
+csSGNodeInput* csSGNode::DefineInput(const std::string& name, eSGValueType types, csSGNodeInput::eModifiable modifiable)
 {
   auto input = new csSGNodeInput(this, name, modifiable);
   input->SetTypes(types);
@@ -38,7 +38,7 @@ csSGNodeInput *csSGNode::DefineInput(const std::string &name, eSGValueType types
   return input;
 }
 
-csSGNodeOutput *csSGNode::DefineOutput(const std::string &name, eSGValueType types)
+csSGNodeOutput* csSGNode::DefineOutput(const std::string& name, eSGValueType types)
 {
   auto output = new csSGNodeOutput(this, name);
   output->SetTypes(types);
@@ -46,15 +46,15 @@ csSGNodeOutput *csSGNode::DefineOutput(const std::string &name, eSGValueType typ
   return output;
 }
 
-void csSGNode::Bind(size_t inputIdx, cs::csSGNode *node, size_t outputIdx)
+void csSGNode::Bind(size_t inputIdx, cs::csSGNode* node, size_t outputIdx)
 {
   if (inputIdx >= m_inputs.size())
   {
     return;
   }
 
-  csSGNodeInput  *input     = m_inputs[inputIdx];
-  csSGNodeOutput *oldSource = input->GetSource();
+  csSGNodeInput* input = m_inputs[inputIdx];
+  csSGNodeOutput* oldSource = input->GetSource();
 
   if (!node)
   {
@@ -66,7 +66,7 @@ void csSGNode::Bind(size_t inputIdx, cs::csSGNode *node, size_t outputIdx)
   }
   else
   {
-    csSGNodeOutput *newSource = node->GetOutput(outputIdx);
+    csSGNodeOutput* newSource = node->GetOutput(outputIdx);
     if (newSource == oldSource)
     {
       return;
@@ -81,7 +81,7 @@ void csSGNode::Bind(size_t inputIdx, cs::csSGNode *node, size_t outputIdx)
       newSource->Add(input);
     }
   }
-  
+
 }
 
 size_t csSGNode::GetNumberOfInputs() const
@@ -108,9 +108,9 @@ const csSGNodeInput* csSGNode::GetInput(size_t idx) const
   return m_inputs[idx];
 }
 
-int csSGNode::IndexOfInput(const std::string &inputName) const
+int csSGNode::IndexOfInput(const std::string& inputName) const
 {
-  for (int i=0, in=m_inputs.size(); i<in; i++)
+  for (int i = 0, in = m_inputs.size(); i < in; i++)
   {
     if (m_inputs[i]->GetName() == inputName)
     {
@@ -144,9 +144,9 @@ const csSGNodeOutput* csSGNode::GetOutput(size_t idx) const
   return m_outputs[idx];
 }
 
-int csSGNode::IndexOfOutput(const std::string &inputName) const
+int csSGNode::IndexOfOutput(const std::string& inputName) const
 {
-  for (int i=0, in=m_outputs.size(); i<in; i++)
+  for (int i = 0, in = m_outputs.size(); i < in; i++)
   {
     if (m_outputs[i]->GetName() == inputName)
     {
@@ -156,12 +156,12 @@ int csSGNode::IndexOfOutput(const std::string &inputName) const
   return -1;
 }
 
-void csSGNode::SetPosition(const cs::csVector2f &pos)
+void csSGNode::SetPosition(const cs::csVector2f& pos)
 {
   m_position = pos;
 }
 
-const csVector2f &csSGNode::GetPosition() const
+const csVector2f& csSGNode::GetPosition() const
 {
   return m_position;
 }
@@ -175,8 +175,46 @@ eSGValueType csSGNodeInput::GetInputValueType() const
   return GetTypes();
 }
 
+void csSGNodeInput::SetSource(csSGNodeOutput* output)
+{
+  if (output)
+  {
+    printf("%s.%s -> %s.%s\n",
+      output->GetNode()->GetName().c_str(),
+      output->GetName().c_str(),
+      GetNode()->GetName().c_str(),
+      GetName().c_str());
+  }
+  else
+  {
+    printf("x- %s.%s\n",
+      GetNode()->GetName().c_str(),
+      GetName().c_str());
+  }
+  m_source = output;
+}
 
-eSGValueType EvalValueType (eSGValueType v0, eSGValueType v1)
+
+void csSGNodeOutput::Add(csSGNodeInput* input)
+{
+  m_destinations.insert(input);
+  printf("%s.%s -> %s.%s\n",
+    GetNode()->GetName().c_str(),
+    GetName().c_str(),
+    input->GetNode()->GetName().c_str(),
+    input->GetName().c_str());
+}
+void csSGNodeOutput::Remove(csSGNodeInput* input)
+{
+  m_destinations.erase(input);
+  printf("%s.%s -x %s.%s\n",
+    GetNode()->GetName().c_str(),
+    GetName().c_str(),
+    input->GetNode()->GetName().c_str(),
+    input->GetName().c_str());
+}
+
+eSGValueType EvalValueType(eSGValueType v0, eSGValueType v1)
 {
   if (v0 == v1)
   {
@@ -190,7 +228,7 @@ eSGValueType EvalValueType (eSGValueType v0, eSGValueType v1)
 
   if (v1 == eSGValueType::Float)
   {
-      return v0;
+    return v0;
   }
   return eSGValueType::Invalid;
 }

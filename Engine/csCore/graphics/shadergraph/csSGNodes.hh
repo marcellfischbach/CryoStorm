@@ -156,6 +156,22 @@ public:
   void CalcIOTypes() override;
 };
 
+CS_CLASS()
+class CS_CORE_API csSGTransformVec4 : public CS_SUPER(csSGNode)
+{
+  CS_CLASS_GEN;
+public:
+  const static std::string IN_V;
+  const static std::string OUT_V2;
+  const static std::string OUT_V3;
+
+  csSGTransformVec4();
+  ~csSGTransformVec4() override = default;
+
+  void CalcIOTypes() override;
+};
+
+
 
 CS_CLASS()
 class CS_CORE_API csSGDecomposeVec2 : public CS_SUPER(csSGNode)

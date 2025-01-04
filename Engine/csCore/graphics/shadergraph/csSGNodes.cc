@@ -251,6 +251,32 @@ void csSGVec4::CalcIOTypes()
   GetOutput(0)->SetValueType(eSGValueType::Vector3);
 }
 
+
+
+
+/* *********************************************************/
+/*     Transform Vec 4                                     */
+/* *********************************************************/
+
+const std::string csSGTransformVec4::IN_V = "V";
+const std::string csSGTransformVec4::OUT_V2 = "V2";
+const std::string csSGTransformVec4::OUT_V3 = "V3";
+
+csSGTransformVec4::csSGTransformVec4()
+  : csSGNode("Transform Vec4")
+{
+  DefineInput(IN_V, eSGValueType::Vector4, csSGNodeInput::eM_Modifiable);
+  DefineOutput(OUT_V2, eSGValueType::Vector2);
+  DefineOutput(OUT_V3, eSGValueType::Vector3);
+}
+
+void csSGTransformVec4::CalcIOTypes()
+{
+  GetOutput(0)->SetValueType(eSGValueType::Vector2);
+  GetOutput(1)->SetValueType(eSGValueType::Vector3);
+}
+
+
 /* *********************************************************/
 /*     Decompose Vec 2                                     */
 /* *********************************************************/

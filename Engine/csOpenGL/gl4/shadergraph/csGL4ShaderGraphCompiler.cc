@@ -38,6 +38,7 @@ csMaterial *csGL4ShaderGraphCompiler::Compile(cs::csShaderGraph *shaderGraph, co
 
   if (!VerifyNodesType())
   {
+    printf("Node types not matching\n");
     return nullptr;
   }
 

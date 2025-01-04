@@ -301,7 +301,7 @@ void csGL4ShaderGraphCompiler::GenerateVariable(csSGNode *node)
     else if (inputY.Name == inputZ.Name && inputY.PostFix != "")
     {
       m_nodeVariables[node] = {
-          "vec3 " + v + " = vec3(" + inputZ.FullQualified() + ", " + inputY.Name + "." + inputY.PostFix +
+          "vec3 " + v + " = vec3(" + inputX.FullQualified() + ", " + inputY.Name + "." + inputY.PostFix +
           inputZ.PostFix + ");",
           v,
           eSGValueType::Vector3,
@@ -514,8 +514,29 @@ void csGL4ShaderGraphCompiler::GenerateVariable(csSGNodeOutput *output)
   eSGValueType type    = var.Type;
   bool         stream  = var.Stream;
 
+  if (cls->IsInstanceOf<csSGTransformVec4>())
+  {
+    csSGNodeInput* input = node->GetInput(0);
+    csSGNodeOutput* source = input->GetSource();
+    if (m_outputVariables.contains(source))
+    {
+      OutputVariable& variable = m_outputVariables[source];
+      name = variable.FullQualified();
+      stream = variable.Stream;
 
-  if (cls->IsInstanceOf<csSGDecomposeVec2>())
+      if (output->GetName() == csSGTransformVec4::OUT_V2)
+      {
+        type = eSGValueType::Vector2;
+        postfix = "xy";
+      }
+      else if (output->GetName() == csSGTransformVec4::OUT_V3)
+      {
+        type = eSGValueType::Vector3;
+        postfix = "xyz";
+      }
+    }
+  }
+  else if (cls->IsInstanceOf<csSGDecomposeVec2>())
   {
     csSGNodeInput  *input  = node->GetInput(0);
     csSGNodeOutput *source = input->GetSource();
