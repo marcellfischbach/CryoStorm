@@ -22,7 +22,7 @@ const std::string& csFileSystemArchive::GetName() const
   return m_name;
 }
 
-const const std::string &csFileSystemArchive::GetRootPath() const
+const std::string &csFileSystemArchive::GetRootPath() const
 {
   return m_rootPath;
 }

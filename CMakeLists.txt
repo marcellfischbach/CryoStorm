@@ -21,7 +21,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 unset(CMAKE_CXX_CL_SHOWINCLUDE)
 
 set(DISABLE_RENDERING OFF)
-set(JAVA_BINDINGS ON)
+set(JAVA_BINDINGS OFF)
 
 
 include(${CryoStorm_SOURCE_DIR}/Scripts/CryoStorm.cmake)

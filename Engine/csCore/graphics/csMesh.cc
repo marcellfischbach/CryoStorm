@@ -2,7 +2,7 @@
 
 #include <csCore/graphics/csMesh.hh>
 #include <csCore/csOutOfBoundsException.hh>
-
+#include <csCore/resource/csResource_Impl.hh>
 namespace cs
 {
 
@@ -22,7 +22,7 @@ const csBoundingBox & csMesh::GetBoundingBox() const
 }
 
 
-Size csMesh::AddMaterialSlot(const std::string& name, iMaterial* defaultMaterial)
+Size csMesh::AddMaterialSlot(const std::string& name, csResource<iMaterial> &defaultMaterial)
 {
   for (Size i = 0; i < m_materialSlots.size(); i++)
   {
@@ -36,13 +36,13 @@ Size csMesh::AddMaterialSlot(const std::string& name, iMaterial* defaultMaterial
   return m_materialSlots.size() - 1;
 }
 
-void csMesh::SetDefaultMaterial(Size idx, iMaterial* defaultMaterial)
+void csMesh::SetDefaultMaterial(Size idx, csResource<iMaterial> &defaultMaterial)
 {
   if (idx >= m_materialSlots.size())
   {
     throw csOutOfBoundsException();
   }
-  CS_SET(m_materialSlots[idx].m_defaultMaterial, defaultMaterial);
+  m_materialSlots[idx].m_defaultMaterial =  defaultMaterial;
 }
 
 Size csMesh::GetNumberOfSubMeshes() const
@@ -169,17 +169,17 @@ Size csMesh::SubMesh::GetMaterialSlotIdx() const
  * *********************************************************************/
 
 
-csMesh::MaterialSlot::MaterialSlot(const std::string& name, iMaterial* defaultMaterial)
+csMesh::MaterialSlot::MaterialSlot(const std::string& name, const csResource<iMaterial> &defaultMaterial)
   : m_defaultMaterial(nullptr)
   , m_name(name)
 {
-  CS_SET(m_defaultMaterial, defaultMaterial);
+  m_defaultMaterial = defaultMaterial;
 }
 
 csMesh::MaterialSlot::MaterialSlot(const MaterialSlot& slot)
 : m_defaultMaterial(nullptr)
 {
-  CS_SET(m_defaultMaterial, slot.m_defaultMaterial);
+  m_defaultMaterial =  slot.m_defaultMaterial;
   m_name = slot.m_name;
 }
 
@@ -191,12 +191,12 @@ csMesh::MaterialSlot::~MaterialSlot()
 
 csMesh::MaterialSlot& csMesh::MaterialSlot::operator=(const MaterialSlot& slot)
 {
-  CS_SET(m_defaultMaterial, slot.m_defaultMaterial);
+  m_defaultMaterial =  slot.m_defaultMaterial;
   m_name = slot.m_name;
   return *this;
 }
 
-iMaterial* csMesh::MaterialSlot::GetDefaultMaterial() const
+const csResource<iMaterial>& csMesh::MaterialSlot::GetDefaultMaterial() const
 {
   return m_defaultMaterial;
 }

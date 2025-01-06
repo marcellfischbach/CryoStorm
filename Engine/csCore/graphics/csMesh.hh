@@ -5,6 +5,7 @@
 #include <csCore/csClass.hh>
 #include <csCore/graphics/iRenderMesh.hh>
 #include <csCore/graphics/material/iMaterial.hh>
+#include <csCore/resource/csResource.hh>
 #include <csCore/csTypes.hh>
 
 
@@ -55,26 +56,26 @@ public:
   {
     friend class csMesh;
   private:
-    MaterialSlot(const std::string &name, iMaterial *defaultMaterial);
+    MaterialSlot(const std::string &name, const csResource<iMaterial> &defaultMaterial);
   public:
     MaterialSlot(const MaterialSlot &slot);
     ~MaterialSlot();
 
-    iMaterial* GetDefaultMaterial() const;
+    const csResource<iMaterial> &GetDefaultMaterial() const;
 
     MaterialSlot &operator=(const MaterialSlot &slot);
 
     const std::string& GetName() const;
 
   private:
-    iMaterial* m_defaultMaterial;
+    csResource<iMaterial> m_defaultMaterial;
     std::string m_name;
   };
 
   const csBoundingBox& GetBoundingBox() const;
 
-  Size AddMaterialSlot(const std::string& name, iMaterial* defaultMaterial = nullptr);
-  void SetDefaultMaterial(Size idx, iMaterial* defaultMaterial);
+  Size AddMaterialSlot(const std::string& name, csResource<iMaterial>& defaultMaterial);
+  void SetDefaultMaterial(Size idx, csResource<iMaterial> &defaultMaterial);
   Size GetNumberOfMaterialSlots() const;
   const MaterialSlot& GetMaterialSlot(Size idx) const;
   size_t IndexOfMaterialSlot(const std::string &materialName) const;

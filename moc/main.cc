@@ -34,6 +34,7 @@ void print_usage(char* name)
   printf("  options:\n");
   printf("    --file   <file>        a single file that should be process\n");
   printf("    --source <source>      the cc file when a single file is processed\n");
+  printf("    --sourceInput <file>   a file containing a list of files that should be processed\n");
   printf("    --sourcepath <path>    the base path where the source code is located\n");
   printf("    --header <header>      the hh file when a single file is processed\n");
   printf("    --path   <path>        base path that contains the moc file and where to put the files\n");
@@ -224,15 +225,34 @@ std::vector<std::string> scan_directory()
   scan_directory(path, path, result);
   return result;
 }
+void generate_list(const std::string& path, const std::string &sourcePath, std::vector<std::string> &scanned_filenames);
+
+void generate_list_by_sourcesfile (const std::string& path, const std::string &sourcePath, const std::string &sourceFiles)
+{
+  std::ifstream stream(sourceFiles);
+  std::string filename;
+  std::vector<std::string> scanned_filenames;
+  while (std::getline(stream, filename))
+  {
+    scanned_filenames.push_back(filename);
+  }
+
+  generate_list(path, sourcePath, scanned_filenames);
+}
 
 
-void generate_list(const std::string& path, const std::string &sourcePath)
+void generate_list_by_directory (const std::string& path, const std::string &sourcePath)
+{
+  std::vector<std::string> scanned_filenames = scan_directory();
+  generate_list(path, sourcePath, scanned_filenames);
+}
+
+void generate_list(const std::string& path, const std::string &sourcePath, std::vector<std::string> &scanned_filenames)
 {
   cs::moc::Cache cache;
   cache.Load(path);
 
   //std::vector<std::string> all_filenames = read_all_filenames(path + "/.spicemoc");
-  std::vector<std::string> scanned_filenames = scan_directory();
   //std::ifstream stream(path + "/.spicemoc");
   //std::string filename;
   bool neededRevalidation = false;
@@ -306,6 +326,7 @@ int main(int argc, char** argv)
   std::string source;
   std::string header;
   std::string sourcePath;
+  std::string sourceInput;
   std::string path;
   std::string javaConverter;
   std::string javaBasePath;
@@ -365,6 +386,16 @@ int main(int argc, char** argv)
         sourcePath = std::string(argv[++i]);
         // std::cout << " source: '" << source << "'";
     }
+    else if (arg == "--sourceInput")
+    {
+      if (i + 1 >= argc)
+      {
+        print_usage(argv[0]);
+        return -1;
+      }
+      sourceInput = std::string(argv[++i]);
+      // std::cout << " file: '" << file << "'";
+    }
     else if (arg == "--path")
     {
       if (i + 1 >= argc)
@@ -416,10 +447,13 @@ int main(int argc, char** argv)
   {
     generate(nullptr, file, header, source);
   }
+  else if (!path.empty() && !sourceInput.empty())
+  {
+    generate_list_by_sourcesfile(path, sourcePath, sourceInput);
+  }
   else if (!path.empty())
   {
-
-    generate_list(path, sourcePath);
+    generate_list_by_directory(path, sourcePath);
   }
 
   return 0;

@@ -155,7 +155,7 @@ void csStaticMeshState::AddMeshToScene(csWorld *world)
     {
       const csMesh::SubMesh &subMesh = m_mesh->GetSubMesh(i);
       size_t materialSlotIdx = subMesh.GetMaterialSlotIdx();
-      iMaterial *material = nullptr;
+      csResource<iMaterial> material = nullptr;
       if (materialSlotIdx < m_materials.size())
       {
         material = m_materials[materialSlotIdx];

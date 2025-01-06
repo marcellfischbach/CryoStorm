@@ -173,6 +173,7 @@ set(SOURCES
         graphics/shadergraph/csSGNodes.hh
         graphics/shadergraph/csShaderGraph.cc
         graphics/shadergraph/csShaderGraph.hh
+        graphics/shadergraph/iShaderGraphCompiler.hh
 
         graphics/shading/iShader.hh
         graphics/shading/iShaderAttribute.hh
@@ -330,6 +331,7 @@ target_link_libraries(csCore
 if (${JAVA_BINDINGS})
     target_link_libraries(csCore ${JNI_LIBRARIES})
 endif ()
+
 
 add_dependencies(csCore csMOC)
 CS_MOC(csCore "${CryoStorm_SOURCE_DIR}/JCryoStorm/CsCore/src/main/generated")

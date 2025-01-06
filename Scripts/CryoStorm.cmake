@@ -27,10 +27,22 @@ function(CS_MOC trgt javaPath)
 	endif()
 	#message ("JavaPathCmd: ${CMD_JAVA_PATH}")
 
+	#Get the source files associated with the executable
+	get_property(SOURCE_FILES TARGET ${trgt} PROPERTY SOURCES)
+	set(OUTPUT_FILE "${MOC_DIRECTORY}/sources.txt")
+	# Write the source files to the file, one per line
+	file(WRITE ${OUTPUT_FILE} "")
+	# Clear the file first
+	foreach(FILE ${SOURCE_FILES})
+		file(APPEND ${OUTPUT_FILE} "${FILE}\n")
+    endforeach()
+
+	# Print the source files
+	message(STATUS "Source files for ${trgt}: ${SOURCE_FILES}")
 
 	set(TARGET_NAME "${trgt}-MOC")
 	add_custom_target(${TARGET_NAME}
-                            COMMAND ${EXEC_PATH}csMOC  --path ${MOC_DIRECTORY} --sourcepath ${CMAKE_CURRENT_SOURCE_DIR} --javaConverter ${CryoStorm_SOURCE_DIR}/Scripts\;${CryoStorm_SOURCE_DIR}/data ${CMD_JAVA_PATH}
+                            COMMAND ${EXEC_PATH}csMOC  --path ${MOC_DIRECTORY} --sourcepath ${CMAKE_CURRENT_SOURCE_DIR} --sourceInput ${MOC_DIRECTORY}/sources.txt --javaConverter ${CryoStorm_SOURCE_DIR}/Scripts\;${CryoStorm_SOURCE_DIR}/data ${CMD_JAVA_PATH}
 			WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 			BYPRODUCTS "${MOC_DIRECTORY}/.csCache"
 	)

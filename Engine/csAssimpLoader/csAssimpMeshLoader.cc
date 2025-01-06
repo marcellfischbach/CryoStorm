@@ -17,6 +17,7 @@
 #include <string>
 #include <vector>
 
+#include <csCore/resource/csResource_Impl.hh>
 
 namespace cs::assimp
 {
@@ -104,7 +105,8 @@ iObject *csAssimpMeshLoader::Load(const csClass *cls, const csResourceLocator &l
     std::string materialName(aiMatName.C_Str());
     if (d.materialSlots.find(materialName) == d.materialSlots.end())
     {
-      Size idx = d.mesh->AddMaterialSlot(materialName);
+      csResource<iMaterial> mat;
+      Size idx = d.mesh->AddMaterialSlot(materialName, mat);
       d.materialSlots[materialName] = idx;
       d.defaultMaterials[materialName] = csAssimpMaterialLoader::Read(material);
     }
@@ -119,7 +121,7 @@ iObject *csAssimpMeshLoader::Load(const csClass *cls, const csResourceLocator &l
   for (auto it = d.materialSlots.begin(); it!=d.materialSlots.end(); it++)
   {
     size_t slotIdx = it->second;
-    iMaterial* material = d.defaultMaterials[it->first];
+    csResource<iMaterial> material = d.defaultMaterials[it->first];
     d.mesh->SetDefaultMaterial(slotIdx, material);
   }
 
