@@ -19,7 +19,12 @@ namespace cs::launcher
 
 void do_something (csResource<iMaterial> &m)
 {
+  printf ("%p\n", &m);
+}
 
+void do_something_2 (csResource<csMaterial> m)
+{
+  csMaterial *matInstance = m.raw();
 }
 
 csSDLWindow::csSDLWindow()
@@ -27,7 +32,12 @@ csSDLWindow::csSDLWindow()
 
   csResource<csMaterial> material (new csMaterial());
 
+  printf ("%p\n", &material);
+
   do_something(material);
+  do_something_2(material);
+  fflush(stdout);
+  printf ("done\n");
 }
 
 csSDLWindow::~csSDLWindow()

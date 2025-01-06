@@ -28,7 +28,7 @@ class CS_CORE_API csMaterialInstance : public CS_SUPER(iMaterial)
 public:
 
   csMaterialInstance();
-  virtual ~csMaterialInstance();
+  ~csMaterialInstance() override;
 
   CS_FUNCTION(jenum)
   const cs::iShader *GetShader(cs::eRenderPass pass) const override;

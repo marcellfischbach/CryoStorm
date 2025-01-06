@@ -53,6 +53,16 @@ public:
 
   T *operator->()
   {
+    return raw();
+  }
+
+  const T *operator->() const
+  {
+    return raw();
+  }
+
+  CS_FORCEINLINE T *raw()
+  {
     if (!m_res || !m_res->IsValid())
     {
       T *resource = csResourcePool::Instance().Get<T>(m_locator);
@@ -61,7 +71,7 @@ public:
     return m_res;
   }
 
-  const T *operator->() const
+  CS_FORCEINLINE const T *raw() const
   {
     if (!m_res || !m_res->IsValid())
     {
@@ -88,9 +98,26 @@ public:
     return m_res;
   }
 
+
+  template<typename O>
+  operator csResource<O> &()
+  {
+    // this cast is necessary to prevent pointer cast to invalid types
+    static_cast<O *> (m_res);
+    return *reinterpret_cast<csResource<O> *>(this);
+  }
+
+  template<typename O>
+  operator const csResource<O> &() const
+  {
+    // this cast is necessary to prevent pointer cast to invalid types
+    static_cast<O *> (m_res);
+    return *reinterpret_cast<const csResource<O> *>(this);
+  }
+
 private:
   csResourceLocator m_locator;
-  T *m_res;
+  T                 *m_res;
 };
 
 
