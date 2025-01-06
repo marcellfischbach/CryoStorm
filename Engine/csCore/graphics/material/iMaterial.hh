@@ -12,6 +12,7 @@
 #include <csCore/graphics/eRenderPass.hh>
 #include <csCore/graphics/eRenderQueue.hh>
 #include <csCore/graphics/iTexture.hh>
+#include <csCore/resource/iResource.hh>
 #include <string>
 #include <map>
 #include <csCore/graphics/eShadingMode.hh>
@@ -24,7 +25,7 @@ struct iDevice;
 struct iShader;
 
 CS_CLASS(jclass="org.cryo.core.graphics.material.IMaterial")
-struct CS_CORE_API iMaterial : public CS_SUPER(iObject)
+struct CS_CORE_API iMaterial : public CS_SUPER(iResource)
 {
   CS_CLASS_GEN;
 

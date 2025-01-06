@@ -8,6 +8,12 @@
 #include <csLauncher/window/csSDLKeyboard.hh>
 #include <csCore/window/iWindow.hh>
 #include <SDL.h>
+#include <csCore/resource/csResource.hh>
+
+namespace cs
+{
+struct iMaterial;
+}
 
 namespace cs::launcher
 {
@@ -21,6 +27,9 @@ class csSDLWindow : public CS_SUPER(iWindow)
 CS_CLASS_GEN_OBJECT;
 
 public:
+  csSDLWindow();
+  ~csSDLWindow() override;
+
   bool Initialize (bool compat);
 
   void SetTitle(const std::string &title) override;
@@ -60,6 +69,8 @@ private:
 
   csSDLKeyboard m_keyboard;
   csSDLMouse    m_mouse;
+
+  csResource<iMaterial> m_material;
 };
 
 }

@@ -6,9 +6,38 @@
 #include <csCore/csSettings.hh>
 #include <csCore/resource/csAssetManager.hh>
 #include <csCore/graphics/csImage.hh>
+#include <csCore/graphics/material/iMaterial.hh>
+#include <csCore/graphics/material/csMaterial.hh>
+#include <csCore/graphics/material/csMaterialInstance.hh>
+
+
+#include <csCore/resource/csResource_Impl.hh>
 
 namespace cs::launcher
 {
+
+
+void do_something (csResource<iMaterial> &m)
+{
+
+}
+
+csSDLWindow::csSDLWindow()
+{
+
+  csResource<csMaterial> material (new csMaterial());
+
+  do_something(material);
+}
+
+csSDLWindow::~csSDLWindow()
+{
+  if (m_window)
+  {
+    SDL_GL_DeleteContext(m_glContext);
+    SDL_DestroyWindow(m_window);
+  }
+}
 
 bool csSDLWindow::Initialize(bool compat)
 {
@@ -36,13 +65,13 @@ bool csSDLWindow::Initialize(bool compat)
   {
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
   }
-  uint32_t     flags    = SDL_WINDOW_OPENGL;
+  uint32_t flags = SDL_WINDOW_OPENGL;
   // flags |= SDL_WINDOW_BORDERLESS;
-  std::string      title = settings.GetText("title");
-  cs::csVector2i res   = settings.GetVector2i("resolution");
-  cs::csVector2i pos   = settings.GetVector2i("pos");
+  std::string title = settings.GetText("title");
+  cs::csVector2i res = settings.GetVector2i("resolution");
+  cs::csVector2i pos = settings.GetVector2i("pos");
 
-  std::string  viewMode = settings.GetText("viewmode", "windowed");
+  std::string viewMode = settings.GetText("viewmode", "windowed");
   if (viewMode == "fullscreen")
   {
     flags |= SDL_WINDOW_FULLSCREEN;
@@ -51,9 +80,13 @@ bool csSDLWindow::Initialize(bool compat)
   {
     flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
   }
-  else if (viewMode == "windowed")
+  else if (viewMode == "borderless")
   {
     flags |= SDL_WINDOW_BORDERLESS;
+  }
+  else if (viewMode == "windowed")
+  {
+
   }
   else if (viewMode != "windowed")
   {
@@ -61,11 +94,11 @@ bool csSDLWindow::Initialize(bool compat)
     return false;
   }
 
-  m_posX   = pos.x;
-  m_posY   = pos.y;
-  m_width  = res.x;
+  m_posX = pos.x;
+  m_posY = pos.y;
+  m_width = res.x;
   m_height = res.y;
-  m_title  = title;
+  m_title = title;
 
   bool vsync = settings.GetBool("vsync");
   m_window = SDL_CreateWindow(title.c_str(),
@@ -122,7 +155,7 @@ int16_t csSDLWindow::GetPositionY() const
 
 void csSDLWindow::SetResolution(uint16_t width, uint16_t height)
 {
-  m_width  = width;
+  m_width = width;
   m_height = height;
   if (m_window)
   {

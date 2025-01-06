@@ -24,6 +24,7 @@ CS_CLASS(jclass="org.cryo.core.graphics.material.MaterialInstance")
 class CS_CORE_API csMaterialInstance : public CS_SUPER(iMaterial)
 {
   CS_CLASS_GEN_OBJECT;
+  CS_RESOURCE_GEN;
 public:
 
   csMaterialInstance();

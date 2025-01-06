@@ -21,6 +21,7 @@ set(SOURCES
         csObjectRegistry.cc
         csObjectRegistry.hh
         csOutOfBoundsException.hh
+        csRef.hh
         csSettings.cc
         csSettings.hh
         csString.cc
@@ -249,18 +250,15 @@ set(SOURCES
         resource/csBaseCSFAssetLoader.hh
         resource/csBinaryData.cc
         resource/csBinaryData.hh
-        resource/eAccessMode.hh
-        resource/eOpenMode.hh
-        resource/eSeekMode.hh
         resource/csCryoFile.cc
         resource/csCryoFile.hh
         resource/csFileSystemArchive.cc
         resource/csFileSystemArchive.hh
         resource/csFileSystemFile.cc
         resource/csFileSystemFile.hh
-        resource/iArchive.hh
-        resource/iAssetLoader.hh
-        resource/iFile.hh
+        resource/csResource.cc
+        resource/csResource.hh
+        resource/csResource_Impl.hh
         resource/csResourceExceptions.hh
         resource/csResourceLocator.cc
         resource/csResourceLocator.hh
@@ -270,6 +268,13 @@ set(SOURCES
         resource/csVFS.hh
         resource/csVFSConfigReader.cc
         resource/csVFSConfigReader.hh
+        resource/eAccessMode.hh
+        resource/eOpenMode.hh
+        resource/eSeekMode.hh
+        resource/iArchive.hh
+        resource/iAssetLoader.hh
+        resource/iFile.hh
+        resource/iResource.hh
 
 
 

@@ -33,6 +33,7 @@ class CS_CORE_API csMaterial : public CS_SUPER(iMaterial)
 {
   friend class csMaterialInstance;
   CS_CLASS_GEN_OBJECT;
+  CS_RESOURCE_GEN;
 public:
   static const size_t UndefinedIndex = ~0x00;
 

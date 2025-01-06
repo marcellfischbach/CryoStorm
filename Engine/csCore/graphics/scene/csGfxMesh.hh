@@ -7,6 +7,7 @@
 #include <csCore/math/csMatrix4f.hh>
 #include <csCore/graphics/eRenderPass.hh>
 #include <csCore/graphics/scene/csGfxLight.hh>
+#include <csCore/resource/csResource.hh>
 #include <vector>
 
 namespace cs
@@ -87,7 +88,7 @@ private:
   bool m_static        = false;
   bool m_receiveShadow = true;
   bool m_castShadow    = true;
-  iMaterial   *m_material = nullptr;
+  iMaterial*   m_material = nullptr;
   iRenderMesh   *m_mesh     = nullptr;
   csMatrix4f    m_modelMatrix;
   csBoundingBox m_boundingBox;

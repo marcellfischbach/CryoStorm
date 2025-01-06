@@ -9,7 +9,7 @@ namespace cs
 class CS_CORE_API csResourceLocator
 {
 public:
-	explicit csResourceLocator(const std::string &encoded);
+	explicit csResourceLocator(const std::string &encoded = std::string(""));
 	csResourceLocator(const csResourceLocator &parent, const std::string &encoded);
 	csResourceLocator(const csResourceLocator *parent, const std::string &encoded);
 

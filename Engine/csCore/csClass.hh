@@ -39,10 +39,12 @@
     void AddRef() override \
     { \
       m_refCount++; \
+/*      printf ("AddRef: %lld\n", m_refCount);*/ \
     } \
     void Release() override  \
     { \
       --m_refCount; \
+/*      printf ("Release: %lld\n", m_refCount);*/ \
       if (m_refCount <= 0) \
       {                     \
         if (m_jobject)        \
@@ -50,6 +52,7 @@
           cs::csJava::Get()->DeleteGlobalRef(m_jobject);          \
           m_jobject = nullptr; \
         }                   \
+/*        printf ("Release: delete\n");*/ \
         delete this;\
       } \
     } \
@@ -280,6 +283,7 @@ public:
   }
 
 };
+
 
 
 template<typename T>

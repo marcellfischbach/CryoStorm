@@ -114,12 +114,30 @@ struct derive_c_t : public virtual derive_b_t
 };
 
 
+#include <csCore/resource/iFile.hh>
+#include <csCore/resource/csFileSystemFile.hh>
+#include <csCore/csRef.hh>
 
+
+csRef<iFile> s_file(new csFileSystemFile("kjlahsdfkl"));
+
+void do_something(const csRef<iFile> &narf)
+{
+  s_file = narf;
+  narf->GetName();
+}
 
 
 int main(int argc, char **argv)
 {
 
+  csRef<iFile>  file;
+
+  file = new csFileSystemFile("ölkaj");
+
+  printf("call\n");
+  do_something(file);
+  printf("call done\n");
 
   std::vector<std::string> args;
   for (int i = 0; i < argc; i++)
