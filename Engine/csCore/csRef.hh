@@ -3,7 +3,7 @@
 
 #include <csCore/csClass.hh>
 #include <csCore/resource/iResource.hh>
-#include <csCore/resource/csResource.hh>
+#include <csCore/resource/csResourcePool.hh>
 
 namespace cs
 {

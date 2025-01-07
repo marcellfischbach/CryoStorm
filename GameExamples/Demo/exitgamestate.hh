@@ -6,6 +6,11 @@
 
 #include <csCore/entity/csEntityState.hh>
 
+namespace cs
+{
+struct iMaterial;
+}
+
 CS_CLASS()
 class ExitGameState : public CS_SUPER(cs::csEntityState)
 {
@@ -16,4 +21,10 @@ public:
 
   void Update(float tpf) override;
 
+private:
+  cs::iMaterial* m_material0;
+  cs::iMaterial* m_material1;
+
 };
+
+

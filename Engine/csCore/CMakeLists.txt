@@ -257,9 +257,8 @@ set(SOURCES
         resource/csFileSystemArchive.hh
         resource/csFileSystemFile.cc
         resource/csFileSystemFile.hh
-        resource/csResource.cc
-        resource/csResource.hh
-        resource/csResource_Impl.hh
+        resource/csResourcePool.cc
+        resource/csResourcePool.hh
         resource/csResourceExceptions.hh
         resource/csResourceLocator.cc
         resource/csResourceLocator.hh

@@ -10,7 +10,6 @@
 #include <csCore/graphics/scene/csGfxMesh.hh>
 #include <csCore/graphics/scene/iGfxScene.hh>
 #include <csCore/resource/csAssetManager.hh>
-#include <csCore/resource/csResource_Impl.hh>
 
 
 

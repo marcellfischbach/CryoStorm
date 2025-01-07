@@ -11,7 +11,6 @@
 #include <csCore/math/csBoundingBox.hh>
 #include <csCore/math/iclipper.hh>
 #include <csCore/math/csVector3f.hh>
-#include <csCore/resource/csResource_Impl.hh>
 #include <csCore/csRef.hh>
 #include <array>
 #include <algorithm>

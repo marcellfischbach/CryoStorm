@@ -64,7 +64,6 @@ CS_DEFINE_GAME(Game)
 #include <sstream>
 #include <string>
 
-#include <csCore/resource/csResource_Impl.hh>
 
 using namespace cs;
 
@@ -917,13 +916,16 @@ void generate_exit_game(cs::csWorld *world)
   world->Attach(entity);
 }
 
+
 void setup_world(cs::csWorld *world)
 {
 
   auto assetMan        = cs::csAssetManager::Get();
   iMaterial* rawMat = assetMan->Get<cs::iMaterial>("/materials/Default.mat");
+  csResourcePool::Instance().Put(rawMat);
   csRes<iMaterial> material(rawMat);
   csRes<iMaterial> skinnedMaterial = assetMan->Get<cs::iMaterial>("/materials/DefaultSkinned.mat");
+
 
 
   generate_exit_game(world);

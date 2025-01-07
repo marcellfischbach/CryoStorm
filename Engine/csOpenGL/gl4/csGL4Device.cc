@@ -20,7 +20,6 @@
 #include <csCore/resource/csAssetManager.hh>
 #include <GL/glew.h>
 #include <iostream>
-#include <csCore/resource/csResource_Impl.hh>
 
 
 #define CS_MAX_LIGHTS 4

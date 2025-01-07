@@ -2,6 +2,7 @@
 
 #include <csCore/resource/csAssetManager.hh>
 #include <csCore/resource/iFile.hh>
+#include <csCore/resource/iResource.hh>
 #include <csCore/resource/csVFS.hh>
 #include <algorithm>
 
@@ -44,6 +45,11 @@ iObject *csAssetManager::Get(const csClass *cls, const csResourceLocator &locato
     return it->second;
   }
   iObject *obj = Load(cls, locator);
+  if (csInstanceOf<iResource>(obj))
+  {
+    iResource* resource = csQueryClass<iResource>(obj);
+    resource->SetLocator(locator);
+  }
   CS_ADDREF(obj);
   m_cachedObjects[locator] = obj;
   return obj;

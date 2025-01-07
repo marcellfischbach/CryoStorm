@@ -28,6 +28,7 @@ public:
 
   void Erase(const csResourceLocator &locator);
   void Put(const csResourceLocator &locator, iResource *resource);
+  void Put(iResource *resource);
 
 private:
   csResourcePool();

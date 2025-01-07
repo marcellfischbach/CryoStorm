@@ -1,5 +1,5 @@
 
-#include <csCore/resource/csResource.hh>
+#include <csCore/resource/csResourcePool.hh>
 
 namespace cs
 {
@@ -36,6 +36,13 @@ void csResourcePool::Erase(const csResourceLocator& locator)
   }
 }
 
+void csResourcePool::Put(iResource* resource)
+{
+  if (resource)
+  {
+    Put(resource->GetLocator(), resource);
+  }
+}
 void csResourcePool::Put(const csResourceLocator& locator, iResource* resource)
 {
   if (!resource)

@@ -60,21 +60,7 @@ public:
   float GetAlphaDiscard_Threshold() const;
   eCompareFunc GetAlphaDiscard_Func() const;
 
-  /*
-  void SetDefault(const std::string &attribute, size_t count, float *floats);
-  void SetDefault(const std::string &attribute, size_t count, int *ints);
-  void SetDefault(const std::string &attribute, iTexture *texture);
 
-  struct Default
-  {
-    std::string           name;
-    std::array<float, 16> floats;
-    std::array<int, 4>    ints;
-    iTexture              *texture;
-  };
-
-  const Default *GetDefault(const std::string &name) const;
-  */
 
   enum eBlendingMode
   {
@@ -103,8 +89,6 @@ public:
 
 private:
 
-
-  //std::vector<Default>    m_defaults;
   std::vector<csSGNode *> m_nodes;
 
   eRenderQueue  m_queue        = eRenderQueue::Default;
