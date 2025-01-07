@@ -3,6 +3,8 @@
 #include <csCore/csCoreExport.hh>
 #include <csCore/entity/csSpatialState.hh>
 #include <vector>
+#include <cscore/csRef.hh>
+
 
 namespace cs
 {
@@ -16,9 +18,9 @@ struct iTexture2D;
 
 
 CS_CLASS(jclass="org.cryo.core.entity.TerrainLayerMask")
-class CS_CORE_API csTerrainLayerMask : public CS_SUPER(csObject)
+class CS_CORE_API csTerrainLayerMask : public CS_SUPER(iObject)
 {
-CS_CLASS_GEN;
+CS_CLASS_GEN_OBJECT;
 public:
   csTerrainLayerMask() = default;
   ~csTerrainLayerMask() override;
@@ -41,9 +43,9 @@ private:
 };
 
 CS_CLASS(jclass="org.cryo.core.entity.TerrainLayer")
-class CS_CORE_API csTerrainLayer : public CS_SUPER(csObject)
+class CS_CORE_API csTerrainLayer : public CS_SUPER(iObject)
 {
-CS_CLASS_GEN;
+CS_CLASS_GEN_OBJECT;
 public:
   csTerrainLayer() = default;
   ~csTerrainLayer() override;
@@ -132,7 +134,7 @@ private:
 
   iTerrainMesh *m_terrainMesh = nullptr;
   csGfxMesh * m_gfxMesh  = nullptr;
-  iMaterial * m_material = nullptr;
+  csRes<iMaterial> m_material;
 
   csTerrainLayerMask           *m_layerMask = nullptr;
   std::vector<csTerrainLayer*> m_layers;

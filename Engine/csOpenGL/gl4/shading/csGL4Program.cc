@@ -13,7 +13,7 @@ namespace cs::opengl
 
 csGL4Program::csGL4Program()
 {
-  CS_CLASS_GEN_CONSTR;
+
   CS_GL_ERROR();
   m_name = glCreateProgram();
   CS_GL_ERROR();

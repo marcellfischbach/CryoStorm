@@ -6,38 +6,58 @@
 #include <csCore/csSettings.hh>
 #include <csCore/resource/csAssetManager.hh>
 #include <csCore/graphics/csImage.hh>
-#include <csCore/graphics/material/iMaterial.hh>
-#include <csCore/graphics/material/csMaterial.hh>
-#include <csCore/graphics/material/csMaterialInstance.hh>
+#include <csCore/entity/csEntity.hh>
 
 
-#include <csCore/resource/csResource_Impl.hh>
 
 namespace cs::launcher
 {
 
 
-void do_something (csResource<iMaterial> &m)
+
+void csSDLWindow::do_something_raw (csEntity* entity)
 {
-  printf ("%p\n", &m);
+  if (entity)
+  {
+    printf("Do something: \"%s\"\n", entity->GetName().c_str());
+  }
+  else
+  {
+    printf ("Do someting: Entity is null\n");
+  }
 }
 
-void do_something_2 (csResource<csMaterial> m)
+void csSDLWindow::do_something_ref (csRef<csEntity> &entity)
 {
-  csMaterial *matInstance = m.raw();
+  if (entity)
+  {
+    printf("Do something: \"%s\"\n", entity->GetName().c_str());
+  }
+  else
+  {
+    printf ("Do someting: Entity is null\n");
+  }
+}
+
+void csSDLWindow::do_something_value (csRef<csEntity> entity)
+{
+  if (entity)
+  {
+    printf("Do something: \"%s\"\n", entity->GetName().c_str());
+  }
+  else
+  {
+    printf ("Do someting: Entity is null\n");
+  }
 }
 
 csSDLWindow::csSDLWindow()
 {
-
-  csResource<csMaterial> material (new csMaterial());
-
-  printf ("%p\n", &material);
-
-  do_something(material);
-  do_something_2(material);
+  csRef<csEntity> entity = new csEntity("Name");
+  do_something_raw(entity.raw());
+  do_something_ref(entity);
+  do_something_value(entity);
   fflush(stdout);
-  printf ("done\n");
 }
 
 csSDLWindow::~csSDLWindow()

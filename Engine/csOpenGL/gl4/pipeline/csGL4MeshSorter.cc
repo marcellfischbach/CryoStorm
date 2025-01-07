@@ -9,8 +9,8 @@ namespace cs::opengl
 
 bool material_shader_compare_less(const csGfxMesh *mesh0, const csGfxMesh *mesh1, eRenderPass pass)
 {
-  auto mat0 = mesh0->GetMaterial();
-  auto mat1 = mesh1->GetMaterial();
+  const csRes<iMaterial> & mat0 = mesh0->GetMaterial();
+  const csRes<iMaterial> & mat1 = mesh1->GetMaterial();
   auto shader0 = mat0->GetShader(pass);
   auto shader1 = mat1->GetShader(pass);
 

@@ -13,7 +13,7 @@ csSkeletonAnimationPlayer::csSkeletonAnimationPlayer()
     , m_active(false)
     , m_time(0.0f)
 {
-  CS_CLASS_GEN_CONSTR;
+
 }
 
 

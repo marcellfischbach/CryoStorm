@@ -11,6 +11,8 @@
 #include <csCore/math/csBoundingBox.hh>
 #include <csCore/math/iclipper.hh>
 #include <csCore/math/csVector3f.hh>
+#include <csCore/resource/csResource_Impl.hh>
+#include <csCore/csRef.hh>
 #include <array>
 #include <algorithm>
 
@@ -25,7 +27,7 @@ static const bool OPTIMIZE = false;
 
 struct MaterialCompound
 {
-  iMaterial         *material;
+  csRes<iMaterial> material;
   csGfxMeshCompound *mesh;
 };
 
@@ -57,7 +59,7 @@ struct csGfxQuadtreeScene::Cell
   bool ContainsShaded(csGfxMesh *mesh);
   bool ContainsUnshaded(csGfxMesh *mesh);
 
-  MaterialCompound& GetShadedCompound(iMaterial* material);
+  MaterialCompound& GetShadedCompound(csRes<iMaterial> & material);
 
 
   CS_NODISCARD size_t Idx(const csVector3f &v) const;
@@ -80,7 +82,7 @@ struct csGfxQuadtreeScene::Cell
 
 csGfxQuadtreeScene::csGfxQuadtreeScene()
 {
-  CS_CLASS_GEN_CONSTR;
+
   m_root = new Cell(nullptr, 0, csVector2f(-100.0f, -100.0f), csVector2f(100.0f, 100.0f));
 }
 
@@ -518,7 +520,7 @@ void csGfxQuadtreeScene::Cell::Decimate()
   // reduce the cell hierarchy;
 }
 
-MaterialCompound &csGfxQuadtreeScene::Cell::GetShadedCompound(cs::iMaterial *material)
+MaterialCompound &csGfxQuadtreeScene::Cell::GetShadedCompound(csRes<iMaterial> &material)
 {
   for (auto &materialCompound: m_shadedCompound)
   {

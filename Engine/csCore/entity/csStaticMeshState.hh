@@ -5,6 +5,7 @@
 
 #include <csCore/csCoreExport.hh>
 #include <csCore/entity/csSpatialState.hh>
+#include <csCore/csRef.hh>
 
 
 namespace cs
@@ -28,9 +29,9 @@ public:
   CS_NODISCARD const csMesh* GetMesh() const;
   CS_NODISCARD csMesh* GetMesh();
 
-  void SetMaterial (Size idx, iMaterial* material);
-  CS_NODISCARD const iMaterial *GetMaterial (Size idx) const;
-  CS_NODISCARD iMaterial *GetMaterial (Size idx);
+  void SetMaterial (Size idx, csRes<iMaterial> &material);
+  CS_NODISCARD const csRes<iMaterial> GetMaterial (Size idx) const;
+  CS_NODISCARD csRes<iMaterial> GetMaterial (Size idx);
 
   void SetReceiveShadow (bool receiveShadow);
   CS_NODISCARD bool IsReceiveShadow () const;
@@ -69,7 +70,7 @@ private:
   bool m_receiveShadow = true;
   bool                    m_castShadow = true;
   std::vector<GfxMeshData> m_gfxMeshes;
-  std::vector<iMaterial*> m_materials;
+  std::vector<csRes<iMaterial>> m_materials;
 };
 
 

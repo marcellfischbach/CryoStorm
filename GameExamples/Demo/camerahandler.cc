@@ -12,7 +12,7 @@ CameraHandler::CameraHandler()
 //        : EntityState(), m_speed(4.0f), m_rotSpeed(0.0025f), m_rotY(1.88), m_rotX(-0.96)
         : csEntityState(), m_speed(4.0f), m_rotSpeed(0.0025f), m_rotY(4.02), m_rotX(0.33)
 {
-  CS_CLASS_GEN_CONSTR;
+
   SetNeedUpdate(true);
 }
 
@@ -105,7 +105,7 @@ void CameraHandler::Update(float tpf)
 CameraHandlerMotion::CameraHandlerMotion()
     : csEntityState(), m_position(5.0f, 5.0f, 5.0f), m_target(0, 0, 0), m_distance(1.0f), m_time(0.0f)
 {
-  CS_CLASS_GEN_CONSTR;
+
   SetNeedUpdate(true);
 }
 

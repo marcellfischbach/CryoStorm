@@ -10,7 +10,7 @@ csFileSystemFile::csFileSystemFile(const std::string& path)
   , m_path(path)
   , m_file(nullptr)
 {
-  CS_CLASS_GEN_CONSTR;
+
 }
 
 const std::string &csFileSystemFile::GetName() const

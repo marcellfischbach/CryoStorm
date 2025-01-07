@@ -13,7 +13,7 @@ csEntity::csEntity(const std::string &name)
     , m_parent(nullptr)
     , m_world(nullptr)
 {
-  CS_CLASS_GEN_CONSTR;
+
 }
 
 csEntity::~csEntity()

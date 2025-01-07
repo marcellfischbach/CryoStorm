@@ -1,11 +1,10 @@
 
 #include <csCore/entity/csStaticMeshState.hh>
-#include "csEntity.hh"
+#include <csCore/entity/csEntity.hh>
 #include <csCore/entity/csWorld.hh>
 #include <csCore/graphics/csMesh.hh>
 #include <csCore/graphics/scene/iGfxScene.hh>
 #include <csCore/graphics/scene/csGfxMesh.hh>
-
 
 namespace cs
 {
@@ -31,10 +30,10 @@ void csStaticMeshState::Clear()
   }
   m_gfxMeshes.clear();
 
-  for (auto material: m_materials)
-  {
-    CS_RELEASE(material);
-  }
+//  for (auto material: m_materials)
+//  {
+//    CS_RELEASE(material);
+//  }
   m_materials.clear();
 }
 
@@ -69,11 +68,11 @@ csMesh *csStaticMeshState::GetMesh()
   return m_mesh;
 }
 
-void csStaticMeshState::SetMaterial(Size idx, iMaterial *material)
+void csStaticMeshState::SetMaterial(Size idx, csRes<iMaterial> &material)
 {
   if (idx < m_materials.size())
   {
-    CS_SET(m_materials[idx], material);
+    m_materials[idx] = material;
 
     for (auto &data : m_gfxMeshes)
     {
@@ -85,18 +84,18 @@ void csStaticMeshState::SetMaterial(Size idx, iMaterial *material)
   }
 }
 
-const iMaterial *csStaticMeshState::GetMaterial(Size idx) const
+const csRes<iMaterial>csStaticMeshState::GetMaterial(Size idx) const
 {
   return idx < m_materials.size()
          ? m_materials[idx]
-         : nullptr;
+         : csRes<iMaterial>();
 }
 
-iMaterial *csStaticMeshState::GetMaterial(Size idx)
+csRes<iMaterial> csStaticMeshState::GetMaterial(Size idx)
 {
   return idx < m_materials.size()
          ? m_materials[idx]
-         : nullptr;
+         : csRes<iMaterial>();
 }
 
 void csStaticMeshState::SetReceiveShadow(bool receiveShadow)
@@ -155,7 +154,7 @@ void csStaticMeshState::AddMeshToScene(csWorld *world)
     {
       const csMesh::SubMesh &subMesh = m_mesh->GetSubMesh(i);
       size_t materialSlotIdx = subMesh.GetMaterialSlotIdx();
-      csResource<iMaterial> material = nullptr;
+      csRes<iMaterial> material = nullptr;
       if (materialSlotIdx < m_materials.size())
       {
         material = m_materials[materialSlotIdx];

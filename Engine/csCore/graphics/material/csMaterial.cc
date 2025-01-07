@@ -6,13 +6,11 @@
 
 namespace cs
 {
-std::map<iMaterial *, std::string> s_material_names;
-
 
 csMaterial::csMaterial()
     : iMaterial()
 {
-  CS_CLASS_GEN_CONSTR;
+
   for (auto &item: m_shader)
   {
     item = nullptr;

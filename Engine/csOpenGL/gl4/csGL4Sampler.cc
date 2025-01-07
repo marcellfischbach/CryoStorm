@@ -25,7 +25,7 @@ csGL4Sampler::csGL4Sampler()
   , m_textureCompareFunc(eCF_Always)
 
 {
-  CS_CLASS_GEN_CONSTR;
+
   CS_GL_ERROR();
   glGenSamplers(1, &m_name);
   glSamplerParameteri(m_name, GL_TEXTURE_MIN_FILTER, GL_NEAREST);

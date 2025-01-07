@@ -119,24 +119,51 @@ struct derive_c_t : public virtual derive_b_t
 #include <csCore/csRef.hh>
 
 
-csRef<iFile> s_file(new csFileSystemFile("kjlahsdfkl"));
 
-void do_something(const csRef<iFile> &narf)
+void do_something(const csRef<iFile> &file)
 {
-  s_file = narf;
-  narf->GetName();
+  if (file)
+  {
+    std::string name = file->GetName();
+    printf("Open file: \"%s\"\n", name.c_str());
+  }
+  else
+  {
+    printf ("file is null\n");
+  }
+}
+
+void do_something_by_value (csRef<iFile> file)
+{
+  if (file)
+  {
+    std::string name = file->GetName();
+    printf("Open file: \"%s\"\n", name.c_str());
+  }
+  else
+  {
+    printf ("file is null\n");
+  }
+
 }
 
 
 int main(int argc, char **argv)
 {
 
-  csRef<iFile>  file;
+  csRef<csFileSystemFile>  file;
 
-  file = new csFileSystemFile("ölkaj");
+  file = new csFileSystemFile("This is a file");
 
-  printf("call\n");
+  {
+    csRef <iFile> ifile = file;
+
+    printf("call\n");
+  }
   do_something(file);
+  do_something(csRef<iFile>());
+  do_something_by_value(file);
+  do_something_by_value(csRef<iFile>());
   printf("call done\n");
 
   std::vector<std::string> args;

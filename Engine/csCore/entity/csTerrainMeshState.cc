@@ -10,6 +10,9 @@
 #include <csCore/graphics/scene/csGfxMesh.hh>
 #include <csCore/graphics/scene/iGfxScene.hh>
 #include <csCore/resource/csAssetManager.hh>
+#include <csCore/resource/csResource_Impl.hh>
+
+
 
 namespace cs
 {
@@ -107,7 +110,7 @@ csTerrainMeshState::~csTerrainMeshState()
 {
   CS_RELEASE(m_terrainMesh);
   CS_RELEASE(m_gfxMesh);
-  CS_RELEASE(m_material);
+//  CS_RELEASE(m_material);
 }
 
 void csTerrainMeshState::SetTerrainMesh(iTerrainMesh* terrainMesh)
@@ -279,7 +282,9 @@ void csTerrainMeshState::UpdateMaterial()
   if (!m_material)
   {
     m_material = csAssetManager::Get()->Get<iMaterial>(csResourceLocator("/materials/terrain/terrain4.mat"));
-    cs::s_material_names[m_material] = "Terrain4";
+//    const csResource<iMaterial> resMat (rawMaterial);
+//    const iMaterial* resMatRaw = resMat.rawPtr();
+//    m_material = resmaterial;
     if (!m_material)
     {
       return;

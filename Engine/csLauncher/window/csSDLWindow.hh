@@ -7,12 +7,13 @@
 #include <csLauncher/window/csSDLMouse.hh>
 #include <csLauncher/window/csSDLKeyboard.hh>
 #include <csCore/window/iWindow.hh>
+#include <csCore/csRef.hh>
 #include <SDL.h>
-#include <csCore/resource/csResource.hh>
+
 
 namespace cs
 {
-struct iMaterial;
+class csEntity;
 }
 
 namespace cs::launcher
@@ -54,6 +55,12 @@ public:
   csSDLMouse* GetMouse();
 
 private:
+
+  void do_something_raw (csEntity* entity);
+  void do_something_ref (csRef<csEntity> &entity);
+  void do_something_value (csRef<csEntity> entity);
+
+
   SDL_Window *m_window = nullptr;
   SDL_GLContext m_glContext;
 
@@ -70,7 +77,8 @@ private:
   csSDLKeyboard m_keyboard;
   csSDLMouse    m_mouse;
 
-  csResource<iMaterial> m_material;
+
+  csRef<csEntity> m_entity;
 };
 
 }

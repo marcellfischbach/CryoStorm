@@ -13,7 +13,7 @@ csBulletWorld::csBulletWorld()
   , m_tmpId(1)
   , m_exportId(2)
 {
-  CS_CLASS_GEN_CONSTR;
+
 
   
 

@@ -139,8 +139,6 @@ public:                                \
 
 #endif
 
-#define CS_CLASS_GEN_CONSTR m_refCount = 1
-
 #define CS_WEAK_OBJECT(Super) \
   public: void AddRef () { Super::AddRef (); }\
           void Release () { Super::Release (); }
@@ -644,17 +642,7 @@ namespace cs
 {
 #endif
 
-CS_CLASS()
-class CS_CORE_API csObject : public CS_SUPER(iObject)
-{
-CS_CLASS_GEN_OBJECT;
 
-public:
-  csObject();
-  ~csObject() override;
-
-
-};
 
 
 }

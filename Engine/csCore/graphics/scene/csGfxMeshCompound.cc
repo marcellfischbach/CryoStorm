@@ -64,7 +64,7 @@ bool csGfxMeshCompound::ContainsMesh(const cs::csGfxMesh *mesh) const
 
 void csGfxMeshCompound::RegenerateMesh()
 {
-  iMaterial* material = nullptr;
+  csRes<iMaterial> material;
   iRenderMeshBatchGenerator *generator = csObjectRegistry::Get<iRenderMeshBatchGeneratorFactory>()->Create();
   for (const auto &internalMesh: m_internalMeshes)
   {

@@ -281,7 +281,7 @@ csGL4Shader *LoadShader(const std::string &typeText,
 
 csGL4ShaderLoader::csGL4ShaderLoader()
 {
-  CS_CLASS_GEN_CONSTR;
+
 }
 
 

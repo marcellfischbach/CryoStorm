@@ -11,7 +11,7 @@ namespace cs::bullet
 
 csBulletSystem::csBulletSystem()
 {
-  CS_CLASS_GEN_CONSTR;
+
 }
 
 csBulletSystem::~csBulletSystem()

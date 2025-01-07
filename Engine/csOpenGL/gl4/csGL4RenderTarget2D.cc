@@ -19,7 +19,7 @@ csGL4RenderTarget2D::csGL4RenderTarget2D()
     , m_depthTexture(nullptr)
     , m_externalRenderTarget(false)
 {
-  CS_CLASS_GEN_CONSTR;
+
   CS_GL_ERROR();
   glGenFramebuffers(1, &m_name);
   CS_GL_ERROR();
@@ -34,7 +34,7 @@ csGL4RenderTarget2D::csGL4RenderTarget2D(uint32_t name)
     , m_depthTexture(nullptr)
     , m_externalRenderTarget(true)
 {
-  CS_CLASS_GEN_CONSTR;
+
 
 
   // get the current bindings
@@ -75,7 +75,7 @@ csGL4RenderTarget2D::csGL4RenderTarget2D(uint32_t name, uint16_t width, uint16_t
     , m_depthTexture(nullptr)
     , m_externalRenderTarget(true)
 {
-  CS_CLASS_GEN_CONSTR;
+
 }
 
 csGL4RenderTarget2D::~csGL4RenderTarget2D()

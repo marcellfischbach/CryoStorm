@@ -13,7 +13,7 @@ csCamera::csCamera()
   , m_spot(0, 0, 1)
   , m_up(0, 1, 0)
 {
-  CS_CLASS_GEN_CONSTR;
+
 }
 
 csCamera::~csCamera()

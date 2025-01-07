@@ -26,7 +26,7 @@ csLightState::csLightState(const std::string& name)
   , m_color(1.0f, 1.0f, 1.0f, 1.0f)
   , m_range (100.0f)
 {
-  CS_CLASS_GEN_CONSTR;
+
 }
 
 csLightState::~csLightState() noexcept

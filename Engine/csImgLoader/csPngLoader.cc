@@ -10,7 +10,7 @@ namespace cs::img
 
 csPngLoader::csPngLoader()
 {
-  CS_CLASS_GEN_CONSTR;
+
 
 
 }

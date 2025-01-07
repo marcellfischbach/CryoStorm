@@ -25,7 +25,7 @@ csGfxCamera::csGfxCamera()
     , m_renderShadows(true)
     , m_postProcessing(nullptr)
 {
-  CS_CLASS_GEN_CONSTR;
+
 }
 
 csGfxCamera::~csGfxCamera()

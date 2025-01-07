@@ -11,7 +11,7 @@ csEntityState::csEntityState(const std::string &name)
   , m_needUpdate(false)
   , m_entity(nullptr)
 {
-  CS_CLASS_GEN_CONSTR;
+
 }
 
 

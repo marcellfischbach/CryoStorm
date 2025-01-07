@@ -11,7 +11,7 @@ csGL4TerrainMeshGeneratorFactory::csGL4TerrainMeshGeneratorFactory(bool compat)
   : iTerrainMeshGeneratorFactory()
   , m_compat(compat)
 {
-  CS_CLASS_GEN_CONSTR;
+
 }
 
 iTerrainMeshGenerator* csGL4TerrainMeshGeneratorFactory::Create()

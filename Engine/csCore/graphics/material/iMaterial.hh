@@ -69,6 +69,4 @@ struct CS_CORE_API iMaterial : public CS_SUPER(iResource)
 };
 
 
-CS_CORE_API extern std::map<iMaterial*, std::string> s_material_names;
-
 }

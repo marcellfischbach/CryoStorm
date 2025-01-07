@@ -24,7 +24,7 @@ struct my_error_mgr {
 
 csJpegLoader::csJpegLoader()
 {
-  CS_CLASS_GEN_CONSTR;
+
 
 
 }

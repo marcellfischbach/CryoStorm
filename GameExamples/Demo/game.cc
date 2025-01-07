@@ -431,12 +431,11 @@ void generate_terrain(cs::csWorld *world)
 }
 
 
-void generate_test_grid(cs::csWorld *world, cs::iMaterial *material)
+void generate_test_grid(cs::csWorld *world, cs::csRes<cs::iMaterial> &material)
 {
   auto sphere = create_sphere_mesh(0.25, 16, 12.0f);
   auto mesh   = new cs::csMesh();
-  cs::csResource<cs::iMaterial> mat(material);
-  mesh->AddMaterialSlot("Default", mat);
+  mesh->AddMaterialSlot("Default", material);
   mesh->AddSubMesh(sphere, 0);
   int gridSize = 100;
 
@@ -505,7 +504,7 @@ cs::csSkeletonAnimationPlayer *global_player    = nullptr;
 
 cs::csEntity *bones[4];
 
-cs::csEntity *add_bone(cs::csWorld *world, cs::iMaterial *material)
+cs::csEntity *add_bone(cs::csWorld *world, cs::csRes<cs::iMaterial> &material)
 {
 
   cs::csMesh *mesh = cs::csAssetManager::Get()->Load<cs::csMesh>("/bone_x.fbx");
@@ -525,7 +524,7 @@ cs::csEntity *add_bone(cs::csWorld *world, cs::iMaterial *material)
   return entity;
 }
 
-void add_skeleton_mesh(cs::csWorld *world, cs::iMaterial *material)
+void add_skeleton_mesh(cs::csWorld *world, cs::csRes<cs::iMaterial> &material)
 {
 
   cs::csSkeletonMesh *mesh   = cs::csAssetManager::Get()->Load<cs::csSkeletonMesh>("/skinned_mesh.fbx");
@@ -555,7 +554,7 @@ void add_skeleton_mesh(cs::csWorld *world, cs::iMaterial *material)
 }
 
 
-void generate_batched_test_grid(cs::csWorld *world, csResource<cs::iMaterial> &material)
+void generate_batched_test_grid(cs::csWorld *world, csRes<cs::iMaterial> &material)
 {
 
   auto sphere = create_multi_sphere_mesh(0.25, 16, 12.0f, 25, new cs::csVector3f[] {
@@ -620,7 +619,7 @@ void generate_batched_test_grid(cs::csWorld *world, csResource<cs::iMaterial> &m
 }
 
 
-void generate_physics(cs::csWorld *world, csResource<cs::iMaterial> &material)
+void generate_physics(cs::csWorld *world, csRes<cs::iMaterial> &material)
 {
 
   cs::iPhysicsSystem *physics = cs::csObjectRegistry::Get<cs::iPhysicsSystem>();
@@ -745,7 +744,7 @@ cs::csLightState *add_directional_light(cs::csWorld *world,
   lightState->SetStatic(isStatic);
   lightState->SetCastShadow(castsShadow);
   lightState->GetTransform()
-            .SetRotation(cs::csQuaternion::csQuaternion(axis.Normalized(), rad))
+            .SetRotation(cs::csQuaternion(axis.Normalized(), rad))
             .Finish();
   world->Attach(entity);
   const cs::csVector3f &direction = lightState->GetTransform().GetForward();
@@ -829,17 +828,14 @@ void generate_axis_grid(cs::csWorld *world)
   auto matG   = cs::csAssetManager::Get()->Get<cs::iMaterial>("/materials/DefaultGreen.matinstance");
   auto matB   = cs::csAssetManager::Get()->Get<cs::iMaterial>("/materials/DefaultBlue.matinstance");
 
-  csResource<iMaterial> resMatR (matR);
-  csResource<iMaterial> resMatG (matG);
-  csResource<iMaterial> resMatB (matB);
+  csRes<iMaterial> resMatR (matR);
+  csRes<iMaterial> resMatG (matG);
+  csRes<iMaterial> resMatB (matB);
 
 //  matR = generate_color_material(cs::Color4f(0.5f, 0.0f, 0.0f));
 //  matG = generate_color_material(cs::Color4f(0.0f, 0.5f, 0.0f));
 //  matB = generate_color_material(cs::Color4f(0.0f, 0.0f, 0.5f));
 
-  cs::s_material_names[matR] = "DefaultRed";
-  cs::s_material_names[matG] = "DefaultGreen";
-  cs::s_material_names[matB] = "DefaultBlue";
 
   auto meshR = new cs::csMesh();
   auto meshG = new cs::csMesh();
@@ -891,13 +887,12 @@ void generate_cube_fbx(cs::csWorld *world)
 
   cs::csMesh *mesh = cs::csAssetManager::Get()->Get<cs::csMesh>("/cube2.fbx");
 
-  csResource<iMaterial> mat;
+  csRes<iMaterial> mat;
   mesh = new cs::csMesh();
   mesh->AddSubMesh(create_sphere_mesh(3.0f, 32, 1.0f), 0);
   mesh->AddMaterialSlot("Default", mat);
-  csResource<cs::iMaterial> dustMaterial = cs::csAssetManager::Get()->Get<cs::iMaterial>("/materials/Dust.sg");
+  csRes<cs::iMaterial> dustMaterial = cs::csAssetManager::Get()->Get<cs::iMaterial>("/materials/Dust.sg");
 //  cs::iMaterial *dustMaterial = cs::AssetManager::Get()->Get<cs::iMaterial>("/materials/Dust.mat");
-  cs::s_material_names[dustMaterial] = "Dust";
 
   for (int i = 0; i < mesh->GetNumberOfMaterialSlots(); ++i)
   {
@@ -926,10 +921,9 @@ void setup_world(cs::csWorld *world)
 {
 
   auto assetMan        = cs::csAssetManager::Get();
-  csResource<iMaterial> material        = assetMan->Get<cs::iMaterial>("/materials/Default.mat");
-  csResource<iMaterial> skinnedMaterial = assetMan->Get<cs::iMaterial>("/materials/DefaultSkinned.mat");
-  cs::s_material_names[material] = "Default";
-  cs::s_material_names[skinnedMaterial] = "Skinned";
+  iMaterial* rawMat = assetMan->Get<cs::iMaterial>("/materials/Default.mat");
+  csRes<iMaterial> material(rawMat);
+  csRes<iMaterial> skinnedMaterial = assetMan->Get<cs::iMaterial>("/materials/DefaultSkinned.mat");
 
 
   generate_exit_game(world);

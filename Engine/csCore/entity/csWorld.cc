@@ -24,7 +24,7 @@ csWorld::csWorld()
     , m_physicsUpdateCounter(0.0f)
     , m_rootState(new csSpatialState())
 {
-  CS_CLASS_GEN_CONSTR;
+
   SetScene(new csGfxQuadtreeScene());
   SetPhysicsWorld(csObjectRegistry::Get<iPhysicsSystem>()->CreateWorld());
 }

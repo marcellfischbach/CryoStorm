@@ -14,7 +14,7 @@ csGL4TextureCube::csGL4TextureCube()
         , m_size(0)
         , m_sampler(nullptr)
 {
-  CS_CLASS_GEN_CONSTR;
+
   CS_GL_ERROR()
   glGenTextures(1, &m_name);
   CS_GL_ERROR()

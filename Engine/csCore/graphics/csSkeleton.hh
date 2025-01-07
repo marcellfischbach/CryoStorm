@@ -13,7 +13,7 @@ namespace cs
 
 
 CS_CLASS()
-class CS_CORE_API csSkeleton : public CS_SUPER(csObject)
+class CS_CORE_API csSkeleton : public CS_SUPER(iObject)
 {
   CS_CLASS_GEN_OBJECT;
 public:

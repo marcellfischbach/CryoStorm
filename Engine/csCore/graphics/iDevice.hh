@@ -24,6 +24,7 @@
 #include <csCore/graphics/iTexture2DArray.hh>
 #include <csCore/graphics/iTextureCube.hh>
 #include <csCore/graphics/material/iMaterial.hh>
+#include <cscore/csRef.hh>
 #include <array>
 
 namespace cs
@@ -133,7 +134,7 @@ CS_CLASS_GEN;
   virtual void MarkTexture() = 0;
   virtual void ResetTexturesToMark() = 0;
   virtual eTextureUnit BindTexture(iTexture *texture) = 0;
-  virtual bool BindMaterial(iMaterial *material, eRenderPass pass) = 0;
+  virtual bool BindMaterial(csRes<iMaterial> &material, eRenderPass pass) = 0;
   virtual void Render(iRenderMesh *mesh, eRenderPass pass) = 0;
   virtual void RenderPixel() = 0;
   virtual void RenderFullscreen() = 0;

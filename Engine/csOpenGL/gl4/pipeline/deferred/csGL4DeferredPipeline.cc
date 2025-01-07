@@ -32,7 +32,7 @@ csGL4DeferredPipeline::csGL4DeferredPipeline()
     , m_intermediate(nullptr)
     , m_renderMode(0)
 {
-  CS_CLASS_GEN_CONSTR;
+
 }
 
 csGL4DeferredPipeline::~csGL4DeferredPipeline()
@@ -91,7 +91,8 @@ void csGL4DeferredPipeline::RenderGBuffer(uint16_t width,
                   m_gfxCamera->GetClearMode() == eClearMode::Depth ||
                   m_gfxCamera->GetClearMode() == eClearMode::DepthColor,
                   1.0f, true, 0);
-  m_device->BindMaterial(nullptr, eRP_GBuffer);
+  csRes<iMaterial> null;
+  m_device->BindMaterial(null, eRP_GBuffer);
   std::vector<csGfxMesh *> &meshes = m_collector.GetMeshes(eRenderQueue::Default);
 
 
@@ -480,7 +481,8 @@ void csGL4DeferredPipeline::RenderPostProcessing(iRenderTarget2D *target)
 
 void csGL4DeferredPipeline::Cleanup()
 {
-  m_device->BindMaterial(nullptr, eRP_COUNT);
+  csRes<iMaterial> null;
+  m_device->BindMaterial(null, eRP_COUNT);
 
   m_device->SetBlending(false);
   m_device->SetDepthWrite(true);
@@ -515,7 +517,8 @@ bool csGL4DeferredPipeline::SetupVariables(iRenderTarget2D *target,
   m_projector = camera->GetProjector();
   m_scene     = scene;
   m_target    = camera->GetPostProcessing() ? UpdateRenderTarget(device, target) : target;
-  m_device->BindMaterial(nullptr, eRP_COUNT);
+  csRes<iMaterial> null;
+  m_device->BindMaterial(null, eRP_COUNT);
   m_device->ClearTextureCache();
 
   UpdateIntermediate();

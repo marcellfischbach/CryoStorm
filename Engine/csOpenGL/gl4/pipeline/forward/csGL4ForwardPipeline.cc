@@ -34,7 +34,7 @@ const float MinLightInfluence = 0.0f;
 csGL4ForwardPipeline::csGL4ForwardPipeline()
     : m_frame(0), m_device(nullptr), m_scene(nullptr), m_target(nullptr)
 {
-  CS_CLASS_GEN_CONSTR;
+
 
 }
 
@@ -425,7 +425,8 @@ void csGL4ForwardPipeline::RenderPostProcessing(iRenderTarget2D *target)
 
 void csGL4ForwardPipeline::Cleanup()
 {
-  m_device->BindMaterial(nullptr, eRP_COUNT);
+  csRes<iMaterial> null;
+  m_device->BindMaterial(null, eRP_COUNT);
 
   m_device->SetBlending(false);
   m_device->SetDepthWrite(true);

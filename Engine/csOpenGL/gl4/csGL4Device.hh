@@ -117,7 +117,7 @@ public:
   void ResetTexturesToMark() override;
   void SetSampler(eTextureUnit unit, iSampler *sampler);
   eTextureUnit BindTexture(iTexture *texture) override;
-  bool BindMaterial(iMaterial *material, eRenderPass pass) override;
+  bool BindMaterial(csRes<iMaterial> &material, eRenderPass pass) override;
   void Render(iRenderMesh *mesh, eRenderPass pass) override;
   void RenderPixel();
   void RenderFullscreen();
@@ -156,7 +156,7 @@ private:
   iRenderTarget *m_renderTarget;
   iShader       *m_shader;
   bool          m_materialSuccessfull;
-  iMaterial     *m_material;
+  csRes<iMaterial>     m_material;
   eRenderPass   m_materialPass;
   eTextureUnit ShiftTextureUnit();
   eTextureUnit  m_nextTextureUnit;

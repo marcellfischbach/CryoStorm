@@ -11,7 +11,7 @@ csSkeletonAnimation::csSkeletonAnimation()
     , m_loop(false)
     , m_channels()
 {
-  CS_CLASS_GEN_CONSTR;
+
 }
 
 csSkeletonAnimation::~csSkeletonAnimation()

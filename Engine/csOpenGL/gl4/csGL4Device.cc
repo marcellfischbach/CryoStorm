@@ -20,6 +20,8 @@
 #include <csCore/resource/csAssetManager.hh>
 #include <GL/glew.h>
 #include <iostream>
+#include <csCore/resource/csResource_Impl.hh>
+
 
 #define CS_MAX_LIGHTS 4
 
@@ -70,7 +72,7 @@ csGL4Device::csGL4Device()
     , m_fullscreenBlitCubeNegZRenderMesh(nullptr)
     , m_renderLayer(-1)
 {
-  CS_CLASS_GEN_CONSTR;
+
 
 
 }
@@ -1058,7 +1060,7 @@ void csGL4Device::SetActiveTexture(cs::uint32_t activeTexture)
   }
 }
 
-bool csGL4Device::BindMaterial(iMaterial *material, eRenderPass pass)
+bool csGL4Device::BindMaterial(csRes<iMaterial> &material, eRenderPass pass)
 {
 #ifndef CS_DISABLE_RENDERING
   if (!material && pass == eRP_COUNT)

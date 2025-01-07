@@ -12,7 +12,7 @@ csMaterialInstance::csMaterialInstance()
   : iMaterial()
   , m_material(nullptr)
 {
-  CS_CLASS_GEN_CONSTR;
+
 }
 
 

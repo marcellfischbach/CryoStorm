@@ -32,7 +32,7 @@ struct SkeletonLoaderData
 
 csAssimpSkeletonMeshLoader::csAssimpSkeletonMeshLoader()
 {
-  CS_CLASS_GEN_CONSTR;
+
 }
 
 
@@ -105,7 +105,7 @@ iObject *csAssimpSkeletonMeshLoader::Load(const csClass *cls, const csResourceLo
     std::string materialName(aiMatName.C_Str());
     if (d.materialSlots.find(materialName) == d.materialSlots.end())
     {
-      csResource<iMaterial> mat;
+      csRes<iMaterial> mat;
       Size idx = d.mesh->AddMaterialSlot(materialName, mat);
       d.materialSlots[materialName] = idx;
       d.defaultMaterials[materialName] = csAssimpMaterialLoader::Read(material);
@@ -123,7 +123,7 @@ iObject *csAssimpSkeletonMeshLoader::Load(const csClass *cls, const csResourceLo
   for (auto it = d.materialSlots.begin(); it!=d.materialSlots.end(); it++)
   {
     size_t slotIdx = it->second;
-    csResource<iMaterial> material = d.defaultMaterials[it->first];
+    csRes<iMaterial> material = d.defaultMaterials[it->first];
     d.mesh->SetDefaultMaterial(slotIdx, material);
   }
 

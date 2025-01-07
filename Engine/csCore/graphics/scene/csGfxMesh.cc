@@ -7,7 +7,6 @@
 
 #include <algorithm>
 
-
 namespace cs
 {
 
@@ -15,7 +14,7 @@ csGfxMesh::csGfxMesh()
   : iObject()
   , m_skeleton(nullptr)
 {
-  CS_CLASS_GEN_CONSTR;
+
 }
 
 
@@ -138,17 +137,17 @@ bool csGfxMesh::IsCastShadow() const
 }
 
 
-void csGfxMesh::SetMaterial(iMaterial* material)
+void csGfxMesh::SetMaterial(csRes<iMaterial> &material)
 {
-  CS_SET(m_material, material);
+  m_material = material;
 }
 
-iMaterial* csGfxMesh::GetMaterial()
+csRes<iMaterial> &csGfxMesh::GetMaterial()
 {
   return m_material;
 }
 
-const iMaterial* csGfxMesh::GetMaterial() const
+const csRes<iMaterial> &csGfxMesh::GetMaterial() const
 {
   return m_material;
 }

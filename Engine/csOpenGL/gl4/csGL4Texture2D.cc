@@ -13,7 +13,7 @@ csGL4Texture2D::csGL4Texture2D()
   : iTexture2D(), m_target(GL_TEXTURE_2D), m_name(0), m_width(0), m_height(0), m_sampler(nullptr),
     m_multiSampling(false)
 {
-  CS_CLASS_GEN_CONSTR;
+
   CS_GL_ERROR();
   glGenTextures(1, &m_name);
   CS_GL_ERROR();

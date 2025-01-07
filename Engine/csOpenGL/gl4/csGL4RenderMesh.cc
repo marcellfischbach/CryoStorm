@@ -52,7 +52,7 @@ csGL4RenderMesh::csGL4RenderMesh(uint32_t vao,
     , m_boundingBox(boundingBox)
     , m_vertexCount(vertexCount)
 {
-  CS_CLASS_GEN_CONSTR;
+
   CS_SET(m_vertexBuffer, vb);
   CS_SET(m_indexBuffer, ib);
 
@@ -145,7 +145,7 @@ csGL4RenderMeshGenerator::csGL4RenderMeshGenerator(bool compatMode)
     , m_compatMode(compatMode)
     , m_primitiveType(ePT_Triangles)
 {
-  CS_CLASS_GEN_CONSTR;
+
 }
 
 csGL4RenderMeshGenerator::~csGL4RenderMeshGenerator() = default;
@@ -646,7 +646,7 @@ csGL4RenderMeshGeneratorFactory::csGL4RenderMeshGeneratorFactory(bool compatMode
     : iRenderMeshGeneratorFactory()
     , m_compatMode(compatMode)
 {
-  CS_CLASS_GEN_CONSTR;
+
 }
 
 iRenderMeshGenerator *csGL4RenderMeshGeneratorFactory::Create()
@@ -884,7 +884,7 @@ csGL4RenderMeshBatchGeneratorFactory::csGL4RenderMeshBatchGeneratorFactory(bool 
     : iRenderMeshBatchGeneratorFactory()
     , m_compatMode(compatMode)
 {
-  CS_CLASS_GEN_CONSTR;
+
 }
 
 iRenderMeshBatchGenerator *csGL4RenderMeshBatchGeneratorFactory::Create()

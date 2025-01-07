@@ -33,7 +33,7 @@ csGL4TerrainMeshCPU::csGL4TerrainMeshCPU(uint32_t vao,
     , m_terrainSize(terrainSize)
     , m_patchSize(patchSize)
 {
-  CS_CLASS_GEN_CONSTR;
+
   CS_SET(m_vb, vb);
   CS_SET(m_ib, ib);
 }
@@ -316,7 +316,7 @@ csGL4TerrainMeshGeneratorCPU::csGL4TerrainMeshGeneratorCPU(bool compat)
     : iTerrainMeshGenerator()
     , m_compat(compat)
 {
-  CS_CLASS_GEN_CONSTR;
+
 }
 
 void csGL4TerrainMeshGeneratorCPU::SetSize(eTerrainSize size)

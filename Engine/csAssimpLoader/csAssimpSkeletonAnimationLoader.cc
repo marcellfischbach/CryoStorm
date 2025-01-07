@@ -10,7 +10,7 @@ namespace cs::assimp
 
 csAssimpSkeletonAnimationLoader::csAssimpSkeletonAnimationLoader()
 {
-  CS_CLASS_GEN_CONSTR;
+
 }
 
 

@@ -19,10 +19,10 @@ csSkeleton::Bone csSkeleton::IllegalBone = {
 };
 
 csSkeleton::csSkeleton()
-    : csObject()
+    : iObject()
     , m_base()
 {
-  CS_CLASS_GEN_CONSTR;
+
 }
 
 void csSkeleton::Clear()

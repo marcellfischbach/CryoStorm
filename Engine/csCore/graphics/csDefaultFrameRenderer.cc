@@ -17,7 +17,7 @@ namespace cs
 csDefaultFrameRenderer::csDefaultFrameRenderer()
     : m_renderPipeline(nullptr)
 {
-  CS_CLASS_GEN_CONSTR;
+
 }
 
 bool gfx_camera_sorter(csGfxCamera *cam0, csGfxCamera *cam1)

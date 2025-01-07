@@ -18,7 +18,7 @@ csBulletDynamicCollider::csBulletDynamicCollider()
   , m_userData(nullptr)
 {
   m_motionState.priv = this;
-  CS_CLASS_GEN_CONSTR;
+
 }
 
 csBulletDynamicCollider::~csBulletDynamicCollider()

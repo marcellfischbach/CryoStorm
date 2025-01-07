@@ -2,7 +2,8 @@
 
 #include <csCore/graphics/csMesh.hh>
 #include <csCore/csOutOfBoundsException.hh>
-#include <csCore/resource/csResource_Impl.hh>
+
+
 namespace cs
 {
 
@@ -22,7 +23,7 @@ const csBoundingBox & csMesh::GetBoundingBox() const
 }
 
 
-Size csMesh::AddMaterialSlot(const std::string& name, csResource<iMaterial> &defaultMaterial)
+Size csMesh::AddMaterialSlot(const std::string& name, csRes<iMaterial> &defaultMaterial)
 {
   for (Size i = 0; i < m_materialSlots.size(); i++)
   {
@@ -36,7 +37,7 @@ Size csMesh::AddMaterialSlot(const std::string& name, csResource<iMaterial> &def
   return m_materialSlots.size() - 1;
 }
 
-void csMesh::SetDefaultMaterial(Size idx, csResource<iMaterial> &defaultMaterial)
+void csMesh::SetDefaultMaterial(Size idx, csRes<iMaterial> &defaultMaterial)
 {
   if (idx >= m_materialSlots.size())
   {
@@ -169,7 +170,7 @@ Size csMesh::SubMesh::GetMaterialSlotIdx() const
  * *********************************************************************/
 
 
-csMesh::MaterialSlot::MaterialSlot(const std::string& name, const csResource<iMaterial> &defaultMaterial)
+csMesh::MaterialSlot::MaterialSlot(const std::string& name, const csRes<iMaterial> &defaultMaterial)
   : m_defaultMaterial(nullptr)
   , m_name(name)
 {
@@ -185,8 +186,8 @@ csMesh::MaterialSlot::MaterialSlot(const MaterialSlot& slot)
 
 csMesh::MaterialSlot::~MaterialSlot()
 {
-  CS_RELEASE(m_defaultMaterial);
-  m_defaultMaterial = nullptr;
+//  CS_RELEASE(m_defaultMaterial);
+//  m_defaultMaterial = nullptr;
 }
 
 csMesh::MaterialSlot& csMesh::MaterialSlot::operator=(const MaterialSlot& slot)
@@ -196,7 +197,7 @@ csMesh::MaterialSlot& csMesh::MaterialSlot::operator=(const MaterialSlot& slot)
   return *this;
 }
 
-const csResource<iMaterial>& csMesh::MaterialSlot::GetDefaultMaterial() const
+const csRes<iMaterial>& csMesh::MaterialSlot::GetDefaultMaterial() const
 {
   return m_defaultMaterial;
 }

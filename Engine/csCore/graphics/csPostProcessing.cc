@@ -24,7 +24,7 @@ csPostProcessing::csPostProcessing()
     : iObject()
     , m_plan(new PPPlan)
 {
-  CS_CLASS_GEN_CONSTR;
+
   for (size_t i = 0; i < (size_t) ePPImageType::Count; i++)
   {
     m_inputTextures[i]  = nullptr;

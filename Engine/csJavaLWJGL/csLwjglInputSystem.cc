@@ -9,7 +9,7 @@ csLwjglInputSystem::csLwjglInputSystem(csLwjglKeyboard* keyboard, csLwjglMouse* 
     , m_keyboard(keyboard)
     , m_mouse(mouse)
 {
-  CS_CLASS_GEN_CONSTR;
+
 }
 
 

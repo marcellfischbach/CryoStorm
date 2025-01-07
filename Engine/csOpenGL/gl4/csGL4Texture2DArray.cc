@@ -16,7 +16,7 @@ csGL4Texture2DArray::csGL4Texture2DArray()
   , m_layer(0)
   , m_sampler(nullptr)
 {
-  CS_CLASS_GEN_CONSTR;
+
   CS_GL_ERROR()
   glGenTextures(1, &m_name);
   CS_GL_ERROR()

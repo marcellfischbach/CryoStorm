@@ -11,7 +11,7 @@ csGL4VertexBuffer::csGL4VertexBuffer()
   : iVertexBuffer()
   , m_size(0)
 {
-  CS_CLASS_GEN_CONSTR;
+
   CS_GL_ERROR()
   glGenBuffers(1, &m_name);
   CS_GL_ERROR()

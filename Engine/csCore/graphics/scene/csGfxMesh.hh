@@ -7,7 +7,7 @@
 #include <csCore/math/csMatrix4f.hh>
 #include <csCore/graphics/eRenderPass.hh>
 #include <csCore/graphics/scene/csGfxLight.hh>
-#include <csCore/resource/csResource.hh>
+#include <csCore/csRef.hh>
 #include <vector>
 
 namespace cs
@@ -46,9 +46,9 @@ public:
   void SetCastShadow(bool castShadow);
   CS_NODISCARD bool IsCastShadow() const;
 
-  void SetMaterial(iMaterial *material);
-  CS_NODISCARD iMaterial *GetMaterial();
-  CS_NODISCARD const iMaterial *GetMaterial() const;
+  void SetMaterial(csRes<iMaterial> &material);
+  CS_NODISCARD csRes<iMaterial> &GetMaterial();
+  CS_NODISCARD const csRes<iMaterial> &GetMaterial() const;
 
   void SetMesh(iRenderMesh *mesh);
   iRenderMesh *GetMesh();
@@ -88,7 +88,7 @@ private:
   bool m_static        = false;
   bool m_receiveShadow = true;
   bool m_castShadow    = true;
-  iMaterial*   m_material = nullptr;
+  csRes<iMaterial>   m_material;
   iRenderMesh   *m_mesh     = nullptr;
   csMatrix4f    m_modelMatrix;
   csBoundingBox m_boundingBox;

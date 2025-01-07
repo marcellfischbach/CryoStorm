@@ -28,7 +28,7 @@ csCameraState::csCameraState()
       m_skyboxRenderer(nullptr),
       m_postProcessing(nullptr)
 {
-  CS_CLASS_GEN_CONSTR;
+
   m_gfxCamera->SetCamera(&m_camera);
   m_gfxCamera->SetProjector(&m_projector);
   UpdateGfxCamera();

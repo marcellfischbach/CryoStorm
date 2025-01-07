@@ -13,7 +13,7 @@ csGfxLight::csGfxLight()
   , m_light(nullptr)
   , m_frame(0)
 {
-  CS_CLASS_GEN_CONSTR;
+
 }
 
 csGfxLight::~csGfxLight()

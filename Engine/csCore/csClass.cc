@@ -54,16 +54,6 @@ cs::iObject* iObjectClass::CreateInstance() const
   throw cs::csInstantiationException("cs::iObject");
 }
 
-csObject::csObject()
-  : cs::iObject()
-{
-  CS_CLASS_GEN_CONSTR;
-}
-
-csObject::~csObject()
-{
-
-}
 
 
 // ---------------------------------------------------------------------------------------

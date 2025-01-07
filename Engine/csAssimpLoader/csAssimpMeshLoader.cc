@@ -9,6 +9,7 @@
 #include <csCore/resource/csVFS.hh>
 #include <csCore/csObjectRegistry.hh>
 #include <csCore/csTypes.hh>
+#include <csCore/csRef.hh>
 
 #include <assimp/scene.h>
 #include <assimp/Importer.hpp>
@@ -17,7 +18,6 @@
 #include <string>
 #include <vector>
 
-#include <csCore/resource/csResource_Impl.hh>
 
 namespace cs::assimp
 {
@@ -33,7 +33,7 @@ struct StaticLoaderData
 
 csAssimpMeshLoader::csAssimpMeshLoader()
 {
-  CS_CLASS_GEN_CONSTR;
+
 }
 
 
@@ -105,7 +105,7 @@ iObject *csAssimpMeshLoader::Load(const csClass *cls, const csResourceLocator &l
     std::string materialName(aiMatName.C_Str());
     if (d.materialSlots.find(materialName) == d.materialSlots.end())
     {
-      csResource<iMaterial> mat;
+      csRes<iMaterial> mat;
       Size idx = d.mesh->AddMaterialSlot(materialName, mat);
       d.materialSlots[materialName] = idx;
       d.defaultMaterials[materialName] = csAssimpMaterialLoader::Read(material);
@@ -121,7 +121,7 @@ iObject *csAssimpMeshLoader::Load(const csClass *cls, const csResourceLocator &l
   for (auto it = d.materialSlots.begin(); it!=d.materialSlots.end(); it++)
   {
     size_t slotIdx = it->second;
-    csResource<iMaterial> material = d.defaultMaterials[it->first];
+    csRes<iMaterial> material = d.defaultMaterials[it->first];
     d.mesh->SetDefaultMaterial(slotIdx, material);
   }
 

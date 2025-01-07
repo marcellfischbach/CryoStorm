@@ -13,7 +13,7 @@ namespace cs
 GfxSimpleScene::GfxSimpleScene()
         : iGfxScene()
 {
-  CS_CLASS_GEN_CONSTR;
+
 }
 
 void GfxSimpleScene::Add(csGfxCamera *camera)
