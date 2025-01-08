@@ -238,6 +238,7 @@ struct CS_CORE_API iObject
 
   CS_NODISCARD virtual int64_t RefCount() const = 0;
 
+
 #ifdef CS_JAVA
   virtual void SetJObject(jobject object) const = 0;
   CS_NODISCARD virtual jobject GetJObject() const = 0;

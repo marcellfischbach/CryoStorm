@@ -3,6 +3,7 @@
 
 #include <csCore/csCoreExport.hh>
 #include <csCore/csClass.hh>
+#include <csCore/csRef.hh>
 #include <vector>
 
 namespace cs
@@ -26,45 +27,51 @@ public:
   const std::string& GetName() const;
 
   CS_FUNCTION()
-  void SetEntity(cs::csEntity* entity);
+  void SetEntity(csRef<cs::csEntity> &entity);
 
   CS_FUNCTION()
-  cs::csEntity* GetEntity();
-  const csEntity* GetEntity() const;
+  csRef<cs::csEntity> &GetEntity();
+  const csRef<csEntity> &GetEntity() const;
 
   template<typename ES>
-  ES* GetState()
+  csRef<ES>& GetState()
   {
-    return static_cast<ES*>(GetState(ES::GetStaticClass()));
+    return static_cast<csRef<ES>&>(GetState(ES::GetStaticClass()));
   }
   template<typename ES>
-  const ES* GetState() const
+  const csRef<ES>& GetState() const
   {
-    return static_cast<const ES*>(GetState(ES::GetStaticClass()));
+    return static_cast<const csRef<ES>&>(GetState(ES::GetStaticClass()));
   }
 
-  csEntityState* GetState(const csClass* cls);
-  const csEntityState* GetState(const csClass* cls) const;
+  csRef<csEntityState>& GetState(const csClass * cls);
+  const csRef<csEntityState>& GetState(const csClass * cls) const;
+
 
   template<typename ES>
-  std::vector<ES*> GetStates()
+  std::vector<csRef<ES>> GetStates()
   {
-    std::vector<csEntityState*> states = GetStates(ES::GetStaticClass());
-    return *reinterpret_cast<std::vector<ES*>*>(&states);
+    std::vector<csRef<csEntityState>> states = GetStates(ES::GetStaticClass());
+    std::vector<csRef<csEntityState>>* statesPtr = &states;
+    std::vector<csRef<ES>>* esPtr = reinterpret_cast<std::vector<csRef<ES>>*>(statesPtr);
+    return *esPtr;
   }
 
-  template<typename ES>
-  std::vector<const ES*> GetStates() const
-  {
-    return *reinterpret_cast<std::vector<const ES*>*>(&GetStates(ES::GetStaticClass()));
-  }
+  //template<typename ES>
+  //std::vector<const csRef<ES>> GetStates() const
+  //{
+  //  std::vector<const csRef<csEntityState>> states = GetStates(ES::GetStaticClass());
+  //  std::vector<const csRef<csEntityState>>* statesPtr = &states;
+  //  std::vector<const csRef<ES>>* esPtr = reinterpret_cast<std::vector<csRef<ES>>*>(esPtr);
+  //  return *esPtr;
+  //}
 
-  std::vector<csEntityState*> GetStates(const csClass* cls);
-  std::vector<const csEntityState*> GetStates(const csClass* cls) const;
+  std::vector<csRef<csEntityState>> GetStates(const csClass* cls);
+  //std::vector<const csRef<csEntityState>> GetStates(const csClass* cls) const;
 
   CS_FUNCTION()
-  cs::csSpatialState* GetRoot();
-  const csSpatialState* GetRoot() const;
+  csRef<cs::csSpatialState>& GetRoot();
+  const csRef<csSpatialState>& GetRoot() const;
 
   CS_FUNCTION()
   cs::csWorld* GetWorld();
@@ -94,11 +101,11 @@ public:
    */
 
 protected:
-  virtual void UpdateEntity(csEntity* oldEntity, csEntity* newEntity);
+  virtual void UpdateEntity(csRef<csEntity> &oldEntity, csRef<csEntity> &newEntity);
 
 private:
   std::string m_name;
-  csEntity * m_entity;
+  csRef<csEntity> m_entity;
 
   bool m_needUpdate;
 

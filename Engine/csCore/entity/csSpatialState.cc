@@ -28,7 +28,7 @@ bool csSpatialState::IsStatic() const
   return m_static;
 }
 
-bool csSpatialState::AttachSpatial(cs::csSpatialState *child)
+bool csSpatialState::AttachSpatial(csRef<cs::csSpatialState> child)
 {
   if (!child)
   {
@@ -43,7 +43,6 @@ bool csSpatialState::AttachSpatial(cs::csSpatialState *child)
     return false;
   }
 
-  child->AddRef();
   m_children.push_back(child);
   child->m_parent = this;
   if (!child->GetEntity())
@@ -55,10 +54,11 @@ bool csSpatialState::AttachSpatial(cs::csSpatialState *child)
 
 bool csSpatialState::DetachSelf()
 {
-  return m_parent && m_parent->DetachSpatial(this);
+  csRef<csSpatialState> thisRef(this);
+  return m_parent && m_parent->DetachSpatial(thisRef);
 }
 
-bool csSpatialState::DetachSpatial(cs::csSpatialState *child)
+bool csSpatialState::DetachSpatial(csRef<cs::csSpatialState> child)
 {
   if (!child)
   {
@@ -76,16 +76,15 @@ bool csSpatialState::DetachSpatial(cs::csSpatialState *child)
 
   m_children.erase(it);
   child->m_parent = nullptr;
-  child->Release();
   return true;
 }
 
-csSpatialState* csSpatialState::GetParent()
+csRef<csSpatialState>& csSpatialState::GetParent()
 {
   return m_parent;
 }
 
-const csSpatialState* csSpatialState::GetParent() const
+const csRef<csSpatialState> &csSpatialState::GetParent() const
 {
   return m_parent;
 }
@@ -95,22 +94,27 @@ Size csSpatialState::GetNumberOfChildren() const
   return m_children.size();
 }
 
-const csSpatialState* csSpatialState::GetChild(Size idx) const
+const csRef<csSpatialState> &csSpatialState::GetChild(Size idx) const
 {
   if (idx >= m_children.size())
   {
-    return nullptr;
+    return csRef<csSpatialState>::Null();
   }
 
   return m_children[idx];
 }
 
-csSpatialState* csSpatialState::GetChild(Size idx)
+csRef<csSpatialState> &csSpatialState::GetChild(Size idx)
 {
-  return const_cast<csSpatialState*>(static_cast<const csSpatialState*>(this)->GetChild(idx));
+  if (idx >= m_children.size())
+  {
+    return csRef<csSpatialState>::Null();
+  }
+
+  return m_children[idx];
 }
 
-void csSpatialState::UpdateEntity(csEntity* oldEntity, csEntity* newEntity)
+void csSpatialState::UpdateEntity(csRef<csEntity> &oldEntity, csRef<csEntity> &newEntity)
 {
   csEntityState::UpdateEntity(oldEntity, newEntity);
   for (auto child : m_children)

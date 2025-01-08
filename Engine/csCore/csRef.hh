@@ -13,6 +13,18 @@ template<typename T>
 class csRef
 {
 public:
+  static csRef& Null()
+  {
+    static csRef ref;
+    return ref;
+  }
+
+  static const csRef& ConstNull()
+  {
+    static csRef ref;
+    return ref;
+  }
+
   csRef()
       : m_ptr(nullptr)
   {
@@ -25,6 +37,16 @@ public:
     if (m_ptr)
     {
       reinterpret_cast<iObject *>(m_ptr)->AddRef();
+    }
+  }
+
+  csRef(csRef& other)
+    : m_ptr(nullptr)
+  {
+    m_ptr = other.m_ptr;
+    if (m_ptr)
+    {
+      reinterpret_cast<iObject*>(m_ptr)->AddRef();
     }
   }
 
@@ -104,7 +126,7 @@ public:
   {
     if (this != &ref)
     {
-      void *t = const_cast<void *>(ref.raw());
+      void *t = const_cast<void *>(reinterpret_cast<const void*>(ref.raw()));
       if (t)
       {
         reinterpret_cast<iObject*>(t)->AddRef();
@@ -113,7 +135,7 @@ public:
       {
         reinterpret_cast<iObject*>(m_ptr)->Release();
       }
-      m_ptr = t;
+      m_ptr = reinterpret_cast<T*>(t);
     }
     return *this;
   }
@@ -141,6 +163,16 @@ public:
   operator bool() const
   {
     return m_ptr != nullptr;
+  }
+
+  bool operator==(const csRef& ref) const
+  {
+    return m_ptr == ref.m_ptr;
+  }
+
+  bool operator==(const T* ptr) const
+  {
+    return m_ptr == ptr;
   }
 
   T *raw()

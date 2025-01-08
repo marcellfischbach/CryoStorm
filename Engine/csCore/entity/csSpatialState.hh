@@ -5,6 +5,7 @@
 #include <csCore/entity/csEntityState.hh>
 #include <csCore/entity/csTransform.hh>
 #include <csCore/csTypes.hh>
+#include <csCore/csRef.hh>
 #include <csCore/math/csMatrix4f.hh>
 #include <vector>
 
@@ -26,20 +27,20 @@ public:
   bool IsStatic() const;
 
   CS_FUNCTION()
-  bool AttachSpatial(cs::csSpatialState *child);
+  bool AttachSpatial(csRef<cs::csSpatialState> child);
   CS_FUNCTION()
   bool DetachSelf();
   CS_FUNCTION()
-  bool DetachSpatial(cs::csSpatialState *child);
+  bool DetachSpatial(csRef<cs::csSpatialState> child);
   CS_FUNCTION()
-  cs::csSpatialState* GetParent();
-  const csSpatialState* GetParent() const;
+  csRef<cs::csSpatialState>& GetParent();
+  const csRef<csSpatialState> &GetParent() const;
 
   CS_FUNCTION()
   size_t GetNumberOfChildren() const;
   CS_FUNCTION()
-  cs::csSpatialState* GetChild(size_t idx);
-  const csSpatialState* GetChild(size_t idx) const;
+  csRef<cs::csSpatialState> &GetChild(size_t idx);
+  const csRef<csSpatialState>& GetChild(size_t idx) const;
 
   /**
    * @name Transformation
@@ -63,7 +64,7 @@ public:
 
   
 protected:
-  void UpdateEntity(csEntity* oldEntity, csEntity* newEntity) override;
+  void UpdateEntity(csRef<csEntity> &oldEntity, csRef<csEntity> &newEntity) override;
   virtual void TransformationUpdatedPreChildren();
   virtual void TransformationUpdatedPostChildren();
 
@@ -73,8 +74,8 @@ private:
 
 
   bool m_static;
-  csSpatialState * m_parent;
-  std::vector<csSpatialState*> m_children;
+  csRef<csSpatialState> m_parent;
+  std::vector<csRef<csSpatialState>> m_children;
 
   csMatrix4f m_localMatrix;
 

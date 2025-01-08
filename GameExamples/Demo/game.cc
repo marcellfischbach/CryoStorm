@@ -260,7 +260,7 @@ create_multi_sphere_mesh(float radius, uint32_t detail, float uv_f, size_t num_s
 }
 
 
-void debug(cs::csSpatialState *state, int indent)
+void debug(csRef<cs::csSpatialState> &state, int indent)
 {
   if (!state)
   {
@@ -380,7 +380,7 @@ void generate_camera(cs::csWorld *world)
   cameraState->SetPostProcessing(postProcessing);
 
 
-  auto cameraHandler = new CameraHandlerMotion();
+  auto cameraHandler = csRef<CameraHandlerMotion>(new CameraHandlerMotion());
   cameraEntity->AttachState(cameraState);
   cameraEntity->AttachState(cameraHandler);
   cameraEntity->GetRoot()->GetTransform()
@@ -456,7 +456,7 @@ void generate_test_grid(cs::csWorld *world, cs::csRes<cs::iMaterial> &material)
                      .Finish();
       meshStateSphere->SetMesh(mesh);
       entity->AttachState(meshStateSphere);
-#if 0
+#if 1
       auto rnd = (float) rand() / (float) RAND_MAX;
       int   ma  = a % 4;
       switch (ma)
@@ -464,26 +464,26 @@ void generate_test_grid(cs::csWorld *world, cs::csRes<cs::iMaterial> &material)
         case 0:
         {
 
-          auto testHandler01 = new TestHandler01(cs::Vector3f(i - start, 0.25f, j - start), 0.25f, 0.5f + rnd);
-          entity->Attach(testHandler01);
+          auto testHandler01 = new TestHandler01(csVector3f(i - start, 0.25f, j - start), 0.25f, 0.5f + rnd);
+          entity->AttachState(testHandler01);
           break;
         }
         case 1:
         {
-          auto testHandler02 = new TestHandler02(cs::Vector3f(i - start, 0.25f, j - start), 0.25f, 0.5f + rnd);
-          entity->Attach(testHandler02);
+          auto testHandler02 = new TestHandler02(csVector3f(i - start, 0.25f, j - start), 0.25f, 0.5f + rnd);
+          entity->AttachState(testHandler02);
           break;
         }
         case 2:
         {
-          auto testHandler03 = new TestHandler03(cs::Vector3f(i - start, 0.25f, j - start), 0.25f, 0.5f + rnd);
-          entity->Attach(testHandler03);
+          auto testHandler03 = new TestHandler03(csVector3f(i - start, 0.25f, j - start), 0.25f, 0.5f + rnd);
+          entity->AttachState(testHandler03);
           break;
         }
         case 3:
         {
-          auto testHandler04 = new TestHandler04(cs::Vector3f(i - start, 0.25f, j - start), 0.25f, 0.5f + rnd);
-          entity->Attach(testHandler04);
+          auto testHandler04 = new TestHandler04(csVector3f(i - start, 0.25f, j - start), 0.25f, 0.5f + rnd);
+          entity->AttachState(testHandler04);
           break;
         }
         default:

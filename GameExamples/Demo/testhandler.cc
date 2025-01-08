@@ -20,7 +20,7 @@ BaseTestHandler::~BaseTestHandler()
 void BaseTestHandler::Update(float tpf)
 {
   m_animationValue += tpf * m_animationSpeed;
-  csSpatialState *root = GetRoot();
+  csRef<csSpatialState> &root = GetRoot();
   if (root)
   {
     csVector3f position = m_basePosition + csVector3f(

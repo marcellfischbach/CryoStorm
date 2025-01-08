@@ -69,7 +69,7 @@ const csWorld *csEntity::GetWorld() const
 }
 
 
-bool csEntity::AttachEntity(cs::csEntity *entity, csSpatialState *parentState)
+bool csEntity::AttachEntity(csRef<cs::csEntity> &entity, csRef<csSpatialState> &parentState)
 {
   if (!entity)
   {
@@ -88,7 +88,7 @@ bool csEntity::AttachEntity(cs::csEntity *entity, csSpatialState *parentState)
   m_children.push_back(entity);
   entity->SetWorld(m_world);
 
-  csSpatialState *childRoot = entity->GetRoot();
+  csRef<csSpatialState> &childRoot = entity->GetRoot();
   if (!parentState)
   {
     parentState = GetAbsolutRoot();
@@ -97,13 +97,10 @@ bool csEntity::AttachEntity(cs::csEntity *entity, csSpatialState *parentState)
   {
     parentState->AttachSpatial(childRoot);
   }
-  entity->AddRef();
-  // increment our own reference cound because the parent-to-this relation is set
-  AddRef();
   return true;
 }
 
-bool csEntity::DetachEntity(cs::csEntity *entity)
+bool csEntity::DetachEntity(csRef<cs::csEntity> &entity)
 {
   if (!entity)
   {
@@ -123,24 +120,21 @@ bool csEntity::DetachEntity(cs::csEntity *entity)
   m_children.erase(it);
   entity->SetWorld(nullptr);
 
-  csSpatialState *childRoot = entity->GetRoot();
+  csRef<csSpatialState> &childRoot = entity->GetRoot();
   if (childRoot)
   {
     childRoot->DetachSelf();
   }
-  entity->Release();
 
-  // decrement our own reference cound because the parent-to-this relation is reset
-  Release();
   return true;
 }
 
-csEntity *csEntity::GetParent()
+csRef<csEntity> &csEntity::GetParent()
 {
   return m_parent;
 }
 
-const csEntity *csEntity::GetParent() const
+const csRef<csEntity> &csEntity::GetParent() const
 {
   return m_parent;
 }
@@ -150,65 +144,76 @@ size_t csEntity::GetNumberOfChildren() const
   return m_children.size();
 }
 
-const csEntity *csEntity::GetChild(size_t idx) const
+const csRef<csEntity> &csEntity::GetChild(size_t idx) const
 {
   if (idx >= m_children.size())
   {
-    return nullptr;
+    return csRef<csEntity>::Null();
   }
   return m_children[idx];
 }
 
-csEntity *csEntity::GetChild(size_t idx)
+csRef<csEntity> &csEntity::GetChild(size_t idx)
 {
-  return const_cast<csEntity *>(static_cast<const csEntity *>(this)->GetChild(idx));
+  if (idx >= m_children.size())
+  {
+    return csRef<csEntity>::Null();
+  }
+  return m_children[idx];
 }
 
-const csEntityState *csEntity::GetState(const csClass *cls) const
+const csRef<csEntityState> &csEntity::GetState(const csClass *cls) const
 {
   for (auto state: m_states)
   {
     if (cls->IsAssignableFrom(state->GetClass()))
     {
-      return static_cast<const csEntityState *>(state->QueryClass(cls));
+      return state;
     }
   }
-  return nullptr;
+  return csRef<csEntityState>::Null();
 }
 
-csEntityState *csEntity::GetState(const csClass *cls)
+csRef<csEntityState> &csEntity::GetState(const csClass *cls)
 {
-  return const_cast<csEntityState *>(static_cast<const csEntity *>(this)->GetState(cls));
-}
-
-
-std::vector<const csEntityState *> csEntity::GetStates(const csClass *cls) const
-{
-  std::vector<const csEntityState *> result;
-  for (auto                          state: m_states)
+  for (auto state : m_states)
   {
     if (cls->IsAssignableFrom(state->GetClass()))
     {
-      result.emplace_back(static_cast<const csEntityState *>(state->QueryClass(cls)));
+      return state;
     }
   }
-  return result;
+  return csRef<csEntityState>::Null();
 }
 
-std::vector<csEntityState *> csEntity::GetStates(const csClass *cls)
+//
+//std::vector<const csRef<csEntityState>> csEntity::GetStates(const csClass *cls) const
+//{
+//  std::vector<const csRef<csEntityState>> result;
+//  for (auto                          state: m_states)
+//  {
+//    if (cls->IsAssignableFrom(state->GetClass()))
+//    {
+//      result.push_back(state);
+//    }
+//  }
+//  return result;
+//}
+
+std::vector<csRef<csEntityState>> csEntity::GetStates(const csClass *cls)
 {
-  std::vector<csEntityState *> result;
+  std::vector<csRef<csEntityState>> result;
   for (auto                    state: m_states)
   {
     if (cls->IsAssignableFrom(state->GetClass()))
     {
-      result.emplace_back(static_cast<csEntityState *>(state->QueryClass(cls)));
+      result.push_back(state);
     }
   }
   return result;
 }
 
-bool csEntity::AttachState(cs::csEntityState *entityState)
+bool csEntity::AttachState(csRef<cs::csEntityState> entityState)
 {
   if (!entityState)
   {
@@ -224,20 +229,22 @@ bool csEntity::AttachState(cs::csEntityState *entityState)
     return false;
   }
 
-  entityState->SetEntity(this);
+  csRef<csEntity> thisRef(this);
+  entityState->SetEntity(thisRef);
 
 
   auto spatialState = entityState->Query<csSpatialState>();
   if (spatialState && !m_rootState)
   {
-    SetRoot(spatialState);
+    csRef<csSpatialState> spatialRef(spatialState);
+    SetRoot(spatialRef);
   }
 
 
   return true;
 }
 
-bool csEntity::DetachState(cs::csEntityState *entityState)
+bool csEntity::DetachState(csRef<cs::csEntityState> entityState)
 {
   if (!entityState)
   {
@@ -253,20 +260,20 @@ bool csEntity::DetachState(cs::csEntityState *entityState)
     return false;
   }
 
-  entityState->SetEntity(nullptr);
+  entityState->SetEntity(csRef<csEntity>::Null());
 
 
   auto spatialState = entityState->Query<csSpatialState>();
   if (spatialState == m_rootState)
   {
-    SetRoot(nullptr);
+    SetRoot(csRef<csSpatialState>::Null());
   }
 
 
   return true;
 }
 
-void csEntity::RegisterEntityState(csEntityState *entityState)
+void csEntity::RegisterEntityState(csRef<csEntityState> &entityState)
 {
   if (!entityState)
   {
@@ -284,7 +291,7 @@ void csEntity::RegisterEntityState(csEntityState *entityState)
   }
 }
 
-void csEntity::DeregisterEntityState(csEntityState *entityState)
+void csEntity::DeregisterEntityState(csRef<csEntityState> &entityState)
 {
   if (!entityState)
   {
@@ -298,13 +305,12 @@ void csEntity::DeregisterEntityState(csEntityState *entityState)
       entityState->DetachFromWorld(m_world);
     }
 
-    entityState->Release();
     m_states.erase(it);
   }
 }
 
 
-void csEntity::SetRoot(csSpatialState *rootState)
+void csEntity::SetRoot(csRef<csSpatialState> &rootState)
 {
   bool replace = m_rootState != nullptr;
 
@@ -312,18 +318,18 @@ void csEntity::SetRoot(csSpatialState *rootState)
   {
     m_rootState->DetachSelf();
   }
-  CS_SET(m_rootState, rootState);
-  csSpatialState *parentRoot = GetAbsolutParentRoot();
+  m_rootState = rootState;
+  csRef<csSpatialState> &parentRoot = GetAbsolutParentRoot();
   if (parentRoot)
   {
-    parentRoot->AttachSpatial(m_rootState);
+    parentRoot->AttachSpatial(rootState);
   }
 
   if (replace && m_rootState)
   {
-    for (csEntity *child : m_children)
+    for (csRef<csEntity> &child : m_children)
     {
-      csSpatialState *childRoot = child->GetRoot();
+      csRef<csSpatialState> &childRoot = child->GetRoot();
       if (childRoot)
       {
         childRoot->DetachSelf();
@@ -334,17 +340,17 @@ void csEntity::SetRoot(csSpatialState *rootState)
 }
 
 
-csSpatialState *csEntity::GetRoot()
+csRef<csSpatialState> &csEntity::GetRoot()
 {
   return m_rootState;
 }
 
-const csSpatialState *csEntity::GetRoot() const
+const csRef<csSpatialState> &csEntity::GetRoot() const
 {
   return m_rootState;
 }
 
-csSpatialState *csEntity::GetAbsolutRoot()
+csRef<csSpatialState> &csEntity::GetAbsolutRoot()
 {
   csEntity *entity = this;
   while (entity)
@@ -353,14 +359,14 @@ csSpatialState *csEntity::GetAbsolutRoot()
     {
       return entity->m_rootState;
     }
-    entity = entity->GetParent();
+    entity = entity->GetParent().raw();
   }
-  return nullptr;
+  return csRef<csSpatialState>::Null();
 }
 
-csSpatialState *csEntity::GetAbsolutParentRoot()
+csRef<csSpatialState> &csEntity::GetAbsolutParentRoot()
 {
-  return m_parent ? m_parent->GetAbsolutRoot() : nullptr;
+  return m_parent ? m_parent->GetAbsolutRoot() : csRef<csSpatialState>::Null();
 }
 
 }

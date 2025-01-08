@@ -25,62 +25,59 @@ const std::string &csEntityState::GetName() const
   return m_name;
 }
 
-void csEntityState::SetEntity(csEntity *entity)
+void csEntityState::SetEntity(csRef<csEntity> &entity)
 {
   if (m_entity != entity)
   {
-    csEntity * oldEntity = m_entity;
+    csRef<csEntity> oldEntity = m_entity;
     m_entity = entity;
     
     UpdateEntity(oldEntity, m_entity);
-    
-    CS_ADDREF(m_entity);
-    CS_RELEASE(oldEntity);
   }
 }
 
-csEntity* csEntityState::GetEntity()
+csRef<csEntity> &csEntityState::GetEntity()
 {
   return m_entity;
 }
 
 
-csEntityState* csEntityState::GetState(const csClass* cls)
+csRef<csEntityState> &csEntityState::GetState(const csClass* cls)
 {
-  return m_entity ? m_entity->GetState(cls) : nullptr;
+  return m_entity ? m_entity->GetState(cls) : csRef<csEntityState>::Null();
 }
 
-const csEntityState* csEntityState::GetState(const csClass* cls) const
+const csRef<csEntityState> &csEntityState::GetState(const csClass* cls) const
 {
-  return m_entity ? static_cast<const csEntity*>(m_entity)->GetState(cls) : nullptr;
-}
-
-
-std::vector<csEntityState*> csEntityState::GetStates(const csClass* cls)
-{
-  return m_entity ? m_entity->GetStates(cls) : std::vector<csEntityState*>();
-}
-
-std::vector<const csEntityState*> csEntityState::GetStates(const csClass* cls) const
-{
-  return m_entity ? static_cast<const csEntity*>(m_entity)->GetStates(cls) : std::vector<const csEntityState*>();
+  return m_entity ? m_entity->GetState(cls) : csRef<csEntityState>::Null();
 }
 
 
-const csEntity* csEntityState::GetEntity() const
+std::vector<csRef<csEntityState>> csEntityState::GetStates(const csClass* cls)
+{
+  return m_entity ? m_entity->GetStates(cls) : std::vector<csRef<csEntityState>>();
+}
+
+//std::vector<const csRef<csEntityState>> csEntityState::GetStates(const csClass* cls) const
+//{
+//  return m_entity ? m_entity->GetStates(cls) : std::vector<const csRef<csEntityState>>();
+//}
+
+
+const csRef<csEntity> &csEntityState::GetEntity() const
 {
   return m_entity;
 }
 
-csSpatialState* csEntityState::GetRoot()
+csRef<csSpatialState> &csEntityState::GetRoot()
 {
-  return m_entity ? m_entity->GetRoot() : nullptr;
+  return m_entity ? m_entity->GetRoot() : csRef<csSpatialState>::Null();
 }
 
 
-const csSpatialState* csEntityState::GetRoot() const
+const csRef<csSpatialState> &csEntityState::GetRoot() const
 {
-  return m_entity ? m_entity->GetRoot() : nullptr;
+  return m_entity ? m_entity->GetRoot() : csRef<csSpatialState>::Null();
 }
 
 csWorld* csEntityState::GetWorld()
@@ -115,15 +112,16 @@ bool csEntityState::IsNeedUpdate() const
   return m_needUpdate;
 }
 
-void csEntityState::UpdateEntity(csEntity *oldEntity, csEntity *newEntity)
+void csEntityState::UpdateEntity(csRef<csEntity> &oldEntity, csRef<csEntity> &newEntity)
 {
+  csRef<csEntityState> thisState(this);
   if (oldEntity)
   {
-    oldEntity->DeregisterEntityState(this);
+    oldEntity->DeregisterEntityState(thisState);
   }
   if (newEntity)
   {
-    newEntity->RegisterEntityState(this);
+    newEntity->RegisterEntityState(thisState);
   }
 }
 
