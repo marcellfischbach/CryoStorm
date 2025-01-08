@@ -3,8 +3,9 @@
 
 #include <csCore/csCoreExport.hh>
 #include <csCore/csClass.hh>
+#include <csCore/resource/csAssetLoader.hh>
 #include <csCore/resource/iAssetLoader.hh>
-#include <csCore/resource/iAssetLoader.hh>
+#include <csCore/csRef.hh>
 #include <map>
 #include <vector>
 #include <string>
@@ -21,7 +22,7 @@ public:
   static csAssetManager *Get();
 
   void RegisterLoader(iAssetLoader *loader);
-
+  void RegisterLoader(csAssetLoader* loader);
 
   template<typename T>
   T *Get(const std::string &locator)
@@ -60,11 +61,28 @@ public:
     return Load(cls, csResourceLocator(locator));
   }
 
+
+  csRef<iObject> Load(const csResourceLocator& locator);
+
+  template<typename T>
+  csRef<T> LoadType(const csResourceLocator& locator)
+  {
+    csRef<iObject> obj = Load(locator);
+    if (!obj)
+    {
+      return csRef<T>::Null();
+    }
+    return csRef<T>(obj.raw()->Query<T>());
+  }
+
 protected:
   csAssetManager();
 
 
   std::vector<iAssetLoader *> m_loaders;
+
+  std::vector<csAssetLoader* > m_assetLoaders;
+  std::vector<std::string> m_knownExtensions;
 
   std::map<csResourceLocator, iObject*> m_cachedObjects;
 

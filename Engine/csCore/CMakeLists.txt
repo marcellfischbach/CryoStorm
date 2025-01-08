@@ -245,6 +245,8 @@ set(SOURCES
         physics/iPhysicsSystem.hh
         physics/iPhysicsWorld.hh
 
+        resource/csAssetLoader.cc
+        resource/csAssetLoader.hh
         resource/csAssetManager.cc
         resource/csAssetManager.hh
         resource/csBaseCSFAssetLoader.cc

@@ -37,6 +37,27 @@ void csAssetManager::RegisterLoader(iAssetLoader *loader)
 }
 
 
+
+void csAssetManager::RegisterLoader(csAssetLoader* loader)
+{
+  const std::vector<csAssetLoader::FileFormat> &formats = loader->GetFormats();
+  for (auto const& fmt : formats)
+  {
+    if (std::find(m_knownExtensions.begin(), m_knownExtensions.end(), fmt.Extension) != m_knownExtensions.end())
+    {
+      throw DuplicateResourceException("Extension " + fmt.Extension + " is already registered.");
+    }
+  }
+  for (auto const& fmt : formats)
+  {
+    m_knownExtensions.push_back(fmt.Extension);
+  }
+
+  m_assetLoaders.push_back(loader);
+}
+
+
+
 iObject *csAssetManager::Get(const csClass *cls, const csResourceLocator &locator)
 {
   auto it = m_cachedObjects.find(locator);
