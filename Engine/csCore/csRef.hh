@@ -13,13 +13,7 @@ template<typename T>
 class csRef
 {
 public:
-  static csRef& Null()
-  {
-    static csRef ref;
-    return ref;
-  }
-
-  static const csRef& ConstNull()
+  static csRef &Null()
   {
     static csRef ref;
     return ref;
@@ -40,13 +34,13 @@ public:
     }
   }
 
-  csRef(csRef& other)
-    : m_ptr(nullptr)
+  csRef(csRef &other)
+      : m_ptr(nullptr)
   {
     m_ptr = other.m_ptr;
     if (m_ptr)
     {
-      reinterpret_cast<iObject*>(m_ptr)->AddRef();
+      reinterpret_cast<iObject *>(m_ptr)->AddRef();
     }
   }
 
@@ -105,7 +99,7 @@ public:
     }
     if (m_ptr)
     {
-      reinterpret_cast<iObject*>(m_ptr)->Release();
+      reinterpret_cast<iObject *>(m_ptr)->Release();
     }
     m_ptr = t;
     return *this;
@@ -126,38 +120,38 @@ public:
   {
     if (this != &ref)
     {
-      void *t = const_cast<void *>(reinterpret_cast<const void*>(ref.raw()));
+      void *t = const_cast<void *>(reinterpret_cast<const void *>(ref.raw()));
       if (t)
       {
-        reinterpret_cast<iObject*>(t)->AddRef();
+        reinterpret_cast<iObject *>(t)->AddRef();
       }
       if (m_ptr)
       {
-        reinterpret_cast<iObject*>(m_ptr)->Release();
+        reinterpret_cast<iObject *>(m_ptr)->Release();
       }
-      m_ptr = reinterpret_cast<T*>(t);
+      m_ptr = reinterpret_cast<T *>(t);
     }
     return *this;
   }
 
   T *operator->()
   {
-    return reinterpret_cast<T*>(m_ptr);
+    return reinterpret_cast<T *>(m_ptr);
   }
 
   const T *operator->() const
   {
-    return reinterpret_cast<const T*>(m_ptr);
+    return reinterpret_cast<const T *>(m_ptr);
   }
 
   T &operator*()
   {
-    return *reinterpret_cast<T*>(m_ptr);
+    return *reinterpret_cast<T *>(m_ptr);
   }
 
   const T &operator*() const
   {
-    return *reinterpret_cast<const T*>(m_ptr);
+    return *reinterpret_cast<const T *>(m_ptr);
   }
 
   operator bool() const
@@ -165,38 +159,38 @@ public:
     return m_ptr != nullptr;
   }
 
-  bool operator==(const csRef& ref) const
+  bool operator==(const csRef &ref) const
   {
     return m_ptr == ref.m_ptr;
   }
 
-  bool operator==(const T* ptr) const
+  bool operator==(const T *ptr) const
   {
     return m_ptr == ptr;
   }
 
   T *raw()
   {
-    return reinterpret_cast<T*>(m_ptr);
+    return reinterpret_cast<T *>(m_ptr);
   }
 
   [[maybe_unused]] const T *raw() const
   {
-    return reinterpret_cast<const T*>(m_ptr);
+    return reinterpret_cast<const T *>(m_ptr);
   }
 
   template<typename O>
-  operator csRef<O>& ()
+  operator csRef<O> &()
   {
-    static_cast<O*> (m_ptr);
-    return *reinterpret_cast<csRef<O>*>(this);
+    static_cast<O *> (m_ptr);
+    return *reinterpret_cast<csRef<O> *>(this);
   }
 
   template<typename O>
-  operator const csRef<O>& () const
+  operator const csRef<O> &() const
   {
-    static_cast<O*> (m_ptr);
-    return *reinterpret_cast<const csRef<O>*>(this);
+    static_cast<O *> (m_ptr);
+    return *reinterpret_cast<const csRef<O> *>(this);
   }
 
 private:
@@ -213,6 +207,15 @@ public:
       : m_ptr(nullptr)
   {
 
+  }
+
+  csRes(csRef<T> &other)
+      : m_ptr(other.raw())
+  {
+    if (m_ptr)
+    {
+      reinterpret_cast<iResource *>(m_ptr)->AddRef();
+    }
   }
 
   csRes(T *t)
@@ -270,6 +273,16 @@ public:
     }
   }
 
+  operator csRef<T>()
+  {
+    return csRef<T>(m_ptr);
+  }
+
+  operator const csRef<T>() const
+  {
+    return csRef<T>(m_ptr);
+  }
+
 
   csRes &operator=(T *t)
   {
@@ -279,7 +292,7 @@ public:
     }
     if (m_ptr)
     {
-      reinterpret_cast<iResource*>(m_ptr)->Release();
+      reinterpret_cast<iResource *>(m_ptr)->Release();
     }
     m_ptr = t;
     return *this;
@@ -303,13 +316,13 @@ public:
       void *t = ref.raw();
       if (t)
       {
-        reinterpret_cast<iResource*>(t)->AddRef();
+        reinterpret_cast<iResource *>(t)->AddRef();
       }
       if (m_ptr)
       {
-        reinterpret_cast<iResource*>(m_ptr)->Release();
+        reinterpret_cast<iResource *>(m_ptr)->Release();
       }
-      m_ptr = reinterpret_cast<T*>(t);
+      m_ptr = reinterpret_cast<T *>(t);
     }
     return *this;
   }
@@ -321,13 +334,13 @@ public:
       void *t = const_cast<T *>(ref.raw());
       if (t)
       {
-        reinterpret_cast<iResource*>(t)->AddRef();
+        reinterpret_cast<iResource *>(t)->AddRef();
       }
       if (m_ptr)
       {
-        reinterpret_cast<iResource*>(m_ptr)->Release();
+        reinterpret_cast<iResource *>(m_ptr)->Release();
       }
-      m_ptr = reinterpret_cast<T*>(t);
+      m_ptr = reinterpret_cast<T *>(t);
     }
     return *this;
   }
@@ -335,25 +348,25 @@ public:
   T *operator->()
   {
     validate();
-    return reinterpret_cast<T*>(m_ptr);
+    return reinterpret_cast<T *>(m_ptr);
   }
 
   const T *operator->() const
   {
     validate();
-    return reinterpret_cast<const T*>(m_ptr);
+    return reinterpret_cast<const T *>(m_ptr);
   }
 
   T &operator*()
   {
     validate();
-    return *reinterpret_cast<T*>(m_ptr);
+    return *reinterpret_cast<T *>(m_ptr);
   }
 
   const T &operator*() const
   {
     validate();
-    return *reinterpret_cast<const T*>(m_ptr);
+    return *reinterpret_cast<const T *>(m_ptr);
   }
 
   operator bool() const
@@ -361,7 +374,7 @@ public:
     return m_ptr != nullptr;
   }
 
-  bool operator==(const csRes& res) const
+  bool operator==(const csRes &res) const
   {
     return m_ptr == res.m_ptr;
   }
@@ -369,45 +382,45 @@ public:
   T *raw()
   {
     validate();
-    return reinterpret_cast<T*>(m_ptr);
+    return reinterpret_cast<T *>(m_ptr);
   }
 
   [[maybe_unused]] const T *raw() const
   {
     validate();
-    return reinterpret_cast<const T*>(m_ptr);
+    return reinterpret_cast<const T *>(m_ptr);
   }
 
   template<typename O>
-  operator csRes<O>& ()
+  operator csRes<O> &()
   {
-    static_cast<O*> (m_ptr);
-    return *reinterpret_cast<csRes<O>*>(this);
+    static_cast<O *> (m_ptr);
+    return *reinterpret_cast<csRes<O> *>(this);
   }
 
   template<typename O>
-  operator const csRes<O>& () const
+  operator const csRes<O> &() const
   {
-    static_cast<O*> (m_ptr);
-    return *reinterpret_cast<const csRes<O>*>(this);
+    static_cast<O *> (m_ptr);
+    return *reinterpret_cast<const csRes<O> *>(this);
   }
 
 private:
 
-  CS_FORCEINLINE void validate () const
+  CS_FORCEINLINE void validate() const
   {
-    if (m_ptr && !reinterpret_cast<iResource*>(m_ptr)->IsValid())
+    if (m_ptr && !reinterpret_cast<iResource *>(m_ptr)->IsValid())
     {
-      iResource* t = csResourcePool::Instance().Get(reinterpret_cast<iResource*>(m_ptr)->GetLocator());
+      iResource *t = csResourcePool::Instance().Get(reinterpret_cast<iResource *>(m_ptr)->GetLocator());
       if (t)
       {
         t->AddRef();
       }
       if (m_ptr)
       {
-        reinterpret_cast<iResource*>(m_ptr)->Release();
+        reinterpret_cast<iResource *>(m_ptr)->Release();
       }
-      m_ptr = reinterpret_cast<T*>(t);
+      m_ptr = reinterpret_cast<T *>(t);
     }
   }
 

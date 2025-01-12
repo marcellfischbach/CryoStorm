@@ -262,8 +262,12 @@ set(SOURCES
         resource/csResourcePool.cc
         resource/csResourcePool.hh
         resource/csResourceExceptions.hh
+        resource/csResourceLoader.cc
+        resource/csResourceLoader.hh
         resource/csResourceLocator.cc
         resource/csResourceLocator.hh
+        resource/csResourceManager.cc
+        resource/csResourceManager.hh
         resource/csTextFile.cc
         resource/csTextFile.hh
         resource/csVFS.cc
