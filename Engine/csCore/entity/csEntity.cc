@@ -75,7 +75,7 @@ bool csEntity::AttachEntity(cs::csEntity *entity, csSpatialState *parentState)
   {
     return false;
   }
-  if (entity->GetParent() || std::ranges::find(m_children.begin(), m_children.end(), entity) != m_children.end())
+  if (entity->GetParent() || std::find(m_children.begin(), m_children.end(), entity) != m_children.end())
   {
     return false;
   }
@@ -110,7 +110,7 @@ bool csEntity::DetachEntity(cs::csEntity *entity)
   {
     return false;
   }
-  auto it = std::ranges::find(m_children.begin(), m_children.end(), entity);
+  auto it = std::find(m_children.begin(), m_children.end(), entity);
   if (it == m_children.end())
   {
     return false;
@@ -134,7 +134,7 @@ csEntity *csEntity::GetParent()
   return m_parent;
 }
 
-const const csEntity *csEntity::GetParent() const
+const csEntity *csEntity::GetParent() const
 {
   return m_parent;
 }
@@ -187,18 +187,18 @@ csEntityState *csEntity::GetState(const csClass *cls)
 }
 
 //
-//std::vector<const csRef<csEntityState>> csEntity::GetStates(const csClass *cls) const
-//{
-//  std::vector<const csRef<csEntityState>> result;
-//  for (auto                          state: m_states)
-//  {
-//    if (cls->IsAssignableFrom(state->GetClass()))
-//    {
-//      result.push_back(state);
-//    }
-//  }
-//  return result;
-//}
+std::vector<const csEntityState*> csEntity::GetStates(const csClass *cls) const
+{
+  std::vector<const csEntityState*> result;
+  for (auto                          state: m_states)
+  {
+    if (cls->IsAssignableFrom(state->GetClass()))
+    {
+      result.push_back(state);
+    }
+  }
+  return result;
+}
 
 std::vector<csEntityState *> csEntity::GetStates(const csClass *cls)
 {
@@ -224,7 +224,7 @@ bool csEntity::AttachState(cs::csEntityState *entityState)
     return false;
   }
 
-  if (std::ranges::find(m_states.begin(), m_states.end(), entityState) != m_states.end())
+  if (std::find(m_states.begin(), m_states.end(), entityState) != m_states.end())
   {
     return false;
   }
@@ -252,7 +252,7 @@ bool csEntity::DetachState(cs::csEntityState *entityState)
   {
     return false;
   }
-  auto it = std::ranges::find(m_states.begin(), m_states.end(), entityState);
+  auto it = std::find(m_states.begin(), m_states.end(), entityState);
   if (it == m_states.end())
   {
     return false;
@@ -277,7 +277,7 @@ void csEntity::RegisterEntityState(csEntityState *entityState)
   {
     return;
   }
-  auto it = std::ranges::find(m_states.begin(), m_states.end(), entityState);
+  auto it = std::find(m_states.begin(), m_states.end(), entityState);
   if (it == m_states.end())
   {
     entityState->AddRef();
@@ -295,7 +295,7 @@ void csEntity::DeregisterEntityState(csEntityState *entityState)
   {
     return;
   }
-  auto it = std::ranges::find(m_states.begin(), m_states.end(), entityState);
+  auto it = std::find(m_states.begin(), m_states.end(), entityState);
   if (it != m_states.end())
   {
     if (m_world)

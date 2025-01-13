@@ -294,7 +294,7 @@ csGL4ShaderLoader::csGL4ShaderLoader()
 
 
 
-csAssetRef<iAsset> csGL4ShaderLoader::Load(const csAssetLocator & locator) const
+iAsset *csGL4ShaderLoader::Load(const csAssetLocator & locator) const
 {
   iFile *file = csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (!file)

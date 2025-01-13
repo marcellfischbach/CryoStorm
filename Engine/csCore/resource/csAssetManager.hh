@@ -24,42 +24,42 @@ public:
   void RegisterLoader(csAssetLoader* loader);
 
   template<typename T>
-  csAssetRef<T> Get(const std::string &locator)
+  T *Get(const std::string &locator)
   {
-    csAssetRef<iAsset> res = Get(csAssetLocator(locator));
-    return res ? csAssetRef<T>(res->Query<T>()) : csAssetRef<T>::Null();
+    iAsset *res = Get(csAssetLocator(locator));
+    return res ? res->Query<T>() : nullptr;
   }
   template<typename T>
-  csAssetRef<T> Get(const csAssetLocator &locator)
+  T *Get(const csAssetLocator &locator)
   {
-    csAssetRef<iAsset> res = Get(locator);
-    return res ? csAssetRef<T>(res->Query<T>()) : csAssetRef<T>::Null();
+    iAsset *res = Get(locator);
+    return res ? res->Query<T>() : nullptr;
   }
-  csAssetRef<iAsset> Get(const std::string &locator)
+  iAsset *Get(const std::string &locator)
   {
     return Get(csAssetLocator(locator));
   }
-  csAssetRef<iAsset> Get(const csAssetLocator &locator);
+  iAsset *Get(const csAssetLocator &locator);
 
   template<typename T>
-  csAssetRef<T> Load(const std::string &locator)
+  T *Load(const std::string &locator)
   {
-    csAssetRef<iAsset> res = Load(csAssetLocator(locator));
-    return res ? csAssetRef<T>(res->Query<T>()) : csAssetRef<T>::Null();
+    iAsset *res = Load(csAssetLocator(locator));
+    return res ? res->Query<T>() : nullptr;
   }
   template<typename T>
-  csAssetRef<T> Load(const csAssetLocator &locator)
+  T *Load(const csAssetLocator &locator)
   {
-    csAssetRef<iAsset> res = Load(locator);
-    return res ? csAssetRef<T>(res->Query<T>()) : csAssetRef<T>::Null();
+    iAsset *res = Load(locator);
+    return res ? res->Query<T>() : nullptr;
   }
-  csAssetRef<iAsset> Load(const std::string &locator)
+  iAsset *Load(const std::string &locator)
   {
     return Load(csAssetLocator(locator));
   }
 
 
-  csAssetRef<iAsset> Load(const csAssetLocator &locator);
+  iAsset *Load(const csAssetLocator &locator);
 
 protected:
   csAssetManager();

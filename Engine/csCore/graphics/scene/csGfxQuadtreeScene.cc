@@ -58,7 +58,7 @@ struct csGfxQuadtreeScene::Cell
   bool ContainsShaded(csGfxMesh *mesh);
   bool ContainsUnshaded(csGfxMesh *mesh);
 
-  MaterialCompound& GetShadedCompound(csAssetRef<iMaterial> & material);
+  MaterialCompound& GetShadedCompound(iMaterial *material);
 
 
   CS_NODISCARD size_t Idx(const csVector3f &v) const;
@@ -519,7 +519,7 @@ void csGfxQuadtreeScene::Cell::Decimate()
   // reduce the cell hierarchy;
 }
 
-MaterialCompound &csGfxQuadtreeScene::Cell::GetShadedCompound(csAssetRef<iMaterial> &material)
+MaterialCompound &csGfxQuadtreeScene::Cell::GetShadedCompound(iMaterial *material)
 {
   for (auto &materialCompound: m_shadedCompound)
   {

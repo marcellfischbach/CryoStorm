@@ -85,7 +85,7 @@ eCompareFunc CompareFunc(const std::string& compareFunc)
   return eCF_Always;
 }
 
-csAssetRef<iAsset> csSamplerLoader::Load(const csCryoFile *file, const csAssetLocator &locator) const
+iAsset *csSamplerLoader::Load(const csCryoFile *file, const csAssetLocator &locator) const
 {
   const csCryoFileElement * samplerElement = file->Root()->GetChild("sampler");
   if (!samplerElement)
@@ -105,7 +105,7 @@ csAssetRef<iAsset> csSamplerLoader::Load(const csCryoFile *file, const csAssetLo
   eCompareFunc compareFunc = CompareFunc(samplerElement->GetAttribute("textureCompareFunc", ""));
 
 
-  csAssetRef<iSampler> sampler = csObjectRegistry::Get<iDevice>()->CreateSampler();
+  iSampler *sampler = csObjectRegistry::Get<iDevice>()->CreateSampler();
   if (sampler)
   {
     sampler->SetFilterMode(filter);

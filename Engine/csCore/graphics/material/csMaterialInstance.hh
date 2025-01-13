@@ -31,7 +31,7 @@ public:
   ~csMaterialInstance() override;
 
   CS_FUNCTION(jenum)
-  csAssetRef<const cs::iShader> &GetShader(cs::eRenderPass pass) const override;
+  const cs::iShader *GetShader(cs::eRenderPass pass) const override;
 
   CS_FUNCTION(jenum)
   cs::eFillMode GetFillMode() const override;
@@ -45,10 +45,10 @@ public:
 
 
   CS_FUNCTION()
-  void SetMaterial(csAssetRef<cs::csMaterial> &material);
+  void SetMaterial(cs::csMaterial *material);
   CS_FUNCTION()
-  csAssetRef<cs::csMaterial> &GetMaterial();
-  csAssetRef<const csMaterial> &GetMaterial() const;
+  cs::csMaterial *GetMaterial();
+  const cs::csMaterial *GetMaterial() const;
 
   CS_FUNCTION()
   size_t IndexOf(const std::string &attributeName) override;
@@ -68,7 +68,7 @@ public:
   void SetMatrix3f(size_t idx, const cs::csMatrix3f &m) override;
   void SetMatrix4f(size_t idx, const cs::csMatrix4f &m) override;
   CS_FUNCTION()
-  void SetTexture(size_t idx, csAssetRef<cs::iTexture> &texture) override;
+  void SetTexture(size_t idx, cs::iTexture *texture) override;
 
   CS_FUNCTION()
   bool IsOverridden(size_t idx) const;

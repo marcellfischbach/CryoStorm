@@ -53,18 +53,18 @@ bool csMaterialInstance::Bind(iDevice* device, eRenderPass pass)
   return true;
 }
 
-void csMaterialInstance::SetMaterial(csAssetRef<csMaterial> &material)
+void csMaterialInstance::SetMaterial(csMaterial *material)
 {
   m_material = material;
   RebuildAttributes();
 }
 
-csAssetRef<csMaterial> &csMaterialInstance::GetMaterial()
+csMaterial *csMaterialInstance::GetMaterial()
 {
   return m_material;
 }
 
-const csAssetRef<csMaterial> &csMaterialInstance::GetMaterial() const
+const csMaterial *csMaterialInstance::GetMaterial() const
 {
   return m_material;
 }
@@ -74,7 +74,6 @@ Size csMaterialInstance::IndexOf(const std::string& attributeName)
 {
   return m_material ? m_material->IndexOf(attributeName) : csMaterial::UndefinedIndex;
 }
-
 
 
 void csMaterialInstance::SetFloat(size_t idx, float value)
@@ -178,7 +177,7 @@ void csMaterialInstance::SetMatrix4f(size_t idx, const cs::csMatrix4f &m)
   memcpy(attr.Floats.data(), &m, sizeof(float) * 16);
 }
 
-void csMaterialInstance::SetTexture(size_t idx, csAssetRef<cs::iTexture> &texture)
+void csMaterialInstance::SetTexture(size_t idx, cs::iTexture *texture)
 {
   if (idx >= m_attributes.size())
   {
@@ -187,7 +186,6 @@ void csMaterialInstance::SetTexture(size_t idx, csAssetRef<cs::iTexture> &textur
   Attribute& attr = m_attributes[idx];
   attr.Override = true;
   attr.Texture = texture;
-
 }
 
 bool csMaterialInstance::IsOverridden(Size idx) const
@@ -226,9 +224,9 @@ void csMaterialInstance::RebuildAttributes()
 }
 
 
-const csAssetRef<iShader>  &csMaterialInstance::GetShader(eRenderPass pass) const
+const iShader *csMaterialInstance::GetShader(eRenderPass pass) const
 {
-  return m_material ? m_material->GetShader(pass) : csAssetRef<iShader>::Null();
+  return m_material ? m_material->GetShader(pass) : nullptr;
 }
 
 eFillMode csMaterialInstance::GetFillMode() const

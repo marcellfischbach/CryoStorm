@@ -26,7 +26,7 @@ public:
   csTextureLoader();
   virtual ~csTextureLoader() override = default;
 
-  csAssetRef<iAsset> Load(const csCryoFile *file, const csAssetLocator &locator) const override;
+  iAsset *Load(const csCryoFile *file, const csAssetLocator &locator) const override;
 
 private:
 

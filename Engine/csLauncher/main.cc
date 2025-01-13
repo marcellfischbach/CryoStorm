@@ -120,58 +120,10 @@ struct derive_c_t : public virtual derive_b_t
 
 
 
-void do_something(const csRef<iFile> &file)
-{
-  if (file)
-  {
-    std::string name = file->GetName();
-    printf("Open file: \"%s\"\n", name.c_str());
-  }
-  else
-  {
-    printf ("file is null\n");
-  }
-}
-
-void do_something_by_value (csRef<iFile> file)
-{
-  if (file)
-  {
-    std::string name = file->GetName();
-    printf("Open file: \"%s\"\n", name.c_str());
-  }
-  else
-  {
-    printf ("file is null\n");
-  }
-
-}
-
 
 int main(int argc, char **argv)
 {
 
-  csRef<csFileSystemFile>  file;
-
-  csFileSystemFile* filePtr = new csFileSystemFile("This is a file");
-  file = filePtr;
-
-  printf("Size csRef<file>: %d\n", sizeof(file));
-  printf("Size file ptr: %d\n", sizeof(filePtr));
-
-
-  do_something(file);
-  do_something(csRef<iFile>());
-  do_something_by_value(file);
-  do_something_by_value(csRef<iFile>());
-  printf("call done\n");
-  if (true)
-  {
-    csRef <iFile> ifile = file;
-
-    printf("call\n");
-    return 0;
-  }
   std::vector<std::string> args;
   for (int i = 0; i < argc; i++)
   {

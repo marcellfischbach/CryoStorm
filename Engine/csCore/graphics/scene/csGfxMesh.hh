@@ -46,9 +46,9 @@ public:
   void SetCastShadow(bool castShadow);
   CS_NODISCARD bool IsCastShadow() const;
 
-  void SetMaterial(csAssetRef<iMaterial> &material);
-  CS_NODISCARD csAssetRef<iMaterial> &GetMaterial();
-  CS_NODISCARD csAssetRef<const iMaterial> &GetMaterial() const;
+  void SetMaterial(iMaterial *material);
+  CS_NODISCARD iMaterial *GetMaterial();
+  CS_NODISCARD const iMaterial *GetMaterial() const;
 
   void SetMesh(iRenderMesh *mesh);
   iRenderMesh *GetMesh();

@@ -18,7 +18,7 @@ csMaterialLoader::csMaterialLoader()
   RegisterType("MATINSTANCE");
 }
 
-csAssetRef<iAsset> csMaterialLoader::Load(const csCryoFile *file, const csAssetLocator &locator) const
+iAsset *csMaterialLoader::Load(const csCryoFile *file, const csAssetLocator &locator) const
 {
   if (file->Root()->HasChild("material"))
   {

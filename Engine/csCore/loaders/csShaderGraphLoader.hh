@@ -22,7 +22,7 @@ public:
   csShaderGraphLoader();
   ~csShaderGraphLoader() override = default;
 
-  csAssetRef<iAsset> Load(const csCryoFile *file, const csAssetLocator &locator) const override;
+  iAsset *Load(const csCryoFile *file, const csAssetLocator &locator) const override;
 
 private:
   void LoadQueue(const csCryoFileElement * shaderGraphElement, csShaderGraph * sg) const;

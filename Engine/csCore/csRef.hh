@@ -13,12 +13,6 @@ template<typename T>
 class csRef
 {
 public:
-  static csRef &Null()
-  {
-    static csRef ref;
-    return ref;
-  }
-
 
   csRef(T *t = nullptr)
       : m_ptr(t)
@@ -29,15 +23,15 @@ public:
     }
   }
 
-//  csRef(csRef &other)
-//      : m_ptr(nullptr)
-//  {
-//    m_ptr = other.m_ptr;
-//    if (m_ptr)
-//    {
-//      reinterpret_cast<iObject *>(m_ptr)->AddRef();
-//    }
-//  }
+  csRef(const csRef &other)
+      : m_ptr(nullptr)
+  {
+    m_ptr = other.m_ptr;
+    if (m_ptr)
+    {
+      reinterpret_cast<iObject *>(m_ptr)->AddRef();
+    }
+  }
 //
 //  csRef(const csRef &other)
 //      : m_ptr(nullptr)
@@ -156,10 +150,10 @@ public:
 //    return m_ptr == ref.m_ptr;
 //  }
 
-  bool operator==(const T *ptr) const
-  {
-    return m_ptr == ptr;
-  }
+//  bool operator==(const T *ptr) const
+//  {
+//    return m_ptr == ptr;
+//  }
 
 //  bool operator!=(const T *ptr) const
 //  {
@@ -226,40 +220,40 @@ public:
       reinterpret_cast<const iAsset *>(m_ptr)->AddRef();
     }
   }
-
-
-  csAssetRef(const csRef<T> &other)
-      : m_ptr(other.raw())
-  {
-    if (m_ptr)
-    {
-      reinterpret_cast<const iAsset *>(m_ptr)->AddRef();
-    }
-  }
-
-
-  csAssetRef(csAssetRef &&other) noexcept
-      : m_ptr(other.m_ptr)
-  {
-    other.m_ptr = nullptr;
-  }
-
-  template<typename O>
-  csAssetRef(const csAssetRef<O> &other)
-      : m_ptr(other.raw())
-  {
-    if (m_ptr)
-    {
-      reinterpret_cast<const iAsset *>(m_ptr)->AddRef();
-    }
-  }
-
-  template<typename O>
-  csAssetRef(csAssetRef<O> &&other) noexcept
-      : m_ptr(other.m_ptr)
-  {
-    other.m_ptr = nullptr;
-  }
+//
+//
+//  csAssetRef(const csRef<T> &other)
+//      : m_ptr(other.raw())
+//  {
+//    if (m_ptr)
+//    {
+//      reinterpret_cast<const iAsset *>(m_ptr)->AddRef();
+//    }
+//  }
+//
+//
+//  csAssetRef(csAssetRef &&other) noexcept
+//      : m_ptr(other.m_ptr)
+//  {
+//    other.m_ptr = nullptr;
+//  }
+//
+//  template<typename O>
+//  csAssetRef(const csAssetRef<O> &other)
+//      : m_ptr(other.raw())
+//  {
+//    if (m_ptr)
+//    {
+//      reinterpret_cast<const iAsset *>(m_ptr)->AddRef();
+//    }
+//  }
+//
+//  template<typename O>
+//  csAssetRef(csAssetRef<O> &&other) noexcept
+//      : m_ptr(other.m_ptr)
+//  {
+//    other.m_ptr = nullptr;
+//  }
 
 
   ~csAssetRef()
@@ -272,10 +266,10 @@ public:
     }
   }
 
-  operator csRef<T>()
-  {
-    return csRef<T>(m_ptr);
-  }
+//  operator csRef<T>()
+//  {
+//    return csRef<T>(m_ptr);
+//  }
 
 
   csAssetRef &operator=(T *t)
@@ -293,41 +287,40 @@ public:
   }
 
 
-  csAssetRef &operator=(csAssetRef &&ref) noexcept
-  {
-    if (this != &ref)
-    {
-      m_ptr = ref.raw();
-      ref.m_ptr = nullptr;
-    }
-    return *this;
-  }
+//  csAssetRef &operator=(csAssetRef &&ref) noexcept
+//  {
+//    if (this != &ref)
+//    {
+//      m_ptr = ref.raw();
+//      ref.m_ptr = nullptr;
+//    }
+//    return *this;
+//  }
+//
+//  csAssetRef &operator=(const csAssetRef &ref)
+//  {
+//    if (this != &ref)
+//    {
+//      const void *t = ref.raw();
+//      if (t)
+//      {
+//        reinterpret_cast<const iAsset *>(t)->AddRef();
+//      }
+//      if (m_ptr)
+//      {
+//        reinterpret_cast<const iAsset *>(m_ptr)->Release();
+//      }
+//      m_ptr = reinterpret_cast<T *>(const_cast<void *>(t));
+//    }
+//    return *this;
+//  }
 
-  csAssetRef &operator=(const csAssetRef &ref)
-  {
-    if (this != &ref)
-    {
-      const void *t = ref.raw();
-      if (t)
-      {
-        reinterpret_cast<const iAsset *>(t)->AddRef();
-      }
-      if (m_ptr)
-      {
-        reinterpret_cast<const iAsset *>(m_ptr)->Release();
-      }
-      m_ptr = reinterpret_cast<T *>(const_cast<void *>(t));
-    }
-    return *this;
-  }
 
-
-  T *operator->()
+  T *operator->() const
   {
     validate();
     return reinterpret_cast<T *>(m_ptr);
   }
-
 
   T &operator*()
   {
@@ -335,15 +328,25 @@ public:
     return *reinterpret_cast<T *>(m_ptr);
   }
 
+  const T &operator*() const
+  {
+    validate();
+    return *reinterpret_cast<const T *>(m_ptr);
+  }
 
   operator bool() const
   {
     return m_ptr != nullptr;
   }
 
-  bool operator==(const csAssetRef &res) const
+//  bool operator==(const T* t) const
+//  {
+//    return m_ptr == t;
+//  }
+
+  operator T *() const
   {
-    return m_ptr == res.m_ptr;
+    return m_ptr;
   }
 
 
@@ -353,20 +356,20 @@ public:
     return reinterpret_cast<T *>(m_ptr);
   }
 
-  template<typename O>
-  operator csAssetRef<O> &()
-  {
-    static_cast<O *> (m_ptr);
-    return *reinterpret_cast<csAssetRef<O> *>(this);
-  }
-
-  //
-  // type conversion from 'const csAssetRef<T>&' -> 'csAssetRef<const T>&'. This is safe to do because
-  // the inner const is much more restrictive than the outer const because the csAs
-  operator csAssetRef<const T> &() const
-  {
-    return *reinterpret_cast<csAssetRef<const T> *>(const_cast<csAssetRef *>(this));
-  }
+//  template<typename O>
+//  operator csAssetRef<O> &()
+//  {
+//    static_cast<O *> (m_ptr);
+//    return *reinterpret_cast<csAssetRef<O> *>(this);
+//  }
+//
+//  //
+//  // type conversion from 'const csAssetRef<T>&' -> 'csAssetRef<const T>&'. This is safe to do because
+//  // the inner const is much more restrictive than the outer const because the csAs
+//  operator csAssetRef<const T> &() const
+//  {
+//    return *reinterpret_cast<csAssetRef<const T> *>(const_cast<csAssetRef *>(this));
+//  }
 
 private:
 

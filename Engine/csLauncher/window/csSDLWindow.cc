@@ -15,50 +15,7 @@ namespace cs::launcher
 
 
 
-void csSDLWindow::do_something_raw (csEntity* entity)
-{
-  if (entity)
-  {
-    printf("Do something: \"%s\"\n", entity->GetName().c_str());
-  }
-  else
-  {
-    printf ("Do someting: Entity is null\n");
-  }
-}
 
-void csSDLWindow::do_something_ref (csRef<csEntity> &entity)
-{
-  if (entity)
-  {
-    printf("Do something: \"%s\"\n", entity->GetName().c_str());
-  }
-  else
-  {
-    printf ("Do someting: Entity is null\n");
-  }
-}
-
-void csSDLWindow::do_something_value (csRef<csEntity> entity)
-{
-  if (entity)
-  {
-    printf("Do something: \"%s\"\n", entity->GetName().c_str());
-  }
-  else
-  {
-    printf ("Do someting: Entity is null\n");
-  }
-}
-
-csSDLWindow::csSDLWindow()
-{
-  csRef<csEntity> entity = new csEntity("Name");
-  do_something_raw(entity.raw());
-  do_something_ref(entity);
-  do_something_value(entity);
-  fflush(stdout);
-}
 
 csSDLWindow::~csSDLWindow()
 {

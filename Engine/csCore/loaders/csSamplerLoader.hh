@@ -19,7 +19,7 @@ public:
 
 
 protected:
-  csAssetRef<iAsset> Load(const csCryoFile *file, const csAssetLocator &locator) const override ;
+  iAsset *Load(const csCryoFile *file, const csAssetLocator &locator) const override ;
 
 };
 

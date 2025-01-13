@@ -28,7 +28,7 @@ class csSDLWindow : public CS_SUPER(iWindow)
 CS_CLASS_GEN_OBJECT;
 
 public:
-  csSDLWindow();
+  csSDLWindow() = default;
   ~csSDLWindow() override;
 
   bool Initialize (bool compat);
@@ -55,10 +55,6 @@ public:
   csSDLMouse* GetMouse();
 
 private:
-
-  void do_something_raw (csEntity* entity);
-  void do_something_ref (csRef<csEntity> &entity);
-  void do_something_value (csRef<csEntity> entity);
 
 
   SDL_Window *m_window = nullptr;

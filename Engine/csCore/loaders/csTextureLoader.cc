@@ -17,13 +17,14 @@ namespace cs
 
 csTextureLoader::csTextureLoader()
 {
-  AddValidFile<iTexture2D>("TEX2D");
-  AddValidFile<iTexture2DArray>("TEX2DARRAY");
-  AddValidFile<iTextureCube>("TEXCUBE");
+  RegisterType("TEX2D");
+  RegisterType("TEX2DARRAY");
+  RegisterType("TEXCUBE");
+
 }
 
 
-csAssetRef<iAsset> csTextureLoader::Load(const csCryoFile *file, const csAssetLocator &locator) const
+iAsset *csTextureLoader::Load(const csCryoFile *file, const csAssetLocator &locator) const
 {
   auto textureElement = file->Root()->GetChild(0);
   auto tag = textureElement->GetTagName();

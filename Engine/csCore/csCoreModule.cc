@@ -34,7 +34,6 @@ bool csCoreModule::Register(const std::vector<std::string> &args, csEngine *engi
   assetMan->RegisterLoader(new csShaderGraphLoader());
   assetMan->RegisterLoader(new csTerrainLayerLoader());
   assetMan->RegisterLoader(new csTerrainLayerMaskLoader());
-  assetMan->RegisterLoader(new csTextFileLoader());
   assetMan->RegisterLoader(new csTextureLoader());
 
   return true;

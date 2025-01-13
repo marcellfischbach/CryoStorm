@@ -28,6 +28,7 @@ bool csSpatialState::IsStatic() const
   return m_static;
 }
 
+
 bool csSpatialState::AttachSpatial(cs::csSpatialState *child)
 {
   if (!child)
@@ -38,7 +39,7 @@ bool csSpatialState::AttachSpatial(cs::csSpatialState *child)
   {
     return false;
   }
-  if (std::ranges::find(m_children.begin(), m_children.end(), child) != m_children.end())
+  if (std::find(m_children.begin(), m_children.end(), child) != m_children.end())
   {
     return false;
   }
@@ -67,7 +68,7 @@ bool csSpatialState::DetachSpatial(cs::csSpatialState *child)
   {
     return false;
   }
-  auto it = std::ranges::find(m_children.begin(), m_children.end(), child);
+  auto it = std::find(m_children.begin(), m_children.end(), child);
   if (it == m_children.end())
   {
     return false;

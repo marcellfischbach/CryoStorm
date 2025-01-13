@@ -610,9 +610,9 @@ int8_t csGL4Device::GetRenderLayer() const
   return m_renderLayer;
 }
 
-void csGL4Device::SetShader(csAssetRef<cs::iShader> &shader)
+void csGL4Device::SetShader(cs::iShader *shader)
 {
-  if (shader == m_shader)
+  if (m_shader == shader)
   {
     return;
   }
@@ -1059,7 +1059,7 @@ void csGL4Device::SetActiveTexture(cs::uint32_t activeTexture)
   }
 }
 
-bool csGL4Device::BindMaterial(csAssetRef<iMaterial> &material, eRenderPass pass)
+bool csGL4Device::BindMaterial(iMaterial *material, eRenderPass pass)
 {
 #ifndef CS_DISABLE_RENDERING
   if (!material && pass == eRP_COUNT)
@@ -1124,7 +1124,7 @@ void csGL4Device::RenderFullscreen(iTexture2D *texture)
   bool     multiSampling = texture->IsMultiSampling();
   uint16_t samples       = texture->GetSamples();
 
-  csAssetRef<csGL4Program> &prog = multiSampling ? FullscreenBlitMSProgram() : FullscreenBlitProgram();
+  csGL4Program *prog = multiSampling ? FullscreenBlitMSProgram() : FullscreenBlitProgram();
   SetShader(prog);
   ResetTextures();
   eTextureUnit unit = BindTexture(texture);
@@ -1148,7 +1148,7 @@ void csGL4Device::RenderFullscreen(iTexture2DArray *texture, int layer)
 {
 #ifndef CS_DISABLE_RENDERING
   SetFillMode(eFillMode::Fill);
-  csAssetRef<csGL4Program> &prog = FullscreenBlitArrayProgram();
+  csGL4Program *prog = FullscreenBlitArrayProgram();
   SetShader(prog);
   ResetTextures();
   eTextureUnit     unit    = BindTexture(texture);
@@ -1180,7 +1180,7 @@ void csGL4Device::RenderFullscreen(iTextureCube
   SetColorWrite(true, true, true, true);
   SetBlending(false);
   iRenderMesh  *mesh = FullscreenBlitCubeRenderMesh((int) face);
-  csAssetRef<csGL4Program> &prog = FullscreenBlitCubeProgram();
+  csGL4Program *prog = FullscreenBlitCubeProgram();
   SetShader(prog);
   ResetTextures();
   if (m_fullscreenBlitCubeDiffuse)
@@ -1621,7 +1621,7 @@ void csGL4Device::UpdateShadowMapViewProjectionMatrix()
   m_shadowMapViewProjectionMatrixDirty = false;
 }
 
-csAssetRef<csGL4Program> &csGL4Device::FullscreenBlitProgram()
+csGL4Program *csGL4Device::FullscreenBlitProgram()
 {
   if (!m_fullscreenBlitProgram)
   {
@@ -1631,7 +1631,7 @@ csAssetRef<csGL4Program> &csGL4Device::FullscreenBlitProgram()
   return m_fullscreenBlitProgram;
 }
 
-csAssetRef<csGL4Program> &csGL4Device::FullscreenBlitMSProgram()
+csGL4Program *csGL4Device::FullscreenBlitMSProgram()
 {
   if (!m_fullscreenBlitMSProgram)
   {
@@ -1641,7 +1641,7 @@ csAssetRef<csGL4Program> &csGL4Device::FullscreenBlitMSProgram()
   return m_fullscreenBlitMSProgram;
 }
 
-csAssetRef<csGL4Program> &csGL4Device::FullscreenBlitArrayProgram()
+csGL4Program *csGL4Device::FullscreenBlitArrayProgram()
 {
   if (!m_fullscreenBlitArrayProgram)
   {
@@ -1708,7 +1708,7 @@ iRenderMesh *csGL4Device::PixelRenderMesh()
 }
 
 
-csAssetRef<csGL4Program> &csGL4Device::FullscreenBlitCubeProgram()
+csGL4Program *csGL4Device::FullscreenBlitCubeProgram()
 {
   if (!m_fullscreenBlitCubeProgram)
   {

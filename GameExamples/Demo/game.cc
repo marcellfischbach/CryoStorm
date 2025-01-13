@@ -260,7 +260,7 @@ create_multi_sphere_mesh(float radius, uint32_t detail, float uv_f, size_t num_s
 }
 
 
-void debug(csRef<cs::csSpatialState> &state, int indent)
+void debug(cs::csSpatialState *state, int indent)
 {
   if (!state)
   {
@@ -937,12 +937,12 @@ void setup_world(cs::csWorld *world)
   generate_axis_grid(world);
   generate_cube_fbx(world);
 
-  add_skeleton_mesh(world, skinnedMaterial);
+//  add_skeleton_mesh(world, skinnedMaterial);
 
-  bones[0] = add_bone(world, material);
-  bones[1] = add_bone(world, material);
-  bones[2] = add_bone(world, material);
-  bones[3] = add_bone(world, material);
+//  bones[0] = add_bone(world, material);
+//  bones[1] = add_bone(world, material);
+//  bones[2] = add_bone(world, material);
+//  bones[3] = add_bone(world, material);
 
 #if 1
   shadowLightState = add_directional_light(world,

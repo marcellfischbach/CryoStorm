@@ -214,7 +214,7 @@ bool csMaterial::BindAttribute(iDevice *device,
                                size_t idx,
                                const std::array<float, 16> &floats,
                                const std::array<int, 4> &ints,
-                               csAssetRef<cs::iTexture2D> texture) const
+                               cs::iTexture *texture) const
 {
 
   if (const Attribute &attribute = m_attributes[idx]; iShaderAttribute *shaderAttribute = attribute.Attributes[pass])
@@ -260,7 +260,7 @@ bool csMaterial::BindAttribute(iDevice *device,
   return true;
 }
 
-bool csMaterial::BindTexture(iDevice *device, iShaderAttribute *attribute, csAssetRef<cs::iTexture2D> &texture)
+bool csMaterial::BindTexture(iDevice *device, iShaderAttribute *attribute, cs::iTexture *texture)
 {
   eTextureUnit unit = device->BindTexture(texture);
 //  printf ("Bind texture: %p -> %d\n", texture, unit);
@@ -272,20 +272,20 @@ bool csMaterial::BindTexture(iDevice *device, iShaderAttribute *attribute, csAss
   return true;
 }
 
-void csMaterial::SetShader(eRenderPass pass, csAssetRef<cs::iShader> &shader)
+void csMaterial::SetShader(eRenderPass pass, cs::iShader *shader)
 {
   m_shader[pass] = shader;
 
   UpdateShaderAttributes(pass);
 }
 
-csAssetRef<cs::iShader> &csMaterial::GetShader(eRenderPass pass)
+cs::iShader *csMaterial::GetShader(eRenderPass pass)
 {
   return m_shader[pass];
 }
 
 
-const csAssetRef<cs::iShader> &csMaterial::GetShader(eRenderPass pass) const
+const cs::iShader *csMaterial::GetShader(eRenderPass pass) const
 {
   return m_shader[pass];
 }
@@ -441,7 +441,7 @@ void csMaterial::SetMatrix4f(size_t idx, const cs::csMatrix4f &m)
   memcpy(attr.Floats.data(), &m, sizeof(float) * 16);
 }
 
-void csMaterial::SetTexture(size_t idx, csAssetRef<cs::iTexture2D> &texture)
+void csMaterial::SetTexture(size_t idx, cs::iTexture *texture)
 {
   if (idx >= m_attributes.size())
   {
@@ -449,7 +449,7 @@ void csMaterial::SetTexture(size_t idx, csAssetRef<cs::iTexture2D> &texture)
   }
   Attribute &attr = m_attributes[idx];
   attr.Type = eMAT_Texture;
-  CS_SET(attr.Texture, texture);
+  attr.Texture = texture;
 
 }
 void csMaterial::Debug(size_t idx)

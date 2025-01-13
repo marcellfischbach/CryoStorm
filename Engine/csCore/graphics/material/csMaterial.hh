@@ -90,10 +90,10 @@ public:
 
 
   CS_FUNCTION(jenum="cs::eRenderPass")
-  void SetShader(cs::eRenderPass pass, csAssetRef<cs::iShader> & shader);
+  void SetShader(cs::eRenderPass pass, cs::iShader *shader);
   CS_FUNCTION(jenum="cs::eRenderPass")
-  CS_NODISCARD csAssetRef<cs::iShader> &GetShader(cs::eRenderPass pass);
-  CS_NODISCARD csAssetRef<const cs::iShader> GetShader(eRenderPass pass) const override;
+  CS_NODISCARD cs::iShader *GetShader(cs::eRenderPass pass);
+  CS_NODISCARD const cs::iShader *GetShader(eRenderPass pass) const override;
 
   CS_FUNCTION(jenum="cs::eMaterialAttributeType")
   void RegisterAttribute(const std::string & attributeName, cs::eMaterialAttributeType attributeType);
@@ -123,7 +123,7 @@ public:
   void SetMatrix3f(size_t idx, const cs::csMatrix3f &m) override;
   void SetMatrix4f(size_t idx, const cs::csMatrix4f &m) override;
   CS_FUNCTION()
-  void SetTexture(size_t idx, csAssetRef<cs::iTexture> &texture) override;
+  void SetTexture(size_t idx, cs::iTexture *texture) override;
 
 private:
   bool BindShader(iDevice * device, eRenderPass pass) const;
@@ -131,8 +131,8 @@ private:
   void BindDepthMode(iDevice *device) const;
   void BindFillMode (iDevice *device) const;
   bool BindAttribute(iDevice * device, eRenderPass pass, size_t idx) const;
-  bool BindAttribute(iDevice * device, eRenderPass pass, size_t idx, const std::array<float, 16> &floats, const std::array<int, 4> &ints, csAssetRef<cs::iTexture2D> texture) const;
-  static bool BindTexture (iDevice *device, iShaderAttribute *attribute,  csAssetRef<cs::iTexture2D> &texture);
+  bool BindAttribute(iDevice * device, eRenderPass pass, size_t idx, const std::array<float, 16> &floats, const std::array<int, 4> &ints, cs::iTexture *texture) const;
+  static bool BindTexture (iDevice *device, iShaderAttribute *attribute, cs::iTexture *texture);
   void UpdateShaderAttributes(eRenderPass pass);
 
   struct Attribute
@@ -142,7 +142,7 @@ private:
     eMaterialAttributeType Type;
     std::array<float, 16> Floats;
     std::array<int, 4> Ints;
-    csAssetRef<cs::iTexture2D>  Texture;
+    csAssetRef<cs::iTexture>  Texture;
   };
 
 

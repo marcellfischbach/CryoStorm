@@ -34,7 +34,7 @@ struct CS_CORE_API iMaterial : public CS_SUPER(iAsset)
 
 
   CS_FUNCTION(jenum)
-  CS_NODISCARD virtual csAssetRef<const cs::iShader> GetShader (cs::eRenderPass pass) const = 0;
+  CS_NODISCARD virtual const cs::iShader *GetShader (cs::eRenderPass pass) const = 0;
 
   CS_FUNCTION(jenum)
   CS_NODISCARD virtual cs::eFillMode GetFillMode() const = 0;
@@ -66,7 +66,7 @@ struct CS_CORE_API iMaterial : public CS_SUPER(iAsset)
   virtual void SetMatrix3f(size_t idx, const cs::csMatrix3f & m) = 0;
   virtual void SetMatrix4f(size_t idx, const cs::csMatrix4f & m) = 0;
   CS_FUNCTION()
-  virtual void SetTexture(size_t idx, csAssetRef<cs::iTexture> &texture) = 0;
+  virtual void SetTexture(size_t idx, cs::iTexture *texture) = 0;
 };
 
 

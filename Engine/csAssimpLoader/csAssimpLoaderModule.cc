@@ -16,9 +16,9 @@ bool csAssimpLoaderModule::Register(const std::vector<std::string> &args, csEngi
 {
   register_classes();
 
-  csAssetManager::Get()->RegisterLoader(new csAssimpMeshLoader());
-  csAssetManager::Get()->RegisterLoader(new csAssimpSkeletonAnimationLoader());
-  csAssetManager::Get()->RegisterLoader(new csAssimpSkeletonMeshLoader());
+//  csAssetManager::Get()->RegisterLoader(new csAssimpMeshLoader());
+//  csAssetManager::Get()->RegisterLoader(new csAssimpSkeletonAnimationLoader());
+//  csAssetManager::Get()->RegisterLoader(new csAssimpSkeletonMeshLoader());
 
 
   return true;

@@ -23,7 +23,7 @@ public:
 
   CS_NODISCARD uint32_t GetPriority() const;
 
-  CS_NODISCARD virtual csAssetRef<iAsset> Load(const csAssetLocator & locator) const = 0;
+  CS_NODISCARD virtual iAsset* Load(const csAssetLocator & locator) const = 0;
   CS_NODISCARD bool CanLoad(const csAssetLocator & locator) const;
 
   CS_NODISCARD const std::vector<std::string>& GetExtensions() const;

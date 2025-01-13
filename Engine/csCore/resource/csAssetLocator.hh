@@ -1,6 +1,7 @@
 #pragma once
 
 #include <csCore/csCoreExport.hh>
+#include <csCore/csDefs.hh>
 #include <string>
 
 namespace cs

@@ -15,7 +15,7 @@ csTerrainLayerLoader::csTerrainLayerLoader()
   RegisterType("TERRAINLAYER");
 }
 
-csAssetRef<iAsset> csTerrainLayerLoader::Load(const csCryoFile *file, const csAssetLocator &locator) const
+iAsset *csTerrainLayerLoader::Load(const csCryoFile *file, const csAssetLocator &locator) const
 {
   const csCryoFileElement * rootElement = file->Root();
 
@@ -35,7 +35,7 @@ csAssetRef<iAsset> csTerrainLayerLoader::Load(const csCryoFile *file, const csAs
                                                      : nullptr;
   if (diffuseRoughnessAttribute)
   {
-    layer->SetDiffuseRoughness(assetMan->Get<iTexture2D>(locator, diffuseRoughnessAttribute->GetValue()));
+    layer->SetDiffuseRoughness(assetMan->Get<iTexture2D>(csAssetLocator(locator, diffuseRoughnessAttribute->GetValue())));
   }
 
   const csCryoFileElement   * normalElement   = terrainLayerElement->GetChild("normal");
@@ -44,7 +44,7 @@ csAssetRef<iAsset> csTerrainLayerLoader::Load(const csCryoFile *file, const csAs
                                            : nullptr;
   if (normalAttribute)
   {
-    layer->SetNormal(assetMan->Get<iTexture2D>(locator, normalAttribute->GetValue()));
+    layer->SetNormal(assetMan->Get<iTexture2D>(csAssetLocator(locator, normalAttribute->GetValue())));
   }
 
   return layer;
@@ -59,7 +59,7 @@ csTerrainLayerMaskLoader::csTerrainLayerMaskLoader ()
 }
 
 
-csAssetRef<iAsset> csTerrainLayerMaskLoader::Load(const csCryoFile *file, const csAssetLocator &locator) const
+iAsset *csTerrainLayerMaskLoader::Load(const csCryoFile *file, const csAssetLocator &locator) const
 {
   const csCryoFileElement * rootElement = file->Root();
 
@@ -79,7 +79,7 @@ csAssetRef<iAsset> csTerrainLayerMaskLoader::Load(const csCryoFile *file, const 
                                            : nullptr;
   if (layersAttribute)
   {
-    layer->SetLayerTexture(assetMan->Get<iTexture2D>(locator, layersAttribute->GetValue()));
+    layer->SetLayerTexture(assetMan->Get<iTexture2D>(csAssetLocator(locator, layersAttribute->GetValue())));
   }
 
   const csCryoFileElement   * maskElement   = terrainLayerMaskElement->GetChild("mask");
@@ -88,7 +88,7 @@ csAssetRef<iAsset> csTerrainLayerMaskLoader::Load(const csCryoFile *file, const 
                                            : nullptr;
   if (maskAttribute)
   {
-    layer->SetMaskTexture(assetMan->Get<iTexture2D>(locator, maskAttribute->GetValue()));
+    layer->SetMaskTexture(assetMan->Get<iTexture2D>(csAssetLocator(locator, maskAttribute->GetValue())));
   }
 
   return layer;

@@ -137,17 +137,17 @@ bool csGfxMesh::IsCastShadow() const
 }
 
 
-void csGfxMesh::SetMaterial(csAssetRef<iMaterial> &material)
+void csGfxMesh::SetMaterial(iMaterial *material)
 {
   m_material = material;
 }
 
-csAssetRef<iMaterial> &csGfxMesh::GetMaterial()
+iMaterial *csGfxMesh::GetMaterial()
 {
   return m_material;
 }
 
-csAssetRef<const iMaterial> &csGfxMesh::GetMaterial() const
+const iMaterial *csGfxMesh::GetMaterial() const
 {
   return m_material;
 }

@@ -63,12 +63,12 @@ void csPostProcessing::Bind(const cs::csPPBind &bind)
   m_planDirty = true;
 }
 
-void csPostProcessing::SetInput(ePPImageType type, csAssetRef<iTexture2D> &texture)
+void csPostProcessing::SetInput(ePPImageType type, iTexture2D *texture)
 {
   m_inputTextures[(size_t) type] = texture;
 }
 
-csAssetRef<iTexture2D> &csPostProcessing::GetOutput(ePPImageType type)
+iTexture2D *csPostProcessing::GetOutput(ePPImageType type)
 {
   return m_outputTextures[(size_t) type];
 }
@@ -176,20 +176,20 @@ std::vector<csPPBind> csPostProcessing::GetBindingsForProcess(const iPostProcess
 }
 
 
-void csBasePostProcess::SetInput(size_t idx, csAssetRef<cs::iTexture2D> &texture)
+void csBasePostProcess::SetInput(size_t idx, cs::iTexture2D *texture)
 {
   if (idx >= m_inputs.size())
   {
     return;
   }
-  CS_SET(m_inputs[idx], texture);
+  m_inputs[idx] = texture;
 }
 
-const csAssetRef< iTexture2D> &csBasePostProcess::GetOutput(size_t idx) const
+iTexture2D *csBasePostProcess::GetOutput(size_t idx) const
 {
   if (idx >= m_outputs.size())
   {
-    return csAssetRef<iTexture2D>::Null();
+    return nullptr;
   }
 
   return m_outputs[idx];
@@ -200,11 +200,11 @@ csBasePostProcess::~csBasePostProcess()
 {
   for (auto &input: m_inputs)
   {
-    CS_RELEASE(input);
+    input = nullptr;
   }
   for (auto &output: m_outputs)
   {
-    CS_RELEASE(output);
+    output = nullptr;
   }
 }
 
@@ -249,8 +249,8 @@ bool csSimplePostProcess::UpdateRenderTarget(iDevice *device,
 {
   if (m_renderTarget != nullptr)
   {
-    csAssetRef<iTexture2D> &colorTexture = m_renderTarget->GetColorTexture(0);
-    csAssetRef<iTexture2D> &depthTexture = m_renderTarget->GetDepthTexture();
+    iTexture2D *colorTexture = m_renderTarget->GetColorTexture(0);
+    iTexture2D *depthTexture = m_renderTarget->GetDepthTexture();
     if (m_renderTarget->GetWidth() == width
         && m_renderTarget->GetHeight() == height
         && (!color && !colorTexture || colorTexture && colorTexture->GetFormat() == colorFormat)
@@ -285,7 +285,7 @@ bool csSimplePostProcess::UpdateRenderTarget(iDevice *device,
         false,
         1
     };
-    csAssetRef<cs::iTexture2D> colorTexture = device->CreateTexture(colorDesc);
+    csRef<cs::iTexture2D> colorTexture = device->CreateTexture(colorDesc);
 
     iSampler *sampler = device->CreateSampler();
     sampler->SetAddressU(eTAM_Clamp);
@@ -311,7 +311,7 @@ bool csSimplePostProcess::UpdateRenderTarget(iDevice *device,
         false,
         1
     };
-    csAssetRef<cs::iTexture2D> depthTexture = device->CreateTexture(depthDesc);
+    csRef<cs::iTexture2D> depthTexture = device->CreateTexture(depthDesc);
 
 
     m_renderTarget->SetDepthTexture(depthTexture);

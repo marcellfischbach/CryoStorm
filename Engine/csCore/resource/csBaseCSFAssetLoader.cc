@@ -20,7 +20,7 @@ bool csBaseCSFAssetLoader::Open(const csAssetLocator& locator, csCryoFile &file)
 
 
 
-csAssetRef<iAsset> csBaseCSFAssetLoader::Load(const csAssetLocator &locator) const
+iAsset *csBaseCSFAssetLoader::Load(const csAssetLocator &locator) const
 {
   csCryoFile file;
   if (!Open(locator, file))

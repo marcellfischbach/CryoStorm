@@ -24,7 +24,7 @@ csShaderGraphLoader::csShaderGraphLoader()
 }
 
 
-csAssetRef<iAsset> csShaderGraphLoader::Load(const csCryoFile *file, const csAssetLocator &locator) const
+iAsset *csShaderGraphLoader::Load(const csCryoFile *file, const csAssetLocator &locator) const
 {
   const csCryoFileElement *root               = file->Root();
   const csCryoFileElement *shaderGraphElement = root->GetChild("shaderGraph");

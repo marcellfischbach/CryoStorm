@@ -22,7 +22,7 @@ public:
   }
 
 
-  csAssetRef<iAsset> Load(const csCryoFile *file, const csAssetLocator &locator) const override;
+  iAsset *Load(const csCryoFile *file, const csAssetLocator &locator) const override;
 
 private:
   static csMaterial* LoadMaterial(const csCryoFile* file, const csAssetLocator& locator);

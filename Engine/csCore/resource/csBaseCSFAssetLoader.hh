@@ -22,12 +22,12 @@ class CS_CORE_API csBaseCSFAssetLoader : public CS_SUPER(csAssetLoader)
 protected:
   csBaseCSFAssetLoader() = default;
 
-  virtual csAssetRef<iAsset> Load(const csCryoFile *file, const csAssetLocator &locator) const = 0;
+  virtual iAsset*Load(const csCryoFile *file, const csAssetLocator &locator) const = 0;
 
 public:
   ~csBaseCSFAssetLoader() override = default;
 
-  CS_NODISCARD csAssetRef<iAsset> Load(const csAssetLocator &locator) const override;
+  CS_NODISCARD iAsset *Load(const csAssetLocator &locator) const override;
 
 private:
   CS_NODISCARD static bool Open(const csAssetLocator &locator, csCryoFile &file);

@@ -11,6 +11,11 @@ csAssetLoader::csAssetLoader(uint32_t priority)
 
 }
 
+uint32_t csAssetLoader::GetPriority() const
+{
+  return m_priority;
+}
+
 
 void csAssetLoader::RegisterType(const std::string &extension)
 {

@@ -60,8 +60,8 @@ CS_CLASS_GEN;
   virtual const std::vector<csPPInputDefinition> &GetInputDefinitions() const = 0;
   virtual const std::vector<csPPOutputDefinition> &GetOutputDefinitions() const = 0;
 
-  virtual void SetInput(size_t idx, csAssetRef<iTexture2D> &texture) = 0;
-  virtual const csAssetRef<iTexture2D> &GetOutput(size_t idx) const = 0;
+  virtual void SetInput(size_t idx, iTexture2D *texture) = 0;
+  virtual iTexture2D *GetOutput(size_t idx) const = 0;
 
   virtual void Process(iDevice *device, iRenderTarget2D *finalTarget) = 0;
 
@@ -78,8 +78,8 @@ public:
   const std::vector<csPPInputDefinition> &GetInputDefinitions() const override;
   const std::vector<csPPOutputDefinition> &GetOutputDefinitions() const override;
 
-  void SetInput(size_t idx, csAssetRef<iTexture2D> &texture) override;
-  const csAssetRef<iTexture2D> &GetOutput(size_t idx) const override;
+  void SetInput(size_t idx, iTexture2D *texture) override;
+  iTexture2D *GetOutput(size_t idx) const override;
 
 protected:
   csBasePostProcess() = default;
@@ -144,9 +144,9 @@ public:
   void AddProcess(iPostProcess *process);
   void Bind(const csPPBind &bind);
 
-  void SetInput(ePPImageType type, csAssetRef<iTexture2D> &texture);
+  void SetInput(ePPImageType type, iTexture2D *texture);
   void Process(iDevice *device, iRenderTarget2D *finalTarget);
-  csAssetRef<iTexture2D> &GetOutput(ePPImageType type);
+  iTexture2D *GetOutput(ePPImageType type);
 
 private:
   void RebuildPlan();

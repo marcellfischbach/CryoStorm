@@ -13,7 +13,7 @@ class CS_OGL_API csGL4ProgramLoader : public CS_SUPER(csBaseCSFAssetLoader)
 public:
   csGL4ProgramLoader();
 
-  csAssetRef<iAsset> Load(const csCryoFile *file, const csAssetLocator &locator) const override;
+  iAsset *Load(const csCryoFile *file, const csAssetLocator &locator) const override;
 
 
 };

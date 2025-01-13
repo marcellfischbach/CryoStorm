@@ -32,18 +32,17 @@ csGL4Program::~csGL4Program()
   m_shaders.clear();
 }
 
-void csGL4Program::AttachShader(csAssetRef<csGL4Shader> &shader)
+void csGL4Program::AttachShader(csGL4Shader *shader)
 {
   if (!shader)
   {
     return;
   }
-  if (std::ranges::find(m_shaders.begin(), m_shaders.end(), shader) != m_shaders.end())
+  if (std::find(m_shaders.begin(), m_shaders.end(), shader) != m_shaders.end())
   {
     return;
   }
 
-  shader->AddRef();
   m_shaders.push_back(shader);
 
   CS_GL_ERROR();
@@ -51,13 +50,13 @@ void csGL4Program::AttachShader(csAssetRef<csGL4Shader> &shader)
   CS_GL_ERROR();
 }
 
-void csGL4Program::DetachShader(csAssetRef<csGL4Shader> &shader)
+void csGL4Program::DetachShader(csGL4Shader *shader)
 {
   if (!shader)
   {
     return;
   }
-  auto it = std::ranges::find(m_shaders.begin(), m_shaders.end(), shader);
+  auto it = std::find(m_shaders.begin(), m_shaders.end(), shader);
   if (it == m_shaders.end())
   {
     return;
