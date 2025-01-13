@@ -14,7 +14,7 @@ csAssimpSkeletonAnimationLoader::csAssimpSkeletonAnimationLoader()
 }
 
 
-bool csAssimpSkeletonAnimationLoader::CanLoad(const cs::csClass *cls, const cs::csResourceLocator &locator) const
+bool csAssimpSkeletonAnimationLoader::CanLoad(const cs::csClass *cls, const cs::csAssetLocator &locator) const
 {
   const std::string &ext = locator.GetExtension();
   return cls == csSkeletonAnimationPack::GetStaticClass()
@@ -22,7 +22,7 @@ bool csAssimpSkeletonAnimationLoader::CanLoad(const cs::csClass *cls, const cs::
 }
 
 
-iObject *csAssimpSkeletonAnimationLoader::Load(const cs::csClass *cls, const cs::csResourceLocator &locator) const
+iObject *csAssimpSkeletonAnimationLoader::Load(const cs::csClass *cls, const cs::csAssetLocator &locator) const
 {
   iFile *file = cs::csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (!file)

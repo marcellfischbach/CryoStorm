@@ -28,7 +28,7 @@ bool csSpatialState::IsStatic() const
   return m_static;
 }
 
-bool csSpatialState::AttachSpatial(csRef<cs::csSpatialState> child)
+bool csSpatialState::AttachSpatial(cs::csSpatialState *child)
 {
   if (!child)
   {
@@ -54,11 +54,10 @@ bool csSpatialState::AttachSpatial(csRef<cs::csSpatialState> child)
 
 bool csSpatialState::DetachSelf()
 {
-  csRef<csSpatialState> thisRef(this);
-  return m_parent && m_parent->DetachSpatial(thisRef);
+  return m_parent && m_parent->DetachSpatial(this);
 }
 
-bool csSpatialState::DetachSpatial(csRef<cs::csSpatialState> child)
+bool csSpatialState::DetachSpatial(cs::csSpatialState *child)
 {
   if (!child)
   {
@@ -79,12 +78,12 @@ bool csSpatialState::DetachSpatial(csRef<cs::csSpatialState> child)
   return true;
 }
 
-csRef<csSpatialState>& csSpatialState::GetParent()
+csSpatialState *csSpatialState::GetParent()
 {
   return m_parent;
 }
 
-const csRef<csSpatialState> &csSpatialState::GetParent() const
+const csSpatialState *csSpatialState::GetParent() const
 {
   return m_parent;
 }
@@ -94,27 +93,28 @@ Size csSpatialState::GetNumberOfChildren() const
   return m_children.size();
 }
 
-const csRef<csSpatialState> &csSpatialState::GetChild(Size idx) const
+const csSpatialState *csSpatialState::GetChild(Size idx) const
 {
   if (idx >= m_children.size())
   {
-    return csRef<csSpatialState>::Null();
+    return nullptr;
   }
 
   return m_children[idx];
 }
 
-csRef<csSpatialState> &csSpatialState::GetChild(Size idx)
+csSpatialState *csSpatialState::GetChild(Size idx)
+
 {
   if (idx >= m_children.size())
   {
-    return csRef<csSpatialState>::Null();
+    return nullptr;
   }
 
   return m_children[idx];
 }
 
-void csSpatialState::UpdateEntity(csRef<csEntity> &oldEntity, csRef<csEntity> &newEntity)
+void csSpatialState::UpdateEntity(csEntity *oldEntity, csEntity *newEntity)
 {
   csEntityState::UpdateEntity(oldEntity, newEntity);
   for (auto child : m_children)

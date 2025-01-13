@@ -5,7 +5,7 @@
 #include <csCore/math/csVector3f.hh>
 #include <csCore/math/csVector4f.hh>
 #include <csCore/math/csVector2i.hh>
-#include <csCore/resource/csResourceLocator.hh>
+#include <csCore/resource/csAssetLocator.hh>
 
 #include <string>
 namespace cs
@@ -18,7 +18,7 @@ class CS_CORE_API csSettingsFile
 {
 public:
   csSettingsFile(const std::string& encodedLocator);
-  csSettingsFile(const csResourceLocator& locator);
+  csSettingsFile(const csAssetLocator& locator);
   ~csSettingsFile();
 
   CS_NODISCARD bool IsValid() const;
@@ -34,7 +34,7 @@ public:
   CS_NODISCARD csVector2i GetVector2i(const std::string& path, const csVector2i& defaultValue = csVector2i(0, 0)) const;
 
 private:
-  void Initialize(const csResourceLocator &locator);
+  void Initialize(const csAssetLocator &locator);
   CS_NODISCARD csCryoFileElement* GetElement(const std::string &path) const;
 
   csCryoFile * m_file;

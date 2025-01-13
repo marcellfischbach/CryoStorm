@@ -46,9 +46,9 @@ public:
   void SetCastShadow(bool castShadow);
   CS_NODISCARD bool IsCastShadow() const;
 
-  void SetMaterial(csRes<iMaterial> &material);
-  CS_NODISCARD csRes<iMaterial> &GetMaterial();
-  CS_NODISCARD const csRes<iMaterial> &GetMaterial() const;
+  void SetMaterial(csAssetRef<iMaterial> &material);
+  CS_NODISCARD csAssetRef<iMaterial> &GetMaterial();
+  CS_NODISCARD csAssetRef<const iMaterial> &GetMaterial() const;
 
   void SetMesh(iRenderMesh *mesh);
   iRenderMesh *GetMesh();
@@ -87,9 +87,9 @@ private:
   bool m_batchable     = false;
   bool m_static        = false;
   bool m_receiveShadow = true;
-  bool m_castShadow    = true;
-  csRes<iMaterial>   m_material;
-  iRenderMesh   *m_mesh     = nullptr;
+  bool               m_castShadow    = true;
+  csAssetRef<iMaterial> m_material;
+  iRenderMesh        *m_mesh     = nullptr;
   csMatrix4f    m_modelMatrix;
   csBoundingBox m_boundingBox;
   uint64_t      m_frame         = 0;

@@ -29,14 +29,10 @@ csGL4Program::~csGL4Program()
     m_name = 0;
   }
 
-  for (csGL4Shader *shader: m_shaders)
-  {
-    shader->Release();
-  }
   m_shaders.clear();
 }
 
-void csGL4Program::AttachShader(csGL4Shader *shader)
+void csGL4Program::AttachShader(csAssetRef<csGL4Shader> &shader)
 {
   if (!shader)
   {
@@ -55,7 +51,7 @@ void csGL4Program::AttachShader(csGL4Shader *shader)
   CS_GL_ERROR();
 }
 
-void csGL4Program::DetachShader(csGL4Shader *shader)
+void csGL4Program::DetachShader(csAssetRef<csGL4Shader> &shader)
 {
   if (!shader)
   {

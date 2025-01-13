@@ -71,13 +71,14 @@ public:
   csMatrix4f &GetPerspectiveProjection(float l, float r, float b, float t, float n, float f, csMatrix4f &m) override;
   csMatrix4f &GetPerspectiveProjectionInv(float l, float r, float b, float t, float n, float f, csMatrix4f &m) override;
   csMatrix4f &GetOrthographicProjection(float l, float r, float b, float t, float n, float f, csMatrix4f &m) override;
-  csMatrix4f &GetOrthographicProjectionInv(float l, float r, float b, float t, float n, float f, csMatrix4f &m) override;
+  csMatrix4f &
+  GetOrthographicProjectionInv(float l, float r, float b, float t, float n, float f, csMatrix4f &m) override;
 
 
   void SetRenderLayer(int8_t renderLayer) override;
   int8_t GetRenderLayer() const override;
 
-  void SetShader(iShader *shader) override;
+  void SetShader(csAssetRef<cs::iShader> &shader) override;
   void SetRenderTarget(iRenderTarget *target) override;
   void SetRenderBuffer(uint32_t buffer) override;
   void SetRenderBuffer(const std::vector<uint32_t> &buffer) override;
@@ -117,7 +118,7 @@ public:
   void ResetTexturesToMark() override;
   void SetSampler(eTextureUnit unit, iSampler *sampler);
   eTextureUnit BindTexture(iTexture *texture) override;
-  bool BindMaterial(csRes<iMaterial> &material, eRenderPass pass) override;
+  bool BindMaterial(csAssetRef<iMaterial> &material, eRenderPass pass) override;
   void Render(iRenderMesh *mesh, eRenderPass pass) override;
   void RenderPixel();
   void RenderFullscreen();
@@ -153,18 +154,18 @@ private:
   static void UnbindUnsafe(iTexture *texture);
 
 private:
-  iRenderTarget *m_renderTarget;
-  iShader       *m_shader;
-  bool          m_materialSuccessfull;
-  csRes<iMaterial>     m_material;
-  eRenderPass   m_materialPass;
+  iRenderTarget           *m_renderTarget;
+  const csAssetRef<cs::iShader> m_shader;
+  bool                    m_materialSuccessfull;
+  csAssetRef<const iMaterial>   m_material;
+  eRenderPass             m_materialPass;
   eTextureUnit ShiftTextureUnit();
-  eTextureUnit  m_nextTextureUnit;
-  eTextureUnit  m_markTextureUnit;
-  bool          m_texturesUsed[eTU_COUNT];
-  iTexture      *m_textures[eTU_COUNT];
-  iSampler      *m_samplers[eTU_COUNT];
-  iTexture      *m_tempTexture = nullptr;
+  eTextureUnit            m_nextTextureUnit;
+  eTextureUnit            m_markTextureUnit;
+  bool                    m_texturesUsed[eTU_COUNT];
+  iTexture                *m_textures[eTU_COUNT];
+  iSampler                *m_samplers[eTU_COUNT];
+  iTexture                *m_tempTexture = nullptr;
 
 
   /*
@@ -278,37 +279,37 @@ private:
 //
 //  std::vector<iTexture2D *> m_shadowMapTextures;
 
-  int8_t           m_renderLayer;
+  int8_t                   m_renderLayer;
 
   /** 
    * \name Fullscreen Rendering
    * @{
    */
-  csGL4Program *FullscreenBlitProgram();
-  csGL4Program *FullscreenBlitMSProgram();
-  csGL4Program     *m_fullscreenBlitProgram;
-  csGL4Program     *m_fullscreenBlitMSProgram;
+  csAssetRef<csGL4Program> &FullscreenBlitProgram();
+  csAssetRef<csGL4Program> m_fullscreenBlitProgram;
+  csAssetRef<csGL4Program> &FullscreenBlitMSProgram();
+  csAssetRef<csGL4Program> m_fullscreenBlitMSProgram;
   iRenderMesh *FullscreenBlitRenderMesh();
-  iRenderMesh      *m_fullscreenBlitRenderMesh;
+  iRenderMesh              *m_fullscreenBlitRenderMesh;
   iRenderMesh *PixelRenderMesh();
-  iRenderMesh      *m_pixelRenderMesh;
+  iRenderMesh              *m_pixelRenderMesh;
 
-  csGL4Program *FullscreenBlitArrayProgram();
-  csGL4Program     *m_fullscreenBlitArrayProgram;
+  csAssetRef<csGL4Program> &FullscreenBlitArrayProgram();
+  csAssetRef<csGL4Program> m_fullscreenBlitArrayProgram;
 
 
-  csGL4Program *FullscreenBlitCubeProgram();
-  csGL4Program     *m_fullscreenBlitCubeProgram;
-  iShaderAttribute *m_fullscreenBlitCubeDiffuse;
-  iShaderAttribute *m_fullscreenBlitCubeScale;
-  iShaderAttribute *m_fullscreenBlitCubeTranslation;
+  csAssetRef<csGL4Program> &FullscreenBlitCubeProgram();
+  csAssetRef<csGL4Program> m_fullscreenBlitCubeProgram;
+  iShaderAttribute         *m_fullscreenBlitCubeDiffuse;
+  iShaderAttribute         *m_fullscreenBlitCubeScale;
+  iShaderAttribute         *m_fullscreenBlitCubeTranslation;
   iRenderMesh *FullscreenBlitCubeRenderMesh(int layer);
-  iRenderMesh      *m_fullscreenBlitCubePosXRenderMesh;
-  iRenderMesh      *m_fullscreenBlitCubePosYRenderMesh;
-  iRenderMesh      *m_fullscreenBlitCubePosZRenderMesh;
-  iRenderMesh      *m_fullscreenBlitCubeNegXRenderMesh;
-  iRenderMesh      *m_fullscreenBlitCubeNegYRenderMesh;
-  iRenderMesh      *m_fullscreenBlitCubeNegZRenderMesh;
+  iRenderMesh              *m_fullscreenBlitCubePosXRenderMesh;
+  iRenderMesh              *m_fullscreenBlitCubePosYRenderMesh;
+  iRenderMesh              *m_fullscreenBlitCubePosZRenderMesh;
+  iRenderMesh              *m_fullscreenBlitCubeNegXRenderMesh;
+  iRenderMesh              *m_fullscreenBlitCubeNegYRenderMesh;
+  iRenderMesh              *m_fullscreenBlitCubeNegZRenderMesh;
 
 #if _DEBUG
   Size m_numDrawCalls;

@@ -15,7 +15,7 @@ namespace cs
 
 
 struct iArchive;
-class csResourceLocator;
+class csAssetLocator;
 class CS_CORE_API csVFS
 {
 public:
@@ -28,11 +28,11 @@ public:
 
   const std::vector<const iArchive*> &GetArchives () const;
 
-  CS_NODISCARD iFile *Open(const csResourceLocator &resourceLocator, eAccessMode accessMode, eOpenMode openMode) const;
+  CS_NODISCARD iFile *Open(const csAssetLocator &resourceLocator, eAccessMode accessMode, eOpenMode openMode) const;
 
 private:
   csVFS();
-  CS_NODISCARD iFile *File(const csResourceLocator &resourceLocator) const;
+  CS_NODISCARD iFile *File(const csAssetLocator &resourceLocator) const;
   CS_NODISCARD std::string ReplaceAliases(const std::string &str) const;
 
   std::vector<iArchive *>            m_archives;

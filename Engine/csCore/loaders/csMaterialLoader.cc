@@ -14,24 +14,24 @@ namespace cs
 csMaterialLoader::csMaterialLoader()
     : csBaseCSFAssetLoader()
 {
-  AddValidFile(csMaterial::GetStaticClass(), "MAT");
-  AddValidFile(csMaterialInstance::GetStaticClass(), "MATINSTANCE");
+  RegisterType("MAT");
+  RegisterType("MATINSTANCE");
 }
 
-iObject *csMaterialLoader::Load(const csCryoFile *file, const csClass *cls, const csResourceLocator &locator) const
+csAssetRef<iAsset> csMaterialLoader::Load(const csCryoFile *file, const csAssetLocator &locator) const
 {
-  if (cls->IsAssignableFrom<csMaterial>() && file->Root()->HasChild("material"))
+  if (file->Root()->HasChild("material"))
   {
-    return LoadMaterial(cls, file, locator);
+    return LoadMaterial(file, locator);
   }
-  else if (cls->IsAssignableFrom<csMaterialInstance>() && file->Root()->HasChild("materialinstance"))
+  else if (file->Root()->HasChild("materialinstance"))
   {
-    return LoadMaterialInstance(cls, file, locator);
+    return LoadMaterialInstance(file, locator);
   }
   return nullptr;
 }
 
-csMaterial *csMaterialLoader::LoadMaterial(const csClass *, const csCryoFile *file, const csResourceLocator &locator)
+csMaterial *csMaterialLoader::LoadMaterial(const csCryoFile *file, const csAssetLocator &locator)
 {
   const csCryoFileElement *root            = file->Root();
   const csCryoFileElement *materialElement = root->GetChild("material");
@@ -63,7 +63,7 @@ csMaterial *csMaterialLoader::LoadMaterial(const csClass *, const csCryoFile *fi
   return material;
 }
 
-iObject *csMaterialLoader::LoadMaterialInstance(const csClass *, const csCryoFile *file, const csResourceLocator &locator)
+csMaterialInstance *csMaterialLoader::LoadMaterialInstance(const csCryoFile *file, const csAssetLocator &locator)
 {
 
   const csCryoFileElement *root            = file->Root();
@@ -92,7 +92,7 @@ iObject *csMaterialLoader::LoadMaterialInstance(const csClass *, const csCryoFil
 }
 void csMaterialLoader::LoadShading(csMaterial *material,
                                    const csCryoFileElement *materialElement,
-                                   const csResourceLocator &locator)
+                                   const csAssetLocator &locator)
 {
   const csCryoFileElement *shadingElement = materialElement->GetChild("shading");
   if (!shadingElement)
@@ -112,7 +112,7 @@ void csMaterialLoader::LoadShading(csMaterial *material,
 
 void csMaterialLoader::LoadQueue(csMaterial *material,
                                  const csCryoFileElement *materialElement,
-                                 const csResourceLocator &locator)
+                                 const csAssetLocator &locator)
 {
   const csCryoFileElement *queueElement = materialElement->GetChild("queue");
   if (!queueElement)
@@ -153,7 +153,7 @@ eBlendFactor BlendFactor(const std::string &blendFactor, eBlendFactor defaultFac
 
 void csMaterialLoader::LoadBlending(csMaterial *material,
                                     const csCryoFileElement *materialElement,
-                                    const csResourceLocator &locator)
+                                    const csAssetLocator &locator)
 {
   auto         blendElement = materialElement->GetChild("blend");
   bool         blending     = false;
@@ -207,7 +207,7 @@ void csMaterialLoader::LoadBlending(csMaterial *material,
 
 void csMaterialLoader::LoadDepth(csMaterial *material,
                                  const csCryoFileElement *materialElement,
-                                 const csResourceLocator &locator)
+                                 const csAssetLocator &locator)
 {
 #define _IF_(name) if (std::string(#name) == depthValue) { depthFun = eCompareFunc::eCF_##name; }
 
@@ -247,7 +247,7 @@ void csMaterialLoader::LoadDepth(csMaterial *material,
 
 bool csMaterialLoader::LoadShaders(csMaterial *material,
                                    const csCryoFileElement *materialElement,
-                                   const csResourceLocator &locator)
+                                   const csAssetLocator &locator)
 {
   const csCryoFileElement *shadersElement = materialElement->GetChild("shaders");
   if (!shadersElement)
@@ -286,7 +286,7 @@ eRenderPass RenderPass(const std::string &renderPass)
 
 bool csMaterialLoader::LoadShader(csMaterial *material,
                                   const csCryoFileElement *shaderElement,
-                                  const csResourceLocator &locator)
+                                  const csAssetLocator &locator)
 {
   if (shaderElement->GetNumberOfAttributes() != 2)
   {
@@ -307,8 +307,8 @@ bool csMaterialLoader::LoadShader(csMaterial *material,
     return false;
   }
 
-  csResourceLocator shaderLocator(locator, shaderLoc);
-  auto              shader = csAssetManager::Get()->Get<iShader>(shaderLocator);
+  csAssetLocator shaderLocator(locator, shaderLoc);
+  auto           shader = csAssetManager::Get()->Get<iShader>(shaderLocator);
   if (!shader)
   {
     return false;
@@ -322,7 +322,7 @@ bool csMaterialLoader::LoadShader(csMaterial *material,
 
 bool csMaterialLoader::LoadAttributes(csMaterial *material,
                                       const csCryoFileElement *materialElement,
-                                      const csResourceLocator &locator)
+                                      const csAssetLocator &locator)
 {
   const csCryoFileElement *attributesElement = materialElement->GetChild("attributes");
   if (!attributesElement)
@@ -346,7 +346,7 @@ bool csMaterialLoader::LoadAttributes(csMaterial *material,
 
 bool csMaterialLoader::LoadAttribute(csMaterial *material,
                                      const csCryoFileElement *attributeElement,
-                                     const csResourceLocator &locator)
+                                     const csAssetLocator &locator)
 {
   if (attributeElement->GetNumberOfAttributes() < 2)
   {
@@ -380,7 +380,7 @@ bool csMaterialLoader::LoadAttribute(csMaterial *material,
 
 bool csMaterialLoader::LoadReferenceMaterial(csMaterialInstance *materialInstance,
                                              const csCryoFileElement *materialInstanceElement,
-                                             const csResourceLocator &locator)
+                                             const csAssetLocator &locator)
 {
   const csCryoFileElement *materialElement = materialInstanceElement->GetChild("material");
   if (!materialElement)
@@ -393,8 +393,8 @@ bool csMaterialLoader::LoadReferenceMaterial(csMaterialInstance *materialInstanc
     return false;
   }
 
-  csResourceLocator materialLocator(locator, materialElement->GetAttribute(0, ""));
-  auto              material = csAssetManager::Get()->Get<csMaterial>(materialLocator);
+  csAssetLocator materialLocator(locator, materialElement->GetAttribute(0, ""));
+  auto           material = csAssetManager::Get()->Get<csMaterial>(materialLocator);
   if (!material)
   {
     return false;
@@ -406,7 +406,7 @@ bool csMaterialLoader::LoadReferenceMaterial(csMaterialInstance *materialInstanc
 
 bool csMaterialLoader::LoadAttributes(csMaterialInstance *materialInstance,
                                       const csCryoFileElement *materialInstanceElement,
-                                      const csResourceLocator &locator)
+                                      const csAssetLocator &locator)
 {
   const csCryoFileElement *attributesElement = materialInstanceElement->GetChild("attributes");
   if (!attributesElement)
@@ -430,7 +430,7 @@ bool csMaterialLoader::LoadAttributes(csMaterialInstance *materialInstance,
 
 bool csMaterialLoader::LoadAttribute(csMaterialInstance *materialInstance,
                                      const csCryoFileElement *attributeElement,
-                                     const csResourceLocator &locator)
+                                     const csAssetLocator &locator)
 {
   if (attributeElement->GetNumberOfAttributes() < 2)
   {
@@ -511,7 +511,7 @@ bool csMaterialLoader::LoadAttributeDefault(iMaterial *material,
                                             size_t attributeIdx,
                                             eMaterialAttributeType attributeType,
                                             const csCryoFileElement *attributeElement,
-                                            const csResourceLocator &locator)
+                                            const csAssetLocator &locator)
 {
   switch (attributeType)
   {
@@ -703,7 +703,7 @@ bool csMaterialLoader::LoadAttributeMatrix4(iMaterial *material,
 bool csMaterialLoader::LoadAttributeTexture(iMaterial *material,
                                             size_t attributeIdx,
                                             const csCryoFileElement *attributeElement,
-                                            const csResourceLocator &locator)
+                                            const csAssetLocator &locator)
 {
   if (attributeElement->GetNumberOfAttributes() < 3)
   {
@@ -718,7 +718,7 @@ bool csMaterialLoader::LoadAttributeTexture(iMaterial *material,
     return true;
   }
 
-  auto texture = csAssetManager::Get()->Get<iTexture>(csResourceLocator(locator, textureLoc));
+  auto texture = csAssetManager::Get()->Get<iTexture>(csAssetLocator(locator, textureLoc));
   if (!texture)
   {
     return false;

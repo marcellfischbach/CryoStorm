@@ -53,18 +53,18 @@ bool csMaterialInstance::Bind(iDevice* device, eRenderPass pass)
   return true;
 }
 
-void csMaterialInstance::SetMaterial(csMaterial* material)
+void csMaterialInstance::SetMaterial(csAssetRef<csMaterial> &material)
 {
-  CS_SET(m_material, material);
+  m_material = material;
   RebuildAttributes();
 }
 
-csMaterial* csMaterialInstance::GetMaterial()
+csAssetRef<csMaterial> &csMaterialInstance::GetMaterial()
 {
   return m_material;
 }
 
-const csMaterial* csMaterialInstance::GetMaterial() const
+const csAssetRef<csMaterial> &csMaterialInstance::GetMaterial() const
 {
   return m_material;
 }
@@ -178,7 +178,7 @@ void csMaterialInstance::SetMatrix4f(size_t idx, const cs::csMatrix4f &m)
   memcpy(attr.Floats.data(), &m, sizeof(float) * 16);
 }
 
-void csMaterialInstance::SetTexture(size_t idx, cs::iTexture *texture)
+void csMaterialInstance::SetTexture(size_t idx, csAssetRef<cs::iTexture> &texture)
 {
   if (idx >= m_attributes.size())
   {
@@ -186,7 +186,7 @@ void csMaterialInstance::SetTexture(size_t idx, cs::iTexture *texture)
   }
   Attribute& attr = m_attributes[idx];
   attr.Override = true;
-  CS_SET(attr.Texture, texture);
+  attr.Texture = texture;
 
 }
 
@@ -226,9 +226,9 @@ void csMaterialInstance::RebuildAttributes()
 }
 
 
-const iShader *csMaterialInstance::GetShader(eRenderPass pass) const
+const csAssetRef<iShader>  &csMaterialInstance::GetShader(eRenderPass pass) const
 {
-  return m_material ? m_material->GetShader(pass) : nullptr;
+  return m_material ? m_material->GetShader(pass) : csAssetRef<iShader>::Null();
 }
 
 eFillMode csMaterialInstance::GetFillMode() const

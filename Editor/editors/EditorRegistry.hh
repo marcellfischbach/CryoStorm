@@ -14,7 +14,7 @@ public:
 
     EditorRegistry &RegisterEditor(iEditorFactory *editor);
 
-    iEditorFactory *GetEditor(const cs::csResourceLocator &locator) const;
+    iEditorFactory *GetEditor(const cs::csAssetLocator &locator) const;
 
 private:
     EditorRegistry() = default;

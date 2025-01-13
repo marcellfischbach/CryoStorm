@@ -4,8 +4,7 @@
 #include <csCore/csCoreExport.hh>
 #include <csCore/csClass.hh>
 #include <csCore/csTypes.hh>
-#include <csCore/resource/csCryoFile.hh>
-#include <csCore/resource/csResourceLocator.hh>
+#include <csCore/resource/csAssetLocator.hh>
 
 namespace cs
 {
@@ -26,9 +25,9 @@ struct CS_CORE_API iAssetLoader : public iObject
     return DefaultPriority;
   }
 
-  virtual bool CanLoad(const csClass* cls, const csResourceLocator& locator) const = 0;
+  virtual bool CanLoad(const csClass* cls, const csAssetLocator& locator) const = 0;
 
-  virtual iObject* Load(const csClass* cls, const csResourceLocator& locator) const = 0;
+  virtual iObject* Load(const csClass* cls, const csAssetLocator& locator) const = 0;
 
 };
 

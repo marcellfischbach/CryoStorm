@@ -44,7 +44,7 @@ public:
   int16_t GetWidth() const override;
   int16_t GetHeight() const override;
 
-  void SetWindowIcon(const csResourceLocator &locator) override;
+  void SetWindowIcon(const csAssetLocator &locator) override;
 
   void Show() override;
   void Hide() override;

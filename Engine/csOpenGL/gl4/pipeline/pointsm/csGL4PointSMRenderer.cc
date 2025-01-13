@@ -49,7 +49,7 @@ void csGL4PointSMRenderer::Initialize()
 
 
   m_shadowMappingShader = csAssetManager::Get()->Get<iShader>(
-      csResourceLocator("${engine}/opengl/gl4/pointsm/point_light_shadow_map.shader"));
+      csAssetLocator("${engine}/opengl/gl4/pointsm/point_light_shadow_map.shader"));
   if (m_shadowMappingShader)
   {
     m_attrLightPosition = m_shadowMappingShader->GetShaderAttribute("LightPosition");

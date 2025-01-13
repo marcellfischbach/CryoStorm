@@ -24,21 +24,14 @@ struct my_error_mgr {
 
 csJpegLoader::csJpegLoader()
 {
-
+  RegisterType("JPEG");
+  RegisterType("JPG");
 
 
 }
 
 
-bool csJpegLoader::CanLoad(const csClass* cls, const csResourceLocator& locator) const
-{
-  return cls->IsAssignableFrom<csImage>() &&
-         (locator.GetExtension() == "JPEG"
-      || locator.GetExtension() == "JPG");
-}
-
-
-iObject* csJpegLoader::Load(const csClass* cls, const csResourceLocator& locator) const
+csAssetRef<iAsset> csJpegLoader::Load(const csAssetLocator& locator) const
 {
   iFile* ifile = cs::csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   FILE* infile = ifile->Query<csFileSystemFile>()->GetHandle();

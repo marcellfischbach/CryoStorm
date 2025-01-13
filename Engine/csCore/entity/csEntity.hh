@@ -38,67 +38,59 @@ public:
 
 
   CS_FUNCTION()
-  bool AttachEntity(csRef<cs::csEntity> &entity, csRef<cs::csSpatialState> &parentState = csRef<cs::csSpatialState>::Null());
+  bool AttachEntity(cs::csEntity *entity, cs::csSpatialState *parentState = nullptr);
   CS_FUNCTION()
-  bool DetachEntity(csRef<cs::csEntity> &entity);
+  bool DetachEntity(cs::csEntity *entity);
   CS_FUNCTION()
-  csRef<cs::csEntity> &GetParent();
-  const csRef<csEntity> &GetParent() const;
+  cs::csEntity *GetParent();
+  const csEntity *GetParent() const;
   CS_FUNCTION()
   size_t GetNumberOfChildren() const;
   CS_FUNCTION()
-  csRef<cs::csEntity> &GetChild(size_t idx);
-  const csRef<csEntity> &GetChild(size_t idx) const;
+  cs::csEntity *GetChild(size_t idx);
+  const csEntity *GetChild(size_t idx) const;
 
 
   template<typename ES>
-  csRef<ES> &GetState()
+  ES *GetState()
   {
-    return static_cast<csRef<ES>&>(GetState(ES::GetStaticClass()));
+    return static_cast<ES *>(GetState(ES::GetStaticClass()));
   }
   template<typename ES>
-  const csRef<ES> &GetState() const
+  const ES *GetState() const
   {
-    return static_cast<const csRef<ES>&>(GetState(ES::GetStaticClass()));
+    return static_cast<const ES *>(GetState(ES::GetStaticClass()));
   }
 
-  csRef<csEntityState> &GetState(const csClass *cls);
-  const csRef<csEntityState> &GetState(const csClass *cls) const;
+  csEntityState *GetState(const csClass *cls);
+  const csEntityState *GetState(const csClass *cls) const;
 
 
   template<typename ES>
-  std::vector<csRef<ES>> GetStates()
+  std::vector<ES *> GetStates()
   {
-    std::vector<csRef<csEntityState>> states = GetStates(ES::GetStaticClass());
-    std::vector<csRef<csEntityState>>* statesPtr = &states;
-    std::vector<csRef<ES>>* esPtr = reinterpret_cast<std::vector<csRef<ES>>*>(esPtr);
-    return *esPtr;
+    return *reinterpret_cast<std::vector<ES *> *>(&GetStates(ES::GetStaticClass()));
   }
 
+  template<typename ES>
+  std::vector<const ES *> GetStates() const
+  {
+    return *reinterpret_cast<std::vector<const ES *> *>(&GetStates(ES::GetStaticClass()));
+  }
 
-  // TODO: Reimplement this in another way
-  //template<typename ES>
-  //std::vector<const csRef<ES>> GetStates() const
-  //{
-  //  std::vector<const csRef<csEntityState>> states = GetStates(ES::GetStaticClass());
-  //  std::vector<const csRef<csEntityState>>* statesPtr = &states;
-  //  std::vector<const csRef<ES>>* esPtr = reinterpret_cast<std::vector<csRef<ES>>*>(esPtr);
-  //  return *esPtr;
-  //}
-
-  std::vector<csRef<csEntityState>> GetStates(const csClass *cls);
-  //std::vector<const csRef<csEntityState>> GetStates(const csClass *cls) const;
+  std::vector<csEntityState *> GetStates(const csClass *cls);
+  std::vector<const csEntityState *> GetStates(const csClass *cls) const;
 
   CS_FUNCTION()
-  bool AttachState(csRef<cs::csEntityState> entityState);
+  bool AttachState(cs::csEntityState *entityState);
   CS_FUNCTION()
-  bool DetachState(csRef<cs::csEntityState> entityState);
+  bool DetachState(cs::csEntityState *entityState);
 
   CS_FUNCTION()
-  void SetRoot(csRef<cs::csSpatialState> &rootState);
+  void SetRoot(cs::csSpatialState *rootState);
   CS_FUNCTION()
-  csRef<cs::csSpatialState> &GetRoot();
-  const csRef<csSpatialState> &GetRoot() const;
+  cs::csSpatialState *GetRoot();
+  const csSpatialState *GetRoot() const;
 
   /**
    * @name Lifecycle
@@ -114,12 +106,12 @@ public:
    * Don't use directly will be called by the entity states
    * @param entityState
    */
-  void RegisterEntityState(csRef<csEntityState> &entityState);
-  void DeregisterEntityState(csRef<csEntityState> &entityState);
+  void RegisterEntityState(csEntityState *entityState);
+  void DeregisterEntityState(csEntityState *entityState);
 
 private:
-  csRef<csSpatialState> &GetAbsolutRoot();
-  csRef<csSpatialState> &GetAbsolutParentRoot();
+  csSpatialState *GetAbsolutRoot();
+  csSpatialState *GetAbsolutParentRoot();
   std::string m_name;
 
   csRef<csSpatialState> m_rootState;

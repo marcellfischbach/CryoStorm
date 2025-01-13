@@ -71,7 +71,7 @@ void csGL4PSSMRenderer::Initialize()
 
 
   m_shadowMappingShader = csAssetManager::Get()->Get<iShader>(
-      csResourceLocator("${engine}/opengl/gl4/pssm/directional_light_shadow_map.shader"));
+      csAssetLocator("${engine}/opengl/gl4/pssm/directional_light_shadow_map.shader"));
   if (m_shadowMappingShader)
   {
     m_attrLayersDepth   = m_shadowMappingShader->GetShaderAttribute("LayersDepth");

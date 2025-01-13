@@ -2,7 +2,7 @@
 #pragma once
 
 #include <filesystem>
-#include <csCore/resource/csResourceLocator.hh>
+#include <csCore/resource/csAssetLocator.hh>
 namespace std
 {
 namespace fs = filesystem;
@@ -18,9 +18,9 @@ struct iEditorFactory
 {
   virtual ~iEditorFactory() = default;
 
-  virtual bool CanEdit(const cs::csResourceLocator &locator) const = 0;
+  virtual bool CanEdit(const cs::csAssetLocator &locator) const = 0;
 
-  virtual void Edit(const cs::csResourceLocator &locator, QWidget *path = nullptr) const = 0;
+  virtual void Edit(const cs::csAssetLocator &locator, QWidget *path = nullptr) const = 0;
 
 };
 

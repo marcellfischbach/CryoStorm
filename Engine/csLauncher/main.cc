@@ -153,19 +153,25 @@ int main(int argc, char **argv)
 
   csRef<csFileSystemFile>  file;
 
-  file = new csFileSystemFile("This is a file");
+  csFileSystemFile* filePtr = new csFileSystemFile("This is a file");
+  file = filePtr;
 
-  {
-    csRef <iFile> ifile = file;
+  printf("Size csRef<file>: %d\n", sizeof(file));
+  printf("Size file ptr: %d\n", sizeof(filePtr));
 
-    printf("call\n");
-  }
+
   do_something(file);
   do_something(csRef<iFile>());
   do_something_by_value(file);
   do_something_by_value(csRef<iFile>());
   printf("call done\n");
+  if (true)
+  {
+    csRef <iFile> ifile = file;
 
+    printf("call\n");
+    return 0;
+  }
   std::vector<std::string> args;
   for (int i = 0; i < argc; i++)
   {

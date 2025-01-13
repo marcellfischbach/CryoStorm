@@ -36,12 +36,12 @@
 #ifdef CS_JAVA
 #define CS_CLASS_GEN_OBJECT \
     CS_CLASS_GEN; \
-    void AddRef() override \
+    void AddRef() const override \
     { \
       m_refCount++; \
 /*      printf ("AddRef: %lld\n", m_refCount);*/ \
     } \
-    void Release() override  \
+    void Release() const override  \
     { \
       --m_refCount; \
 /*      printf ("Release: %lld\n", m_refCount);*/ \
@@ -116,11 +116,11 @@ public:                                \
 #else
 #define CS_CLASS_GEN_OBJECT \
     CS_CLASS_GEN; \
-    void AddRef() override \
+    void AddRef() const override \
     { \
       m_refCount++; \
     } \
-    void Release() override  \
+    void Release() const override  \
     { \
       --m_refCount; \
       if (m_refCount <= 0) \
@@ -133,15 +133,15 @@ public:                                \
       return m_refCount; \
     } \
     private: \
-      int64_t m_refCount = 1
+      mutable int64_t m_refCount = 0
 
 #define CS_DECLARE_JAVA(fqcn)
 
 #endif
 
 #define CS_WEAK_OBJECT(Super) \
-  public: void AddRef () { Super::AddRef (); }\
-          void Release () { Super::Release (); }
+  public: void AddRef () const { Super::AddRef (); }\
+          void Release () const { Super::Release (); }
 
 
 #define CS_SET(oo, no) if (no) no->AddRef(); if (oo) oo->Release(); oo = no
@@ -232,9 +232,9 @@ struct CS_CORE_API iObject
   CS_NODISCARD virtual const csClass *GetClass() const;
   static const csClass *GetStaticClass();
 
-  virtual void AddRef() = 0;
+  virtual void AddRef() const = 0;
 
-  virtual void Release() = 0;
+  virtual void Release() const = 0;
 
   CS_NODISCARD virtual int64_t RefCount() const = 0;
 

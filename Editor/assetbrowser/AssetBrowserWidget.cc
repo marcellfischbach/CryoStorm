@@ -13,7 +13,7 @@
 #include <editors/EditorRegistry.hh>
 #include "ui_AssetBrowserWidget.h"
 
-#include <csCore/resource/csResourceLocator.hh>
+#include <csCore/resource/csAssetLocator.hh>
 #include <csCore/resource/csFileSystemArchive.hh>
 
 #include <QMenu>
@@ -141,8 +141,8 @@ void AssetBrowserWidget::onFolderContentDoubleClicked(const QModelIndex &index)
   std::string archivePath = m_treeModel->ConstructArchivePath(ui->treeView->currentIndex());
   std::string fileName = m_folderModel->GetName(index);
 
-  cs::csResourceLocator locator(pArchive->GetName() + "@" +  archivePath + fileName);
-  iEditorFactory *editorFactory = EditorRegistry::Get().GetEditor(locator);
+  cs::csAssetLocator locator(pArchive->GetName() + "@" + archivePath + fileName);
+  iEditorFactory     *editorFactory = EditorRegistry::Get().GetEditor(locator);
   if (!editorFactory)
   {
     return;

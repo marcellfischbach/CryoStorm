@@ -5,62 +5,33 @@ namespace cs
 {
 
 
-csAssetLoader::csAssetLoader()
+csAssetLoader::csAssetLoader(uint32_t priority)
+    : m_priority(priority)
 {
 
 }
 
-csAssetLoader::~csAssetLoader()
-{
 
-}
-
-void csAssetLoader::RegisterType(const csClass* cls, const std::string& extension)
+void csAssetLoader::RegisterType(const std::string &extension)
 {
-  for (const auto& fmt : m_formats)
+  if (std::find(m_extensions.begin(), m_extensions.end(), extension) != m_extensions.end())
   {
-    if (fmt.Extension == extension && fmt.Cls != cls)
-    {
-      throw DuplicateResourceException("Extension " + extension + " already registered for: " + fmt.Cls->GetName());
-    }
+    return;
   }
 
-  FileFormat fmt{};
-  fmt.Cls = cls;
-  fmt.Extension = extension;
-  m_formats.push_back(fmt);
+  m_extensions.push_back(extension);
 }
 
-const std::vector<csAssetLoader::FileFormat>& csAssetLoader::GetFormats() const
+const std::vector<std::string> &csAssetLoader::GetExtensions() const
 {
-  return m_formats;
+  return m_extensions;
 }
 
-bool csAssetLoader::CanLoad(const csResourceLocator& locator) const
+bool csAssetLoader::CanLoad(const csAssetLocator &locator) const
 {
   const std::string &ext = locator.GetExtension();
-  for (const auto& fmt : m_formats)
-  {
-    if (fmt.Extension == ext)
-    {
-      return true;
-    }
-  }
-  return false;
+  return std::find(m_extensions.begin(), m_extensions.end(), ext) != m_extensions.end();
 }
 
-
-csRef<iObject> csAssetLoader::Load(const csResourceLocator& locator) const
-{
-  const std::string& ext = locator.GetExtension();
-  for (const auto& fmt : m_formats)
-  {
-    if (fmt.Extension == ext)
-    {
-      return Load(fmt.Cls, locator);
-    }
-  }
-  return csRef<iObject>::Null();
-}
 
 }

@@ -3,7 +3,7 @@
 #include <QApplication>
 #include <mainwindow.hh>
 #include <default_registries.hh>
-#include <csCore/resource/csResourceLocator.hh>
+#include <csCore/resource/csAssetLocator.hh>
 #include <csCore/resource/csVFS.hh>
 #include <csCore/resource/csVFSConfigReader.hh>
 #include <Project.hh>
@@ -37,8 +37,8 @@ int main(int argc, char** argv)
 {
   register_classes();
 
-  cs::csResourceLocator loc ("test-archive@/Users/andreas/Development/cryos/Editor/Editor.txt");
-  cs::csResourceLocator loc1 (loc,"test-archive@../AnotherValue.txt");
+  cs::csAssetLocator loc ("test-archive@/Users/andreas/Development/cryos/Editor/Editor.txt");
+  cs::csAssetLocator loc1 (loc, "test-archive@../AnotherValue.txt");
 
   QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
 

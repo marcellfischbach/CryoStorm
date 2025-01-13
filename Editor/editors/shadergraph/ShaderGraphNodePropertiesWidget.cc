@@ -229,7 +229,7 @@ void ShaderGraphResourceNodeWidget::SyncValues()
 
   std::array<float, 16> floats;
   std::array<int, 4> ints;
-  cs::csResourceLocator locator("");
+  cs::csAssetLocator locator("");
   switch (m_resource->GetMatType())
   {
   case cs::eMAT_Float:
@@ -285,7 +285,7 @@ void ShaderGraphResourceNodeWidget::SyncValues()
     floats[15] = m_gui->matMat433->value();
     break;
   case cs::eMAT_Texture:
-    locator = cs::csResourceLocator(m_gui->matTextureLocator->text().toStdString());
+    locator = cs::csAssetLocator(m_gui->matTextureLocator->text().toStdString());
     break;
   }
 

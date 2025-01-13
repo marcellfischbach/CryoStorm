@@ -247,8 +247,12 @@ set(SOURCES
 
         resource/csAssetLoader.cc
         resource/csAssetLoader.hh
+        resource/csAssetLocator.cc
+        resource/csAssetLocator.hh
         resource/csAssetManager.cc
         resource/csAssetManager.hh
+        resource/csAssetPool.cc
+        resource/csAssetPool.hh
         resource/csBaseCSFAssetLoader.cc
         resource/csBaseCSFAssetLoader.hh
         resource/csBinaryData.cc
@@ -259,13 +263,9 @@ set(SOURCES
         resource/csFileSystemArchive.hh
         resource/csFileSystemFile.cc
         resource/csFileSystemFile.hh
-        resource/csResourcePool.cc
-        resource/csResourcePool.hh
         resource/csResourceExceptions.hh
         resource/csResourceLoader.cc
         resource/csResourceLoader.hh
-        resource/csResourceLocator.cc
-        resource/csResourceLocator.hh
         resource/csResourceManager.cc
         resource/csResourceManager.hh
         resource/csTextFile.cc
@@ -278,9 +278,8 @@ set(SOURCES
         resource/eOpenMode.hh
         resource/eSeekMode.hh
         resource/iArchive.hh
-        resource/iAssetLoader.hh
+        resource/iAsset.hh
         resource/iFile.hh
-        resource/iResource.hh
 
 
 

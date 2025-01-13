@@ -4,7 +4,7 @@
 #include <csOpenGL/gl4/shading/csGL4Shader.hh>
 #include <csOpenGL/gl4/csGL4Exceptions.hh>
 #include <csCore/resource/csAssetManager.hh>
-#include <csCore/resource/csResourceLocator.hh>
+#include <csCore/resource/csAssetLocator.hh>
 #include <csCore/resource/csVFS.hh>
 
 #include <tinyxml2/tinyxml2.h>
@@ -17,10 +17,10 @@ namespace cs::opengl
 csGL4ProgramLoader::csGL4ProgramLoader()
   : csBaseCSFAssetLoader()
 {
-  AddValidFile(csGL4Program::GetStaticClass(), "SHADER");
+  RegisterType("SHADER");
 }
 
-iObject* csGL4ProgramLoader::Load(const csCryoFile* file, const csClass* cls, const csResourceLocator& locator) const
+csAssetRef<iAsset> csGL4ProgramLoader::Load(const csCryoFile *file, const csAssetLocator &locator) const
 {
 
   const csCryoFileElement * programElement = file->Root()->GetChild("program");
@@ -41,9 +41,9 @@ iObject* csGL4ProgramLoader::Load(const csCryoFile* file, const csClass* cls, co
     const csCryoFileElement * shaderElement = shadersElement->GetChild(i);
     if (shaderElement && shaderElement->GetTagName() == "shader")
     {
-      csResourceLocator shaderResourceLocator = csResourceLocator(locator, shaderElement->GetAttribute(0)->GetValue());
+      csAssetLocator shaderResourceLocator = csAssetLocator(locator, shaderElement->GetAttribute(0)->GetValue());
 
-      csGL4Shader * shader = csAssetManager::Get()->Load<csGL4Shader>(shaderResourceLocator);
+      csAssetRef<csGL4Shader> shader = csAssetManager::Get()->Load(shaderResourceLocator);
       program->AttachShader(shader);
     }
   }

@@ -1,8 +1,9 @@
 
 
 #include <csCore/resource/csAssetManager.hh>
+#include <csCore/resource/csAssetPool.hh>
 #include <csCore/resource/iFile.hh>
-#include <csCore/resource/iResource.hh>
+#include <csCore/resource/iAsset.hh>
 #include <csCore/resource/csVFS.hh>
 #include <algorithm>
 
@@ -17,89 +18,55 @@ csAssetManager::csAssetManager()
 }
 
 
-void csAssetManager::RegisterLoader(iAssetLoader *loader)
+void csAssetManager::RegisterLoader(csAssetLoader *loader)
 {
-  if (!loader)
-  {
-    return;
-  }
-  if (std::ranges::find(m_loaders.begin(), m_loaders.end(), loader) != m_loaders.end())
-  {
-    return;
-  }
 
-  loader->AddRef();
-  m_loaders.push_back(loader);
-
-  std::sort(m_loaders.begin(), m_loaders.end(), [](iAssetLoader *l0, iAssetLoader *l1) {
-    return l0->Priority() > l1->Priority();
+  m_assetLoaders.push_back(loader);
+  std::sort(m_assetLoaders.begin(), m_assetLoaders.end(), [](csAssetLoader *l0, csAssetLoader *l1) {
+    return l0->GetPriority() > l1->GetPriority();
   });
 }
 
 
-
-void csAssetManager::RegisterLoader(csAssetLoader* loader)
+csAssetRef<iAsset> csAssetManager::Get(const csAssetLocator &locator)
 {
-  const std::vector<csAssetLoader::FileFormat> &formats = loader->GetFormats();
-  for (auto const& fmt : formats)
+  iAsset *pooled = csAssetPool::Instance().Get(locator);
+  if (pooled)
   {
-    if (std::find(m_knownExtensions.begin(), m_knownExtensions.end(), fmt.Extension) != m_knownExtensions.end())
-    {
-      throw DuplicateResourceException("Extension " + fmt.Extension + " is already registered.");
-    }
-  }
-  for (auto const& fmt : formats)
-  {
-    m_knownExtensions.push_back(fmt.Extension);
+    return {pooled};
   }
 
-  m_assetLoaders.push_back(loader);
+
+  csAssetRef<iAsset> resource = Load(locator);
+  resource->SetLocator(locator);
+
+  return resource;
 }
 
 
-
-iObject *csAssetManager::Get(const csClass *cls, const csResourceLocator &locator)
+csAssetRef<iAsset> csAssetManager::Load(const csAssetLocator &locator)
 {
-  auto it = m_cachedObjects.find(locator);
-  if (it != m_cachedObjects.end())
+  for (csAssetLoader *loader: m_assetLoaders)
   {
-    return it->second;
-  }
-  iObject *obj = Load(cls, locator);
-  if (csInstanceOf<iResource>(obj))
-  {
-    iResource* resource = csQueryClass<iResource>(obj);
-    resource->SetLocator(locator);
-  }
-  CS_ADDREF(obj);
-  m_cachedObjects[locator] = obj;
-  return obj;
-}
-
-
-iObject *csAssetManager::Load(const csClass *cls, const csResourceLocator &locator)
-{
-  for (iAssetLoader *loader: m_loaders)
-  {
-    if (loader->CanLoad(cls, locator))
+    if (loader->CanLoad(locator))
     {
-      iObject *obj = loader->Load(cls, locator);
-      if (obj)
+      csAssetRef<iAsset> res = loader->Load(locator);
+      if (res)
       {
-        return obj;
+        return res;
       }
       fprintf(stderr, "Loader '%s' cannot load '%s'\n",
               loader->GetClass()->GetName().c_str(),
-              locator.Encoded().c_str()
+              locator.Canonical().c_str()
       );
     }
   }
 
   fprintf(stderr, "No loader found for '%s'\n",
-          locator.Encoded().c_str()
+          locator.Canonical().c_str()
   );
 
-  return nullptr;
+  return csAssetRef<iAsset>::Null();
 }
 
 

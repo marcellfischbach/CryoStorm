@@ -2,7 +2,8 @@
 
 #include <csCore/csCoreExport.hh>
 #include <csCore/csClass.hh>
-#include <csCore/resource/csResourceLocator.hh>
+#include <csCore/resource/csAssetLocator.hh>
+#include <csCore/resource/iAsset.hh>
 #include <csCore/csRef.hh>
 #include <exception>
 #include <vector>
@@ -11,50 +12,33 @@ namespace cs
 {
 
 
-class DuplicateResourceException : public std::exception
-{
-public:
-  DuplicateResourceException(const std::string& msg)
-    : std::exception(msg.c_str())
-  {
-  }
-};
-
-
 
 CS_CLASS()
 class CS_CORE_API csAssetLoader : public CS_SUPER(iObject)
 {
   CS_CLASS_GEN_OBJECT;
-protected:
-  csAssetLoader();
-
-  void RegisterType(const csClass * cls, const std::string & extension);
-  virtual csRef<iObject> Load(const csClass * cls, const csResourceLocator & locator) const = 0;
-
-
-
 public:
-  virtual ~csAssetLoader();
-
-  struct FileFormat
-  {
-    const csClass* Cls;
-    std::string Extension;
-  };
+  virtual ~csAssetLoader() = default;
 
 
+  CS_NODISCARD uint32_t GetPriority() const;
 
-  csRef<iObject> Load(const csResourceLocator & locator) const;
-  bool CanLoad(const csResourceLocator & locator) const;
+  CS_NODISCARD virtual csAssetRef<iAsset> Load(const csAssetLocator & locator) const = 0;
+  CS_NODISCARD bool CanLoad(const csAssetLocator & locator) const;
 
-  const std::vector<FileFormat>& GetFormats() const;
+  CS_NODISCARD const std::vector<std::string>& GetExtensions() const;
+
+protected:
+  csAssetLoader(uint32_t priority = 0);
+
+  void RegisterType(const std::string & extension);
 
 
 
 private:
+  uint32_t m_priority = 0;
 
-  std::vector<FileFormat> m_formats;
+  std::vector<std::string> m_extensions;
 };
 
 }

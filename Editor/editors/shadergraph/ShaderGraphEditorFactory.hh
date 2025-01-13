@@ -12,9 +12,9 @@ public:
   ShaderGraphEditorFactory() = default;
   ~ShaderGraphEditorFactory() override = default;
 
-  bool CanEdit (const cs::csResourceLocator &locator) const override;
+  bool CanEdit(const cs::csAssetLocator &locator) const override;
 
-  void Edit (const cs::csResourceLocator &locator, QWidget* path = nullptr) const override;
+  void Edit(const cs::csAssetLocator &locator, QWidget* path = nullptr) const override;
 
 
 

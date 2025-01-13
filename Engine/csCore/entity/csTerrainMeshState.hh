@@ -2,8 +2,9 @@
 
 #include <csCore/csCoreExport.hh>
 #include <csCore/entity/csSpatialState.hh>
+#include <csCore/resource/iAsset.hh>
+#include <csCore/csRef.hh>
 #include <vector>
-#include <cscore/csRef.hh>
 
 
 namespace cs
@@ -18,53 +19,55 @@ struct iTexture2D;
 
 
 CS_CLASS(jclass="org.cryo.core.entity.TerrainLayerMask")
-class CS_CORE_API csTerrainLayerMask : public CS_SUPER(iObject)
+class CS_CORE_API csTerrainLayerMask : public CS_SUPER(iAsset)
 {
 CS_CLASS_GEN_OBJECT;
+CS_ASSET_GEN;
 public:
   csTerrainLayerMask() = default;
   ~csTerrainLayerMask() override;
 
   CS_FUNCTION()
-  void SetLayerTexture (cs::iTexture2D *layerTexture);
+  void SetLayerTexture (csAssetRef<cs::iTexture2D> &layerTexture);
   CS_FUNCTION()
-  CS_NODISCARD cs::iTexture2D *GetLayerTexture ();
-  CS_NODISCARD const iTexture2D *GetLayerTexture () const;
+  CS_NODISCARD csAssetRef<cs::iTexture2D> &GetLayerTexture ();
+  CS_NODISCARD const csAssetRef<const cs::iTexture2D> &GetLayerTexture () const;
 
   CS_FUNCTION()
-  void SetMaskTexture (cs::iTexture2D *maskTexture);
+  void SetMaskTexture (csAssetRef<cs::iTexture2D> &maskTexture);
   CS_FUNCTION()
-  CS_NODISCARD cs::iTexture2D *GetMaskTexture ();
-  CS_NODISCARD const iTexture2D *GetMaskTexture () const;
+  CS_NODISCARD csAssetRef<cs::iTexture2D> &GetMaskTexture ();
+  CS_NODISCARD const csAssetRef<const cs::iTexture2D> &GetMaskTexture () const;
 
 private:
-  iTexture2D *m_layerTexture = nullptr;
-  iTexture2D *m_maskTexture = nullptr;
+  csAssetRef<iTexture2D> m_layerTexture;
+  csAssetRef<iTexture2D> m_maskTexture;
 };
 
 CS_CLASS(jclass="org.cryo.core.entity.TerrainLayer")
-class CS_CORE_API csTerrainLayer : public CS_SUPER(iObject)
+class CS_CORE_API csTerrainLayer : public CS_SUPER(iAsset)
 {
 CS_CLASS_GEN_OBJECT;
+CS_ASSET_GEN;
 public:
   csTerrainLayer() = default;
   ~csTerrainLayer() override;
 
   CS_FUNCTION()
-  void SetDiffuseRoughness (cs::iTexture2D *diffuseRoughness);
+  void SetDiffuseRoughness (csAssetRef<cs::iTexture2D> &diffuseRoughness);
   CS_FUNCTION()
-  CS_NODISCARD cs::iTexture2D *GetDiffuseRoughness ();
-  CS_NODISCARD const iTexture2D *GetDiffuseRoughness () const;
+  CS_NODISCARD csAssetRef<cs::iTexture2D> &GetDiffuseRoughness ();
+  CS_NODISCARD const csAssetRef<const cs::iTexture2D> &GetDiffuseRoughness () const;
 
   CS_FUNCTION()
-  void SetNormal (cs::iTexture2D *normal);
+  void SetNormal (csAssetRef<cs::iTexture2D> &normal);
   CS_FUNCTION()
-  CS_NODISCARD cs::iTexture2D *GetNormal ();
-  CS_NODISCARD const iTexture2D *GetNormal () const;
+  CS_NODISCARD csAssetRef<cs::iTexture2D> &GetNormal ();
+  CS_NODISCARD const csAssetRef<const cs::iTexture2D> &GetNormal () const;
 
 private:
-  iTexture2D *m_diffuseRoughness = nullptr;
-  iTexture2D *m_normal = nullptr;
+  csAssetRef<cs::iTexture2D> m_diffuseRoughness = nullptr;
+  csAssetRef<cs::iTexture2D> m_normal = nullptr;
 };
 
 
@@ -134,7 +137,7 @@ private:
 
   iTerrainMesh *m_terrainMesh = nullptr;
   csGfxMesh * m_gfxMesh  = nullptr;
-  csRes<iMaterial> m_material;
+  csAssetRef<iMaterial> m_material;
 
   csTerrainLayerMask           *m_layerMask = nullptr;
   std::vector<csTerrainLayer*> m_layers;

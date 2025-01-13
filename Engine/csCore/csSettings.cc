@@ -1,6 +1,6 @@
 #include <csCore/csSettings.hh>
 #include <csCore/resource/csCryoFile.hh>
-#include <csCore/resource/csResourceLocator.hh>
+#include <csCore/resource/csAssetLocator.hh>
 #include <csCore/resource/csVFS.hh>
 #
 
@@ -10,16 +10,16 @@ namespace cs
 csSettingsFile::csSettingsFile(const std::string& locator)
   : m_file(nullptr)
 {
-  Initialize(csResourceLocator(locator));
+  Initialize(csAssetLocator(locator));
 }
 
-csSettingsFile::csSettingsFile(const csResourceLocator& locator)
+csSettingsFile::csSettingsFile(const csAssetLocator& locator)
   : m_file(nullptr)
 {
   Initialize(locator);
 }
 
-void csSettingsFile::Initialize(const csResourceLocator& locator)
+void csSettingsFile::Initialize(const csAssetLocator& locator)
 {
   iFile* file = csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (file)

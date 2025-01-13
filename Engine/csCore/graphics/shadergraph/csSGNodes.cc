@@ -477,7 +477,7 @@ void csSGResourceNode::SetDefault(const std::array<int, 4>& v)
 }
   
 
-void csSGResourceNode::SetDefault(const csResourceLocator& locator)
+void csSGResourceNode::SetDefault(const csAssetLocator& locator)
 {
   m_defaultLocator = locator;
 }
@@ -492,7 +492,7 @@ const std::array<int, 4> &csSGResourceNode::GetDefaultInts() const
   return m_defaultInts;
 }
 
-const csResourceLocator& csSGResourceNode::GetDefaultLocator() const
+const csAssetLocator& csSGResourceNode::GetDefaultLocator() const
 {
   return m_defaultLocator;
 }

@@ -27,20 +27,20 @@ public:
   bool IsStatic() const;
 
   CS_FUNCTION()
-  bool AttachSpatial(csRef<cs::csSpatialState> child);
+  bool AttachSpatial(cs::csSpatialState *child);
   CS_FUNCTION()
   bool DetachSelf();
   CS_FUNCTION()
-  bool DetachSpatial(csRef<cs::csSpatialState> child);
+  bool DetachSpatial(cs::csSpatialState *child);
   CS_FUNCTION()
-  csRef<cs::csSpatialState>& GetParent();
-  const csRef<csSpatialState> &GetParent() const;
+  cs::csSpatialState *GetParent();
+  const csSpatialState *GetParent() const;
 
   CS_FUNCTION()
   size_t GetNumberOfChildren() const;
   CS_FUNCTION()
-  csRef<cs::csSpatialState> &GetChild(size_t idx);
-  const csRef<csSpatialState>& GetChild(size_t idx) const;
+  cs::csSpatialState *GetChild(size_t idx);
+  const csSpatialState *GetChild(size_t idx) const;
 
   /**
    * @name Transformation
@@ -64,7 +64,7 @@ public:
 
   
 protected:
-  void UpdateEntity(csRef<csEntity> &oldEntity, csRef<csEntity> &newEntity) override;
+  void UpdateEntity(csEntity *oldEntity, csEntity *newEntity) override;
   virtual void TransformationUpdatedPreChildren();
   virtual void TransformationUpdatedPostChildren();
 

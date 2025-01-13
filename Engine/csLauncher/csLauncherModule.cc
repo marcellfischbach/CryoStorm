@@ -43,7 +43,7 @@ bool csLauncherModule::Initialize(const std::vector<std::string> &args, csEngine
   const std::string &iconName = csSettings::Get().Display().GetText("icon");
   if (!iconName.empty())
   {
-    window->SetWindowIcon(csResourceLocator(iconName));
+    window->SetWindowIcon(csAssetLocator(iconName));
   }
 
   window->Show();

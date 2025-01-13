@@ -22,38 +22,38 @@ public:
   }
 
 
-  iObject* Load(const csCryoFile* file, const csClass* cls, const csResourceLocator& locator) const override;
+  csAssetRef<iAsset> Load(const csCryoFile *file, const csAssetLocator &locator) const override;
 
 private:
-  static csMaterial* LoadMaterial(const csClass* cls, const csCryoFile* file, const csResourceLocator& locator);
-  static iObject* LoadMaterialInstance(const csClass* cls, const csCryoFile* file, const csResourceLocator& locator);
+  static csMaterial* LoadMaterial(const csCryoFile* file, const csAssetLocator& locator);
+  static csMaterialInstance* LoadMaterialInstance(const csCryoFile* file, const csAssetLocator& locator);
 
-  static void LoadShading(csMaterial* material, const csCryoFileElement* materialElement, const csResourceLocator& locator);
-  static void LoadQueue(csMaterial* material, const csCryoFileElement* materialElement, const csResourceLocator& locator);
-  static void LoadBlending(csMaterial* material, const csCryoFileElement* materialElement, const csResourceLocator& locator);
-  static void LoadDepth(csMaterial* material, const csCryoFileElement* materialElement, const csResourceLocator& locator);
+  static void LoadShading(csMaterial* material, const csCryoFileElement* materialElement, const csAssetLocator& locator);
+  static void LoadQueue(csMaterial* material, const csCryoFileElement* materialElement, const csAssetLocator& locator);
+  static void LoadBlending(csMaterial* material, const csCryoFileElement* materialElement, const csAssetLocator& locator);
+  static void LoadDepth(csMaterial* material, const csCryoFileElement* materialElement, const csAssetLocator& locator);
 
-  static bool LoadShaders(csMaterial* material, const csCryoFileElement* materialElement, const csResourceLocator& locator);
-  static bool LoadShader(csMaterial* material, const csCryoFileElement* shaderElement, const csResourceLocator& locator);
-  static bool LoadAttributes(csMaterial* material, const csCryoFileElement* materialElement, const csResourceLocator& locator);
-  static bool LoadAttribute(csMaterial* material, const csCryoFileElement* attributeElement, const csResourceLocator& locator);
+  static bool LoadShaders(csMaterial* material, const csCryoFileElement* materialElement, const csAssetLocator& locator);
+  static bool LoadShader(csMaterial* material, const csCryoFileElement* shaderElement, const csAssetLocator& locator);
+  static bool LoadAttributes(csMaterial* material, const csCryoFileElement* materialElement, const csAssetLocator& locator);
+  static bool LoadAttribute(csMaterial* material, const csCryoFileElement* attributeElement, const csAssetLocator& locator);
 
   static bool LoadReferenceMaterial(csMaterialInstance* materialInstance,
                                     const csCryoFileElement* materialInstanceElement,
-                                    const csResourceLocator& locator);
+                                    const csAssetLocator& locator);
   static bool LoadAttributes(csMaterialInstance* materialInstance,
                              const csCryoFileElement* materialInstanceElement,
-                             const csResourceLocator& locator);
+                             const csAssetLocator& locator);
   static bool LoadAttribute(csMaterialInstance* materialInstance,
                             const csCryoFileElement* attributeElement,
-                            const csResourceLocator& locator);
+                            const csAssetLocator& locator);
 
   static eMaterialAttributeType GetAttributeType(const csCryoFileElement* attributeElement);
   static bool LoadAttributeDefault(iMaterial* material,
                                    size_t attributeIdx,
                                    eMaterialAttributeType attributeType,
                                    const csCryoFileElement* attributeElement,
-                                   const csResourceLocator& locator);
+                                   const csAssetLocator& locator);
   static bool LoadAttributeFloat(iMaterial* material, size_t attributeIdx, const csCryoFileElement* attributeElement);
   static bool LoadAttributeVec2(iMaterial* material, size_t attributeIdx, const csCryoFileElement* attributeElement);
   static bool LoadAttributeVec3(iMaterial* material, size_t attributeIdx, const csCryoFileElement* attributeElement);
@@ -64,7 +64,7 @@ private:
   static bool LoadAttributeTexture(iMaterial* material,
                                    size_t attributeIdx,
                                    const csCryoFileElement* attributeElement,
-                                   const csResourceLocator& locator);
+                                   const csAssetLocator& locator);
 };
 
 }

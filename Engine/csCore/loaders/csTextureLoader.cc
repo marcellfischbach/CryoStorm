@@ -23,7 +23,7 @@ csTextureLoader::csTextureLoader()
 }
 
 
-iObject *csTextureLoader::Load(const csCryoFile * file, const csClass *cls, const csResourceLocator &locator) const
+csAssetRef<iAsset> csTextureLoader::Load(const csCryoFile *file, const csAssetLocator &locator) const
 {
   auto textureElement = file->Root()->GetChild(0);
   auto tag = textureElement->GetTagName();
@@ -43,7 +43,7 @@ iObject *csTextureLoader::Load(const csCryoFile * file, const csClass *cls, cons
   return nullptr;
 }
 
-iTexture2D *csTextureLoader::LoadTexture2D(const csCryoFileElement *textureElement, const csResourceLocator & locator)
+iTexture2D *csTextureLoader::LoadTexture2D(const csCryoFileElement *textureElement, const csAssetLocator & locator)
 {
 
   auto image = LoadImage (textureElement->GetChild("image"), locator);
@@ -81,18 +81,18 @@ iTexture2D *csTextureLoader::LoadTexture2D(const csCryoFileElement *textureEleme
   return texture;
 }
 
-iTexture2DArray *csTextureLoader::LoadTexture2DArray(const csCryoFileElement *textureElement, const csResourceLocator & locator)
+iTexture2DArray *csTextureLoader::LoadTexture2DArray(const csCryoFileElement *textureElement, const csAssetLocator & locator)
 {
   return nullptr;
 }
 
-iTextureCube *csTextureLoader::LoadTextureCube(const csCryoFileElement *textureElement, const csResourceLocator & locator)
+iTextureCube *csTextureLoader::LoadTextureCube(const csCryoFileElement *textureElement, const csAssetLocator & locator)
 {
   return nullptr;
 }
 
 
-csImage* csTextureLoader::LoadImage(const csCryoFileElement *imageElement, const csResourceLocator & locator)
+csImage* csTextureLoader::LoadImage(const csCryoFileElement *imageElement, const csAssetLocator & locator)
 {
   if (!imageElement || imageElement->GetNumberOfAttributes() != 1)
   {
@@ -101,7 +101,7 @@ csImage* csTextureLoader::LoadImage(const csCryoFileElement *imageElement, const
 
   auto imageName = imageElement->GetAttribute(0, "");
 
-  return csAssetManager::Get()->Get<csImage>(csResourceLocator(locator, imageName));
+  return csAssetManager::Get()->Get<csImage>(csAssetLocator(locator, imageName));
 }
 
 void csTextureLoader::ColorCorrection(const csCryoFileElement * textureElement, csImage *image)
@@ -131,7 +131,7 @@ void csTextureLoader::ColorCorrection(const csCryoFileElement * textureElement, 
 }
 
 
-iSampler *csTextureLoader::LoadSampler(const csCryoFileElement *samplerElement, const csResourceLocator & locator)
+iSampler *csTextureLoader::LoadSampler(const csCryoFileElement *samplerElement, const csAssetLocator & locator)
 {
   if (!samplerElement || samplerElement->GetNumberOfAttributes() != 1)
   {
@@ -158,7 +158,7 @@ iSampler *csTextureLoader::LoadSampler(const csCryoFileElement *samplerElement, 
   }
   else
   {
-    sampler = csAssetManager::Get()->Get<iSampler>(csResourceLocator(locator, samplerName));
+    sampler = csAssetManager::Get()->Get<iSampler>(csAssetLocator(locator, samplerName));
   }
 
 

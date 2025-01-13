@@ -5,7 +5,7 @@
 #include <csCore/resource/csFileSystemArchive.hh>
 #include <csCore/resource/csFileSystemFile.hh>
 #include <csCore/resource/csJavaArchive.hh>
-#include <csCore/resource/csResourceLocator.hh>
+#include <csCore/resource/csAssetLocator.hh>
 #include <csCore/csAutoDelete.hh>
 
 

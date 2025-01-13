@@ -5,6 +5,7 @@
 #include <csCore/csCoreExport.hh>
 #include <csCore/csClass.hh>
 #include <csCore/graphics/iSampler.hh>
+#include <csCore/csRef.hh>
 
 namespace cs
 {
@@ -18,27 +19,27 @@ public:
   virtual ~csSamplers();
 
   void SetDefault(iSampler * sampler);
-  iSampler* GetDefault();
+  csAssetRef<iSampler>  &GetDefault();
 
   void SetNormalMap(iSampler * sampler);
-  iSampler* GetNormalMap();
+  csAssetRef<iSampler>  &GetNormalMap();
 
   void SetUISprite(iSampler * sampler);
-  iSampler* GetUISprite();
+  csAssetRef<iSampler>  &GetUISprite();
 
   void SetTest(iSampler *sampler);
-  iSampler* GetTest();
+  csAssetRef<iSampler>  &GetTest();
 
   void Load();
 
 private:
 
-  iSampler* m_default;
-  iSampler* m_normalMap;
-  iSampler* m_uiSprite;
-  iSampler* m_test;
-  iSampler* m_offscreen;
-  iSampler* m_offscreenDepth;
+  csAssetRef<iSampler> m_default;
+  csAssetRef<iSampler> m_normalMap;
+  csAssetRef<iSampler> m_uiSprite;
+  csAssetRef<iSampler> m_test;
+  csAssetRef<iSampler> m_offscreen;
+  csAssetRef<iSampler> m_offscreenDepth;
 
 };
 

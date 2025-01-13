@@ -5,6 +5,7 @@
 #include <csCore/csClass.hh>
 #include <csCore/csTypes.hh>
 #include <csCore/graphics/eShaderAttribute.hh>
+#include <csCore/resource/iAsset.hh>
 #include <string>
 
 namespace cs
@@ -13,7 +14,7 @@ namespace cs
 struct iShaderAttribute;
 
 CS_CLASS(jclass="org.cryo.core.graphics.shading.IShader")
-struct CS_CORE_API iShader : public CS_SUPER(iObject)
+struct CS_CORE_API iShader : public CS_SUPER(iAsset)
 {
 CS_CLASS_GEN;
 

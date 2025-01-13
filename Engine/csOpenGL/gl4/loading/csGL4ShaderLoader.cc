@@ -15,9 +15,9 @@
 namespace cs::opengl
 {
 
-std::vector<std::string> replace_includes(const csResourceLocator *parent,
+std::vector<std::string> replace_includes(const csAssetLocator *parent,
                                           std::vector<std::string> &lines,
-                                          std::set<csResourceLocator> &included);
+                                          std::set<csAssetLocator> &included);
 
 
 std::vector<std::string> split(const std::string &string)
@@ -96,7 +96,7 @@ void replace(std::vector<std::string> &lines, const std::string &vertexStreamNam
 }
 
 std::vector<std::string>
-loadExternalLinesRaw(const csResourceLocator &locator, iFile *file, std::set<csResourceLocator> &included)
+loadExternalLinesRaw(const csAssetLocator &locator, iFile *file, std::set<csAssetLocator> &included)
 {
   file->Seek(eSM_End, 0);
   long size = file->Tell();
@@ -114,7 +114,7 @@ loadExternalLinesRaw(const csResourceLocator &locator, iFile *file, std::set<csR
 }
 
 std::vector<std::string>
-loadExternalLinesSpc(const csResourceLocator &locator, iFile *file, std::set<csResourceLocator> &included)
+loadExternalLinesSpc(const csAssetLocator &locator, iFile *file, std::set<csAssetLocator> &included)
 {
   cs::csCryoFile fFile;
   bool             res = fFile.Parse(file);
@@ -136,7 +136,7 @@ loadExternalLinesSpc(const csResourceLocator &locator, iFile *file, std::set<csR
 }
 
 
-std::vector<std::string> loadExternalLines(const csResourceLocator &locator, std::set<csResourceLocator> &included)
+std::vector<std::string> loadExternalLines(const csAssetLocator &locator, std::set<csAssetLocator> &included)
 {
   iFile *file = csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (!file)
@@ -168,7 +168,7 @@ std::vector<std::string> loadExternalLines(const csResourceLocator &locator, std
 }
 
 std::vector<std::string>
-replace_includes(const csResourceLocator *parent, std::vector<std::string> &lines, std::set<csResourceLocator> &included)
+replace_includes(const csAssetLocator *parent, std::vector<std::string> &lines, std::set<csAssetLocator> &included)
 {
   std::vector<std::string> result;
   std::regex               reg("(#include\\s*\\<\\s*)([^\\>\\s]+)(\\s*\\>)");
@@ -179,7 +179,9 @@ replace_includes(const csResourceLocator *parent, std::vector<std::string> &line
     {
 
       std::string              part1       = sm[2];
-      csResourceLocator        locator(parent, part1);
+      csAssetLocator           locator = parent
+          ? csAssetLocator(*parent, part1)
+          : csAssetLocator(part1);
       std::vector<std::string> loadedLines = loadExternalLines(locator, included);
       included.insert(locator);
       for (std::string &l: loadedLines)
@@ -197,7 +199,7 @@ replace_includes(const csResourceLocator *parent, std::vector<std::string> &line
 
 csGL4Shader *LoadShader(const std::string &typeText,
                         const std::string &origSource,
-                        const csResourceLocator *locator)
+                        const csAssetLocator *locator)
 {
   eGL4ShaderType shaderType;
   if (typeText == "vertex")
@@ -230,8 +232,8 @@ csGL4Shader *LoadShader(const std::string &typeText,
   }
 
 
-  std::vector<std::string>    lines = split(origSource);
-  std::set<csResourceLocator> included;
+  std::vector<std::string> lines = split(origSource);
+  std::set<csAssetLocator> included;
 
   lines = replace_includes(locator, lines, included);
   replace(lines, "eVS_Vertices", eVS_Vertices);
@@ -266,7 +268,7 @@ csGL4Shader *LoadShader(const std::string &typeText,
     {
       printf("(%04zu) %s\n", i + 1, lines[i].c_str());
     }
-    printf("Unable to compile shader: %s\n%s\n", locator ? locator->GetLocator().c_str() : "unknown file", sce.what());
+    printf("Unable to compile shader: %s\n%s\n", locator ? locator->Canonical().c_str() : "unknown file", sce.what());
   }
 
   if (shader)
@@ -281,26 +283,18 @@ csGL4Shader *LoadShader(const std::string &typeText,
 
 csGL4ShaderLoader::csGL4ShaderLoader()
 {
-
+  RegisterType("VERT");
+  RegisterType("EVAL");
+  RegisterType("CTRL");
+  RegisterType("GEOM");
+  RegisterType("FRAG");
+  RegisterType("COMP");
 }
 
 
-bool csGL4ShaderLoader::CanLoad(const csClass *cls, const csResourceLocator &locator) const
-{
-  std::string ext = locator.GetExtension();
-
-  return cls->IsAssignableFrom<csGL4Shader>() &&
-         (ext == std::string("VERT")
-          || ext == std::string("EVAL")
-          || ext == std::string("CTRL")
-          || ext == std::string("GEOM")
-          || ext == std::string("FRAG")
-          || ext == std::string("COMP")
-         );
-}
 
 
-iObject *csGL4ShaderLoader::Load(const csClass *cls, const csResourceLocator &locator) const
+csAssetRef<iAsset> csGL4ShaderLoader::Load(const csAssetLocator & locator) const
 {
   iFile *file = csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (!file)

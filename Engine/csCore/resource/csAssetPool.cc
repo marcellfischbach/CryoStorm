@@ -1,21 +1,21 @@
 
-#include <csCore/resource/csResourcePool.hh>
+#include <csCore/resource/csAssetPool.hh>
 
 namespace cs
 {
 
-csResourcePool& csResourcePool::Instance()
+csAssetPool& csAssetPool::Instance()
 {
-  static csResourcePool pool;
+  static csAssetPool pool;
   return pool;
 }
 
-csResourcePool::csResourcePool()
+csAssetPool::csAssetPool()
 {
 
 }
 
-iResource* csResourcePool::Get(const csResourceLocator& locator)
+iAsset* csAssetPool::Get(const csAssetLocator& locator)
 {
   auto it = m_resources.find(locator);
   if (it == m_resources.end())
@@ -25,7 +25,7 @@ iResource* csResourcePool::Get(const csResourceLocator& locator)
   return it->second;
 }
 
-void csResourcePool::Erase(const csResourceLocator& locator)
+void csAssetPool::Erase(const csAssetLocator& locator)
 {
   auto it = m_resources.find(locator);
   if (it != m_resources.end())
@@ -36,14 +36,14 @@ void csResourcePool::Erase(const csResourceLocator& locator)
   }
 }
 
-void csResourcePool::Put(iResource* resource)
+void csAssetPool::Put(iAsset* resource)
 {
   if (resource)
   {
     Put(resource->GetLocator(), resource);
   }
 }
-void csResourcePool::Put(const csResourceLocator& locator, iResource* resource)
+void csAssetPool::Put(const csAssetLocator& locator, iAsset* resource)
 {
   if (!resource)
   {

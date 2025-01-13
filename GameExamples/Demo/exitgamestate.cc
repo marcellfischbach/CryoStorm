@@ -7,7 +7,7 @@
 #include <csCore/csEngine.hh>
 #include <csCore/graphics/material/iMaterial.hh>
 #include <csCore/resource/csAssetManager.hh>
-#include <csCore/resource/csResourcePool.hh>
+#include <csCore/resource/csAssetPool.hh>
 
 ExitGameState::ExitGameState()
 {
@@ -15,8 +15,8 @@ ExitGameState::ExitGameState()
 
   m_material0 = cs::csAssetManager::Get()->Load<cs::iMaterial>("/materials/DefaultBlue.mat");
   m_material1 = cs::csAssetManager::Get()->Load<cs::iMaterial>("/materials/DefaultRed.mat");
-  m_material0->SetLocator(cs::csResourceLocator("/materials/Default.mat"));
-  m_material1->SetLocator(cs::csResourceLocator("/materials/Default.mat"));
+  m_material0->SetLocator(cs::csAssetLocator("/materials/Default.mat"));
+  m_material1->SetLocator(cs::csAssetLocator("/materials/Default.mat"));
 }
 
 void ExitGameState::Update(float tpf)
@@ -32,11 +32,11 @@ void ExitGameState::Update(float tpf)
 
     if (set)
     {
-      cs::csResourcePool::Instance().Put(m_material0);
+      cs::csAssetPool::Instance().Put(m_material0);
     }
     else
     {
-      cs::csResourcePool::Instance().Put(m_material1);
+      cs::csAssetPool::Instance().Put(m_material1);
     }
     set = !set;
   }

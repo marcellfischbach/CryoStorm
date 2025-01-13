@@ -68,7 +68,7 @@ csMesh *csStaticMeshState::GetMesh()
   return m_mesh;
 }
 
-void csStaticMeshState::SetMaterial(Size idx, csRes<iMaterial> &material)
+void csStaticMeshState::SetMaterial(Size idx, csAssetRef<iMaterial> &material)
 {
   if (idx < m_materials.size())
   {
@@ -84,18 +84,18 @@ void csStaticMeshState::SetMaterial(Size idx, csRes<iMaterial> &material)
   }
 }
 
-const csRes<iMaterial>csStaticMeshState::GetMaterial(Size idx) const
+const csAssetRef<iMaterial>csStaticMeshState::GetMaterial(Size idx) const
 {
   return idx < m_materials.size()
          ? m_materials[idx]
-         : csRes<iMaterial>();
+         : csAssetRef<iMaterial>();
 }
 
-csRes<iMaterial> csStaticMeshState::GetMaterial(Size idx)
+csAssetRef<iMaterial> csStaticMeshState::GetMaterial(Size idx)
 {
   return idx < m_materials.size()
          ? m_materials[idx]
-         : csRes<iMaterial>();
+         : csAssetRef<iMaterial>();
 }
 
 void csStaticMeshState::SetReceiveShadow(bool receiveShadow)
@@ -153,8 +153,8 @@ void csStaticMeshState::AddMeshToScene(csWorld *world)
     for (Size i = 0, in = m_mesh->GetNumberOfSubMeshes(); i < in; i++)
     {
       const csMesh::SubMesh &subMesh = m_mesh->GetSubMesh(i);
-      size_t materialSlotIdx = subMesh.GetMaterialSlotIdx();
-      csRes<iMaterial> material = nullptr;
+      size_t                materialSlotIdx = subMesh.GetMaterialSlotIdx();
+      csAssetRef<iMaterial> material        = nullptr;
       if (materialSlotIdx < m_materials.size())
       {
         material = m_materials[materialSlotIdx];

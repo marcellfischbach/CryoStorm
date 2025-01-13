@@ -12,7 +12,7 @@ namespace cs
 csSamplerLoader::csSamplerLoader()
 : csBaseCSFAssetLoader()
 {
-  AddValidFile(iSampler::GetStaticClass(), "SAMPLER");
+  RegisterType("SAMPLER");
 }
 
 
@@ -85,7 +85,7 @@ eCompareFunc CompareFunc(const std::string& compareFunc)
   return eCF_Always;
 }
 
-iObject* csSamplerLoader::Load(const csCryoFile *file, const csClass* cls, const csResourceLocator& locator) const
+csAssetRef<iAsset> csSamplerLoader::Load(const csCryoFile *file, const csAssetLocator &locator) const
 {
   const csCryoFileElement * samplerElement = file->Root()->GetChild("sampler");
   if (!samplerElement)
@@ -105,7 +105,7 @@ iObject* csSamplerLoader::Load(const csCryoFile *file, const csClass* cls, const
   eCompareFunc compareFunc = CompareFunc(samplerElement->GetAttribute("textureCompareFunc", ""));
 
 
-  iSampler* sampler = csObjectRegistry::Get<iDevice>()->CreateSampler();
+  csAssetRef<iSampler> sampler = csObjectRegistry::Get<iDevice>()->CreateSampler();
   if (sampler)
   {
     sampler->SetFilterMode(filter);

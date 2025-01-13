@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <csCore/resource/csResourceLocator.hh>
+#include <csCore/resource/csAssetLocator.hh>
 
 #include <QDialog>
 #include <vector>
@@ -43,7 +43,7 @@ class ShaderGraphEditorWidget : public QDialog
 Q_OBJECT
 
 public:
-  explicit ShaderGraphEditorWidget(cs::csShaderGraph* shaderGraph, const cs::csResourceLocator &locator, QWidget *parent = nullptr);
+  explicit ShaderGraphEditorWidget(cs::csShaderGraph* shaderGraph, const cs::csAssetLocator &locator, QWidget *parent = nullptr);
   ~ShaderGraphEditorWidget() override;
 
 
@@ -71,8 +71,8 @@ private:
   cs::csEntity* m_lightEntity = nullptr;
   cs::csLightState *m_light = nullptr;
 
-  cs::csShaderGraph *m_shaderGraph = nullptr;
-  cs::csResourceLocator m_locator;
+  cs::csShaderGraph              *m_shaderGraph = nullptr;
+  cs::csAssetLocator             m_locator;
   ShaderGraphNodePalletTreeModel *m_palletModel = nullptr;
 
   cs::csStaticMeshState* m_cube = nullptr;

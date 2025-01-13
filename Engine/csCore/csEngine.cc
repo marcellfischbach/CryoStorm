@@ -16,7 +16,7 @@
 #include <csCore/window/iWindow.hh>
 #include <csCore/resource/csAssetManager.hh>
 #include <csCore/resource/csCryoFile.hh>
-#include <csCore/resource/csResourceLocator.hh>
+#include <csCore/resource/csAssetLocator.hh>
 #include <csCore/resource/csVFS.hh>
 #include <csCore/iModule.hh>
 #include <csCore/iGame.hh>
@@ -119,7 +119,7 @@ bool csModuleConfig::LoadModuleConfig()
  */
 bool csModuleConfig::LoadModuleConfigEx(const std::string &configFilename)
 {
-  iFile *modulesConfig = csVFS::Get()->Open(csResourceLocator(configFilename), eAM_Read, eOM_Binary);
+  iFile *modulesConfig = csVFS::Get()->Open(csAssetLocator(configFilename), eAM_Read, eOM_Binary);
   if (!modulesConfig)
   {
     return false;

@@ -6,6 +6,7 @@
 #include <csCore/csClass.hh>
 #include <csCore/graphics/eTextureType.hh>
 #include <csCore/graphics/ePixelFormat.hh>
+#include <csCore/resource/iAsset.hh>
 
 
 namespace cs
@@ -14,7 +15,7 @@ namespace cs
 struct iSampler;
 
 CS_CLASS(virtual, jclass="org.cryo.core.graphics.ITexture")
-struct CS_CORE_API iTexture : public CS_SUPER(iObject)
+struct CS_CORE_API iTexture : public CS_SUPER(iAsset)
 {
   CS_CLASS_GEN;
   ~iTexture() override { }

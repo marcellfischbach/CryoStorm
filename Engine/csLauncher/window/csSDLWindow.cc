@@ -204,7 +204,7 @@ int16_t csSDLWindow::GetHeight() const
   return m_height;
 }
 
-void csSDLWindow::SetWindowIcon(const cs::csResourceLocator &locator)
+void csSDLWindow::SetWindowIcon(const cs::csAssetLocator &locator)
 {
   if (m_window)
   {

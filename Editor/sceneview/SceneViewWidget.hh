@@ -36,7 +36,7 @@ public:
   int16_t GetHeight() const override;
 
 
-  void SetWindowIcon(const cs::csResourceLocator &iconName) override;
+  void SetWindowIcon(const cs::csAssetLocator &iconName) override;
 
   void Show() override;
   void Hide() override;

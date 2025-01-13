@@ -5,8 +5,8 @@
 #pragma once
 
 #include <csCore/csCoreExport.hh>
-#include <csCore/resource/csResourceLocator.hh>
-#include <csCore/resource/iResource.hh>
+#include <csCore/resource/csAssetLocator.hh>
+#include <csCore/resource/iAsset.hh>
 #include <csCore/csRef.hh>
 #include <map>
 
@@ -21,33 +21,33 @@ public:
 
 
 
-  void AddResource(const csResourceLocator &locator, csRes<iResource> &resource);
-  csRes<iResource> GetResource(const csResourceLocator &locator);
-  csRes<iResource> Load (const csResourceLocator &locator) const;
+  void AddResource(const csAssetLocator &locator, csAssetRef<iAsset> &resource);
+  csAssetRef<iAsset> GetResource(const csAssetLocator &locator);
+  csAssetRef<iAsset> Load(const csAssetLocator &locator) const;
 
   template<typename T>
-  csRes<T> GetResource (const csResourceLocator &locator)
+  csAssetRef<T> GetResource(const csAssetLocator &locator)
   {
-    csRes<iResource> res = GetResource(locator);
-    iResource *resource = res.raw();
+    csAssetRef<iAsset> res       = GetResource(locator);
+    iAsset             *resource = res.raw();
     T* t = csQueryClass<T>(resource);
-    return csRes<T>(t);
+    return csAssetRef<T>(t);
   }
 
   template<typename T>
-  csRes<T> GetLoad (const csResourceLocator &locator)
+  csAssetRef<T> GetLoad(const csAssetLocator &locator)
   {
-    csRes<iResource> res = Load(locator);
-    iResource *resource = res.raw();
+    csAssetRef<iAsset> res       = Load(locator);
+    iAsset             *resource = res.raw();
     T* t = csQueryClass<T>(resource);
-    return csRes<T>(t);
+    return csAssetRef<T>(t);
   }
 
 private:
   csResourceManager() = default;
   ~csResourceManager() = default;
 
-  std::map<csResourceLocator, csRef<iResource>> m_resources;
+  std::map<csAssetLocator, csRef<iAsset>> m_resources;
 };
 
 } // cs

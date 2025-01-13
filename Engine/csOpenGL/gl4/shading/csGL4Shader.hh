@@ -4,6 +4,7 @@
 #include <csOpenGL/gl4/shading/eGL4ShaderType.hh>
 #include <csCore/csClass.hh>
 #include <csCore/csTypes.hh>
+#include <csCore/resource/iAsset.hh>
 #include <string>
 #include <stdexcept>
 
@@ -11,9 +12,10 @@ namespace cs::opengl
 {
 
 CS_CLASS()
-class CS_OGL_API csGL4Shader : public CS_SUPER(iObject)
+class CS_OGL_API csGL4Shader : public CS_SUPER(iAsset)
 {
   CS_CLASS_GEN_OBJECT;
+  CS_ASSET_GEN;
 public:
 	csGL4Shader(eGL4ShaderType type);
 	virtual ~csGL4Shader();

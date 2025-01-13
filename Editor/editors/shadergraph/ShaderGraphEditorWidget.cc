@@ -30,7 +30,7 @@
 
 using namespace cs;
 
-ShaderGraphEditorWidget::ShaderGraphEditorWidget(csShaderGraph *shaderGraph, const csResourceLocator &locator,
+ShaderGraphEditorWidget::ShaderGraphEditorWidget(csShaderGraph *shaderGraph, const csAssetLocator &locator,
                                                  QWidget *parent)
     : QDialog(parent, Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint)
     , m_gui(new Ui::ShaderGraphEditorWidget)

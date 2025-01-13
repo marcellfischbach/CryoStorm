@@ -174,7 +174,7 @@ int16_t SceneViewWidget_WindowPriv::GetHeight() const
   return static_cast<int16_t>(m_window->height());
 }
 
-void SceneViewWidget_WindowPriv::SetWindowIcon(const csResourceLocator &iconName)
+void SceneViewWidget_WindowPriv::SetWindowIcon(const csAssetLocator &iconName)
 {
 }
 

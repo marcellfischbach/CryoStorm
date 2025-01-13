@@ -20,37 +20,35 @@ namespace cs
 
 csTerrainLayerMask::~csTerrainLayerMask()
 {
-  CS_RELEASE(m_layerTexture);
-  CS_RELEASE(m_maskTexture);
 }
 
-void csTerrainLayerMask::SetLayerTexture(iTexture2D* layerTexture)
+void csTerrainLayerMask::SetLayerTexture(csAssetRef<cs::iTexture2D> & layerTexture)
 {
-  CS_SET(m_layerTexture, layerTexture);
+  m_layerTexture = layerTexture;
 }
 
-iTexture2D *csTerrainLayerMask::GetLayerTexture()
+csAssetRef<cs::iTexture2D> &csTerrainLayerMask::GetLayerTexture()
 {
   return m_layerTexture;
 }
 
-const iTexture2D *csTerrainLayerMask::GetLayerTexture() const
+const csAssetRef<cs::iTexture2D> &csTerrainLayerMask::GetLayerTexture() const
 {
   return m_layerTexture;
 }
 
 
-void csTerrainLayerMask::SetMaskTexture(iTexture2D* maskTexture)
+void csTerrainLayerMask::SetMaskTexture(csAssetRef<cs::iTexture2D> &maskTexture)
 {
-  CS_SET(m_maskTexture, maskTexture);
+  m_maskTexture = maskTexture;
 }
 
-iTexture2D *csTerrainLayerMask::GetMaskTexture()
+csAssetRef<cs::iTexture2D> &csTerrainLayerMask::GetMaskTexture()
 {
   return m_maskTexture;
 }
 
-const iTexture2D *csTerrainLayerMask::GetMaskTexture() const
+const csAssetRef<cs::iTexture2D> &csTerrainLayerMask::GetMaskTexture() const
 {
   return m_maskTexture;
 }
@@ -61,37 +59,35 @@ const iTexture2D *csTerrainLayerMask::GetMaskTexture() const
 
 csTerrainLayer::~csTerrainLayer()
 {
-  CS_RELEASE(m_diffuseRoughness);
-  CS_RELEASE(m_normal);
 }
 
-void csTerrainLayer::SetDiffuseRoughness(iTexture2D* diffuseRoughness)
+void csTerrainLayer::SetDiffuseRoughness(csAssetRef<cs::iTexture2D> & diffuseRoughness)
 {
-  CS_SET(m_diffuseRoughness, diffuseRoughness);
+  m_diffuseRoughness = diffuseRoughness;
 }
 
-iTexture2D *csTerrainLayer::GetDiffuseRoughness()
+csAssetRef<cs::iTexture2D> &csTerrainLayer::GetDiffuseRoughness()
 {
   return m_diffuseRoughness;
 }
 
-const iTexture2D *csTerrainLayer::GetDiffuseRoughness() const
+const csAssetRef<cs::iTexture2D> &csTerrainLayer::GetDiffuseRoughness() const
 {
   return m_diffuseRoughness;
 }
 
 
-void csTerrainLayer::SetNormal(iTexture2D* normal)
+void csTerrainLayer::SetNormal(csAssetRef<cs::iTexture2D> &normal)
 {
-  CS_SET(m_normal, normal);
+  m_normal = normal;
 }
 
-iTexture2D *csTerrainLayer::GetNormal()
+csAssetRef<cs::iTexture2D> &csTerrainLayer::GetNormal()
 {
   return m_normal;
 }
 
-const iTexture2D *csTerrainLayer::GetNormal() const
+const csAssetRef<cs::iTexture2D> &csTerrainLayer::GetNormal() const
 {
   return m_normal;
 }
@@ -280,7 +276,7 @@ void csTerrainMeshState::UpdateMaterial()
 {
   if (!m_material)
   {
-    m_material = csAssetManager::Get()->Get<iMaterial>(csResourceLocator("/materials/terrain/terrain4.mat"));
+    m_material = csAssetManager::Get()->Get<iMaterial>(csAssetLocator("/materials/terrain/terrain4.mat"));
 //    const csResource<iMaterial> resMat (rawMaterial);
 //    const iMaterial* resMatRaw = resMat.rawPtr();
 //    m_material = resmaterial;

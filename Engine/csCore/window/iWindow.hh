@@ -10,7 +10,7 @@
 namespace cs
 {
 
-class csResourceLocator;
+class csAssetLocator;
 
 CS_CLASS(jclass="org.cryo.core.window.IWindow")
 struct CS_CORE_API iWindow : public iObject
@@ -43,7 +43,7 @@ struct CS_CORE_API iWindow : public iObject
    * Optional.
    * @param iconName
    */
-  virtual void SetWindowIcon(const csResourceLocator &iconName) = 0;
+  virtual void SetWindowIcon(const csAssetLocator &iconName) = 0;
 
   CS_FUNCTION()
   virtual void Show () = 0;

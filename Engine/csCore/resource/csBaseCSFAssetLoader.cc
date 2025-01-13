@@ -8,15 +8,9 @@
 namespace cs
 {
 
-void csBaseCSFAssetLoader::AddValidFile(const csClass* cls, const std::string& fileExtension)
-{
-  ValidFile validFile;
-  validFile.Cls = cls;
-  validFile.Extension = fileExtension;
-  m_validFiles.emplace_back(validFile);
-}
 
-bool csBaseCSFAssetLoader::Open(const csResourceLocator& locator, csCryoFile &file)
+
+bool csBaseCSFAssetLoader::Open(const csAssetLocator& locator, csCryoFile &file)
 {
   iFile* fd = cs::csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   csAutoRelease arFD(fd);
@@ -24,20 +18,9 @@ bool csBaseCSFAssetLoader::Open(const csResourceLocator& locator, csCryoFile &fi
   return file.Parse(fd);
 }
 
-bool csBaseCSFAssetLoader::CanLoad(const csClass* cls, const csResourceLocator& locator) const
-{
-  const std::string& extension = locator.GetExtension();
-  for (auto &validFile : m_validFiles)
-  {
-    if (cls->IsAssignableFrom(validFile.Cls) &&  extension == validFile.Extension)
-    {
-      return true;
-    }
-  }
-  return false;
-}
 
-iObject *csBaseCSFAssetLoader::Load(const csClass* cls, const csResourceLocator& locator) const
+
+csAssetRef<iAsset> csBaseCSFAssetLoader::Load(const csAssetLocator &locator) const
 {
   csCryoFile file;
   if (!Open(locator, file))
@@ -45,7 +28,7 @@ iObject *csBaseCSFAssetLoader::Load(const csClass* cls, const csResourceLocator&
     return nullptr;
   }
 
-  return Load(&file, cls, locator);
+  return Load(&file, locator);
 }
 
 } // ce

@@ -13,6 +13,7 @@ CS_CLASS()
 class CS_OGL_API csGL4Texture2D : public CS_SUPER(iTexture2D)
 {
   CS_CLASS_GEN_OBJECT;
+  CS_ASSET_GEN;
 public:
   csGL4Texture2D();
   ~csGL4Texture2D() override;

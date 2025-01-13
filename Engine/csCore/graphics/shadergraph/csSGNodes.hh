@@ -5,7 +5,7 @@
 #include <csCore/graphics/shadergraph/csSGNode.hh>
 #include <csCore/graphics/material/eMaterialAttributeType.hh>
 #include <csCore/graphics/eVertexStream.hh>
-#include <csCore/resource/csResourceLocator.hh>
+#include <csCore/resource/csAssetLocator.hh>
 #include <array>
 
 namespace cs
@@ -353,11 +353,11 @@ public:
 
   void SetDefault(const std::array<float, 16> &v);
   void SetDefault(const std::array<int, 4> &v);
-  void SetDefault(const csResourceLocator &locator);
+  void SetDefault(const csAssetLocator &locator);
 
   const std::array<float, 16>& GetDefaultFloats() const;
   const std::array<int, 4>& GetDefaultInts() const;
-  const csResourceLocator &GetDefaultLocator() const;
+  const csAssetLocator &GetDefaultLocator() const;
 
 private:
   eMaterialAttributeType m_matType;
@@ -365,7 +365,7 @@ private:
 
   std::array<int, 4> m_defaultInts;
   std::array<float, 16> m_defaultFloats;
-  csResourceLocator m_defaultLocator;
+  csAssetLocator        m_defaultLocator;
 
 };
 

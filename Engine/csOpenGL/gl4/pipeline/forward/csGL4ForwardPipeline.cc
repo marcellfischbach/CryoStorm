@@ -425,7 +425,7 @@ void csGL4ForwardPipeline::RenderPostProcessing(iRenderTarget2D *target)
 
 void csGL4ForwardPipeline::Cleanup()
 {
-  csRes<iMaterial> null;
+  csAssetRef<iMaterial> null;
   m_device->BindMaterial(null, eRP_COUNT);
 
   m_device->SetBlending(false);

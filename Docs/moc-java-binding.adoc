@@ -320,7 +320,7 @@ the MOC limitations from above)
 
 There are a few special variable names
 
-* `${csRes}`  This is the return value from the real engine method call. `csColor4f` for example in `const csColor4f& GetColor()`.
+* `${csAssetRef}`  This is the return value from the real engine method call. `csColor4f` for example in `const csColor4f& GetColor()`.
 * `${csTmp}` If you need a unique temporary variable you can use this. If you need more than one just use a suffix like
 `${csTmp}_01` or whatever suits your needs
 

@@ -7,7 +7,7 @@
 namespace cs
 {
 
-class csResourceLocator;
+class csAssetLocator;
 
 CS_CLASS()
 struct CS_CORE_API iArchive : public CS_SUPER(iObject)

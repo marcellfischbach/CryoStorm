@@ -26,8 +26,8 @@ static const bool OPTIMIZE = false;
 
 struct MaterialCompound
 {
-  csRes<iMaterial> material;
-  csGfxMeshCompound *mesh;
+  csAssetRef<iMaterial> material;
+  csGfxMeshCompound     *mesh;
 };
 
 struct csGfxQuadtreeScene::Cell
@@ -58,7 +58,7 @@ struct csGfxQuadtreeScene::Cell
   bool ContainsShaded(csGfxMesh *mesh);
   bool ContainsUnshaded(csGfxMesh *mesh);
 
-  MaterialCompound& GetShadedCompound(csRes<iMaterial> & material);
+  MaterialCompound& GetShadedCompound(csAssetRef<iMaterial> & material);
 
 
   CS_NODISCARD size_t Idx(const csVector3f &v) const;
@@ -519,7 +519,7 @@ void csGfxQuadtreeScene::Cell::Decimate()
   // reduce the cell hierarchy;
 }
 
-MaterialCompound &csGfxQuadtreeScene::Cell::GetShadedCompound(csRes<iMaterial> &material)
+MaterialCompound &csGfxQuadtreeScene::Cell::GetShadedCompound(csAssetRef<iMaterial> &material)
 {
   for (auto &materialCompound: m_shadedCompound)
   {

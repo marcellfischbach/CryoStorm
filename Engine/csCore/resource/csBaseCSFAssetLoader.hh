@@ -6,7 +6,8 @@
 
 #include <csCore/csCoreExport.hh>
 #include <csCore/csClass.hh>
-#include <csCore/resource/iAssetLoader.hh>
+#include <csCore/resource/csAssetLoader.hh>
+#include <csCore/resource/csCryoFile.hh>
 #include <vector>
 
 namespace cs
@@ -14,39 +15,24 @@ namespace cs
 
 
 CS_CLASS()
-class CS_CORE_API csBaseCSFAssetLoader : public CS_SUPER(iAssetLoader)
+class CS_CORE_API csBaseCSFAssetLoader : public CS_SUPER(csAssetLoader)
 {
   CS_CLASS_GEN_OBJECT;
 
 protected:
   csBaseCSFAssetLoader() = default;
 
-  template<typename T>
-  void AddValidFile(const std::string &fileExtension)
-  {
-    AddValidFile(T::GetStaticClass(), fileExtension);
-  }
-  void AddValidFile(const csClass* cls, const std::string &fileExtension);
-
-  virtual iObject* Load(const csCryoFile *file, const csClass* cls, const csResourceLocator& locator) const = 0;
+  virtual csAssetRef<iAsset> Load(const csCryoFile *file, const csAssetLocator &locator) const = 0;
 
 public:
   ~csBaseCSFAssetLoader() override = default;
 
-  bool CanLoad(const csClass* cls, const csResourceLocator& locator) const override ;
-  CS_NODISCARD iObject* Load(const csClass* cls, const csResourceLocator& locator) const override;
+  CS_NODISCARD csAssetRef<iAsset> Load(const csAssetLocator &locator) const override;
 
 private:
-  CS_NODISCARD static bool Open(const csResourceLocator &locator, csCryoFile &file);
+  CS_NODISCARD static bool Open(const csAssetLocator &locator, csCryoFile &file);
 
 
-  struct ValidFile
-  {
-    const csClass * Cls;
-    std::string Extension;
-  };
-
-  std::vector<ValidFile> m_validFiles;
 };
 
 } // ce

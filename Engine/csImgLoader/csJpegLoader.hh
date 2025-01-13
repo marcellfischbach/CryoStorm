@@ -2,7 +2,7 @@
 #pragma once
 
 #include <csImgLoader/csImgLoaderExport.hh>
-#include <csCore/resource/iAssetLoader.hh>
+#include <csCore/resource/csAssetLoader.hh>
 #include <png.h>
 
 namespace cs::img
@@ -10,16 +10,14 @@ namespace cs::img
 
 
   CS_CLASS()
-    class CS_IMGLOADER_API csJpegLoader : public CS_SUPER(iAssetLoader)
+    class CS_IMGLOADER_API csJpegLoader : public CS_SUPER(csAssetLoader)
   {
     CS_CLASS_GEN_OBJECT;
   public:
     csJpegLoader();
-    virtual ~csJpegLoader() { }
+    ~csJpegLoader() override = default;
 
-    virtual bool CanLoad(const csClass * cls, const csResourceLocator & locator) const;
-
-    virtual iObject* Load(const csClass * cls, const csResourceLocator & locator) const;
+    CS_NODISCARD csAssetRef<iAsset> Load(const csAssetLocator & locator) const override;
 
   };
 

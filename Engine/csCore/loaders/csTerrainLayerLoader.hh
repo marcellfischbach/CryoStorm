@@ -16,13 +16,12 @@ class CS_CORE_API csTerrainLayerLoader : public CS_SUPER(csBaseCSFAssetLoader)
 {
   CS_CLASS_GEN;
 public:
-  csTerrainLayerLoader() = default;
+  csTerrainLayerLoader();
   ~csTerrainLayerLoader() override = default;
 
-  bool CanLoad(const csClass* cls, const csResourceLocator& locator) const override;
 
 protected:
-  iObject* Load(const csCryoFile* file, const csClass* cls, const csResourceLocator& locator) const override;
+  csAssetRef<iAsset> Load(const csCryoFile *file, const csAssetLocator &locator) const override;
 
 };
 
@@ -35,13 +34,12 @@ class CS_CORE_API csTerrainLayerMaskLoader : public CS_SUPER(csBaseCSFAssetLoade
 {
 CS_CLASS_GEN;
 public:
-  csTerrainLayerMaskLoader() = default;
+  csTerrainLayerMaskLoader();
   ~csTerrainLayerMaskLoader() override = default;
 
-  bool CanLoad(const csClass* cls, const csResourceLocator& locator) const override;
 
 protected:
-  iObject* Load(const csCryoFile* file, const csClass* cls, const csResourceLocator& locator) const override;
+  csAssetRef<iAsset> Load(const csCryoFile *file, const csAssetLocator &locator) const override;
 
 };
 

@@ -12,7 +12,8 @@
 #include <csCore/graphics/eRenderPass.hh>
 #include <csCore/graphics/eRenderQueue.hh>
 #include <csCore/graphics/iTexture.hh>
-#include <csCore/resource/iResource.hh>
+#include <csCore/resource/iAsset.hh>
+#include <csCore/csRef.hh>
 #include <string>
 #include <map>
 #include <csCore/graphics/eShadingMode.hh>
@@ -25,7 +26,7 @@ struct iDevice;
 struct iShader;
 
 CS_CLASS(jclass="org.cryo.core.graphics.material.IMaterial")
-struct CS_CORE_API iMaterial : public CS_SUPER(iResource)
+struct CS_CORE_API iMaterial : public CS_SUPER(iAsset)
 {
   CS_CLASS_GEN;
 
@@ -33,7 +34,7 @@ struct CS_CORE_API iMaterial : public CS_SUPER(iResource)
 
 
   CS_FUNCTION(jenum)
-  CS_NODISCARD virtual const cs::iShader *GetShader (cs::eRenderPass pass) const = 0;
+  CS_NODISCARD virtual csAssetRef<const cs::iShader> GetShader (cs::eRenderPass pass) const = 0;
 
   CS_FUNCTION(jenum)
   CS_NODISCARD virtual cs::eFillMode GetFillMode() const = 0;
@@ -65,7 +66,7 @@ struct CS_CORE_API iMaterial : public CS_SUPER(iResource)
   virtual void SetMatrix3f(size_t idx, const cs::csMatrix3f & m) = 0;
   virtual void SetMatrix4f(size_t idx, const cs::csMatrix4f & m) = 0;
   CS_FUNCTION()
-  virtual void SetTexture(size_t idx, cs::iTexture * texture) = 0;
+  virtual void SetTexture(size_t idx, csAssetRef<cs::iTexture> &texture) = 0;
 };
 
 

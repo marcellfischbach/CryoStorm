@@ -24,9 +24,9 @@ public:
   csAssimpSkeletonAnimationLoader();
   ~csAssimpSkeletonAnimationLoader() override = default;
 
-  virtual bool CanLoad(const csClass *cls, const csResourceLocator &locator) const;
+  virtual bool CanLoad(const csClass *cls, const csAssetLocator &locator) const;
 
-  virtual iObject *Load(const csClass *cls, const csResourceLocator &locator) const;
+  virtual iObject *Load(const csClass *cls, const csAssetLocator &locator) const;
 
 private:
 

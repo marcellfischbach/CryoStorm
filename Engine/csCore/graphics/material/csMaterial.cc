@@ -163,7 +163,7 @@ bool csMaterial::Bind(iDevice *device, eRenderPass pass)
 
 bool csMaterial::BindShader(iDevice *device, eRenderPass pass) const
 {
-  iShader *shader = m_shader[pass];
+  csAssetRef<cs::iShader> shader = m_shader[pass];
   if (!shader)
   {
     return false;
@@ -214,7 +214,7 @@ bool csMaterial::BindAttribute(iDevice *device,
                                size_t idx,
                                const std::array<float, 16> &floats,
                                const std::array<int, 4> &ints,
-                               iTexture *texture) const
+                               csAssetRef<cs::iTexture2D> texture) const
 {
 
   if (const Attribute &attribute = m_attributes[idx]; iShaderAttribute *shaderAttribute = attribute.Attributes[pass])
@@ -260,7 +260,7 @@ bool csMaterial::BindAttribute(iDevice *device,
   return true;
 }
 
-bool csMaterial::BindTexture(iDevice *device, iShaderAttribute *attribute, iTexture *texture)
+bool csMaterial::BindTexture(iDevice *device, iShaderAttribute *attribute, csAssetRef<cs::iTexture2D> &texture)
 {
   eTextureUnit unit = device->BindTexture(texture);
 //  printf ("Bind texture: %p -> %d\n", texture, unit);
@@ -272,20 +272,20 @@ bool csMaterial::BindTexture(iDevice *device, iShaderAttribute *attribute, iText
   return true;
 }
 
-void csMaterial::SetShader(eRenderPass pass, iShader *shader)
+void csMaterial::SetShader(eRenderPass pass, csAssetRef<cs::iShader> &shader)
 {
-  CS_SET(m_shader[pass], shader);
+  m_shader[pass] = shader;
 
   UpdateShaderAttributes(pass);
 }
 
-iShader *csMaterial::GetShader(eRenderPass pass)
+csAssetRef<cs::iShader> &csMaterial::GetShader(eRenderPass pass)
 {
   return m_shader[pass];
 }
 
 
-const iShader *csMaterial::GetShader(eRenderPass pass) const
+const csAssetRef<cs::iShader> &csMaterial::GetShader(eRenderPass pass) const
 {
   return m_shader[pass];
 }
@@ -441,7 +441,7 @@ void csMaterial::SetMatrix4f(size_t idx, const cs::csMatrix4f &m)
   memcpy(attr.Floats.data(), &m, sizeof(float) * 16);
 }
 
-void csMaterial::SetTexture(size_t idx, cs::iTexture *texture)
+void csMaterial::SetTexture(size_t idx, csAssetRef<cs::iTexture2D> &texture)
 {
   if (idx >= m_attributes.size())
   {

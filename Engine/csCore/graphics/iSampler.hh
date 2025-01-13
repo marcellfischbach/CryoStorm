@@ -8,13 +8,14 @@
 #include <csCore/graphics/eFilterMode.hh>
 #include <csCore/graphics/eTextureAddressMode.hh>
 #include <csCore/graphics/eTextureCompareMode.hh>
+#include <csCore/resource/iAsset.hh>
 #include <csCore/math/csColor4f.hh>
 
 namespace cs
 {
 
 CS_CLASS()
-struct CS_CORE_API iSampler : public CS_SUPER(iObject)
+struct CS_CORE_API iSampler : public CS_SUPER(iAsset)
 {
   CS_CLASS_GEN;
   virtual ~iSampler() {}

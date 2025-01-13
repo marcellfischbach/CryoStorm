@@ -4,11 +4,13 @@
 #include <csCore/csCoreExport.hh>
 #include <csCore/csClass.hh>
 #include <csCore/resource/csAssetManager.hh>
+#include <csCore/resource/iAsset.hh>
 #include <csCore/graphics/ePixelFormat.hh>
 #include <csCore/graphics/iDevice.hh>
 #include <csCore/graphics/iTexture2D.hh>
 #include <csCore/graphics/shading/iShader.hh>
 #include <csCore/graphics/shading/iShaderAttribute.hh>
+#include <csCore/csRef.hh>
 #include <vector>
 
 
@@ -58,8 +60,8 @@ CS_CLASS_GEN;
   virtual const std::vector<csPPInputDefinition> &GetInputDefinitions() const = 0;
   virtual const std::vector<csPPOutputDefinition> &GetOutputDefinitions() const = 0;
 
-  virtual void SetInput(size_t idx, iTexture2D *texture) = 0;
-  virtual iTexture2D *GetOutput(size_t idx) const = 0;
+  virtual void SetInput(size_t idx, csAssetRef<iTexture2D> &texture) = 0;
+  virtual const csAssetRef<iTexture2D> &GetOutput(size_t idx) const = 0;
 
   virtual void Process(iDevice *device, iRenderTarget2D *finalTarget) = 0;
 
@@ -76,8 +78,8 @@ public:
   const std::vector<csPPInputDefinition> &GetInputDefinitions() const override;
   const std::vector<csPPOutputDefinition> &GetOutputDefinitions() const override;
 
-  void SetInput(size_t idx, iTexture2D *texture) override;
-  iTexture2D *GetOutput(size_t idx) const override;
+  void SetInput(size_t idx, csAssetRef<iTexture2D> &texture) override;
+  const csAssetRef<iTexture2D> &GetOutput(size_t idx) const override;
 
 protected:
   csBasePostProcess() = default;
@@ -90,8 +92,8 @@ private:
   std::vector<csPPOutputDefinition> m_outputDefinitions;
 
 protected:
-  std::vector<iTexture2D *> m_inputs;
-  std::vector<iTexture2D *> m_outputs;
+  std::vector<csAssetRef<iTexture2D>> m_inputs;
+  std::vector<csAssetRef<iTexture2D>> m_outputs;
 };
 
 CS_CLASS()
@@ -142,17 +144,17 @@ public:
   void AddProcess(iPostProcess *process);
   void Bind(const csPPBind &bind);
 
-  void SetInput(ePPImageType type, iTexture2D *texture);
+  void SetInput(ePPImageType type, csAssetRef<iTexture2D> &texture);
   void Process(iDevice *device, iRenderTarget2D *finalTarget);
-  iTexture2D *GetOutput(ePPImageType type);
+  csAssetRef<iTexture2D> &GetOutput(ePPImageType type);
 
 private:
   void RebuildPlan();
   std::vector<csPPBind> GetBindingsForProcess(const iPostProcess *process);
 
 public:
-  iTexture2D *m_inputTextures[(size_t) ePPImageType::Count];
-  iTexture2D *m_outputTextures[(size_t) ePPImageType::Count];
+  csAssetRef<iTexture2D> m_inputTextures[(size_t) ePPImageType::Count];
+  csAssetRef<iTexture2D> m_outputTextures[(size_t) ePPImageType::Count];
 
   std::vector<iPostProcess *> m_processes;
   iPostProcess          *m_finalProcess;

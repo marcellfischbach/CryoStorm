@@ -11,16 +11,11 @@ namespace cs::img
 csPngLoader::csPngLoader()
 {
 
-
+  RegisterType("PNG");
 
 }
 
 
-bool csPngLoader::CanLoad(const csClass* cls, const csResourceLocator& locator) const
-{
-  return cls->IsAssignableFrom<csImage>()
-    && locator.GetExtension() == "PNG";
-}
 
 #define PNGSIGSIZE 8
 
@@ -38,7 +33,7 @@ void read_data_from_i_file(png_structp png_ptr, png_bytep buffer, png_size_t siz
 }
 
 
-iObject* csPngLoader::Load(const csClass* cls, const csResourceLocator& locator) const
+csAssetRef<iAsset> csPngLoader::Load(const csAssetLocator& locator) const
 {
   iFile* fp = csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (!fp)
@@ -50,7 +45,7 @@ iObject* csPngLoader::Load(const csClass* cls, const csResourceLocator& locator)
   int is_png = png_sig_cmp(pngsig, 0, PNGSIGSIZE);
   if (is_png != 0)
   {
-    std::cout << "Image: " + locator.GetLocator() << " is no png" << std::endl;
+    std::cout << "Image: " + locator.Canonical() << " is no png" << std::endl;
     return nullptr;
   }
 

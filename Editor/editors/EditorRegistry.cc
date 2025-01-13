@@ -20,7 +20,7 @@ EditorRegistry &EditorRegistry::RegisterEditor(iEditorFactory *editor)
   return *this;
 }
 
-iEditorFactory *EditorRegistry::GetEditor(const csResourceLocator &locator) const
+iEditorFactory *EditorRegistry::GetEditor(const csAssetLocator &locator) const
 {
   for (auto editor: m_editors)
   {

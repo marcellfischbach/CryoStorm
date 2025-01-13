@@ -1,7 +1,7 @@
 
 #include <csCore/resource/csVFS.hh>
 #include <csCore/resource/csVFSConfigReader.hh>
-#include <csCore/resource/csResourceLocator.hh>
+#include <csCore/resource/csAssetLocator.hh>
 #include <csCore/resource/csCryoFile.hh>
 #include <csCore/resource/csFileSystemFile.hh>
 #include <csCore/resource/iArchive.hh>
@@ -60,7 +60,7 @@ void csVFS::InsertAlias(const std::string& alias, const std::string& replacement
   m_aliases[alias] = replacement;
 }
 
-iFile* csVFS::Open(const csResourceLocator& resourceLocator, eAccessMode accessMode, eOpenMode openMode) const
+iFile* csVFS::Open(const csAssetLocator& resourceLocator, eAccessMode accessMode, eOpenMode openMode) const
 {
 
   const std::string &archiveName = resourceLocator.GetArchive();
@@ -84,7 +84,7 @@ iFile* csVFS::Open(const csResourceLocator& resourceLocator, eAccessMode accessM
   return nullptr;
 }
 
-iFile* csVFS::File(const csResourceLocator& resourceLocator) const
+iFile* csVFS::File(const csAssetLocator& resourceLocator) const
 {
   std::string resourcePathWithReplacedAliases = ReplaceAliases(resourceLocator.Encoded());
   return new csFileSystemFile(m_rootPath + "/" + resourcePathWithReplacedAliases);

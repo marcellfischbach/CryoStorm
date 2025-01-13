@@ -2,14 +2,14 @@
 #pragma once
 
 #include <csOpenGL/csOpenGLExport.hh>
-#include <csCore/resource/iAssetLoader.hh>
+#include <csCore/resource/csAssetLoader.hh>
 
 namespace cs::opengl
 {
 
 
 CS_CLASS()
-class csGL4ShaderLoader : public CS_SUPER(iAssetLoader)
+class csGL4ShaderLoader : public CS_SUPER(csAssetLoader)
 {
   CS_CLASS_GEN_OBJECT;
 public:
@@ -17,9 +17,8 @@ public:
   virtual ~csGL4ShaderLoader() = default;
 
 
-  bool CanLoad(const csClass * cls, const csResourceLocator & locator) const override;
 
-  iObject* Load(const csClass * cls, const csResourceLocator & locator) const override;
+  csAssetRef<iAsset> Load(const csAssetLocator & locator) const override;
 
 };
 

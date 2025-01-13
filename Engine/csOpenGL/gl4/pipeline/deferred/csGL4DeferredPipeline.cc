@@ -47,7 +47,7 @@ void csGL4DeferredPipeline::Initialize()
   m_pointLightRenderer.Initialize();
 
   m_backMaskShader = csAssetManager::Get()->Get<iShader>(
-      csResourceLocator("${engine}/opengl/gl4/deferred/back_mask.shader"));
+      csAssetLocator("${engine}/opengl/gl4/deferred/back_mask.shader"));
   if (m_backMaskShader)
   {
     m_attrBackMaskDepth = m_backMaskShader->GetShaderAttribute("Depth");
@@ -91,7 +91,7 @@ void csGL4DeferredPipeline::RenderGBuffer(uint16_t width,
                   m_gfxCamera->GetClearMode() == eClearMode::Depth ||
                   m_gfxCamera->GetClearMode() == eClearMode::DepthColor,
                   1.0f, true, 0);
-  csRes<iMaterial> null;
+  csAssetRef<iMaterial> null;
   m_device->BindMaterial(null, eRP_GBuffer);
   std::vector<csGfxMesh *> &meshes = m_collector.GetMeshes(eRenderQueue::Default);
 
@@ -481,7 +481,7 @@ void csGL4DeferredPipeline::RenderPostProcessing(iRenderTarget2D *target)
 
 void csGL4DeferredPipeline::Cleanup()
 {
-  csRes<iMaterial> null;
+  csAssetRef<iMaterial> null;
   m_device->BindMaterial(null, eRP_COUNT);
 
   m_device->SetBlending(false);
@@ -517,7 +517,7 @@ bool csGL4DeferredPipeline::SetupVariables(iRenderTarget2D *target,
   m_projector = camera->GetProjector();
   m_scene     = scene;
   m_target    = camera->GetPostProcessing() ? UpdateRenderTarget(device, target) : target;
-  csRes<iMaterial> null;
+  csAssetRef<iMaterial> null;
   m_device->BindMaterial(null, eRP_COUNT);
   m_device->ClearTextureCache();
 

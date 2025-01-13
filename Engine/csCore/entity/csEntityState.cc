@@ -25,7 +25,7 @@ const std::string &csEntityState::GetName() const
   return m_name;
 }
 
-void csEntityState::SetEntity(csRef<csEntity> &entity)
+void csEntityState::SetEntity(csEntity *entity)
 {
   if (m_entity != entity)
   {
@@ -36,48 +36,48 @@ void csEntityState::SetEntity(csRef<csEntity> &entity)
   }
 }
 
-csRef<csEntity> &csEntityState::GetEntity()
+csEntity *csEntityState::GetEntity()
 {
   return m_entity;
 }
 
 
-csRef<csEntityState> &csEntityState::GetState(const csClass* cls)
+csEntityState *csEntityState::GetState(const csClass* cls)
 {
-  return m_entity ? m_entity->GetState(cls) : csRef<csEntityState>::Null();
+  return m_entity ? m_entity->GetState(cls) : nullptr;
 }
 
-const csRef<csEntityState> &csEntityState::GetState(const csClass* cls) const
+const csEntityState *csEntityState::GetState(const csClass* cls) const
 {
-  return m_entity ? m_entity->GetState(cls) : csRef<csEntityState>::Null();
+  return m_entity ? m_entity->GetState(cls) : nullptr;
 }
 
 
-std::vector<csRef<csEntityState>> csEntityState::GetStates(const csClass* cls)
+std::vector<csEntityState*> csEntityState::GetStates(const csClass* cls)
 {
-  return m_entity ? m_entity->GetStates(cls) : std::vector<csRef<csEntityState>>();
+  return m_entity ? m_entity->GetStates(cls) : std::vector<csEntityState*>();
 }
 
-//std::vector<const csRef<csEntityState>> csEntityState::GetStates(const csClass* cls) const
-//{
-//  return m_entity ? m_entity->GetStates(cls) : std::vector<const csRef<csEntityState>>();
-//}
+std::vector<const csEntityState*> csEntityState::GetStates(const csClass* cls) const
+{
+  return m_entity ? m_entity->GetStates(cls) : std::vector<const csEntityState*>();
+}
 
 
-const csRef<csEntity> &csEntityState::GetEntity() const
+const csEntity *csEntityState::GetEntity() const
 {
   return m_entity;
 }
 
-csRef<csSpatialState> &csEntityState::GetRoot()
+csSpatialState *csEntityState::GetRoot()
 {
-  return m_entity ? m_entity->GetRoot() : csRef<csSpatialState>::Null();
+  return m_entity ? m_entity->GetRoot() : nullptr;
 }
 
 
-const csRef<csSpatialState> &csEntityState::GetRoot() const
+const csSpatialState *csEntityState::GetRoot() const
 {
-  return m_entity ? m_entity->GetRoot() : csRef<csSpatialState>::Null();
+  return m_entity ? m_entity->GetRoot() : nullptr;
 }
 
 csWorld* csEntityState::GetWorld()
@@ -112,16 +112,15 @@ bool csEntityState::IsNeedUpdate() const
   return m_needUpdate;
 }
 
-void csEntityState::UpdateEntity(csRef<csEntity> &oldEntity, csRef<csEntity> &newEntity)
+void csEntityState::UpdateEntity(csEntity *oldEntity, csEntity *newEntity)
 {
-  csRef<csEntityState> thisState(this);
   if (oldEntity)
   {
-    oldEntity->DeregisterEntityState(thisState);
+    oldEntity->DeregisterEntityState(this);
   }
   if (newEntity)
   {
-    newEntity->RegisterEntityState(thisState);
+    newEntity->RegisterEntityState(this);
   }
 }
 

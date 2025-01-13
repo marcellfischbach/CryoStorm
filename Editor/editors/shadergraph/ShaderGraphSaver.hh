@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <csCore/resource/csResourceLocator.hh>
+#include <csCore/resource/csAssetLocator.hh>
 #include <vector>
 #include <string>
 
@@ -20,7 +20,7 @@ public:
   ShaderGraphSaver(cs::csShaderGraph* shaderGraph);
   ~ShaderGraphSaver() = default;
 
-  void Save(const cs::csResourceLocator &locator);
+  void Save(const cs::csAssetLocator &locator);
 private:
   void CollectNodes ();
   std::string GetNodeSource (cs::csSGNode *node);

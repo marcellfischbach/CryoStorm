@@ -14,7 +14,7 @@ csResourceManager &csResourceManager::Instance()
 }
 
 
-void csResourceManager::AddResource(const cs::csResourceLocator &locator, csRes<cs::iResource> &resource)
+void csResourceManager::AddResource(const cs::csAssetLocator &locator, csAssetRef<cs::iAsset> &resource)
 {
   auto it = m_resources.find(locator);
   if (it != m_resources.end())
@@ -26,7 +26,7 @@ void csResourceManager::AddResource(const cs::csResourceLocator &locator, csRes<
   m_resources[locator] = resource;
 }
 
-csRes<iResource> csResourceManager::GetResource(const cs::csResourceLocator &locator)
+csAssetRef<iAsset> csResourceManager::GetResource(const cs::csAssetLocator &locator)
 {
   auto it =  m_resources.find(locator);
   if (it != m_resources.end())
@@ -34,14 +34,14 @@ csRes<iResource> csResourceManager::GetResource(const cs::csResourceLocator &loc
     return it->second;
   }
 
-  csRes <iResource> res = Load(locator);
+  csAssetRef <iAsset> res = Load(locator);
   m_resources[locator] = res;
   return res;
 }
 
-csRes<iResource> csResourceManager::Load(const cs::csResourceLocator &locator) const
+csAssetRef<iAsset> csResourceManager::Load(const cs::csAssetLocator &locator) const
 {
-  return csRes<iResource>(nullptr);
+  return csAssetRef<iAsset>(nullptr);
 }
 
 

@@ -16,21 +16,19 @@ namespace cs
 {
 
 csShaderGraphLoader::csShaderGraphLoader()
-  : csBaseCSFAssetLoader()
+    : csBaseCSFAssetLoader()
 {
-  AddValidFile<csShaderGraph>("SG");
-  AddValidFile<csShaderGraph>("SHADERGRAPH");
+  RegisterType("SG");
+  RegisterType("SHADERGRAPH");
 
-  AddValidFile<csMaterial>("SG");
-  AddValidFile<csMaterial>("SHADERGRAPH");
 }
 
 
-iObject* csShaderGraphLoader::Load(const csCryoFile* file, const csClass* cls, const csResourceLocator& locator) const
+csAssetRef<iAsset> csShaderGraphLoader::Load(const csCryoFile *file, const csAssetLocator &locator) const
 {
-  const csCryoFileElement* root = file->Root();
-  const csCryoFileElement* shaderGraphElement = root->GetChild("shaderGraph");
-  auto sg = new csShaderGraph();
+  const csCryoFileElement *root               = file->Root();
+  const csCryoFileElement *shaderGraphElement = root->GetChild("shaderGraph");
+  auto          sg = new csShaderGraph();
   csAutoRelease autoRelSG(sg);
 
 
@@ -51,7 +49,7 @@ iObject* csShaderGraphLoader::Load(const csCryoFile* file, const csClass* cls, c
   LoadBlendingMode(shaderGraphElement, sg);
 
 
-  const csCryoFileElement* nodesElements = shaderGraphElement->GetChild("nodes");
+  const csCryoFileElement *nodesElements = shaderGraphElement->GetChild("nodes");
   if (!nodesElements)
   {
     fprintf(stderr, "Invalid shader graph. No 'nodes' element\n");
@@ -60,14 +58,14 @@ iObject* csShaderGraphLoader::Load(const csCryoFile* file, const csClass* cls, c
 
   for (size_t i = 0, in = nodesElements->GetNumberOfChildren(); i < in; ++i)
   {
-    const csCryoFileElement* childElement = nodesElements->GetChild(i);
+    const csCryoFileElement *childElement = nodesElements->GetChild(i);
     if (!childElement)
     {
       continue;
     }
 
-    csSGNode* node = nullptr;
-    const std::string& tagName = childElement->GetTagName();
+    csSGNode          *node    = nullptr;
+    const std::string &tagName = childElement->GetTagName();
     if (tagName == "node")
     {
       node = CreateNode(childElement, sg);
@@ -96,48 +94,40 @@ iObject* csShaderGraphLoader::Load(const csCryoFile* file, const csClass* cls, c
   }
 
 
-  if (cls->IsInstanceOf<csMaterial>())
-  {
-    // Now compile the shader graph to a material
+  // Now compile the shader graph to a material
 
-    auto compilerFactory = cs::csObjectRegistry::Get<cs::iShaderGraphCompilerFactory>();
-    if (compilerFactory)
+  auto compilerFactory = cs::csObjectRegistry::Get<cs::iShaderGraphCompilerFactory>();
+  if (compilerFactory)
+  {
+    auto compiler = compilerFactory->Create();
+    if (compiler)
     {
-      auto compiler = compilerFactory->Create();
-      if (compiler)
+      iShaderGraphCompiler::Parameters parameters {};
+      memset(&parameters, 0, sizeof(parameters));
+      parameters.DebugName    = locator.Encoded();
+      parameters.DebugSources = true;
+
+      auto shader = compiler->Compile(sg, parameters);
+      if (!shader)
       {
-        iShaderGraphCompiler::Parameters parameters{};
-        memset(&parameters, 0, sizeof(parameters));
-        parameters.DebugName = locator.Encoded();
-        parameters.DebugSources = true;
-
-        auto shader = compiler->Compile(sg, parameters);
-        if (!shader)
-        {
-          printf("Unable to compiler '%s'\n", locator.Encoded().c_str());
-          printf("%s\n", compiler->GetError().c_str());
-        }
-
-        return shader;
+        printf("Unable to compiler '%s'\n", locator.Encoded().c_str());
+        printf("%s\n", compiler->GetError().c_str());
       }
+
+      return shader;
     }
-  }
-  else if (cls->IsInstanceOf<csShaderGraph>())
-  {
-    autoRelSG.Clear(); // keep the sg alive
-    return sg;
   }
 
   return nullptr;
 }
 
-void csShaderGraphLoader::LoadQueue(const cs::csCryoFileElement* shaderGraphElement, csShaderGraph* sg) const
+void csShaderGraphLoader::LoadQueue(const cs::csCryoFileElement *shaderGraphElement, csShaderGraph *sg) const
 {
   auto queueElement = shaderGraphElement->GetChild("queue");
   if (queueElement)
   {
-    eRenderQueue queue = eRenderQueue::Default;
-    std::string queueString = queueElement->GetAttribute(0, "Default");
+    eRenderQueue queue       = eRenderQueue::Default;
+    std::string  queueString = queueElement->GetAttribute(0, "Default");
     if (queueString == "Transparency")
     {
       queue = eRenderQueue::Transparency;
@@ -146,13 +136,13 @@ void csShaderGraphLoader::LoadQueue(const cs::csCryoFileElement* shaderGraphElem
   }
 }
 
-void csShaderGraphLoader::LoadLightingMode(const csCryoFileElement* shaderGraphElement, csShaderGraph* sg) const
+void csShaderGraphLoader::LoadLightingMode(const csCryoFileElement *shaderGraphElement, csShaderGraph *sg) const
 {
   auto lightingElement = shaderGraphElement->GetChild("lighting");
   if (lightingElement)
   {
-    csShaderGraph::eLightingMode lighting = csShaderGraph::eLM_Default;
-    std::string lightingString = lightingElement->GetAttribute(0, "Default");
+    csShaderGraph::eLightingMode lighting       = csShaderGraph::eLM_Default;
+    std::string                  lightingString = lightingElement->GetAttribute(0, "Default");
     if (lightingString == "Attenuated")
     {
       lighting = csShaderGraph::eLM_Attenuated;
@@ -165,13 +155,13 @@ void csShaderGraphLoader::LoadLightingMode(const csCryoFileElement* shaderGraphE
   }
 }
 
-void csShaderGraphLoader::LoadBlendingMode(const csCryoFileElement* shaderGraphElement, csShaderGraph* sg) const
+void csShaderGraphLoader::LoadBlendingMode(const csCryoFileElement *shaderGraphElement, csShaderGraph *sg) const
 {
   auto blendingElement = shaderGraphElement->GetChild("blending");
   if (blendingElement)
   {
-    csShaderGraph::eBlendingMode blending = csShaderGraph::eBM_Off;
-    std::string blendingString = blendingElement->GetAttribute(0, "Off");
+    csShaderGraph::eBlendingMode blending       = csShaderGraph::eBM_Off;
+    std::string                  blendingString = blendingElement->GetAttribute(0, "Off");
     if (blendingString == "Alpha")
     {
       blending = csShaderGraph::eBM_Alpha;
@@ -185,21 +175,21 @@ void csShaderGraphLoader::LoadBlendingMode(const csCryoFileElement* shaderGraphE
 }
 
 
-csSGNode* csShaderGraphLoader::CreateNode(const cs::csCryoFileElement* nodeElement, cs::csShaderGraph* sg) const
+csSGNode *csShaderGraphLoader::CreateNode(const cs::csCryoFileElement *nodeElement, cs::csShaderGraph *sg) const
 {
-  const std::string& nodeTypeName = nodeElement->GetAttribute(0, "");
+  const std::string &nodeTypeName = nodeElement->GetAttribute(0, "");
   if (nodeTypeName.empty())
   {
     return nullptr;
   }
-  const csClass* nodeTypeClass = csClassRegistry::Get()->GetClass(nodeTypeName);
+  const csClass *nodeTypeClass = csClassRegistry::Get()->GetClass(nodeTypeName);
   if (!nodeTypeClass)
   {
     fprintf(stderr, "Unable to loader shader graph: Class name '%s' node found.\n", nodeTypeName.c_str());
     return nullptr;
   }
 
-  const std::string& nodeKey = nodeElement->GetAttribute(1, "");
+  const std::string &nodeKey = nodeElement->GetAttribute(1, "");
   if (nodeKey.empty())
   {
     fprintf(stderr, "Unable to create node '%s'. No key defined.\n", nodeTypeName.c_str());
@@ -210,39 +200,39 @@ csSGNode* csShaderGraphLoader::CreateNode(const cs::csCryoFileElement* nodeEleme
 }
 
 
-csSGResourceNode*
-csShaderGraphLoader::CreateResourceNode(const cs::csCryoFileElement* nodeElement, cs::csShaderGraph* sg) const
+csSGResourceNode *
+csShaderGraphLoader::CreateResourceNode(const cs::csCryoFileElement *nodeElement, cs::csShaderGraph *sg) const
 {
-  const std::string& nodeTypeName = nodeElement->GetAttribute(0, "");
+  const std::string &nodeTypeName = nodeElement->GetAttribute(0, "");
   if (nodeTypeName.empty())
   {
     return nullptr;
   }
-  const csClass* nodeTypeClass = csClassRegistry::Get()->GetClass(nodeTypeName);
+  const csClass *nodeTypeClass = csClassRegistry::Get()->GetClass(nodeTypeName);
   if (!nodeTypeClass)
   {
     fprintf(stderr, "Unable to loader shader graph: Class name '%s' node found.\n", nodeTypeName.c_str());
     return nullptr;
   }
 
-  const std::string& nodeKey = nodeElement->GetAttribute(1, "");
+  const std::string &nodeKey = nodeElement->GetAttribute(1, "");
   if (nodeKey.empty())
   {
     fprintf(stderr, "Unable to create node '%s'. No key defined.\n", nodeTypeName.c_str());
     return nullptr;
   }
 
-  const std::string& nodeResourceName = nodeElement->GetAttribute(2, "");
+  const std::string &nodeResourceName = nodeElement->GetAttribute(2, "");
   if (nodeResourceName.empty())
   {
     fprintf(stderr,
-      "Unable to create node '%s'#'%s'. No resource name defined.\n",
-      nodeTypeName.c_str(),
-      nodeKey.c_str());
+            "Unable to create node '%s'#'%s'. No resource name defined.\n",
+            nodeTypeName.c_str(),
+            nodeKey.c_str());
     return nullptr;
   }
 
-  csSGResourceNode* node = sg->AddResource(nodeTypeClass, nodeKey, nodeResourceName);
+  csSGResourceNode *node = sg->AddResource(nodeTypeClass, nodeKey, nodeResourceName);
   if (!node)
   {
     fprintf(stderr, "Unable to create node '%s'.\n", nodeTypeName.c_str());
@@ -260,19 +250,21 @@ csShaderGraphLoader::CreateResourceNode(const cs::csCryoFileElement* nodeElement
 }
 
 
-bool csShaderGraphLoader::LoadResourceDefaults(const csCryoFileElement* nodeElement, csSGResourceNode* resourceNode, csShaderGraph* sg) const
+bool csShaderGraphLoader::LoadResourceDefaults(const csCryoFileElement *nodeElement,
+                                               csSGResourceNode *resourceNode,
+                                               csShaderGraph *sg) const
 {
   for (size_t i = 0, in = nodeElement->GetNumberOfChildren(); i < in; i++)
   {
-    const csCryoFileElement* childElement = nodeElement->GetChild(i);
+    const csCryoFileElement *childElement = nodeElement->GetChild(i);
     if (!childElement)
     {
       continue;
     }
-    const std::string& tagName = childElement->GetTagName();
+    const std::string &tagName = childElement->GetTagName();
     std::array<float, 16> floats;
-    std::array<int, 4> ints;
-    csResourceLocator locator("");
+    std::array<int, 4>    ints;
+    csAssetLocator        locator("");
     if (tagName == "defaultFloat")
     {
       size_t num = childElement->GetAttribute(0, 0);
@@ -293,7 +285,7 @@ bool csShaderGraphLoader::LoadResourceDefaults(const csCryoFileElement* nodeElem
     }
     else if (tagName == "defaultLocator")
     {
-      locator = csResourceLocator(childElement->GetAttribute(0, ""));
+      locator = csAssetLocator(childElement->GetAttribute(0, ""));
     }
 
     resourceNode->SetDefault(floats);
@@ -304,19 +296,19 @@ bool csShaderGraphLoader::LoadResourceDefaults(const csCryoFileElement* nodeElem
   return true;
 }
 
-bool csShaderGraphLoader::LoadNodeBindingsAndValues(const csCryoFileElement* nodeElement,
-  csSGNode* node,
-  csShaderGraph* sg) const
+bool csShaderGraphLoader::LoadNodeBindingsAndValues(const csCryoFileElement *nodeElement,
+                                                    csSGNode *node,
+                                                    csShaderGraph *sg) const
 {
   for (size_t i = 0, in = nodeElement->GetNumberOfChildren(); i < in; i++)
   {
-    const csCryoFileElement* childElement = nodeElement->GetChild(i);
+    const csCryoFileElement *childElement = nodeElement->GetChild(i);
     if (!childElement)
     {
       continue;
     }
 
-    const std::string& tagName = childElement->GetTagName();
+    const std::string &tagName = childElement->GetTagName();
     if (tagName == "value")
     {
       if (!LoadValue(childElement, node, sg))
@@ -335,9 +327,9 @@ bool csShaderGraphLoader::LoadNodeBindingsAndValues(const csCryoFileElement* nod
   return true;
 }
 
-bool csShaderGraphLoader::LoadValue(const csCryoFileElement* valueElement,
-  csSGNode* node,
-  csShaderGraph* sg) const
+bool csShaderGraphLoader::LoadValue(const csCryoFileElement *valueElement,
+                                    csSGNode *node,
+                                    csShaderGraph *sg) const
 {
   size_t idx = valueElement->GetAttribute(0, 0xffff);
   if (idx == 0xffff)
@@ -347,7 +339,7 @@ bool csShaderGraphLoader::LoadValue(const csCryoFileElement* valueElement,
   }
 
 
-  csSGNodeInput* input = node->GetInput(idx);
+  csSGNodeInput *input = node->GetInput(idx);
   if (!input)
   {
     fprintf(stderr, "The index %zu is no valid input index of '%s'\n", idx, node->GetKey().c_str());
@@ -360,13 +352,13 @@ bool csShaderGraphLoader::LoadValue(const csCryoFileElement* valueElement,
 }
 
 
-static bool is_uint(const std::string& str)
+static bool is_uint(const std::string &str)
 {
   if (str.empty())
   {
     return false;
   }
-  for (auto ch : str)
+  for (auto ch: str)
   {
     if (ch < '0' || ch > '9')
     {
@@ -376,11 +368,11 @@ static bool is_uint(const std::string& str)
   return true;
 }
 
-bool csShaderGraphLoader::LoadBinding(const csCryoFileElement* valueElement,
-  csSGNode* node,
-  csShaderGraph* sg) const
+bool csShaderGraphLoader::LoadBinding(const csCryoFileElement *valueElement,
+                                      csSGNode *node,
+                                      csShaderGraph *sg) const
 {
-  size_t idx;
+  size_t      idx;
   std::string idxName = valueElement->GetAttribute(0, "");
   if (is_uint(idxName))
   {
@@ -400,7 +392,7 @@ bool csShaderGraphLoader::LoadBinding(const csCryoFileElement* valueElement,
   }
 
 
-  csSGNodeInput* input = node->GetInput(idx);
+  csSGNodeInput *input = node->GetInput(idx);
   if (!input)
   {
     fprintf(stderr, "The index '%s' is no valid input index of '%s'\n", idxName.c_str(), node->GetKey().c_str());
@@ -414,13 +406,13 @@ bool csShaderGraphLoader::LoadBinding(const csCryoFileElement* valueElement,
     return false;
   }
 
-  csSGNode* bindingInputNode = sg->GetNode(bindingInputKey);
+  csSGNode *bindingInputNode = sg->GetNode(bindingInputKey);
   if (!bindingInputNode)
   {
     fprintf(stderr,
-      "Binding input '%s' could not be found in shader graph for '%s'\n",
-      bindingInputKey.c_str(),
-      node->GetKey().c_str());
+            "Binding input '%s' could not be found in shader graph for '%s'\n",
+            bindingInputKey.c_str(),
+            node->GetKey().c_str());
     return false;
   }
 
@@ -444,13 +436,13 @@ bool csShaderGraphLoader::LoadBinding(const csCryoFileElement* valueElement,
     }
   }
 
-  csSGNodeOutput* output = bindingInputNode->GetOutput(bindingInputOutputIdx);
+  csSGNodeOutput *output = bindingInputNode->GetOutput(bindingInputOutputIdx);
   if (!output)
   {
     fprintf(stderr,
-      "The index '%s' is no valid output index of '%s'\n",
-      idxName.c_str(),
-      bindingInputNode->GetKey().c_str());
+            "The index '%s' is no valid output index of '%s'\n",
+            idxName.c_str(),
+            bindingInputNode->GetKey().c_str());
     return false;
   }
 
@@ -460,8 +452,7 @@ bool csShaderGraphLoader::LoadBinding(const csCryoFileElement* valueElement,
 }
 
 
-
-void csShaderGraphLoader::LoadNodePositions(const csCryoFileElement* nodeElement, csSGNode* node) const
+void csShaderGraphLoader::LoadNodePositions(const csCryoFileElement *nodeElement, csSGNode *node) const
 {
   float posX = nodeElement->GetAttribute("x", 0.0f);
   float posY = nodeElement->GetAttribute("y", 0.0f);

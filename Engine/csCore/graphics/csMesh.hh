@@ -56,26 +56,26 @@ public:
   {
     friend class csMesh;
   private:
-    MaterialSlot(const std::string &name, const csRes<iMaterial> &defaultMaterial);
+    MaterialSlot(const std::string &name, const csAssetRef<iMaterial> &defaultMaterial);
   public:
     MaterialSlot(const MaterialSlot &slot);
     ~MaterialSlot();
 
-    const csRes<iMaterial> &GetDefaultMaterial() const;
+    const csAssetRef<iMaterial> &GetDefaultMaterial() const;
 
     MaterialSlot &operator=(const MaterialSlot &slot);
 
     const std::string& GetName() const;
 
   private:
-    csRes<iMaterial> m_defaultMaterial;
-    std::string m_name;
+    csAssetRef<iMaterial> m_defaultMaterial;
+    std::string           m_name;
   };
 
   const csBoundingBox& GetBoundingBox() const;
 
-  Size AddMaterialSlot(const std::string& name, csRes<iMaterial>& defaultMaterial);
-  void SetDefaultMaterial(Size idx, csRes<iMaterial> &defaultMaterial);
+  Size AddMaterialSlot(const std::string& name, csAssetRef<iMaterial>& defaultMaterial);
+  void SetDefaultMaterial(Size idx, csAssetRef<iMaterial> &defaultMaterial);
   Size GetNumberOfMaterialSlots() const;
   const MaterialSlot& GetMaterialSlot(Size idx) const;
   size_t IndexOfMaterialSlot(const std::string &materialName) const;

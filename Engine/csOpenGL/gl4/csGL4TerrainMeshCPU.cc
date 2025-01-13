@@ -427,7 +427,7 @@ void csGL4TerrainMeshGeneratorCPU::GenerateNormals(std::vector<csVector3f> &vert
         n += db % dl;
       }
 
-//      normals[idx] = Vector3f(0.0f, 1.0f, 0.0f); //n.Normalized();
+//      normals[idx] = Vector3f(0.0f, 1.0f, 0.0f); //n.Canonical();
       normals[idx] = n.Normalized();
     }
   }

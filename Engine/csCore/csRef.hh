@@ -2,8 +2,8 @@
 #pragma once
 
 #include <csCore/csClass.hh>
-#include <csCore/resource/iResource.hh>
-#include <csCore/resource/csResourcePool.hh>
+#include <csCore/resource/iAsset.hh>
+#include <csCore/resource/csAssetPool.hh>
 
 namespace cs
 {
@@ -19,73 +19,69 @@ public:
     return ref;
   }
 
-  csRef()
-      : m_ptr(nullptr)
-  {
 
-  }
-
-  csRef(T *t)
+  csRef(T *t = nullptr)
       : m_ptr(t)
   {
     if (m_ptr)
     {
-      reinterpret_cast<iObject *>(m_ptr)->AddRef();
+      reinterpret_cast<const iObject *>(m_ptr)->AddRef();
     }
   }
 
-  csRef(csRef &other)
-      : m_ptr(nullptr)
-  {
-    m_ptr = other.m_ptr;
-    if (m_ptr)
-    {
-      reinterpret_cast<iObject *>(m_ptr)->AddRef();
-    }
-  }
-
-  csRef(const csRef &other)
-      : m_ptr(nullptr)
-  {
-    m_ptr = other.m_ptr;
-    if (m_ptr)
-    {
-      reinterpret_cast<iObject *>(m_ptr)->AddRef();
-    }
-  }
-
-  csRef(csRef &&other) noexcept
-      : m_ptr(other.m_ptr)
-  {
-    other.m_ptr = nullptr;
-  }
-
-  template<typename O>
-  explicit
-  csRef(const csRef<O> &other)
-      : m_ptr(other.m_ptr)
-  {
-    if (m_ptr)
-    {
-      reinterpret_cast<iObject *>(m_ptr)->AddRef();
-    }
-  }
-
-  template<typename O>
-  explicit
-  csRef(csRef<O> &&other)
-      : m_ptr(other.m_ptr)
-  {
-    other.m_ptr = nullptr;
-  }
-
+//  csRef(csRef &other)
+//      : m_ptr(nullptr)
+//  {
+//    m_ptr = other.m_ptr;
+//    if (m_ptr)
+//    {
+//      reinterpret_cast<iObject *>(m_ptr)->AddRef();
+//    }
+//  }
+//
+//  csRef(const csRef &other)
+//      : m_ptr(nullptr)
+//  {
+//    m_ptr = other.m_ptr;
+//    if (m_ptr)
+//    {
+//      reinterpret_cast<const iObject *>(m_ptr)->AddRef();
+//    }
+//  }
+//
+//
+//  template<typename O>
+//  csRef(const csRef<O> &other)
+//      : m_ptr(other.raw())
+//  {
+//    if (m_ptr)
+//    {
+//      reinterpret_cast<const iObject *>(m_ptr)->AddRef();
+//    }
+//  }
+//
+//  csRef(csRef &&other) noexcept
+//      : m_ptr(other.m_ptr)
+//  {
+//    other.m_ptr = nullptr;
+//  }
+//
+//
+//  template<typename O>
+//  explicit
+//  csRef(csRef<O> &&other) noexcept
+//      : m_ptr(other.m_ptr)
+//  {
+//    other.m_ptr = nullptr;
+//  }
+//
 
   ~csRef()
   {
 
     if (m_ptr)
     {
-      reinterpret_cast<iObject *>(m_ptr)->Release();
+      reinterpret_cast<const iObject *>(m_ptr)->Release();
       m_ptr = nullptr;
     }
   }
@@ -99,40 +95,40 @@ public:
     }
     if (m_ptr)
     {
-      reinterpret_cast<iObject *>(m_ptr)->Release();
+      reinterpret_cast<const iObject *>(m_ptr)->Release();
     }
     m_ptr = t;
     return *this;
   }
 
 
-  csRef &operator=(csRef &&ref) noexcept
-  {
-    if (this != &ref)
-    {
-      m_ptr = ref.raw();
-      ref.m_ptr = nullptr;
-    }
-    return *this;
-  }
-
-  csRef &operator=(const csRef &ref)
-  {
-    if (this != &ref)
-    {
-      void *t = const_cast<void *>(reinterpret_cast<const void *>(ref.raw()));
-      if (t)
-      {
-        reinterpret_cast<iObject *>(t)->AddRef();
-      }
-      if (m_ptr)
-      {
-        reinterpret_cast<iObject *>(m_ptr)->Release();
-      }
-      m_ptr = reinterpret_cast<T *>(t);
-    }
-    return *this;
-  }
+//  csRef &operator=(csRef &&ref) noexcept
+//  {
+//    if (this != &ref)
+//    {
+//      m_ptr = ref.raw();
+//      ref.m_ptr = nullptr;
+//    }
+//    return *this;
+//  }
+//
+//  csRef &operator=(const csRef &ref)
+//  {
+//    if (this != &ref)
+//    {
+//      void *t = const_cast<void *>(reinterpret_cast<const void *>(ref.raw()));
+//      if (t)
+//      {
+//        reinterpret_cast<iObject *>(t)->AddRef();
+//      }
+//      if (m_ptr)
+//      {
+//        reinterpret_cast<iObject *>(m_ptr)->Release();
+//      }
+//      m_ptr = reinterpret_cast<T *>(t);
+//    }
+//    return *this;
+//  }
 
   T *operator->()
   {
@@ -144,54 +140,55 @@ public:
     return reinterpret_cast<const T *>(m_ptr);
   }
 
+
   T &operator*()
   {
     return *reinterpret_cast<T *>(m_ptr);
-  }
-
-  const T &operator*() const
-  {
-    return *reinterpret_cast<const T *>(m_ptr);
   }
 
   operator bool() const
   {
     return m_ptr != nullptr;
   }
-
-  bool operator==(const csRef &ref) const
-  {
-    return m_ptr == ref.m_ptr;
-  }
+//
+//  bool operator==(const csRef &ref) const
+//  {
+//    return m_ptr == ref.m_ptr;
+//  }
 
   bool operator==(const T *ptr) const
   {
     return m_ptr == ptr;
   }
 
-  T *raw()
+//  bool operator!=(const T *ptr) const
+//  {
+//    return m_ptr != ptr;
+//  }
+
+  operator T *()
+  {
+    return m_ptr;
+  }
+
+  operator const T *() const
+  {
+    return m_ptr;
+  }
+
+  T *raw() const
   {
     return reinterpret_cast<T *>(m_ptr);
   }
 
-  [[maybe_unused]] const T *raw() const
-  {
-    return reinterpret_cast<const T *>(m_ptr);
-  }
 
-  template<typename O>
-  operator csRef<O> &()
-  {
-    static_cast<O *> (m_ptr);
-    return *reinterpret_cast<csRef<O> *>(this);
-  }
+//  template<typename O>
+//  operator csRef<O> &()
+//  {
+//    static_cast<O *> (m_ptr);
+//    return *reinterpret_cast<csRef<O> *>(this);
+//  }
 
-  template<typename O>
-  operator const csRef<O> &() const
-  {
-    static_cast<O *> (m_ptr);
-    return *reinterpret_cast<const csRef<O> *>(this);
-  }
 
 private:
   T *m_ptr;
@@ -200,75 +197,77 @@ private:
 
 
 template<typename T>
-class csRes
+class csAssetRef
 {
 public:
-  csRes()
-      : m_ptr(nullptr)
-  {
 
+  static csAssetRef &Null()
+  {
+    static csAssetRef asset;
+    return asset;
   }
 
-  csRes(csRef<T> &other)
-      : m_ptr(other.raw())
-  {
-    if (m_ptr)
-    {
-      reinterpret_cast<iResource *>(m_ptr)->AddRef();
-    }
-  }
 
-  csRes(T *t)
+  csAssetRef(T *t = nullptr)
       : m_ptr(t)
   {
     if (m_ptr)
     {
-      reinterpret_cast<iResource *>(m_ptr)->AddRef();
+      reinterpret_cast<const iAsset *>(m_ptr)->AddRef();
     }
   }
 
-  csRes(const csRes &other)
+  csAssetRef(const csAssetRef &other)
       : m_ptr(nullptr)
   {
     m_ptr = other.m_ptr;
     if (m_ptr)
     {
-      reinterpret_cast<iResource *>(m_ptr)->AddRef();
+      reinterpret_cast<const iAsset *>(m_ptr)->AddRef();
     }
   }
 
-  csRes(csRes &&other) noexcept
+
+  csAssetRef(const csRef<T> &other)
+      : m_ptr(other.raw())
+  {
+    if (m_ptr)
+    {
+      reinterpret_cast<const iAsset *>(m_ptr)->AddRef();
+    }
+  }
+
+
+  csAssetRef(csAssetRef &&other) noexcept
       : m_ptr(other.m_ptr)
   {
     other.m_ptr = nullptr;
   }
 
   template<typename O>
-  explicit
-  csRes(const csRes<O> &other)
-      : m_ptr(other.m_ptr)
+  csAssetRef(const csAssetRef<O> &other)
+      : m_ptr(other.raw())
   {
     if (m_ptr)
     {
-      reinterpret_cast<iResource *>(m_ptr)->AddRef();
+      reinterpret_cast<const iAsset *>(m_ptr)->AddRef();
     }
   }
 
   template<typename O>
-  explicit
-  csRes(csRes<O> &&other)
+  csAssetRef(csAssetRef<O> &&other) noexcept
       : m_ptr(other.m_ptr)
   {
     other.m_ptr = nullptr;
   }
 
 
-  ~csRes()
+  ~csAssetRef()
   {
 
     if (m_ptr)
     {
-      reinterpret_cast<iResource *>(m_ptr)->Release();
+      reinterpret_cast<const iAsset *>(m_ptr)->Release();
       m_ptr = nullptr;
     }
   }
@@ -278,13 +277,8 @@ public:
     return csRef<T>(m_ptr);
   }
 
-  operator const csRef<T>() const
-  {
-    return csRef<T>(m_ptr);
-  }
 
-
-  csRes &operator=(T *t)
+  csAssetRef &operator=(T *t)
   {
     if (t)
     {
@@ -292,14 +286,14 @@ public:
     }
     if (m_ptr)
     {
-      reinterpret_cast<iResource *>(m_ptr)->Release();
+      reinterpret_cast<iAsset *>(m_ptr)->Release();
     }
     m_ptr = t;
     return *this;
   }
 
 
-  csRes &operator=(csRes &&ref) noexcept
+  csAssetRef &operator=(csAssetRef &&ref) noexcept
   {
     if (this != &ref)
     {
@@ -309,41 +303,24 @@ public:
     return *this;
   }
 
-  csRes &operator=(csRes &ref)
+  csAssetRef &operator=(const csAssetRef &ref)
   {
     if (this != &ref)
     {
-      void *t = ref.raw();
+      const void *t = ref.raw();
       if (t)
       {
-        reinterpret_cast<iResource *>(t)->AddRef();
+        reinterpret_cast<const iAsset *>(t)->AddRef();
       }
       if (m_ptr)
       {
-        reinterpret_cast<iResource *>(m_ptr)->Release();
+        reinterpret_cast<const iAsset *>(m_ptr)->Release();
       }
-      m_ptr = reinterpret_cast<T *>(t);
+      m_ptr = reinterpret_cast<T *>(const_cast<void *>(t));
     }
     return *this;
   }
 
-  csRes &operator=(const csRes &ref)
-  {
-    if (this != &ref)
-    {
-      void *t = const_cast<T *>(ref.raw());
-      if (t)
-      {
-        reinterpret_cast<iResource *>(t)->AddRef();
-      }
-      if (m_ptr)
-      {
-        reinterpret_cast<iResource *>(m_ptr)->Release();
-      }
-      m_ptr = reinterpret_cast<T *>(t);
-    }
-    return *this;
-  }
 
   T *operator->()
   {
@@ -351,11 +328,6 @@ public:
     return reinterpret_cast<T *>(m_ptr);
   }
 
-  const T *operator->() const
-  {
-    validate();
-    return reinterpret_cast<const T *>(m_ptr);
-  }
 
   T &operator*()
   {
@@ -363,62 +335,53 @@ public:
     return *reinterpret_cast<T *>(m_ptr);
   }
 
-  const T &operator*() const
-  {
-    validate();
-    return *reinterpret_cast<const T *>(m_ptr);
-  }
 
   operator bool() const
   {
     return m_ptr != nullptr;
   }
 
-  bool operator==(const csRes &res) const
+  bool operator==(const csAssetRef &res) const
   {
     return m_ptr == res.m_ptr;
   }
 
-  T *raw()
+
+  T *raw() const
   {
     validate();
     return reinterpret_cast<T *>(m_ptr);
   }
 
-  [[maybe_unused]] const T *raw() const
-  {
-    validate();
-    return reinterpret_cast<const T *>(m_ptr);
-  }
-
   template<typename O>
-  operator csRes<O> &()
+  operator csAssetRef<O> &()
   {
     static_cast<O *> (m_ptr);
-    return *reinterpret_cast<csRes<O> *>(this);
+    return *reinterpret_cast<csAssetRef<O> *>(this);
   }
 
-  template<typename O>
-  operator const csRes<O> &() const
+  //
+  // type conversion from 'const csAssetRef<T>&' -> 'csAssetRef<const T>&'. This is safe to do because
+  // the inner const is much more restrictive than the outer const because the csAs
+  operator csAssetRef<const T> &() const
   {
-    static_cast<O *> (m_ptr);
-    return *reinterpret_cast<const csRes<O> *>(this);
+    return *reinterpret_cast<csAssetRef<const T> *>(const_cast<csAssetRef *>(this));
   }
 
 private:
 
   CS_FORCEINLINE void validate() const
   {
-    if (m_ptr && !reinterpret_cast<iResource *>(m_ptr)->IsValid())
+    if (m_ptr && !reinterpret_cast<const iAsset *>(m_ptr)->IsValid())
     {
-      iResource *t = csResourcePool::Instance().Get(reinterpret_cast<iResource *>(m_ptr)->GetLocator());
+      iAsset *t = csAssetPool::Instance().Get(reinterpret_cast<const iAsset *>(m_ptr)->GetLocator());
       if (t)
       {
         t->AddRef();
       }
       if (m_ptr)
       {
-        reinterpret_cast<iResource *>(m_ptr)->Release();
+        reinterpret_cast<const iAsset *>(m_ptr)->Release();
       }
       m_ptr = reinterpret_cast<T *>(t);
     }

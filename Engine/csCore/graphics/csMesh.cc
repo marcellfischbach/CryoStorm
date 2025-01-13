@@ -23,7 +23,7 @@ const csBoundingBox & csMesh::GetBoundingBox() const
 }
 
 
-Size csMesh::AddMaterialSlot(const std::string& name, csRes<iMaterial> &defaultMaterial)
+Size csMesh::AddMaterialSlot(const std::string& name, csAssetRef<iMaterial> &defaultMaterial)
 {
   for (Size i = 0; i < m_materialSlots.size(); i++)
   {
@@ -37,7 +37,7 @@ Size csMesh::AddMaterialSlot(const std::string& name, csRes<iMaterial> &defaultM
   return m_materialSlots.size() - 1;
 }
 
-void csMesh::SetDefaultMaterial(Size idx, csRes<iMaterial> &defaultMaterial)
+void csMesh::SetDefaultMaterial(Size idx, csAssetRef<iMaterial> &defaultMaterial)
 {
   if (idx >= m_materialSlots.size())
   {
@@ -170,7 +170,7 @@ Size csMesh::SubMesh::GetMaterialSlotIdx() const
  * *********************************************************************/
 
 
-csMesh::MaterialSlot::MaterialSlot(const std::string& name, const csRes<iMaterial> &defaultMaterial)
+csMesh::MaterialSlot::MaterialSlot(const std::string& name, const csAssetRef<iMaterial> &defaultMaterial)
   : m_defaultMaterial(nullptr)
   , m_name(name)
 {
@@ -197,7 +197,7 @@ csMesh::MaterialSlot& csMesh::MaterialSlot::operator=(const MaterialSlot& slot)
   return *this;
 }
 
-const csRes<iMaterial>& csMesh::MaterialSlot::GetDefaultMaterial() const
+const csAssetRef<iMaterial>& csMesh::MaterialSlot::GetDefaultMaterial() const
 {
   return m_defaultMaterial;
 }

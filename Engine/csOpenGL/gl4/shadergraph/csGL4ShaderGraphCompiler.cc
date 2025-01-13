@@ -7,6 +7,7 @@
 #include <csCore/graphics/shadergraph/csSGNodes.hh>
 #include <csCore/resource/csAssetManager.hh>
 #include <csCore/resource/csTextFile.hh>
+#include <csCore/resource/csVFS.hh>
 #include <csCore/csSettings.hh>
 
 namespace cs::opengl
@@ -17,7 +18,7 @@ csMaterial *csGL4ShaderGraphCompiler::Compile(cs::csShaderGraph *shaderGraph, co
 {
   m_shaderGraph = shaderGraph;
   m_errorString = "";
-  m_parameters = parameters;
+  m_parameters  = parameters;
 
   if (!csGL4ShaderGraphLightData::Get().Valid)
   {
@@ -48,7 +49,7 @@ csMaterial *csGL4ShaderGraphCompiler::Compile(cs::csShaderGraph *shaderGraph, co
   GenerateDepth(depth);
   GenerateForward(forward);
 
-  iShader *depthShader = Compile(depth, "Depth");
+  iShader *depthShader   = Compile(depth, "Depth");
   iShader *forwardShader = Compile(forward, "Forward");
 
   csMaterial *material = new csMaterial();
@@ -69,38 +70,32 @@ csMaterial *csGL4ShaderGraphCompiler::Compile(cs::csShaderGraph *shaderGraph, co
 
   switch (m_shaderGraph->GetLightingMode())
   {
-    case csShaderGraph::eLM_Default:
-      material->SetShadingMode(eShadingMode::Shaded);
+    case csShaderGraph::eLM_Default:material->SetShadingMode(eShadingMode::Shaded);
       material->SetBlending(false);
       break;
 
-    case csShaderGraph::eLM_Attenuated:
-      material->SetShadingMode(eShadingMode::Shaded);
+    case csShaderGraph::eLM_Attenuated:material->SetShadingMode(eShadingMode::Shaded);
       material->SetBlending(true);
       break;
 
-    case csShaderGraph::eLM_Unlit:
-      material->SetShadingMode(eShadingMode::Unshaded);
+    case csShaderGraph::eLM_Unlit:material->SetShadingMode(eShadingMode::Unshaded);
       material->SetBlending(true);
       break;
 
   }
   switch (m_shaderGraph->GetBlendingMode())
   {
-    case csShaderGraph::eBM_Off:
-      material->SetBlending(false);
+    case csShaderGraph::eBM_Off:material->SetBlending(false);
       material->SetBlendFactor(eBlendFactor::One, eBlendFactor::Zero);
       material->SetDepthWrite(true);
       break;
 
-    case csShaderGraph::eBM_Alpha:
-      material->SetBlending(true);
+    case csShaderGraph::eBM_Alpha:material->SetBlending(true);
       material->SetBlendFactor(eBlendFactor::SrcAlpha, eBlendFactor::OneMinusSrcAlpha);
       material->SetDepthWrite(false);
       break;
 
-    case csShaderGraph::eBM_Add:
-      material->SetBlending(true);
+    case csShaderGraph::eBM_Add:material->SetBlending(true);
       material->SetBlendFactor(eBlendFactor::SrcAlpha, eBlendFactor::One);
       material->SetDepthWrite(false);
       break;
@@ -148,9 +143,9 @@ static bool has_cycle(const csSGNode *node, const csSGNode *referenceNode)
 {
   for (size_t i = 0, in = node->GetNumberOfInputs(); i < in; i++)
   {
-    const csSGNodeInput *input = node->GetInput(i);
-    const csSGNodeOutput *source = input->GetSource();
-    const csSGNode *sourceNode = source ? source->GetNode() : nullptr;
+    const csSGNodeInput  *input      = node->GetInput(i);
+    const csSGNodeOutput *source     = input->GetSource();
+    const csSGNode       *sourceNode = source ? source->GetNode() : nullptr;
     if (sourceNode)
     {
       if (sourceNode == referenceNode)
@@ -196,7 +191,7 @@ static void linearize(std::set<csSGNode *> &untouched, csSGNodeInput *input, std
     return;
   }
   csSGNode *sourceNode = source->GetNode();
-  auto it = untouched.find(sourceNode);
+  auto     it          = untouched.find(sourceNode);
   if (it == untouched.end())
   {
     return;
@@ -215,7 +210,7 @@ static void linearize(std::set<csSGNode *> &untouched, csSGNodeInput *input, std
 void csGL4ShaderGraphCompiler::LinearizeNodes()
 {
   std::set<csSGNode *> untouchedNodes;
-  for (size_t i = 0, in = m_shaderGraph->GetNumberOfNodes(); i < in; i++)
+  for (size_t          i = 0, in = m_shaderGraph->GetNumberOfNodes(); i < in; i++)
   {
     untouchedNodes.insert(m_shaderGraph->GetNode(i));
   }
@@ -269,7 +264,7 @@ bool csGL4ShaderGraphCompiler::VerifyNodeType(csSGNode *node)
 
   for (size_t i = 0, in = node->GetNumberOfInputs(); i < in; i++)
   {
-    csSGNodeInput *input = node->GetInput(i);
+    csSGNodeInput  *input  = node->GetInput(i);
     csSGNodeOutput *source = input->GetSource();
 
     if (source)
@@ -305,9 +300,9 @@ bool csGL4ShaderGraphCompiler::VerifyNodeType(csSGNode *node)
 bool csGL4ShaderGraphCompiler::VerifyResources()
 {
   std::map<std::string, csSGResourceNode *> resources;
-  for (size_t i = 0, in = m_shaderGraph->GetNumberOfNodes(); i < in; ++i)
+  for (size_t                               i = 0, in = m_shaderGraph->GetNumberOfNodes(); i < in; ++i)
   {
-    csSGNode *node = m_shaderGraph->GetNode(i);
+    csSGNode         *node         = m_shaderGraph->GetNode(i);
     csSGResourceNode *resourceNode = node->Query<csSGResourceNode>();
     if (resourceNode)
     {
@@ -343,8 +338,8 @@ std::string line_number(size_t number)
 
 std::string replace_all(const std::string &input, const std::string &from, const std::string &to)
 {
-  std::string str = input;
-  size_t start_pos = 0;
+  std::string str       = input;
+  size_t      start_pos = 0;
   while ((start_pos = str.find(from, start_pos)) != std::string::npos)
   {
     str.replace(start_pos, from.length(), to);
@@ -359,9 +354,9 @@ std::string annotate_with_line_numbers(const std::string &code)
   std::string str = replace_all(code, "\r\n", "\n");
   str = replace_all(str, "\r", "\n");
 
-  size_t line_no = 1;
-  bool newLine = true;
-  bool hadR = false;
+  size_t          line_no = 1;
+  bool            newLine = true;
+  bool            hadR    = false;
   for (const auto &ch: str)
   {
     if (newLine)
@@ -501,7 +496,7 @@ std::vector<csSGNode *> csGL4ShaderGraphCompiler::ScanNeededVariables(std::vecto
     return result;
   }
   std::set<csSGNode *> needs;
-  for (auto input: inputs)
+  for (auto            input: inputs)
   {
     ScanNeededVariables(needs, input);
   }
@@ -522,67 +517,92 @@ const csGL4ShaderGraphLightData &csGL4ShaderGraphLightData::Get()
   return data;
 }
 
+static std::string get_file_content(const std::string &locator)
+{
+  iFile *pFile = csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
+  if (!pFile)
+  {
+    return std::string();
+  }
+
+  pFile->Seek(eSM_End, 0);
+  long size = pFile->Tell();
+  pFile->Seek(eSM_Set, 0);
+
+
+  char *buffer = new char[size + 1];
+  memset(buffer, 0, size + 1);
+  pFile->Read(sizeof(char), size, buffer);
+  pFile->Close();
+
+
+  std::string result(buffer);
+  delete[] buffer;
+
+  return result;
+}
+
 csGL4ShaderGraphLightData::csGL4ShaderGraphLightData()
 {
   Valid = false;
   const csSettingsFile &gfxSettings = csSettings::Get().Graphics();
 
-  csTextFile *txt = csAssetManager::Get()->Get<csTextFile>(
-      "/shaders/gl4/shadergraph/diffuse/diffuse_default_lighting.glsl");
-  if (!txt)
-  {
-    return;
-  }
-  DiffuseLightingDefault = txt->GetContent();
-  txt->Release();
+//  csTextFile *txt = csAssetManager::Get()->Get<csTextFile>(
+//      "/shaders/gl4/shadergraph/diffuse/diffuse_default_lighting.glsl");
+//  if (!txt)
+//  {
+//    return;
+//  }
+  DiffuseLightingDefault = get_file_content("/shaders/gl4/shadergraph/diffuse/diffuse_attenuated_lighting.glsl");
+//  txt->Release();
 
-  txt = csAssetManager::Get()->Get<csTextFile>("/shaders/gl4/shadergraph/diffuse/diffuse_attenuated_lighting.glsl");
-  if (!txt)
-  {
-    return;
-  }
-  DiffuseLightingAttenuated = txt->GetContent();
-  txt->Release();
+//  txt = csAssetManager::Get()->Get<csTextFile>("/shaders/gl4/shadergraph/diffuse/diffuse_attenuated_lighting.glsl");
+//  if (!txt)
+//  {
+//    return;
+//  }
+  DiffuseLightingAttenuated = get_file_content("/shaders/gl4/shadergraph/diffuse/diffuse_attenuated_lighting.glsl");
+//  txt->Release();
 
 
   std::string ambientFile = gfxSettings.GetText("ambient", "null");
-  txt = csAssetManager::Get()->Get<csTextFile>("/shaders/gl4/shadergraph/lighting/ambient_" + ambientFile + ".glsl");
-  if (!txt)
-  {
-    return;
-  }
-  DiffuseLightingAmbient = txt->GetContent();
+//  txt = csAssetManager::Get()->Get<csTextFile>("/shaders/gl4/shadergraph/lighting/ambient_" + ambientFile + ".glsl");
+//  if (!txt)
+//  {
+//    return;
+//  }
+  DiffuseLightingAmbient = get_file_content("/shaders/gl4/shadergraph/lighting/ambient_" + ambientFile + ".glsl");
 
 
   std::string diffuseFile = gfxSettings.GetText("diffuse", "null");
-  txt = csAssetManager::Get()->Get<csTextFile>("/shaders/gl4/shadergraph/lighting/diffuse_" + diffuseFile + ".glsl");
-  if (!txt)
-  {
-    return;
-  }
-  DiffuseLightingDiffuse = txt->GetContent();
+//  txt = csAssetManager::Get()->Get<csTextFile>("/shaders/gl4/shadergraph/lighting/diffuse_" + diffuseFile + ".glsl");
+//  if (!txt)
+//  {
+//    return;
+//  }
+  DiffuseLightingDiffuse = get_file_content("/shaders/gl4/shadergraph/lighting/diffuse_" + diffuseFile + ".glsl");
 
   std::string specularFile = gfxSettings.GetText("specular", "null");
-  txt = csAssetManager::Get()->Get<csTextFile>("/shaders/gl4/shadergraph/lighting/specular_" + specularFile + ".glsl");
-  if (!txt)
-  {
-    return;
-  }
-  DiffuseLightingSpecular = txt->GetContent();
+//  txt = csAssetManager::Get()->Get<csTextFile>("/shaders/gl4/shadergraph/lighting/specular_" + specularFile + ".glsl");
+//  if (!txt)
+//  {
+//    return;
+//  }
+  DiffuseLightingSpecular =  get_file_content("/shaders/gl4/shadergraph/lighting/specular_" + specularFile + ".glsl");
 
-  txt = csAssetManager::Get()->Get<csTextFile>("/shaders/gl4/shadergraph/lighting/shadow_map.glsl");
-  if (!txt)
-  {
-    return;
-  }
-  DiffuseLightingShadowMap = txt->GetContent();
+//  txt = csAssetManager::Get()->Get<csTextFile>("/shaders/gl4/shadergraph/lighting/shadow_map.glsl");
+//  if (!txt)
+//  {
+//    return;
+//  }
+  DiffuseLightingShadowMap = get_file_content("/shaders/gl4/shadergraph/lighting/shadow_map.glsl");
 
-  txt = csAssetManager::Get()->Get<csTextFile>("/shaders/gl4/shadergraph/lighting/shadow_inline.glsl");
-  if (!txt)
-  {
-    return;
-  }
-  DiffuseLightingShadowInline = txt->GetContent();
+//  txt = csAssetManager::Get()->Get<csTextFile>("/shaders/gl4/shadergraph/lighting/shadow_inline.glsl");
+//  if (!txt)
+//  {
+//    return;
+//  }
+  DiffuseLightingShadowInline = get_file_content("/shaders/gl4/shadergraph/lighting/shadow_inline.glsl");
 
   Valid = true;
 }
@@ -616,14 +636,14 @@ bool csGL4ShaderGraphCompiler::IsNeedingTangent(const std::vector<csSGNode *> &n
 void csGL4ShaderGraphCompiler::SetMaterialDefaults(cs::csMaterial *material)
 {
   std::vector<csSGNode *> nodes;
-  for (int i = 0; i < m_shaderGraph->GetNumberOfNodes(); ++i)
+  for (int                i = 0; i < m_shaderGraph->GetNumberOfNodes(); ++i)
   {
-    csSGNode* node = m_shaderGraph->GetNode(i);
+    csSGNode *node = m_shaderGraph->GetNode(i);
     if (!node || !node->IsInstanceOf<csSGResourceNode>())
     {
       continue;
     }
-    csSGResourceNode* resource = node->Query<csSGResourceNode>();
+    csSGResourceNode *resource = node->Query<csSGResourceNode>();
 
     size_t idx = material->IndexOf(resource->GetResourceName());
     if (idx == csMaterial::UndefinedIndex)
@@ -631,44 +651,36 @@ void csGL4ShaderGraphCompiler::SetMaterialDefaults(cs::csMaterial *material)
       continue;
     }
 
-    const std::array<float, 16>& floats = resource->GetDefaultFloats();
-    const std::array<int, 4>& ints = resource->GetDefaultInts();
+    const std::array<float, 16> &floats = resource->GetDefaultFloats();
+    const std::array<int, 4>    &ints   = resource->GetDefaultInts();
 
     switch (resource->GetMatType())
     {
-      case eMAT_Float:
-        material->SetFloat(idx, floats[0]);
+      case eMAT_Float:material->SetFloat(idx, floats[0]);
         break;
-      case eMAT_Vec2:
-        material->SetVector2f(idx, csVector2f(floats[0], floats[1]));
+      case eMAT_Vec2:material->SetVector2f(idx, csVector2f(floats[0], floats[1]));
         break;
-      case eMAT_Vec3:
-        material->SetVector3f(idx, csVector3f(floats[0], floats[1], floats[2]));
+      case eMAT_Vec3:material->SetVector3f(idx, csVector3f(floats[0], floats[1], floats[2]));
         break;
-      case eMAT_Vec4:
-        material->SetVector4f(idx, csVector4f(floats[0], floats[1], floats[2], floats[3]));
+      case eMAT_Vec4:material->SetVector4f(idx, csVector4f(floats[0], floats[1], floats[2], floats[3]));
         break;
 
-      case eMAT_Matrix3:
-        material->SetMatrix3f(idx, csMatrix3f(floats.data()));
+      case eMAT_Matrix3:material->SetMatrix3f(idx, csMatrix3f(floats.data()));
         break;
-      case eMAT_Matrix4:
-        material->SetMatrix4f(idx, csMatrix4f(floats.data()));
+      case eMAT_Matrix4:material->SetMatrix4f(idx, csMatrix4f(floats.data()));
         break;
 
-      case eMAT_Int:
-        material->SetInt(idx, ints[0]);
+      case eMAT_Int:material->SetInt(idx, ints[0]);
         break;
 
       case eMAT_Texture:
       {
-        iTexture* texture = csAssetManager::Get()->Get<iTexture>(resource->GetDefaultLocator());
+        iTexture *texture = csAssetManager::Get()->Get<iTexture>(resource->GetDefaultLocator());
         material->SetTexture(idx, texture);
       }
         break;
 
-      default:
-        break;
+      default:break;
     }
   }
 }

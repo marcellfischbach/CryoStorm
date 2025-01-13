@@ -36,7 +36,7 @@ csAssimpSkeletonMeshLoader::csAssimpSkeletonMeshLoader()
 }
 
 
-bool csAssimpSkeletonMeshLoader::CanLoad(const csClass *cls, const csResourceLocator &locator) const
+bool csAssimpSkeletonMeshLoader::CanLoad(const csClass *cls, const csAssetLocator &locator) const
 {
   const std::string &ext = locator.GetExtension();
   return cls == csSkeletonMesh::GetStaticClass()
@@ -65,7 +65,7 @@ static void debug_node(aiNode *node, const csMatrix4f &parent, const std::string
 //  }
 }
 
-iObject *csAssimpSkeletonMeshLoader::Load(const csClass *cls, const csResourceLocator &locator) const
+iObject *csAssimpSkeletonMeshLoader::Load(const csClass *cls, const csAssetLocator &locator) const
 {
   iFile *file = cs::csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (!file)
@@ -105,8 +105,8 @@ iObject *csAssimpSkeletonMeshLoader::Load(const csClass *cls, const csResourceLo
     std::string materialName(aiMatName.C_Str());
     if (d.materialSlots.find(materialName) == d.materialSlots.end())
     {
-      csRes<iMaterial> mat;
-      Size idx = d.mesh->AddMaterialSlot(materialName, mat);
+      csAssetRef<iMaterial> mat;
+      Size                  idx = d.mesh->AddMaterialSlot(materialName, mat);
       d.materialSlots[materialName] = idx;
       d.defaultMaterials[materialName] = csAssimpMaterialLoader::Read(material);
     }
@@ -122,8 +122,8 @@ iObject *csAssimpSkeletonMeshLoader::Load(const csClass *cls, const csResourceLo
 
   for (auto it = d.materialSlots.begin(); it!=d.materialSlots.end(); it++)
   {
-    size_t slotIdx = it->second;
-    csRes<iMaterial> material = d.defaultMaterials[it->first];
+    size_t                slotIdx  = it->second;
+    csAssetRef<iMaterial> material = d.defaultMaterials[it->first];
     d.mesh->SetDefaultMaterial(slotIdx, material);
   }
 

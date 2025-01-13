@@ -250,7 +250,7 @@ std::string ShaderGraphSaver::GetShaderGraphSource()
 };
 
 
-void ShaderGraphSaver::Save(const cs::csResourceLocator &locator)
+void ShaderGraphSaver::Save(const cs::csAssetLocator &locator)
 {
   std::string source = GetShaderGraphSource();
   printf ("%s\n", source.c_str());

@@ -6,8 +6,8 @@
 
 #include <csCore/csCoreExport.hh>
 #include <csCore/csClass.hh>
-#include <csCore/resource/iResource.hh>
-#include <csCore/resource/csResourceLocator.hh>
+#include <csCore/resource/iAsset.hh>
+#include <csCore/resource/csAssetLocator.hh>
 
 #include <vector>
 #include <string>
@@ -20,8 +20,8 @@ class CS_CORE_API csResourceLoader : public CS_SUPER(iObject)
 {
   uint32_t GetPriority () const;
 
-  virtual bool IsValidFor(const csResourceLocator &locator) const;
-  virtual iResource* Load (const csResourceLocator &locator) = 0;
+  virtual bool IsValidFor(const csAssetLocator &locator) const;
+  virtual iAsset* Load(const csAssetLocator &locator) = 0;
 
 protected:
   csResourceLoader (uint32_t priority);
