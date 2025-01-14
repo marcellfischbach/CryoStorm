@@ -15,7 +15,6 @@ CS_CLASS()
 class CS_OGL_API csGL4Shader : public CS_SUPER(iAsset)
 {
   CS_CLASS_GEN_OBJECT;
-  CS_ASSET_GEN;
 public:
 	csGL4Shader(eGL4ShaderType type);
 	virtual ~csGL4Shader();

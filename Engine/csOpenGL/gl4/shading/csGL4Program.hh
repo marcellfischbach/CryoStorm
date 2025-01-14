@@ -15,7 +15,6 @@ CS_CLASS()
 class CS_OGL_API csGL4Program : public CS_SUPER(iShader)
 {
 CS_CLASS_GEN_OBJECT;
-CS_ASSET_GEN;
 public:
   csGL4Program();
   virtual ~csGL4Program();

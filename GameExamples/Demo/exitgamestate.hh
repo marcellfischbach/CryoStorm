@@ -22,10 +22,6 @@ public:
 
   void Update(float tpf) override;
 
-private:
-  cs::csAssetRef<cs::iMaterial> m_material0;
-  cs::csAssetRef<cs::iMaterial> m_material1;
-
 };
 
 

@@ -922,7 +922,7 @@ void setup_world(cs::csWorld *world)
 
   auto assetMan        = cs::csAssetManager::Get();
   iMaterial* rawMat = assetMan->Get<cs::iMaterial>("/materials/Default.mat");
-  csAssetPool::Instance().Put(rawMat);
+//  csAssetPool::Instance().Put(rawMat);
   csAssetRef<iMaterial> material(rawMat);
   csAssetRef<iMaterial> skinnedMaterial = assetMan->Get<cs::iMaterial>("/materials/DefaultSkinned.mat");
 
@@ -935,7 +935,7 @@ void setup_world(cs::csWorld *world)
 //  generate_batched_test_grid(world, material);
   generate_test_grid(world, material);
   generate_axis_grid(world);
-  generate_cube_fbx(world);
+//  generate_cube_fbx(world);
 
 //  add_skeleton_mesh(world, skinnedMaterial);
 

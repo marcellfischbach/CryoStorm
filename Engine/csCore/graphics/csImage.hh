@@ -17,7 +17,6 @@ CS_CLASS()
 class CS_CORE_API csImage : public CS_SUPER(iAsset)
 {
   CS_CLASS_GEN_OBJECT;
-  CS_ASSET_GEN;
 public:
   csImage(uint16_t width, uint16_t height, ePixelFormat pixelFormat);
 

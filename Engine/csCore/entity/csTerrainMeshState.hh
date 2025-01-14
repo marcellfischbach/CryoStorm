@@ -22,7 +22,6 @@ CS_CLASS(jclass = "org.cryo.core.entity.TerrainLayerMask")
 class CS_CORE_API csTerrainLayerMask : public CS_SUPER(iAsset)
 {
 CS_CLASS_GEN_OBJECT;
-CS_ASSET_GEN;
 public:
   csTerrainLayerMask() = default;
   ~csTerrainLayerMask() override;
@@ -48,7 +47,6 @@ CS_CLASS(jclass = "org.cryo.core.entity.TerrainLayer")
 class CS_CORE_API csTerrainLayer : public CS_SUPER(iAsset)
 {
 CS_CLASS_GEN_OBJECT;
-CS_ASSET_GEN;
 public:
   csTerrainLayer() = default;
   ~csTerrainLayer() override;

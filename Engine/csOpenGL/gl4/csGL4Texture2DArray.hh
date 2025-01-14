@@ -14,7 +14,6 @@ CS_CLASS()
 class CS_OGL_API csGL4Texture2DArray : public CS_SUPER(iTexture2DArray)
 {
   CS_CLASS_GEN_OBJECT;
-CS_ASSET_GEN;
 public:
   csGL4Texture2DArray();
   ~csGL4Texture2DArray();

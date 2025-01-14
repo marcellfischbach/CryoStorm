@@ -154,18 +154,18 @@ private:
   static void UnbindUnsafe(iTexture *texture);
 
 private:
-  iRenderTarget                               *m_renderTarget;
-  csAssetRef<cs::iShader>                     m_shader;
-  bool                                        m_materialSuccessfull;
-  csAssetRef<iMaterial>                       m_material;
-  eRenderPass                                 m_materialPass;
+  iRenderTarget                     *m_renderTarget;
+  cs::iShader                       *m_shader;
+  bool                              m_materialSuccessfull;
+  csAssetRef<iMaterial>             m_material;
+  eRenderPass                       m_materialPass;
   eTextureUnit ShiftTextureUnit();
-  eTextureUnit                                m_nextTextureUnit;
-  eTextureUnit                                m_markTextureUnit;
-  bool                                        m_texturesUsed[eTU_COUNT];
-  std::array<csAssetRef<iTexture>, eTU_COUNT> m_textures;
-  std::array<csAssetRef<iSampler>, eTU_COUNT> m_samplers;
-  csAssetRef<iTexture>                        m_tempTexture;
+  eTextureUnit                      m_nextTextureUnit;
+  eTextureUnit                      m_markTextureUnit;
+  bool                              m_texturesUsed[eTU_COUNT];
+  std::array<iTexture *, eTU_COUNT> m_textures;
+  std::array<iSampler *, eTU_COUNT> m_samplers;
+  iTexture                          *m_tempTexture;
 
 
   /*
@@ -244,26 +244,26 @@ private:
 
   struct LightShadowData
   {
-    eLightType             LightType;
-    iLight                 *Light;
-    csAssetRef<iTexture2D> ShadowMap;
+    eLightType LightType;
+    iLight     *Light;
+    iTexture2D *ShadowMap;
 
     struct
     {
-      csAssetRef<iTextureCube> ShadowBufferDepth;
-      csAssetRef<iTextureCube> ShadowBufferColor;
-      float                    Near;
-      float                    Far;
-      float                    Bias;
-    }                      PointLight;
+      iTextureCube *ShadowBufferDepth;
+      iTextureCube *ShadowBufferColor;
+      float Near;
+      float Far;
+      float Bias;
+    }          PointLight;
 
     struct
     {
-      csAssetRef<iTexture2DArray> ShadowBufferDepth;
-      csAssetRef<iTexture2DArray> ShadowBufferColor;
-      float                       Matrices[64];
-      float                       Layers[4];
-    }                      DirectionalLight;
+      iTexture2DArray *ShadowBufferDepth;
+      iTexture2DArray *ShadowBufferColor;
+      float Matrices[64];
+      float Layers[4];
+    }          DirectionalLight;
   };
 
 
@@ -276,37 +276,37 @@ private:
 //
 //  std::vector<iTexture2D *> m_shadowMapTextures;
 
-  int8_t                   m_renderLayer;
+  int8_t       m_renderLayer;
 
   /** 
    * \name Fullscreen Rendering
    * @{
    */
   csGL4Program *FullscreenBlitProgram();
-  csAssetRef<csGL4Program> m_fullscreenBlitProgram;
+  csGL4Program *m_fullscreenBlitProgram;
   csGL4Program *FullscreenBlitMSProgram();
-  csAssetRef<csGL4Program> m_fullscreenBlitMSProgram;
+  csGL4Program *m_fullscreenBlitMSProgram;
   iRenderMesh *FullscreenBlitRenderMesh();
-  iRenderMesh              *m_fullscreenBlitRenderMesh;
+  iRenderMesh  *m_fullscreenBlitRenderMesh;
   iRenderMesh *PixelRenderMesh();
-  iRenderMesh              *m_pixelRenderMesh;
+  iRenderMesh  *m_pixelRenderMesh;
 
   csGL4Program *FullscreenBlitArrayProgram();
-  csAssetRef<csGL4Program> m_fullscreenBlitArrayProgram;
+  csGL4Program *m_fullscreenBlitArrayProgram;
 
 
   csGL4Program *FullscreenBlitCubeProgram();
-  csAssetRef<csGL4Program> m_fullscreenBlitCubeProgram;
-  iShaderAttribute         *m_fullscreenBlitCubeDiffuse;
-  iShaderAttribute         *m_fullscreenBlitCubeScale;
-  iShaderAttribute         *m_fullscreenBlitCubeTranslation;
+  csGL4Program *m_fullscreenBlitCubeProgram;
+  iShaderAttribute *m_fullscreenBlitCubeDiffuse;
+  iShaderAttribute *m_fullscreenBlitCubeScale;
+  iShaderAttribute *m_fullscreenBlitCubeTranslation;
   iRenderMesh *FullscreenBlitCubeRenderMesh(int layer);
-  iRenderMesh              *m_fullscreenBlitCubePosXRenderMesh;
-  iRenderMesh              *m_fullscreenBlitCubePosYRenderMesh;
-  iRenderMesh              *m_fullscreenBlitCubePosZRenderMesh;
-  iRenderMesh              *m_fullscreenBlitCubeNegXRenderMesh;
-  iRenderMesh              *m_fullscreenBlitCubeNegYRenderMesh;
-  iRenderMesh              *m_fullscreenBlitCubeNegZRenderMesh;
+  iRenderMesh      *m_fullscreenBlitCubePosXRenderMesh;
+  iRenderMesh      *m_fullscreenBlitCubePosYRenderMesh;
+  iRenderMesh      *m_fullscreenBlitCubePosZRenderMesh;
+  iRenderMesh      *m_fullscreenBlitCubeNegXRenderMesh;
+  iRenderMesh      *m_fullscreenBlitCubeNegYRenderMesh;
+  iRenderMesh      *m_fullscreenBlitCubeNegZRenderMesh;
 
 #if _DEBUG
   Size m_numDrawCalls;

@@ -14,7 +14,6 @@ CS_CLASS()
 class CS_OGL_API csGL4Sampler : public CS_SUPER(iSampler)
 {
   CS_CLASS_GEN_OBJECT;
-  CS_ASSET_GEN;
 public:
   csGL4Sampler();
   virtual ~csGL4Sampler();

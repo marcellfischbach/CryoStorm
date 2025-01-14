@@ -346,6 +346,7 @@ public:
 
   operator T *() const
   {
+    validate();
     return m_ptr;
   }
 

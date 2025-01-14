@@ -21,7 +21,6 @@ CS_CLASS()
 class CS_CORE_API csMesh : public CS_SUPER(iAsset)
 {
   CS_CLASS_GEN_OBJECT;
-  CS_ASSET_GEN;
 public:
   csMesh();
   ~csMesh() override;

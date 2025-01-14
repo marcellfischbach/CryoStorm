@@ -9,41 +9,34 @@ namespace cs
 {
 
 
-CS_CLASS(jclass = "org.cryo.core.resource.IAsset")
+CS_CLASS(Virtual, jclass = "org.cryo.core.resource.IAsset")
 struct CS_CORE_API iAsset : public CS_SUPER(iObject)
 {
-  CS_CLASS_GEN;
+CS_CLASS_GEN;
 
   ~iAsset() override = default;
 
-  virtual void SetLocator(const csAssetLocator & locator) = 0;
-  virtual const csAssetLocator& GetLocator() const = 0;
+  CS_FORCEINLINE void SetLocator(const csAssetLocator &locator)
+  {
+    m_locator = locator;
+  }
+  CS_NODISCARD CS_FORCEINLINE const csAssetLocator &GetLocator() const
+  {
+    return m_locator;
+  }
 
-  virtual void Invalidate() = 0;
-  virtual bool IsValid() const = 0;
+  CS_FORCEINLINE void Invalidate()
+  {
+    m_valid = false;
+  }
+  CS_NODISCARD CS_FORCEINLINE bool IsValid() const
+  {
+    return m_valid;
+  }
+private:
+  csAssetLocator m_locator = csAssetLocator("");
+  bool           m_valid   = true;
 };
 
 
-#define CS_ASSET_GEN \
-public: \
-  void SetLocator (const csAssetLocator &locator) override \
-  { \
-    m_locator = locator; \
-  } \
-  const csAssetLocator &GetLocator () const override \
-  { \
-    return m_locator; \
-  } \
-  void Invalidate () override \
-  {\
-    m_valid = false; \
-  }\
-  bool IsValid () const override \
-  {\
-    return m_valid;\
-  }\
-private:\
-  csAssetLocator m_locator = csAssetLocator("");\
-  bool m_valid = true
-
-} 
+}

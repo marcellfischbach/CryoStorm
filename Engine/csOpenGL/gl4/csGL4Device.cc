@@ -622,7 +622,7 @@ void csGL4Device::SetShader(cs::iShader *shader)
 #endif
   if (m_shader)
   {
-    csGL4Program *program = static_cast<csGL4Program *>(m_shader.raw());
+    csGL4Program *program = static_cast<csGL4Program *>(m_shader);
     CS_GL_ERROR();
     glUseProgram(program->GetName());
     CS_GL_ERROR();

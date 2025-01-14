@@ -20,8 +20,6 @@ csGfxMesh::csGfxMesh()
 
 csGfxMesh::~csGfxMesh()
 {
-  CS_RELEASE(m_material);
-  CS_RELEASE(m_mesh);
   ClearLights();
 }
 

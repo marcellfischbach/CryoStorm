@@ -14,7 +14,6 @@ CS_CLASS()
 class CS_OGL_API csGL4TextureCube : public CS_SUPER(iTextureCube)
 {
 CS_CLASS_GEN_OBJECT;
-CS_ASSET_GEN;
 public:
   csGL4TextureCube();
   ~csGL4TextureCube() override;
