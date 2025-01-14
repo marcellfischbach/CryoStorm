@@ -2,7 +2,7 @@
 #pragma  once
 
 #include <csCore/math/csVector.hh>
-
+#include <csCore/csRef.hh>
 namespace cs
 {
 
@@ -37,7 +37,7 @@ private:
   float m_samplesFactor;
   float m_maxSampleDistance;
 
-  iShader *m_shadowMapFilterShader = nullptr;
+  csAssetRef<iShader> m_shadowMapFilterShader = nullptr;
   iShaderAttribute *m_attrFilterDepthBuffer = nullptr;
   iShaderAttribute *m_attrFilterShadowMap = nullptr;
   iShaderAttribute *m_attrFilterRadius = nullptr;

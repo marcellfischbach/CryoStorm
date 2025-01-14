@@ -5,6 +5,7 @@
 #pragma once
 
 #include <csCore/resource/csAssetLocator.hh>
+#include <csCore/csRef.hh>
 
 #include <QDialog>
 #include <vector>
@@ -78,6 +79,6 @@ private:
   cs::csStaticMeshState* m_cube = nullptr;
   cs::csEntity* m_cubeEntity = nullptr;
 
-  cs::csMaterial* m_material = nullptr;
+  cs::csAssetRef<cs::csMaterial> m_material;
 
 };

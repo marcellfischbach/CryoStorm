@@ -2,6 +2,7 @@
 
 #include <csCore/csCoreExport.hh>
 #include <csCore/csTypes.hh>
+#include <csCore/csRef.hh>
 #include <vector>
 
 namespace cs
@@ -29,18 +30,18 @@ public:
 private:
   void UpdateSamplers (iDevice *device);
 
-  iSampler *m_diffuseRoughnessSampler;
-  iSampler *m_depthSampler;
-  iSampler *m_normalSampler;
-  iSampler *m_emissionMetallicSampler;
+  csAssetRef<iSampler>  m_diffuseRoughnessSampler;
+  csAssetRef<iSampler>  m_depthSampler;
+  csAssetRef<iSampler>  m_normalSampler;
+  csAssetRef<iSampler>  m_emissionMetallicSampler;
 
 
   std::vector<uint32_t> m_bufferIds;
   iRenderTarget2D *m_gBuffer;
-  iTexture2D *m_diffuseRoughness;
-  iTexture2D *m_depth;
-  iTexture2D *m_normal;
-  iTexture2D *m_emissionMetallic;
+  csAssetRef<iTexture2D> m_diffuseRoughness;
+  csAssetRef<iTexture2D> m_depth;
+  csAssetRef<iTexture2D> m_normal;
+  csAssetRef<iTexture2D> m_emissionMetallic;
 };
 
 

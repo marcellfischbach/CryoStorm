@@ -5,6 +5,7 @@
 #pragma once
 
 #include <csCore/entity/csEntityState.hh>
+#include <csCore/csRef.hh>
 
 namespace cs
 {
@@ -22,8 +23,8 @@ public:
   void Update(float tpf) override;
 
 private:
-  cs::iMaterial* m_material0;
-  cs::iMaterial* m_material1;
+  cs::csAssetRef<cs::iMaterial> m_material0;
+  cs::csAssetRef<cs::iMaterial> m_material1;
 
 };
 

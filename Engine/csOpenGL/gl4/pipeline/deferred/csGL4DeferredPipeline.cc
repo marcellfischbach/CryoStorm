@@ -570,16 +570,14 @@ iRenderTarget2D *csGL4DeferredPipeline::UpdateRenderTarget(cs::iDevice *device, 
       false,
       1
   };
-  iTexture2D             *colorTexture = device->CreateTexture(colorDesc);
-  iSampler               *colorSampler = device->CreateSampler();
+  csRef<iTexture2D> colorTexture = device->CreateTexture(colorDesc);
+  csRef<iSampler> colorSampler = device->CreateSampler();
   colorSampler->SetFilterMode(eFM_MinMagNearest);
   colorSampler->SetAddressU(eTAM_Clamp);
   colorSampler->SetAddressV(eTAM_Clamp);
   colorSampler->SetAddressW(eTAM_Clamp);
   colorTexture->SetSampler(colorSampler);
   renderTarget->AddColorTexture(colorTexture);
-  CS_RELEASE(colorTexture);
-  CS_RELEASE(colorSampler);
 
   if (!renderTarget->Compile())
   {

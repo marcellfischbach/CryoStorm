@@ -3,6 +3,7 @@
 
 #include <csCore/csCoreExport.hh>
 #include <csCore/graphics/csPostProcessing.hh>
+#include <csCore/csRef.hh>
 
 namespace cs
 {
@@ -24,7 +25,7 @@ private:
   size_t m_sampleCount;
   float m_sampleScale;
 
-  cs::iShader *m_shader;
+  csAssetRef<iShader> m_shader;
   cs::iShaderAttribute *m_attribColor;
   cs::iShaderAttribute *m_attribTextureSizeInv;
   cs::iShaderAttribute *m_attribSampleCount;

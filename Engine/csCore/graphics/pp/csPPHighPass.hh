@@ -3,6 +3,7 @@
 
 #include <csCore/csCoreExport.hh>
 #include <csCore/graphics/csPostProcessing.hh>
+#include <csCore/csRef.hh>
 
 namespace cs
 {
@@ -22,7 +23,7 @@ private:
   bool RefreshOutputTexture (cs::iDevice* device, iRenderTarget2D *finalTarget);
   float m_highValue;
 
-  cs::iShader *m_shader;
+  csAssetRef<iShader> m_shader;
   cs::iShaderAttribute *m_attribColor;
   cs::iShaderAttribute *m_attribHighValue;
 };

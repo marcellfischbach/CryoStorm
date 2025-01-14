@@ -74,7 +74,7 @@ void csGL4PointSMRenderer::SetDevice(csGL4Device *device)
 
 void csGL4PointSMRenderer::SetDepthBuffer(iTexture2D *depthBuffer)
 {
-  CS_SET(m_depthBuffer, depthBuffer);
+  m_depthBuffer = depthBuffer;
   m_pointLightShadowMapWidth  = m_depthBuffer->GetWidth();
   m_pointLightShadowMapHeight = m_depthBuffer->GetHeight();
 }

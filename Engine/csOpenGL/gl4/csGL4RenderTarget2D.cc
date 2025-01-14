@@ -55,7 +55,7 @@ csGL4RenderTarget2D::csGL4RenderTarget2D(uint32_t name)
   GLint width, height;
   glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &width);
   glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &height);
-  m_width = width;
+  m_width  = width;
   m_height = height;
 
 
@@ -90,8 +90,8 @@ csGL4RenderTarget2D::~csGL4RenderTarget2D()
   CS_GL_ERROR();
   m_name = 0;
 
-  CS_RELEASE(m_depthTexture.texture);
-  CS_RELEASE(m_depthTexture.textureCube);
+  m_depthTexture.texture     = nullptr;
+  m_depthTexture.textureCube = nullptr;
 
   if (m_depthBuffer)
   {
@@ -99,11 +99,6 @@ csGL4RenderTarget2D::~csGL4RenderTarget2D()
     glDeleteRenderbuffers(1, &m_depthBuffer);
     CS_GL_ERROR();
     m_depthBuffer = 0;
-  }
-  for (auto color: m_colorTextures)
-  {
-    CS_RELEASE(color.texture);
-    CS_RELEASE(color.textureCube);
   }
   m_colorTextures.clear();
 }
@@ -153,20 +148,17 @@ void csGL4RenderTarget2D::SetDepthTexture(iTexture2D *depthTexture)
   GLenum attachment;
   switch (depthTexture->GetFormat())
   {
-    case ePF_Depth:
-      attachment = GL_DEPTH_ATTACHMENT;
+    case ePF_Depth:attachment = GL_DEPTH_ATTACHMENT;
       break;
-    case ePF_DepthStencil:
-      attachment = GL_DEPTH_STENCIL_ATTACHMENT;
+    case ePF_DepthStencil:attachment = GL_DEPTH_STENCIL_ATTACHMENT;
       break;
-    default:
-      return;
+    default:return;
   }
 
 
-  CS_SET(m_depthTexture.texture, txt);
-  CS_RELEASE(m_depthTexture.textureArray);
-  CS_RELEASE(m_depthTexture.textureCube);
+  m_depthTexture.texture      = txt;
+  m_depthTexture.textureArray = nullptr;
+  m_depthTexture.textureCube  = nullptr;
 
 
   CS_GL_ERROR();
@@ -196,20 +188,17 @@ void csGL4RenderTarget2D::SetDepthTexture(iTexture2DArray *depthTexture, size_t 
   GLenum attachment;
   switch (depthTexture->GetFormat())
   {
-    case ePF_Depth:
-      attachment = GL_DEPTH_ATTACHMENT;
+    case ePF_Depth:attachment = GL_DEPTH_ATTACHMENT;
       break;
-    case ePF_DepthStencil:
-      attachment = GL_DEPTH_STENCIL_ATTACHMENT;
+    case ePF_DepthStencil:attachment = GL_DEPTH_STENCIL_ATTACHMENT;
       break;
-    default:
-      return;
+    default:return;
   }
 
 
-  CS_SET(m_depthTexture.textureArray, txt);
-  CS_RELEASE(m_depthTexture.texture);
-  CS_RELEASE(m_depthTexture.textureCube);
+  m_depthTexture.textureArray = txt;
+  m_depthTexture.texture      = nullptr;
+  m_depthTexture.textureCube  = nullptr;
 
 
   m_depthTexture.textureArrayLayer = layer;
@@ -241,21 +230,18 @@ void csGL4RenderTarget2D::SetDepthTexture(iTextureCube *depthTexture, eCubeFace 
   GLenum attachment;
   switch (depthTexture->GetFormat())
   {
-    case ePF_Depth:
-      attachment = GL_DEPTH_ATTACHMENT;
+    case ePF_Depth:attachment = GL_DEPTH_ATTACHMENT;
       break;
-    case ePF_DepthStencil:
-      attachment = GL_DEPTH_STENCIL_ATTACHMENT;
+    case ePF_DepthStencil:attachment = GL_DEPTH_STENCIL_ATTACHMENT;
       break;
-    default:
-      return;
+    default:return;
   }
 
 
   m_depthTexture.textureCubeFace = face;
-  CS_SET(m_depthTexture.textureCube, txt);
-  CS_RELEASE(m_depthTexture.textureArray);
-  CS_RELEASE(m_depthTexture.texture);
+  m_depthTexture.textureCube     = txt;
+  m_depthTexture.textureArray    = nullptr;
+  m_depthTexture.texture         = nullptr;
 
 
   CS_GL_ERROR();
@@ -276,16 +262,13 @@ void csGL4RenderTarget2D::SetDepthBuffer(ePixelFormat format)
   GLenum internalFormat = 0;
   switch (format)
   {
-    case ePF_Depth:
-      internalFormat = GL_DEPTH_COMPONENT;
-      attachment     = GL_DEPTH_ATTACHMENT;
+    case ePF_Depth:internalFormat = GL_DEPTH_COMPONENT;
+      attachment                  = GL_DEPTH_ATTACHMENT;
       break;
-    case ePF_DepthStencil:
-      internalFormat = GL_DEPTH_STENCIL;
-      attachment     = GL_DEPTH_STENCIL_ATTACHMENT;
+    case ePF_DepthStencil:internalFormat = GL_DEPTH_STENCIL;
+      attachment                         = GL_DEPTH_STENCIL_ATTACHMENT;
       break;
-    default:
-      return;
+    default:return;
   }
   CS_GL_ERROR();
   glGenRenderbuffers(1, &m_depthBuffer);
@@ -294,8 +277,8 @@ void csGL4RenderTarget2D::SetDepthBuffer(ePixelFormat format)
   glFramebufferRenderbuffer(GL_FRAMEBUFFER, attachment, GL_RENDERBUFFER, m_depthBuffer);
   CS_GL_ERROR();
 
-  CS_RELEASE(m_depthTexture.textureCube);
-  CS_RELEASE(m_depthTexture.texture);
+  m_depthTexture.textureCube = nullptr;
+  m_depthTexture.texture = nullptr;
 
 }
 
@@ -312,8 +295,6 @@ void csGL4RenderTarget2D::AddColorTexture(iTexture2D *colorTexture)
   {
     return;
   }
-
-  CS_ADDREF(txt);
 
 
   if (colorTexture->GetFormat() == ePF_DepthStencil)
@@ -352,7 +333,6 @@ void csGL4RenderTarget2D::AddColorTexture(iTexture2DArray *colorTexture, size_t 
     return;
   }
 
-  CS_ADDREF(txt);
 
 
   if (colorTexture->GetFormat() == ePF_DepthStencil)
@@ -392,7 +372,6 @@ void csGL4RenderTarget2D::AddColorTexture(iTextureCube *colorTexture, eCubeFace 
   {
     return;
   }
-  CS_ADDREF(txt);
 
 
   if (colorTexture->GetFormat() == ePF_DepthStencil)
@@ -432,32 +411,23 @@ bool csGL4RenderTarget2D::Compile()
   CS_GL_ERROR();
   switch (res)
   {
-    case GL_FRAMEBUFFER_COMPLETE:
-      m_log = "Complete";
+    case GL_FRAMEBUFFER_COMPLETE:m_log = "Complete";
       return true;
-    case GL_FRAMEBUFFER_UNDEFINED:
-      m_log = "Framebuffer undefined";
+    case GL_FRAMEBUFFER_UNDEFINED:m_log = "Framebuffer undefined";
       break;
-    case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
-      m_log = "Framebuffer incomplete attachment";
+    case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:m_log = "Framebuffer incomplete attachment";
       break;
-    case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
-      m_log = "Framebuffer incomplete missing attachment";
+    case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:m_log = "Framebuffer incomplete missing attachment";
       break;
-    case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
-      m_log = "Framebuffer incomplete draw buffer";
+    case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:m_log = "Framebuffer incomplete draw buffer";
       break;
-    case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
-      m_log = "Framebuffer incomplete read buffer";
+    case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:m_log = "Framebuffer incomplete read buffer";
       break;
-    case GL_FRAMEBUFFER_UNSUPPORTED:
-      m_log = "Framebuffer unsupported";
+    case GL_FRAMEBUFFER_UNSUPPORTED:m_log = "Framebuffer unsupported";
       break;
-    case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE:
-      m_log = "Framebuffer incomplete multisample";
+    case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE:m_log = "Framebuffer incomplete multisample";
       break;
-    case GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS:
-      m_log = "Framebuffer incomplete layer targets";
+    case GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS:m_log = "Framebuffer incomplete layer targets";
       break;
   }
   return false;

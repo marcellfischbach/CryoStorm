@@ -3,6 +3,7 @@
 #pragma once
 
 #include <csCore/graphics/csPostProcessing.hh>
+#include <csCore/csRef.hh>
 
 namespace cs
 {
@@ -23,6 +24,6 @@ public:
 private:
   bool RefreshOutputTexture (cs::iDevice* device);
 
-  cs::iShader *m_shader;
+  cs::csAssetRef<cs::iShader> m_shader;
   cs::iShaderAttribute *m_attribColor;
 };

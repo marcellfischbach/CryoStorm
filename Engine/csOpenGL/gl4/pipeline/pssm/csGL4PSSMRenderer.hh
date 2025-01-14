@@ -1,12 +1,9 @@
-//
-// Created by MCEL on 06.11.2023.
-//
-
 #pragma once
 
 #include <csOpenGL/gl4/pipeline/pssm/csGL4PSSMFilter.hh>
 #include <csCore/graphics/scene/csGfxSceneCollector.hh>
 #include <csCore/math/csMatrix4f.hh>
+#include <csCore/csRef.hh>
 
 #include <array>
 #include <vector>
@@ -100,7 +97,7 @@ private:
   iGfxScene   *m_scene  = nullptr;
 
 
-  iTexture2D *m_depthBuffer = nullptr;
+  csAssetRef<iTexture2D> m_depthBuffer = nullptr;
 
   csGL4PSSMShadowBufferObject m_directionalLightShadowBuffers;
   size_t                      m_directionalLightShadowBufferSize = 0;
@@ -125,11 +122,11 @@ private:
   std::array<csMatrix4f, 4> m_shadowMatrices;
 
   ShadowSamplingMode m_shadowSamplingMode;
-  iSampler           *m_shadowMapColorSampler    = nullptr;
-  iSampler           *m_shadowBufferColorSampler = nullptr;
-  iSampler           *m_shadowMapDepthSampler    = nullptr;
+  csAssetRef<iSampler> m_shadowMapColorSampler;
+  csAssetRef<iSampler> m_shadowBufferColorSampler;
+  csAssetRef<iSampler> m_shadowMapDepthSampler;
 
-  iShader          *m_shadowMappingShader = nullptr;
+  csAssetRef<iShader> m_shadowMappingShader;
   iShaderAttribute *m_attrLayersDepth     = nullptr;
   iShaderAttribute *m_attrLayersBias      = nullptr;
   iShaderAttribute *m_attrShadowBuffers   = nullptr;

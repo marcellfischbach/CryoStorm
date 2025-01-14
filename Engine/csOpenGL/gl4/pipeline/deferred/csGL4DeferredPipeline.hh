@@ -126,7 +126,7 @@ private:
   csGL4DeferredDirectionalLightRenderer m_directionalLightRenderer;
   csGL4DeferredPointLightRenderer       m_pointLightRenderer;
 
-  iShader          *m_backMaskShader;
+  csAssetRef<iShader> m_backMaskShader;
   iShaderAttribute *m_attrBackMaskDepth;
   int          m_renderMode;
   csSkyboxMesh m_skyboxMesh;

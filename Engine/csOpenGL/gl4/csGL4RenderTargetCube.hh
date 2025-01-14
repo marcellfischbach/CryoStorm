@@ -3,6 +3,7 @@
 
 #include <csOpenGL/csOpenGLExport.hh>
 #include <csCore/graphics/iRenderTargetCube.hh>
+#include <csCore/csRef.hh>
 
 namespace cs::opengl
 {
@@ -43,8 +44,8 @@ private:
   uint16_t m_size;
   bool m_external;
 
-  iTextureCube                   *m_depthTexture;
-  std::vector<csGL4TextureCube*> m_colorTextures;
+  csAssetRef<iTextureCube> m_depthTexture;
+  std::vector<csAssetRef<csGL4TextureCube>> m_colorTextures;
 
   std::string m_log;
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <csCore/csCoreExport.hh>
+#include <csCore/csRef.hh>
 
 namespace cs
 {
@@ -29,12 +30,12 @@ private:
   iShader* ShaderForward(iDevice *device);
   iRenderMesh* m_renderMesh = nullptr;
 
-  iShader* m_shaderDeferred = nullptr;
+  csAssetRef<iShader> m_shaderDeferred;
   iShaderAttribute *m_attrDeferredSkybox      = nullptr;
   iShaderAttribute *m_attrDeferredRenderPlane = nullptr;
   iShaderAttribute *m_attrDeferredDepth      = nullptr;
 
-  iShader* m_shaderForward = nullptr;
+  csAssetRef<iShader> m_shaderForward;
   iShaderAttribute *m_attrForwardSkybox      = nullptr;
   iShaderAttribute *m_attrForwardRenderPlane = nullptr;
 };

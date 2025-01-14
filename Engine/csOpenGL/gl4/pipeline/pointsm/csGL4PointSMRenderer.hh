@@ -1,12 +1,11 @@
-//
-// Created by Marcell on 11.11.2023.
-//
 
 #pragma once
+
 #include <csOpenGL/csOpenGLExport.hh>
 
 #include <csOpenGL/gl4/pipeline/pointsm/csGL4PointSMFilter.hh>
 #include <csCore/graphics/eCubeFace.hh>
+#include <csCore/csRef.hh>
 #include <array>
 #include <vector>
 
@@ -70,10 +69,10 @@ private:
   iGfxScene   *m_scene  = nullptr;
 
 
-  iTexture2D *m_depthBuffer = nullptr;
+  csAssetRef<iTexture2D> m_depthBuffer;
 
-  iTextureCube *m_pointLightShadowBufferColor = nullptr;
-  iTextureCube *m_pointLightShadowBufferDepth = nullptr;
+  csAssetRef<iTextureCube> m_pointLightShadowBufferColor;
+  csAssetRef<iTextureCube> m_pointLightShadowBufferDepth;
 
   std::array<csGL4RenderTarget2D *, 6> m_pointLightShadowBuffer;
   size_t                               m_pointLightShadowBufferSize = 0;
@@ -92,11 +91,11 @@ private:
   };
 
   ShadowSamplingMode m_shadowSamplingMode;
-  iSampler           *m_shadowMapColorSampler    = nullptr;
-  iSampler           *m_shadowBufferColorSampler = nullptr;
-  iSampler           *m_shadowMapDepthSampler    = nullptr;
+  csAssetRef<iSampler> m_shadowMapColorSampler;
+  csAssetRef<iSampler> m_shadowBufferColorSampler;
+  csAssetRef<iSampler> m_shadowMapDepthSampler;
 
-  iShader          *m_shadowMappingShader = nullptr;
+  csAssetRef<iShader> m_shadowMappingShader;
   iShaderAttribute *m_attrLightPosition   = nullptr;
   iShaderAttribute *m_attrMappingBias     = nullptr;
   iShaderAttribute *m_attrShadowBuffer    = nullptr;

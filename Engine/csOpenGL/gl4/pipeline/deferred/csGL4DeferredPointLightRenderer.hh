@@ -65,7 +65,7 @@ private:
 
   struct LightRenderShader
   {
-    iShader          *m_shader                = nullptr;
+    csAssetRef<iShader> m_shader;
     iShaderAttribute *m_attrRectMin           = nullptr;
     iShaderAttribute *m_attrRectMax           = nullptr;
     iShaderAttribute *m_attrDiffuseRoughness  = nullptr;

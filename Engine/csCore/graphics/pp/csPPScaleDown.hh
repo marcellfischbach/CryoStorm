@@ -21,7 +21,7 @@ public:
 private:
   bool RefreshOutputTexture (cs::iDevice* device);
 
-  cs::iShader *m_shader;
+  csAssetRef<iShader> m_shader;
   cs::iShaderAttribute *m_attribColor;
   cs::iShaderAttribute *m_attribTextureSizeInv;
 };

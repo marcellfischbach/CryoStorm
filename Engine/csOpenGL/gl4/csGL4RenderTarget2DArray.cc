@@ -27,12 +27,9 @@ csGL4RenderTarget2DArray::~csGL4RenderTarget2DArray()
   glDeleteFramebuffers(1, &m_name);
   CS_GL_ERROR();
   m_name = 0;
-
-  CS_RELEASE(m_depthTexture);
-  for (auto color : m_colorTextures) {
-    color->Release();
-  }
   m_colorTextures.clear();
+  m_depthTexture = nullptr;
+
 }
 
 void csGL4RenderTarget2DArray::Bind()
@@ -90,7 +87,7 @@ void csGL4RenderTarget2DArray::SetDepthTexture(iTexture2DArray *depthTexture)
       return;
   }
 
-  CS_SET(m_depthTexture, txt);
+  m_depthTexture = txt;
 
 
   CS_GL_ERROR();

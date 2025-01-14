@@ -74,7 +74,7 @@ private:
 
   std::vector<csGL4DirectionalLight *> m_shadowDirectionalLights;
 
-  iTexture2D* m_depthBuffer = nullptr;
+  csAssetRef<iTexture2D> m_depthBuffer;
 
   std::array<csGL4RenderTarget2D *, MaxLights>       m_directionalLightShadowMap;
   std::array<csGL4PSSMShadowBufferObject, MaxLights> m_directionalLightShadowBuffer;

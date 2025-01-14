@@ -67,9 +67,9 @@ private:
 
   struct TextureBind
   {
-    iTexture2D *texture = nullptr;
-    iTexture2DArray *textureArray = nullptr;
-    iTextureCube *textureCube = nullptr;
+    csAssetRef<iTexture2D> texture = nullptr;
+    csAssetRef<iTexture2DArray> textureArray;
+    csAssetRef<iTextureCube> textureCube;
     size_t textureArrayLayer = 0;
     eCubeFace textureCubeFace = eCubeFace::eCF_PosX;
 

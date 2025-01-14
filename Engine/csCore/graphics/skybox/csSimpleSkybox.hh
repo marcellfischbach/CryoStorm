@@ -8,6 +8,7 @@
 #include <csCore/graphics/iRenderTarget2D.hh>
 #include <csCore/graphics/iRenderTargetCube.hh>
 #include <csCore/graphics/iSkyboxRenderer.hh>
+#include <csCore/csRef.hh>
 
 namespace cs
 {
@@ -32,9 +33,9 @@ private:
   bool PrepRenderTarget(cs::iDevice *device);
 
 private:
-  iShader           *m_prepShader    = nullptr;
-  iRenderTargetCube *m_skyboxTarget  = nullptr;
-  iTextureCube      *m_skyboxTexture = nullptr;
+  csAssetRef<iShader>      m_prepShader    = nullptr;
+  iRenderTargetCube        *m_skyboxTarget = nullptr;
+  csAssetRef<iTextureCube> m_skyboxTexture = nullptr;
 
 };
 

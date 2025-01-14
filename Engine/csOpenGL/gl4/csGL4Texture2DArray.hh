@@ -3,6 +3,7 @@
 
 #include <csOpenGL/csOpenGLExport.hh>
 #include <csCore/graphics/iTexture2DArray.hh>
+#include <csCore/csRef.hh>
 #include <vector>
 
 
@@ -60,7 +61,7 @@ private:
     uint16_t Height;
   };
   std::vector<Level> m_level;
-  iSampler* m_sampler;
+  csAssetRef<iSampler> m_sampler;
 };
 
 }

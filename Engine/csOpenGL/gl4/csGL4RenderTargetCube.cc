@@ -29,11 +29,7 @@ csGL4RenderTargetCube::~csGL4RenderTargetCube()
   }
   m_name = 0;
 
-  CS_RELEASE(m_depthTexture);
-  for (auto color : m_colorTextures)
-  {
-    color->Release();
-  }
+  m_depthTexture = nullptr;
   m_colorTextures.clear();
 }
 
@@ -90,7 +86,7 @@ void csGL4RenderTargetCube::SetDepthTexture(iTextureCube* depthTexture)
     return;
   }
 
-  CS_SET(m_depthTexture, txt);
+  m_depthTexture =  txt;
 
 
   CS_GL_ERROR();

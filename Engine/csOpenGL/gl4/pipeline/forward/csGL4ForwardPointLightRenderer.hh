@@ -67,7 +67,7 @@ private:
 private:
   csGL4Device *m_device = nullptr;
   iGfxScene   *m_scene  = nullptr;
-  iTexture2D *m_depthBuffer = nullptr;
+  csAssetRef<iTexture2D> m_depthBuffer = nullptr;
 
   std::vector<csGL4PointLight *>               m_shadowPointLights;
   std::array<csGL4RenderTarget2D *, MaxLights> m_pointLightShadowMap;

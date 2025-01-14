@@ -1033,7 +1033,6 @@ eTextureUnit csGL4Device::BindTexture(iTexture *texture)
   iTexture     *oldTexture = m_textures[unit];
   m_textures[unit]     = texture;
   m_texturesUsed[unit] = true;
-//    CS_ADDREF(texture);
 
   SetActiveTexture(unit);
   UnbindUnsafe(oldTexture);

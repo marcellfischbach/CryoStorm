@@ -3,6 +3,7 @@
 
 #include <csOpenGL/csOpenGLExport.hh>
 #include <csCore/graphics/iRenderTarget2DArray.hh>
+#include <csCore/csRef.hh>
 
 namespace cs::opengl
 {
@@ -45,8 +46,8 @@ private:
   uint16_t m_height;
   uint16_t m_layer;
 
-  iTexture2DArray*m_depthTexture;
-  std::vector<iTexture2DArray*> m_colorTextures;
+  csAssetRef<iTexture2DArray> m_depthTexture;
+  std::vector<csAssetRef<iTexture2DArray>> m_colorTextures;
 
   std::string m_log;
 };
