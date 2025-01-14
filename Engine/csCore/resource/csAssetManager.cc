@@ -41,6 +41,8 @@ iAsset *csAssetManager::Get(const csAssetLocator &locator)
   if (resource)
   {
     resource->SetLocator(locator);
+
+    csAssetPool::Instance().Put(resource);
   }
 
   return resource;

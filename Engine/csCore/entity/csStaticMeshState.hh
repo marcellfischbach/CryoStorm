@@ -66,7 +66,7 @@ private:
 
   void Clear();
 
-  csMesh * m_mesh;
+  csAssetRef<csMesh> m_mesh;
   bool m_receiveShadow = true;
   bool                    m_castShadow = true;
   std::vector<GfxMeshData>           m_gfxMeshes;

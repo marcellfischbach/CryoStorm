@@ -74,52 +74,6 @@ cs::iGame *open_game(const std::string &moduleName)
 }
 
 
-struct base_t
-{
-  base_t()
-  {
-    printf("base_t::base_t\n");
-  }
-};
-
-struct derive_a_t : public virtual base_t
-{
-
-  derive_a_t()
-  {
-    printf("derive_a_t::derive_a_t\n");
-  }
-
-};
-
-
-struct derive_b_t : public virtual derive_a_t
-{
-
-
-  derive_b_t()
-  {
-    printf("derive_b_t::derive_b_t\n");
-  }
-};
-
-
-struct derive_c_t : public virtual derive_b_t
-{
-
-  derive_c_t()
-  {
-    printf("derive_c_t::derive_c_t\n");
-  }
-};
-
-
-#include <csCore/resource/iFile.hh>
-#include <csCore/resource/csFileSystemFile.hh>
-#include <csCore/csRef.hh>
-
-
-
 
 int main(int argc, char **argv)
 {

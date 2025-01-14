@@ -13,7 +13,7 @@ ExitGameState::ExitGameState()
 {
   SetNeedUpdate(true);
 
-  m_material0 = cs::csAssetManager::Get()->Load<cs::iMaterial>("/materials/DefaultBlue.mat");
+  m_material0 = cs::csAssetManager::Get()->Get<cs::iMaterial>("/materials/DefaultBlue.mat");
   m_material1 = cs::csAssetManager::Get()->Load<cs::iMaterial>("/materials/DefaultRed.mat");
   m_material0->SetLocator(cs::csAssetLocator("/materials/Default.mat"));
   m_material1->SetLocator(cs::csAssetLocator("/materials/Default.mat"));

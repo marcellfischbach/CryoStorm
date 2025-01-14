@@ -177,20 +177,20 @@ eSGValueType csSGNodeInput::GetInputValueType() const
 
 void csSGNodeInput::SetSource(csSGNodeOutput* output)
 {
-  if (output)
-  {
-    printf("%s.%s -> %s.%s\n",
-      output->GetNode()->GetName().c_str(),
-      output->GetName().c_str(),
-      GetNode()->GetName().c_str(),
-      GetName().c_str());
-  }
-  else
-  {
-    printf("x- %s.%s\n",
-      GetNode()->GetName().c_str(),
-      GetName().c_str());
-  }
+//  if (output)
+//  {
+//    printf("%s.%s -> %s.%s\n",
+//      output->GetNode()->GetName().c_str(),
+//      output->GetName().c_str(),
+//      GetNode()->GetName().c_str(),
+//      GetName().c_str());
+//  }
+//  else
+//  {
+//    printf("x- %s.%s\n",
+//      GetNode()->GetName().c_str(),
+//      GetName().c_str());
+//  }
   m_source = output;
 }
 
@@ -198,20 +198,21 @@ void csSGNodeInput::SetSource(csSGNodeOutput* output)
 void csSGNodeOutput::Add(csSGNodeInput* input)
 {
   m_destinations.insert(input);
-  printf("%s.%s -> %s.%s\n",
-    GetNode()->GetName().c_str(),
-    GetName().c_str(),
-    input->GetNode()->GetName().c_str(),
-    input->GetName().c_str());
+//  printf("%s.%s -> %s.%s\n",
+//    GetNode()->GetName().c_str(),
+//    GetName().c_str(),
+//    input->GetNode()->GetName().c_str(),
+//    input->GetName().c_str());
 }
+
 void csSGNodeOutput::Remove(csSGNodeInput* input)
 {
   m_destinations.erase(input);
-  printf("%s.%s -x %s.%s\n",
-    GetNode()->GetName().c_str(),
-    GetName().c_str(),
-    input->GetNode()->GetName().c_str(),
-    input->GetName().c_str());
+//  printf("%s.%s -x %s.%s\n",
+//    GetNode()->GetName().c_str(),
+//    GetName().c_str(),
+//    input->GetNode()->GetName().c_str(),
+//    input->GetName().c_str());
 }
 
 eSGValueType EvalValueType(eSGValueType v0, eSGValueType v1)

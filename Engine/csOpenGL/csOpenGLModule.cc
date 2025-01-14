@@ -90,6 +90,5 @@ bool csOpenGLModule::Initialize(const std::vector<std::string> &args, csEngine *
 
 CS_DEFINE_LIBRARY(csOpenGL)
 {
-  printf ("Load library: csOpenGL\n");
   return new cs::opengl::csOpenGLModule;
 }

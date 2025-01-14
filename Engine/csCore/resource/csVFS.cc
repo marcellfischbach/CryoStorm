@@ -75,7 +75,6 @@ iFile* csVFS::Open(const csAssetLocator& resourceLocator, eAccessMode accessMode
     iFile* file = archive->Open(resourcePathWithReplacedAliases, accessMode, openMode);
     if (file)
     {
-      std::cout << "Open file " << resourceLocator.Encoded() << " @ " << archive->GetName() << " -> " << file << std::endl;
       return file;
     }
   }

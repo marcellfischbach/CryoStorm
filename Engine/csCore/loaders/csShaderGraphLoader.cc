@@ -105,7 +105,7 @@ iAsset *csShaderGraphLoader::Load(const csCryoFile *file, const csAssetLocator &
       iShaderGraphCompiler::Parameters parameters {};
       memset(&parameters, 0, sizeof(parameters));
       parameters.DebugName    = locator.Encoded();
-      parameters.DebugSources = true;
+      parameters.DebugSources = false;
 
       auto shader = compiler->Compile(sg, parameters);
       if (!shader)
