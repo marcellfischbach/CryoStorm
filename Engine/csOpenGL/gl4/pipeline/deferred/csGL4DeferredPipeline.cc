@@ -557,7 +557,7 @@ iRenderTarget2D *csGL4DeferredPipeline::UpdateRenderTarget(cs::iDevice *device, 
       target->GetWidth(),
       target->GetHeight()
   };
-  renderTarget = device->CreateRenderTarget(desc);
+  renderTarget = device->CreateRenderTarget(desc).Consume();
   if (!renderTarget)
   {
     return nullptr;
@@ -603,7 +603,7 @@ void csGL4DeferredPipeline::UpdateIntermediate()
     colorDesc.Format       = ePF_RGBA;
     colorDesc.MipMaps      = false;
     colorDesc.MultiSamples = 1;
-    iTexture2D *colorTexture = m_device->CreateTexture(colorDesc);
+    auto colorTexture = m_device->CreateTexture(colorDesc).Consume();
 
     iTexture2D::Descriptor depthDesc {};
     depthDesc.Width        = m_target->GetWidth();
@@ -611,7 +611,7 @@ void csGL4DeferredPipeline::UpdateIntermediate()
     depthDesc.Format       = ePF_DepthStencil;
     depthDesc.MipMaps      = false;
     depthDesc.MultiSamples = 1;
-    iTexture2D *depthTexture = m_device->CreateTexture(depthDesc);
+    auto depthTexture = m_device->CreateTexture(depthDesc).Consume();
 
     iRenderTarget2D::Descriptor interDesc {};
     interDesc.Width  = m_target->GetWidth();

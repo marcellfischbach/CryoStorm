@@ -102,15 +102,17 @@ public:
                                  const std::array<csMatrix4f, 4> &matrices) override;
 //  void SetLightShadowMap(iLight *light, iTexture2D *shadowMap);
 
-  iSampler *CreateSampler() override;
-  iTexture2D *CreateTexture(const iTexture2D::Descriptor &descriptor) override;
-  iTexture2DArray *CreateTexture(const iTexture2DArray::Descriptor &descriptor) override;
-  iTextureCube *CreateTexture(const iTextureCube::Descriptor &descriptor) override;
-  iRenderTarget2D *CreateRenderTarget(const iRenderTarget2D::Descriptor &descriptor) override;
-  iRenderTarget2DArray *CreateRenderTarget(const iRenderTarget2DArray::Descriptor &descriptor) override;
-  iRenderTargetCube *CreateRenderTarget(const iRenderTargetCube::Descriptor &descriptor) override;
-  iDirectionalLight *CreateDirectionalLight() override;
-  iPointLight *CreatePointLight() override;
+  csOwned<iSampler> CreateSampler() override;
+  CS_FUNCTION()
+  csOwned<cs::iTexture2D> CreateTexture(const cs::iTexture2D::Descriptor &descriptor) override;
+  csOwned<iTexture2DArray> CreateTexture(const iTexture2DArray::Descriptor &descriptor) override;
+  csOwned<iTextureCube> CreateTexture(const iTextureCube::Descriptor &descriptor) override;
+  csOwned<iRenderTarget2D> CreateRenderTarget(const iRenderTarget2D::Descriptor &descriptor) override;
+  csOwned<iRenderTarget2DArray> CreateRenderTarget(const iRenderTarget2DArray::Descriptor &descriptor) override;
+  csOwned<iRenderTargetCube> CreateRenderTarget(const iRenderTargetCube::Descriptor &descriptor) override;
+  csOwned<iDirectionalLight> CreateDirectionalLight() override;
+  csOwned<iPointLight> CreatePointLight() override;
+
 
   void ClearTextureCache() override;
   void ResetTextures() override;
@@ -154,8 +156,8 @@ private:
   static void UnbindUnsafe(iTexture *texture);
 
 private:
-  iRenderTarget                     *m_renderTarget;
-  cs::iShader                       *m_shader;
+  iRenderTarget                     *m_renderTarget = nullptr;
+  cs::iShader                       *m_shader = nullptr;
   bool                              m_materialSuccessfull;
   csAssetRef<iMaterial>             m_material;
   eRenderPass                       m_materialPass;
@@ -165,7 +167,7 @@ private:
   bool                              m_texturesUsed[eTU_COUNT];
   std::array<iTexture *, eTU_COUNT> m_textures;
   std::array<iSampler *, eTU_COUNT> m_samplers;
-  iTexture                          *m_tempTexture;
+  iTexture                          *m_tempTexture = nullptr;
 
 
   /*
@@ -250,8 +252,8 @@ private:
 
     struct
     {
-      iTextureCube *ShadowBufferDepth;
-      iTextureCube *ShadowBufferColor;
+      iTextureCube *ShadowBufferDepth = nullptr;
+      iTextureCube *ShadowBufferColor = nullptr;
       float Near;
       float Far;
       float Bias;
@@ -259,8 +261,8 @@ private:
 
     struct
     {
-      iTexture2DArray *ShadowBufferDepth;
-      iTexture2DArray *ShadowBufferColor;
+      iTexture2DArray *ShadowBufferDepth = nullptr;
+      iTexture2DArray *ShadowBufferColor = nullptr;
       float Matrices[64];
       float Layers[4];
     }          DirectionalLight;
@@ -283,20 +285,20 @@ private:
    * @{
    */
   csGL4Program *FullscreenBlitProgram();
-  csGL4Program *m_fullscreenBlitProgram;
+  csGL4Program *m_fullscreenBlitProgram = nullptr;
   csGL4Program *FullscreenBlitMSProgram();
-  csGL4Program *m_fullscreenBlitMSProgram;
+  csGL4Program *m_fullscreenBlitMSProgram = nullptr;
   iRenderMesh *FullscreenBlitRenderMesh();
-  iRenderMesh  *m_fullscreenBlitRenderMesh;
+  iRenderMesh  *m_fullscreenBlitRenderMesh = nullptr;
   iRenderMesh *PixelRenderMesh();
-  iRenderMesh  *m_pixelRenderMesh;
+  iRenderMesh  *m_pixelRenderMesh = nullptr;
 
   csGL4Program *FullscreenBlitArrayProgram();
-  csGL4Program *m_fullscreenBlitArrayProgram;
+  csGL4Program *m_fullscreenBlitArrayProgram = nullptr;
 
 
   csGL4Program *FullscreenBlitCubeProgram();
-  csGL4Program *m_fullscreenBlitCubeProgram;
+  csGL4Program *m_fullscreenBlitCubeProgram = nullptr;
   iShaderAttribute *m_fullscreenBlitCubeDiffuse;
   iShaderAttribute *m_fullscreenBlitCubeScale;
   iShaderAttribute *m_fullscreenBlitCubeTranslation;

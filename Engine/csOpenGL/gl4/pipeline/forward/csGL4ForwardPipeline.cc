@@ -155,7 +155,7 @@ iRenderTarget2D *csGL4ForwardPipeline::UpdateRenderTarget(cs::iDevice *device, c
       target->GetWidth(),
       target->GetHeight()
   };
-  renderTarget = device->CreateRenderTarget(desc);
+  renderTarget = device->CreateRenderTarget(desc).Consume();
   if (!renderTarget)
   {
     return nullptr;
@@ -168,16 +168,14 @@ iRenderTarget2D *csGL4ForwardPipeline::UpdateRenderTarget(cs::iDevice *device, c
       false,
       1
   };
-  iTexture2D             *colorTexture = device->CreateTexture(colorDesc);
-  iSampler               *colorSampler = device->CreateSampler();
+  csRef<iTexture2D> colorTexture = device->CreateTexture(colorDesc);
+  csRef<iSampler> colorSampler = device->CreateSampler();
   colorSampler->SetFilterMode(eFM_MinMagNearest);
   colorSampler->SetAddressU(eTAM_Clamp);
   colorSampler->SetAddressV(eTAM_Clamp);
   colorSampler->SetAddressW(eTAM_Clamp);
   colorTexture->SetSampler(colorSampler);
   renderTarget->AddColorTexture(colorTexture);
-  CS_RELEASE(colorTexture);
-  CS_RELEASE(colorSampler);
 
   iTexture2D::Descriptor depthDesc {
       ePF_Depth,
@@ -186,8 +184,8 @@ iRenderTarget2D *csGL4ForwardPipeline::UpdateRenderTarget(cs::iDevice *device, c
       false,
       1
   };
-  iTexture2D             *depthTexture = device->CreateTexture(depthDesc);
-  iSampler               *depthSampler = device->CreateSampler();
+  csRef<iTexture2D> depthTexture = device->CreateTexture(depthDesc);
+  csRef<iSampler> depthSampler = device->CreateSampler();
   depthSampler->SetFilterMode(eFM_MinMagNearest);
   depthSampler->SetAddressU(eTAM_Clamp);
   depthSampler->SetAddressV(eTAM_Clamp);
@@ -196,8 +194,6 @@ iRenderTarget2D *csGL4ForwardPipeline::UpdateRenderTarget(cs::iDevice *device, c
   depthSampler->SetTextureCompareMode(eTCM_None);
   depthTexture->SetSampler(depthSampler);
   renderTarget->SetDepthTexture(depthTexture);
-  CS_RELEASE(depthTexture);
-  CS_RELEASE(depthSampler);
 
   if (!renderTarget->Compile())
   {

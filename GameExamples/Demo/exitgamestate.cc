@@ -30,13 +30,15 @@ void ExitGameState::Update(float tpf)
 
     if (set)
     {
-      cs::iMaterial* mat = cs::csAssetManager::Get()->Load<cs::iMaterial>("/materials/DefaultBlue.mat");
+      auto matData = cs::csAssetManager::Get()->Load<cs::iMaterial>("/materials/DefaultBlue.mat");
+      auto mat = matData.Data();
       mat->SetLocator(cs::csAssetLocator("/materials/Default.mat"));
       cs::csAssetPool::Instance().Put(mat);
     }
     else
     {
-      cs::iMaterial* mat = cs::csAssetManager::Get()->Load<cs::iMaterial>("/materials/DefaultRed.mat");
+      auto matData = cs::csAssetManager::Get()->Load<cs::iMaterial>("/materials/DefaultRed.mat");
+      auto mat = matData.Data();
       mat->SetLocator(cs::csAssetLocator("/materials/Default.mat"));
       cs::csAssetPool::Instance().Put(mat);
     }

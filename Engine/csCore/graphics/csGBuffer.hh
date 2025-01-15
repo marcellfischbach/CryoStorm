@@ -37,7 +37,7 @@ private:
 
 
   std::vector<uint32_t> m_bufferIds;
-  iRenderTarget2D *m_gBuffer;
+  csRef<iRenderTarget2D> m_gBuffer;
   csAssetRef<iTexture2D> m_diffuseRoughness;
   csAssetRef<iTexture2D> m_depth;
   csAssetRef<iTexture2D> m_normal;

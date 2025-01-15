@@ -76,7 +76,7 @@ private:
 
   csAssetRef<iTexture2D> m_depthBuffer;
 
-  std::array<csGL4RenderTarget2D *, MaxLights>       m_directionalLightShadowMap;
+  std::array<csRef<csGL4RenderTarget2D>, MaxLights>       m_directionalLightShadowMap;
   std::array<csGL4PSSMShadowBufferObject, MaxLights> m_directionalLightShadowBuffer;
 
   csGL4PSSMRenderer m_pssmRenderer;

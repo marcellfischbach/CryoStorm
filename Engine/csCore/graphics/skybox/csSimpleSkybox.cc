@@ -65,7 +65,8 @@ bool csSimpleSkybox::PrepRenderTarget(cs::iDevice *device)
       false // maybe later
   };
 
-  iSampler *sampler = device->CreateSampler();
+  auto oSampler = device->CreateSampler();
+  auto sampler = oSampler.Data();
   sampler->SetFilterMode(eFM_MinMagNearest);
   sampler->SetAnisotropy(1);
   sampler->SetMinLOD(0);

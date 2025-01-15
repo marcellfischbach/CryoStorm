@@ -128,14 +128,13 @@ csGL4RenderTarget2D* csGL4ForwardPointLightRenderer::GetPointLightShadowMap(Size
   }
 
   csGL4RenderTarget2D *target = m_pointLightShadowMap[lightIdx];
-  if (m_shadowRenderer.IsShadowMapValid (target))
+  if (m_shadowRenderer.IsShadowMapValid (m_pointLightShadowMap[lightIdx]))
   {
     return target;
   }
 
-  target = m_shadowRenderer.CreateShadowMap();
-  CS_SET(m_pointLightShadowMap[lightIdx], target);
-  return target;
+  m_pointLightShadowMap[lightIdx] = m_shadowRenderer.CreateShadowMap();
+  return m_pointLightShadowMap[lightIdx];
 }
 
 

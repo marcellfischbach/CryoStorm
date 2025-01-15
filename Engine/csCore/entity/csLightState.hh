@@ -7,6 +7,7 @@
 #include <csCore/graphics/eLightType.hh>
 #include <csCore/math/csColor4f.hh>
 #include <csCore/math/csVector3f.hh>
+#include <csCore/csOwned.hh>
 
 
 namespace cs
@@ -62,14 +63,14 @@ protected:
   void TransformationUpdatedPreChildren() override;
 
 private:
-  iLight *CreateLight();
+  csOwned<iLight> CreateLight();
   void AddToScene(csWorld *world);
   void RemoveFromScene(csWorld * world);
 
   void UpdateValues();
 
 
-  iLight* m_light;
+  csRef<iLight> m_light;
   iPointLight* m_pointLight;
   iDirectionalLight* m_directionalLight;
 

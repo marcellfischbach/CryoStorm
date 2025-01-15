@@ -17,7 +17,7 @@ namespace cs::img
     csJpegLoader();
     ~csJpegLoader() override = default;
 
-    CS_NODISCARD iAsset *Load(const csAssetLocator & locator) const override;
+    CS_NODISCARD csOwned<iAsset> Load(const csAssetLocator & locator) const override;
 
   };
 

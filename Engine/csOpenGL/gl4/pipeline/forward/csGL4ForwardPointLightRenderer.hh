@@ -54,8 +54,8 @@ public:
   void RenderShadowMaps(const csCamera &camera,
                         const csProjector &projector);
 
-  iTexture2D* GetColorTexture();
-  iTexture2D* GetDepthTexture();
+  iTexture2D *GetColorTexture();
+  iTexture2D *GetDepthTexture();
 private:
   void SortLights();
 
@@ -65,15 +65,14 @@ private:
   csGL4RenderTarget2D *GetPointLightShadowMap(Size idx);
 
 private:
-  csGL4Device *m_device = nullptr;
-  iGfxScene   *m_scene  = nullptr;
+  csGL4Device            *m_device     = nullptr;
+  iGfxScene              *m_scene      = nullptr;
   csAssetRef<iTexture2D> m_depthBuffer = nullptr;
 
-  std::vector<csGL4PointLight *>               m_shadowPointLights;
-  std::array<csGL4RenderTarget2D *, MaxLights> m_pointLightShadowMap;
+  std::vector<csGL4PointLight *>                    m_shadowPointLights;
+  std::array<csRef<csGL4RenderTarget2D>, MaxLights> m_pointLightShadowMap;
 
   csGL4PointSMRenderer m_shadowRenderer;
-
 
 
 };

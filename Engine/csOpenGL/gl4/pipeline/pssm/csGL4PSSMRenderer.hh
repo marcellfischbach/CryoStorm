@@ -3,6 +3,7 @@
 #include <csOpenGL/gl4/pipeline/pssm/csGL4PSSMFilter.hh>
 #include <csCore/graphics/scene/csGfxSceneCollector.hh>
 #include <csCore/math/csMatrix4f.hh>
+#include <csCore/csOwned.hh>
 #include <csCore/csRef.hh>
 
 #include <array>
@@ -34,9 +35,9 @@ class csGL4Texture2DArray;
 
 struct csGL4PSSMShadowBufferObject
 {
-  csGL4Texture2DArray                  *ShadowDepth  = nullptr;
-  csGL4Texture2DArray                  *ShadowColor  = nullptr;
-  std::array<csGL4RenderTarget2D *, 4> ShadowBuffers = {nullptr, nullptr, nullptr, nullptr };
+  csRef<csGL4Texture2DArray> ShadowDepth  = nullptr;
+  csRef<csGL4Texture2DArray> ShadowColor  = nullptr;
+  std::array<csRef<csGL4RenderTarget2D>, 4> ShadowBuffers = {nullptr, nullptr, nullptr, nullptr };
 
   csGL4PSSMShadowBufferObject();
   csGL4PSSMShadowBufferObject(const csGL4PSSMShadowBufferObject &sbo);
@@ -58,7 +59,7 @@ public:
   void SetDepthBuffer(iTexture2D *depthBuffer);
   void SetDevice(csGL4Device *device);
   void SetScene(iGfxScene *scene);
-  csGL4RenderTarget2D *CreateDirectionalLightShadowMap();
+  csOwned<csGL4RenderTarget2D> CreateDirectionalLightShadowMap();
 
   void SetShadowMap(csGL4RenderTarget2D *shadowMap);
   csGL4RenderTarget2D *GetShadowMap();
@@ -103,8 +104,8 @@ private:
   size_t                      m_directionalLightShadowBufferSize = 0;
 
 
-  csGL4RenderTarget2D *m_directionalLightShadowMapTemp = nullptr;
-  csGL4RenderTarget2D *m_directionalLightShadowMap     = nullptr;
+  csRef<csGL4RenderTarget2D> m_directionalLightShadowMapTemp = nullptr;
+  csRef<csGL4RenderTarget2D> m_directionalLightShadowMap     = nullptr;
   size_t              m_directionalLightShadowMapWidth = 0;
   size_t            m_directionalLightShadowMapHeight = 0;
 

@@ -117,16 +117,16 @@ const cs::iWindow *csViewport::GetWindow() const
 }
 
 
-static cs::iRenderTarget2D *
+static csOwned<cs::iRenderTarget2D>
 create_render_target(cs::iDevice *device, uint32_t width, uint32_t height, uint16_t multiSamples)
 {
-  cs::iSampler *colorSampler = device->CreateSampler();
-  colorSampler->SetFilterMode(cs::eFM_MinMagNearest);
+  csOwned<cs::iSampler> colorSampler = device->CreateSampler();
+  colorSampler.Data()->SetFilterMode(cs::eFM_MinMagNearest);
 
-  cs::iSampler *depthSampler = device->CreateSampler();
-  depthSampler->SetFilterMode(cs::eFM_MinMagNearest);
-  depthSampler->SetTextureCompareFunc(cs::eCF_LessOrEqual);
-  depthSampler->SetTextureCompareMode(cs::eTCM_None);
+  csOwned<cs::iSampler> depthSampler = device->CreateSampler();
+  depthSampler.Data()->SetFilterMode(cs::eFM_MinMagNearest);
+  depthSampler.Data()->SetTextureCompareFunc(cs::eCF_LessOrEqual);
+  depthSampler.Data()->SetTextureCompareMode(cs::eTCM_None);
 
   cs::iTexture2D::Descriptor rt_col_desc = {};
   rt_col_desc.Width = width;
@@ -134,8 +134,8 @@ create_render_target(cs::iDevice *device, uint32_t width, uint32_t height, uint1
   rt_col_desc.Format = cs::ePF_RGBA;
   rt_col_desc.MipMaps = false;
   rt_col_desc.MultiSamples = multiSamples;
-  cs::iTexture2D *color_texture = device->CreateTexture(rt_col_desc);
-  color_texture->SetSampler(colorSampler);
+  csOwned<cs::iTexture2D> color_texture = device->CreateTexture(rt_col_desc);
+  color_texture.Data()->SetSampler(colorSampler.Data());
 
   cs::iTexture2D::Descriptor rt_dpth_desc = {};
   rt_dpth_desc.Width = width;
@@ -143,21 +143,21 @@ create_render_target(cs::iDevice *device, uint32_t width, uint32_t height, uint1
   rt_dpth_desc.Format = cs::ePF_DepthStencil;
   rt_dpth_desc.MipMaps = false;
   rt_dpth_desc.MultiSamples = multiSamples;
-  cs::iTexture2D *depth_texture = device->CreateTexture(rt_dpth_desc);
-  depth_texture->SetSampler(depthSampler);
+  csOwned<cs::iTexture2D> depth_texture = device->CreateTexture(rt_dpth_desc);
+  depth_texture.Data()->SetSampler(depthSampler.Data());
 
 
   cs::iRenderTarget2D::Descriptor rt_desc = {};
   rt_desc.Width = width;
   rt_desc.Height = height;
 
-  cs::iRenderTarget2D *renderTarget = device->CreateRenderTarget(rt_desc);
-  renderTarget->AddColorTexture(color_texture);
+  csOwned<cs::iRenderTarget2D> renderTarget = device->CreateRenderTarget(rt_desc);
+  renderTarget.Data()->AddColorTexture(color_texture.Data());
 //  renderTarget->SetDepthBuffer(cs::ePF_Depth);
-  renderTarget->SetDepthTexture(depth_texture);
-  if (!renderTarget->Compile())
+  renderTarget.Data()->SetDepthTexture(depth_texture.Data());
+  if (!renderTarget.Data()->Compile())
   {
-    printf("Unable to compile render target: %s\n", renderTarget->GetCompileLog().c_str());
+    printf("Unable to compile render target: %s\n", renderTarget.Data()->GetCompileLog().c_str());
     return nullptr;
   }
   return renderTarget;
@@ -250,3 +250,4 @@ JNICALL Java_org_cryo_demo_TestView_paint(JNIEnv *env, jclass, jintArray buffer)
 
 };
 #endif
+

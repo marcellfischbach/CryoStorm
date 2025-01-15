@@ -29,6 +29,10 @@ CS_CLASS_GEN;
   {
     m_valid = false;
   }
+  CS_FORCEINLINE void Revalidate ()
+  {
+    m_valid = true;
+  }
   CS_NODISCARD CS_FORCEINLINE bool IsValid() const
   {
     return m_valid;

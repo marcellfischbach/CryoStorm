@@ -197,7 +197,7 @@ replace_includes(const csAssetLocator *parent, std::vector<std::string> &lines, 
   return result;
 }
 
-csGL4Shader *LoadShader(const std::string &typeText,
+csOwned<csGL4Shader> LoadShader(const std::string &typeText,
                         const std::string &origSource,
                         const csAssetLocator *locator)
 {
@@ -294,7 +294,7 @@ csGL4ShaderLoader::csGL4ShaderLoader()
 
 
 
-iAsset *csGL4ShaderLoader::Load(const csAssetLocator & locator) const
+csOwned<iAsset> csGL4ShaderLoader::Load(const csAssetLocator & locator) const
 {
   iFile *file = csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (!file)
@@ -338,7 +338,7 @@ iAsset *csGL4ShaderLoader::Load(const csAssetLocator & locator) const
   {
     ext = std::string("compute");
   }
-  csGL4Shader *shader = LoadShader(ext, source, &locator);
+  auto shader = LoadShader(ext, source, &locator);
   delete[] buffer;
   buffer = nullptr;
 

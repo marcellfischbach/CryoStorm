@@ -18,7 +18,7 @@ csMaterialLoader::csMaterialLoader()
   RegisterType("MATINSTANCE");
 }
 
-iAsset *csMaterialLoader::Load(const csCryoFile *file, const csAssetLocator &locator) const
+csOwned<iAsset> csMaterialLoader::Load(const csCryoFile *file, const csAssetLocator &locator) const
 {
   if (file->Root()->HasChild("material"))
   {
@@ -309,13 +309,13 @@ bool csMaterialLoader::LoadShader(csMaterial *material,
 
   csAssetLocator shaderLocator(locator, shaderLoc);
   auto           shader = csAssetManager::Get()->Get<iShader>(shaderLocator);
-  if (!shader)
+  if (!shader.Data())
   {
     return false;
   }
 
 
-  material->SetShader(renderPass, shader);
+  material->SetShader(renderPass, shader.Data());
 
   return true;
 }
@@ -400,7 +400,7 @@ bool csMaterialLoader::LoadReferenceMaterial(csMaterialInstance *materialInstanc
     return false;
   }
 
-  materialInstance->SetMaterial(material);
+  materialInstance->SetMaterial(material.Data());
   return true;
 }
 
@@ -515,26 +515,17 @@ bool csMaterialLoader::LoadAttributeDefault(iMaterial *material,
 {
   switch (attributeType)
   {
-    case eMAT_Float:
-      return LoadAttributeFloat(material, attributeIdx, attributeElement);
-    case eMAT_Vec2:
-      return LoadAttributeVec2(material, attributeIdx, attributeElement);
-    case eMAT_Vec3:
-      return LoadAttributeVec3(material, attributeIdx, attributeElement);
-    case eMAT_Vec4:
-      return LoadAttributeVec4(material, attributeIdx, attributeElement);
-    case eMAT_Int:
-      return LoadAttributeInt(material, attributeIdx, attributeElement);
+    case eMAT_Float:return LoadAttributeFloat(material, attributeIdx, attributeElement);
+    case eMAT_Vec2:return LoadAttributeVec2(material, attributeIdx, attributeElement);
+    case eMAT_Vec3:return LoadAttributeVec3(material, attributeIdx, attributeElement);
+    case eMAT_Vec4:return LoadAttributeVec4(material, attributeIdx, attributeElement);
+    case eMAT_Int:return LoadAttributeInt(material, attributeIdx, attributeElement);
 
-    case eMAT_Matrix3:
-      return LoadAttributeMatrix3(material, attributeIdx, attributeElement);
-    case eMAT_Matrix4:
-      return LoadAttributeMatrix4(material, attributeIdx, attributeElement);
+    case eMAT_Matrix3:return LoadAttributeMatrix3(material, attributeIdx, attributeElement);
+    case eMAT_Matrix4:return LoadAttributeMatrix4(material, attributeIdx, attributeElement);
 
-    case eMAT_Texture:
-      return LoadAttributeTexture(material, attributeIdx, attributeElement, locator);
-    default:
-      break;
+    case eMAT_Texture:return LoadAttributeTexture(material, attributeIdx, attributeElement, locator);
+    default:break;
   }
   return false;
 }
@@ -719,12 +710,12 @@ bool csMaterialLoader::LoadAttributeTexture(iMaterial *material,
   }
 
   auto texture = csAssetManager::Get()->Get<iTexture>(csAssetLocator(locator, textureLoc));
-  if (!texture)
+  if (!texture.Data())
   {
     return false;
   }
 
-  material->SetTexture(attributeIdx, texture);
+  material->SetTexture(attributeIdx, texture.Data());
   return true;
 }
 

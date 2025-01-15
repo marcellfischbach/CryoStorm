@@ -28,34 +28,34 @@ void csAssetManager::RegisterLoader(csAssetLoader *loader)
 }
 
 
-iAsset *csAssetManager::Get(const csAssetLocator &locator)
+csOwned<iAsset> csAssetManager::Get(const csAssetLocator &locator)
 {
   iAsset *pooled = csAssetPool::Instance().Get(locator);
   if (pooled)
   {
-    return pooled;
+    return csOwned<iAsset>(pooled);
   }
 
 
-  iAsset *resource = Load(locator);
-  if (resource)
+  csOwned<iAsset> resource = Load(locator);
+  iAsset* asset = resource.Data();
+  if (asset)
   {
-    resource->SetLocator(locator);
-
-    csAssetPool::Instance().Put(resource);
+    asset->SetLocator(locator);
+    csAssetPool::Instance().Put(asset);
   }
 
   return resource;
 }
 
 
-iAsset *csAssetManager::Load(const csAssetLocator &locator)
+csOwned<iAsset> csAssetManager::Load(const csAssetLocator &locator)
 {
   for (csAssetLoader *loader: m_assetLoaders)
   {
     if (loader->CanLoad(locator))
     {
-      iAsset *res = loader->Load(locator);
+      csOwned<iAsset> res = loader->Load(locator);
       if (res)
       {
         return res;
@@ -71,7 +71,7 @@ iAsset *csAssetManager::Load(const csAssetLocator &locator)
           locator.Canonical().c_str()
   );
 
-  return nullptr;
+  return csOwned<iAsset>(nullptr);
 }
 
 

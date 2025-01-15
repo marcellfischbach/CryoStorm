@@ -227,8 +227,7 @@ csGL4RenderTarget2D *csGL4DeferredPointLightRenderer::GetShadowMap()
     return m_shadowMap;
   }
 
-  csGL4RenderTarget2D *target = m_shadowRenderer.CreateShadowMap();
-  CS_SET(m_shadowMap, target);
+  m_shadowMap = m_shadowRenderer.CreateShadowMap();
   return m_shadowMap;
 }
 

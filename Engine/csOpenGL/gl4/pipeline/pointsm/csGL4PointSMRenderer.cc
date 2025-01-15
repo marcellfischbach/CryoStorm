@@ -226,7 +226,8 @@ csGL4RenderTarget2D *csGL4PointSMRenderer::GetShadowBuffer(eCubeFace face)
     desc.Width  = m_pointLightShadowBufferSize;
     desc.Height = m_pointLightShadowBufferSize;
 
-    m_pointLightShadowBuffer[face] = csQueryClass<csGL4RenderTarget2D>(m_device->CreateRenderTarget(desc));
+    auto target = m_device->CreateRenderTarget(desc);
+    m_pointLightShadowBuffer[face] = csQueryClass<csGL4RenderTarget2D>(target.Data());
 
 
     if (m_shadowSamplingMode == ShadowSamplingMode::VSM || true)
@@ -290,42 +291,41 @@ bool csGL4PointSMRenderer::IsShadowMapValid(csGL4RenderTarget2D *shadowMap) cons
 csGL4RenderTarget2D *csGL4PointSMRenderer::GetShadowMapTemp()
 {
   csGL4RenderTarget2D *target = m_pointLightShadowMapTemp;
-  if (target)
+  if (m_pointLightShadowMapTemp)
   {
-    if (m_pointLightShadowMapWidth == target->GetWidth()
-        && m_pointLightShadowMapHeight == target->GetHeight())
+    if (m_pointLightShadowMapWidth == m_pointLightShadowMapTemp->GetWidth()
+        && m_pointLightShadowMapHeight == m_pointLightShadowMapTemp->GetHeight())
     {
-      return target;
+      return m_pointLightShadowMapTemp;
     }
-    target->Release();
   }
 
-  target                    = CreateShadowMap();
-  m_pointLightShadowMapTemp = target;
-  return target;
+  m_pointLightShadowMapTemp = CreateShadowMap();
+  return m_pointLightShadowMapTemp;
 }
 
 
-csGL4RenderTarget2D *csGL4PointSMRenderer::CreateShadowMap()
+csOwned<csGL4RenderTarget2D> csGL4PointSMRenderer::CreateShadowMap()
 {
   iRenderTarget2D::Descriptor desc {};
   desc.Width  = (uint16_t) m_pointLightShadowMapWidth;
   desc.Height = (uint16_t) m_pointLightShadowMapHeight;
-  auto target = csQueryClass<csGL4RenderTarget2D>(m_device->CreateRenderTarget(desc));
+  auto trgt = m_device->CreateRenderTarget(desc);
+  auto target = csOwned<csGL4RenderTarget2D>(csQueryClass<csGL4RenderTarget2D>(trgt.Data()));
 
   iTexture2D::Descriptor colorDesc {};
   colorDesc.Width   = (uint16_t) m_pointLightShadowMapWidth;
   colorDesc.Height  = (uint16_t) m_pointLightShadowMapHeight;
   colorDesc.Format  = ePF_RGB;
   colorDesc.MipMaps = false;
-  iTexture2D *colorTexture = m_device->CreateTexture(colorDesc);
+  auto oColorTexture = m_device->CreateTexture(colorDesc);
+  auto colorTexture = oColorTexture.Data();
   colorTexture->SetSampler(GetShadowMapColorSampler());
   target->AddColorTexture(colorTexture);
   target->SetDepthBuffer(ePF_Depth);
 
   if (!target->Compile())
   {
-    target->Release();
     target = nullptr;
   }
 

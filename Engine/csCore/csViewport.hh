@@ -7,6 +7,7 @@
 #include <csCore/csCoreExport.hh>
 #include <csCore/csClass.hh>
 #include <csCore/csFPS.hh>
+#include <csCore/csRef.hh>
 
 namespace cs
 {
@@ -74,7 +75,7 @@ private:
   csWorld *m_world = nullptr;
   iFrameRenderer *m_frameRenderer = nullptr;
   iSkyboxRenderer *m_skyboxRenderer = nullptr;
-  iRenderTarget2D *m_renderTarget = nullptr;
+  csRef<iRenderTarget2D> m_renderTarget = nullptr;
   iWindow *m_window = nullptr;
 
   uint8_t m_multiSamples = 1;

@@ -171,9 +171,8 @@ csGL4RenderTarget2D *csGL4DeferredDirectionalLightRenderer::GetShadowMap()
       return target;
     }
 
-    target = m_pssmRenderer.CreateDirectionalLightShadowMap();
-    CS_SET(m_shadowMaps[m_lightIdx], target);
-    return target;
+    m_shadowMaps[m_lightIdx] = m_pssmRenderer.CreateDirectionalLightShadowMap();
+    return m_shadowMaps[m_lightIdx];
   }
   else
   {
@@ -183,9 +182,8 @@ csGL4RenderTarget2D *csGL4DeferredDirectionalLightRenderer::GetShadowMap()
       return m_shadowMap;
     }
 
-    csGL4RenderTarget2D *target = m_pssmRenderer.CreateDirectionalLightShadowMap();
-    CS_SET(m_shadowMap, target);
-    return target;
+    m_shadowMap = m_pssmRenderer.CreateDirectionalLightShadowMap();
+    return m_shadowMap;
   }
 }
 

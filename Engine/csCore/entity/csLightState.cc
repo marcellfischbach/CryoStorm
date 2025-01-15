@@ -8,6 +8,7 @@
 #include <csCore/graphics/scene/csGfxLight.hh>
 #include <csCore/graphics/scene/iGfxScene.hh>
 #include <csCore/csObjectRegistry.hh>
+#include <csCore/csOwned.hh>
 
 namespace cs
 {
@@ -80,7 +81,7 @@ eLightType csLightState::GetType() const
 }
 
 
-iLight* csLightState::CreateLight()
+csOwned<iLight> csLightState::CreateLight()
 {
   iDevice* device = csObjectRegistry::Get<iDevice>();
   switch (m_lightType)
@@ -114,8 +115,10 @@ void csLightState::AddToScene(csWorld* world)
   if (!m_light)
   {
     m_light = CreateLight();
-    m_pointLight = m_light->Query<iPointLight>();
-    m_directionalLight = m_light->Query<iDirectionalLight>();
+    iLight* light = m_light.raw();
+    const csClass *pClass = light->GetClass();
+    m_pointLight = light->Query<iPointLight>();
+    m_directionalLight = light->Query<iDirectionalLight>();
     UpdateValues();
   }
   if (world)

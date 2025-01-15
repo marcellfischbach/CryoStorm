@@ -24,7 +24,7 @@ csTextureLoader::csTextureLoader()
 }
 
 
-iAsset *csTextureLoader::Load(const csCryoFile *file, const csAssetLocator &locator) const
+csOwned<iAsset>csTextureLoader::Load(const csCryoFile *file, const csAssetLocator &locator) const
 {
   auto textureElement = file->Root()->GetChild(0);
   auto tag = textureElement->GetTagName();
@@ -44,7 +44,7 @@ iAsset *csTextureLoader::Load(const csCryoFile *file, const csAssetLocator &loca
   return nullptr;
 }
 
-iTexture2D *csTextureLoader::LoadTexture2D(const csCryoFileElement *textureElement, const csAssetLocator & locator)
+csOwned<iTexture2D> csTextureLoader::LoadTexture2D(const csCryoFileElement *textureElement, const csAssetLocator & locator)
 {
 
   auto image = LoadImage (textureElement->GetChild("image"), locator);
@@ -55,7 +55,7 @@ iTexture2D *csTextureLoader::LoadTexture2D(const csCryoFileElement *textureEleme
 
   ColorCorrection(textureElement, image);
 
-  iSampler *sampler = LoadSampler(textureElement->GetChild("sampler"), locator);
+  auto sampler = LoadSampler(textureElement->GetChild("sampler"), locator);
 
 
 
@@ -71,7 +71,7 @@ iTexture2D *csTextureLoader::LoadTexture2D(const csCryoFileElement *textureEleme
     image->GenerateMipMaps(csImage::eMipMapProcedure::eMMP_Linear4x4);
   }
 
-  iTexture2D *texture = csObjectRegistry::Get<iDevice>()->CreateTexture(desc);
+  auto texture = csObjectRegistry::Get<iDevice>()->CreateTexture(desc);
   texture->Data(image);
   if (sampler)
   {
@@ -82,18 +82,18 @@ iTexture2D *csTextureLoader::LoadTexture2D(const csCryoFileElement *textureEleme
   return texture;
 }
 
-iTexture2DArray *csTextureLoader::LoadTexture2DArray(const csCryoFileElement *textureElement, const csAssetLocator & locator)
+csOwned<iTexture2DArray> csTextureLoader::LoadTexture2DArray(const csCryoFileElement *textureElement, const csAssetLocator & locator)
 {
   return nullptr;
 }
 
-iTextureCube *csTextureLoader::LoadTextureCube(const csCryoFileElement *textureElement, const csAssetLocator & locator)
+csOwned<iTextureCube> csTextureLoader::LoadTextureCube(const csCryoFileElement *textureElement, const csAssetLocator & locator)
 {
   return nullptr;
 }
 
 
-csImage* csTextureLoader::LoadImage(const csCryoFileElement *imageElement, const csAssetLocator & locator)
+csRef<csImage> csTextureLoader::LoadImage(const csCryoFileElement *imageElement, const csAssetLocator & locator)
 {
   if (!imageElement || imageElement->GetNumberOfAttributes() != 1)
   {
@@ -102,7 +102,7 @@ csImage* csTextureLoader::LoadImage(const csCryoFileElement *imageElement, const
 
   auto imageName = imageElement->GetAttribute(0, "");
 
-  return csAssetManager::Get()->Get<csImage>(csAssetLocator(locator, imageName));
+  return csRef<csImage>(csAssetManager::Get()->Get<csImage>(csAssetLocator(locator, imageName)));
 }
 
 void csTextureLoader::ColorCorrection(const csCryoFileElement * textureElement, csImage *image)
@@ -132,14 +132,14 @@ void csTextureLoader::ColorCorrection(const csCryoFileElement * textureElement, 
 }
 
 
-iSampler *csTextureLoader::LoadSampler(const csCryoFileElement *samplerElement, const csAssetLocator & locator)
+csRef<iSampler> csTextureLoader::LoadSampler(const csCryoFileElement *samplerElement, const csAssetLocator & locator)
 {
   if (!samplerElement || samplerElement->GetNumberOfAttributes() != 1)
   {
     return nullptr;
   }
 
-  iSampler *sampler;
+  csRef<iSampler> sampler;
   auto samplerName = samplerElement->GetAttribute(0, "");
   if(samplerName == std::string("Default"))
   {
@@ -159,7 +159,7 @@ iSampler *csTextureLoader::LoadSampler(const csCryoFileElement *samplerElement, 
   }
   else
   {
-    sampler = csAssetManager::Get()->Get<iSampler>(csAssetLocator(locator, samplerName));
+    sampler = csAssetManager::Get()->Get<iSampler>(csAssetLocator(locator, samplerName)).Data();
   }
 
 

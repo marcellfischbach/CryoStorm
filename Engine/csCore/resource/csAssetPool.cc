@@ -56,10 +56,15 @@ void csAssetPool::Put(const csAssetLocator& locator, iAsset* resource)
   auto it = m_resources.find(locator);
   if (it != m_resources.end())
   {
+    if (it->second == resource)
+    {
+      return;
+    }
     it->second->Invalidate();
     it->second->Release();
   }
   m_resources[locator] = resource;
+  resource->Revalidate();
 }
 
 

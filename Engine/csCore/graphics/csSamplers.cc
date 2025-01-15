@@ -24,35 +24,35 @@ csSamplers::~csSamplers()
 
 void csSamplers::SetDefault(iSampler* sampler)
 {
-  CS_SET(m_default, sampler);
+  m_default = sampler;
 }
 
-csAssetRef<iSampler>  &csSamplers::GetDefault()
+iSampler* csSamplers::GetDefault()
 {
   return m_default;
 }
 
 void csSamplers::SetNormalMap(iSampler* sampler)
 {
-  CS_SET(m_normalMap, sampler);
+  m_normalMap = sampler;
 }
 
-csAssetRef<iSampler>  &csSamplers::GetNormalMap()
+iSampler* csSamplers::GetNormalMap()
 {
   return m_normalMap;
 }
 
 void csSamplers::SetUISprite(iSampler* sampler)
 {
-  CS_SET(m_uiSprite, sampler);
+  m_uiSprite =  sampler;
 }
 
-csAssetRef<iSampler>  &csSamplers::GetUISprite()
+iSampler* csSamplers::GetUISprite()
 {
   return m_uiSprite;
 }
 
-csAssetRef<iSampler>  &csSamplers::GetTest()
+iSampler* csSamplers::GetTest()
 {
   return m_test;
 }

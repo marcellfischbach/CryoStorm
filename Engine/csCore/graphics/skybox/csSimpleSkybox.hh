@@ -34,7 +34,7 @@ private:
 
 private:
   csAssetRef<iShader>      m_prepShader    = nullptr;
-  iRenderTargetCube        *m_skyboxTarget = nullptr;
+  csRef<iRenderTargetCube> m_skyboxTarget = nullptr;
   csAssetRef<iTextureCube> m_skyboxTexture = nullptr;
 
 };

@@ -137,14 +137,13 @@ csGL4RenderTarget2D *csGL4ForwardDirectionalLightRenderer::GetDirectionalLightSh
   }
 
   csGL4RenderTarget2D *target = m_directionalLightShadowMap[lightIdx];
-  if (m_pssmRenderer.IsShadowMapValid(target))
+  if (m_pssmRenderer.IsShadowMapValid(m_directionalLightShadowMap[lightIdx]))
   {
     return target;
   }
 
-  target = m_pssmRenderer.CreateDirectionalLightShadowMap();
-  CS_SET(m_directionalLightShadowMap[lightIdx], target);
-  return target;
+  m_directionalLightShadowMap[lightIdx] = m_pssmRenderer.CreateDirectionalLightShadowMap();
+  return m_directionalLightShadowMap[lightIdx];
 }
 
 csGL4PSSMShadowBufferObject *csGL4ForwardDirectionalLightRenderer::GetDirectionalLightShadowBuffer(size_t lightIdx)

@@ -105,9 +105,9 @@ private:
   const csCamera    *m_camera;
   const csProjector *m_projector;
   iGfxScene         *m_scene;
-  iRenderTarget2D *m_intermediate;
-  iRenderTarget2D *m_target = nullptr;
-  iRenderTarget2D *m_transparentTarget = nullptr;
+  csRef<iRenderTarget2D> m_intermediate;
+  csRef<iRenderTarget2D> m_target = nullptr;
+  csRef<iRenderTarget2D> m_transparentTarget = nullptr;
 
 
   std::vector<csGfxLight *>                 m_globalLights;

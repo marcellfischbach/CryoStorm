@@ -6,6 +6,7 @@
 #include <csCore/graphics/ePixelFormat.hh>
 #include <csCore/resource/iAssetLoader.hh>
 #include <csCore/resource/csBaseCSFAssetLoader.hh>
+#include <csCore/csRef.hh>
 
 namespace cs
 {
@@ -26,17 +27,17 @@ public:
   csTextureLoader();
   virtual ~csTextureLoader() override = default;
 
-  iAsset *Load(const csCryoFile *file, const csAssetLocator &locator) const override;
+  csOwned<iAsset> Load(const csCryoFile *file, const csAssetLocator &locator) const override;
 
 private:
 
-  static iTexture2D *LoadTexture2D(const csCryoFileElement *textureElement, const csAssetLocator & locator);
-  static iTexture2DArray *LoadTexture2DArray(const csCryoFileElement *textureElement, const csAssetLocator & locator);
-  static iTextureCube *LoadTextureCube(const csCryoFileElement *textureElement, const csAssetLocator & locator);
+  static csOwned<iTexture2D> LoadTexture2D(const csCryoFileElement *textureElement, const csAssetLocator & locator);
+  static csOwned<iTexture2DArray> LoadTexture2DArray(const csCryoFileElement *textureElement, const csAssetLocator & locator);
+  static csOwned<iTextureCube> LoadTextureCube(const csCryoFileElement *textureElement, const csAssetLocator & locator);
   static void ColorCorrection(const csCryoFileElement *textureElement, csImage* image);
 
-  static csImage *LoadImage(const csCryoFileElement *imageElement, const csAssetLocator & locator);
-  static iSampler *LoadSampler(const csCryoFileElement *samplerElement, const csAssetLocator & locator);
+  static csRef<csImage> LoadImage(const csCryoFileElement *imageElement, const csAssetLocator & locator);
+  static csRef<iSampler> LoadSampler(const csCryoFileElement *samplerElement, const csAssetLocator & locator);
 
   static ePixelFormat GetPixelFormatFrom(const csImage *image);
 };

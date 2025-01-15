@@ -801,12 +801,12 @@ csGL4Device::LightShadowData *csGL4Device::FindLightShadowData(const iLight *lig
 //  m_lightShadowMaps[light] = shadowMap;
 //}
 
-iSampler *csGL4Device::CreateSampler()
+csOwned<iSampler> csGL4Device::CreateSampler()
 {
   return new csGL4Sampler();
 }
 
-iTexture2D *csGL4Device::CreateTexture(const iTexture2D::Descriptor &descriptor)
+csOwned<iTexture2D> csGL4Device::CreateTexture(const iTexture2D::Descriptor &descriptor)
 {
   SetActiveTexture(eTU_COUNT + 1);
   UnbindUnsafe(m_tempTexture);
@@ -824,7 +824,7 @@ iTexture2D *csGL4Device::CreateTexture(const iTexture2D::Descriptor &descriptor)
   return texture;
 }
 
-iTexture2DArray *csGL4Device::CreateTexture(const iTexture2DArray::Descriptor &descriptor)
+csOwned<iTexture2DArray> csGL4Device::CreateTexture(const iTexture2DArray::Descriptor &descriptor)
 {
   SetActiveTexture(eTU_COUNT + 1);
   UnbindUnsafe(m_tempTexture);
@@ -842,7 +842,7 @@ iTexture2DArray *csGL4Device::CreateTexture(const iTexture2DArray::Descriptor &d
   return texture;
 }
 
-iTextureCube *csGL4Device::CreateTexture(const iTextureCube::Descriptor &descriptor)
+csOwned<iTextureCube> csGL4Device::CreateTexture(const iTextureCube::Descriptor &descriptor)
 {
   SetActiveTexture(eTU_COUNT + 1);
   UnbindUnsafe(m_tempTexture);
@@ -858,7 +858,7 @@ iTextureCube *csGL4Device::CreateTexture(const iTextureCube::Descriptor &descrip
   return texture;
 }
 
-iRenderTarget2D *csGL4Device::CreateRenderTarget(const iRenderTarget2D::Descriptor &descriptor)
+csOwned<iRenderTarget2D> csGL4Device::CreateRenderTarget(const iRenderTarget2D::Descriptor &descriptor)
 {
   csGL4RenderTarget2D *target = new csGL4RenderTarget2D();
   target->Initialize(descriptor.Width, descriptor.Height);
@@ -866,7 +866,7 @@ iRenderTarget2D *csGL4Device::CreateRenderTarget(const iRenderTarget2D::Descript
   return target;
 }
 
-iRenderTarget2DArray *csGL4Device::CreateRenderTarget(const iRenderTarget2DArray::Descriptor &descriptor)
+csOwned<iRenderTarget2DArray> csGL4Device::CreateRenderTarget(const iRenderTarget2DArray::Descriptor &descriptor)
 {
   csGL4RenderTarget2DArray *target = new csGL4RenderTarget2DArray();
   target->Initialize(descriptor.Width, descriptor.Height, descriptor.Layer);
@@ -874,7 +874,7 @@ iRenderTarget2DArray *csGL4Device::CreateRenderTarget(const iRenderTarget2DArray
   return target;
 }
 
-iRenderTargetCube *csGL4Device::CreateRenderTarget(const iRenderTargetCube::Descriptor &descriptor)
+csOwned<iRenderTargetCube> csGL4Device::CreateRenderTarget(const iRenderTargetCube::Descriptor &descriptor)
 {
   csGL4RenderTargetCube *target = new csGL4RenderTargetCube();
   target->Initialize(descriptor.Size);
@@ -882,14 +882,17 @@ iRenderTargetCube *csGL4Device::CreateRenderTarget(const iRenderTargetCube::Desc
   return target;
 }
 
-iPointLight *csGL4Device::CreatePointLight()
+csOwned<iPointLight> csGL4Device::CreatePointLight()
 {
   return new csGL4PointLight();
 }
 
-iDirectionalLight *csGL4Device::CreateDirectionalLight()
+csOwned<iDirectionalLight> csGL4Device::CreateDirectionalLight()
 {
-  return new csGL4DirectionalLight();
+  csGL4DirectionalLight *gl4Light = new csGL4DirectionalLight();
+  iDirectionalLight* dirLight = static_cast<iDirectionalLight*>(gl4Light);
+  csOwned oLight = csOwned<iDirectionalLight>(dirLight);
+  return oLight;
 }
 
 void csGL4Device::ClearTextureCache()
@@ -1625,7 +1628,7 @@ csGL4Program *csGL4Device::FullscreenBlitProgram()
   if (!m_fullscreenBlitProgram)
   {
     m_fullscreenBlitProgram = csAssetManager::Get()->Load<csGL4Program>(
-        "/engine/opengl/gl4/fullscreen_blit.shader");
+        "/engine/opengl/gl4/fullscreen_blit.shader").Consume();
   }
   return m_fullscreenBlitProgram;
 }
@@ -1635,7 +1638,7 @@ csGL4Program *csGL4Device::FullscreenBlitMSProgram()
   if (!m_fullscreenBlitMSProgram)
   {
     m_fullscreenBlitMSProgram =
-        csAssetManager::Get()->Load<csGL4Program>("/engine/opengl/gl4/fullscreen_blit_ms.shader");
+        csAssetManager::Get()->Load<csGL4Program>("/engine/opengl/gl4/fullscreen_blit_ms.shader").Consume();
   }
   return m_fullscreenBlitMSProgram;
 }
@@ -1646,7 +1649,7 @@ csGL4Program *csGL4Device::FullscreenBlitArrayProgram()
   {
     m_fullscreenBlitArrayProgram = csAssetManager::Get()->Load<csGL4Program>(
         "/engine/opengl/gl4/fullscreen_blit_array.shader"
-    );
+    ).Consume();
   }
   return m_fullscreenBlitArrayProgram;
 }
@@ -1713,7 +1716,7 @@ csGL4Program *csGL4Device::FullscreenBlitCubeProgram()
   {
     m_fullscreenBlitCubeProgram = csAssetManager::Get()->Load<csGL4Program>(
         "/engine/opengl/gl4/fullscreen_blit_cube.shader"
-    );
+    ).Consume();
     if (m_fullscreenBlitCubeProgram)
     {
       m_fullscreenBlitCubeDiffuse     = m_fullscreenBlitCubeProgram->GetShaderAttribute("Diffuse");

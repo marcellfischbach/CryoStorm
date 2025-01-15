@@ -83,7 +83,7 @@ private:
   LightRenderShader m_shadow;
 
 
-  csGL4RenderTarget2D  *m_shadowMap = nullptr;
+  csRef<csGL4RenderTarget2D> m_shadowMap = nullptr;
   csGL4PointSMRenderer m_shadowRenderer;
 
 };

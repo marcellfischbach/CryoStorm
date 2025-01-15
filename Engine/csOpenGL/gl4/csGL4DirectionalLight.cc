@@ -18,6 +18,12 @@ csGL4DirectionalLight::csGL4DirectionalLight()
 }
 
 
+csGL4DirectionalLight::~csGL4DirectionalLight ()
+{
+  printf ("Delete directional light\n");
+  fflush(stdout);
+}
+
 
 void csGL4DirectionalLight::SetChangeMode(eLightChangeMode changeMode)
 {

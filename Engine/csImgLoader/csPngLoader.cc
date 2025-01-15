@@ -33,7 +33,7 @@ void read_data_from_i_file(png_structp png_ptr, png_bytep buffer, png_size_t siz
 }
 
 
-iAsset *csPngLoader::Load(const csAssetLocator& locator) const
+csOwned<iAsset> csPngLoader::Load(const csAssetLocator& locator) const
 {
   iFile* fp = csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (!fp)

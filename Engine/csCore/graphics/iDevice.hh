@@ -24,7 +24,7 @@
 #include <csCore/graphics/iTexture2DArray.hh>
 #include <csCore/graphics/iTextureCube.hh>
 #include <csCore/graphics/material/iMaterial.hh>
-#include <cscore/csRef.hh>
+#include <csCore/csOwned.hh>
 #include <array>
 
 namespace cs
@@ -117,16 +117,16 @@ CS_CLASS_GEN;
                                          const std::array<csMatrix4f, 4> &matrices) = 0;
 //  virtual void SetLightShadowMap(iLight *light, iTexture2D *shadowMap) = 0;
 
-  virtual iSampler *CreateSampler() = 0;
+  virtual csOwned<iSampler> CreateSampler() = 0;
   CS_FUNCTION()
-  virtual cs::iTexture2D *CreateTexture(const cs::iTexture2D::Descriptor &descriptor) = 0;
-  virtual iTexture2DArray *CreateTexture(const iTexture2DArray::Descriptor &descriptor) = 0;
-  virtual iTextureCube *CreateTexture(const iTextureCube::Descriptor &descriptor) = 0;
-  virtual iRenderTarget2D *CreateRenderTarget(const iRenderTarget2D::Descriptor &descriptor) = 0;
-  virtual iRenderTarget2DArray *CreateRenderTarget(const iRenderTarget2DArray::Descriptor &descriptor) = 0;
-  virtual iRenderTargetCube *CreateRenderTarget(const iRenderTargetCube::Descriptor &descriptor) = 0;
-  virtual iDirectionalLight *CreateDirectionalLight() = 0;
-  virtual iPointLight *CreatePointLight() = 0;
+  virtual csOwned<cs::iTexture2D> CreateTexture(const cs::iTexture2D::Descriptor &descriptor) = 0;
+  virtual csOwned<iTexture2DArray> CreateTexture(const iTexture2DArray::Descriptor &descriptor) = 0;
+  virtual csOwned<iTextureCube> CreateTexture(const iTextureCube::Descriptor &descriptor) = 0;
+  virtual csOwned<iRenderTarget2D> CreateRenderTarget(const iRenderTarget2D::Descriptor &descriptor) = 0;
+  virtual csOwned<iRenderTarget2DArray> CreateRenderTarget(const iRenderTarget2DArray::Descriptor &descriptor) = 0;
+  virtual csOwned<iRenderTargetCube> CreateRenderTarget(const iRenderTargetCube::Descriptor &descriptor) = 0;
+  virtual csOwned<iDirectionalLight> CreateDirectionalLight() = 0;
+  virtual csOwned<iPointLight> CreatePointLight() = 0;
 
 
   virtual void ClearTextureCache() = 0;

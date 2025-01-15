@@ -428,7 +428,7 @@ csGL4PSSMShadowBufferObject csGL4PSSMRenderer::CreateDirectionalLightShadowBuffe
     colorDesc.Layers  = 4;
     colorDesc.Format  = ePF_RGBA;
     colorDesc.MipMaps = false;
-    sbo.ShadowColor = csQueryClass<csGL4Texture2DArray>(m_device->CreateTexture(colorDesc));
+    sbo.ShadowColor = m_device->CreateTexture(colorDesc).Query<csGL4Texture2DArray>();
     sbo.ShadowColor->SetSampler(GetShadowBufferColorSampler());
   }
 
@@ -438,7 +438,7 @@ csGL4PSSMShadowBufferObject csGL4PSSMRenderer::CreateDirectionalLightShadowBuffe
   depthDesc.Layers  = 4;
   depthDesc.Format  = ePF_Depth;
   depthDesc.MipMaps = false;
-  sbo.ShadowDepth = csQueryClass<csGL4Texture2DArray>(m_device->CreateTexture(depthDesc));
+  sbo.ShadowDepth = m_device->CreateTexture(depthDesc).Query<csGL4Texture2DArray>();
   sbo.ShadowDepth->SetSampler(GetShadowBufferDepthSampler());
 
 
@@ -447,7 +447,7 @@ csGL4PSSMShadowBufferObject csGL4PSSMRenderer::CreateDirectionalLightShadowBuffe
     iRenderTarget2D::Descriptor desc {};
     desc.Width  = (uint16_t) m_directionalLightShadowBufferSize;
     desc.Height = (uint16_t) m_directionalLightShadowBufferSize;
-    auto shadowRenderTarget = csQueryClass<csGL4RenderTarget2D>(m_device->CreateRenderTarget(desc));
+    auto shadowRenderTarget = m_device->CreateRenderTarget(desc).Query<csGL4RenderTarget2D>();
 
 
     if (sbo.ShadowColor)
@@ -481,7 +481,7 @@ bool csGL4PSSMRenderer::IsShadowMapValid(csGL4RenderTarget2D *shadowMap) const
 
 bool csGL4PSSMRenderer::IsShadowBufferValid(csGL4PSSMShadowBufferObject &shadowMap) const
 {
-  csGL4RenderTarget2D *&buffer = shadowMap.ShadowBuffers[0];
+  csGL4RenderTarget2D *buffer = shadowMap.ShadowBuffers[0];
   return buffer
          && buffer->GetWidth() == m_directionalLightShadowBufferSize
          && buffer->GetHeight() == m_directionalLightShadowBufferSize;
@@ -490,37 +490,36 @@ bool csGL4PSSMRenderer::IsShadowBufferValid(csGL4PSSMShadowBufferObject &shadowM
 csGL4RenderTarget2D *csGL4PSSMRenderer::GetDirectionalLightShadowMapTemp()
 {
   csGL4RenderTarget2D *target = m_directionalLightShadowMapTemp;
-  if (target)
+  if (m_directionalLightShadowMapTemp)
   {
-    if (m_directionalLightShadowMapWidth == target->GetWidth()
-        && m_directionalLightShadowMapHeight == target->GetHeight())
+    if (m_directionalLightShadowMapWidth == m_directionalLightShadowMapTemp->GetWidth()
+        && m_directionalLightShadowMapHeight == m_directionalLightShadowMapTemp->GetHeight())
     {
-      return target;
+      return m_directionalLightShadowMapTemp;
     }
-    target->Release();
   }
 
-  target                          = CreateDirectionalLightShadowMap();
-  m_directionalLightShadowMapTemp = target;
-  return target;
+  m_directionalLightShadowMapTemp = CreateDirectionalLightShadowMap();
+  return m_directionalLightShadowMapTemp;
 }
 
 
-csGL4RenderTarget2D *csGL4PSSMRenderer::CreateDirectionalLightShadowMap()
+csOwned<csGL4RenderTarget2D> csGL4PSSMRenderer::CreateDirectionalLightShadowMap()
 {
   iRenderTarget2D::Descriptor desc {};
   desc.Width  = (uint16_t) m_directionalLightShadowMapWidth;
   desc.Height = (uint16_t) m_directionalLightShadowMapHeight;
-  auto target = csQueryClass<csGL4RenderTarget2D>(m_device->CreateRenderTarget(desc));
+  auto target = m_device->CreateRenderTarget(desc).Query<csGL4RenderTarget2D>();
 
   iTexture2D::Descriptor colorDesc {};
   colorDesc.Width   = (uint16_t) m_directionalLightShadowMapWidth;
   colorDesc.Height  = (uint16_t) m_directionalLightShadowMapHeight;
   colorDesc.Format  = ePF_RGB;
   colorDesc.MipMaps = false;
-  iTexture2D *colorTexture = m_device->CreateTexture(colorDesc);
+  auto colorTexture = m_device->CreateTexture(colorDesc);
+
   colorTexture->SetSampler(GetShadowMapColorSampler());
-  target->AddColorTexture(colorTexture);
+  target->AddColorTexture(colorTexture.Data());
   target->SetDepthBuffer(ePF_Depth);
 
   if (!target->Compile())

@@ -20,7 +20,7 @@ csGL4ProgramLoader::csGL4ProgramLoader()
   RegisterType("SHADER");
 }
 
-iAsset *csGL4ProgramLoader::Load(const csCryoFile *file, const csAssetLocator &locator) const
+csOwned<iAsset> csGL4ProgramLoader::Load(const csCryoFile *file, const csAssetLocator &locator) const
 {
 
   const csCryoFileElement * programElement = file->Root()->GetChild("program");
@@ -43,8 +43,7 @@ iAsset *csGL4ProgramLoader::Load(const csCryoFile *file, const csAssetLocator &l
     {
       csAssetLocator shaderResourceLocator = csAssetLocator(locator, shaderElement->GetAttribute(0)->GetValue());
 
-      csGL4Shader *shader = csAssetManager::Get()->Load<csGL4Shader>(shaderResourceLocator);
-      program->AttachShader(shader);
+      program->AttachShader(csAssetManager::Get()->Load<csGL4Shader>(shaderResourceLocator).Data());
     }
   }
   try

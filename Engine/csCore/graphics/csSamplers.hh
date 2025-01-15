@@ -19,16 +19,16 @@ public:
   virtual ~csSamplers();
 
   void SetDefault(iSampler * sampler);
-  csAssetRef<iSampler>  &GetDefault();
+  iSampler* GetDefault();
 
   void SetNormalMap(iSampler * sampler);
-  csAssetRef<iSampler>  &GetNormalMap();
+  iSampler* GetNormalMap();
 
   void SetUISprite(iSampler * sampler);
-  csAssetRef<iSampler>  &GetUISprite();
+  iSampler* GetUISprite();
 
   void SetTest(iSampler *sampler);
-  csAssetRef<iSampler>  &GetTest();
+  iSampler* GetTest();
 
   void Load();
 

@@ -117,7 +117,7 @@ protected:
                           ePixelFormat depthFormat);
 
 protected:
-  iRenderTarget2D *m_renderTarget = nullptr;
+  csRef<iRenderTarget2D> m_renderTarget = nullptr;
 };
 
 

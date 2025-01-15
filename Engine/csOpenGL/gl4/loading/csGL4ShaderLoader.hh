@@ -18,7 +18,7 @@ public:
 
 
 
-  iAsset *Load(const csAssetLocator & locator) const override;
+  csOwned<iAsset> Load(const csAssetLocator & locator) const override;
 
 };
 

@@ -31,7 +31,7 @@ csJpegLoader::csJpegLoader()
 }
 
 
-iAsset *csJpegLoader::Load(const csAssetLocator& locator) const
+csOwned<iAsset> csJpegLoader::Load(const csAssetLocator& locator) const
 {
   iFile* ifile = cs::csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   FILE* infile = ifile->Query<csFileSystemFile>()->GetHandle();

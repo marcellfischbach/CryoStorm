@@ -15,7 +15,7 @@ class CS_OGL_API csGL4DirectionalLight : public CS_SUPER(iDirectionalLight)
   CS_CLASS_GEN_OBJECT;
 public:
   csGL4DirectionalLight();
-  ~csGL4DirectionalLight() override = default;
+  ~csGL4DirectionalLight();
 
   CS_NODISCARD CS_FORCEINLINE eLightType GetType() const override
   {

@@ -115,7 +115,7 @@ private:
   std::string VarName();
   OutputVariable GetInputValue(csSGNodeInput *input);
 
-  iShader *Compile(SourceBundle &bundle, const std::string &pathName);
+  csOwned<iShader> Compile(SourceBundle &bundle, const std::string &pathName);
   void SetMaterialDefaults(csMaterial* material);
 
 

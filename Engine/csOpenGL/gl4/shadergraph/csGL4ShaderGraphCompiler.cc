@@ -49,8 +49,8 @@ csMaterial *csGL4ShaderGraphCompiler::Compile(cs::csShaderGraph *shaderGraph, co
   GenerateDepth(depth);
   GenerateForward(forward);
 
-  iShader *depthShader   = Compile(depth, "Depth");
-  iShader *forwardShader = Compile(forward, "Forward");
+  csRef<iShader> depthShader   = Compile(depth, "Depth");
+  csRef<iShader> forwardShader = Compile(forward, "Forward");
 
   csMaterial *material = new csMaterial();
   material->SetShader(eRP_Depth, depthShader);
@@ -61,7 +61,7 @@ csMaterial *csGL4ShaderGraphCompiler::Compile(cs::csShaderGraph *shaderGraph, co
   {
     SourceBundle gbuffer;
     GenerateGBuffer(gbuffer);
-    iShader *gbufferShader = Compile(gbuffer, "GBuffer");
+    csRef<iShader> gbufferShader = Compile(gbuffer, "GBuffer");
     material->SetShader(eRP_GBuffer, gbufferShader);
   }
 
@@ -375,7 +375,7 @@ std::string annotate_with_line_numbers(const std::string &code)
   return result;
 }
 
-static csGL4Shader *Compile(eGL4ShaderType type, const std::string &src)
+static csOwned<csGL4Shader> Compile(eGL4ShaderType type, const std::string &src)
 {
   try
   {
@@ -420,19 +420,18 @@ static bool Attach(csGL4Program *program,
     fflush(stdout);
   }
 
-  csGL4Shader *shader = Compile(type, src);
+  csRef<csGL4Shader> shader = Compile(type, src);
   if (!shader)
   {
     return false;
   }
 
   program->AttachShader(shader);
-  shader->Release();
   return true;
 }
 
 
-iShader *csGL4ShaderGraphCompiler::Compile(SourceBundle &bundle, const std::string &pathName)
+csOwned<iShader> csGL4ShaderGraphCompiler::Compile(SourceBundle &bundle, const std::string &pathName)
 {
 
   if (bundle.vert.empty() || bundle.frag.empty())
@@ -446,7 +445,7 @@ iShader *csGL4ShaderGraphCompiler::Compile(SourceBundle &bundle, const std::stri
       || !Attach(program, eST_Geometry, bundle.geom, m_parameters.DebugSources, pathName, m_parameters.DebugName)
       || !Attach(program, eST_Fragment, bundle.frag, m_parameters.DebugSources, pathName, m_parameters.DebugName))
   {
-    program->Release();
+    delete program;
     return nullptr;
   }
 
@@ -465,7 +464,7 @@ iShader *csGL4ShaderGraphCompiler::Compile(SourceBundle &bundle, const std::stri
     printf("Unable to link program:\n%s\n", exc.what());
   }
 
-
+  delete program;
   return nullptr;
 }
 
@@ -588,7 +587,7 @@ csGL4ShaderGraphLightData::csGL4ShaderGraphLightData()
 //  {
 //    return;
 //  }
-  DiffuseLightingSpecular =  get_file_content("/shaders/gl4/shadergraph/lighting/specular_" + specularFile + ".glsl");
+  DiffuseLightingSpecular = get_file_content("/shaders/gl4/shadergraph/lighting/specular_" + specularFile + ".glsl");
 
 //  txt = csAssetManager::Get()->Get<csTextFile>("/shaders/gl4/shadergraph/lighting/shadow_map.glsl");
 //  if (!txt)
@@ -673,11 +672,9 @@ void csGL4ShaderGraphCompiler::SetMaterialDefaults(cs::csMaterial *material)
       case eMAT_Int:material->SetInt(idx, ints[0]);
         break;
 
-      case eMAT_Texture:
-      {
-        iTexture *texture = csAssetManager::Get()->Get<iTexture>(resource->GetDefaultLocator());
-        material->SetTexture(idx, texture);
-      }
+      case eMAT_Texture:material->SetTexture(idx,
+                                             csAssetManager::Get()->Get<iTexture>(resource->GetDefaultLocator())
+                                                                  .Data());
         break;
 
       default:break;

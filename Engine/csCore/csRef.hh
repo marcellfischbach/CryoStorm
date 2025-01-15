@@ -23,6 +23,17 @@ public:
     }
   }
 
+
+  template<typename O>
+  csRef(O *o)
+      : m_ptr(static_cast<T*>(o))
+  {
+    if (m_ptr)
+    {
+      reinterpret_cast<const iObject *>(m_ptr)->AddRef();
+    }
+  }
+
   csRef(const csRef &other)
       : m_ptr(nullptr)
   {
@@ -32,43 +43,17 @@ public:
       reinterpret_cast<iObject *>(m_ptr)->AddRef();
     }
   }
-//
-//  csRef(const csRef &other)
-//      : m_ptr(nullptr)
-//  {
-//    m_ptr = other.m_ptr;
-//    if (m_ptr)
-//    {
-//      reinterpret_cast<const iObject *>(m_ptr)->AddRef();
-//    }
-//  }
-//
-//
-//  template<typename O>
-//  csRef(const csRef<O> &other)
-//      : m_ptr(other.raw())
-//  {
-//    if (m_ptr)
-//    {
-//      reinterpret_cast<const iObject *>(m_ptr)->AddRef();
-//    }
-//  }
-//
-//  csRef(csRef &&other) noexcept
-//      : m_ptr(other.m_ptr)
-//  {
-//    other.m_ptr = nullptr;
-//  }
-//
-//
-//  template<typename O>
-//  explicit
-//  csRef(csRef<O> &&other) noexcept
-//      : m_ptr(other.m_ptr)
-//  {
-//    other.m_ptr = nullptr;
-//  }
-//
+
+  template<typename O>
+  csRef(const csRef<O> &other)
+      : m_ptr(nullptr)
+  {
+    m_ptr = static_cast<T*>(other.raw());
+    if (m_ptr)
+    {
+      reinterpret_cast<iObject *>(m_ptr)->AddRef();
+    }
+  }
 
   ~csRef()
   {
@@ -96,33 +81,53 @@ public:
   }
 
 
-//  csRef &operator=(csRef &&ref) noexcept
-//  {
-//    if (this != &ref)
-//    {
-//      m_ptr = ref.raw();
-//      ref.m_ptr = nullptr;
-//    }
-//    return *this;
-//  }
-//
-//  csRef &operator=(const csRef &ref)
-//  {
-//    if (this != &ref)
-//    {
-//      void *t = const_cast<void *>(reinterpret_cast<const void *>(ref.raw()));
-//      if (t)
-//      {
-//        reinterpret_cast<iObject *>(t)->AddRef();
-//      }
-//      if (m_ptr)
-//      {
-//        reinterpret_cast<iObject *>(m_ptr)->Release();
-//      }
-//      m_ptr = reinterpret_cast<T *>(t);
-//    }
-//    return *this;
-//  }
+  template<typename O>
+  csRef &operator=(O *o)
+  {
+    if (o)
+    {
+      o->AddRef();
+    }
+    if (m_ptr)
+    {
+      reinterpret_cast<const iObject *>(m_ptr)->Release();
+    }
+    m_ptr = static_cast<T*>(o);
+    return *this;
+  }
+
+
+  csRef &operator=(const csRef &other)
+  {
+
+    if (other.m_ptr)
+    {
+      reinterpret_cast<const iObject*>(other.m_ptr)->AddRef();
+    }
+    if (m_ptr)
+    {
+      reinterpret_cast<const iObject *>(m_ptr)->Release();
+    }
+    m_ptr = other.m_ptr;
+    return *this;
+  }
+
+
+  template<typename O>
+  csRef &operator=(const csRef<O> &other)
+  {
+    O* o = other.raw();
+    if (o)
+    {
+      reinterpret_cast<const iObject*>(o)->AddRef();
+    }
+    if (m_ptr)
+    {
+      reinterpret_cast<const iObject *>(m_ptr)->Release();
+    }
+    m_ptr = static_cast<T*>(o);
+    return *this;
+  }
 
   T *operator->()
   {
@@ -144,29 +149,11 @@ public:
   {
     return m_ptr != nullptr;
   }
-//
-//  bool operator==(const csRef &ref) const
-//  {
-//    return m_ptr == ref.m_ptr;
-//  }
 
-//  bool operator==(const T *ptr) const
-//  {
-//    return m_ptr == ptr;
-//  }
 
-//  bool operator!=(const T *ptr) const
-//  {
-//    return m_ptr != ptr;
-//  }
-
-  operator T *()
+  CS_FORCEINLINE operator T *() const
   {
-    return m_ptr;
-  }
 
-  operator const T *() const
-  {
     return m_ptr;
   }
 
@@ -174,14 +161,6 @@ public:
   {
     return reinterpret_cast<T *>(m_ptr);
   }
-
-
-//  template<typename O>
-//  operator csRef<O> &()
-//  {
-//    static_cast<O *> (m_ptr);
-//    return *reinterpret_cast<csRef<O> *>(this);
-//  }
 
 
 private:
@@ -195,15 +174,19 @@ class csAssetRef
 {
 public:
 
-  static csAssetRef &Null()
-  {
-    static csAssetRef asset;
-    return asset;
-  }
-
 
   csAssetRef(T *t = nullptr)
       : m_ptr(t)
+  {
+    if (m_ptr)
+    {
+      reinterpret_cast<const iAsset *>(m_ptr)->AddRef();
+    }
+  }
+
+  template<typename O>
+  csAssetRef(O *o)
+      : m_ptr(static_cast<T*>(o))
   {
     if (m_ptr)
     {
@@ -220,41 +203,17 @@ public:
       reinterpret_cast<const iAsset *>(m_ptr)->AddRef();
     }
   }
-//
-//
-//  csAssetRef(const csRef<T> &other)
-//      : m_ptr(other.raw())
-//  {
-//    if (m_ptr)
-//    {
-//      reinterpret_cast<const iAsset *>(m_ptr)->AddRef();
-//    }
-//  }
-//
-//
-//  csAssetRef(csAssetRef &&other) noexcept
-//      : m_ptr(other.m_ptr)
-//  {
-//    other.m_ptr = nullptr;
-//  }
-//
-//  template<typename O>
-//  csAssetRef(const csAssetRef<O> &other)
-//      : m_ptr(other.raw())
-//  {
-//    if (m_ptr)
-//    {
-//      reinterpret_cast<const iAsset *>(m_ptr)->AddRef();
-//    }
-//  }
-//
-//  template<typename O>
-//  csAssetRef(csAssetRef<O> &&other) noexcept
-//      : m_ptr(other.m_ptr)
-//  {
-//    other.m_ptr = nullptr;
-//  }
 
+  template<typename O>
+  csAssetRef(const csAssetRef<O> &other)
+      : m_ptr(nullptr)
+  {
+    m_ptr = static_cast<T*>(other.raw());
+    if (m_ptr)
+    {
+      reinterpret_cast<iAsset *>(m_ptr)->AddRef();
+    }
+  }
 
   ~csAssetRef()
   {
@@ -266,10 +225,6 @@ public:
     }
   }
 
-//  operator csRef<T>()
-//  {
-//    return csRef<T>(m_ptr);
-//  }
 
 
   csAssetRef &operator=(T *t)
@@ -286,35 +241,53 @@ public:
     return *this;
   }
 
+  template<typename O>
+  csAssetRef &operator=(O *o)
+  {
+    if (o)
+    {
+      o->AddRef();
+    }
+    if (m_ptr)
+    {
+      reinterpret_cast<const iAsset *>(m_ptr)->Release();
+    }
+    m_ptr = static_cast<T*>(o);
+    return *this;
+  }
 
-//  csAssetRef &operator=(csAssetRef &&ref) noexcept
-//  {
-//    if (this != &ref)
-//    {
-//      m_ptr = ref.raw();
-//      ref.m_ptr = nullptr;
-//    }
-//    return *this;
-//  }
-//
-//  csAssetRef &operator=(const csAssetRef &ref)
-//  {
-//    if (this != &ref)
-//    {
-//      const void *t = ref.raw();
-//      if (t)
-//      {
-//        reinterpret_cast<const iAsset *>(t)->AddRef();
-//      }
-//      if (m_ptr)
-//      {
-//        reinterpret_cast<const iAsset *>(m_ptr)->Release();
-//      }
-//      m_ptr = reinterpret_cast<T *>(const_cast<void *>(t));
-//    }
-//    return *this;
-//  }
 
+  csAssetRef &operator=(const csAssetRef &other)
+  {
+
+    if (other.m_ptr)
+    {
+      reinterpret_cast<const iAsset*>(other.m_ptr)->AddRef();
+    }
+    if (m_ptr)
+    {
+      reinterpret_cast<const iAsset *>(m_ptr)->Release();
+    }
+    m_ptr = other.m_ptr;
+    return *this;
+  }
+
+
+  template<typename O>
+  csAssetRef &operator=(const csAssetRef<O> &other)
+  {
+    O* o = other.raw();
+    if (o)
+    {
+      reinterpret_cast<const iAsset*>(o)->AddRef();
+    }
+    if (m_ptr)
+    {
+      reinterpret_cast<const iAsset *>(m_ptr)->Release();
+    }
+    m_ptr = static_cast<T*>(o);
+    return *this;
+  }
 
   T *operator->() const
   {
@@ -339,13 +312,9 @@ public:
     return m_ptr != nullptr;
   }
 
-//  bool operator==(const T* t) const
-//  {
-//    return m_ptr == t;
-//  }
-
-  operator T *() const
+  CS_FORCEINLINE operator T *() const
   {
+
     validate();
     return m_ptr;
   }
@@ -357,20 +326,6 @@ public:
     return reinterpret_cast<T *>(m_ptr);
   }
 
-//  template<typename O>
-//  operator csAssetRef<O> &()
-//  {
-//    static_cast<O *> (m_ptr);
-//    return *reinterpret_cast<csAssetRef<O> *>(this);
-//  }
-//
-//  //
-//  // type conversion from 'const csAssetRef<T>&' -> 'csAssetRef<const T>&'. This is safe to do because
-//  // the inner const is much more restrictive than the outer const because the csAs
-//  operator csAssetRef<const T> &() const
-//  {
-//    return *reinterpret_cast<csAssetRef<const T> *>(const_cast<csAssetRef *>(this));
-//  }
 
 private:
 
@@ -390,6 +345,7 @@ private:
       m_ptr = reinterpret_cast<T *>(t);
     }
   }
+
 
   mutable T *m_ptr;
 

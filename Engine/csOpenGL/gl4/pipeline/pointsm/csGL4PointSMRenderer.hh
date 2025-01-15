@@ -5,6 +5,7 @@
 
 #include <csOpenGL/gl4/pipeline/pointsm/csGL4PointSMFilter.hh>
 #include <csCore/graphics/eCubeFace.hh>
+#include <csCore/csOwned.hh>
 #include <csCore/csRef.hh>
 #include <array>
 #include <vector>
@@ -44,7 +45,7 @@ public:
   void SetDepthBuffer(iTexture2D *depthBuffer);
   void SetDevice(csGL4Device *device);
   void SetScene(iGfxScene *scene);
-  csGL4RenderTarget2D *CreateShadowMap();
+  csOwned<csGL4RenderTarget2D> CreateShadowMap();
   void SetShadowMap(csGL4RenderTarget2D *shadowMap);
   csGL4RenderTarget2D *GetShadowMap();
   void RenderShadow(const csGL4PointLight *pointLight, const csCamera &camera, const csProjector &projector);
@@ -74,12 +75,12 @@ private:
   csAssetRef<iTextureCube> m_pointLightShadowBufferColor;
   csAssetRef<iTextureCube> m_pointLightShadowBufferDepth;
 
-  std::array<csGL4RenderTarget2D *, 6> m_pointLightShadowBuffer;
+  std::array<csRef<csGL4RenderTarget2D>, 6> m_pointLightShadowBuffer;
   size_t                               m_pointLightShadowBufferSize = 0;
 
 
-  csGL4RenderTarget2D *m_pointLightShadowMapTemp = nullptr;
-  csGL4RenderTarget2D *m_pointLightShadowMap     = nullptr;
+  csRef<csGL4RenderTarget2D> m_pointLightShadowMapTemp = nullptr;
+  csRef<csGL4RenderTarget2D> m_pointLightShadowMap     = nullptr;
   size_t              m_pointLightShadowMapWidth = 0;
   size_t            m_pointLightShadowMapHeight = 0;
 

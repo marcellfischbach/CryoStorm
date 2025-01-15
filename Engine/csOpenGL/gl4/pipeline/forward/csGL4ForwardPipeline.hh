@@ -93,7 +93,7 @@ protected:
   const csCamera    *m_camera;
   const csProjector *m_projector;
   iGfxScene  * m_scene;
-  iRenderTarget2D * m_target;
+  csRef<iRenderTarget2D> m_target;
 private:
   std::array<const csGfxLight *, MaxLights> m_renderLights = {};
   size_t                                    m_numberOfFixedLights;

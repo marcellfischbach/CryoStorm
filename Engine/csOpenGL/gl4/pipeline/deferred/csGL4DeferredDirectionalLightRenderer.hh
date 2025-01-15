@@ -30,7 +30,7 @@ public:
 
   bool Initialize();
 
-  void SetDevice (iDevice* device);
+  void SetDevice(iDevice *device);
   void SetScene(iGfxScene *scene);
   void ResetShadowBuffer();
 
@@ -46,21 +46,20 @@ private:
   csGL4PSSMShadowBufferObject &GetShadowBuffer();
 
 
-
   csGL4Device *m_device = nullptr;
   iGfxScene   *m_scene  = nullptr;
 
   struct LightRenderShader
   {
     csAssetRef<iShader> m_shader;
-    iShaderAttribute *m_attrDiffuseRoughness       = nullptr;
-    iShaderAttribute *m_attrNormal                 = nullptr;
-    iShaderAttribute *m_attrDepth                  = nullptr;
-    iShaderAttribute *m_attrShadowMap              = nullptr;
-    iShaderAttribute *m_attrLightColor             = nullptr;
-    iShaderAttribute *m_attrLightAmbientColor      = nullptr;
-    iShaderAttribute *m_attrLightNegLightDirection = nullptr;
-    iShaderAttribute *m_attrCameraPosition         = nullptr;
+    iShaderAttribute    *m_attrDiffuseRoughness       = nullptr;
+    iShaderAttribute    *m_attrNormal                 = nullptr;
+    iShaderAttribute    *m_attrDepth                  = nullptr;
+    iShaderAttribute    *m_attrShadowMap              = nullptr;
+    iShaderAttribute    *m_attrLightColor             = nullptr;
+    iShaderAttribute    *m_attrLightAmbientColor      = nullptr;
+    iShaderAttribute    *m_attrLightNegLightDirection = nullptr;
+    iShaderAttribute    *m_attrCameraPosition         = nullptr;
   };
 
   LightRenderShader m_nonShadow;
@@ -68,10 +67,10 @@ private:
 
   csGL4PSSMRenderer m_pssmRenderer;
 
-  csGL4RenderTarget2D                        *m_shadowMap = nullptr;
+  csRef<csGL4RenderTarget2D>                 m_shadowMap  = nullptr;
   csGL4PSSMShadowBufferObject                m_shadowBuffer;
   size_t                                     m_lightIdx   = 0;
-  std::array<csGL4RenderTarget2D *, 4>       m_shadowMaps = {nullptr, nullptr, nullptr, nullptr};
+  std::array<csRef<csGL4RenderTarget2D>, 4>  m_shadowMaps = {nullptr, nullptr, nullptr, nullptr};
   std::array<csGL4PSSMShadowBufferObject, 4> m_shadowBuffers;
 
 };

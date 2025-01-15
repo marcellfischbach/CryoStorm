@@ -4,6 +4,7 @@
 #include <csCore/csClass.hh>
 #include <csCore/resource/csAssetLocator.hh>
 #include <csCore/resource/iAsset.hh>
+#include <csCore/csOwned.hh>
 #include <csCore/csRef.hh>
 #include <exception>
 #include <vector>
@@ -23,7 +24,7 @@ public:
 
   CS_NODISCARD uint32_t GetPriority() const;
 
-  CS_NODISCARD virtual iAsset* Load(const csAssetLocator & locator) const = 0;
+  CS_NODISCARD virtual csOwned<iAsset> Load(const csAssetLocator & locator) const = 0;
   CS_NODISCARD bool CanLoad(const csAssetLocator & locator) const;
 
   CS_NODISCARD const std::vector<std::string>& GetExtensions() const;

@@ -133,7 +133,7 @@ public:                                \
       return m_refCount; \
     } \
     private: \
-      mutable int64_t m_refCount = 1
+      mutable int64_t m_refCount = 0
 
 #define CS_DECLARE_JAVA(fqcn)
 
