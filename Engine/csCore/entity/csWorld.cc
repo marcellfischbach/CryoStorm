@@ -26,12 +26,12 @@ csWorld::csWorld()
 {
 
   SetScene(new csGfxQuadtreeScene());
-  SetPhysicsWorld(csObjectRegistry::Get<iPhysicsSystem>()->CreateWorld());
+  SetPhysicsWorld(csObjectRegistry::Get<iPhysicsSystem>()->CreateWorld().Data());
 }
 
 void csWorld::SetScene(iGfxScene *scene)
 {
-  CS_SET(m_scene, scene);
+  m_scene = scene;
 }
 
 iGfxScene *csWorld::GetScene()
@@ -46,7 +46,7 @@ const iGfxScene *csWorld::GetScene() const
 
 void csWorld::SetPhysicsWorld(iPhysicsWorld *world)
 {
-  CS_SET(m_physicsWorld, world);
+  m_physicsWorld = world;
 }
 
 iPhysicsWorld *csWorld::GetPhysicsWorld()
@@ -62,7 +62,7 @@ const iPhysicsWorld *csWorld::GetPhysicsWorld() const
 
 void csWorld::SetMainCamera(csCameraState *mainCamera)
 {
-  CS_SET(m_mainCamera, mainCamera);
+  m_mainCamera = mainCamera;
 }
 
 csCameraState *csWorld::GetMainCamera()
@@ -77,7 +77,7 @@ const csCameraState *csWorld::GetMainCamera() const
 
 bool csWorld::Attach(csEntity *entity)
 {
-  if (std::ranges::find(m_entities.begin(), m_entities.end(), entity) != m_entities.end()
+  if (std::find(m_entities.begin(), m_entities.end(), entity) != m_entities.end()
       || entity->GetWorld())
   {
     return false;
@@ -85,21 +85,19 @@ bool csWorld::Attach(csEntity *entity)
 
   m_entities.push_back(entity);
   entity->SetWorld(this);
-  entity->AddRef();
   return true;
 }
 
 bool csWorld::Detach(csEntity *entity)
 {
-  auto it = std::ranges::find(m_entities.begin(), m_entities.end(), entity);
+  auto it = std::find(m_entities.begin(), m_entities.end(), entity);
   if (it == m_entities.end() || entity->GetWorld() != this)
   {
     return false;
   }
 
-  m_entities.erase(it);
   entity->SetWorld(nullptr);
-  entity->Release();
+  m_entities.erase(it);
   return true;
 }
 
@@ -110,14 +108,13 @@ bool csWorld::AttachUpdateState(csEntityState *updateState)
     return false;
   }
 
-  auto it = std::ranges::find(m_updateStates.begin(), m_updateStates.end(), updateState);
+  auto it = std::find(m_updateStates.begin(), m_updateStates.end(), updateState);
   if (it != m_updateStates.end())
   {
     return false;
   }
 
   m_updateStates.push_back(updateState);
-  updateState->AddRef();
   return true;
 }
 
@@ -128,14 +125,13 @@ bool csWorld::DetachUpdateState(csEntityState *updateState)
   {
     return false;
   }
-  auto it = std::ranges::find(m_updateStates.begin(), m_updateStates.end(), updateState);
+  auto it = std::find(m_updateStates.begin(), m_updateStates.end(), updateState);
   if (it == m_updateStates.end())
   {
     return false;
   }
 
   m_updateStates.erase(it);
-  updateState->Release();
   return true;
 }
 
@@ -143,7 +139,7 @@ bool csWorld::DetachUpdateState(csEntityState *updateState)
 
 struct ThreadData
 {
-  ::std::vector<csEntityState *> *updateStates;
+  ::std::vector<csRef<csEntityState>> *updateStates;
   ::std::atomic_size_t           counter;
   ::std::atomic_bool inUpdate;
   ::std::atomic_bool active;

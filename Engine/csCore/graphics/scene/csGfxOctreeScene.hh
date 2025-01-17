@@ -1,7 +1,7 @@
 #pragma once
 #include <csCore/csCoreExport.hh>
 #include <csCore/graphics/scene/iGfxScene.hh>
-
+#include <csCore/csRef.hh>
 
 namespace cs
 {
@@ -23,7 +23,7 @@ public:
   void Add(csGfxLight *light) override;
   void Remove(csGfxLight *light) override;
 
-  CS_NODISCARD const std::vector<csGfxCamera *> &GetCameras() const override;
+  CS_NODISCARD const std::vector<csRef<csGfxCamera>> &GetCameras() const override;
 
   void ScanMeshes(const iClipper *clipper, csGfxSceneCollector &collector) const override;
   void ScanMeshes(const iClipper *clipper, uint32_t scanMask, csGfxSceneCollector &collector) const override;
@@ -40,7 +40,7 @@ public:
 
 
 private:
-  std::vector<csGfxCamera*> m_cameras;
+  std::vector<csRef<csGfxCamera>> m_cameras;
 };
 
 

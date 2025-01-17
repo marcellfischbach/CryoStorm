@@ -640,9 +640,9 @@ void generate_physics(cs::csWorld *world, csAssetRef<cs::iMaterial> &material)
   physWorld->AddCollider(floorCollider);
   */
 
-  cs::csEntity              *floorEntity         = new cs::csEntity("Floor");
-  cs::csBoxColliderState    *floorBoxCollider    = new cs::csBoxColliderState();
-  cs::csStaticColliderState *floorStaticCollider = new cs::csStaticColliderState();
+  csRef<cs::csEntity> floorEntity         = new cs::csEntity("Floor");
+  csRef<cs::csBoxColliderState> floorBoxCollider    = new cs::csBoxColliderState();
+  csRef<cs::csStaticColliderState> floorStaticCollider = new cs::csStaticColliderState();
   floorBoxCollider->SetHalfExtends(cs::csVector3f(100.0f, 1.0f, 100.0f));
   floorEntity->AttachState(floorBoxCollider);
   floorEntity->AttachState(floorStaticCollider);

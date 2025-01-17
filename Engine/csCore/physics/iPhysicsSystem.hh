@@ -3,7 +3,7 @@
 
 #include <csCore/csCoreExport.hh>
 #include <csCore/csClass.hh>
-
+#include <csCore/csRef.hh>
 namespace cs
 {
 
@@ -26,17 +26,17 @@ struct CS_CORE_API iPhysicsSystem : public CS_SUPER(iObject)
   ~iPhysicsSystem() override = default;
 
 
-  CS_NODISCARD virtual iPhysicsWorld *CreateWorld() = 0;
+  CS_NODISCARD virtual csOwned<iPhysicsWorld> CreateWorld() = 0;
 
-  CS_NODISCARD virtual iCollisionShape* CreateShape(const SphereShapeDesc & desc) = 0;
-  CS_NODISCARD virtual iCollisionShape* CreateShape(const BoxShapeDesc & desc) = 0;
-  CS_NODISCARD virtual iCollisionShape* CreateShape(const CylinderShapeDesc & desc) = 0;
-  CS_NODISCARD virtual iCollisionShape* CreateShape(const CapsuleShapeDesc & desc) = 0;
+  CS_NODISCARD virtual csOwned<iCollisionShape> CreateShape(const SphereShapeDesc & desc) = 0;
+  CS_NODISCARD virtual csOwned<iCollisionShape> CreateShape(const BoxShapeDesc & desc) = 0;
+  CS_NODISCARD virtual csOwned<iCollisionShape> CreateShape(const CylinderShapeDesc & desc) = 0;
+  CS_NODISCARD virtual csOwned<iCollisionShape> CreateShape(const CapsuleShapeDesc & desc) = 0;
 
 
-  CS_NODISCARD virtual iStaticCollider* CreateStaticCollider() = 0;
-  CS_NODISCARD virtual iDynamicCollider* CreateDynamicCollider() = 0;
-  CS_NODISCARD virtual iTriggerCollider* CreateTriggerCollider() = 0;
+  CS_NODISCARD virtual csOwned<iStaticCollider> CreateStaticCollider() = 0;
+  CS_NODISCARD virtual csOwned<iDynamicCollider> CreateDynamicCollider() = 0;
+  CS_NODISCARD virtual csOwned<iTriggerCollider> CreateTriggerCollider() = 0;
 
 };
 

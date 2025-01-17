@@ -197,17 +197,20 @@ void csSGNodeInput::SetSource(csSGNodeOutput* output)
 
 void csSGNodeOutput::Add(csSGNodeInput* input)
 {
-  m_destinations.insert(input);
-//  printf("%s.%s -> %s.%s\n",
-//    GetNode()->GetName().c_str(),
-//    GetName().c_str(),
-//    input->GetNode()->GetName().c_str(),
-//    input->GetName().c_str());
+  if (std::find(m_destinations.begin(), m_destinations.end(), input) != m_destinations.end())
+  {
+    return;
+  }
+  m_destinations.emplace_back(input);
 }
 
 void csSGNodeOutput::Remove(csSGNodeInput* input)
 {
-  m_destinations.erase(input);
+  auto it = std::find(m_destinations.begin(), m_destinations.end(), input);
+  if (it != m_destinations.end())
+  {
+    m_destinations.erase(it);
+  }
 //  printf("%s.%s -x %s.%s\n",
 //    GetNode()->GetName().c_str(),
 //    GetName().c_str(),

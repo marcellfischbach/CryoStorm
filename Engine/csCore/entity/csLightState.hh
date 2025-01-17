@@ -7,7 +7,7 @@
 #include <csCore/graphics/eLightType.hh>
 #include <csCore/math/csColor4f.hh>
 #include <csCore/math/csVector3f.hh>
-#include <csCore/csOwned.hh>
+#include <csCore/csRef.hh>
 
 
 namespace cs
@@ -74,7 +74,7 @@ private:
   iPointLight* m_pointLight;
   iDirectionalLight* m_directionalLight;
 
-  csGfxLight *m_gfxLight;
+  csRef<csGfxLight> m_gfxLight;
 
   eLightType m_lightType;
 

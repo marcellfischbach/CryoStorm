@@ -121,7 +121,7 @@ private:
   csRef<csEntity> m_parent;
   std::vector<csRef<csEntity>> m_children;
 
-  csWorld *m_world;
+  csRef<csWorld> m_world;
 
 };
 

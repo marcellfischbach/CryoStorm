@@ -4,7 +4,6 @@
 #include <csCore/csClass.hh>
 #include <csCore/resource/csAssetLocator.hh>
 #include <csCore/resource/iAsset.hh>
-#include <csCore/csOwned.hh>
 #include <csCore/csRef.hh>
 #include <exception>
 #include <vector>

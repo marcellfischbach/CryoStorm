@@ -113,7 +113,7 @@ void Cache::Put(const std::string& filename, const std::string& className)
   Data& data = m_fileCache[filename];
   data.touched = true;
   data.filename = filename;
-  auto it = std::ranges::find(data.classes.begin(), data.classes.end(), className);
+  auto it = std::find(data.classes.begin(), data.classes.end(), className);
   if (it == data.classes.end())
   {
     data.classes.push_back(className);

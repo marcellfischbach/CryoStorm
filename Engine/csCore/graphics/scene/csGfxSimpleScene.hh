@@ -36,7 +36,7 @@ public:
   void Add(csGfxLight* light) override;
   void Remove(csGfxLight* light) override;
 
-  CS_NODISCARD const std::vector<csGfxCamera*> &GetCameras() const override;
+  CS_NODISCARD const std::vector<csRef<csGfxCamera>> &GetCameras() const override;
 
 
   void ScanMeshes(const iClipper *clipper, csGfxSceneCollector &collector) const override;
@@ -46,22 +46,22 @@ public:
 
 
 private:
-  static void Add(csGfxLight *light, std::vector<csGfxLight*> &lights);
-  static void Remove(csGfxLight *light, std::vector<csGfxLight*> &lights);
+  static void Add(csGfxLight *light, std::vector<csRef<csGfxLight>> &lights);
+  static void Remove(csGfxLight *light, std::vector<csRef<csGfxLight>> &lights);
 
   void ScanGlobalLights(const std::function<bool(csGfxLight *)> &callback) const;
   void ScanStaticLights(const iClipper* clipper, const std::function<bool(csGfxLight *)> &callback) const;
   void ScanDynamicLights(const iClipper* clipper, const std::function<bool(csGfxLight *)> &callback) const;
 
-  std::vector<csGfxCamera*> m_cameras;
+  std::vector<csRef<csGfxCamera>> m_cameras;
 
-  std::vector<csGfxMesh*> m_dynamicMeshes;
-  std::vector<csGfxMesh*> m_staticMeshes;
-  std::vector<csGfxMesh*> m_unshadedMeshes;
+  std::vector<csRef<csGfxMesh>> m_dynamicMeshes;
+  std::vector<csRef<csGfxMesh>> m_staticMeshes;
+  std::vector<csRef<csGfxMesh>> m_unshadedMeshes;
 
-  std::vector<csGfxLight*> m_globalLights;
-  std::vector<csGfxLight*> m_staticLights;
-  std::vector<csGfxLight*> m_dynamicLights;
+  std::vector<csRef<csGfxLight>> m_globalLights;
+  std::vector<csRef<csGfxLight>> m_staticLights;
+  std::vector<csRef<csGfxLight>> m_dynamicLights;
 };
 
 }

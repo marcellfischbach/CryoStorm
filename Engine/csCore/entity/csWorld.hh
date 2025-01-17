@@ -3,6 +3,7 @@
 
 #include <csCore/csCoreExport.hh>
 #include <csCore/csClass.hh>
+#include <csCore/csRef.hh>
 #include <array>
 #include <thread>
 
@@ -56,16 +57,16 @@ public:
   void Update (float tpf);
 
 private:
-  iGfxScene * m_scene;
-  iPhysicsWorld *m_physicsWorld;
+  csRef<iGfxScene> m_scene;
+  csRef<iPhysicsWorld> m_physicsWorld;
   float m_physicsUpdateCounter;
 
-  csSpatialState *m_rootState;
+  csRef<csSpatialState> m_rootState;
   
-  std::vector<csEntity*>      m_entities;
-  std::vector<csEntityState*> m_updateStates;
+  std::vector<csRef<csEntity>>      m_entities;
+  std::vector<csRef<csEntityState>> m_updateStates;
 
-  csCameraState *m_mainCamera = nullptr;
+  csRef<csCameraState> m_mainCamera = nullptr;
 
   std::array<std::thread, 4> m_threads;
 };

@@ -31,7 +31,6 @@ void csGfxMeshCompound::AddMesh(cs::csGfxMesh *mesh)
   }
   
   m_internalMeshes.emplace_back(mesh);
-  mesh->AddRef();
 }
 
 void csGfxMeshCompound::RemoveMesh(cs::csGfxMesh *mesh)
@@ -41,7 +40,6 @@ void csGfxMeshCompound::RemoveMesh(cs::csGfxMesh *mesh)
     if (*it == mesh)
     {
       m_internalMeshes.erase(it);
-      mesh->Release();
     }
   }
 }

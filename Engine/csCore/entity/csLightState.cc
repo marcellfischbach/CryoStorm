@@ -8,7 +8,7 @@
 #include <csCore/graphics/scene/csGfxLight.hh>
 #include <csCore/graphics/scene/iGfxScene.hh>
 #include <csCore/csObjectRegistry.hh>
-#include <csCore/csOwned.hh>
+#include <csCore/csRef.hh>
 
 namespace cs
 {
@@ -33,8 +33,6 @@ csLightState::csLightState(const std::string& name)
 csLightState::~csLightState() noexcept
 {
   RemoveFromScene(GetWorld());
-  CS_RELEASE(m_light);
-  CS_RELEASE(m_gfxLight);
 }
 
 void csLightState::SetType(eLightType type)
@@ -144,8 +142,6 @@ void csLightState::RemoveFromScene(csWorld* world)
     world->GetScene()->Remove(m_gfxLight);
   }
 
-  CS_RELEASE(m_light);
-  CS_RELEASE(m_gfxLight);
   m_gfxLight = nullptr;
   m_light = nullptr;
   m_pointLight = nullptr;

@@ -17,9 +17,6 @@ csSamplers::csSamplers()
 
 csSamplers::~csSamplers()
 {
-  CS_RELEASE(m_default);
-  CS_RELEASE(m_normalMap);
-  CS_RELEASE(m_uiSprite);
 }
 
 void csSamplers::SetDefault(iSampler* sampler)

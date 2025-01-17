@@ -2,8 +2,9 @@
 #define OBJECTREGISTRY_HH
 
 #include <csCore/csCoreExport.hh>
-#include <map>
 #include <csCore/csClass.hh>
+#include <csCore/csRef.hh>
+#include <map>
 
 namespace cs
 {
@@ -52,7 +53,7 @@ private:
     csObjectRegistry() = default;
 
 private:
-  static std::map<const csClass*, iObject*> m_registry;
+  static std::map<const csClass*, csRef<iObject>> m_registry;
 };
 
 }

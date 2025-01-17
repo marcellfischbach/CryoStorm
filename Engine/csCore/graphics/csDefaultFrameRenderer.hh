@@ -2,6 +2,7 @@
 
 #include <csCore/csCoreExport.hh>
 #include <csCore/csClass.hh>
+#include <csCore/csRef.hh>
 #include <csCore/graphics/iFrameRenderer.hh>
 
 namespace cs
@@ -24,7 +25,7 @@ public:
 private:
   iRenderPipeline *GetRenderPipeline();
 
-  iRenderPipeline *m_renderPipeline;
+  csRef<iRenderPipeline> m_renderPipeline;
 
 };
 

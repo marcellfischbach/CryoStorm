@@ -36,7 +36,6 @@ csCameraState::csCameraState()
 
 csCameraState::~csCameraState()
 {
-  m_gfxCamera->Release();
 }
 
 void csCameraState::SetNear(float near)
@@ -97,7 +96,7 @@ int csCameraState::GetOrder() const
 
 void csCameraState::SetRenderTarget(iRenderTarget2D *renderTarget)
 {
-  CS_SET(m_renderTarget, renderTarget);
+  m_renderTarget = renderTarget;
   UpdateGfxCamera();
 }
 
@@ -108,7 +107,7 @@ iRenderTarget2D* csCameraState::GetRenderTarget()
 
 void csCameraState::SetSkyboxRenderer(cs::iSkyboxRenderer *skyboxRenderer)
 {
-  CS_SET(m_skyboxRenderer, skyboxRenderer);
+  m_skyboxRenderer = skyboxRenderer;
 }
 
 iSkyboxRenderer* csCameraState::GetSkyboxRenderer() const
@@ -184,7 +183,7 @@ bool csCameraState::IsRenderShadows() const
 
 void csCameraState::SetPostProcessing(cs::csPostProcessing *postProcessing)
 {
-  CS_SET(m_postProcessing, postProcessing);
+  m_postProcessing = postProcessing;
   UpdateGfxCamera();
 }
 

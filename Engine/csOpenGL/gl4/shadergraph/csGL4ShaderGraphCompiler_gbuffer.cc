@@ -215,7 +215,7 @@ in vec3 cs_vs_out_WorldTangent;
 
   for (auto node: nodes)
   {
-    if (std::ranges::find(alphaNodes.begin(), alphaNodes.end(), node) != alphaNodes.end())
+    if (std::find(alphaNodes.begin(), alphaNodes.end(), node) != alphaNodes.end())
     {
       // this node is already processed
       continue;

@@ -28,7 +28,7 @@ private:
   iRenderMesh *RenderMesh (iDevice * device);
   iShader* ShaderDeferred(iDevice *device);
   iShader* ShaderForward(iDevice *device);
-  iRenderMesh* m_renderMesh = nullptr;
+  csRef<iRenderMesh> m_renderMesh = nullptr;
 
   csAssetRef<iShader> m_shaderDeferred;
   iShaderAttribute *m_attrDeferredSkybox      = nullptr;

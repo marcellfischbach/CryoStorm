@@ -24,7 +24,7 @@
 #include <csCore/graphics/iTexture2DArray.hh>
 #include <csCore/graphics/iTextureCube.hh>
 #include <csCore/graphics/material/iMaterial.hh>
-#include <csCore/csOwned.hh>
+#include <csCore/csRef.hh>
 #include <array>
 
 namespace cs

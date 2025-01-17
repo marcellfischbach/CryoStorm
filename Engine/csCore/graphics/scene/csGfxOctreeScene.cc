@@ -40,7 +40,7 @@ void csGfxOctreeScene::Remove(csGfxLight *light)
 
 }
 
-const std::vector<csGfxCamera *> &csGfxOctreeScene::GetCameras() const
+const std::vector<csRef<csGfxCamera>> &csGfxOctreeScene::GetCameras() const
 {
   return m_cameras;
 }

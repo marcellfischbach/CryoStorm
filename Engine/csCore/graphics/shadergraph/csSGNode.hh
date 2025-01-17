@@ -2,11 +2,11 @@
 
 #include <csCore/csCoreExport.hh>
 #include <csCore/csClass.hh>
+#include <csCore/csRef.hh>
 #include <csCore/graphics/shadergraph/eSGValueType.hh>
 #include <csCore/math/csVector.hh>
 #include <utility>
 #include <string>
-#include <set>
 #include <vector>
 
 namespace cs
@@ -57,7 +57,7 @@ protected:
 
 private:
 
-  csSGNode* m_node;
+  csRef<csSGNode> m_node;
   std::string m_name;
   eSGValueType m_types = eSGValueType::Invalid;
 
@@ -79,7 +79,7 @@ public:
 
   void Add(csSGNodeInput* input);
   void Remove(csSGNodeInput* input);
-  CS_NODISCARD const std::set<csSGNodeInput*>& GetInputs() const
+  CS_NODISCARD const std::vector<csRef<csSGNodeInput>>& GetInputs() const
   {
     return m_destinations;
   }
@@ -96,7 +96,7 @@ protected:
 
 private:
   eSGValueType              m_valueType = eSGValueType::Invalid;
-  std::set<csSGNodeInput*> m_destinations;
+  std::vector<csRef<csSGNodeInput>> m_destinations;
 };
 
 CS_CLASS()
@@ -141,7 +141,7 @@ public:
   eSGValueType GetInputValueType() const;
 
 private:
-  csSGNodeOutput* m_source = nullptr;
+  csRef<csSGNodeOutput> m_source = nullptr;
   float m_scalar;
 
   eModifiable m_modifiable;
@@ -190,8 +190,8 @@ private:
   std::string m_name;
   std::string m_key;
 
-  std::vector<csSGNodeInput*>  m_inputs;
-  std::vector<csSGNodeOutput*> m_outputs;
+  std::vector<csRef<csSGNodeInput>>  m_inputs;
+  std::vector<csRef<csSGNodeOutput>> m_outputs;
 
   csVector2f m_position;
 };

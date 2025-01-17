@@ -42,7 +42,7 @@ void csEntity::SetWorld(csWorld *world)
         state->DetachFromWorld(m_world);
       }
     }
-    CS_SET(m_world, world);
+    m_world = world;
     if (m_world)
     {
       for (auto state: m_states)

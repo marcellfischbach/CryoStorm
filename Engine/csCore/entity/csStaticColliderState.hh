@@ -31,8 +31,8 @@ private:
   void AcquireEmptyStaticCollider(iPhysicsSystem* physicsSystem);
   void DetachCurrentShapes();
 
-  iStaticCollider* m_collider;
-  std::vector<iCollisionShape*> m_shapes;
+  csRef<iStaticCollider> m_collider;
+  std::vector<csRef<iCollisionShape>> m_shapes;
 };
 
 } // ce

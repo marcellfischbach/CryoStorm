@@ -23,6 +23,8 @@ csSDLWindow::~csSDLWindow()
   {
     SDL_GL_DeleteContext(m_glContext);
     SDL_DestroyWindow(m_window);
+    printf ("delete window\n");
+    fflush(stdout);
   }
 }
 

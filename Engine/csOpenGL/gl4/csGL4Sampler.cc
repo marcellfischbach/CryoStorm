@@ -11,19 +11,18 @@ namespace cs::opengl
 {
 
 csGL4Sampler::csGL4Sampler()
-  : iSampler()
-  , m_name(0)
-  , m_filterMode(eFM_MinMagNearest)
-  , m_anisotropy(1)
-  , m_minLOD(-1000)
-  , m_maxLOD(1000)
-  , m_addressU(eTAM_Repeat)
-  , m_addressV(eTAM_Repeat)
-  , m_addressW(eTAM_Repeat)
-  , m_borderColor(0, 0, 0, 0)
-  , m_textureCompareMode(eTCM_None)
-  , m_textureCompareFunc(eCF_Always)
-
+    : iSampler()
+    , m_name(0)
+    , m_filterMode(eFM_MinMagNearest)
+    , m_anisotropy(1)
+    , m_minLOD(-1000)
+    , m_maxLOD(1000)
+    , m_addressU(eTAM_Repeat)
+    , m_addressV(eTAM_Repeat)
+    , m_addressW(eTAM_Repeat)
+    , m_borderColor(0, 0, 0, 0)
+    , m_textureCompareMode(eTCM_None)
+    , m_textureCompareFunc(eCF_Always)
 {
 
   CS_GL_ERROR();
@@ -36,7 +35,7 @@ csGL4Sampler::csGL4Sampler()
   glSamplerParameteri(m_name, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glSamplerParameteri(m_name, GL_TEXTURE_WRAP_T, GL_REPEAT);
   glSamplerParameteri(m_name, GL_TEXTURE_WRAP_R, GL_REPEAT);
-  float borderColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+  float borderColor[4] = {0.0f, 0.0f, 0.0f, 0.0f};
   glSamplerParameterfv(m_name, GL_TEXTURE_BORDER_COLOR, borderColor);
   glSamplerParameteri(m_name, GL_TEXTURE_COMPARE_MODE, GL_NONE);
   glSamplerParameteri(m_name, GL_TEXTURE_COMPARE_FUNC, GL_ALWAYS);
@@ -46,9 +45,12 @@ csGL4Sampler::csGL4Sampler()
 
 csGL4Sampler::~csGL4Sampler()
 {
-  CS_GL_ERROR();
+//  CS_GL_ERROR();
   glDeleteSamplers(1, &m_name);
-  CS_GL_ERROR();
+  {
+    GLenum error = glGetError();
+    csGLErrorCallError(error, __FILE__, __LINE__);
+  }
   m_name = 0;
 }
 
@@ -76,56 +78,47 @@ void csGL4Sampler::SetFilterMode(eFilterMode filterMode)
     CS_GL_ERROR();
     switch (m_filterMode)
     {
-    case eFM_MinMagNearest:
-      glSamplerParameteri(m_name, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-      glSamplerParameteri(m_name, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-      break;
-    case eFM_MinNearestMagLinear:
-      glSamplerParameteri(m_name, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-      glSamplerParameteri(m_name, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-      break;
-    case eFM_MinLinearMagNearest:
-      glSamplerParameteri(m_name, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-      glSamplerParameteri(m_name, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-      break;
-    case eFM_MinMagLinear:
-      glSamplerParameteri(m_name, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-      glSamplerParameteri(m_name, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-      break;
-    case eFM_MinMagMipNearest:
-      glSamplerParameteri(m_name, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-      glSamplerParameteri(m_name, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-      break;
-    case eFM_MinMagNearestMipLinear:
-      glSamplerParameteri(m_name, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
-      glSamplerParameteri(m_name, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-      break;
-    case eFM_MinNearestMagLinearMipNearest:
-      glSamplerParameteri(m_name, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-      glSamplerParameteri(m_name, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-      break;
-    case eFM_MinNearestMagMipLinear:
-      glSamplerParameteri(m_name, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
-      glSamplerParameteri(m_name, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-      SetAnisotropy(1);
-      break;
-    case eFM_MinLinearMagMipNearest:
-      glSamplerParameteri(m_name, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-      glSamplerParameteri(m_name, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-      break;
-    case eFM_MinLinearMagNearestMipLinear:
-      glSamplerParameteri(m_name, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-      glSamplerParameteri(m_name, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-      break;
-    case eFM_MinMagLinearMipNearest:
-      glSamplerParameteri(m_name, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-      glSamplerParameteri(m_name, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-      break;
-    case eFM_MinMagMipLinear:
-    case eFM_Anisotropic:
-      glSamplerParameteri(m_name, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-      glSamplerParameteri(m_name, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-      break;
+      case eFM_MinMagNearest:glSamplerParameteri(m_name, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glSamplerParameteri(m_name, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        break;
+      case eFM_MinNearestMagLinear:glSamplerParameteri(m_name, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glSamplerParameteri(m_name, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        break;
+      case eFM_MinLinearMagNearest:glSamplerParameteri(m_name, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glSamplerParameteri(m_name, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        break;
+      case eFM_MinMagLinear:glSamplerParameteri(m_name, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glSamplerParameteri(m_name, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        break;
+      case eFM_MinMagMipNearest:glSamplerParameteri(m_name, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+        glSamplerParameteri(m_name, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        break;
+      case eFM_MinMagNearestMipLinear:glSamplerParameteri(m_name, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+        glSamplerParameteri(m_name, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        break;
+      case eFM_MinNearestMagLinearMipNearest:
+        glSamplerParameteri(m_name,
+                            GL_TEXTURE_MIN_FILTER,
+                            GL_NEAREST_MIPMAP_NEAREST);
+        glSamplerParameteri(m_name, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        break;
+      case eFM_MinNearestMagMipLinear:glSamplerParameteri(m_name, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+        glSamplerParameteri(m_name, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        SetAnisotropy(1);
+        break;
+      case eFM_MinLinearMagMipNearest:glSamplerParameteri(m_name, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+        glSamplerParameteri(m_name, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        break;
+      case eFM_MinLinearMagNearestMipLinear:glSamplerParameteri(m_name, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glSamplerParameteri(m_name, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        break;
+      case eFM_MinMagLinearMipNearest:glSamplerParameteri(m_name, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+        glSamplerParameteri(m_name, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        break;
+      case eFM_MinMagMipLinear:
+      case eFM_Anisotropic:glSamplerParameteri(m_name, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glSamplerParameteri(m_name, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        break;
     }
     CS_GL_ERROR();
   }
@@ -190,10 +183,10 @@ static uint32_t Address(eTextureAddressMode tam)
 {
   switch (tam)
   {
-  case eTAM_Repeat: return GL_REPEAT;
-  case eTAM_Clamp: return GL_CLAMP_TO_EDGE;
-  case eTAM_Mirror: return GL_MIRRORED_REPEAT;
-  case eTAM_MirrorOnce: return GL_MIRROR_CLAMP_TO_EDGE;
+    case eTAM_Repeat: return GL_REPEAT;
+    case eTAM_Clamp: return GL_CLAMP_TO_EDGE;
+    case eTAM_Mirror: return GL_MIRRORED_REPEAT;
+    case eTAM_MirrorOnce: return GL_MIRROR_CLAMP_TO_EDGE;
   }
   return GL_REPEAT;
 }
@@ -247,7 +240,7 @@ eTextureAddressMode csGL4Sampler::GetAddressW() const
   return m_addressW;
 }
 
-void csGL4Sampler::SetBorderColor(const csColor4f& borderColor)
+void csGL4Sampler::SetBorderColor(const csColor4f &borderColor)
 {
   if (m_borderColor != borderColor)
   {
@@ -259,7 +252,7 @@ void csGL4Sampler::SetBorderColor(const csColor4f& borderColor)
   }
 }
 
-const csColor4f& csGL4Sampler::GetBorderColor() const
+const csColor4f &csGL4Sampler::GetBorderColor() const
 {
   return m_borderColor;
 }
@@ -301,21 +294,19 @@ bool csGL4Sampler::NeedsMipMaps() const
 {
   switch (m_filterMode)
   {
-  case eFM_MinMagNearest:
-  case eFM_MinNearestMagLinear:
-  case eFM_MinLinearMagNearest:
-  case eFM_MinMagLinear:
-    return false;
-  case eFM_MinMagMipNearest:
-  case eFM_MinMagNearestMipLinear:
-  case eFM_MinNearestMagLinearMipNearest:
-  case eFM_MinNearestMagMipLinear:
-  case eFM_MinLinearMagMipNearest:
-  case eFM_MinLinearMagNearestMipLinear:
-  case eFM_MinMagLinearMipNearest:
-  case eFM_MinMagMipLinear:
-  case eFM_Anisotropic:
-    return true;
+    case eFM_MinMagNearest:
+    case eFM_MinNearestMagLinear:
+    case eFM_MinLinearMagNearest:
+    case eFM_MinMagLinear:return false;
+    case eFM_MinMagMipNearest:
+    case eFM_MinMagNearestMipLinear:
+    case eFM_MinNearestMagLinearMipNearest:
+    case eFM_MinNearestMagMipLinear:
+    case eFM_MinLinearMagMipNearest:
+    case eFM_MinLinearMagNearestMipLinear:
+    case eFM_MinMagLinearMipNearest:
+    case eFM_MinMagMipLinear:
+    case eFM_Anisotropic:return true;
   }
   return false;
 }

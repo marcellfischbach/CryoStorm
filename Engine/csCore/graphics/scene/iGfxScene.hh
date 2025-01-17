@@ -3,6 +3,7 @@
 #include <csCore/csCoreExport.hh>
 #include <csCore/csClass.hh>
 #include <csCore/csDefs.hh>
+#include <csCore/csRef.hh>
 #include <functional>
 
 namespace cs
@@ -44,7 +45,7 @@ CS_CLASS_GEN;
 
   virtual void Remove(csGfxLight *light) = 0;
 
-  CS_NODISCARD virtual const std::vector<csGfxCamera *> &GetCameras() const = 0;
+  CS_NODISCARD virtual const std::vector<csRef<csGfxCamera>> &GetCameras() const = 0;
 
   virtual void Optimize () {}
 

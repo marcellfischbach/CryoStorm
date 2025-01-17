@@ -352,22 +352,22 @@ size_t csGL4DeferredPipeline::AssignLights(
   {
     if (s < sn && d < dn)
     {
-      if (static_lights[s].Influence >= dynamic_lights[d].Influence)
+      if (static_lights[s].influence >= dynamic_lights[d].influence)
       {
-        lights[offset] = static_lights[s++].Light;
+        lights[offset] = static_lights[s++].light;
       }
       else
       {
-        lights[offset] = dynamic_lights[d++].Light;
+        lights[offset] = dynamic_lights[d++].light;
       }
     }
     else if (s < sn)
     {
-      lights[offset] = static_lights[s++].Light;
+      lights[offset] = static_lights[s++].light;
     }
     else if (d < dn)
     {
-      lights[offset] = dynamic_lights[d++].Light;
+      lights[offset] = dynamic_lights[d++].light;
     }
     else
     {
@@ -389,7 +389,7 @@ void csGL4DeferredPipeline::AppendLights(csGfxMesh *mesh, const std::vector<csGf
   auto      meshLights = CalcMeshLightInfluences(mesh, lights, false);
   for (auto &meshLight: meshLights)
   {
-    mesh->AddLight(meshLight.Light, meshLight.Influence);
+    mesh->AddLight(meshLight.light, meshLight.influence);
   }
   mesh->SortAndLimitLights(MaxLights);
 }
@@ -447,17 +447,14 @@ std::vector<csGfxMesh::Light> csGL4DeferredPipeline::CalcMeshLightInfluences(con
     {
       continue;
     }
-    csGfxMesh::Light l {};
-    l.Light     = light;
-    l.Influence = influence;
-    influences.push_back(l);
+    influences.emplace_back(light, influence);
   }
 
   if (sorted)
   {
     std::sort(influences.begin(),
               influences.end(),
-              [](csGfxMesh::Light &l0, csGfxMesh::Light &l1) { return l0.Influence > l1.Influence; }
+              [](csGfxMesh::Light &l0, csGfxMesh::Light &l1) { return l0.influence > l1.influence; }
     );
   }
 

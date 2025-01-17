@@ -68,7 +68,7 @@ bool csOpenGLModule::Initialize(const std::vector<std::string> &args, csEngine *
   bool initialized = gl4Graphics->Initialize();
   if (initialized) 
   {
-    auto samplers = new csSamplers();
+    csRef<csSamplers> samplers = new csSamplers();
     samplers->Load();
 
     csObjectRegistry::Register<csSamplers>(samplers);

@@ -56,7 +56,7 @@ csSphereColliderState::~csSphereColliderState()
 
 
 
-iCollisionShape* csSphereColliderState::CreateShape(iPhysicsSystem* physSystem) const
+csOwned<iCollisionShape> csSphereColliderState::CreateShape(iPhysicsSystem* physSystem) const
 {
   SphereShapeDesc desc = {};
   desc.Radius = m_radius;
@@ -99,7 +99,7 @@ csBoxColliderState::~csBoxColliderState()
 
 
 
-iCollisionShape* csBoxColliderState::CreateShape(iPhysicsSystem* physSystem) const
+csOwned<iCollisionShape> csBoxColliderState::CreateShape(iPhysicsSystem* physSystem) const
 {
   BoxShapeDesc desc = {};
   desc.HalfExtents = m_halfExtends;

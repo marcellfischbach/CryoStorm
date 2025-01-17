@@ -133,14 +133,14 @@ private:
   bool m_receiveShadow = true;
   bool m_castShadow = true;
 
-  iTerrainMesh *m_terrainMesh = nullptr;
-  csGfxMesh *m_gfxMesh = nullptr;
+  csRef<iTerrainMesh> m_terrainMesh = nullptr;
+  csRef<csGfxMesh> m_gfxMesh = nullptr;
   csAssetRef <iMaterial> m_material;
 
   csAssetRef <csTerrainLayerMask> m_layerMask;
   std::vector<csAssetRef<csTerrainLayer>> m_layers;
 
-  csSpatialState *m_reference = nullptr;
+  csRef<csSpatialState> m_reference = nullptr;
 };
 
 } // ce

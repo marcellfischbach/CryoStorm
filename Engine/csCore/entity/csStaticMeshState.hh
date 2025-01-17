@@ -57,7 +57,7 @@ protected:
 private:
   struct GfxMeshData
   {
-    csGfxMesh* gfxMesh;
+    csRef<csGfxMesh> gfxMesh;
     size_t materialSlot;
   };
 

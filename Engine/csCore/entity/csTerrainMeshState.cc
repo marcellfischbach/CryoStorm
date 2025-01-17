@@ -103,21 +103,17 @@ csTerrainMeshState::csTerrainMeshState()
 
 csTerrainMeshState::~csTerrainMeshState()
 {
-  CS_RELEASE(m_terrainMesh);
-  CS_RELEASE(m_gfxMesh);
-//  CS_RELEASE(m_material);
 }
 
 void csTerrainMeshState::SetTerrainMesh(iTerrainMesh* terrainMesh)
 {
-  CS_SET(m_terrainMesh, terrainMesh);
 
   csWorld * world = GetWorld();
   if (m_terrainMesh && world)
   {
     RemoveMeshFromScene(world);
   }
-  CS_SET(m_terrainMesh, terrainMesh);
+  m_terrainMesh =terrainMesh;
   if (m_terrainMesh && world)
   {
     AddMeshToScene(world);
@@ -136,7 +132,7 @@ const iTerrainMesh* csTerrainMeshState::GetTerrainMesh() const
 
 void csTerrainMeshState::SetLayerMask(csTerrainLayerMask* mask)
 {
-  CS_SET(m_layerMask, mask);
+  m_layerMask = mask;
   UpdateMaterial();
 }
 
@@ -148,7 +144,6 @@ void csTerrainMeshState::AddLayer(csTerrainLayer* layer)
     return;
   }
 
-  CS_ADDREF(layer);
   m_layers.emplace_back(layer);
 
   UpdateMaterial();
@@ -184,7 +179,7 @@ bool csTerrainMeshState::IsReceiveShadow() const
 
 void csTerrainMeshState::SetReference(csSpatialState* reference)
 {
-  CS_SET(m_reference, reference);
+  m_reference = reference;
 }
 
 csSpatialState *csTerrainMeshState::GetReference()
@@ -259,7 +254,7 @@ void csTerrainMeshState::RemoveMeshFromScene(csWorld* world)
   {
     iGfxScene * scene = world->GetScene();
     scene->Remove(m_gfxMesh);
-    m_gfxMesh->Release();
+    m_gfxMesh = nullptr;
   }
 }
 
@@ -286,7 +281,6 @@ void csTerrainMeshState::UpdateMaterial()
     }
   }
 
-  fflush(stdout);
   m_material->SetTexture(m_material->IndexOf("Layer"), m_layerMask->GetLayerTexture());
 
   for (size_t i=0; i<4; i++)

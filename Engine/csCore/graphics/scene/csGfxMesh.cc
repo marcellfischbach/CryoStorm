@@ -10,6 +10,13 @@
 namespace cs
 {
 
+csGfxMesh::Light::Light(cs::csGfxLight *light, float influence)
+: light(light)
+, influence(influence)
+{
+
+}
+
 csGfxMesh::csGfxMesh()
   : iObject()
   , m_skeleton(nullptr)
@@ -33,7 +40,7 @@ void csGfxMesh::Render(iDevice* device, eRenderPass pass)
       Size i = 0;
       for (Light &light : m_lights)
       {
-        device->BindForwardLight(light.Light->GetLight(), i++);
+        device->BindForwardLight(light.light->GetLight(), i++);
       }
       device->FinishForwardLights(i);
     }
@@ -181,10 +188,6 @@ const csMatrix4f& csGfxMesh::GetModelMatrix()  const
 
 void csGfxMesh::ClearLights()
 {
-  for (Light& light : m_lights)
-  {
-    light.Light->Release();
-  }
   m_lights.clear();
 }
 
@@ -196,12 +199,7 @@ void csGfxMesh::AddLight(csGfxLight* light, float influence)
     {
       return;
     }
-    Light lght = {};
-    lght.Light = light;
-    lght.Influence = influence;
-
-    light->AddRef();
-    m_lights.push_back(lght);
+    m_lights.emplace_back(light, influence);
   }
 }
 
@@ -216,14 +214,13 @@ void csGfxMesh::RemoveLight(csGfxLight* light)
     }
 
     m_lights.erase(it);
-    light->Release();
     m_lightingDirty = true;
   }
 }
 
 void csGfxMesh::SortAndLimitLights(Size size)
 {
-  std::sort(m_lights.begin(), m_lights.end(), [](Light& l0, Light& l1) { return l0.Influence > l1.Influence; });
+  std::sort(m_lights.begin(), m_lights.end(), [](Light& l0, Light& l1) { return l0.influence > l1.influence; });
   if (m_lights.size() > 4)
   {
     m_lights.resize(size);
@@ -267,7 +264,7 @@ bool csGfxMesh::IsLightingDirty() const
 
 void csGfxMesh::SetSkeleton(cs::csSkeleton *skeleton)
 {
-  CS_SET(m_skeleton, skeleton);
+  m_skeleton = skeleton;
 }
 
 csSkeleton* csGfxMesh::GetSkeleton()

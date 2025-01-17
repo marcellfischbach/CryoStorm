@@ -38,7 +38,7 @@ csSGNode *csShaderGraph::Add(const cs::csClass *nodeClass, const std::string &ke
     return nullptr;
   }
 
-  iObject *obj = nodeClass->CreateInstance();
+  csRef<iObject> obj = nodeClass->CreateInstance();
   if (!obj)
   {
     return nullptr;
@@ -47,11 +47,10 @@ csSGNode *csShaderGraph::Add(const cs::csClass *nodeClass, const std::string &ke
   auto node = obj->Query<csSGNode>();
   if (!node)
   {
-    obj->Release();
     return nullptr;
   }
   node->SetKey(key);
-  m_nodes.push_back(node);
+  m_nodes.emplace_back(node);
   return node;
 
 }
@@ -64,7 +63,7 @@ csSGResourceNode *csShaderGraph::AddResource(const cs::csClass *nodeClass,
   {
     return nullptr;
   }
-  iObject *obj = nodeClass->CreateInstance();
+  csRef<iObject> obj = nodeClass->CreateInstance();
   if (!obj)
   {
     return nullptr;
@@ -73,12 +72,11 @@ csSGResourceNode *csShaderGraph::AddResource(const cs::csClass *nodeClass,
   auto node = obj->Query<csSGResourceNode>();
   if (!node)
   {
-    obj->Release();
     return nullptr;
   }
   node->SetKey(key);
   node->SetResourceName(resourceName);
-  m_nodes.push_back(node);
+  m_nodes.emplace_back(node);
   return node;
 }
 
@@ -90,7 +88,6 @@ bool csShaderGraph::Remove(cs::csSGNode *node)
     return false;
   }
 
-  m_nodes.erase(it);
 
 
   for (int i = 0; i < node->GetNumberOfInputs(); ++i)
@@ -108,7 +105,7 @@ bool csShaderGraph::Remove(cs::csSGNode *node)
     csSGNodeOutput *pOutput = node->GetOutput(i);
     if (pOutput)
     {
-      for (auto outInput: std::set<csSGNodeInput *>(pOutput->GetInputs()))
+      for (const auto &outInput: std::vector<csRef<csSGNodeInput>>(pOutput->GetInputs()))
       {
         outInput->SetSource(nullptr);
         pOutput->Remove(outInput);
@@ -116,7 +113,7 @@ bool csShaderGraph::Remove(cs::csSGNode *node)
     }
   }
 
-  node->Release();
+  m_nodes.erase(it);
   return true;
 }
 
@@ -201,7 +198,7 @@ const csSGNode *csShaderGraph::GetNode(size_t idx) const
 
 csSGNode *csShaderGraph::GetNode(const std::string &key)
 {
-  for (auto node: m_nodes)
+  for (auto &node: m_nodes)
   {
     if (node->GetKey() == key)
     {
@@ -214,7 +211,7 @@ csSGNode *csShaderGraph::GetNode(const std::string &key)
 
 const csSGNode *csShaderGraph::GetNode(const std::string &key) const
 {
-  for (const auto node: m_nodes)
+  for (const auto &node: m_nodes)
   {
     if (node->GetKey() == key)
     {

@@ -3,7 +3,6 @@
 #include <csOpenGL/gl4/pipeline/pssm/csGL4PSSMFilter.hh>
 #include <csCore/graphics/scene/csGfxSceneCollector.hh>
 #include <csCore/math/csMatrix4f.hh>
-#include <csCore/csOwned.hh>
 #include <csCore/csRef.hh>
 
 #include <array>

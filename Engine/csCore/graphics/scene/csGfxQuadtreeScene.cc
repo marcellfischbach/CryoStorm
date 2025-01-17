@@ -27,7 +27,7 @@ static const bool OPTIMIZE = false;
 struct MaterialCompound
 {
   csAssetRef<iMaterial> material;
-  csGfxMeshCompound     *mesh;
+  csRef<csGfxMeshCompound> mesh;
 };
 
 struct csGfxQuadtreeScene::Cell
@@ -37,11 +37,11 @@ struct csGfxQuadtreeScene::Cell
 
   bool m_dirty;
 
-  std::vector<csGfxMesh *> m_shaded;
-  std::vector<csGfxMesh *> m_unshaded;
+  std::vector<csRef<csGfxMesh>> m_shaded;
+  std::vector<csRef<csGfxMesh>> m_unshaded;
 
-  std::vector<csGfxMesh *> m_pendingShaded;
-  std::vector<csGfxMesh *> m_pendingUnshaded;
+  std::vector<csRef<csGfxMesh>> m_pendingShaded;
+  std::vector<csRef<csGfxMesh>> m_pendingUnshaded;
 
   std::vector<MaterialCompound> m_shadedCompound;
   std::vector<MaterialCompound> m_unshadedCompound;
@@ -87,20 +87,18 @@ csGfxQuadtreeScene::csGfxQuadtreeScene()
 
 void csGfxQuadtreeScene::Add(csGfxCamera *camera)
 {
-  if (std::ranges::find(m_cameras, camera) == m_cameras.end())
+  if (std::find(m_cameras.begin(), m_cameras.end(), camera) == m_cameras.end())
   {
     m_cameras.emplace_back(camera);
-    camera->AddRef();
   }
 }
 
 void csGfxQuadtreeScene::Remove(csGfxCamera *camera)
 {
-  auto it = std::ranges::find(m_cameras, camera);
+  auto it = std::find(m_cameras.begin(), m_cameras.end(), camera);
   if (it != m_cameras.end())
   {
     m_cameras.erase(it);
-    camera->Release();
   }
 }
 
@@ -117,25 +115,22 @@ void csGfxQuadtreeScene::Add(csGfxMesh *mesh)
   }
   else if (mesh->GetMaterial()->GetShadingMode() == eShadingMode::Unshaded)
   {
-    if (std::ranges::find(m_unshadedMeshes, mesh) != m_unshadedMeshes.end())
+    if (std::find(m_unshadedMeshes.begin(), m_unshadedMeshes.end(), mesh) != m_unshadedMeshes.end())
     {
       return;
     }
     m_unshadedMeshes.emplace_back(mesh);
-    mesh->AddRef();
   }
   else
   {
-    if (std::ranges::find(m_shadedMeshes, mesh) != m_shadedMeshes.end())
+    if (std::find(m_shadedMeshes.begin(), m_shadedMeshes.end(), mesh) != m_shadedMeshes.end())
     {
       return;
     }
     m_shadedMeshes.emplace_back(mesh);
-    mesh->AddRef();
   }
 
 
-  mesh->AddRef();
   mesh->ClearLights();
   mesh->SetLightingDirty(true);
 
@@ -149,18 +144,16 @@ void csGfxQuadtreeScene::Remove(csGfxMesh *mesh)
     m_root->Remove(mesh);
   }
 
-  auto it = std::ranges::find(m_shadedMeshes, mesh);
+  auto it = std::find(m_shadedMeshes.begin(), m_shadedMeshes.end(), mesh);
   if (it != m_shadedMeshes.end())
   {
     m_shadedMeshes.erase(it);
-    mesh->Release();
   }
 
-  it = std::ranges::find(m_unshadedMeshes, mesh);
+  it = std::find(m_unshadedMeshes.begin(), m_unshadedMeshes.end(), mesh);
   if (it != m_unshadedMeshes.end())
   {
     m_unshadedMeshes.erase(it);
-    mesh->Release();
   }
 
 }
@@ -184,16 +177,13 @@ void csGfxQuadtreeScene::Add(csGfxLight *light)
   }
 }
 
-void csGfxQuadtreeScene::Add(csGfxLight *light, std::vector<csGfxLight *> &lights)
+void csGfxQuadtreeScene::Add(csGfxLight *light, std::vector<csRef<csGfxLight>> &lights)
 {
-  if (std::ranges::find(lights.begin(), lights.end(), light) != lights.end())
+  if (std::find(lights.begin(), lights.end(), light) != lights.end())
   {
     return;
   }
-  light->AddRef();
-  lights.push_back(light);
-
-
+  lights.emplace_back(light);
 }
 
 
@@ -219,20 +209,19 @@ void csGfxQuadtreeScene::Remove(csGfxLight *light)
 }
 
 
-void csGfxQuadtreeScene::Remove(csGfxLight *light, std::vector<csGfxLight *> &lights)
+void csGfxQuadtreeScene::Remove(csGfxLight *light, std::vector<csRef<csGfxLight>> &lights)
 {
-  auto it = std::ranges::find(lights.begin(), lights.end(), light);
+  auto it = std::find(lights.begin(), lights.end(), light);
   if (it == lights.end())
   {
     return;
   }
 
   lights.erase(it);
-  light->Release();
 }
 
 
-const std::vector<csGfxCamera *> &csGfxQuadtreeScene::GetCameras() const
+const std::vector<csRef<csGfxCamera>> &csGfxQuadtreeScene::GetCameras() const
 {
   return m_cameras;
 }
@@ -249,7 +238,7 @@ void csGfxQuadtreeScene::ScanMeshes(const iClipper *clipper,
 {
   if (scanMask & eSM_Dynamic)
   {
-    for (auto mesh: m_shadedMeshes)
+    for (const auto &mesh: m_shadedMeshes)
     {
       if (!clipper || clipper->Test(mesh->GetBoundingBox()) != eClippingResult::eCR_Outside)
       {
@@ -259,7 +248,7 @@ void csGfxQuadtreeScene::ScanMeshes(const iClipper *clipper,
   }
   if (scanMask & eSM_Unshaded)
   {
-    for (auto mesh: m_unshadedMeshes)
+    for (const auto &mesh: m_unshadedMeshes)
     {
       if (!clipper || clipper->Test(mesh->GetBoundingBox()) != eClippingResult::eCR_Outside)
       {
@@ -277,7 +266,7 @@ void csGfxQuadtreeScene::ScanMeshes(const iClipper *clipper,
 
 void csGfxQuadtreeScene::ScanMeshes(const iClipper *clipper, csGfxSceneCollector &collector) const
 {
-  for (auto mesh: m_shadedMeshes)
+  for (const auto &mesh: m_shadedMeshes)
   {
     if (!clipper || clipper->Test(mesh->GetBoundingBox()) != eClippingResult::eCR_Outside)
     {
@@ -285,7 +274,7 @@ void csGfxQuadtreeScene::ScanMeshes(const iClipper *clipper, csGfxSceneCollector
     }
   }
 
-  for (auto mesh: m_unshadedMeshes)
+  for (const auto &mesh: m_unshadedMeshes)
   {
     if (!clipper || clipper->Test(mesh->GetBoundingBox()) != eClippingResult::eCR_Outside)
     {
@@ -299,7 +288,7 @@ void csGfxQuadtreeScene::ScanMeshes(const iClipper *clipper, uint32_t scanMask, 
 {
   if (scanMask & eSM_Dynamic)
   {
-    for (auto mesh: m_shadedMeshes)
+    for (const auto &mesh: m_shadedMeshes)
     {
       if (!clipper || clipper->Test(mesh->GetBoundingBox()) != eClippingResult::eCR_Outside)
       {
@@ -309,7 +298,7 @@ void csGfxQuadtreeScene::ScanMeshes(const iClipper *clipper, uint32_t scanMask, 
   }
   if (scanMask & eSM_Unshaded)
   {
-    for (auto mesh: m_unshadedMeshes)
+    for (const auto &mesh: m_unshadedMeshes)
     {
       if (!clipper || clipper->Test(mesh->GetBoundingBox()) != eClippingResult::eCR_Outside)
       {
@@ -327,7 +316,7 @@ void csGfxQuadtreeScene::ScanMeshes(const iClipper *clipper, uint32_t scanMask, 
 
 void csGfxQuadtreeScene::ScanGlobalLights(const std::function<bool(csGfxLight *)> &callback) const
 {
-  for (auto light: m_globalLights)
+  for (const auto &light: m_globalLights)
   {
     if (!callback(light))
     {
@@ -338,7 +327,7 @@ void csGfxQuadtreeScene::ScanGlobalLights(const std::function<bool(csGfxLight *)
 
 void csGfxQuadtreeScene::ScanStaticLights(const iClipper *clipper, const std::function<bool(csGfxLight *)> &callback) const
 {
-  for (auto light: m_staticLights)
+  for (const auto &light: m_staticLights)
   {
     const iLight *lght = light->GetLight();
     bool         test  = true;
@@ -356,7 +345,7 @@ void csGfxQuadtreeScene::ScanStaticLights(const iClipper *clipper, const std::fu
 
 void csGfxQuadtreeScene::ScanDynamicLights(const iClipper *clipper, const std::function<bool(csGfxLight *)> &callback) const
 {
-  for (auto light: m_dynamicLights)
+  for (const auto &light: m_dynamicLights)
   {
     const iLight *lght = light->GetLight();
     bool         test  = true;
@@ -440,14 +429,12 @@ void csGfxQuadtreeScene::Cell::Add(csGfxMesh *mesh)
     {
       size_t idx = Idx(item->GetModelMatrix().GetTranslation());
       m_cells[idx]->Add(item);
-      item->Release();
     }
     m_shaded.clear();
     for (const auto &item: m_unshaded)
     {
       size_t idx = Idx(item->GetModelMatrix().GetTranslation());
       m_cells[idx]->Add(item);
-      item->Release();
     }
     m_unshaded.clear();
   }
@@ -475,19 +462,17 @@ void csGfxQuadtreeScene::Cell::Add(csGfxMesh *mesh)
 
 bool csGfxQuadtreeScene::Cell::Remove(csGfxMesh *mesh)
 {
-  auto it = std::ranges::find(m_shaded, mesh);
+  auto it = std::find(m_shaded.begin(), m_shaded.end(), mesh);
   if (it != m_shaded.end())
   {
     m_shaded.erase(it);
-    mesh->Release();
     Decimate();
     return true;
   }
-  it = std::ranges::find(m_unshaded, mesh);
+  it = std::find(m_unshaded.begin(), m_unshaded.end(), mesh);
   if (it != m_unshaded.end())
   {
     m_unshaded.erase(it);
-    mesh->Release();
     Decimate();
     return true;
   }
@@ -554,11 +539,10 @@ void csGfxQuadtreeScene::Cell::Optimize()
   }
 
   std::set<csGfxMeshCompound*> compounds;
-  for (auto pendingMesh: m_pendingShaded)
+  for (const auto &pendingMesh: m_pendingShaded)
   {
     MaterialCompound &cmp = GetShadedCompound(pendingMesh->GetMaterial());
     cmp.mesh->AddMesh(pendingMesh);
-    pendingMesh->Release();
     compounds.insert(cmp.mesh);
   }
   m_pendingShaded.clear();
@@ -623,7 +607,6 @@ void csGfxQuadtreeScene::Cell::AddShadedMesh(cs::csGfxMesh *mesh)
     m_shaded.emplace_back(mesh);
   }
 
-  mesh->AddRef();
   mesh->ClearLights();
   mesh->SetLightingDirty(true);
   UpdateBoundingBox();
@@ -640,7 +623,6 @@ void csGfxQuadtreeScene::Cell::AddUnshadedMesh(cs::csGfxMesh *mesh)
 
   m_unshaded.emplace_back(mesh);
 
-  mesh->AddRef();
   mesh->ClearLights();
   mesh->SetLightingDirty(true);
 
@@ -656,7 +638,7 @@ bool csGfxQuadtreeScene::Cell::ContainsShaded(cs::csGfxMesh *mesh)
       return true;
     }
   }
-  return std::ranges::find(m_shaded, mesh) != m_shaded.end();
+  return std::find(m_shaded.begin(), m_shaded.end(), mesh) != m_shaded.end();
 }
 
 bool csGfxQuadtreeScene::Cell::ContainsUnshaded(cs::csGfxMesh *mesh)
@@ -668,16 +650,16 @@ bool csGfxQuadtreeScene::Cell::ContainsUnshaded(cs::csGfxMesh *mesh)
       return true;
     }
   }
-  return std::ranges::find(m_unshaded, mesh) != m_unshaded.end();
+  return std::find(m_unshaded.begin(), m_unshaded.end(), mesh) != m_unshaded.end();
 }
 
 void csGfxQuadtreeScene::Cell::RemoveLight(csGfxLight *light) const
 {
-  for (auto mesh: m_shaded)
+  for (const auto &mesh: m_shaded)
   {
     mesh->RemoveLight(light);
   }
-  for (auto mesh: m_unshaded)
+  for (const auto &mesh: m_unshaded)
   {
     mesh->RemoveLight(light);
   }

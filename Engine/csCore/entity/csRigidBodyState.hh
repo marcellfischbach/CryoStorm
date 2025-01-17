@@ -31,8 +31,8 @@ private:
   void AcquireEmptyDynamicCollider(iPhysicsSystem *physSystem);
   void DetachCurrentShapes();
 
-  iDynamicCollider *m_dynamicCollider;
-  std::vector<iCollisionShape*> m_shapes;
+  csRef<iDynamicCollider> m_dynamicCollider;
+  std::vector<csRef<iCollisionShape>> m_shapes;
 };
 
 }

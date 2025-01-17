@@ -60,7 +60,7 @@ std::vector<csEntityState*> csEntityState::GetStates(const csClass* cls)
 
 std::vector<const csEntityState*> csEntityState::GetStates(const csClass* cls) const
 {
-  return m_entity ? m_entity->GetStates(cls) : std::vector<const csEntityState*>();
+  return m_entity ? static_cast<const csEntity*>(m_entity)->GetStates(cls) : std::vector<const csEntityState*>();
 }
 
 

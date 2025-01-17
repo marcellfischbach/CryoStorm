@@ -20,7 +20,6 @@ csRigidBodyState::csRigidBodyState(const std::string& name)
 
 csRigidBodyState::~csRigidBodyState()
 {
-  // TODO: Detach ridid
 }
 
 

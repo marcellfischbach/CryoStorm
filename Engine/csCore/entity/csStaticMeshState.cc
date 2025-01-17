@@ -18,23 +18,11 @@ csStaticMeshState::csStaticMeshState(const std::string &name)
 
 csStaticMeshState::~csStaticMeshState()
 {
-  CS_RELEASE(m_mesh);
   Clear();
 }
 
 void csStaticMeshState::Clear()
 {
-  for (auto &data: m_gfxMeshes)
-  {
-    data.gfxMesh->Release();
-  }
-  m_gfxMeshes.clear();
-
-//  for (auto material: m_materials)
-//  {
-//    CS_RELEASE(material);
-//  }
-  m_materials.clear();
 }
 
 
@@ -46,7 +34,7 @@ void csStaticMeshState::SetMesh(csMesh *mesh)
     RemoveMeshFromScene(world);
   }
   Clear();
-  CS_SET(m_mesh, mesh);
+  m_mesh = mesh;
   if (m_mesh)
   {
     m_materials.resize(m_mesh->GetNumberOfMaterialSlots(), nullptr);
@@ -196,7 +184,6 @@ void csStaticMeshState::RemoveMeshFromScene(csWorld *world)
     for (auto &data: m_gfxMeshes)
     {
       scene->Remove(data.gfxMesh);
-      data.gfxMesh->Release();
     }
     m_gfxMeshes.clear();
   }

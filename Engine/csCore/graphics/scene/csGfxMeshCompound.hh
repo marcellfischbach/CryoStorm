@@ -25,7 +25,7 @@ public:
 private:
 
 
-  std::vector<csGfxMesh*> m_internalMeshes;
+  std::vector<csRef<csGfxMesh>> m_internalMeshes;
 };
 
 } // ce

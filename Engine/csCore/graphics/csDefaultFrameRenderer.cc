@@ -38,11 +38,11 @@ bool gfx_camera_sorter(csGfxCamera *cam0, csGfxCamera *cam1)
 
 void csDefaultFrameRenderer::Render(iRenderTarget2D *target, iDevice *device, iGfxScene *scene)
 {
-  auto                       cameras = std::vector<csGfxCamera *>(scene->GetCameras());
+  auto                       cameras = std::vector<csRef<csGfxCamera>>(scene->GetCameras());
   std::vector<csGfxCamera *> plainCameras;
   plainCameras.reserve(cameras.size());
 
-  for (auto camera: cameras)
+  for (const auto & camera: cameras)
   {
     if (camera->GetRenderTarget())
     {

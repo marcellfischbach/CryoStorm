@@ -6,6 +6,7 @@
 #include <csCore/csClass.hh>
 #include <csCore/math/csVector3f.hh>
 #include <csCore/csTypes.hh>
+#include <csCore/csRef.hh>
 
 namespace cs
 {
@@ -34,7 +35,7 @@ public:
 
 private:
   bool m_static;
-  iLight* m_light;
+  csRef<iLight> m_light;
 
   uint64_t  m_frame;
 

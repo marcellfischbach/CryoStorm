@@ -21,7 +21,6 @@ csStaticColliderState::~csStaticColliderState()
 {
   if (m_collider)
   {
-    // TODO: Detach collider from world and delete
     m_collider = nullptr;
   }
 }
@@ -86,7 +85,6 @@ void csStaticColliderState::OnDetachedFromWorld(csWorld *world)
     iPhysicsWorld* physWorld = world->GetPhysicsWorld();
     DetachCurrentShapes();
     physWorld->RemoveCollider(m_collider);
-    CS_RELEASE(m_collider);
     m_collider = nullptr;
   }
 }

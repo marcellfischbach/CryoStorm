@@ -153,6 +153,7 @@ int main(int argc, char **argv)
     window->Present();
   }
 
+  printf ("That's all folks.\n");
   return exitValue;
 }
 

@@ -18,8 +18,6 @@ csGfxLight::csGfxLight()
 
 csGfxLight::~csGfxLight()
 {
-  CS_RELEASE(m_light);
-  m_light = nullptr;
 }
 
 void csGfxLight::SetStatic(bool _static)
@@ -34,7 +32,7 @@ bool csGfxLight::IsStatic() const
 
 void csGfxLight::SetLight(iLight* light)
 {
-  CS_SET(m_light, light);
+  m_light = light;
 }
 
 iLight * csGfxLight::GetLight()

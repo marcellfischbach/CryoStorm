@@ -5,7 +5,6 @@
 #include <csCore/csClass.hh>
 #include <csCore/resource/csAssetLoader.hh>
 #include <csCore/resource/iAsset.hh>
-#include <csCore/csOwned.hh>
 #include <csCore/csRef.hh>
 #include <map>
 #include <vector>

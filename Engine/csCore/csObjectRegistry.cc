@@ -4,7 +4,9 @@
 namespace cs
 {
 
-std::map<const csClass*, iObject*> csObjectRegistry::m_registry;
+std::map<const csClass*, csRef<iObject>> csObjectRegistry::m_registry;
+
+
 
 void csObjectRegistry::Register(const csClass *cls, iObject *obj)
 {
@@ -12,11 +14,8 @@ void csObjectRegistry::Register(const csClass *cls, iObject *obj)
   auto it = m_registry.find(cls);
   if (it != m_registry.end())
   {
-    CS_RELEASE(it->second);
     m_registry.erase(it);
   }
-
-  CS_ADDREF(obj);
   m_registry[cls] = obj;
 }
 

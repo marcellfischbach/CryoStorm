@@ -5,7 +5,6 @@
 
 #include <csOpenGL/gl4/pipeline/pointsm/csGL4PointSMFilter.hh>
 #include <csCore/graphics/eCubeFace.hh>
-#include <csCore/csOwned.hh>
 #include <csCore/csRef.hh>
 #include <array>
 #include <vector>

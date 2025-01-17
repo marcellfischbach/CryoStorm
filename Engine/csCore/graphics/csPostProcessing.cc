@@ -130,7 +130,7 @@ void csPostProcessing::RebuildPlan()
       bool                  allBindingsFound = true;
       for (const auto     &binding: bindings)
       {
-        if (binding.SrcPP && std::ranges::find(processed.begin(), processed.end(), binding.SrcPP) == processed.end())
+        if (binding.SrcPP && std::find(processed.begin(), processed.end(), binding.SrcPP) == processed.end())
         {
           //not processed yet
           allBindingsFound = false;

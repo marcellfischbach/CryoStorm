@@ -25,10 +25,10 @@ public:
   iCollisionShape *GetShape ();
 
 protected:
-  virtual iCollisionShape* CreateShape(iPhysicsSystem *physSystem) const = 0;
+  virtual csOwned<iCollisionShape> CreateShape(iPhysicsSystem *physSystem) const = 0;
 
 private:
-  iCollisionShape* m_shape;
+  csRef<iCollisionShape> m_shape;
 
 };
 
@@ -45,7 +45,7 @@ public:
 
 protected:
 
-  iCollisionShape* CreateShape(iPhysicsSystem * physSystem) const override;
+  csOwned<iCollisionShape> CreateShape(iPhysicsSystem * physSystem) const override;
 
 private:
   float m_radius;
@@ -64,7 +64,7 @@ public:
 
 protected:
 
-  iCollisionShape* CreateShape(iPhysicsSystem * physSystem) const override;
+  csOwned<iCollisionShape> CreateShape(iPhysicsSystem * physSystem) const override;
 
 private:
   csVector3f m_halfExtends;

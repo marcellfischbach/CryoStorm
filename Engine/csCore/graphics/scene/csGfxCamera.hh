@@ -4,6 +4,7 @@
 #include <csCore/csClass.hh>
 #include <csCore/graphics/eClearMode.hh>
 #include <csCore/math/csColor4f.hh>
+#include <csCore/csRef.hh>
 
 namespace cs
 {
@@ -72,16 +73,16 @@ private:
   csColor4f m_clearColor;
   float     m_clearDepth;
 
-  csCamera    *m_camera;
-  csProjector *m_projector;
+  csRef<csCamera> m_camera;
+  csRef<csProjector> m_projector;
 
-  iSkyboxRenderer *m_skyboxRenderer;
+  csRef<iSkyboxRenderer> m_skyboxRenderer;
 
-  iRenderTarget2D *m_renderTarget;
+  csRef<iRenderTarget2D> m_renderTarget;
   int             m_order;
   bool            m_renderShadows;
 
-  csPostProcessing *m_postProcessing;
+  csRef<csPostProcessing> m_postProcessing;
 };
 
 

@@ -89,18 +89,18 @@ public:
 
 private:
 
-  std::vector<csSGNode *> m_nodes;
+  std::vector<csRef<csSGNode>> m_nodes;
 
   eRenderQueue  m_queue        = eRenderQueue::Default;
   eLightingMode m_lightingMode = eLM_Default;
   eBlendingMode m_blendingMode = eBM_Off;
 
 
-  csSGNodeInput *m_diffuse   = nullptr;
-  csSGNodeInput *m_alpha     = nullptr;
-  csSGNodeInput *m_roughness = nullptr;
-  csSGNodeInput *m_normal    = nullptr;
-  csSGNodeInput *m_metallic  = nullptr;
+  csRef<csSGNodeInput> m_diffuse   = nullptr;
+  csRef<csSGNodeInput> m_alpha     = nullptr;
+  csRef<csSGNodeInput> m_roughness = nullptr;
+  csRef<csSGNodeInput> m_normal    = nullptr;
+  csRef<csSGNodeInput> m_metallic  = nullptr;
 
   bool         m_receiveShadow          = true;
   float        m_alphaDiscard_Threshold = 0.5f;

@@ -20,26 +20,26 @@ csBulletSystem::~csBulletSystem()
 }
 
 
-iPhysicsWorld *csBulletSystem::CreateWorld()
+csOwned<iPhysicsWorld> csBulletSystem::CreateWorld()
 {
   return new csBulletWorld();
 }
 
 
-iCollisionShape* csBulletSystem::CreateShape(const SphereShapeDesc& desc)
+csOwned<iCollisionShape> csBulletSystem::CreateShape(const SphereShapeDesc& desc)
 {
   btSphereShape* shape = new btSphereShape(desc.Radius);
   return new csBulletCollisionShape(shape);
 }
 
 
-iCollisionShape* csBulletSystem::CreateShape(const BoxShapeDesc& desc)
+csOwned<iCollisionShape> csBulletSystem::CreateShape(const BoxShapeDesc& desc)
 {
   btBoxShape* shape = new btBoxShape(btVector3(desc.HalfExtents.x, desc.HalfExtents.y, desc.HalfExtents.z));
   return new csBulletCollisionShape(shape);
 }
 
-iCollisionShape* csBulletSystem::CreateShape(const CylinderShapeDesc& desc)
+csOwned<iCollisionShape> csBulletSystem::CreateShape(const CylinderShapeDesc& desc)
 {
   btCylinderShape* shape;
   switch (desc.Axis)
@@ -60,7 +60,7 @@ iCollisionShape* csBulletSystem::CreateShape(const CylinderShapeDesc& desc)
   return new csBulletCollisionShape(shape);
 }
 
-iCollisionShape* csBulletSystem::CreateShape(const CapsuleShapeDesc& desc)
+csOwned<iCollisionShape> csBulletSystem::CreateShape(const CapsuleShapeDesc& desc)
 {
   btCapsuleShape* shape;
   switch (desc.Axis)
@@ -84,17 +84,17 @@ iCollisionShape* csBulletSystem::CreateShape(const CapsuleShapeDesc& desc)
 
 
 
-iStaticCollider* csBulletSystem::CreateStaticCollider()
+csOwned<iStaticCollider> csBulletSystem::CreateStaticCollider()
 {
   return new csBulletStaticCollider();
 }
 
-iDynamicCollider* csBulletSystem::CreateDynamicCollider()
+csOwned<iDynamicCollider> csBulletSystem::CreateDynamicCollider()
 {
   return new csBulletDynamicCollider();
 }
 
-iTriggerCollider* csBulletSystem::CreateTriggerCollider()
+csOwned<iTriggerCollider> csBulletSystem::CreateTriggerCollider()
 {
   return nullptr;
 }

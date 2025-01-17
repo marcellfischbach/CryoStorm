@@ -17,18 +17,18 @@ public:
 
   ~csBulletSystem() override;
 
-  CS_NODISCARD iPhysicsWorld *CreateWorld() override;
+  CS_NODISCARD csOwned<iPhysicsWorld> CreateWorld() override;
 
 
-  CS_NODISCARD iCollisionShape* CreateShape(const SphereShapeDesc & desc) override;
-  CS_NODISCARD iCollisionShape* CreateShape(const BoxShapeDesc & desc) override;
-  CS_NODISCARD iCollisionShape* CreateShape(const CylinderShapeDesc & desc) override;
-  CS_NODISCARD iCollisionShape* CreateShape(const CapsuleShapeDesc & desc) override;
+  CS_NODISCARD csOwned<iCollisionShape> CreateShape(const SphereShapeDesc & desc) override;
+  CS_NODISCARD csOwned<iCollisionShape> CreateShape(const BoxShapeDesc & desc) override;
+  CS_NODISCARD csOwned<iCollisionShape> CreateShape(const CylinderShapeDesc & desc) override;
+  CS_NODISCARD csOwned<iCollisionShape> CreateShape(const CapsuleShapeDesc & desc) override;
 
 
-  CS_NODISCARD iStaticCollider* CreateStaticCollider() override;
-  CS_NODISCARD iDynamicCollider* CreateDynamicCollider() override;
-  CS_NODISCARD iTriggerCollider* CreateTriggerCollider() override;
+  CS_NODISCARD csOwned<iStaticCollider> CreateStaticCollider() override;
+  CS_NODISCARD csOwned<iDynamicCollider> CreateDynamicCollider() override;
+  CS_NODISCARD csOwned<iTriggerCollider> CreateTriggerCollider() override;
 
 };
 

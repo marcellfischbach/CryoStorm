@@ -29,7 +29,7 @@ csBulletDynamicCollider::~csBulletDynamicCollider()
 
 void csBulletDynamicCollider::Attach(iCollisionShape* shape)
 {
-  if (std::ranges::find(m_shapes, shape) != m_shapes.end())
+  if (std::find(m_shapes.begin(), m_shapes.end(), shape) != m_shapes.end())
   {
     return;
   }
@@ -43,7 +43,7 @@ void csBulletDynamicCollider::Attach(iCollisionShape* shape)
 
 void csBulletDynamicCollider::Detach(iCollisionShape* shape)
 {
-  auto it = std::ranges::find(m_shapes, shape);
+  auto it = std::find(m_shapes.begin(), m_shapes.end(), shape);
   if (it == m_shapes.end())
   {
     return;

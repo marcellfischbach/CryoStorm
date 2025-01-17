@@ -23,12 +23,14 @@ class CS_CORE_API csGfxMesh : public CS_SUPER(iObject)
 {
 CS_CLASS_GEN_OBJECT;
 public:
-  struct Light
+  struct CS_CORE_API Light
   {
-    csGfxLight *Light;
-    float      Influence;
+    csRef<csGfxLight> light;
+    float      influence;
     bool operator==(const csGfxLight *l) const
-    { return Light == l; }
+    { return light == l; }
+
+    Light(csGfxLight* light = nullptr, float influence = 0.0f);
   };
 
 
@@ -89,14 +91,14 @@ private:
   bool m_receiveShadow = true;
   bool               m_castShadow    = true;
   csAssetRef<iMaterial> m_material;
-  iRenderMesh        *m_mesh     = nullptr;
+  csRef<iRenderMesh> m_mesh     = nullptr;
   csMatrix4f    m_modelMatrix;
   csBoundingBox m_boundingBox;
   uint64_t      m_frame         = 0;
   bool        m_lightingDirty = true;
 
   std::vector<Light> m_lights;
-  csSkeleton         *m_skeleton;
+  csRef<csSkeleton> m_skeleton;
 
 };
 

@@ -7,10 +7,13 @@ namespace cs
 
 
 csTransform::csTransform(csSpatialState *state, const csMatrix4f &matrix, const csMatrix4f &parentMatrix)
-    : m_state(state), m_matrix(matrix), m_translation(0.0f, 0.0f, 0.0f), m_rotation(0.0f, 0.0f, 0.0f, 1.0f), m_scale(
-    1.0f,
-    1.0f,
-    1.0f), m_dirty(true), m_parentMatrix(parentMatrix)
+    : m_state(state)
+    , m_matrix(matrix)
+    , m_translation(0.0f, 0.0f, 0.0f)
+    , m_rotation(0.0f, 0.0f, 0.0f, 1.0f)
+    , m_scale(1.0f, 1.0f, 1.0f)
+    , m_dirty(true)
+    , m_parentMatrix(parentMatrix)
 {
   ExtractTRS();
 }

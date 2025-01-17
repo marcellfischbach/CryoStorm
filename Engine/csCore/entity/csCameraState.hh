@@ -111,7 +111,7 @@ private:
 
   int m_order;
 
-  iRenderTarget2D *m_renderTarget;
+  csRef<iRenderTarget2D> m_renderTarget;
 
   eClearMode m_clearMode = eClearMode::DepthColor;
 
@@ -126,11 +126,11 @@ private:
 
   csCamera         m_camera;
   csProjector      m_projector;
-  csPostProcessing *m_postProcessing;
-  iSkyboxRenderer  *m_skyboxRenderer;
+  csRef<csPostProcessing> m_postProcessing;
+  csRef<iSkyboxRenderer>  m_skyboxRenderer;
 
   void UpdateGfxCamera();
-  csGfxCamera *m_gfxCamera;
+  csRef<csGfxCamera> m_gfxCamera;
 
 
 };
