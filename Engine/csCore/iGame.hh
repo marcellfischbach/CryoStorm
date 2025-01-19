@@ -13,6 +13,8 @@ struct iGame
   virtual ~iGame ()  = default;
 
   virtual bool Initialize(cs::csWorld* world) = 0;
+
+  virtual void Shutdown (cs::csWorld* world) = 0;
 };
 
 

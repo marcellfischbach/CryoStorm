@@ -27,6 +27,7 @@ public:
 
 
   bool Initialize();
+  void Shutdown();
 
   void CheckError() const override;
 
@@ -289,7 +290,7 @@ private:
   csGL4Program *FullscreenBlitMSProgram();
   csGL4Program *m_fullscreenBlitMSProgram = nullptr;
   iRenderMesh *FullscreenBlitRenderMesh();
-  iRenderMesh  *m_fullscreenBlitRenderMesh = nullptr;
+  iRenderMesh *m_fullscreenBlitRenderMesh = nullptr;
   iRenderMesh *PixelRenderMesh();
   iRenderMesh  *m_pixelRenderMesh = nullptr;
 

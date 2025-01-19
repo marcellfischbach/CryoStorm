@@ -40,14 +40,14 @@ public:
     iRenderMesh* GetMesh() const;
 
     void SetMaterialSlotIdx(Size materialSlotIdx);
-    Size GetMaterialSlotIdx() const;
+    size_t GetMaterialSlotIdx() const;
 
     SubMesh &operator=(const SubMesh &mesh);
 
   private:
-    iRenderMesh* m_mesh;
+    csRef<iRenderMesh> m_mesh;
 
-    Size m_materialSlotIdx;
+    size_t m_materialSlotIdx;
 
   };
 

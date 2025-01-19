@@ -17,7 +17,6 @@ csPPHighPass::csPPHighPass(float highValue)
 
 csPPHighPass::~csPPHighPass()
 {
-  CS_RELEASE(m_shader);
   m_shader               = nullptr;
   m_attribColor          = nullptr;
 }
@@ -28,7 +27,7 @@ bool csPPHighPass::RefreshOutputTexture(cs::iDevice *device, iRenderTarget2D *fi
 {
   if (finalTarget)
   {
-    CS_SET(m_renderTarget, finalTarget);
+    m_renderTarget = finalTarget;
     return finalTarget;
   }
 

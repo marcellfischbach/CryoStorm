@@ -21,7 +21,7 @@ csSettingsFile::csSettingsFile(const csAssetLocator& locator)
 
 void csSettingsFile::Initialize(const csAssetLocator& locator)
 {
-  iFile* file = csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
+  csRef<iFile> file = csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (file)
   {
     m_file = new csCryoFile();
@@ -30,7 +30,6 @@ void csSettingsFile::Initialize(const csAssetLocator& locator)
       delete m_file;
       m_file = nullptr;
     }
-    file->Release();
   }
 }
 

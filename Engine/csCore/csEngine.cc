@@ -10,11 +10,12 @@
 #include <csCore/entity/csWorld.hh>
 #include <csCore/graphics/iDevice.hh>
 #include <csCore/graphics/iFrameRenderer.hh>
-#include <csCore/graphics/csDefaultFrameRenderer.hh>
+#include "csOpenGL/gl4/pipeline/csGL4DefaultFrameRenderer.hh"
 #include <csCore/graphics/iRenderTarget2D.hh>
 #include <csCore/graphics/iSkyboxRenderer.hh>
 #include <csCore/window/iWindow.hh>
 #include <csCore/resource/csAssetManager.hh>
+#include <csCore/resource/csAssetPool.hh>
 #include <csCore/resource/csCryoFile.hh>
 #include <csCore/resource/csAssetLocator.hh>
 #include <csCore/resource/csVFS.hh>
@@ -22,6 +23,7 @@
 #include <csCore/iGame.hh>
 
 #include <iostream>
+
 #ifdef CS_WIN32
 
 #include <Windows.h>
@@ -53,15 +55,14 @@ int csEngine::ExitValue() const
 }
 
 
-bool csEngine::InitializeEngine(const std::vector<std::string> &args,
-                                const csModuleConfig &config)
+bool csEngine::InitializeEngine(const std::vector<std::string> &args, const csModuleConfig &config)
 {
 
   if (!csAssetManager::Get())
   {
     csAssetManager::Set(new csAssetManager());
   }
-  const std::vector<iModule *> &modules = config.GetModules();
+  const std::vector<csRef<iModule>> &modules = config.GetModules();
 
   for (auto module: modules)
   {
@@ -85,8 +86,30 @@ bool csEngine::InitializeEngine(const std::vector<std::string> &args,
 }
 
 
+void csEngine::ShutdownEngine(const std::vector<std::string> &args, const cs::csModuleConfig &config)
+{
+  const std::vector<csRef<iModule>> modules = config.GetModules();
+
+  //
+  // cleanup the cached assets early to prevent some device bound assets to be hold,
+  // when the window system with device graphics devices goes down later
+  csAssetPool::Instance().Clear();
+  csAssetManager *assetManager = csAssetManager::Get();
+  if (assetManager)
+  {
+    delete assetManager;
+  }
 
 
+  // reverse shut down the modules
+  for (auto it = modules.rbegin(); it != modules.rend(); it++)
+  {
+    (*it)->Shutdown(args, this);
+  }
+
+
+
+}
 
 
 csEngine *csEngine::s_instance = nullptr;
@@ -119,7 +142,7 @@ bool csModuleConfig::LoadModuleConfig()
  */
 bool csModuleConfig::LoadModuleConfigEx(const std::string &configFilename)
 {
-  iFile *modulesConfig = csVFS::Get()->Open(csAssetLocator(configFilename), eAM_Read, eOM_Binary);
+  csRef<iFile> modulesConfig = csVFS::Get()->Open(csAssetLocator(configFilename), eAM_Read, eOM_Binary);
   if (!modulesConfig)
   {
     return false;
@@ -128,7 +151,6 @@ bool csModuleConfig::LoadModuleConfigEx(const std::string &configFilename)
   csCryoFile file;
   if (!file.Parse(modulesConfig))
   {
-    CS_RELEASE(modulesConfig);
     return false;
   }
 
@@ -140,10 +162,8 @@ bool csModuleConfig::LoadModuleConfigEx(const std::string &configFilename)
       AddModuleByName(moduleElement->GetTagName());
     }
   }
-  CS_RELEASE(modulesConfig);
   return true;
 }
-
 
 
 typedef iModule *(*load_library_func_ptr)();
@@ -172,7 +192,7 @@ static HMODULE load_module(const std::string &libraryName)
   return handle;
 }
 
-static iModule *open_module(const std::string &moduleName)
+static csOwned<iModule> open_module(const std::string &moduleName)
 {
 #ifdef  CS_WIN32
   std::string dll_name = moduleName + std::string(".dll");
@@ -212,7 +232,7 @@ static iModule *open_module(const std::string &moduleName)
 
 void csModuleConfig::AddModuleByName(const std::string &moduleName)
 {
-  iModule *module = open_module(moduleName);
+  csRef<iModule> module = open_module(moduleName);
   AddModule(module);
 }
 
@@ -222,13 +242,12 @@ void csModuleConfig::AddModule(cs::iModule *module)
   {
     if (std::find(m_modules.begin(), m_modules.end(), module) == m_modules.end())
     {
-      module->AddRef();
-      m_modules.push_back(module);
+      m_modules.emplace_back(module);
     }
   }
 }
 
-const std::vector<iModule *> &csModuleConfig::GetModules() const
+const std::vector<csRef<iModule>> &csModuleConfig::GetModules() const
 {
   return m_modules;
 }

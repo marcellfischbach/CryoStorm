@@ -69,8 +69,8 @@ private:
 
 
 private:
-  csGL4Device *m_device = nullptr;
-  iGfxScene   *m_scene  = nullptr;
+  csRef<csGL4Device> m_device;
+  csRef<iGfxScene> m_scene;
 
   std::vector<csGL4DirectionalLight *> m_shadowDirectionalLights;
 

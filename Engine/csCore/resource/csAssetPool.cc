@@ -67,6 +67,11 @@ void csAssetPool::Put(const csAssetLocator& locator, iAsset* resource)
   resource->Revalidate();
 }
 
+void csAssetPool::Clear()
+{
+  m_resources.clear();
+}
+
 
 
 }

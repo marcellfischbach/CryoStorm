@@ -20,7 +20,6 @@ csPPBlurV::csPPBlurV(size_t sampleCount, float sampleScale)
 
 csPPBlurV::~csPPBlurV()
 {
-  CS_RELEASE(m_shader);
   m_shader               = nullptr;
   m_attribColor          = nullptr;
   m_attribTextureSizeInv = nullptr;

@@ -1,7 +1,6 @@
 #include <csCore/csCoreModule.hh>
 #include <master.refl.cc>
 #include <csCore/csObjectRegistry.hh>
-#include <csCore/graphics/csDefaultFrameRenderer.hh>
 #include <csCore/resource/csAssetManager.hh>
 #include <csCore/loaders/csMaterialLoader.hh>
 #include <csCore/loaders/csSamplerLoader.hh>
@@ -26,8 +25,6 @@ void csCoreModule::RegisterClasses()
 
 bool csCoreModule::Register(const std::vector<std::string> &args, csEngine *engine)
 {
-
-  csObjectRegistry::Register<iFrameRenderer>(new csDefaultFrameRenderer);
   csAssetManager * assetMan = csAssetManager::Get();
   assetMan->RegisterLoader(new csMaterialLoader());
   assetMan->RegisterLoader(new csSamplerLoader());
@@ -43,6 +40,11 @@ bool csCoreModule::Initialize(const std::vector<std::string> &args, csEngine *en
 {
 
   return true;
+}
+
+
+void csCoreModule::Shutdown(const std::vector<std::string> &args, cs::csEngine *engine)
+{
 }
 
 

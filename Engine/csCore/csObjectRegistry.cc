@@ -10,12 +10,6 @@ std::map<const csClass*, csRef<iObject>> csObjectRegistry::m_registry;
 
 void csObjectRegistry::Register(const csClass *cls, iObject *obj)
 {
-
-  auto it = m_registry.find(cls);
-  if (it != m_registry.end())
-  {
-    m_registry.erase(it);
-  }
   m_registry[cls] = obj;
 }
 
@@ -27,6 +21,16 @@ iObject *csObjectRegistry::Get(const csClass *cls)
     return nullptr;
   }
   return it->second;
+}
+
+
+void csObjectRegistry::Remove(const csClass *cls)
+{
+  auto it = m_registry.find(cls);
+  if (it != m_registry.end())
+  {
+    m_registry.erase(it);
+  }
 }
 
 

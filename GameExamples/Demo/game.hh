@@ -13,7 +13,7 @@ public:
 
 
   bool Initialize(cs::csWorld *world) override;
-
+  void Shutdown (cs::csWorld* world) override;
 };
 
 

@@ -35,7 +35,7 @@ void read_data_from_i_file(png_structp png_ptr, png_bytep buffer, png_size_t siz
 
 csOwned<iAsset> csPngLoader::Load(const csAssetLocator& locator) const
 {
-  iFile* fp = csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
+  csRef<iFile> fp = csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (!fp)
   {
     return nullptr;
@@ -149,7 +149,6 @@ csOwned<iAsset> csPngLoader::Load(const csAssetLocator& locator) const
   png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
 
 
-  fp->Close();
   return img;
 }
 

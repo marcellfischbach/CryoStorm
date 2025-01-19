@@ -167,6 +167,11 @@ bool csGL4Device::Initialize()
   return true;
 }
 
+void csGL4Device::Shutdown ()
+{
+
+}
+
 void csGL4Device::CheckError() const
 {
   CS_GL_ERROR()
@@ -1658,8 +1663,7 @@ iRenderMesh *csGL4Device::FullscreenBlitRenderMesh()
 {
   if (!m_fullscreenBlitRenderMesh)
   {
-    iRenderMeshGenerator *gen = csObjectRegistry::Get<iRenderMeshGeneratorFactory>()->Create();
-    csAutoRelease        relGen(gen);
+    csOwned<iRenderMeshGenerator> gen = csObjectRegistry::Get<iRenderMeshGeneratorFactory>()->Create();
 
     std::vector<csVector4f> vertices4;
     vertices4.push_back(csVector4f(-1.0f, -1.0f, 0.0f, 1.0f));
@@ -1683,7 +1687,7 @@ iRenderMesh *csGL4Device::FullscreenBlitRenderMesh()
     gen->SetVertices(vertices4);
     gen->SetUV0(uv);
     gen->SetIndices(indices);
-    m_fullscreenBlitRenderMesh = gen->Generate();
+    m_fullscreenBlitRenderMesh = gen->Generate().Consume();
   }
   return m_fullscreenBlitRenderMesh;
 }
@@ -1693,8 +1697,7 @@ iRenderMesh *csGL4Device::PixelRenderMesh()
 {
   if (!m_fullscreenBlitRenderMesh)
   {
-    iRenderMeshGenerator    *gen = csObjectRegistry::Get<iRenderMeshGeneratorFactory>()->Create();
-    csAutoRelease           relGen(gen);
+    csOwned<iRenderMeshGenerator> gen = csObjectRegistry::Get<iRenderMeshGeneratorFactory>()->Create();
     std::vector<csVector4f> vertices4;
     vertices4.push_back(csVector4f(0.0f, 0.0f, 0.0f, 1.0f));
     std::vector<uint32_t> indices;
@@ -1704,7 +1707,7 @@ iRenderMesh *csGL4Device::PixelRenderMesh()
     gen->SetVertices(vertices4);
     gen->SetIndices(indices);
     gen->SetPrimitiveType(ePT_Points);
-    m_fullscreenBlitRenderMesh = gen->Generate();
+    m_fullscreenBlitRenderMesh = gen->Generate().Consume();
   }
   return m_fullscreenBlitRenderMesh;
 }
@@ -1767,8 +1770,7 @@ iRenderMesh *csGL4Device::FullscreenBlitCubeRenderMesh(int layer)
   }
 
 
-  iRenderMeshGenerator *gen = csObjectRegistry::Get<iRenderMeshGeneratorFactory>()->Create();
-  csAutoRelease        relGen(gen);
+  csOwned<iRenderMeshGenerator> gen = csObjectRegistry::Get<iRenderMeshGeneratorFactory>()->Create();
 
   std::vector<csVector4f> vertices4;
   vertices4.push_back(csVector4f(-1.0f, -1.0f, 0.0f, 1.0f));
@@ -1794,42 +1796,42 @@ iRenderMesh *csGL4Device::FullscreenBlitCubeRenderMesh(int layer)
       uv.push_back(csVector3f(1.0f, -1.0f, -1.0f));
       uv.push_back(csVector3f(1.0f, 1.0f, -1.0f));
       gen->SetUV0(uv);
-      return (m_fullscreenBlitCubePosXRenderMesh = gen->Generate());
+      return (m_fullscreenBlitCubePosXRenderMesh = gen->Generate().Consume());
     case 1: // Negative X
       uv.push_back(csVector3f(-1.0f, -1.0f, -1.0f));
       uv.push_back(csVector3f(-1.0f, 1.0f, -1.0f));
       uv.push_back(csVector3f(-1.0f, -1.0f, 1.0f));
       uv.push_back(csVector3f(-1.0f, 1.0f, 1.0f));
       gen->SetUV0(uv);
-      return (m_fullscreenBlitCubeNegXRenderMesh = gen->Generate());
+      return (m_fullscreenBlitCubeNegXRenderMesh = gen->Generate().Consume());
     case 2: // Positive Y
       uv.push_back(csVector3f(-1.0f, 1.0f, -1.0f));
       uv.push_back(csVector3f(-1.0f, 1.0f, 1.0f));
       uv.push_back(csVector3f(1.0f, 1.0f, -1.0f));
       uv.push_back(csVector3f(1.0f, 1.0f, 1.0f));
       gen->SetUV0(uv);
-      return (m_fullscreenBlitCubePosYRenderMesh = gen->Generate());
+      return (m_fullscreenBlitCubePosYRenderMesh = gen->Generate().Consume());
     case 3: // Negative Y
       uv.push_back(csVector3f(-1.0f, -1.0f, -1.0f));
       uv.push_back(csVector3f(-1.0f, -1.0f, 1.0f));
       uv.push_back(csVector3f(1.0f, -1.0f, -1.0f));
       uv.push_back(csVector3f(1.0f, -1.0f, 1.0f));
       gen->SetUV0(uv);
-      return (m_fullscreenBlitCubeNegYRenderMesh = gen->Generate());
+      return (m_fullscreenBlitCubeNegYRenderMesh = gen->Generate().Consume());
     case 4: // Positive Z
       uv.push_back(csVector3f(-1.0f, -1.0f, 1.0f));
       uv.push_back(csVector3f(-1.0f, 1.0f, 1.0f));
       uv.push_back(csVector3f(1.0f, -1.0f, 1.0f));
       uv.push_back(csVector3f(1.0f, 1.0f, 1.0f));
       gen->SetUV0(uv);
-      return (m_fullscreenBlitCubePosZRenderMesh = gen->Generate());
+      return (m_fullscreenBlitCubePosZRenderMesh = gen->Generate().Consume());
     case 5: // Negative Z
       uv.push_back(csVector3f(1.0f, -1.0f, -1.0f));
       uv.push_back(csVector3f(1.0f, 1.0f, -1.0f));
       uv.push_back(csVector3f(-1.0f, -1.0f, -1.0f));
       uv.push_back(csVector3f(-1.0f, 1.0f, -1.0f));
       gen->SetUV0(uv);
-      return (m_fullscreenBlitCubeNegZRenderMesh = gen->Generate());
+      return (m_fullscreenBlitCubeNegZRenderMesh = gen->Generate().Consume());
 
   }
   return nullptr;

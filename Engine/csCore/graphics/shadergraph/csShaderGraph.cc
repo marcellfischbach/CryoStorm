@@ -31,7 +31,7 @@ csShaderGraph::~csShaderGraph() noexcept
 
 }
 
-csSGNode *csShaderGraph::Add(const cs::csClass *nodeClass, const std::string &key)
+csOwned<csSGNode> csShaderGraph::Add(const cs::csClass *nodeClass, const std::string &key)
 {
   if (!nodeClass->IsInstanceOf<csSGNode>())
   {
@@ -55,7 +55,7 @@ csSGNode *csShaderGraph::Add(const cs::csClass *nodeClass, const std::string &ke
 
 }
 
-csSGResourceNode *csShaderGraph::AddResource(const cs::csClass *nodeClass,
+csOwned<csSGResourceNode> csShaderGraph::AddResource(const cs::csClass *nodeClass,
                                              const std::string &key,
                                              const std::string &resourceName)
 {
@@ -273,7 +273,7 @@ void csShaderGraph::SetDefault(const std::string &attribute, cs::iTexture *textu
 {
   Default def{};
   def.name = attribute;
-  CS_SET(def.texture, texture);
+  def.texture = texture;
 
   m_defaults.push_back(def);
 }

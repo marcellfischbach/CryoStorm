@@ -14,6 +14,10 @@ csFPS::csFPS()
 
 }
 
+static uint64_t s_totalFps = 0;
+static uint64_t s_totalSecs = 0;
+
+
 int64_t csFPS::Tick()
 {
   m_count++;
@@ -22,10 +26,16 @@ int64_t csFPS::Tick()
   {
     while (time >= m_nextFrame)
     {
+      s_totalSecs++;
       m_nextFrame += 1000;
     }
+
+    s_totalFps += m_count;
     m_fps = m_count;
     m_count = 0;
+
+    printf ("Total FPS: %llu\n", s_totalFps / s_totalSecs);
+    fflush(stdout);
   }
 
   int64_t delta = time - m_lastFrame;

@@ -85,6 +85,7 @@ csGL4RenderTarget2D::~csGL4RenderTarget2D()
     m_name = 0;
     return;
   }
+
   CS_GL_ERROR();
   glDeleteFramebuffers(1, &m_name);
   CS_GL_ERROR();

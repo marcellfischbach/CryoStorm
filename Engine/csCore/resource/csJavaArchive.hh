@@ -20,7 +20,7 @@ public:
   void SetRootPath(const std::string &rootPath);
   void SetPriority(int priority);
   int GetPriority() const override;
-  iFile *Open(const std::string &locator, eAccessMode accessMode, eOpenMode openMode) override;
+  csOwned<iFile> Open(const std::string &locator, eAccessMode accessMode, eOpenMode openMode) override;
 
 private:
   std::string m_name;

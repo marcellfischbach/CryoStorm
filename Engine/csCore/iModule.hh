@@ -17,6 +17,7 @@ struct CS_CORE_API iModule : public CS_SUPER(iObject)
 
   virtual bool Register(const std::vector<std::string> &args, csEngine *engine) = 0;
   virtual bool Initialize(const std::vector<std::string> &args, csEngine *engine) = 0;
+  virtual void Shutdown (const std::vector<std::string> &args, csEngine *engine) = 0;
 
 };
 

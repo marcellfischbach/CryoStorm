@@ -14,6 +14,7 @@ class CS_ASSIMP_API csAssimpLoaderModule : public CS_SUPER(iModule)
 public:
   bool Register(const std::vector<std::string> &args, csEngine *engine);
   bool Initialize(const std::vector<std::string> &args, csEngine *engine);
+  void Shutdown(const std::vector<std::string> &args, csEngine *engine);
 
 };
 

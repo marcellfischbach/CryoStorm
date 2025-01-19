@@ -14,6 +14,7 @@ class CS_CORE_API csFileSystemFile : public CS_SUPER(iFile)
   CS_CLASS_GEN_OBJECT;
 public:
   csFileSystemFile(const std::string & path);
+  ~csFileSystemFile();
 
   const std::string &GetName() const override;
   bool Open(eAccessMode accessMode, eOpenMode openMode = eOM_Binary) override;

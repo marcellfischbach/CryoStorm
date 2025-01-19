@@ -71,12 +71,12 @@ private:
   csFPS    m_fps;
   uint32_t m_lastFPS;
 
-  iDevice *m_device = nullptr;
-  csWorld *m_world = nullptr;
-  iFrameRenderer *m_frameRenderer = nullptr;
-  iSkyboxRenderer *m_skyboxRenderer = nullptr;
-  csRef<iRenderTarget2D> m_renderTarget = nullptr;
-  iWindow *m_window = nullptr;
+  csRef<iDevice> m_device;
+  csRef<csWorld> m_world;
+  csRef<iFrameRenderer> m_frameRenderer;
+  csRef<iSkyboxRenderer> m_skyboxRenderer;
+  csRef<iRenderTarget2D> m_renderTarget;
+  csRef<iWindow> m_window;
 
   uint8_t m_multiSamples = 1;
 };

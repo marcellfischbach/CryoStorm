@@ -60,8 +60,8 @@ private:
   csVector2f OnScreen(const csVector3f &v, const csMatrix4f &m) const;
 
 
-  csGL4Device *m_device;
-  iGfxScene   *m_scene;
+  csRef<csGL4Device> m_device;
+  csRef<iGfxScene> m_scene;
 
   struct LightRenderShader
   {

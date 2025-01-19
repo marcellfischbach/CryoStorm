@@ -12,6 +12,7 @@
 #include <csOpenGL/gl4/csGL4TerrainMeshGeneratorFactory.hh>
 #include <csOpenGL/gl4/loading/csGL4ProgramLoader.hh>
 #include <csOpenGL/gl4/loading/csGL4ShaderLoader.hh>
+#include <csOpenGL/gl4/pipeline/csGL4DefaultFrameRenderer.hh>
 #include <csOpenGL/gl4/pipeline/forward/csGL4ForwardPipeline.hh>
 #include <csOpenGL/gl4/pipeline/deferred/csGL4DeferredPipeline.hh>
 #include <csOpenGL/gl4/shadergraph/csGL4ShaderGraphCompiler.hh>
@@ -27,6 +28,7 @@ bool csOpenGLModule::Register(const std::vector<std::string> &args, csEngine *en
   csAssetManager::Get()->RegisterLoader(new csGL4ShaderLoader());
 
   csObjectRegistry::Register<iDevice>(new csGL4Device());
+  csObjectRegistry::Register<iFrameRenderer>(new csGL4DefaultFrameRenderer);
 
   std::string renderPipeline = csSettings::Get().Graphics().GetText("pipeline", "forward");
   if (renderPipeline == std::string("forward"))
@@ -85,6 +87,24 @@ bool csOpenGLModule::Initialize(const std::vector<std::string> &args, csEngine *
   return initialized;
 }
 
+void csOpenGLModule::Shutdown(const std::vector<std::string> &args, cs::csEngine *engine)
+{
+  auto gl4Graphics = (csGL4Device*)csObjectRegistry::Get<iDevice>();
+  auto pipeline = csObjectRegistry::Get<iRenderPipeline>();
+  pipeline->Shutdown();
+  gl4Graphics->Shutdown();
+
+  csObjectRegistry::Remove<iRenderPipeline>();
+
+  csObjectRegistry::Remove<iFrameRenderer>();
+
+  csObjectRegistry::Remove<csSamplers>();
+  csObjectRegistry::Remove<iTerrainMeshGeneratorFactory>();
+  csObjectRegistry::Remove<iRenderMeshBatchGeneratorFactory>();
+  csObjectRegistry::Remove<iRenderMeshGeneratorFactory>();
+  csObjectRegistry::Remove<iShaderGraphCompilerFactory>();
+  csObjectRegistry::Remove<iDevice>();
+}
 
 }
 

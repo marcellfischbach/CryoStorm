@@ -43,12 +43,11 @@ int csFileSystemArchive::GetPriority() const
   return m_priority;
 }
 
-iFile* csFileSystemArchive::Open(const std::string &locator, cs::eAccessMode accessMode, cs::eOpenMode openMode)
+csOwned<iFile> csFileSystemArchive::Open(const std::string &locator, cs::eAccessMode accessMode, cs::eOpenMode openMode)
 {
-  csFileSystemFile *file = new csFileSystemFile(m_rootPath + locator);
+  csOwned<csFileSystemFile> file = new csFileSystemFile(m_rootPath + locator);
   if (!file->Open(accessMode, openMode))
   {
-    file->Release();
     file = nullptr;
   }
   return file;

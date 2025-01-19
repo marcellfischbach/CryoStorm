@@ -4,6 +4,7 @@
 #include <csCore/csCoreExport.hh>
 #include <csCore/csClass.hh>
 #include <csCore/csTypes.hh>
+#include <csCore/csRef.hh>
 #include <csCore/math/csBoundingBox.hh>
 #include <csCore/math/csVector.hh>
 #include <csCore/math/csColor4f.hh>
@@ -57,7 +58,7 @@ struct CS_CORE_API iRenderMeshGenerator : CS_SUPER(iObject)
   virtual void SetBoneIndices(const std::vector<csVector4i> & boneIndices) = 0;
   virtual void SetBoneWeights(const std::vector<csVector4f> & boneWeights) = 0;
   virtual void SetIndices(const std::vector<uint32_t> & indices) = 0;
-  CS_NODISCARD virtual iRenderMesh* Generate() = 0;
+  CS_NODISCARD virtual csOwned<iRenderMesh> Generate() = 0;
 };
 
 
@@ -67,7 +68,7 @@ struct CS_CORE_API iRenderMeshGeneratorFactory : CS_SUPER(iObject)
   CS_CLASS_GEN;
   ~iRenderMeshGeneratorFactory() override = default;
 
-  CS_NODISCARD virtual iRenderMeshGenerator* Create() = 0;
+  CS_NODISCARD virtual csOwned<iRenderMeshGenerator> Create() = 0;
 };
 
 
@@ -81,7 +82,7 @@ CS_CLASS_GEN;
 
   virtual void Add(const iRenderMesh* mesh, const csMatrix4f &matrix) = 0;
 
-  CS_NODISCARD virtual iRenderMesh* Generate() = 0;
+  CS_NODISCARD virtual csOwned<iRenderMesh> Generate() = 0;
 };
 
 
@@ -91,7 +92,7 @@ struct CS_CORE_API iRenderMeshBatchGeneratorFactory : CS_SUPER(iObject)
 CS_CLASS_GEN;
   ~iRenderMeshBatchGeneratorFactory() override = default;
 
-  CS_NODISCARD virtual iRenderMeshBatchGenerator* Create() = 0;
+  CS_NODISCARD virtual csOwned<iRenderMeshBatchGenerator> Create() = 0;
 };
 
 

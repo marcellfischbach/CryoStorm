@@ -16,7 +16,6 @@ csPPScaleDown::csPPScaleDown()
 
 csPPScaleDown::~csPPScaleDown()
 {
-  CS_RELEASE(m_shader);
   m_shader               = nullptr;
   m_attribColor          = nullptr;
   m_attribTextureSizeInv = nullptr;

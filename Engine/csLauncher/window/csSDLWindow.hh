@@ -32,6 +32,7 @@ public:
   ~csSDLWindow() override;
 
   bool Initialize (bool compat);
+  void Shutdown ();
 
   void SetTitle(const std::string &title) override;
   const std::string &GetTitle() const override;

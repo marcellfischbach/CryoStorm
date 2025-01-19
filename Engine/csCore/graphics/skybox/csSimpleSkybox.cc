@@ -56,8 +56,6 @@ bool csSimpleSkybox::PrepRenderTarget(cs::iDevice *device)
 
   uint16_t skyboxSize = 2048;
 
-  CS_RELEASE(m_skyboxTarget);
-  CS_RELEASE(m_skyboxTexture);
 
   iTextureCube::Descriptor txtDesc {
       ePF_RGBA,

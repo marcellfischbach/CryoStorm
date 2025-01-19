@@ -17,6 +17,11 @@ csImage::csImage(uint16_t width, uint16_t height, ePixelFormat format)
   GenerateLayer(0);
 }
 
+csImage::~csImage()
+{
+  printf ("Delete image\n");
+}
+
 void csImage::GenerateLayers(uint16_t width, uint16_t height)
 {
   // count the layers

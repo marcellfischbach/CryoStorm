@@ -67,7 +67,6 @@ void csGL4Program::DetachShader(csGL4Shader *shader)
   glDetachShader(m_name, shader->GetName());
   CS_GL_ERROR();
   m_shaders.erase(it);
-  shader->Release();
 }
 
 void csGL4Program::Link()

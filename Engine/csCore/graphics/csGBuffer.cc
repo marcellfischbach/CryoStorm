@@ -31,7 +31,7 @@ bool csGBuffer::Update(cs::iDevice *device, uint16_t width, uint16_t height)
     {
       return true;
     }
-    CS_RELEASE(m_gBuffer);
+    m_gBuffer = nullptr;
     m_diffuseRoughness = nullptr;
     m_depth = nullptr;
     m_normal = nullptr;

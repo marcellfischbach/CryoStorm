@@ -14,6 +14,7 @@ CS_CLASS_GEN_OBJECT;
 public:
   bool Register(const std::vector<std::string> &args, csEngine *engine);
   bool Initialize(const std::vector<std::string> &args, csEngine *engine);
+  void Shutdown(const std::vector<std::string> &args, csEngine *engine);
 
 };
 

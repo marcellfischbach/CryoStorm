@@ -19,20 +19,16 @@ csSkeletonAnimationPlayer::csSkeletonAnimationPlayer()
 
 csSkeletonAnimationPlayer::~csSkeletonAnimationPlayer()
 {
-  CS_RELEASE(m_skeleton);
-  CS_RELEASE(m_animation);
-  m_skeleton  = nullptr;
-  m_animation = nullptr;
 }
 
 void csSkeletonAnimationPlayer::SetSkeleton(cs::csSkeleton *skeleton)
 {
-  CS_SET(m_skeleton, skeleton);
+  m_skeleton = skeleton;
 }
 
 void csSkeletonAnimationPlayer::SetAnimation(cs::csSkeletonAnimation *animation)
 {
-  CS_SET(m_animation, animation);
+  m_animation = animation;
 }
 
 

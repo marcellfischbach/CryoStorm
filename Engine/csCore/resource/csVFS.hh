@@ -6,6 +6,7 @@
 #include <csCore/resource/eAccessMode.hh>
 #include <csCore/resource/eOpenMode.hh>
 #include <csCore/resource/iFile.hh>
+#include <csCore/csRef.hh>
 #include <map>
 #include <string>
 #include <vector>
@@ -26,16 +27,16 @@ public:
   void AddArchive (iArchive* archive);
   void InsertAlias(const std::string &alias, const std::string &replacement);
 
-  const std::vector<const iArchive*> &GetArchives () const;
+  CS_NODISCARD const std::vector<csRef<const iArchive>> &GetArchives () const;
 
-  CS_NODISCARD iFile *Open(const csAssetLocator &resourceLocator, eAccessMode accessMode, eOpenMode openMode) const;
+  CS_NODISCARD csOwned<iFile> Open(const csAssetLocator &resourceLocator, eAccessMode accessMode, eOpenMode openMode) const;
 
 private:
   csVFS();
   CS_NODISCARD iFile *File(const csAssetLocator &resourceLocator) const;
   CS_NODISCARD std::string ReplaceAliases(const std::string &str) const;
 
-  std::vector<iArchive *>            m_archives;
+  std::vector<csRef<iArchive>>            m_archives;
   std::string                        m_rootPath;
   std::map<std::string, std::string> m_aliases;
 };

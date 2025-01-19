@@ -29,6 +29,10 @@ bool csAssimpLoaderModule::Initialize(const std::vector<std::string> &args, csEn
   return true;
 }
 
+void csAssimpLoaderModule::Shutdown(const std::vector<std::string> &args, cs::csEngine *engine)
+{
+
+}
 
 }
 

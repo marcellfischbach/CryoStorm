@@ -85,12 +85,12 @@ void csGL4PSSMRenderer::Initialize()
 
 void csGL4PSSMRenderer::SetDevice(csGL4Device *device)
 {
-  CS_SET(m_device, device);
+  m_device = device;
 }
 
 void csGL4PSSMRenderer::SetDepthBuffer(iTexture2D *depthBuffer)
 {
-  CS_SET(m_depthBuffer, depthBuffer);
+  m_depthBuffer = depthBuffer;
 
   if (m_depthBuffer)
   {
@@ -102,12 +102,12 @@ void csGL4PSSMRenderer::SetDepthBuffer(iTexture2D *depthBuffer)
 
 void csGL4PSSMRenderer::SetScene(iGfxScene *scene)
 {
-  CS_SET(m_scene, scene);
+  m_scene = scene;
 }
 
 void csGL4PSSMRenderer::SetShadowMap(csGL4RenderTarget2D *shadowMap)
 {
-  CS_SET(m_directionalLightShadowMap, shadowMap);
+  m_directionalLightShadowMap = shadowMap;
 }
 
 csGL4RenderTarget2D *csGL4PSSMRenderer::GetShadowMap()
@@ -121,7 +121,7 @@ void csGL4PSSMRenderer::SetShadowBuffer(const csGL4PSSMShadowBufferObject &shado
   m_directionalLightShadowBuffers.ShadowColor = shadowBufferObject.ShadowColor;
   for (size_t i = 0; i < m_directionalLightShadowBuffers.ShadowBuffers.size(); ++i)
   {
-    CS_SET(m_directionalLightShadowBuffers.ShadowBuffers[i], shadowBufferObject.ShadowBuffers[i]);
+    m_directionalLightShadowBuffers.ShadowBuffers[i] = shadowBufferObject.ShadowBuffers[i];
   }
 }
 
@@ -328,10 +328,8 @@ void csGL4PSSMRenderer::RenderShadowBuffer(const csGL4DirectionalLight *directio
     m_device->SetProjectionMatrix(proj);
     m_device->SetViewMatrix(view);
 
-//    std::sort(m_meshesCache.begin(), m_meshesCache.end(), material_shader_compare_less_forward);
 
     uint64_t        startTime = csTime::GetTime();
-//    printf (" [%d @ (%.2f %.2f)]", m_meshesCache.size(), near, far);
     size_t          c         = 0;
     for (const auto &mesh: meshes)
     {
@@ -462,7 +460,6 @@ csGL4PSSMShadowBufferObject csGL4PSSMRenderer::CreateDirectionalLightShadowBuffe
     if (!shadowRenderTarget->Compile())
     {
       printf("Unable to compile\n");
-      shadowRenderTarget->Release();
       shadowRenderTarget = nullptr;
     }
 
@@ -524,7 +521,6 @@ csOwned<csGL4RenderTarget2D> csGL4PSSMRenderer::CreateDirectionalLightShadowMap(
 
   if (!target->Compile())
   {
-    target->Release();
     target = nullptr;
   }
 
@@ -621,12 +617,12 @@ csGL4PSSMShadowBufferObject::csGL4PSSMShadowBufferObject()
 
 csGL4PSSMShadowBufferObject::csGL4PSSMShadowBufferObject(const csGL4PSSMShadowBufferObject &sbo)
 {
-  CS_SET(ShadowDepth, sbo.ShadowDepth);
-  CS_SET(ShadowColor, sbo.ShadowColor);
-  CS_SET(ShadowBuffers[0], sbo.ShadowBuffers[0]);
-  CS_SET(ShadowBuffers[1], sbo.ShadowBuffers[1]);
-  CS_SET(ShadowBuffers[2], sbo.ShadowBuffers[2]);
-  CS_SET(ShadowBuffers[3], sbo.ShadowBuffers[3]);
+  ShadowDepth = sbo.ShadowDepth;
+  ShadowColor = sbo.ShadowColor;
+  ShadowBuffers[0] = sbo.ShadowBuffers[0];
+  ShadowBuffers[1] = sbo.ShadowBuffers[1];
+  ShadowBuffers[2] = sbo.ShadowBuffers[2];
+  ShadowBuffers[3] = sbo.ShadowBuffers[3];
 }
 
 csGL4PSSMShadowBufferObject::csGL4PSSMShadowBufferObject(csGL4PSSMShadowBufferObject &&sbo)
@@ -637,6 +633,8 @@ csGL4PSSMShadowBufferObject::csGL4PSSMShadowBufferObject(csGL4PSSMShadowBufferOb
   ShadowBuffers[1]     = sbo.ShadowBuffers[1];
   ShadowBuffers[2]     = sbo.ShadowBuffers[2];
   ShadowBuffers[3]     = sbo.ShadowBuffers[3];
+  sbo.ShadowDepth = nullptr;
+  sbo.ShadowColor = nullptr;
   sbo.ShadowBuffers[0] = nullptr;
   sbo.ShadowBuffers[1] = nullptr;
   sbo.ShadowBuffers[2] = nullptr;
@@ -645,22 +643,17 @@ csGL4PSSMShadowBufferObject::csGL4PSSMShadowBufferObject(csGL4PSSMShadowBufferOb
 
 csGL4PSSMShadowBufferObject::~csGL4PSSMShadowBufferObject()
 {
-  CS_RELEASE(ShadowDepth);
-  CS_RELEASE(ShadowColor);
-  CS_RELEASE(ShadowBuffers[0]);
-  CS_RELEASE(ShadowBuffers[1]);
-  CS_RELEASE(ShadowBuffers[2]);
-  CS_RELEASE(ShadowBuffers[3]);
+
 }
 
 csGL4PSSMShadowBufferObject &csGL4PSSMShadowBufferObject::operator=(const csGL4PSSMShadowBufferObject &sbo)
 {
-  CS_SET(ShadowDepth, sbo.ShadowDepth);
-  CS_SET(ShadowColor, sbo.ShadowColor);
-  CS_SET(ShadowBuffers[0], sbo.ShadowBuffers[0]);
-  CS_SET(ShadowBuffers[1], sbo.ShadowBuffers[1]);
-  CS_SET(ShadowBuffers[2], sbo.ShadowBuffers[2]);
-  CS_SET(ShadowBuffers[3], sbo.ShadowBuffers[3]);
+  ShadowDepth = sbo.ShadowDepth;
+  ShadowColor = sbo.ShadowColor;
+  ShadowBuffers[0]     = sbo.ShadowBuffers[0];
+  ShadowBuffers[1]     = sbo.ShadowBuffers[1];
+  ShadowBuffers[2]     = sbo.ShadowBuffers[2];
+  ShadowBuffers[3]     = sbo.ShadowBuffers[3];
   return *this;
 }
 

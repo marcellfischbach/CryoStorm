@@ -45,13 +45,9 @@ csGL4Sampler::csGL4Sampler()
 
 csGL4Sampler::~csGL4Sampler()
 {
-//  CS_GL_ERROR();
+  CS_GL_ERROR();
   glDeleteSamplers(1, &m_name);
-  {
-    GLenum error = glGetError();
-    csGLErrorCallError(error, __FILE__, __LINE__);
-  }
-  m_name = 0;
+  CS_GL_ERROR();
 }
 
 void csGL4Sampler::Bind(eTextureUnit unit)

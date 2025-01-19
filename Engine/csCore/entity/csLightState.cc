@@ -122,10 +122,6 @@ void csLightState::AddToScene(csWorld* world)
   if (world)
   {
     iGfxScene * scene = world->GetScene();
-    if (m_gfxLight)
-    {
-      m_gfxLight->Release();
-    }
     m_gfxLight = new csGfxLight();
     m_gfxLight->SetStatic(IsStatic());
     m_gfxLight->SetLight(m_light);

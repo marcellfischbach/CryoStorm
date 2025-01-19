@@ -17,7 +17,6 @@ csPPCombine::csPPCombine()
 
 csPPCombine::~csPPCombine()
 {
-  CS_RELEASE(m_shader);
   m_shader               = nullptr;
   m_attribColor0          = nullptr;
   m_attribColor1          = nullptr;
@@ -28,7 +27,7 @@ bool csPPCombine::RefreshOutputTexture(cs::iDevice *device, iRenderTarget2D *fin
 {
   if (finalTarget)
   {
-    CS_SET(m_renderTarget, finalTarget);
+    m_renderTarget = finalTarget;
     return finalTarget;
   }
 

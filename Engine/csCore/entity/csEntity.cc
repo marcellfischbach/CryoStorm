@@ -280,8 +280,7 @@ void csEntity::RegisterEntityState(csEntityState *entityState)
   auto it = std::find(m_states.begin(), m_states.end(), entityState);
   if (it == m_states.end())
   {
-    entityState->AddRef();
-    m_states.push_back(entityState);
+    m_states.emplace_back(entityState);
     if (m_world)
     {
       entityState->AttachToWorld(m_world);

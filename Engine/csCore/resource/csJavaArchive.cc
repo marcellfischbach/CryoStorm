@@ -44,7 +44,7 @@ void csJavaArchive::SetPriority(int priority)
 
 #define IF_NULL(obj) if (!(obj)) return nullptr
 
-iFile *csJavaArchive::Open(const std::string &locator, eAccessMode accessMode, eOpenMode openMode)
+csOwned<iFile> csJavaArchive::Open(const std::string &locator, eAccessMode accessMode, eOpenMode openMode)
 {
   JNIEnv                                                 *env = csJava::Get();
   static csJavaCallObject3<jobject, jstring, jint, jint> open(env,

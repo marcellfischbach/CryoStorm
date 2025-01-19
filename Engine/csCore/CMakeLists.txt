@@ -70,8 +70,6 @@ set(SOURCES
 
         graphics/csCamera.cc
         graphics/csCamera.hh
-        graphics/csDefaultFrameRenderer.cc
-        graphics/csDefaultFrameRenderer.hh
         graphics/csDefaultMeshGenerators.cc
         graphics/csDefaultMeshGenerators.hh
         graphics/eBufferUsage.hh

@@ -31,7 +31,7 @@ csOwned<iAsset> csMaterialLoader::Load(const csCryoFile *file, const csAssetLoca
   return nullptr;
 }
 
-csMaterial *csMaterialLoader::LoadMaterial(const csCryoFile *file, const csAssetLocator &locator)
+csOwned<csMaterial> csMaterialLoader::LoadMaterial(const csCryoFile *file, const csAssetLocator &locator)
 {
   const csCryoFileElement *root            = file->Root();
   const csCryoFileElement *materialElement = root->GetChild("material");
@@ -49,13 +49,11 @@ csMaterial *csMaterialLoader::LoadMaterial(const csCryoFile *file, const csAsset
 
   if (!LoadShaders(material, materialElement, locator))
   {
-    CS_RELEASE(material);
     return nullptr;
   }
 
   if (!LoadAttributes(material, materialElement, locator))
   {
-    CS_RELEASE(material);
     return nullptr;
   }
 
@@ -63,7 +61,7 @@ csMaterial *csMaterialLoader::LoadMaterial(const csCryoFile *file, const csAsset
   return material;
 }
 
-csMaterialInstance *csMaterialLoader::LoadMaterialInstance(const csCryoFile *file, const csAssetLocator &locator)
+csOwned<csMaterialInstance> csMaterialLoader::LoadMaterialInstance(const csCryoFile *file, const csAssetLocator &locator)
 {
 
   const csCryoFileElement *root            = file->Root();
@@ -77,13 +75,11 @@ csMaterialInstance *csMaterialLoader::LoadMaterialInstance(const csCryoFile *fil
 
   if (!LoadReferenceMaterial(materialInstance, materialElement, locator))
   {
-    CS_RELEASE(materialInstance);
     return nullptr;
   }
 
   if (!LoadAttributes(materialInstance, materialElement, locator))
   {
-    CS_RELEASE(materialInstance);
     return nullptr;
   }
 

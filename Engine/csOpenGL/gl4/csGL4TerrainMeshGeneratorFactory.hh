@@ -16,9 +16,11 @@ public:
   csGL4TerrainMeshGeneratorFactory(bool compat);
   virtual ~csGL4TerrainMeshGeneratorFactory() override = default;
 
+  csOwned<iTerrainMeshGenerator> Create() override;
+  
 private:
   bool m_compat;
-  iTerrainMeshGenerator* Create() override;
+
 };
 
 }

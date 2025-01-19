@@ -14,7 +14,7 @@ namespace cs::opengl
 {
 
 
-csMaterial *csGL4ShaderGraphCompiler::Compile(cs::csShaderGraph *shaderGraph, const Parameters &parameters)
+csOwned<csMaterial> csGL4ShaderGraphCompiler::Compile(cs::csShaderGraph *shaderGraph, const Parameters &parameters)
 {
   m_shaderGraph = shaderGraph;
   m_errorString = "";
@@ -52,7 +52,7 @@ csMaterial *csGL4ShaderGraphCompiler::Compile(cs::csShaderGraph *shaderGraph, co
   csRef<iShader> depthShader   = Compile(depth, "Depth");
   csRef<iShader> forwardShader = Compile(forward, "Forward");
 
-  csMaterial *material = new csMaterial();
+  csRef<csMaterial> material = new csMaterial();
   material->SetShader(eRP_Depth, depthShader);
   material->SetShader(eRP_Forward, forwardShader);
 
@@ -518,7 +518,7 @@ const csGL4ShaderGraphLightData &csGL4ShaderGraphLightData::Get()
 
 static std::string get_file_content(const std::string &locator)
 {
-  iFile *pFile = csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
+  csRef<iFile> pFile = csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (!pFile)
   {
     return std::string();
@@ -532,7 +532,6 @@ static std::string get_file_content(const std::string &locator)
   char *buffer = new char[size + 1];
   memset(buffer, 0, size + 1);
   pFile->Read(sizeof(char), size, buffer);
-  pFile->Close();
 
 
   std::string result(buffer);
@@ -682,7 +681,7 @@ void csGL4ShaderGraphCompiler::SetMaterialDefaults(cs::csMaterial *material)
   }
 }
 
-iShaderGraphCompiler *csGL4ShaderGraphCompilerFactory::Create() const
+csOwned<iShaderGraphCompiler> csGL4ShaderGraphCompilerFactory::Create() const
 {
   return new csGL4ShaderGraphCompiler();
 }

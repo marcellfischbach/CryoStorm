@@ -35,7 +35,7 @@ csOwned<iAsset> csGL4ProgramLoader::Load(const csCryoFile *file, const csAssetLo
     return nullptr;
   }
 
-  csGL4Program * program = new csGL4Program();
+  csRef<csGL4Program> program = new csGL4Program();
   for (Size i = 0, in = shadersElement->GetNumberOfChildren(); i < in; i++)
   {
     const csCryoFileElement * shaderElement = shadersElement->GetChild(i);
@@ -53,7 +53,6 @@ csOwned<iAsset> csGL4ProgramLoader::Load(const csCryoFile *file, const csAssetLo
   catch (csGL4ProgramLinkException& ple)
   {
     printf("Unable to link program [%s]:\n%s\n", locator.Encoded().c_str(), ple.what());
-    program->Release();
     return nullptr;
   }
 

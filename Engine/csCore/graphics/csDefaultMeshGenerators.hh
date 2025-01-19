@@ -6,7 +6,7 @@
 
 
 #include <csCore/csCoreExport.hh>
-
+#include <csCore/csRef.hh>
 #include <csCore/math/csVector2f.hh>
 #include <csCore/math/csVector3f.hh>
 #include <vector>
@@ -26,11 +26,11 @@ public:
   csCubeMeshGenerator &TexScale(const csVector2f &texScale);
 
 
-  iRenderMesh *Generate();
+  csOwned<iRenderMesh> Generate();
 
 private:
-  iRenderMesh *GenerateSmooth();
-  iRenderMesh *GenerateFlat();
+  csOwned<iRenderMesh> GenerateSmooth();
+  csOwned<iRenderMesh> GenerateFlat();
 
   void AddFlatFaceVertices(const csVector3f &v0, const csVector3f &v1, const csVector3f &v2, const csVector3f &v3);
   void AddFlatFaceNormals(const csVector3f &normal);

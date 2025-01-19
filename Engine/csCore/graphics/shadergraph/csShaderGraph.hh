@@ -24,12 +24,12 @@ public:
   ~csShaderGraph() override;
 
   template<typename T>
-  T *Add(const std::string &key);
-  csSGNode *Add(const csClass *nodeClass, const std::string &key);
+  csOwned<T> Add(const std::string &key);
+  csOwned<csSGNode> Add(const csClass *nodeClass, const std::string &key);
 
   template<typename T>
-  T *AddResource(const std::string &key, const std::string &resourceName);
-  csSGResourceNode *AddResource(const csClass *nodeClass, const std::string &key, const std::string &resourceName);
+  csOwned<T> AddResource(const std::string &key, const std::string &resourceName);
+  csOwned<csSGResourceNode> AddResource(const csClass *nodeClass, const std::string &key, const std::string &resourceName);
 
   bool Remove(csSGNode *node);
 
@@ -110,25 +110,25 @@ private:
 };
 
 template<typename T>
-T *csShaderGraph::Add(const std::string &key)
+csOwned<T> csShaderGraph::Add(const std::string &key)
 {
   const csClass *nodeClass = T::GetStaticClass();
 
-  csSGNode *node = Add(nodeClass, key);
+  csOwned<csSGNode> node = Add(nodeClass, key);
 
-  return static_cast<T *>(node);
+  return csOwned<T>(static_cast<T *>(node.Data()));
 
 }
 
 
 template<typename T>
-T *csShaderGraph::AddResource(const std::string &key, const std::string &resourceName)
+csOwned<T> csShaderGraph::AddResource(const std::string &key, const std::string &resourceName)
 {
   const csClass *nodeClass = T::GetStaticClass();
 
-  csSGNode *node = AddResource(nodeClass, key, resourceName);
+  csOwned<csSGNode> node = AddResource(nodeClass, key, resourceName);
 
-  return static_cast<T *>(node);
+  return csOwned<T>(static_cast<T *>(node.Data()));
 }
 
 

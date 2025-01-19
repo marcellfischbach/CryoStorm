@@ -38,8 +38,7 @@ void csVFS::AddArchive(cs::iArchive *archive)
 {
   if (archive)
   {
-    archive->AddRef();
-    m_archives.push_back(archive);
+    m_archives.emplace_back(archive);
 
     struct
     {
@@ -49,9 +48,9 @@ void csVFS::AddArchive(cs::iArchive *archive)
   }
 }
 
-const std::vector<const iArchive*> &csVFS::GetArchives() const
+const std::vector<csRef<const iArchive>> &csVFS::GetArchives() const
 {
-  return reinterpret_cast<const std::vector<const iArchive*> &>(m_archives);
+  return reinterpret_cast<const std::vector<csRef<const iArchive>> &>(m_archives);
 
 }
 
@@ -60,7 +59,7 @@ void csVFS::InsertAlias(const std::string& alias, const std::string& replacement
   m_aliases[alias] = replacement;
 }
 
-iFile* csVFS::Open(const csAssetLocator& resourceLocator, eAccessMode accessMode, eOpenMode openMode) const
+csOwned<iFile> csVFS::Open(const csAssetLocator& resourceLocator, eAccessMode accessMode, eOpenMode openMode) const
 {
 
   const std::string &archiveName = resourceLocator.GetArchive();
@@ -72,7 +71,7 @@ iFile* csVFS::Open(const csAssetLocator& resourceLocator, eAccessMode accessMode
       continue;
     }
 
-    iFile* file = archive->Open(resourcePathWithReplacedAliases, accessMode, openMode);
+    csOwned<iFile> file = archive->Open(resourcePathWithReplacedAliases, accessMode, openMode);
     if (file)
     {
       return file;

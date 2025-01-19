@@ -1,5 +1,6 @@
 #pragma once
 
+#include <csCore/csRef.hh>
 
 
 namespace cs
@@ -31,6 +32,6 @@ csVector2f Convert2f(aiVector3D &v);
 csVector3f Convert3f(aiVector3D &v);
 csMatrix4f ConvertMatrix4x4(aiMatrix4x4 &aiMat);
 
-iRenderMesh *ConvertRenderMesh(aiMesh *mesh, const csMatrix4f &matrix, csSkeleton* skeleton);
+csOwned<iRenderMesh> ConvertRenderMesh(aiMesh *mesh, const csMatrix4f &matrix, csSkeleton* skeleton);
 
 }

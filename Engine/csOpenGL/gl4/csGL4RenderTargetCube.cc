@@ -107,7 +107,6 @@ void csGL4RenderTargetCube::AddColorTexture(iTextureCube* colorTexture)
 
 
   csGL4TextureCube * txt = colorTexture->Query<csGL4TextureCube>();
-  txt->AddRef();
 
 
   if (colorTexture->GetFormat() == ePF_DepthStencil) {
@@ -121,7 +120,7 @@ void csGL4RenderTargetCube::AddColorTexture(iTextureCube* colorTexture)
     txt->GetName(),
     0);
   CS_GL_ERROR();
-  m_colorTextures.push_back(txt);
+  m_colorTextures.emplace_back(colorTexture);
 }
 
 

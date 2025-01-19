@@ -22,17 +22,11 @@ csViewport::csViewport()
 
 csViewport::~csViewport()
 {
-  CS_RELEASE(m_device);
-  CS_RELEASE(m_world);
-  CS_RELEASE(m_frameRenderer);
-  CS_RELEASE(m_skyboxRenderer);
-  CS_RELEASE(m_renderTarget);
-  CS_RELEASE(m_window);
 }
 
 void csViewport::SetDevice(cs::iDevice *device)
 {
-  CS_SET(m_device, device);
+  m_device = device;
 }
 
 iDevice *csViewport::GetDevice()
@@ -47,7 +41,7 @@ const iDevice *csViewport::GetDevice() const
 
 void csViewport::SetWorld(cs::csWorld *world)
 {
-  CS_SET(m_world, world);
+  m_world = world;
 }
 
 cs::csWorld *csViewport::GetWorld()
@@ -63,7 +57,7 @@ const cs::csWorld *csViewport::GetWorld() const
 
 void csViewport::SetFrameRenderer(cs::iFrameRenderer *frameRenderer)
 {
-  CS_SET(m_frameRenderer, frameRenderer);
+  m_frameRenderer = frameRenderer;
 }
 
 cs::iFrameRenderer *csViewport::GetFrameRenderer()
@@ -78,7 +72,7 @@ const cs::iFrameRenderer *csViewport::GetFrameRenderer() const
 
 void csViewport::SetSkyboxRenderer(cs::iSkyboxRenderer *skyboxRenderer)
 {
-  CS_SET(m_skyboxRenderer, skyboxRenderer);
+  m_skyboxRenderer = skyboxRenderer;
 }
 
 cs::iSkyboxRenderer *csViewport::GetSkyboxRenderer()
@@ -103,7 +97,7 @@ const cs::iRenderTarget2D *csViewport::GetRenderTarget() const
 
 void csViewport::SetWindow(cs::iWindow *window)
 {
-  CS_SET(m_window, window);
+  m_window = window;
 }
 
 cs::iWindow *csViewport::GetWindow()
@@ -120,13 +114,13 @@ const cs::iWindow *csViewport::GetWindow() const
 static csOwned<cs::iRenderTarget2D>
 create_render_target(cs::iDevice *device, uint32_t width, uint32_t height, uint16_t multiSamples)
 {
-  csOwned<cs::iSampler> colorSampler = device->CreateSampler();
-  colorSampler.Data()->SetFilterMode(cs::eFM_MinMagNearest);
+  csRef<cs::iSampler> colorSampler = device->CreateSampler();
+  colorSampler->SetFilterMode(cs::eFM_MinMagNearest);
 
-  csOwned<cs::iSampler> depthSampler = device->CreateSampler();
-  depthSampler.Data()->SetFilterMode(cs::eFM_MinMagNearest);
-  depthSampler.Data()->SetTextureCompareFunc(cs::eCF_LessOrEqual);
-  depthSampler.Data()->SetTextureCompareMode(cs::eTCM_None);
+  csRef<cs::iSampler> depthSampler = device->CreateSampler();
+  depthSampler->SetFilterMode(cs::eFM_MinMagNearest);
+  depthSampler->SetTextureCompareFunc(cs::eCF_LessOrEqual);
+  depthSampler->SetTextureCompareMode(cs::eTCM_None);
 
   cs::iTexture2D::Descriptor rt_col_desc = {};
   rt_col_desc.Width = width;
@@ -134,8 +128,8 @@ create_render_target(cs::iDevice *device, uint32_t width, uint32_t height, uint1
   rt_col_desc.Format = cs::ePF_RGBA;
   rt_col_desc.MipMaps = false;
   rt_col_desc.MultiSamples = multiSamples;
-  csOwned<cs::iTexture2D> color_texture = device->CreateTexture(rt_col_desc);
-  color_texture.Data()->SetSampler(colorSampler.Data());
+  csRef<cs::iTexture2D> color_texture = device->CreateTexture(rt_col_desc);
+  color_texture->SetSampler(colorSampler);
 
   cs::iTexture2D::Descriptor rt_dpth_desc = {};
   rt_dpth_desc.Width = width;
@@ -143,24 +137,24 @@ create_render_target(cs::iDevice *device, uint32_t width, uint32_t height, uint1
   rt_dpth_desc.Format = cs::ePF_DepthStencil;
   rt_dpth_desc.MipMaps = false;
   rt_dpth_desc.MultiSamples = multiSamples;
-  csOwned<cs::iTexture2D> depth_texture = device->CreateTexture(rt_dpth_desc);
-  depth_texture.Data()->SetSampler(depthSampler.Data());
+  csRef<cs::iTexture2D> depth_texture = device->CreateTexture(rt_dpth_desc);
+  depth_texture->SetSampler(depthSampler);
 
 
   cs::iRenderTarget2D::Descriptor rt_desc = {};
   rt_desc.Width = width;
   rt_desc.Height = height;
 
-  csOwned<cs::iRenderTarget2D> renderTarget = device->CreateRenderTarget(rt_desc);
-  renderTarget.Data()->AddColorTexture(color_texture.Data());
+  csRef<cs::iRenderTarget2D> renderTarget = device->CreateRenderTarget(rt_desc);
+  renderTarget->AddColorTexture(color_texture);
 //  renderTarget->SetDepthBuffer(cs::ePF_Depth);
-  renderTarget.Data()->SetDepthTexture(depth_texture.Data());
-  if (!renderTarget.Data()->Compile())
+  renderTarget->SetDepthTexture(depth_texture);
+  if (!renderTarget->Compile())
   {
-    printf("Unable to compile render target: %s\n", renderTarget.Data()->GetCompileLog().c_str());
+    printf("Unable to compile render target: %s\n", renderTarget->GetCompileLog().c_str());
     return nullptr;
   }
-  return renderTarget;
+  return csOwned<iRenderTarget2D>(renderTarget);
 }
 
 
@@ -171,7 +165,6 @@ bool csViewport::ProcessFrame(iRenderTarget2D *renderTarget)
   if (!m_renderTarget || m_renderTarget->GetWidth() != m_window->GetWidth() ||
       m_renderTarget->GetHeight() != m_window->GetHeight())
   {
-    CS_RELEASE(m_renderTarget);
     m_renderTarget = create_render_target(m_device, m_window->GetWidth(), m_window->GetHeight(), m_multiSamples);
     if (m_renderTarget == nullptr)
     {

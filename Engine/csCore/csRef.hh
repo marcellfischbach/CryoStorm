@@ -40,7 +40,7 @@ public:
     m_ptr = other.m_ptr;
     if (m_ptr)
     {
-      reinterpret_cast<iObject *>(m_ptr)->AddRef();
+      reinterpret_cast<const iObject *>(m_ptr)->AddRef();
     }
   }
 
@@ -51,7 +51,7 @@ public:
     m_ptr = static_cast<T*>(other.raw());
     if (m_ptr)
     {
-      reinterpret_cast<iObject *>(m_ptr)->AddRef();
+      reinterpret_cast<const iObject *>(m_ptr)->AddRef();
     }
   }
 
@@ -231,7 +231,7 @@ public:
     }
     if (m_ptr)
     {
-      reinterpret_cast<iAsset *>(m_ptr)->Release();
+      reinterpret_cast<const iAsset *>(m_ptr)->Release();
     }
     m_ptr = t;
     return *this;
@@ -377,11 +377,11 @@ public:
     {
       if (other.m_ptr)
       {
-        reinterpret_cast<iObject *>(other.m_ptr)->AddRef();
+        reinterpret_cast<const iObject *>(other.m_ptr)->AddRef();
       }
       if (m_ptr)
       {
-        reinterpret_cast<iObject *>(m_ptr)->Release();
+        reinterpret_cast<const iObject *>(m_ptr)->Release();
       }
       m_ptr = other.m_ptr;
     }
@@ -395,11 +395,29 @@ public:
     {
       if (otherPtr)
       {
-        reinterpret_cast<iObject *>(otherPtr)->AddRef();
+        reinterpret_cast<const iObject *>(otherPtr)->AddRef();
       }
       if (m_ptr)
       {
-        reinterpret_cast<iObject *>(m_ptr)->Release();
+        reinterpret_cast<const iObject *>(m_ptr)->Release();
+      }
+      m_ptr = static_cast<T *>(otherPtr);
+    }
+  }
+
+  template<typename O>
+  csOwned(const csRef<O> &other)
+  {
+    O *otherPtr = other.raw();
+    if (otherPtr != m_ptr)
+    {
+      if (otherPtr)
+      {
+        reinterpret_cast<const iObject *>(otherPtr)->AddRef();
+      }
+      if (m_ptr)
+      {
+        reinterpret_cast<const iObject *>(m_ptr)->Release();
       }
       m_ptr = static_cast<T *>(otherPtr);
     }
@@ -409,10 +427,11 @@ public:
   {
     if (m_ptr)
     {
-      reinterpret_cast<iObject *>(m_ptr)->Release();
+      reinterpret_cast<const iObject *>(m_ptr)->Release();
       m_ptr = nullptr;
     }
   }
+
 
   csOwned &operator=(const csOwned &other)
   {
@@ -425,11 +444,11 @@ public:
     {
       if (other.m_ptr)
       {
-        reinterpret_cast<iObject *>(other.m_ptr)->AddRef();
+        reinterpret_cast<const iObject *>(other.m_ptr)->AddRef();
       }
       if (m_ptr)
       {
-        reinterpret_cast<iObject *>(m_ptr)->Release();
+        reinterpret_cast<const iObject *>(m_ptr)->Release();
       }
       m_ptr = other.m_ptr;
     }
@@ -439,26 +458,63 @@ public:
   template<typename O>
   csOwned &operator=(const csOwned<O> &other)
   {
-    if (this == &other)
-    {
-      return *this;
-    }
 
     O *otherPtr = other.Data();
     if (otherPtr != m_ptr)
     {
       if (otherPtr)
       {
-        reinterpret_cast<iObject *>(otherPtr)->AddRef();
+        reinterpret_cast<const iObject *>(otherPtr)->AddRef();
       }
       if (m_ptr)
       {
-        reinterpret_cast<iObject *>(m_ptr)->Release();
+        reinterpret_cast<const iObject *>(m_ptr)->Release();
       }
       m_ptr = static_cast<T *>(otherPtr);
     }
     return *this;
   }
+
+  template<typename O>
+  csOwned &operator=(const csRef<O> &other)
+  {
+
+    O *otherPtr = other.raw();
+    if (otherPtr != m_ptr)
+    {
+      if (otherPtr)
+      {
+        reinterpret_cast<const iObject *>(otherPtr)->AddRef();
+      }
+      if (m_ptr)
+      {
+        reinterpret_cast<const iObject *>(m_ptr)->Release();
+      }
+      m_ptr = static_cast<T *>(otherPtr);
+    }
+    return *this;
+  }
+
+  template<typename O>
+  csOwned &operator=(const csAssetRef<O> &other)
+  {
+
+    O *otherPtr = other.raw();
+    if (otherPtr != m_ptr)
+    {
+      if (otherPtr)
+      {
+        reinterpret_cast<const iObject *>(otherPtr)->AddRef();
+      }
+      if (m_ptr)
+      {
+        reinterpret_cast<const iObject *>(m_ptr)->Release();
+      }
+      m_ptr = static_cast<T *>(otherPtr);
+    }
+    return *this;
+  }
+
 
   operator bool() const
   {
@@ -482,20 +538,27 @@ public:
     return t;
   }
 
-  operator csRef<T>()
+  template<typename O>
+  operator csRef<O>()
   {
-    return csRef<T>(m_ptr);
+    return csRef<O>(m_ptr);
   };
 
-  operator csAssetRef<T>()
+  template<typename O>
+  operator csAssetRef<O>()
   {
-    return csAssetRef<T>(m_ptr);
+    return csAssetRef<O>(m_ptr);
   };
 
   template<typename O>
   csOwned<O> Query() const
   {
     return csOwned<O>(reinterpret_cast<iObject *>(m_ptr)->Query<O>());
+  }
+
+  csRef<T> toRef ()
+  {
+    return csRef<T>(m_ptr);
   }
 
 private:

@@ -19,3 +19,8 @@ bool GameModule::Initialize(const std::vector<std::string> &args, cs::csEngine *
 {
   return true;
 }
+
+void GameModule::Shutdown(const std::vector<std::string> &args, cs::csEngine *engine)
+{
+
+}

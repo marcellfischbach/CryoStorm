@@ -69,7 +69,7 @@ void csGL4PointSMRenderer::Initialize()
 
 void csGL4PointSMRenderer::SetDevice(csGL4Device *device)
 {
-  CS_SET(m_device, device);
+  m_device = device;
 }
 
 void csGL4PointSMRenderer::SetDepthBuffer(iTexture2D *depthBuffer)
@@ -81,12 +81,12 @@ void csGL4PointSMRenderer::SetDepthBuffer(iTexture2D *depthBuffer)
 
 void csGL4PointSMRenderer::SetScene(iGfxScene *scene)
 {
-  CS_SET(m_scene, scene);
+  m_scene = scene;
 }
 
 void csGL4PointSMRenderer::SetShadowMap(csGL4RenderTarget2D *shadowMap)
 {
-  CS_SET(m_pointLightShadowMap, shadowMap);
+  m_pointLightShadowMap = shadowMap;
 }
 
 csGL4RenderTarget2D *csGL4PointSMRenderer::GetShadowMap()
@@ -239,7 +239,6 @@ csGL4RenderTarget2D *csGL4PointSMRenderer::GetShadowBuffer(eCubeFace face)
     if (!m_pointLightShadowBuffer[face]->Compile())
     {
       printf("Unable to compile point light shadow buffer\n");
-      m_pointLightShadowBuffer[face]->Release();
       m_pointLightShadowBuffer[face] = nullptr;
     }
 

@@ -3,6 +3,7 @@
 
 #include <csCore/csCoreExport.hh>
 #include <csCore/csClass.hh>
+#include <csCore/csRef.hh>
 #include <csCore/math/csVector3f.hh>
 #include <csCore/math/csQuaternion.hh>
 
@@ -100,7 +101,7 @@ public:
 
 
 private:
-  std::vector<csSkeletonAnimation *> m_animations;
+  std::vector<csRef<csSkeletonAnimation>> m_animations;
 
 };
 

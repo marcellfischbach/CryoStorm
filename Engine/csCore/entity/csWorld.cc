@@ -29,6 +29,7 @@ csWorld::csWorld()
   SetPhysicsWorld(csObjectRegistry::Get<iPhysicsSystem>()->CreateWorld().Data());
 }
 
+
 void csWorld::SetScene(iGfxScene *scene)
 {
   m_scene = scene;

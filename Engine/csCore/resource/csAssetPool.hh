@@ -30,10 +30,15 @@ public:
   void Put(const csAssetLocator &locator, iAsset *resource);
   void Put(iAsset *resource);
 
+  void Clear();
+
 private:
   csAssetPool();
 
-  std::map<csAssetLocator, iAsset *> m_resources;
+  //
+  // Needs to be a native pointer not an csRef<iAsset> because the class csRef includes csAssetPool so we would
+  // have a cyclic include
+  std::map<csAssetLocator, iAsset*> m_resources;
 };
 
 

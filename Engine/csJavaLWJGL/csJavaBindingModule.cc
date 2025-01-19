@@ -46,6 +46,11 @@ bool csJavaBindingModule::Initialize(const std::vector<std::string> &args, csEng
   return true;
 }
 
+void csJavaBindingModule::Shutdown(const std::vector<std::string> &args, cs::csEngine *engine)
+{
+
+}
+
 
 }
 

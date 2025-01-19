@@ -138,7 +138,7 @@ loadExternalLinesSpc(const csAssetLocator &locator, iFile *file, std::set<csAsse
 
 std::vector<std::string> loadExternalLines(const csAssetLocator &locator, std::set<csAssetLocator> &included)
 {
-  iFile *file = csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
+  csRef<iFile> file = csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (!file)
   {
     return std::vector<std::string>();
@@ -161,8 +161,6 @@ std::vector<std::string> loadExternalLines(const csAssetLocator &locator, std::s
   {
     lines = loadExternalLinesSpc(locator, file, included);
   }
-  file->Close();
-  file->Release();
 
   return lines;
 }
@@ -252,10 +250,9 @@ csOwned<csGL4Shader> LoadShader(const std::string &typeText,
 
   //printf ("source: %s\n%s\n", locator->Encoded().c_str(), source.c_str());
 
-  csGL4Shader *shader = nullptr;
   try
   {
-    shader = new csGL4Shader(shaderType);
+    csRef<csGL4Shader> shader = new csGL4Shader(shaderType);
     shader->SetSource(source);
     shader->Compile();
     return shader;
@@ -269,12 +266,6 @@ csOwned<csGL4Shader> LoadShader(const std::string &typeText,
       printf("(%04zu) %s\n", i + 1, lines[i].c_str());
     }
     printf("Unable to compile shader: %s\n%s\n", locator ? locator->Canonical().c_str() : "unknown file", sce.what());
-  }
-
-  if (shader)
-  {
-    delete shader;
-    shader = nullptr;
   }
 
 
@@ -296,7 +287,7 @@ csGL4ShaderLoader::csGL4ShaderLoader()
 
 csOwned<iAsset> csGL4ShaderLoader::Load(const csAssetLocator & locator) const
 {
-  iFile *file = csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
+  csRef<iFile> file = csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (!file)
   {
     return nullptr;
@@ -309,11 +300,14 @@ csOwned<iAsset> csGL4ShaderLoader::Load(const csAssetLocator & locator) const
   char *buffer = new char[size + 1];
   file->Read(sizeof(char), size, buffer);
   buffer[size] = '\0';
-  file->Close();
-  file->Release();
+
 
   std::string source(buffer);
+  delete[] buffer;
+
   std::string ext = locator.GetExtension();
+
+
   if (ext == std::string("VERT"))
   {
     ext = std::string("vertex");
@@ -338,11 +332,7 @@ csOwned<iAsset> csGL4ShaderLoader::Load(const csAssetLocator & locator) const
   {
     ext = std::string("compute");
   }
-  auto shader = LoadShader(ext, source, &locator);
-  delete[] buffer;
-  buffer = nullptr;
-
-  return shader;
+  return LoadShader(ext, source, &locator);
 }
 
 

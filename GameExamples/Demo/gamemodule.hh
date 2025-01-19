@@ -11,6 +11,7 @@ CS_CLASS_GEN_OBJECT;
 public:
   bool Register(const std::vector<std::string> &args, cs::csEngine *engine) override;
   bool Initialize(const std::vector<std::string> &args, cs::csEngine *engine) override;
+  void Shutdown (const std::vector<std::string> &args, cs::csEngine *engine) override;
 };
 
 

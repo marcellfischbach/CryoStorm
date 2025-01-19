@@ -54,6 +54,11 @@ void csGL4DeferredPipeline::Initialize()
   }
 }
 
+void csGL4DeferredPipeline::Shutdown()
+{
+
+}
+
 
 void csGL4DeferredPipeline::Render(iRenderTarget2D *target, const csGfxCamera *camera, iDevice *device, iGfxScene *scene)
 {
@@ -186,7 +191,7 @@ void csGL4DeferredPipeline::ScanLightsAndShadows(iClipper *clipper)
                           return false;
                         }
                         m_renderLights[lightOffset] = light;
-                        m_globalLights.push_back(light);
+                        m_globalLights.emplace_back(light);
                         lightOffset++;
                         return true;
                       }
@@ -299,7 +304,7 @@ void csGL4DeferredPipeline::RenderTransparent()
 
 
 void csGL4DeferredPipeline::RenderForwardMeshShaded(csGfxMesh *mesh,
-                                                    std::array<const csGfxLight *, MaxLights> &lights,
+                                                    std::array<const csGfxLight*, MaxLights> &lights,
                                                     Size offset)
 {
   if (mesh->IsStatic())
@@ -379,7 +384,7 @@ size_t csGL4DeferredPipeline::AssignLights(
 }
 
 
-void csGL4DeferredPipeline::AppendLights(csGfxMesh *mesh, const std::vector<csGfxLight *> &lights) const
+void csGL4DeferredPipeline::AppendLights(csGfxMesh *mesh, const std::vector<csGfxLight*> &lights) const
 {
   if (lights.empty())
   {
@@ -600,7 +605,7 @@ void csGL4DeferredPipeline::UpdateIntermediate()
     colorDesc.Format       = ePF_RGBA;
     colorDesc.MipMaps      = false;
     colorDesc.MultiSamples = 1;
-    auto colorTexture = m_device->CreateTexture(colorDesc).Consume();
+    csRef<iTexture2D> colorTexture = m_device->CreateTexture(colorDesc);
 
     iTexture2D::Descriptor depthDesc {};
     depthDesc.Width        = m_target->GetWidth();
@@ -608,7 +613,7 @@ void csGL4DeferredPipeline::UpdateIntermediate()
     depthDesc.Format       = ePF_DepthStencil;
     depthDesc.MipMaps      = false;
     depthDesc.MultiSamples = 1;
-    auto depthTexture = m_device->CreateTexture(depthDesc).Consume();
+    csRef<iTexture2D> depthTexture = m_device->CreateTexture(depthDesc);
 
     iRenderTarget2D::Descriptor interDesc {};
     interDesc.Width  = m_target->GetWidth();
@@ -617,9 +622,6 @@ void csGL4DeferredPipeline::UpdateIntermediate()
 
     m_intermediate->AddColorTexture(colorTexture);
     m_intermediate->SetDepthTexture(depthTexture);
-
-    colorTexture->Release();
-    depthTexture->Release();
   }
 }
 

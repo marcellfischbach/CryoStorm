@@ -21,7 +21,7 @@ csAssetManager::csAssetManager()
 void csAssetManager::RegisterLoader(csAssetLoader *loader)
 {
 
-  m_assetLoaders.push_back(loader);
+  m_assetLoaders.emplace_back(loader);
   std::sort(m_assetLoaders.begin(), m_assetLoaders.end(), [](csAssetLoader *l0, csAssetLoader *l1) {
     return l0->GetPriority() > l1->GetPriority();
   });

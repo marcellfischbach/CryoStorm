@@ -34,6 +34,7 @@ public:
 
 
   void Initialize() override;
+  void Shutdown() override;
 
   void Render(iRenderTarget2D *target, const csGfxCamera *camera, iDevice *device, iGfxScene *scene) override;
 
@@ -73,9 +74,9 @@ private:
   void RenderDirectionalLight(csGL4DirectionalLight *directionalLight);
   void RenderPointLight(const csGL4PointLight *pointLight);
   void RenderTransparent();
-  void RenderForwardMeshShaded(csGfxMesh *mesh, std::array<const csGfxLight *, MaxLights> &lights, Size offset);
+  void RenderForwardMeshShaded(csGfxMesh *mesh, std::array<const csGfxLight*, MaxLights> &lights, Size offset);
   void RenderForwardMeshUnlit(csGfxMesh *mesh);
-  void AppendLights(csGfxMesh *mesh, const std::vector<csGfxLight *> &lights) const;
+  void AppendLights(csGfxMesh *mesh, const std::vector<csGfxLight*> &lights) const;
   size_t AssignLights(const std::vector<csGfxMesh::Light> &static_lights,
                       const std::vector<csGfxMesh::Light> &dynamic_lights,
                       std::array<const csGfxLight *, MaxLights> &lights,
@@ -97,31 +98,28 @@ private:
   void ScanVisibleMeshes(iClipper *clipper);
   void BindCamera();
 
-  csGBuffer *m_gBuffer;
+  csGBuffer  *m_gBuffer;
 
   uint64_t        m_frame   = 0;
-  iDevice           *m_device;
-  const csGfxCamera *m_gfxCamera;
-  const csCamera    *m_camera;
-  const csProjector *m_projector;
-  iGfxScene         *m_scene;
+  csRef<iDevice> m_device;
+  csRef<const csGfxCamera> m_gfxCamera;
+  csRef<const csCamera> m_camera;
+  csRef<const csProjector> m_projector;
+  csRef<iGfxScene> m_scene;
   csRef<iRenderTarget2D> m_intermediate;
   csRef<iRenderTarget2D> m_target = nullptr;
   csRef<iRenderTarget2D> m_transparentTarget = nullptr;
 
 
-  std::vector<csGfxLight *>                 m_globalLights;
-  std::vector<csGfxLight *>                 m_dynamicLights;
-  std::vector<csGfxLight *>                 m_staticLights;
-  std::vector<csGfxLight *>                 m_staticLightsNew;
-  std::array<const csGfxLight *, MaxLights> m_renderLights = {};
+  std::vector<csGfxLight*>                 m_globalLights;
+  std::vector<csGfxLight*>                 m_dynamicLights;
+  std::vector<csGfxLight*>                 m_staticLights;
+  std::vector<csGfxLight*>                 m_staticLightsNew;
+  std::array<const csGfxLight*, MaxLights> m_renderLights = {};
   size_t                                    m_numberOfFixedLights;
 
 
   csGfxSceneCollector      m_collector;
-  std::vector<csGfxMesh *> m_shadedMeshes;
-  std::vector<csGfxMesh *> m_transparentMeshes;
-  std::vector<csGfxMesh *> m_unshadedMeshes;
 
   csGL4DeferredDirectionalLightRenderer m_directionalLightRenderer;
   csGL4DeferredPointLightRenderer       m_pointLightRenderer;

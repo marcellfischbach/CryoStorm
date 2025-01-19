@@ -19,6 +19,7 @@ namespace cs::launcher
 
 csSDLWindow::~csSDLWindow()
 {
+
   if (m_window)
   {
     SDL_GL_DeleteContext(m_glContext);
@@ -106,6 +107,20 @@ bool csSDLWindow::Initialize(bool compat)
   }
 
   return true;
+}
+
+void csSDLWindow::Shutdown()
+{
+  if (m_window)
+  {
+    SDL_HideWindow(m_window);
+
+    SDL_GL_DeleteContext(m_glContext);
+    SDL_DestroyWindow(m_window);
+    m_window = 0;
+
+    SDL_Quit();
+  }
 }
 
 void csSDLWindow::SetTitle(const std::string &title)

@@ -50,5 +50,15 @@ bool csLauncherModule::Initialize(const std::vector<std::string> &args, csEngine
   return true;
 }
 
+void csLauncherModule::Shutdown(const std::vector<std::string> &args, cs::csEngine *engine)
+{
+  csSDLWindow *window = (csSDLWindow*)csObjectRegistry::Get<iWindow>();
+  csSDLInputSystem *inputSystem = (csSDLInputSystem*)csObjectRegistry::Get<iInputSystem>();
+
+  window->Shutdown();
+
+  csObjectRegistry::Remove<iWindow>();
+  csObjectRegistry::Remove<iInputSystem>();
+}
 
 }

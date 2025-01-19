@@ -42,6 +42,10 @@ void csGL4ForwardPipeline::Initialize()
 {
   m_pointLightRenderer.Initialize();
   m_directionalLightRenderer.Initialize();
+}
+
+void csGL4ForwardPipeline::Shutdown()
+{
 
 }
 

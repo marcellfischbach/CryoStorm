@@ -89,7 +89,7 @@ iRenderMesh *csSkyboxMesh::RenderMesh(cs::iDevice *device)
 {
   if (!m_renderMesh)
   {
-    iRenderMeshGenerator *generator = csObjectRegistry::Get<iRenderMeshGeneratorFactory>()->Create();
+    csOwned<iRenderMeshGenerator> generator = csObjectRegistry::Get<iRenderMeshGeneratorFactory>()->Create();
 
     std::vector<csVector4f> vertices;
     std::vector<csVector3f> uvs;

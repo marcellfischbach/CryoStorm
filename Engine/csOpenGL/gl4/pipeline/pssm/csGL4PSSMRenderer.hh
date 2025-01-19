@@ -34,8 +34,8 @@ class csGL4Texture2DArray;
 
 struct csGL4PSSMShadowBufferObject
 {
-  csRef<csGL4Texture2DArray> ShadowDepth  = nullptr;
-  csRef<csGL4Texture2DArray> ShadowColor  = nullptr;
+  csRef<csGL4Texture2DArray> ShadowDepth;
+  csRef<csGL4Texture2DArray> ShadowColor;
   std::array<csRef<csGL4RenderTarget2D>, 4> ShadowBuffers = {nullptr, nullptr, nullptr, nullptr };
 
   csGL4PSSMShadowBufferObject();
@@ -93,8 +93,8 @@ private:
 
 
 private:
-  csGL4Device *m_device = nullptr;
-  iGfxScene   *m_scene  = nullptr;
+  csRef<csGL4Device> m_device = nullptr;
+  csRef<iGfxScene> m_scene  = nullptr;
 
 
   csAssetRef<iTexture2D> m_depthBuffer = nullptr;
@@ -136,7 +136,6 @@ private:
   csGL4PSSMFilter m_shadowMapFilter;
 
   csGfxSceneCollector      m_collector;
-  std::vector<csGfxMesh *> m_meshesCache;
 };
 
 

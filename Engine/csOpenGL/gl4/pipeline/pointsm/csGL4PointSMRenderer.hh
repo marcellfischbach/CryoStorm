@@ -65,8 +65,8 @@ private:
   iSampler *GetShadowBufferColorSampler();
   iSampler *GetShadowBufferDepthSampler();
 private:
-  csGL4Device *m_device = nullptr;
-  iGfxScene   *m_scene  = nullptr;
+  csRef<csGL4Device> m_device = nullptr;
+  csRef<iGfxScene> m_scene  = nullptr;
 
 
   csAssetRef<iTexture2D> m_depthBuffer;
@@ -103,8 +103,6 @@ private:
 
 
   csGL4PointSMFilter m_shadowMapFilter;
-
-  std::vector<csGfxMesh *> m_meshesCache;
 };
 
 } // ce

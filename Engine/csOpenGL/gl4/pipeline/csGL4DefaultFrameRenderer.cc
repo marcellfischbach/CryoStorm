@@ -1,5 +1,5 @@
 
-#include <csCore/graphics/csDefaultFrameRenderer.hh>
+#include <csOpenGL/gl4/pipeline/csGL4DefaultFrameRenderer.hh>
 #include <csCore/graphics/iRenderPipeline.hh>
 #include <csCore/graphics/iRenderTarget2D.hh>
 #include <csCore/graphics/scene/csGfxCamera.hh>
@@ -14,8 +14,8 @@ namespace cs
 {
 
 
-csDefaultFrameRenderer::csDefaultFrameRenderer()
-    : m_renderPipeline(nullptr)
+csGL4DefaultFrameRenderer::csGL4DefaultFrameRenderer()
+//    : m_renderPipeline(nullptr)
 {
 
 }
@@ -36,13 +36,13 @@ bool gfx_camera_sorter(csGfxCamera *cam0, csGfxCamera *cam1)
 }
 
 
-void csDefaultFrameRenderer::Render(iRenderTarget2D *target, iDevice *device, iGfxScene *scene)
+void csGL4DefaultFrameRenderer::Render(iRenderTarget2D *target, iDevice *device, iGfxScene *scene)
 {
-  auto                       cameras = std::vector<csRef<csGfxCamera>>(scene->GetCameras());
+  auto cameras = std::vector<csRef<csGfxCamera>>(scene->GetCameras());
   std::vector<csGfxCamera *> plainCameras;
   plainCameras.reserve(cameras.size());
 
-  for (const auto & camera: cameras)
+  for (const auto &camera: cameras)
   {
     if (camera->GetRenderTarget())
     {
@@ -61,7 +61,7 @@ void csDefaultFrameRenderer::Render(iRenderTarget2D *target, iDevice *device, iG
   }
 }
 
-void csDefaultFrameRenderer::Render(iRenderTarget2D *target, csGfxCamera *camera, iDevice *device, iGfxScene *scene)
+void csGL4DefaultFrameRenderer::Render(iRenderTarget2D *target, csGfxCamera *camera, iDevice *device, iGfxScene *scene)
 {
   iRenderPipeline *renderPipeline = GetRenderPipeline();
   if (!renderPipeline)
@@ -74,7 +74,7 @@ void csDefaultFrameRenderer::Render(iRenderTarget2D *target, csGfxCamera *camera
   renderPipeline->Render(target, camera, device, scene);
 }
 
-iRenderPipeline *csDefaultFrameRenderer::GetRenderPipeline()
+iRenderPipeline *csGL4DefaultFrameRenderer::GetRenderPipeline()
 {
   if (!m_renderPipeline)
   {
@@ -83,9 +83,9 @@ iRenderPipeline *csDefaultFrameRenderer::GetRenderPipeline()
   return m_renderPipeline;
 }
 
-void csDefaultFrameRenderer::SetRenderPipeline(iRenderPipeline *renderPipeline)
+void csGL4DefaultFrameRenderer::SetRenderPipeline(iRenderPipeline *renderPipeline)
 {
-  CS_SET(m_renderPipeline, renderPipeline);
+  m_renderPipeline = renderPipeline;
 }
 
 

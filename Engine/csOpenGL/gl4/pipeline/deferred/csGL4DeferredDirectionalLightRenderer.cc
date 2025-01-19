@@ -9,6 +9,7 @@
 #include <csCore/graphics/iDevice.hh>
 #include <csCore/graphics/csGBuffer.hh>
 #include <csCore/graphics/csProjector.hh>
+#include <csCore/graphics/scene/iGfxScene.hh>
 #include <csCore/graphics/shading/iShader.hh>
 #include <csCore/graphics/shading/iShaderAttribute.hh>
 

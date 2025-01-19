@@ -13,6 +13,15 @@ csFileSystemFile::csFileSystemFile(const std::string& path)
 
 }
 
+csFileSystemFile::~csFileSystemFile()
+{
+  if (m_file)
+  {
+    std::fclose(m_file);
+    m_file = nullptr;
+  }
+}
+
 const std::string &csFileSystemFile::GetName() const
 {
   return m_path;

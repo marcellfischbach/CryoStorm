@@ -65,8 +65,8 @@ private:
   csGL4RenderTarget2D *GetPointLightShadowMap(Size idx);
 
 private:
-  csGL4Device            *m_device     = nullptr;
-  iGfxScene              *m_scene      = nullptr;
+  csRef<csGL4Device> m_device     = nullptr;
+  csRef<iGfxScene> m_scene      = nullptr;
   csAssetRef<iTexture2D> m_depthBuffer = nullptr;
 
   std::vector<csGL4PointLight *>                    m_shadowPointLights;

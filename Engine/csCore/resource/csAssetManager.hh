@@ -71,7 +71,7 @@ protected:
   csAssetManager();
 
 
-  std::vector<csAssetLoader* > m_assetLoaders;
+  std::vector<csRef<csAssetLoader>> m_assetLoaders;
 
 
 private:

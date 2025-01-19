@@ -27,6 +27,11 @@ bool csImgLoaderModule::Initialize(const std::vector<std::string> &args, csEngin
   return true;
 }
 
+void csImgLoaderModule::Shutdown(const std::vector<std::string> &args, cs::csEngine *engine)
+{
+
+}
+
 
 }
 

@@ -19,7 +19,7 @@ public:
 
   CS_NODISCARD const std::string &GetName () const override;
   int GetPriority() const override;
-  iFile *Open(const std::string &locator, eAccessMode accessMode, eOpenMode openMode) override;
+  csOwned<iFile> Open(const std::string &locator, eAccessMode accessMode, eOpenMode openMode) override;
 
 private:
   static std::string Resolve (const std::string &rootPath);

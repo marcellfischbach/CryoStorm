@@ -46,33 +46,32 @@ csCubeMeshGenerator &csCubeMeshGenerator::TexScale(const cs::csVector2f &texScal
   return *this;
 }
 
-iRenderMesh *csCubeMeshGenerator::Generate()
+csOwned<iRenderMesh> csCubeMeshGenerator::Generate()
 {
   return m_smooth
          ? GenerateSmooth()
          : GenerateFlat();
 }
 
-iRenderMesh *csCubeMeshGenerator::GenerateSmooth()
+csOwned<iRenderMesh> csCubeMeshGenerator::GenerateSmooth()
 {
   return nullptr;
 }
 
-iRenderMesh *csCubeMeshGenerator::GenerateFlat()
+csOwned<iRenderMesh> csCubeMeshGenerator::GenerateFlat()
 {
 
-  iRenderMeshGeneratorFactory *generatorFactory = csObjectRegistry::Get<iRenderMeshGeneratorFactory>();
+  auto generatorFactory = csObjectRegistry::Get<iRenderMeshGeneratorFactory>();
   if (!generatorFactory)
   {
     return nullptr;
   }
 
-  iRenderMeshGenerator *gen = generatorFactory->Create();
+  auto gen = generatorFactory->Create();
   if (!gen)
   {
     return nullptr;
   }
-  csAutoRelease delGen(gen);
 
   csVector3f hl = m_halfExtends;
 

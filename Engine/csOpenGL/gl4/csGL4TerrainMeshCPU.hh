@@ -87,8 +87,8 @@ private:
 
   uint32_t            m_vao;
   csVertexDeclaration m_vd;
-  iVertexBuffer* m_vb;
-  iIndexBuffer * m_ib;
+  csRef<iVertexBuffer> m_vb;
+  csRef<iIndexBuffer> m_ib;
   csBoundingBox      m_bbox;
   std::vector<Patch> m_patches;
   std::vector<uint32_t>     m_indexBuffer;
@@ -112,7 +112,7 @@ public:
   void SetNormalizedHeightData(const std::vector<float>& heightData) override;
   void SetHeightData(const std::vector<float>& heightData) override;
 
-  iTerrainMesh* Generate() override;
+  csOwned<iTerrainMesh> Generate() override;
 private:
   void GenerateVerticesUVs(std::vector<csVector3f>& vertices, std::vector<csVector2f>& uv);
   void GenerateNormals(std::vector<csVector3f>& vertices, std::vector<csVector3f>& normals);

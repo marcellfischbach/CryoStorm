@@ -12,8 +12,7 @@ namespace cs
 
 bool csBaseCSFAssetLoader::Open(const csAssetLocator& locator, csCryoFile &file)
 {
-  iFile* fd = cs::csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
-  csAutoRelease arFD(fd);
+  csRef<iFile> fd = cs::csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
 
   return file.Parse(fd);
 }

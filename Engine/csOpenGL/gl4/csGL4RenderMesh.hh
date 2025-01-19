@@ -52,8 +52,8 @@ private:
 
   uint32_t m_vao;
   csVertexDeclaration m_vertexDeclaration;
-  csGL4VertexBuffer *m_vertexBuffer;
-  csGL4IndexBuffer *m_indexBuffer;
+  csRef<csGL4VertexBuffer> m_vertexBuffer;
+  csRef<csGL4IndexBuffer> m_indexBuffer;
   csBoundingBox m_boundingBox;
 
   uint32_t m_indexType;
@@ -103,7 +103,7 @@ public:
   void AddIndices(const std::vector<uint32_t> &indices);
 
   CS_NODISCARD size_t GetNumberOfVertices() const;
-  iRenderMesh *Generate() override;
+  csOwned<iRenderMesh> Generate() override;
 private:
   bool m_compatMode;
   ePrimitiveType m_primitiveType;
@@ -134,7 +134,7 @@ public:
   ~csGL4RenderMeshGeneratorFactory() override = default;
 
 
-  CS_NODISCARD iRenderMeshGenerator *Create() override;
+  CS_NODISCARD csOwned<iRenderMeshGenerator> Create() override;
 
 private:
   bool m_compatMode;
@@ -152,10 +152,10 @@ public:
 
   void Add(const iRenderMesh *mesh, const csMatrix4f &matrix) override;
 
-  iRenderMesh *Generate() override;
+  csOwned<iRenderMesh> Generate() override;
 
 private:
-  csGL4RenderMeshGenerator* m_generator;
+  csRef<csGL4RenderMeshGenerator> m_generator;
 };
 
 
@@ -167,7 +167,7 @@ public:
   csGL4RenderMeshBatchGeneratorFactory(bool compatMode);
   ~csGL4RenderMeshBatchGeneratorFactory() override = default;
 
-  CS_NODISCARD iRenderMeshBatchGenerator *Create() override;
+  CS_NODISCARD csOwned<iRenderMeshBatchGenerator> Create() override;
 private:
   bool m_compatMode;
 

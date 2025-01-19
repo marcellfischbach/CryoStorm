@@ -53,8 +53,8 @@ csGL4RenderMesh::csGL4RenderMesh(uint32_t vao,
     , m_vertexCount(vertexCount)
 {
 
-  CS_SET(m_vertexBuffer, vb);
-  CS_SET(m_indexBuffer, ib);
+  m_vertexBuffer = vb;
+  m_indexBuffer = ib;
 
 }
 
@@ -67,11 +67,6 @@ csGL4RenderMesh::~csGL4RenderMesh()
     CS_GL_ERROR();
     m_vao = 0;
   }
-  CS_RELEASE(m_vertexBuffer);
-  m_vertexBuffer = nullptr;
-
-  CS_RELEASE(m_indexBuffer);
-  m_indexBuffer = nullptr;
 }
 
 Size csGL4RenderMesh::GetNumberOfIndices() const
@@ -304,7 +299,7 @@ size_t csGL4RenderMeshGenerator::GetNumberOfVertices() const
   return std::max(m_vertices2.size(), std::max(m_vertices3.size(), m_vertices4.size()));
 }
 
-iRenderMesh *csGL4RenderMeshGenerator::Generate()
+csOwned<iRenderMesh> csGL4RenderMeshGenerator::Generate()
 {
   if (!m_compatMode)
   {
@@ -636,8 +631,7 @@ iRenderMesh *csGL4RenderMeshGenerator::Generate()
       bbox
   );
 
-  ib->Release();
-  vb->Release();
+
   return mesh;
 }
 
@@ -649,7 +643,7 @@ csGL4RenderMeshGeneratorFactory::csGL4RenderMeshGeneratorFactory(bool compatMode
 
 }
 
-iRenderMeshGenerator *csGL4RenderMeshGeneratorFactory::Create()
+csOwned<iRenderMeshGenerator> csGL4RenderMeshGeneratorFactory::Create()
 {
   return new csGL4RenderMeshGenerator(m_compatMode);
 }
@@ -874,7 +868,7 @@ void csGL4RenderMeshBatchGenerator::Add(const iRenderMesh *mesh, const csMatrix4
 
 }
 
-iRenderMesh *csGL4RenderMeshBatchGenerator::Generate()
+csOwned<iRenderMesh> csGL4RenderMeshBatchGenerator::Generate()
 {
   return m_generator->Generate();
 }
@@ -887,7 +881,7 @@ csGL4RenderMeshBatchGeneratorFactory::csGL4RenderMeshBatchGeneratorFactory(bool 
 
 }
 
-iRenderMeshBatchGenerator *csGL4RenderMeshBatchGeneratorFactory::Create()
+csOwned<iRenderMeshBatchGenerator> csGL4RenderMeshBatchGeneratorFactory::Create()
 {
   return new csGL4RenderMeshBatchGenerator(m_compatMode);
 }

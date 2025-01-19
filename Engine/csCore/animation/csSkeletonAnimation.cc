@@ -214,8 +214,7 @@ void csSkeletonAnimationPack::AddAnimation(csSkeletonAnimation *animation)
 {
   if (animation)
   {
-    CS_ADDREF(animation);
-    m_animations.push_back(animation);
+    m_animations.emplace_back(animation);
   }
 }
 

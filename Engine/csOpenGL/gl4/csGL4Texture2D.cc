@@ -196,7 +196,7 @@ void csGL4Texture2D::Data(uint16_t level,
 
 void csGL4Texture2D::SetSampler(iSampler* sampler)
 {
-  CS_SET(m_sampler, sampler);
+  m_sampler = sampler;
 }
 
 iSampler* csGL4Texture2D::GetSampler()

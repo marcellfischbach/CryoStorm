@@ -20,16 +20,7 @@ csMaterial::csMaterial()
 
 csMaterial::~csMaterial()
 {
-  for (size_t i = 0; i < eRP_COUNT; i++)
-  {
-    CS_RELEASE(m_shader[i]);
-    m_shader[i] = nullptr;
-  }
 
-  for (auto attribute: m_attributes)
-  {
-    CS_RELEASE(attribute.Texture);
-  }
 }
 
 void csMaterial::SetFillMode(eFillMode fillMode)

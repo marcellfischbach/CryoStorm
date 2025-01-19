@@ -58,7 +58,7 @@ CS_CLASS_GEN;
 
 
   CS_FUNCTION()
-  CS_NODISCARD virtual cs::iTerrainMesh* Generate() = 0;
+  CS_NODISCARD virtual csOwned<cs::iTerrainMesh> Generate() = 0;
 };
 
 
@@ -69,7 +69,7 @@ CS_CLASS_GEN;
   ~iTerrainMeshGeneratorFactory() override = default;
 
   CS_FUNCTION()
-  CS_NODISCARD virtual cs::iTerrainMeshGenerator* Create() = 0;
+  CS_NODISCARD virtual csOwned<cs::iTerrainMeshGenerator> Create() = 0;
 };
 
 

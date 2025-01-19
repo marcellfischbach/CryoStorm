@@ -51,8 +51,11 @@ set(SOURCES
 		gl4/loading/csGL4ShaderLoader.hh
 
 
+		gl4/pipeline/csGL4DefaultFrameRenderer.cc
+		gl4/pipeline/csGL4DefaultFrameRenderer.hh
 		gl4/pipeline/csGL4MeshSorter.cc
 		gl4/pipeline/csGL4MeshSorter.hh
+
 
 		gl4/pipeline/deferred/csGL4DeferredDirectionalLightRenderer.cc
 		gl4/pipeline/deferred/csGL4DeferredDirectionalLightRenderer.hh

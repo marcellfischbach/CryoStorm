@@ -502,7 +502,7 @@ void csGL4TerrainMeshGeneratorCPU::GeneratePatches(std::vector<csVector3f> &vert
   }
 }
 
-iTerrainMesh *csGL4TerrainMeshGeneratorCPU::Generate()
+csOwned<iTerrainMesh> csGL4TerrainMeshGeneratorCPU::Generate()
 {
   auto size = static_cast<size_t>(m_size);
   size_t vertexCount = size * size;

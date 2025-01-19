@@ -24,7 +24,7 @@ public:
   csGL4ShaderGraphCompiler() = default;
 
 
-  csMaterial *Compile(csShaderGraph *shaderGraph, const Parameters &parameters) override;
+  csOwned<csMaterial> Compile(csShaderGraph *shaderGraph, const Parameters &parameters) override;
 
   const std::string &GetError() const override;
 
@@ -161,7 +161,7 @@ CS_CLASS_GEN_OBJECT;
 public:
   csGL4ShaderGraphCompilerFactory() = default;
 
-  iShaderGraphCompiler *Create() const override;
+  csOwned<iShaderGraphCompiler> Create() const override;
 
 };
 

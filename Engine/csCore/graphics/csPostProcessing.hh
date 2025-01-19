@@ -156,8 +156,8 @@ public:
   csAssetRef<iTexture2D> m_inputTextures[(size_t) ePPImageType::Count];
   csAssetRef<iTexture2D> m_outputTextures[(size_t) ePPImageType::Count];
 
-  std::vector<iPostProcess *> m_processes;
-  iPostProcess          *m_finalProcess;
+  std::vector<csRef<iPostProcess>> m_processes;
+  csRef<iPostProcess>          m_finalProcess;
   std::vector<csPPBind> m_bindings;
   std::vector<csPPBind> m_outputBindings;
 

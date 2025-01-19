@@ -107,7 +107,6 @@ void csGL4RenderTarget2DArray::AddColorTexture(iTexture2DArray *colorTexture)
 
 
   csGL4Texture2DArray *txt = colorTexture->Query<csGL4Texture2DArray>();
-  txt->AddRef();
 
 
   GLenum attachment = GL_DEPTH_ATTACHMENT;
@@ -122,7 +121,7 @@ void csGL4RenderTarget2DArray::AddColorTexture(iTexture2DArray *colorTexture)
                        txt->GetName(),
                        0);
   CS_GL_ERROR();
-  m_colorTextures.push_back(txt);
+  m_colorTextures.emplace_back(colorTexture);
 }
 
 

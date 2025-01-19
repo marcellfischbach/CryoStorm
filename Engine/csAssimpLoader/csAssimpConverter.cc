@@ -3,6 +3,7 @@
 #include <csCore/graphics/iRenderMesh.hh>
 #include <csCore/graphics/csSkeleton.hh>
 #include <csCore/csObjectRegistry.hh>
+#include <csCore/csRef.hh>
 
 #include <assimp/scene.h>
 #include <assimp/Importer.hpp>
@@ -150,7 +151,7 @@ Weight get_weight(aiMesh *mesh, unsigned vertexID, csSkeleton *skeleton)
   return res;
 }
 
-iRenderMesh *ConvertRenderMesh(aiMesh *mesh, const csMatrix4f &matrix2, csSkeleton* skeleton)
+csOwned<iRenderMesh> ConvertRenderMesh(aiMesh *mesh, const csMatrix4f &matrix2, csSkeleton* skeleton)
 {
   csMatrix4f              matrix = matrix2;
   std::vector<csVector3f> vertices;
@@ -221,7 +222,7 @@ iRenderMesh *ConvertRenderMesh(aiMesh *mesh, const csMatrix4f &matrix2, csSkelet
 
 
   auto                 renderMeshGenFact = csObjectRegistry::Get<iRenderMeshGeneratorFactory>();
-  iRenderMeshGenerator *generator        = renderMeshGenFact->Create();
+  csOwned<iRenderMeshGenerator> generator        = renderMeshGenFact->Create();
   generator->SetVertices(vertices);
   if (mesh->mNormals)
   {
@@ -249,10 +250,7 @@ iRenderMesh *ConvertRenderMesh(aiMesh *mesh, const csMatrix4f &matrix2, csSkelet
   }
 
   generator->SetIndices(indices);
-  iRenderMesh *renderMesh = generator->Generate();
-  generator->Release();
-
-  return renderMesh;
+  return generator->Generate();
 }
 
 

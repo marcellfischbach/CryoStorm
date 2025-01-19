@@ -160,7 +160,7 @@ const iMaterial *csGfxMesh::GetMaterial() const
 
 void csGfxMesh::SetMesh(iRenderMesh* mesh)
 {
-  CS_SET(m_mesh, mesh);
+  m_mesh = mesh;
   UpdateBoundingBox();
 }
 

@@ -4,6 +4,7 @@
 #include <csCore/resource/csVFSConfigReader.hh>
 #include <csCore/iGame.hh>
 #include <csLauncher/csLauncherModule.hh>
+#include <csCore/csClassRegistry.hh>
 
 #ifdef CS_WIN32
 
@@ -74,10 +75,9 @@ cs::iGame *open_game(const std::string &moduleName)
 }
 
 
-
 int main(int argc, char **argv)
 {
-
+  cs::csClassRegistry::Get();
   std::vector<std::string> args;
   for (int i = 0; i < argc; i++)
   {
@@ -121,10 +121,14 @@ int main(int argc, char **argv)
 
   iWindow *window = csObjectRegistry::Get<iWindow>();
 
+  csWorld *world = new csWorld();
+  world->AddRef();
   csViewport *viewport = new csViewport();
+  viewport->AddRef();
+
   viewport->SetWindow(window);
   viewport->SetDevice(csObjectRegistry::Get<iDevice>());
-  viewport->SetWorld(new csWorld());
+  viewport->SetWorld(world);
   viewport->SetFrameRenderer(csObjectRegistry::Get<iFrameRenderer>());
 
 
@@ -153,7 +157,17 @@ int main(int argc, char **argv)
     window->Present();
   }
 
-  printf ("That's all folks.\n");
+  if (game)
+  {
+    game->Shutdown(viewport->GetWorld());
+  }
+
+  world->Release();
+  viewport->Release();
+
+  engine->ShutdownEngine(args, config);
+
+  printf("That's all folks.\n");
   return exitValue;
 }
 

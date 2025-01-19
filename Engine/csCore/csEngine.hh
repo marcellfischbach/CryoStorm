@@ -6,6 +6,7 @@
 
 #include <csCore/csCoreExport.hh>
 #include <csCore/csFPS.hh>
+#include <csCore/csRef.hh>
 #include <vector>
 #include "iGame.hh"
 
@@ -41,10 +42,10 @@ public:
   CS_FUNCTION()
   void AddModuleByName(const std::string &moduleName);
 
-  const std::vector<iModule *> &GetModules() const;
+  const std::vector<csRef<iModule>> &GetModules() const;
 
 private:
-  std::vector<iModule *> m_modules;
+  std::vector<csRef<iModule>> m_modules;
 
 };
 
@@ -57,6 +58,9 @@ public:
 
   CS_FUNCTION()
   bool InitializeEngine(const std::vector<std::string> &args, const cs::csModuleConfig &moduleConfig);
+
+  CS_FUNCTION()
+  void ShutdownEngine(const std::vector<std::string> &args, const cs::csModuleConfig &moduleConfig);
 
   CS_NODISCARD bool ShouldExit() const;
   void Exit(int returnValue = 0);

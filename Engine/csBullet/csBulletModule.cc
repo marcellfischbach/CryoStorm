@@ -24,6 +24,11 @@ bool csBulletModule::Initialize(const std::vector<std::string> &args, csEngine *
   return true;
 }
 
+void csBulletModule::Shutdown(const std::vector<std::string> &args, cs::csEngine *engine)
+{
+
+  csObjectRegistry::Remove<iPhysicsSystem>();
+}
 
 }
 

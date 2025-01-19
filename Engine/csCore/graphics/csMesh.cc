@@ -121,19 +121,17 @@ csMesh::SubMesh::SubMesh(const SubMesh& mesh)
   : m_mesh(nullptr)
   , m_materialSlotIdx(mesh.m_materialSlotIdx)
 {
-  CS_SET(m_mesh, mesh.m_mesh);
+  m_mesh = mesh.m_mesh;
 }
 
 
 csMesh::SubMesh::~SubMesh()
 {
-  CS_RELEASE(m_mesh);
-  m_mesh = nullptr;
 }
 
 csMesh::SubMesh &csMesh::SubMesh::operator=(const SubMesh & mesh)
 {
-  CS_SET(m_mesh, mesh.m_mesh);
+  m_mesh = mesh.m_mesh;
   m_materialSlotIdx = mesh.m_materialSlotIdx;
   return *this;
 }
@@ -143,7 +141,7 @@ csMesh::SubMesh &csMesh::SubMesh::operator=(const SubMesh & mesh)
 
 void csMesh::SubMesh::SetMesh(iRenderMesh* mesh)
 {
-  CS_SET(m_mesh, mesh);
+  m_mesh = mesh;
 }
 
 iRenderMesh* csMesh::SubMesh::GetMesh() const
@@ -186,8 +184,7 @@ csMesh::MaterialSlot::MaterialSlot(const MaterialSlot& slot)
 
 csMesh::MaterialSlot::~MaterialSlot()
 {
-//  CS_RELEASE(m_defaultMaterial);
-//  m_defaultMaterial = nullptr;
+
 }
 
 csMesh::MaterialSlot& csMesh::MaterialSlot::operator=(const MaterialSlot& slot)

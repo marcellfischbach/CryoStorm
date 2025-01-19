@@ -6,6 +6,7 @@
 
 #include <csCore/csCoreExport.hh>
 #include <csCore/csClass.hh>
+#include <csCore/csRef.hh>
 
 namespace cs
 {
@@ -32,8 +33,8 @@ private:
   void UpdateFrame(float time);
 
 private:
-  csSkeleton          *m_skeleton;
-  csSkeletonAnimation *m_animation;
+  csRef<csSkeleton>          m_skeleton;
+  csRef<csSkeletonAnimation> m_animation;
 
   bool m_active;
   float m_time;

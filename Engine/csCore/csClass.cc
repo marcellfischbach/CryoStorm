@@ -401,7 +401,6 @@ eConstness csFunction::GetConstness() const
 
 csClass::~csClass()
 {
-
 }
 
 }

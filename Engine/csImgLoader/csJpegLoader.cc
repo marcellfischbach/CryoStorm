@@ -33,7 +33,7 @@ csJpegLoader::csJpegLoader()
 
 csOwned<iAsset> csJpegLoader::Load(const csAssetLocator& locator) const
 {
-  iFile* ifile = cs::csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
+  csRef<iFile> ifile = cs::csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   FILE* infile = ifile->Query<csFileSystemFile>()->GetHandle();
 
 
@@ -96,7 +96,6 @@ csOwned<iAsset> csJpegLoader::Load(const csAssetLocator& locator) const
   jpeg_finish_decompress(&cinfo);
   jpeg_destroy_decompress(&cinfo);
 
-  ifile->Close();
 
 
   return img;

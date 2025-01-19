@@ -34,19 +34,12 @@ csPostProcessing::csPostProcessing()
 
 csPostProcessing::~csPostProcessing()
 {
-  for (auto process: m_processes)
-  {
-    CS_RELEASE(process);
-  }
-  m_processes.clear();
-  m_bindings.clear();
 }
 
 
 void csPostProcessing::AddProcess(iPostProcess *process)
 {
-  CS_ADDREF(process);
-  m_processes.push_back(process);
+  m_processes.emplace_back(process);
   m_planDirty = true;
 }
 
@@ -115,7 +108,7 @@ void csPostProcessing::Process(iDevice *device, iRenderTarget2D *finalTarget)
 
 void csPostProcessing::RebuildPlan()
 {
-  std::vector<iPostProcess *> pendingProcesses(m_processes);
+  std::vector<csRef<iPostProcess>> pendingProcesses(m_processes);
   m_plan->Processes.clear();
   std::vector<iPostProcess *> processed;
 
@@ -234,7 +227,6 @@ void csBasePostProcess::DeclareOutput(cs::ePPImageType type, const std::string &
 
 csSimplePostProcess::~csSimplePostProcess()
 {
-  CS_RELEASE(m_renderTarget);
 }
 
 bool csSimplePostProcess::UpdateRenderTarget(iDevice *device,
@@ -262,7 +254,7 @@ bool csSimplePostProcess::UpdateRenderTarget(iDevice *device,
   }
 
   // clear the outputs
-  CS_RELEASE(m_renderTarget);
+  m_renderTarget = nullptr;
   for (int i = 0 , in = m_outputs.size(); i<in; ++i)
   {
     m_outputs[i] = nullptr;
@@ -325,7 +317,7 @@ bool csSimplePostProcess::UpdateRenderTarget(iDevice *device,
 
   if (!m_renderTarget->Compile())
   {
-    CS_RELEASE(m_renderTarget);
+    m_renderTarget = nullptr;
     for (auto &output: m_outputs)
     {
       output = nullptr;

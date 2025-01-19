@@ -25,8 +25,8 @@ public:
   csOwned<iAsset> Load(const csCryoFile *file, const csAssetLocator &locator) const override;
 
 private:
-  static csMaterial* LoadMaterial(const csCryoFile* file, const csAssetLocator& locator);
-  static csMaterialInstance* LoadMaterialInstance(const csCryoFile* file, const csAssetLocator& locator);
+  static csOwned<csMaterial> LoadMaterial(const csCryoFile* file, const csAssetLocator& locator);
+  static csOwned<csMaterialInstance> LoadMaterialInstance(const csCryoFile* file, const csAssetLocator& locator);
 
   static void LoadShading(csMaterial* material, const csCryoFileElement* materialElement, const csAssetLocator& locator);
   static void LoadQueue(csMaterial* material, const csCryoFileElement* materialElement, const csAssetLocator& locator);
