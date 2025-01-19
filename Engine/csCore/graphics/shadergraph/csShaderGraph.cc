@@ -10,11 +10,12 @@ static const size_t IDX_ROUGHNESS = 2;
 static const size_t IDX_NORMAL = 3;
 static const size_t IDX_METALLIC = 4;
 
-csShaderGraph::csShaderGraph()
-    : csSGNode("Shader Graph")
+csShaderGraph::ShaderGraphNode::ShaderGraphNode()
+: csSGNode("Shader Graph")
 {
   SetKey("Shader Graph");
-  m_diffuse = DefineInput("Diffuse", eSGValueType::Float | eSGValueType::Vector3 | eSGValueType::Vector4, csSGNodeInput::eM_Modifiable);
+  m_diffuse = DefineInput("Diffuse", eSGValueType::Float | eSGValueType::Vector3 | eSGValueType::Vector4,
+                          csSGNodeInput::eM_Modifiable);
   m_alpha = DefineInput("Alpha", eSGValueType::Float, csSGNodeInput::eM_Modifiable);
   m_roughness = DefineInput("Roughness", eSGValueType::Float, csSGNodeInput::eM_Modifiable);
   m_normal = DefineInput("Normal", eSGValueType::Vector3, csSGNodeInput::eM_Modifiable);
@@ -26,9 +27,14 @@ csShaderGraph::csShaderGraph()
   m_metallic->SetScalar(0.0f);
 }
 
-csShaderGraph::~csShaderGraph() noexcept
+void csShaderGraph::ShaderGraphNode::CalcIOTypes()
 {
 
+}
+
+csSGNode *csShaderGraph::Root()
+{
+  return &m_node;
 }
 
 csOwned<csSGNode> csShaderGraph::Add(const cs::csClass *nodeClass, const std::string &key)
@@ -56,8 +62,8 @@ csOwned<csSGNode> csShaderGraph::Add(const cs::csClass *nodeClass, const std::st
 }
 
 csOwned<csSGResourceNode> csShaderGraph::AddResource(const cs::csClass *nodeClass,
-                                             const std::string &key,
-                                             const std::string &resourceName)
+                                                     const std::string &key,
+                                                     const std::string &resourceName)
 {
   if (!nodeClass->IsInstanceOf<csSGResourceNode>())
   {
@@ -89,7 +95,6 @@ bool csShaderGraph::Remove(cs::csSGNode *node)
   }
 
 
-
   for (int i = 0; i < node->GetNumberOfInputs(); ++i)
   {
     csSGNodeInput *pInput = node->GetInput(i);
@@ -119,59 +124,55 @@ bool csShaderGraph::Remove(cs::csSGNode *node)
 
 void csShaderGraph::BindDiffuse(csSGNode *node, size_t outputIdx)
 {
-  Bind(IDX_DIFFUSE, node, outputIdx);
+  m_node.Bind(IDX_DIFFUSE, node, outputIdx);
 }
 
-csSGNodeInput *csShaderGraph::GetDiffuseInput()
+csSGNodeInput *csShaderGraph::GetDiffuseInput() const
 {
-  return m_diffuse;
+  return m_node.m_diffuse;
 }
 
 
 void csShaderGraph::BindAlpha(csSGNode *node, size_t outputIdx)
 {
-  Bind(IDX_ALPHA, node, outputIdx);
+  m_node.Bind(IDX_ALPHA, node, outputIdx);
 }
 
-csSGNodeInput *csShaderGraph::GetAlphaInput()
+csSGNodeInput *csShaderGraph::GetAlphaInput() const
 {
-  return m_alpha;
+  return m_node.m_alpha;
 }
 
 void csShaderGraph::BindRoughness(cs::csSGNode *node, size_t outputIdx)
 {
-  Bind(IDX_ROUGHNESS, node, outputIdx);
+  m_node.Bind(IDX_ROUGHNESS, node, outputIdx);
 }
 
-csSGNodeInput *csShaderGraph::GetRoughnessInput()
+csSGNodeInput *csShaderGraph::GetRoughnessInput() const
 {
-  return m_roughness;
+  return m_node.m_roughness;
 }
 
 void csShaderGraph::BindNormal(cs::csSGNode *node, size_t outputIdx)
 {
-  Bind(IDX_NORMAL, node, outputIdx);
+  m_node.Bind(IDX_NORMAL, node, outputIdx);
 }
 
-csSGNodeInput *csShaderGraph::GetNormalInput()
+csSGNodeInput *csShaderGraph::GetNormalInput() const
 {
-  return m_normal;
+  return m_node.m_normal;
 }
 
 void csShaderGraph::BindMetallic(cs::csSGNode *node, size_t outputIdx)
 {
-  Bind(IDX_METALLIC, node, outputIdx);
+  m_node.Bind(IDX_METALLIC, node, outputIdx);
 }
 
-csSGNodeInput *csShaderGraph::GetMetallicInput()
+csSGNodeInput *csShaderGraph::GetMetallicInput() const
 {
-  return m_metallic;
+  return m_node.m_metallic;
 }
 
-void csShaderGraph::CalcIOTypes()
-{
-
-}
 
 size_t csShaderGraph::GetNumberOfNodes() const
 {
@@ -313,14 +314,5 @@ csShaderGraph::eBlendingMode csShaderGraph::GetBlendingMode() const
 }
 
 
-void csShaderGraph::SetQueue(eRenderQueue queue)
-{
-  m_queue = queue;
-}
-
-eRenderQueue csShaderGraph::GetQueue() const
-{
-  return m_queue;
-}
 }
 

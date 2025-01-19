@@ -5,11 +5,15 @@ shaderGraph {
     blend Off,
 
     nodes {
-        resource "cs::csSGResourceFloat" roughness "Roughness",
+        resource "cs::csSGResourceFloat" roughness "Roughness" {
+            defaultFloat 1.0,
+        },
 
         resource "cs::csSGResourceColor3" diffuse "Diffuse",
 
-        resource "cs::csSGTexture2D" normal2 "Normal",
+        resource "cs::csSGTexture2D" normal2 "Normal"  {
+            defaultLocator "/textures/fieldstone_normal.tex2d"
+        },
 
         node "cs::csSGConstFloat" alpha {
             value 0 1.0,
@@ -38,11 +42,5 @@ shaderGraph {
             binding "Normal" normalRec,
         }
     },
-
-    attributes {
-        attribute Float "Roughness" 0.0,
-        attribute Texture "Normal" "/textures/fieldstone_normal.tex2d",
-    }
-
 
 },

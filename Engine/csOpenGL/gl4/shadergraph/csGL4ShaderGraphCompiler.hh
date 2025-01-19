@@ -24,7 +24,7 @@ public:
   csGL4ShaderGraphCompiler() = default;
 
 
-  csOwned<csMaterial> Compile(csShaderGraph *shaderGraph, const Parameters &parameters) override;
+  bool Compile(csShaderGraph *shaderGraph, const Parameters &parameters) override;
 
   const std::string &GetError() const override;
 
@@ -93,7 +93,7 @@ private:
   std::string GenerateGBuffer_Geom(std::map<std::string, eMaterialAttributeType> &attributes);
   std::string GenerateGBuffer_Frag(std::map<std::string, eMaterialAttributeType> &attributes);
 
-
+  void Clear (csShaderGraph* shaderGraph) const;
   bool CheckForCycle();
   void LinearizeNodes();
   bool VerifyNodesType();
@@ -116,7 +116,7 @@ private:
   OutputVariable GetInputValue(csSGNodeInput *input);
 
   csOwned<iShader> Compile(SourceBundle &bundle, const std::string &pathName);
-  void SetMaterialDefaults(csMaterial* material);
+  void SetMaterialDefaults(csShaderGraph* shaderGraph);
 
 
 

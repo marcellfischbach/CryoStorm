@@ -37,10 +37,13 @@ public:
   static const size_t UndefinedIndex = ~0x00;
 
   csMaterial();
-  ~csMaterial() override;
+  ~csMaterial() override = default;
 
   CS_FUNCTION(jenum="cs::eRenderPass")
   bool Bind(cs::iDevice * device, cs::eRenderPass pass) override;
+
+  CS_FUNCTION()
+  void Clear ();
 
   CS_FUNCTION(jenum)
   void SetFillMode (cs::eFillMode fillMode);
@@ -93,6 +96,9 @@ public:
   CS_FUNCTION(jenum="cs::eRenderPass")
   CS_NODISCARD cs::iShader *GetShader(cs::eRenderPass pass);
   CS_NODISCARD const cs::iShader *GetShader(eRenderPass pass) const override;
+
+
+
 
   CS_FUNCTION(jenum="cs::eMaterialAttributeType")
   void RegisterAttribute(const std::string & attributeName, cs::eMaterialAttributeType attributeType);

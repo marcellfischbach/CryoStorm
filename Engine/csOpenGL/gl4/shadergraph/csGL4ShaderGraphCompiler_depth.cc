@@ -183,7 +183,7 @@ std::string csGL4ShaderGraphCompiler::GenerateDepth_Frag(std::map<std::string, e
 
 void csGL4ShaderGraphCompiler::GenerateDepth(csGL4ShaderGraphCompiler::SourceBundle &bundle)
 {
-  if (m_shaderGraph->GetQueue() == eRenderQueue::Transparency)
+  if (m_shaderGraph->GetRenderQueue() == eRenderQueue::Transparency)
   {
     // no depth rendering in transparent queue
     return;

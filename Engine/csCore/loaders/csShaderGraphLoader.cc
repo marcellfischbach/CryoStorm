@@ -75,7 +75,7 @@ csOwned<iAsset> csShaderGraphLoader::Load(const csCryoFile *file, const csAssetL
     }
     else if (tagName == "shaderGraph")
     {
-      node = sg;
+      node = sg->Root();
     }
 
     if (!node)
@@ -106,18 +106,17 @@ csOwned<iAsset> csShaderGraphLoader::Load(const csCryoFile *file, const csAssetL
       parameters.DebugName = locator.Encoded();
       parameters.DebugSources = false;
 
-      auto shader = compiler->Compile(sg, parameters);
-      if (!shader)
+      if (!compiler->Compile(sg, parameters))
       {
         printf("Unable to compiler '%s'\n", locator.Encoded().c_str());
         printf("%s\n", compiler->GetError().c_str());
+        sg = nullptr;
       }
 
-      return shader;
     }
   }
 
-  return nullptr;
+  return sg;
 }
 
 void csShaderGraphLoader::LoadQueue(const cs::csCryoFileElement *shaderGraphElement, csShaderGraph *sg) const
@@ -131,7 +130,7 @@ void csShaderGraphLoader::LoadQueue(const cs::csCryoFileElement *shaderGraphElem
     {
       queue = eRenderQueue::Transparency;
     }
-    sg->SetQueue(queue);
+    sg->SetRenderQueue(queue);
   }
 }
 

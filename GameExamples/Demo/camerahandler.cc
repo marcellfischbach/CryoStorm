@@ -103,7 +103,7 @@ void CameraHandler::Update(float tpf)
 
 
 CameraHandlerMotion::CameraHandlerMotion()
-    : csEntityState(), m_position(5.0f, 5.0f, 5.0f), m_target(0, 0, 0), m_distance(1.0f), m_time(0.0f)
+    : csEntityState(), m_position(2.5f, 2.5f, 2.5f), m_target(0, 0, 0), m_distance(.250f), m_time(0.0f)
 {
 
   SetNeedUpdate(true);

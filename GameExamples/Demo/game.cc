@@ -379,7 +379,7 @@ void generate_camera(cs::csWorld *world)
   cameraState->SetPostProcessing(postProcessing);
 
 
-  auto cameraHandler = csRef<CameraHandlerMotion>(new CameraHandlerMotion());
+  auto cameraHandler = csRef<CameraHandler>(new CameraHandler());
   cameraEntity->AttachState(cameraState);
   cameraEntity->AttachState(cameraHandler);
   cameraEntity->GetRoot()->GetTransform()
@@ -782,7 +782,7 @@ cs::csLightState *add_point_light(cs::csWorld *world,
 
 csOwned<cs::iMaterial> generate_color_material(const cs::csColor4f &color)
 {
-  auto sg = new cs::csShaderGraph();
+  csRef<cs::csShaderGraph> sg = new cs::csShaderGraph();
 
 
   auto roughness = sg->Add<cs::csSGConstFloat>("Roughness").toRef();
@@ -811,7 +811,10 @@ csOwned<cs::iMaterial> generate_color_material(const cs::csColor4f &color)
     {
       cs::iShaderGraphCompiler::Parameters parameters{};
       memset(&parameters, 0, sizeof(parameters));
-      return compiler->Compile(sg, parameters);
+      if (compiler->Compile(sg, parameters))
+      {
+        return sg;
+      }
     }
   }
 
@@ -975,7 +978,7 @@ void setup_world(cs::csWorld *world)
 
 csOwned<cs::iMaterial> create_sg_material()
 {
-  auto sg = new cs::csShaderGraph();
+  csRef<cs::csShaderGraph> sg = new cs::csShaderGraph();
   sg->SetAlphaDiscard(0.5f, cs::eCF_Never);
 
   auto color = sg->Add<cs::csSGConstColor4>("diffuse").toRef();
@@ -991,7 +994,10 @@ csOwned<cs::iMaterial> create_sg_material()
     {
       cs::iShaderGraphCompiler::Parameters parameters{};
       memset(&parameters, 0, sizeof(parameters));
-      return compiler->Compile(sg, parameters);
+      if (compiler->Compile(sg, parameters))
+      {
+        return sg;
+      }
     }
   }
 

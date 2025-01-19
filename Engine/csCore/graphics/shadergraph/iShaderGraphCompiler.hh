@@ -19,7 +19,7 @@ CS_CLASS_GEN;
     bool DebugSources;
   };
 
-  virtual csOwned<csMaterial> Compile(csShaderGraph *shaderGraph, const Parameters& parameters) = 0;
+  virtual bool Compile(csShaderGraph *shaderGraph, const Parameters& parameters) = 0;
 
   virtual const std::string &GetError() const = 0;
 };

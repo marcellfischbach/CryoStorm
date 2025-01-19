@@ -222,7 +222,7 @@ in vec2 cs_vs_out_ScreenCoordinates;
     src += csGL4ShaderGraphLightData::Get().DiffuseLightingAttenuated;
   }
 
-  if (m_shaderGraph->GetQueue() == eRenderQueue::Transparency)
+  if (m_shaderGraph->GetRenderQueue() == eRenderQueue::Transparency)
   {
     src += csGL4ShaderGraphLightData::Get().DiffuseLightingShadowInline;
   }

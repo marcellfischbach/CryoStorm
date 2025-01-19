@@ -10,17 +10,17 @@ namespace cs
 csMaterial::csMaterial()
     : iMaterial()
 {
-
-  for (auto &item: m_shader)
-  {
-    item = nullptr;
-  }
+  Clear();
 }
 
 
-csMaterial::~csMaterial()
+void csMaterial::Clear()
 {
-
+  for (size_t i=0; i<eRP_COUNT; i++)
+  {
+    m_shader[i] = nullptr;
+  }
+  m_attributes.clear();
 }
 
 void csMaterial::SetFillMode(eFillMode fillMode)

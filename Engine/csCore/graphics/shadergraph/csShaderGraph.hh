@@ -6,6 +6,7 @@
 #include <csCore/graphics/eBlendFactor.hh>
 #include <csCore/graphics/eCompareFunc.hh>
 #include <csCore/graphics/eRenderQueue.hh>
+#include <csCore/graphics/material/csMaterial.hh>
 #include <csCore/graphics/shadergraph/csSGNode.hh>
 #include <csCore/graphics/shadergraph/csSGNodes.hh>
 #include <csCore/graphics/iTexture.hh>
@@ -16,12 +17,14 @@ namespace cs
 
 
 CS_CLASS()
-class CS_CORE_API csShaderGraph : public CS_SUPER(csSGNode)
+class CS_CORE_API csShaderGraph : public CS_SUPER(csMaterial)
 {
 CS_CLASS_GEN;
 public:
-  csShaderGraph();
-  ~csShaderGraph() override;
+  csShaderGraph() = default;
+  ~csShaderGraph() override = default;
+
+  csSGNode* Root();
 
   template<typename T>
   csOwned<T> Add(const std::string &key);
@@ -29,7 +32,8 @@ public:
 
   template<typename T>
   csOwned<T> AddResource(const std::string &key, const std::string &resourceName);
-  csOwned<csSGResourceNode> AddResource(const csClass *nodeClass, const std::string &key, const std::string &resourceName);
+  csOwned<csSGResourceNode>
+  AddResource(const csClass *nodeClass, const std::string &key, const std::string &resourceName);
 
   bool Remove(csSGNode *node);
 
@@ -39,13 +43,11 @@ public:
   void BindNormal(csSGNode *node, size_t outputIdx = 0);
   void BindMetallic(csSGNode *node, size_t outputIdx = 0);
 
-  csSGNodeInput *GetDiffuseInput();
-  csSGNodeInput *GetAlphaInput();
-  csSGNodeInput *GetRoughnessInput();
-  csSGNodeInput *GetNormalInput();
-  csSGNodeInput *GetMetallicInput();
-
-  void CalcIOTypes() override;
+  csSGNodeInput *GetDiffuseInput() const;
+  csSGNodeInput *GetAlphaInput() const;
+  csSGNodeInput *GetRoughnessInput() const;
+  csSGNodeInput *GetNormalInput() const;
+  csSGNodeInput *GetMetallicInput() const;
 
   size_t GetNumberOfNodes() const;
   csSGNode *GetNode(size_t idx);
@@ -59,7 +61,6 @@ public:
   void SetAlphaDiscard(float threshold, eCompareFunc compreFunc);
   float GetAlphaDiscard_Threshold() const;
   eCompareFunc GetAlphaDiscard_Func() const;
-
 
 
   enum eBlendingMode
@@ -83,28 +84,37 @@ public:
   eBlendingMode GetBlendingMode() const;
 
 
-  void SetQueue(eRenderQueue queue);
-  eRenderQueue GetQueue() const;
-
-
 private:
 
   std::vector<csRef<csSGNode>> m_nodes;
 
-  eRenderQueue  m_queue        = eRenderQueue::Default;
   eLightingMode m_lightingMode = eLM_Default;
   eBlendingMode m_blendingMode = eBM_Off;
 
 
-  csRef<csSGNodeInput> m_diffuse   = nullptr;
-  csRef<csSGNodeInput> m_alpha     = nullptr;
-  csRef<csSGNodeInput> m_roughness = nullptr;
-  csRef<csSGNodeInput> m_normal    = nullptr;
-  csRef<csSGNodeInput> m_metallic  = nullptr;
 
-  bool         m_receiveShadow          = true;
-  float        m_alphaDiscard_Threshold = 0.5f;
-  eCompareFunc m_alphaDiscard_Func      = eCF_Never;
+
+  bool m_receiveShadow = true;
+  float m_alphaDiscard_Threshold = 0.5f;
+  eCompareFunc m_alphaDiscard_Func = eCF_Never;
+
+
+  class ShaderGraphNode  : public csSGNode
+  {
+  public:
+    ShaderGraphNode();
+    ~ShaderGraphNode() override = default;
+
+    void CalcIOTypes() override;
+
+    csRef<csSGNodeInput> m_diffuse = nullptr;
+    csRef<csSGNodeInput> m_alpha = nullptr;
+    csRef<csSGNodeInput> m_roughness = nullptr;
+    csRef<csSGNodeInput> m_normal = nullptr;
+    csRef<csSGNodeInput> m_metallic = nullptr;
+  };
+
+  ShaderGraphNode m_node;
 
 
 };
