@@ -56,7 +56,7 @@ csMesh *csStaticMeshState::GetMesh()
   return m_mesh;
 }
 
-void csStaticMeshState::SetMaterial(Size idx, csAssetRef<iMaterial> &material)
+void csStaticMeshState::SetMaterial(Size idx, iMaterial *material)
 {
   if (idx < m_materials.size())
   {
@@ -72,18 +72,18 @@ void csStaticMeshState::SetMaterial(Size idx, csAssetRef<iMaterial> &material)
   }
 }
 
-const csAssetRef<iMaterial>csStaticMeshState::GetMaterial(Size idx) const
+const iMaterial *csStaticMeshState::GetMaterial(Size idx) const
 {
   return idx < m_materials.size()
          ? m_materials[idx]
-         : csAssetRef<iMaterial>();
+         : nullptr;
 }
 
-csAssetRef<iMaterial> csStaticMeshState::GetMaterial(Size idx)
+iMaterial *csStaticMeshState::GetMaterial(Size idx)
 {
   return idx < m_materials.size()
          ? m_materials[idx]
-         : csAssetRef<iMaterial>();
+         : nullptr;
 }
 
 void csStaticMeshState::SetReceiveShadow(bool receiveShadow)

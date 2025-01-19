@@ -28,7 +28,7 @@ ShaderGraphNodeItem::ShaderGraphNodeItem(csSGNode *node, ShaderGraphEditorWidget
     , m_dragNode(false)
     , m_dragHandle(nullptr)
 {
-  CS_SET(m_node, node);
+  m_node = node;
   setData(CUSTOM_DATA_IS_NODE_ITEM, true);
 
   GenerateSurroundingRect();

@@ -16,7 +16,7 @@ bool ShaderGraphEditorFactory::CanEdit(const cs::csAssetLocator &locator) const
 
 void ShaderGraphEditorFactory::Edit(const cs::csAssetLocator &locator, QWidget *parent) const
 {
-  csShaderGraph* shaderGraph = csAssetManager::Get()->Load<csShaderGraph>(locator);
+  auto shaderGraph = csAssetManager::Get()->Load<csShaderGraph>(locator);
   if (!shaderGraph)
   {
     return;
@@ -25,6 +25,6 @@ void ShaderGraphEditorFactory::Edit(const cs::csAssetLocator &locator, QWidget *
 
 
 
-  ShaderGraphEditorWidget *dlg = new ShaderGraphEditorWidget (shaderGraph, locator, parent);
+  ShaderGraphEditorWidget *dlg = new ShaderGraphEditorWidget (shaderGraph.Data(), locator, parent);
   dlg->show();
 }

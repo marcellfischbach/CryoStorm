@@ -114,13 +114,13 @@ void ShaderGraphEditorWidget::on_preview_initialize(cs::csWorld *world)
   m_world->Attach(m_lightEntity);
 
 
-  iRenderMesh *cubeRenderMesh = csCubeMeshGenerator().Generate();
+  auto cubeRenderMesh = csCubeMeshGenerator().Generate();
   auto cubeMesh = new csMesh();
   cubeMesh->AddMaterialSlot("Slot0", nullptr);
-  cubeMesh->AddSubMesh(cubeRenderMesh, 0);
+  cubeMesh->AddSubMesh(cubeRenderMesh.Data(), 0);
   m_cube = new csStaticMeshState();
   m_cube->SetMesh(cubeMesh);
-  m_cube->SetMaterial(0, m_material);
+  m_cube->SetMaterial(0, m_shaderGraph);
   m_cubeEntity = new csEntity();
   m_cubeEntity->AttachState(m_cube);
 
@@ -181,16 +181,17 @@ void ShaderGraphEditorWidget::CompileMaterial()
   {
     return;
   }
-  csAutoRelease delCompiler(compiler);
 
 
   iShaderGraphCompiler::Parameters params{};
   params.DebugSources = true;
-  CS_RELEASE(m_material);
-  m_material = compiler->Compile(m_shaderGraph, params);
+  if (!compiler->Compile(m_shaderGraph, params))
+  {
+    return;
+  }
 
   if (m_cube)
   {
-    m_cube->SetMaterial(0, m_material);
+    m_cube->SetMaterial(0, m_shaderGraph);
   }
 }

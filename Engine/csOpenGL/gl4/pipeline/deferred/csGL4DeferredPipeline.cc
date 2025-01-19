@@ -597,8 +597,6 @@ void csGL4DeferredPipeline::UpdateIntermediate()
       || m_intermediate->GetWidth() != m_target->GetWidth()
       || m_intermediate->GetHeight() != m_target->GetHeight())
   {
-    CS_RELEASE(m_intermediate);
-
     iTexture2D::Descriptor colorDesc {};
     colorDesc.Width        = m_target->GetWidth();
     colorDesc.Height       = m_target->GetHeight();
@@ -631,8 +629,6 @@ void csGL4DeferredPipeline::UpdateTransparentTarget()
       || m_transparentTarget->GetWidth() != m_target->GetWidth()
       || m_transparentTarget->GetHeight() != m_target->GetHeight())
   {
-    CS_RELEASE(m_transparentTarget);
-
     iRenderTarget2D::Descriptor interDesc {};
     interDesc.Width  = m_target->GetWidth();
     interDesc.Height = m_target->GetHeight();

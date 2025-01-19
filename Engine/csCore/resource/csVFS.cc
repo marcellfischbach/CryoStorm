@@ -63,7 +63,7 @@ csOwned<iFile> csVFS::Open(const csAssetLocator& resourceLocator, eAccessMode ac
 {
 
   const std::string &archiveName = resourceLocator.GetArchive();
-  std::string resourcePathWithReplacedAliases = ReplaceAliases(resourceLocator.Encoded());
+  std::string resourcePathWithReplacedAliases = ReplaceAliases(resourceLocator.Canonical());
   for (const auto &archive: m_archives)
   {
     if (!archiveName.empty() && archive->GetName() != archiveName)

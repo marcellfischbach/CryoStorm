@@ -27,7 +27,7 @@ ShaderGraphShaderGraphPropertiesWidget::~ShaderGraphShaderGraphPropertiesWidget(
 void ShaderGraphShaderGraphPropertiesWidget::SetShaderGraph(cs::csShaderGraph *shaderGraph)
 {
   CS_SET(m_shaderGraph, shaderGraph);
-  m_gui->nodeProperties->SetNode(shaderGraph);
+  m_gui->nodeProperties->SetNode(shaderGraph->Root());
   if (shaderGraph)
   {
     m_gui->receiveShadow->setChecked(shaderGraph->IsReceiveShadow());
@@ -35,7 +35,7 @@ void ShaderGraphShaderGraphPropertiesWidget::SetShaderGraph(cs::csShaderGraph *s
     m_gui->alphaThreshold->setValue(shaderGraph->GetAlphaDiscard_Threshold());
     m_gui->blending->setCurrentIndex(static_cast<int>(shaderGraph->GetBlendingMode()));
     m_gui->lighting->setCurrentIndex(static_cast<int>(shaderGraph->GetLightingMode()));
-    m_gui->queue->setCurrentIndex(static_cast<int>(shaderGraph->GetQueue()));
+    m_gui->queue->setCurrentIndex(static_cast<int>(shaderGraph->GetRenderQueue()));
   }
   UpdateAlphaThreshold();
 }
@@ -91,7 +91,7 @@ void ShaderGraphShaderGraphPropertiesWidget::UpdateValues()
                                  static_cast<eCompareFunc>(m_gui->alphaDiscard->currentIndex()));
   m_shaderGraph->SetBlendingMode(static_cast<csShaderGraph::eBlendingMode>(m_gui->blending->currentIndex()));
   m_shaderGraph->SetLightingMode(static_cast<csShaderGraph::eLightingMode>(m_gui->lighting->currentIndex()));
-  m_shaderGraph->SetQueue(static_cast<eRenderQueue>(m_gui->queue->currentIndex()));
+  m_shaderGraph->SetRenderQueue(static_cast<eRenderQueue>(m_gui->queue->currentIndex()));
 
   UpdateAlphaThreshold();
 }

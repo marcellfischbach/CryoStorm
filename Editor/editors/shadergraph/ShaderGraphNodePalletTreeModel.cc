@@ -25,11 +25,10 @@ ShaderGraphNodePalletTreeModel::ShaderGraphNodePalletTreeModel()
       try
       {
         // just create a temporary node to acquire the name
-        csSGNode *node = cls->CreateInstance<csSGNode>();
+        csRef<csSGNode> node = cls->CreateInstance<csSGNode>();
         if (node)
         {
           m_nodes.emplace_back(cls, QString(node->GetName().c_str()));
-          delete node;
         }
       }
       catch (const csInstantiationException &exception)

@@ -29,9 +29,9 @@ public:
   CS_NODISCARD const csMesh* GetMesh() const;
   CS_NODISCARD csMesh* GetMesh();
 
-  void SetMaterial(Size idx, csAssetRef<iMaterial> &material);
-  CS_NODISCARD const csAssetRef<iMaterial> GetMaterial(Size idx) const;
-  CS_NODISCARD csAssetRef<iMaterial> GetMaterial(Size idx);
+  void SetMaterial(Size idx, iMaterial *material);
+  CS_NODISCARD const iMaterial* GetMaterial(Size idx) const;
+  CS_NODISCARD iMaterial* GetMaterial(Size idx);
 
   void SetReceiveShadow (bool receiveShadow);
   CS_NODISCARD bool IsReceiveShadow () const;

@@ -223,7 +223,7 @@ std::string ShaderGraphSaver::GetShaderGraphSource()
   std::stringstream stream;
   stream << "shaderGraph {\n\n"
          << "  receiveShadow " << (m_shaderGraph->IsReceiveShadow() ? "1" : "0") << ",\n"
-         << "  queue " << to_string(m_shaderGraph->GetQueue()) << ",\n"
+         << "  queue " << to_string(m_shaderGraph->GetRenderQueue()) << ",\n"
          << "  lighting " << to_string(m_shaderGraph->GetLightingMode()) << ",\n"
          << "  blending " << to_string(m_shaderGraph->GetBlendingMode()) << ",\n\n";
 
@@ -234,7 +234,7 @@ std::string ShaderGraphSaver::GetShaderGraphSource()
   {
     stream << GetNodeSource(node);
   }
-  stream << GetNodeSource(m_shaderGraph);
+  stream << GetNodeSource(m_shaderGraph->Root());
 
   stream
       << "  },\n"

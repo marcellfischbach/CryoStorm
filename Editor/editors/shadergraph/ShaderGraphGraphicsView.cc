@@ -29,8 +29,8 @@ void ShaderGraphGraphicsView::SetShaderGraph(cs::csShaderGraph* shaderGraph)
 {
   ClearAll();
   CS_SET(m_shaderGraph, shaderGraph);
-  const csVector2f& sgPos = m_shaderGraph->GetPosition();
-  InsertNode(shaderGraph, QPointF(sgPos.x, sgPos.y));
+  const csVector2f& sgPos = m_shaderGraph->Root()->GetPosition();
+  InsertNode(m_shaderGraph->Root(), QPointF(sgPos.x, sgPos.y));
   for (int i = 0; i < shaderGraph->GetNumberOfNodes(); ++i)
   {
     csSGNode* node = shaderGraph->GetNode(i);
@@ -487,7 +487,7 @@ void ShaderGraphGraphicsView::RegenerateWires()
     csSGNode* inputNode = m_shaderGraph->GetNode(n);
     RegenerateInputWires(inputNode);
   }
-  RegenerateInputWires(m_shaderGraph);
+  RegenerateInputWires(m_shaderGraph->Root());
 
   UpdateWires();
 }
@@ -724,11 +724,10 @@ void ShaderGraphGraphicsView::InsertNode(const csClass* cls, const QPointF& posi
     size_t idx = m_defaultIdx[cls];
     m_defaultIdx[cls] = ++idx;
 
-    csSGNode* tmpNode = cls->CreateInstance<csSGNode>();
+    csRef<csSGNode> tmpNode = cls->CreateInstance<csSGNode>();
     std::string name = extract_node_key(tmpNode) + "_" + std::to_string(idx);
-    delete tmpNode;
 
-    csSGNode* node;
+    csRef<csSGNode> node;
     if (cls->IsInstanceOf<csSGResourceNode>())
     {
       node = m_shaderGraph->AddResource(cls, name, name);

@@ -72,13 +72,12 @@ private:
   cs::csEntity* m_lightEntity = nullptr;
   cs::csLightState *m_light = nullptr;
 
-  cs::csShaderGraph              *m_shaderGraph = nullptr;
+  cs::csAssetRef<cs::csShaderGraph> m_shaderGraph = nullptr;
   cs::csAssetLocator             m_locator;
   ShaderGraphNodePalletTreeModel *m_palletModel = nullptr;
 
   cs::csStaticMeshState* m_cube = nullptr;
   cs::csEntity* m_cubeEntity = nullptr;
 
-  cs::csAssetRef<cs::csMaterial> m_material;
 
 };

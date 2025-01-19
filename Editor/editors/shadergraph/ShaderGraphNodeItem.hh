@@ -7,6 +7,7 @@
 #include <QObject>
 #include <QRectF>
 #include <QGraphicsRectItem>
+#include <csCore/csRef.hh>
 
 class QGraphicsScene;
 class QGraphicsEllipseItem;
@@ -69,7 +70,7 @@ private:
 
 
   ShaderGraphEditorWidget *m_edito2rWidget;
-  cs::csSGNode *m_node;
+  cs::csRef<cs::csSGNode> m_node;
   QGraphicsRectItem *m_titleRect;
   QGraphicsTextItem *m_title;
 
