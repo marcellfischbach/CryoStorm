@@ -67,8 +67,6 @@ std::string extract_extension(const std::string &locator)
 
 std::string canonicalize_encoded(const std::string &encoded)
 {
-  uint64_t idx = encoded.find('@');
-
   // TODO: Implement path normalization
   return encoded;
 }
@@ -102,6 +100,11 @@ csAssetLocator::csAssetLocator(const csAssetLocator &parent, const std::string &
     m_encoded = m_archive + "@" + m_encoded;
   }
   m_canonical = canonicalize_encoded(m_path + m_filename);
+}
+
+csAssetLocator csAssetLocator::AsAnonymous() const
+{
+  return csAssetLocator(m_canonical);
 }
 
 

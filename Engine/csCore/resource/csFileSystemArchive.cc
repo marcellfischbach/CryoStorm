@@ -6,6 +6,8 @@
 #include <csCore/resource/csFileSystemFile.hh>
 #include <csCore/resource/csVFS.hh>
 
+#include <filesystem>
+
 namespace cs
 {
 
@@ -51,6 +53,12 @@ csOwned<iFile> csFileSystemArchive::Open(const std::string &locator, cs::eAccess
     file = nullptr;
   }
   return file;
+}
+
+bool  csFileSystemArchive::IsExisting(const std::string &locator) const
+{
+  std::filesystem::path filePath(locator);
+  return std::filesystem::exists(filePath);
 }
 
 } // ce

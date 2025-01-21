@@ -5,6 +5,7 @@
 #pragma once
 
 #include <QWidget>
+#include <csCore/csRef.hh>
 
 namespace Ui
 {
@@ -42,7 +43,7 @@ private:
 
   Ui::ShaderGraphNodeInputWidget *m_gui;
 
-  cs::csSGNodeInput *m_input;
+  cs::csRef<cs::csSGNodeInput> m_input;
 };
 
 class ShaderGraphResourceNodeWidget : public QWidget
@@ -63,7 +64,7 @@ private slots:
 
 private:
   Ui::ShaderGraphResourceNodeWidget* m_gui;
-  cs::csSGResourceNode* m_resource;
+  cs::csRef<cs::csSGResourceNode> m_resource;
   bool m_changeGuard;
 };
 
@@ -86,7 +87,7 @@ private slots:
 
 private:
 
-  cs::csSGNode* m_node;
+  cs::csRef<cs::csSGNode> m_node;
   QVBoxLayout* m_vbox;
 
   QLineEdit* m_nameLineEdit;

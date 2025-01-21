@@ -237,10 +237,7 @@ csShaderGraphLoader::CreateResourceNode(const cs::csCryoFileElement *nodeElement
     return nullptr;
   }
 
-  if (!LoadResourceDefaults(nodeElement, node.Data(), sg))
-  {
-    return nullptr;
-  }
+  LoadResourceDefaults(nodeElement, node.Data(), sg);
 
 
   return node;
@@ -259,25 +256,21 @@ bool csShaderGraphLoader::LoadResourceDefaults(const csCryoFileElement *nodeElem
       continue;
     }
     const std::string &tagName = childElement->GetTagName();
-    std::array<float, 16> floats;
-    std::array<int, 4> ints;
+    std::array<float, 16> floats = {};
+    std::array<int, 4> ints = {};
     csAssetLocator locator("");
     if (tagName == "defaultFloat")
     {
-      size_t num = childElement->GetAttribute(0, 0);
-      num = num > 16 ? 16 : num;
-      for (size_t j = 0; j < num; j++)
+      for (size_t j = 0; j < 16; j++)
       {
-        floats[j] = childElement->GetAttribute(j + 1, 0.0f);
+        floats[j] = childElement->GetAttribute(j, 0.0f);
       }
     }
     else if (tagName == "defaultInt")
     {
-      size_t num = childElement->GetAttribute(0, 0);
-      num = num > 4 ? 4 : num;
-      for (size_t j = 0; j < num; j++)
+      for (size_t j = 0; j < 4; j++)
       {
-        ints[j] = childElement->GetAttribute(j + 1, 0);
+        ints[j] = childElement->GetAttribute(j, 0);
       }
     }
     else if (tagName == "defaultLocator")

@@ -7,6 +7,7 @@
 #include <csCore/resource/csAssetLocator.hh>
 #include <vector>
 #include <string>
+#include <csCore/csRef.hh>
 
 namespace cs
 {
@@ -27,6 +28,6 @@ private:
   std::string GetAttributeSource (cs::csSGNode *node);
   std::string GetShaderGraphSource ();
 
-  cs::csShaderGraph* m_shaderGraph;
-  std::vector<cs::csSGNode *> m_sortedNodes;
+  cs::csRef<cs::csShaderGraph> m_shaderGraph;
+  std::vector<cs::csRef<cs::csSGNode>> m_sortedNodes;
 };

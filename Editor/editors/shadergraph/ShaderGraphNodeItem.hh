@@ -86,7 +86,7 @@ private:
 
   struct InputOutputHandle
   {
-    cs::csSGNodeIO *IO = nullptr;
+    cs::csRef<cs::csSGNodeIO> IO = nullptr;
     QGraphicsEllipseItem *Handle = nullptr;
     QGraphicsEllipseItem *HandleDot = nullptr;
     QGraphicsTextItem *Text = nullptr;

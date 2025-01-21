@@ -22,12 +22,11 @@ ShaderGraphNodeInputWidget::ShaderGraphNodeInputWidget(QWidget* parent)
 ShaderGraphNodeInputWidget::~ShaderGraphNodeInputWidget()
 {
   delete m_gui;
-  CS_RELEASE(m_input);
 }
 
 void ShaderGraphNodeInputWidget::SetInput(cs::csSGNodeInput* input)
 {
-  CS_SET(m_input, input);
+  m_input = input;
   UpdateState();
 }
 
@@ -115,12 +114,11 @@ ShaderGraphResourceNodeWidget::ShaderGraphResourceNodeWidget(QWidget* parent)
 ShaderGraphResourceNodeWidget::~ShaderGraphResourceNodeWidget()
 {
   delete m_gui;
-  CS_RELEASE(m_resource);
 }
 
 void ShaderGraphResourceNodeWidget::SetResource(cs::csSGResourceNode* resource)
 {
-  CS_SET(m_resource, resource);
+  m_resource = resource;
   UpdateValues();
 }
 
@@ -321,12 +319,13 @@ ShaderGraphNodePropertiesWidget::ShaderGraphNodePropertiesWidget(QWidget* parent
 ShaderGraphNodePropertiesWidget::~ShaderGraphNodePropertiesWidget()
 {
   RemoveAll();
-  CS_RELEASE(m_node);
 }
 
 void ShaderGraphNodePropertiesWidget::SetNode(cs::csSGNode* node)
 {
+  m_node = nullptr;
   RemoveAll();
+
 
   m_nameLineEdit->setText(node->GetKey().c_str());
   if (node->IsInstanceOf<cs::csSGResourceNode>())
@@ -349,14 +348,21 @@ void ShaderGraphNodePropertiesWidget::SetNode(cs::csSGNode* node)
 
 
   m_vbox->addSpacerItem(m_spacer);
-  CS_SET(m_node, node);
+  m_node = node;
 }
 
 void ShaderGraphNodePropertiesWidget::NodeNameChanged(const QString& name)
 {
   if (m_node)
   {
+    printf ("Update node name: %s\n", name.toStdString().c_str());
+    fflush(stdout);
     m_node->SetKey(name.toStdString());
+  }
+  else
+  {
+    printf ("Update node name: %s - but node not set\n", name.toStdString().c_str());
+    fflush(stdout);
   }
 }
 

@@ -38,7 +38,7 @@ private:
   //
   // Needs to be a native pointer not an csRef<iAsset> because the class csRef includes csAssetPool so we would
   // have a cyclic include
-  std::map<csAssetLocator, iAsset*> m_resources;
+  std::map<std::string, iAsset*> m_resources;
 };
 
 

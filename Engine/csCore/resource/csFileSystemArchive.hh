@@ -21,6 +21,7 @@ public:
   int GetPriority() const override;
   csOwned<iFile> Open(const std::string &locator, eAccessMode accessMode, eOpenMode openMode) override;
 
+  bool IsExisting (const std::string &locator) const override;
 private:
   static std::string Resolve (const std::string &rootPath);
 

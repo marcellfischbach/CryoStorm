@@ -43,7 +43,6 @@ ShaderGraphNodeItem::ShaderGraphNodeItem(csSGNode *node, ShaderGraphEditorWidget
 
 ShaderGraphNodeItem::~ShaderGraphNodeItem()
 {
-  CS_RELEASE(m_node);
 }
 
 

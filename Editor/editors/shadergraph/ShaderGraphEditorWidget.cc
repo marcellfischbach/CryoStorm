@@ -38,8 +38,6 @@ ShaderGraphEditorWidget::ShaderGraphEditorWidget(csShaderGraph *shaderGraph, con
     , m_locator(locator)
     , m_palletModel(new ShaderGraphNodePalletTreeModel())
 {
-  CS_ADDREF(m_shaderGraph);
-
   m_gui->setupUi(this);
 
   m_gui->propertiesStack->setCurrentWidget(m_gui->noSelection);
@@ -71,14 +69,13 @@ ShaderGraphEditorWidget::ShaderGraphEditorWidget(csShaderGraph *shaderGraph, con
 
 ShaderGraphEditorWidget::~ShaderGraphEditorWidget()
 {
-  CS_RELEASE(m_shaderGraph);
   delete m_gui;
 }
 
 
 void ShaderGraphEditorWidget::on_preview_initialize(cs::csWorld *world)
 {
-  CS_SET(m_world, world);
+  m_world = world;
   if (!m_world)
   {
     return;
@@ -136,7 +133,13 @@ std::string generate_shader_graph_code(csShaderGraph *shaderGraph);
 
 void ShaderGraphEditorWidget::onBtnSaveClicked(bool)
 {
-  ShaderGraphSaver (m_shaderGraph).Save(m_locator);
+  ShaderGraphSaver(m_shaderGraph).Save(m_locator);
+  CompileMaterial();
+  if (csVFS::Get()->IsMasterLocator(m_locator))
+  {
+    m_shaderGraph->SetLocator(m_locator.AsAnonymous());
+    csAssetPool::Instance().Put(m_shaderGraph);
+  }
 }
 
 void ShaderGraphEditorWidget::on_graph_SelectionChanged()
@@ -168,30 +171,31 @@ void ShaderGraphEditorWidget::on_graph_ConnectionsChanged()
   m_gui->nodePage->UpdateState();
 }
 
-void ShaderGraphEditorWidget::CompileMaterial()
+bool ShaderGraphEditorWidget::CompileMaterial()
 {
   auto factory = csObjectRegistry::Get<iShaderGraphCompilerFactory>();
   if (!factory)
   {
-    return;
+    return false;
   }
 
   auto compiler = factory->Create();
   if (!compiler)
   {
-    return;
+    return false;
   }
 
 
   iShaderGraphCompiler::Parameters params{};
-  params.DebugSources = true;
+  params.DebugSources = false;
   if (!compiler->Compile(m_shaderGraph, params))
   {
-    return;
+    return false;
   }
 
   if (m_cube)
   {
     m_cube->SetMaterial(0, m_shaderGraph);
   }
+  return true;
 }

@@ -56,28 +56,28 @@ private slots:
   void on_btnCompile_clicked();
   void on_graph_SelectionChanged ();
   void on_graph_ConnectionsChanged ();
-  void CompileMaterial();
 
 private:
+  bool CompileMaterial();
 
 
 
   Ui::ShaderGraphEditorWidget *m_gui;
 
 
-  cs::csWorld* m_world = nullptr;
-  cs::csEntity* m_cameraEntity = nullptr;
-  cs::csCameraState *m_camera = nullptr;
+  cs::csRef<cs::csWorld> m_world = nullptr;
+  cs::csRef<cs::csEntity> m_cameraEntity = nullptr;
+  cs::csRef<cs::csCameraState> m_camera = nullptr;
 
-  cs::csEntity* m_lightEntity = nullptr;
-  cs::csLightState *m_light = nullptr;
+  cs::csRef<cs::csEntity> m_lightEntity = nullptr;
+  cs::csRef<cs::csLightState> m_light = nullptr;
 
   cs::csAssetRef<cs::csShaderGraph> m_shaderGraph = nullptr;
   cs::csAssetLocator             m_locator;
   ShaderGraphNodePalletTreeModel *m_palletModel = nullptr;
 
-  cs::csStaticMeshState* m_cube = nullptr;
-  cs::csEntity* m_cubeEntity = nullptr;
+  cs::csRef<cs::csStaticMeshState> m_cube = nullptr;
+  cs::csRef<cs::csEntity> m_cubeEntity = nullptr;
 
 
 };

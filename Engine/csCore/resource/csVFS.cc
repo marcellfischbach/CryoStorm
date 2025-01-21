@@ -116,6 +116,34 @@ std::string csVFS::ReplaceAliases(const std::string& str) const
   return result;
 }
 
+
+bool csVFS::IsMasterLocator(const cs::csAssetLocator &resourceLocator) const
+{
+  std::string archiveName = resourceLocator.GetArchive();
+  if (archiveName.empty())
+  {
+    // no specific archive set... so this is the master per definition
+    return true;
+  }
+  std::string resourcePathWithReplacedAliases = ReplaceAliases(resourceLocator.Canonical());
+
+  for (const auto &archive : m_archives)
+  {
+    if (archive->IsExisting(resourcePathWithReplacedAliases))
+    {
+      if (archive->GetName() == archiveName)
+      {
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
 }
 
 #ifdef CS_JAVA

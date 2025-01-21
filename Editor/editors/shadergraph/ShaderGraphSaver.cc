@@ -6,6 +6,7 @@
 #include <editors/shadergraph/ShaderGraphSaver.hh>
 #include <csCore/graphics/shadergraph/csShaderGraph.hh>
 #include <csCore/graphics/shadergraph/csSGNode.hh>
+#include <csCore/resource/csVFS.hh>
 #include <string>
 #include <sstream>
 
@@ -20,8 +21,8 @@ ShaderGraphSaver::ShaderGraphSaver(cs::csShaderGraph *shaderGraph)
 void ShaderGraphSaver::CollectNodes()
 {
   m_sortedNodes.clear();
-  std::vector<csSGNode*> nodes;
-  for (int i = 0; i < m_shaderGraph->GetNumberOfNodes(); ++i)
+  std::vector<csSGNode *> nodes;
+  for (int                i = 0; i < m_shaderGraph->GetNumberOfNodes(); ++i)
   {
     nodes.push_back(m_shaderGraph->GetNode(i));
   }
@@ -29,11 +30,11 @@ void ShaderGraphSaver::CollectNodes()
 
   while (!nodes.empty())
   {
-    size_t  size = nodes.size();
-    for (auto node : nodes)
+    size_t    size = nodes.size();
+    for (auto node: nodes)
     {
-      bool  add = true;
-      for (int i = 0; i < node->GetNumberOfInputs(); ++i)
+      bool     add = true;
+      for (int i   = 0; i < node->GetNumberOfInputs(); ++i)
       {
         csSGNodeInput *input = node->GetInput(i);
         if (input)
@@ -150,10 +151,10 @@ std::string ShaderGraphSaver::GetNodeSource(cs::csSGNode *node)
     stream
         << "    resource"
         << " \"" << node->GetClass()->GetName() << "\""
-        << " \"" << node->GetName() << "\""
+        << " " << node->GetKey()
         << " \"" << resourceNode->GetResourceName() << "\"";
   }
-  else if (node->IsInstanceOf<csShaderGraph>())
+  else if (m_shaderGraph->Root() == node)
   {
     stream
         << "    shaderGraph";
@@ -163,12 +164,64 @@ std::string ShaderGraphSaver::GetNodeSource(cs::csSGNode *node)
     stream
         << "    node"
         << " \"" << node->GetClass()->GetName() << "\""
-        << " \"" << node->GetName() << "\"";
+        << " " << node->GetKey();
   }
   stream << " x:" << std::to_string(node->GetPosition().x)
          << " y:" << std::to_string(node->GetPosition().y)
          << " {\n";
 
+  if (node->IsInstanceOf<csSGResourceNode>())
+  {
+    csSGResourceNode            *resourceNode = csQueryClass<csSGResourceNode>(node);
+    const std::array<int, 4>    &is           = resourceNode->GetDefaultInts();
+    const std::array<float, 16> &fs           = resourceNode->GetDefaultFloats();
+
+    switch (resourceNode->GetMatType())
+    {
+      case cs::eMAT_Int:
+        stream << "      defaultInt " << is[0] << ",\n";
+        break;
+      case cs::eMAT_IVec2:
+        stream << "      defaultInt " << is[0] << " " << is[1] << ",\n";
+        break;
+      case cs::eMAT_IVec3:
+        stream << "      defaultInt" << is[0] << " " << is[1] << " " << is[2] << ",\n";
+        break;
+      case cs::eMAT_IVec4:
+        stream << "      defaultInt " << is[0] << " " << is[1] << " " << is[2] << " " << is[3] << ",\n";
+        break;
+      case cs::eMAT_Float:
+        stream << "      defaultFloat " << fs[0] << ",\n";
+        break;
+      case cs::eMAT_Vec2:
+        stream << "      defaultFloat " << fs[0] << " " << fs[1] << ",\n";
+        break;
+      case cs::eMAT_Vec3:
+        stream << "      defaultFloat " << fs[0] << " " << fs[1] << " " << fs[2] << ",\n";
+        break;
+      case cs::eMAT_Vec4:
+        stream << "      defaultFloat " << fs[0] << " " << fs[1] << " " << fs[2] << " " << fs[3] << ",\n";
+        break;
+      case cs::eMAT_Matrix3:
+        stream << "      defaultFloat " << fs[0] << " " << fs[1] << " " << fs[2] << "\n"
+               << "                   " << fs[3] << " " << fs[4] << " " << fs[5] << "\n"
+               << "                   " << fs[6] << " " << fs[7] << " " << fs[8] << ",\n";
+        break;
+      case cs::eMAT_Matrix4:
+        stream << "      defaultFloat " << fs[0] << " " << fs[1] << " " << fs[2] << "  " << fs[3] << "\n"
+               << "                   " << fs[4] << " " << fs[5] << " " << fs[6] << "  " << fs[7] << "\n"
+               << "                   " << fs[8] << " " << fs[9] << " " << fs[10] << "  " << fs[11] << "\n"
+               << "                   " << fs[12] << " " << fs[13] << " " << fs[14] << "  " << fs[15] << ",\n";
+        break;
+      case cs::eMAT_Texture:
+        stream << "      defaultLocator \"" << resourceNode->GetDefaultLocator().Encoded() << "\",\n";
+        break;
+      case cs::eMAT_Undefined:
+        break;
+
+    }
+
+  }
   for (int i = 0; i < node->GetNumberOfInputs(); ++i)
   {
     csSGNodeInput *input = node->GetInput(i);
@@ -184,14 +237,14 @@ std::string ShaderGraphSaver::GetNodeSource(cs::csSGNode *node)
       stream
           << "      binding "
           << " \"" << input->GetName() << "\""
-          << " \"" << outputNode->GetName() << "\""
+          << " " << outputNode->GetKey()
           << " \"" << output->GetName() << "\""
           << ",\n";
     }
     else
     {
       stream
-          << "      value " << std::to_string(i)
+          << "      value \"" << input->GetName() << "\""
           << " " << std::to_string(input->GetScalar())
           << ",\n";
     }
@@ -237,23 +290,18 @@ std::string ShaderGraphSaver::GetShaderGraphSource()
   stream << GetNodeSource(m_shaderGraph->Root());
 
   stream
-      << "  },\n"
-      << "  attributes {\n";
-  for (auto node: m_sortedNodes)
-  {
-    stream << GetAttributeSource(node);
-  }
-
-  stream << "  }\n"
-         << "}\n";
+      << "  }\n"
+      << "}\n";
   return stream.str();
 };
 
 
 void ShaderGraphSaver::Save(const cs::csAssetLocator &locator)
 {
-  std::string source = GetShaderGraphSource();
-  printf ("%s\n", source.c_str());
+  std::string          source = GetShaderGraphSource();
+  const csOwned<iFile> &owned = csVFS::Get()->Open(locator, eAM_Write, eOM_Binary);
+  owned->Write(sizeof(char), source.length(), source.c_str());
+
 
 //  iFile *file = csVFS::Get()->Open(m_locator, eAM_Write, eAF_Text);
 //  if (!file)

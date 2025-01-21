@@ -1,27 +1,31 @@
-
-
 shaderGraph {
 
-    receiveShadow 1,
-    queue Default,
-    lighting Default,
-    blending Off,
+  receiveShadow 1,
+  queue Default,
+  lighting Default,
+  blending Off,
 
-    nodes {
-
-        resource "cs::csSGResourceColor3" colorDiffuse "Diffuse" x:-200.0 y:0.0 {
-            defaultFloat 3 0.25 0.5 0.75,
-        },
-
-
-
-        shaderGraph {
-            binding "Diffuse" colorDiffuse,
-        }
+  nodes {
+    resource "cs::csSGResourceColor3" id_0 "Diffuse" x:-243.000000 y:-51.000000 {
+      defaultFloat 1 0 0,
     },
-
-    attributes {
+    resource "cs::csSGResourceFloat" id_1 "Alpha" x:-327.000000 y:28.000000 {
+      defaultFloat 0.1,
     },
-
-},
-  
+    resource "cs::csSGResourceFloat" id_2 "Metallic" x:-254.000000 y:179.000000 {
+      defaultFloat 0,
+    },
+    node "cs::csSGConstVec3" id_3 x:-326.000000 y:125.000000 {
+      value "X" 0.000000,
+      value "Y" 1.000000,
+      value "Z" 0.000000,
+    },
+    shaderGraph x:0.000000 y:0.000000 {
+      binding  "Diffuse" id_0 "V",
+      binding  "Alpha" id_1 "V",
+      value "Roughness" 0.500000,
+      binding  "Normal" id_3 "V",
+      binding  "Metallic" id_2 "V",
+    },
+  }
+}

@@ -8,6 +8,7 @@
 #include <map>
 #include <vector>
 #include <set>
+#include <csCore/csRef.hh>
 
 
 namespace cs
@@ -99,6 +100,8 @@ private:
   void DeleteNode (ShaderGraphNodeItem* node);
 
 
+  size_t GetFreeNodeId () const;
+
   bool m_leftButtonDown = false;
 
   struct
@@ -121,9 +124,9 @@ private:
   struct
   {
     ShaderGraphNodeItem *srcNode = nullptr;
-    cs::csSGNodeIO *srcIO = nullptr;
+    cs::csRef<cs::csSGNodeIO> srcIO = nullptr;
     ShaderGraphNodeItem *dstNode = nullptr;
-    cs::csSGNodeIO *dstIO = nullptr;
+    cs::csRef<cs::csSGNodeIO> dstIO = nullptr;
 
     QPointF startPos;
     QGraphicsPathItem *graphItem = nullptr;
@@ -144,14 +147,14 @@ private:
   {
     QGraphicsPathItem *Path;
     ShaderGraphNodeItem *Source;
-    cs::csSGNodeOutput *SourceIO;
+    cs::csRef<cs::csSGNodeOutput> SourceIO;
     ShaderGraphNodeItem *Destination;
-    cs::csSGNodeInput *DestinationIO;
+    cs::csRef<cs::csSGNodeInput> DestinationIO;
     bool operator==(const Wire &wire) const;
     bool IsValid () const;
   };
 
-  cs::csShaderGraph *m_shaderGraph;
+  cs::csRef<cs::csShaderGraph> m_shaderGraph;
 
   std::vector<ShaderGraphNodeItem *> m_nodes;
   std::set<ShaderGraphNodeItem *> m_selectedNodes;
@@ -159,6 +162,5 @@ private:
 
   QGraphicsScene *m_scene;
 
-  std::map<const cs::csClass*, size_t> m_defaultIdx;
 
 };

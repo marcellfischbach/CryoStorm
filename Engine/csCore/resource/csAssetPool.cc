@@ -17,7 +17,7 @@ csAssetPool::csAssetPool()
 
 iAsset* csAssetPool::Get(const csAssetLocator& locator)
 {
-  auto it = m_resources.find(locator);
+  auto it = m_resources.find(locator.Canonical());
   if (it == m_resources.end())
   {
     return nullptr;
@@ -27,7 +27,7 @@ iAsset* csAssetPool::Get(const csAssetLocator& locator)
 
 void csAssetPool::Erase(const csAssetLocator& locator)
 {
-  auto it = m_resources.find(locator);
+  auto it = m_resources.find(locator.Canonical());
   if (it != m_resources.end())
   {
     it->second->Invalidate();
@@ -53,7 +53,7 @@ void csAssetPool::Put(const csAssetLocator& locator, iAsset* resource)
 
   resource->AddRef();
 
-  auto it = m_resources.find(locator);
+  auto it = m_resources.find(locator.Canonical());
   if (it != m_resources.end())
   {
     if (it->second == resource)
@@ -63,7 +63,7 @@ void csAssetPool::Put(const csAssetLocator& locator, iAsset* resource)
     it->second->Invalidate();
     it->second->Release();
   }
-  m_resources[locator] = resource;
+  m_resources[locator.Canonical()] = resource;
   resource->Revalidate();
 }
 

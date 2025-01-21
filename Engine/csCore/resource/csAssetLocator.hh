@@ -20,6 +20,8 @@ public:
   CS_NODISCARD const std::string& Encoded() const;
   CS_NODISCARD const std::string& Canonical() const;
 
+  csAssetLocator AsAnonymous() const;
+
 	bool operator<(const csAssetLocator& locator) const;
 	bool operator==(const csAssetLocator& locator) const;
 

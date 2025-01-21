@@ -19,6 +19,7 @@ struct CS_CORE_API iArchive : public CS_SUPER(iObject)
   CS_NODISCARD virtual const std::string &GetName () const = 0;
   CS_NODISCARD virtual int GetPriority () const = 0;
   CS_NODISCARD virtual csOwned<iFile> Open (const std::string &locator, eAccessMode accessMode, eOpenMode openMode) = 0;
+  virtual bool IsExisting (const std::string &locator) const = 0;
 };
 
 

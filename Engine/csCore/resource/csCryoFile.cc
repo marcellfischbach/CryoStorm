@@ -842,7 +842,7 @@ std::string Print(const csCryoFileElement *element, bool format, int ind, const 
   return line;
 }
 
-std::string csCryoFile::Print(bool format, int indent)
+std::string csCryoFile::ToString(bool format, int indent)
 {
   std::string indentStr;
   for (int    i = 0; i < indent; i++)

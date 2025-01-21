@@ -152,6 +152,7 @@ std::string csGL4ShaderGraphCompiler::GenerateForward_Frag(std::map<std::string,
   inputs.push_back(m_shaderGraph->GetAlphaInput());
   inputs.push_back(m_shaderGraph->GetRoughnessInput());
   inputs.push_back(m_shaderGraph->GetNormalInput());
+  inputs.push_back(m_shaderGraph->GetMetallicInput());
   std::vector<csSGNode *> nodes = ScanNeededVariables(inputs);
   if (!CollectAttributes(nodes, attributes))
   {

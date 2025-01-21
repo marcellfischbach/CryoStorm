@@ -5,6 +5,7 @@
 #pragma once
 
 #include <QWidget>
+#include <csCore/csRef.hh>
 
 namespace Ui
 {
@@ -39,6 +40,6 @@ private:
   void UpdateAlphaThreshold ();
   Ui::ShaderGraphShaderGraphPropertiesWidget *m_gui;
 
-  cs::csShaderGraph* m_shaderGraph;
+  cs::csRef<cs::csShaderGraph> m_shaderGraph;
 
 };

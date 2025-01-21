@@ -20,13 +20,12 @@ ShaderGraphShaderGraphPropertiesWidget::ShaderGraphShaderGraphPropertiesWidget(Q
 ShaderGraphShaderGraphPropertiesWidget::~ShaderGraphShaderGraphPropertiesWidget()
 {
   delete m_gui;
-  CS_RELEASE(m_shaderGraph);
 }
 
 
 void ShaderGraphShaderGraphPropertiesWidget::SetShaderGraph(cs::csShaderGraph *shaderGraph)
 {
-  CS_SET(m_shaderGraph, shaderGraph);
+  m_shaderGraph = shaderGraph;
   m_gui->nodeProperties->SetNode(shaderGraph->Root());
   if (shaderGraph)
   {

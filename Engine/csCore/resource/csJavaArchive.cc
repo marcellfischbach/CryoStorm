@@ -72,6 +72,11 @@ csOwned<iFile> csJavaArchive::Open(const std::string &locator, eAccessMode acces
   return reinterpret_cast<iFile *>(ref);
 }
 
+bool csJavaArchive::IsExisting(const std::string &locator) const
+{
+  return false;
+}
+
 
 }
 

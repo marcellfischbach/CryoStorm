@@ -31,6 +31,8 @@ public:
 
   CS_NODISCARD csOwned<iFile> Open(const csAssetLocator &resourceLocator, eAccessMode accessMode, eOpenMode openMode) const;
 
+  bool IsMasterLocator (const csAssetLocator &resourceLocator) const;
+
 private:
   csVFS();
   CS_NODISCARD iFile *File(const csAssetLocator &resourceLocator) const;
