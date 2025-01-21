@@ -73,6 +73,7 @@ protected:
   void paintGL() override;
 
 private:
+  bool m_engineInitialized = false;
   cs::csViewport *m_viewport;
   cs::csWorld    *m_world;
 
@@ -80,3 +81,4 @@ private:
   SceneViewWidget_WindowPriv *m_window;
   QTimer *m_timer;
 };
+

@@ -1,6 +1,7 @@
 
 #include <QMainWindow>
 #include <QApplication>
+#include <QSurfaceFormat>
 #include <mainwindow.hh>
 #include <default_registries.hh>
 #include <csCore/resource/csAssetLocator.hh>

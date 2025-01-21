@@ -89,4 +89,6 @@ target_link_libraries(EdLauncher
         Qt6::Xml
         )
 
+
+add_dependencies(EdLauncher csMOC)
 CS_MOC(EdLauncher "")

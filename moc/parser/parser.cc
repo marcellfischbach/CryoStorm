@@ -300,12 +300,22 @@ ClassSuperDefinition Parser::ParseSuperDefinition(Tokenizer &tokenizer, size_t &
 VisibilityNode *Parser::ParseVisibility(Tokenizer &tokenizer, size_t &idx, ASTNode *parent)
 {
   const Token &token = tokenizer.GetTokens()[idx + 1];
-  if (token.GetType() != eTT_Colon)
+  if (token.GetType() == eTT_Colon)
   {
-    throw ParseException(__FILE__, __LINE__, "Unable to parse visibility", token.getLine(), token.getColumn());
+    idx += 2;
+    return new VisibilityNode(tokenizer.GetTokens()[idx - 2].Get());
   }
-  idx += 2;
-  return new VisibilityNode(tokenizer.GetTokens()[idx - 2].Get());
+  if (token.GetType() == eTT_Identifier && (token.Get() == "signals" || token.Get() == "slots"))
+  {
+    const Token &token = tokenizer.GetTokens()[idx + 2];
+    if (token.GetType() == eTT_Colon)
+    {
+      idx += 3;
+      return new VisibilityNode(tokenizer.GetTokens()[idx - 3].Get());
+    }
+  }
+
+  throw ParseException(__FILE__, __LINE__, "Unable to parse visibility", token.getLine(), token.getColumn());
 }
 
 

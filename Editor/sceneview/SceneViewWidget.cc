@@ -5,6 +5,7 @@
 
 #include <sceneview/SceneViewWidget.hh>
 #include <QCoreApplication>
+#include <QOpenGLContext>
 #include <QTimer>
 #include <csCore/csEngine.hh>
 #include <csCore/csViewport.hh>
@@ -18,9 +19,9 @@
 
 using namespace cs;
 
-static bool s_engineInitialized = false;
-
-
+static size_t s_engineInitializedCount = 0;
+static csModuleConfig s_moduleConfig;
+std::vector<std::string> extract_args();
 
 
 SceneViewWidget::SceneViewWidget(QWidget *parent)
@@ -31,7 +32,7 @@ SceneViewWidget::SceneViewWidget(QWidget *parent)
 {
 
   m_timer = new QTimer(this);
-  connect (m_timer, SIGNAL(timeout()), this, SLOT(update()));
+  connect(m_timer, SIGNAL(timeout()), this, SLOT(update()));
   m_timer->setInterval(10);
   m_timer->start();
 
@@ -40,58 +41,54 @@ SceneViewWidget::SceneViewWidget(QWidget *parent)
 
 SceneViewWidget::~SceneViewWidget()
 {
+  if (m_engineInitialized)
+  {
+    s_engineInitializedCount--;
+    if (s_engineInitializedCount == 0)
+    {
+
+      csEngine *engine = csEngine::Get();
+      engine->ShutdownEngine(extract_args(), s_moduleConfig);
+
+    }
+  }
   delete m_window;
   m_window = nullptr;
 }
 
-csWorld* SceneViewWidget::GetWorld()
+csWorld *SceneViewWidget::GetWorld()
 {
   return m_world;
 }
 
 
-const csWorld* SceneViewWidget::GetWorld() const
+const csWorld *SceneViewWidget::GetWorld() const
 {
   return m_world;
 }
 
-std::vector<std::string> extract_args()
-{
-  std::vector<std::string> args;
-  QStringList arguments = QCoreApplication::arguments();
-  for (QString arg: arguments)
-  {
-    args.push_back(std::string(arg.toLatin1()));
-  }
-
-  args.push_back("--glProfile");
-  args.push_back("compat");
-
-  return args;
-}
 
 
 void SceneViewWidget::initializeGL()
 {
-  if (s_engineInitialized)
+  if (s_engineInitializedCount == 0)
   {
-    return;
+
+    s_moduleConfig.LoadModuleConfig();
+
+    csEngine *engine = csEngine::Get();
+    if (!engine->InitializeEngine(extract_args(), s_moduleConfig))
+    {
+      fprintf(stderr, "Unable to initialize engine\n");
+      return;
+    };
+    csObjectRegistry::Get<iDevice>()->CheckError();
   }
 
-
-  s_engineInitialized = true;
-
-  csModuleConfig config;
-  config.LoadModuleConfig();
-
-  csEngine *engine = csEngine::Get();
-  if (!engine->InitializeEngine(extract_args(), config))
-  {
-    fprintf(stderr, "Unable to initialize engine\n");
-  };
-  csObjectRegistry::Get<iDevice>()->CheckError();
-
+  s_engineInitializedCount++;
+  m_engineInitialized = true;
 }
+
 
 void SceneViewWidget::resizeGL(int w, int h)
 {
@@ -111,7 +108,7 @@ void SceneViewWidget::paintGL()
     emit initialize(m_world);
   }
   GLuint fb = defaultFramebufferObject();
-  opengl::csGL4RenderTarget2D rt (fb, QWidget::width(), QWidget::height());
+  opengl::csGL4RenderTarget2D rt(fb, QWidget::width(), QWidget::height());
 
 
   if (!m_viewport)
@@ -127,10 +124,9 @@ void SceneViewWidget::paintGL()
 }
 
 
-
 SceneViewWidget_WindowPriv::SceneViewWidget_WindowPriv(SceneViewWidget *window)
-: iWindow()
-, m_window(window)
+    : iWindow()
+    , m_window(window)
 {
 
 }
@@ -191,4 +187,19 @@ void SceneViewWidget_WindowPriv::Present()
 
 void SceneViewWidget_WindowPriv::ProcessUpdates()
 {
+}
+
+std::vector<std::string> extract_args()
+{
+  std::vector<std::string> args;
+  QStringList arguments = QCoreApplication::arguments();
+  for (QString arg: arguments)
+  {
+    args.push_back(std::string(arg.toLatin1()));
+  }
+
+  args.push_back("--glProfile");
+  args.push_back("compat");
+
+  return args;
 }

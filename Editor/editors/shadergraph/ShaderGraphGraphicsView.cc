@@ -842,9 +842,9 @@ bool ShaderGraphGraphicsView::Wire::operator==(const ShaderGraphGraphicsView::Wi
 {
   return wire.Path == Path
          && wire.Source == Source
-         && wire.SourceIO == SourceIO
+         && wire.SourceIO.raw() == SourceIO
          && wire.Destination == Destination
-         && wire.DestinationIO == DestinationIO;
+         && wire.DestinationIO.raw() == DestinationIO;
 }
 bool ShaderGraphGraphicsView::Wire::IsValid() const
 {
