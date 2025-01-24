@@ -197,6 +197,5 @@ bool Project::Open(const std::string &projectFolder)
   }
 
 
-  printf("\n");
   return true;
 }

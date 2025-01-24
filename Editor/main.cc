@@ -21,12 +21,23 @@ void print_usage()
 std::string extract_path (const std::string &projectDesc)
 {
   std::string path = projectDesc;
-  if (path.ends_with("/cryo-project.xml") || path.ends_with("\\cryo-project.xml"))
+  size_t idx = path.rfind("/cryo-project.xml");
+  if (idx == std::string::npos)
   {
-      path = path.substr(0, path.size() - 10);
+    idx = path.rfind("\\cryo-project.xml");
+    if (idx == std::string::npos)
+    {
+      return path;
+    }
   }
 
-  if (path.ends_with("/") || path.ends_with("\\"))
+  path = path.substr(0, idx);
+//  if (path.ends_with("/cryo-project.xml") || path.ends_with("\\cryo-project.xml"))
+//  {
+//      path = path.substr(0, path.size() - 10);
+//  }
+
+  while (path.ends_with("/") || path.ends_with("\\"))
   {
     path = path.substr(0, path.size()-1);
   }
@@ -38,8 +49,6 @@ int main(int argc, char** argv)
 {
   register_classes();
 
-  cs::csAssetLocator loc ("test-archive@/Users/andreas/Development/cryos/Editor/Editor.txt");
-  cs::csAssetLocator loc1 (loc, "test-archive@../AnotherValue.txt");
 
   QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
 
