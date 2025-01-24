@@ -129,7 +129,7 @@ int main(int argc, char **argv)
   viewport->SetWindow(window);
   viewport->SetDevice(csObjectRegistry::Get<iDevice>());
   viewport->SetWorld(world);
-  viewport->SetFrameRenderer(csObjectRegistry::Get<iFrameRenderer>());
+//  viewport->SetFrameRenderer(csObjectRegistry::Get<iFrameRenderer>());
 
 
   cs::iGame *game = open_game("csGame");
@@ -164,6 +164,7 @@ int main(int argc, char **argv)
 
   world->Release();
   viewport->Release();
+
 
   engine->ShutdownEngine(args, config);
 

@@ -158,7 +158,7 @@ private:
 
 private:
   iRenderTarget                     *m_renderTarget = nullptr;
-  cs::iShader                       *m_shader = nullptr;
+  cs::iShader                       *m_shader       = nullptr;
   bool                              m_materialSuccessfull;
   csAssetRef<iMaterial>             m_material;
   eRenderPass                       m_materialPass;
@@ -168,7 +168,7 @@ private:
   bool                              m_texturesUsed[eTU_COUNT];
   std::array<iTexture *, eTU_COUNT> m_textures;
   std::array<iSampler *, eTU_COUNT> m_samplers;
-  iTexture                          *m_tempTexture = nullptr;
+  csRef<iTexture>                   m_tempTexture   = nullptr;
 
 
   /*
@@ -255,17 +255,17 @@ private:
     {
       iTextureCube *ShadowBufferDepth = nullptr;
       iTextureCube *ShadowBufferColor = nullptr;
-      float Near;
-      float Far;
-      float Bias;
+      float        Near;
+      float        Far;
+      float        Bias;
     }          PointLight;
 
     struct
     {
       iTexture2DArray *ShadowBufferDepth = nullptr;
       iTexture2DArray *ShadowBufferColor = nullptr;
-      float Matrices[64];
-      float Layers[4];
+      float           Matrices[64];
+      float           Layers[4];
     }          DirectionalLight;
   };
 
@@ -279,27 +279,27 @@ private:
 //
 //  std::vector<iTexture2D *> m_shadowMapTextures;
 
-  int8_t       m_renderLayer;
+  int8_t           m_renderLayer;
 
   /** 
    * \name Fullscreen Rendering
    * @{
    */
   csGL4Program *FullscreenBlitProgram();
-  csGL4Program *m_fullscreenBlitProgram = nullptr;
+  csGL4Program     *m_fullscreenBlitProgram      = nullptr;
   csGL4Program *FullscreenBlitMSProgram();
-  csGL4Program *m_fullscreenBlitMSProgram = nullptr;
+  csGL4Program     *m_fullscreenBlitMSProgram    = nullptr;
   iRenderMesh *FullscreenBlitRenderMesh();
-  iRenderMesh *m_fullscreenBlitRenderMesh = nullptr;
+  iRenderMesh      *m_fullscreenBlitRenderMesh   = nullptr;
   iRenderMesh *PixelRenderMesh();
-  iRenderMesh  *m_pixelRenderMesh = nullptr;
+  iRenderMesh      *m_pixelRenderMesh            = nullptr;
 
   csGL4Program *FullscreenBlitArrayProgram();
-  csGL4Program *m_fullscreenBlitArrayProgram = nullptr;
+  csGL4Program     *m_fullscreenBlitArrayProgram = nullptr;
 
 
   csGL4Program *FullscreenBlitCubeProgram();
-  csGL4Program *m_fullscreenBlitCubeProgram = nullptr;
+  csGL4Program     *m_fullscreenBlitCubeProgram  = nullptr;
   iShaderAttribute *m_fullscreenBlitCubeDiffuse;
   iShaderAttribute *m_fullscreenBlitCubeScale;
   iShaderAttribute *m_fullscreenBlitCubeTranslation;

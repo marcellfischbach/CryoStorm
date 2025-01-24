@@ -10,6 +10,7 @@
 #include <csCore/graphics/iRenderTarget2D.hh>
 #include <csCore/graphics/iSkyboxRenderer.hh>
 #include <csCore/window/iWindow.hh>
+#include <csCore/csObjectRegistry.hh>
 
 
 namespace cs
@@ -22,6 +23,17 @@ csViewport::csViewport()
 
 csViewport::~csViewport()
 {
+}
+
+void csViewport::SetRenderPipeline(eRenderPipeline pipeline)
+{
+  m_pipeline = pipeline;
+  InitializeFrameRenderer();
+}
+
+eRenderPipeline csViewport::GetRenderPipeline() const
+{
+  return m_pipeline;
 }
 
 void csViewport::SetDevice(cs::iDevice *device)
@@ -54,11 +66,6 @@ const cs::csWorld *csViewport::GetWorld() const
   return m_world;
 }
 
-
-void csViewport::SetFrameRenderer(cs::iFrameRenderer *frameRenderer)
-{
-  m_frameRenderer = frameRenderer;
-}
 
 cs::iFrameRenderer *csViewport::GetFrameRenderer()
 {
@@ -111,6 +118,19 @@ const cs::iWindow *csViewport::GetWindow() const
 }
 
 
+bool csViewport::InitializeFrameRenderer()
+{
+  iFrameRendererFactory* factory = csObjectRegistry::Get<iFrameRendererFactory>();
+  if (!factory)
+  {
+    return false;
+  }
+
+
+  m_frameRenderer = factory->Create(m_pipeline);
+  return m_frameRenderer != nullptr;
+}
+
 static csOwned<cs::iRenderTarget2D>
 create_render_target(cs::iDevice *device, uint32_t width, uint32_t height, uint16_t multiSamples)
 {
@@ -161,6 +181,14 @@ create_render_target(cs::iDevice *device, uint32_t width, uint32_t height, uint1
 bool csViewport::ProcessFrame(iRenderTarget2D *renderTarget)
 {
   m_device->CheckError();
+
+  if (!m_frameRenderer)
+  {
+    if (!InitializeFrameRenderer())
+    {
+      return false;
+    }
+  }
 
   if (!m_renderTarget || m_renderTarget->GetWidth() != m_window->GetWidth() ||
       m_renderTarget->GetHeight() != m_window->GetHeight())

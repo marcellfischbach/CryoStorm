@@ -6,6 +6,7 @@
 
 #include <QOpenGLWidget>
 #include <csCore/window/iWindow.hh>
+#include <csCore/csRef.hh>
 
 namespace cs
 {
@@ -74,11 +75,11 @@ protected:
 
 private:
   bool m_engineInitialized = false;
-  cs::csViewport *m_viewport;
-  cs::csWorld    *m_world;
+  cs::csRef<cs::csViewport> m_viewport;
+  cs::csRef<cs::csWorld> m_world;
 
   class WindowPriv;
-  SceneViewWidget_WindowPriv *m_window;
+  cs::csRef<SceneViewWidget_WindowPriv> m_window;
   QTimer *m_timer;
 };
 
