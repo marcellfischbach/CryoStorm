@@ -9,6 +9,7 @@
 
 namespace cs::opengl
 {
+
 csGL4Texture2DArray::csGL4Texture2DArray()
   : iTexture2DArray()
   , m_width(0)
@@ -16,7 +17,6 @@ csGL4Texture2DArray::csGL4Texture2DArray()
   , m_layer(0)
   , m_sampler(nullptr)
 {
-
   CS_GL_ERROR()
   glGenTextures(1, &m_name);
   CS_GL_ERROR()
@@ -153,7 +153,7 @@ void csGL4Texture2DArray::Data(uint16_t layer, uint16_t level, uint16_t x, uint1
 
 void csGL4Texture2DArray::SetSampler(iSampler* sampler)
 {
-  CS_SET(m_sampler, sampler);
+  m_sampler = sampler;
 }
 
 iSampler* csGL4Texture2DArray::GetSampler()

@@ -52,8 +52,6 @@ SceneViewWidget::~SceneViewWidget()
 
     }
   }
-  delete m_window;
-  m_window = nullptr;
 }
 
 csWorld *SceneViewWidget::GetWorld()
@@ -117,7 +115,7 @@ void SceneViewWidget::paintGL()
     m_viewport->SetWindow(m_window);
     m_viewport->SetDevice(csObjectRegistry::Get<iDevice>());
     m_viewport->SetWorld(m_world);
-    m_viewport->SetFrameRenderer(csObjectRegistry::Get<iFrameRenderer>());
+//    m_viewport->SetFrameRenderer(csObjectRegistry::Get<iFrameRenderer>());
   }
 
   m_viewport->ProcessFrame(&rt);

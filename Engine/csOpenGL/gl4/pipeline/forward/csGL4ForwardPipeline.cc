@@ -35,7 +35,6 @@ csGL4ForwardPipeline::csGL4ForwardPipeline()
     : m_frame(0), m_device(nullptr), m_scene(nullptr), m_target(nullptr)
 {
 
-
 }
 
 void csGL4ForwardPipeline::Initialize()

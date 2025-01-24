@@ -51,8 +51,8 @@ set(SOURCES
 		gl4/loading/csGL4ShaderLoader.hh
 
 
-		gl4/pipeline/csGL4DefaultFrameRenderer.cc
-		gl4/pipeline/csGL4DefaultFrameRenderer.hh
+		gl4/pipeline/csGL4FrameRenderer.cc
+        gl4/pipeline/csGL4FrameRenderer.hh
 		gl4/pipeline/csGL4MeshSorter.cc
 		gl4/pipeline/csGL4MeshSorter.hh
 

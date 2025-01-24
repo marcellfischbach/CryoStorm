@@ -10,7 +10,7 @@
 #include <csCore/entity/csWorld.hh>
 #include <csCore/graphics/iDevice.hh>
 #include <csCore/graphics/iFrameRenderer.hh>
-#include "csOpenGL/gl4/pipeline/csGL4DefaultFrameRenderer.hh"
+#include "csOpenGL/gl4/pipeline/csGL4FrameRenderer.hh"
 #include <csCore/graphics/iRenderTarget2D.hh>
 #include <csCore/graphics/iSkyboxRenderer.hh>
 #include <csCore/window/iWindow.hh>

@@ -279,8 +279,7 @@ bool csSimplePostProcess::UpdateRenderTarget(iDevice *device,
     };
     csRef<cs::iTexture2D> colorTexture = device->CreateTexture(colorDesc);
 
-    csOwned<iSampler> oSampler = device->CreateSampler();
-    iSampler *sampler = oSampler.Data();
+    csRef<iSampler> sampler = device->CreateSampler();
     sampler->SetAddressU(eTAM_Clamp);
     sampler->SetAddressV(eTAM_Clamp);
     sampler->SetAddressW(eTAM_Clamp);

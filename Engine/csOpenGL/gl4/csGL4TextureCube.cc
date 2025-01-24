@@ -9,12 +9,12 @@
 
 namespace cs::opengl
 {
+
 csGL4TextureCube::csGL4TextureCube()
         : iTextureCube()
         , m_size(0)
         , m_sampler(nullptr)
 {
-
   CS_GL_ERROR()
   glGenTextures(1, &m_name);
   CS_GL_ERROR()
@@ -148,7 +148,7 @@ void csGL4TextureCube::Data(eCubeFace face, uint16_t level, uint16_t x, uint16_t
 
 void csGL4TextureCube::SetSampler(iSampler* sampler)
 {
-  CS_SET(m_sampler, sampler);
+  m_sampler = sampler;
 }
 
 iSampler* csGL4TextureCube::GetSampler()

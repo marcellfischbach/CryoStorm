@@ -8,6 +8,7 @@
 #include <csCore/csClass.hh>
 #include <csCore/csFPS.hh>
 #include <csCore/csRef.hh>
+#include <csCore/graphics/eRenderPipeline.hh>
 
 namespace cs
 {
@@ -29,6 +30,11 @@ public:
   ~csViewport() override;
 
   CS_FUNCTION()
+  void SetRenderPipeline (eRenderPipeline pipeline);
+  CS_FUNCTION()
+  eRenderPipeline GetRenderPipeline () const;
+
+  CS_FUNCTION()
   void SetDevice(cs::iDevice *device);
   CS_FUNCTION()
   CS_NODISCARD cs::iDevice *GetDevice();
@@ -41,8 +47,6 @@ public:
   CS_NODISCARD const cs::csWorld *GetWorld() const;
 
 
-  CS_FUNCTION()
-  void SetFrameRenderer(cs::iFrameRenderer *frameRenderer);
   CS_FUNCTION()
   CS_NODISCARD cs::iFrameRenderer *GetFrameRenderer();
   CS_NODISCARD const cs::iFrameRenderer *GetFrameRenderer() const;
@@ -66,10 +70,14 @@ public:
 
   CS_FUNCTION()
   bool ProcessFrame (cs::iRenderTarget2D *target);
+private:
+  bool InitializeFrameRenderer();
 
 private:
   csFPS    m_fps;
   uint32_t m_lastFPS;
+
+  eRenderPipeline m_pipeline = eRenderPipeline::eRP_Deferred;
 
   csRef<iDevice> m_device;
   csRef<csWorld> m_world;

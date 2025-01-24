@@ -37,7 +37,7 @@ csGL4DeferredPipeline::csGL4DeferredPipeline()
 
 csGL4DeferredPipeline::~csGL4DeferredPipeline()
 {
-
+  delete m_gBuffer;
 }
 
 

@@ -98,7 +98,7 @@ private:
   void ScanVisibleMeshes(iClipper *clipper);
   void BindCamera();
 
-  csGBuffer  *m_gBuffer;
+  csGBuffer *m_gBuffer;
 
   uint64_t        m_frame   = 0;
   csRef<iDevice> m_device;
