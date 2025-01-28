@@ -6,25 +6,28 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>502</width>
-    <height>162</height>
+    <width>571</width>
+    <height>48</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout_2">
+   <property name="spacing">
+    <number>0</number>
+   </property>
    <property name="leftMargin">
-    <number>3</number>
+    <number>0</number>
    </property>
    <property name="topMargin">
-    <number>3</number>
+    <number>0</number>
    </property>
    <property name="rightMargin">
-    <number>3</number>
+    <number>0</number>
    </property>
    <property name="bottomMargin">
-    <number>3</number>
+    <number>0</number>
    </property>
    <item>
     <widget class="QFrame" name="frame">
@@ -34,7 +37,22 @@
      <property name="frameShadow">
       <enum>QFrame::Shadow::Raised</enum>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout">
+     <layout class="QHBoxLayout" name="horizontalLayout_5">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
       <item>
        <widget class="QLabel" name="typeName">
         <property name="text">
@@ -45,7 +63,7 @@
       <item>
        <widget class="QStackedWidget" name="type">
         <property name="currentIndex">
-         <number>0</number>
+         <number>3</number>
         </property>
         <widget class="QWidget" name="float1Page">
          <layout class="QGridLayout" name="gridLayout_2">

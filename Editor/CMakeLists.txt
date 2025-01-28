@@ -41,6 +41,8 @@ set(ALL_SOURCES
 
         editors/shadergraph/ShaderGraphEditorFactory.cc
         editors/shadergraph/ShaderGraphEditorFactory.hh
+        editors/shadergraph/ShaderGraphEditorNodePropertiesWidget.cc
+        editors/shadergraph/ShaderGraphEditorNodePropertiesWidget.hh
         editors/shadergraph/ShaderGraphEditorWidget.cc
         editors/shadergraph/ShaderGraphEditorWidget.hh
         editors/shadergraph/ShaderGraphEditorWidget.ui

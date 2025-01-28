@@ -18,6 +18,7 @@ namespace cs
 class csSGNode;
 class csSGNodeInput;
 class csSGResourceNode;
+class csShaderGraph;
 }
 
 class QLabel;
@@ -75,6 +76,7 @@ public:
   ShaderGraphNodePropertiesWidget(QWidget* parent = nullptr);
   ~ShaderGraphNodePropertiesWidget() override;
 
+  void SetShaderGraph (cs::csShaderGraph* shaderGraph);
   void SetNode (cs::csSGNode* node);
 
   void UpdateState ();
@@ -87,6 +89,7 @@ private slots:
 
 private:
 
+  cs::csRef<cs::csShaderGraph> m_shaderGraph;
   cs::csRef<cs::csSGNode> m_node;
   QVBoxLayout* m_vbox;
 

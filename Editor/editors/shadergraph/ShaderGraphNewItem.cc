@@ -37,16 +37,10 @@ shaderGraph {
             value 2 1.0,
         },
 
-
-
         shaderGraph x: 0 y: 0 {
             binding "Diffuse" colorDiffuse,
         }
-    },
-
-    attributes {
-    },
-
+    }
 },
   )";
   file.close();

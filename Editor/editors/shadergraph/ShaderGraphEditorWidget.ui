@@ -97,8 +97,7 @@
          </item>
         </layout>
        </widget>
-       <widget class="ShaderGraphNodePropertiesWidget" name="nodePage"/>
-       <widget class="ShaderGraphShaderGraphPropertiesWidget" name="shaderGraphPage"/>
+       <widget class="ShaderGraphEditorNodePropertiesWidget" name="nodePage"/>
       </widget>
      </widget>
      <widget class="ShaderGraphGraphicsView" name="graph">
@@ -142,15 +141,9 @@
    <header location="global">editors/shadergraph/ShaderGraphGraphicsView.hh</header>
   </customwidget>
   <customwidget>
-   <class>ShaderGraphShaderGraphPropertiesWidget</class>
+   <class>ShaderGraphEditorNodePropertiesWidget</class>
    <extends>QWidget</extends>
-   <header location="global">editors/shadergraph/ShaderGraphShaderGraphPropertiesWidget.hh</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>ShaderGraphNodePropertiesWidget</class>
-   <extends>QWidget</extends>
-   <header location="global">editors/shadergraph/ShaderGraphNodePropertiesWidget.hh</header>
+   <header location="global">editors/shadergraph/ShaderGraphEditorNodePropertiesWidget.hh</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

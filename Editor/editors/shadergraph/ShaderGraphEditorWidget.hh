@@ -54,7 +54,7 @@ private:
 private slots:
   void on_preview_initialize(cs::csWorld* world);
   void on_btnCompile_clicked();
-  void on_graph_SelectionChanged ();
+  void onNodeSelectionChanged ();
   void on_graph_ConnectionsChanged ();
 
 private:

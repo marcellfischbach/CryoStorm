@@ -66,7 +66,7 @@ int main(int argc, char** argv)
   format.setProfile(QSurfaceFormat::CompatibilityProfile);
   QSurfaceFormat::setDefaultFormat(format);
 
-  QApplication::setStyle ("Apple");
+  QApplication::setStyle ("Fusion");
   QApplication app(argc, argv);
 
 

@@ -5,6 +5,7 @@
 #include <editors/shadergraph/ShaderGraphNodePropertiesWidget.hh>
 #include <csCore/graphics/shadergraph/csSGNode.hh>
 #include <csCore/graphics/shadergraph/csSGNodes.hh>
+#include <csCore/graphics/shadergraph/csShaderGraph.hh>
 #include <ui_ShaderGraphNodeInputWidget.h>
 #include <ui_ShaderGraphResourceNodeWidget.h>
 
@@ -319,6 +320,11 @@ ShaderGraphNodePropertiesWidget::ShaderGraphNodePropertiesWidget(QWidget* parent
 ShaderGraphNodePropertiesWidget::~ShaderGraphNodePropertiesWidget()
 {
   RemoveAll();
+}
+
+void ShaderGraphNodePropertiesWidget::SetShaderGraph(cs::csShaderGraph *shaderGraph)
+{
+  m_shaderGraph = shaderGraph;
 }
 
 void ShaderGraphNodePropertiesWidget::SetNode(cs::csSGNode* node)

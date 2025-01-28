@@ -30,7 +30,8 @@
 
 using namespace cs;
 
-ShaderGraphEditorWidget::ShaderGraphEditorWidget(csShaderGraph *shaderGraph, const csAssetLocator &locator,
+ShaderGraphEditorWidget::ShaderGraphEditorWidget(csShaderGraph *shaderGraph,
+                                                 const csAssetLocator &locator,
                                                  QWidget *parent)
     : QDialog(parent, Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint)
     , m_gui(new Ui::ShaderGraphEditorWidget)
@@ -39,18 +40,24 @@ ShaderGraphEditorWidget::ShaderGraphEditorWidget(csShaderGraph *shaderGraph, con
     , m_palletModel(new ShaderGraphNodePalletTreeModel())
 {
   m_gui->setupUi(this);
+  fflush(stdout);
+  fflush(stderr);
 
   m_gui->propertiesStack->setCurrentWidget(m_gui->noSelection);
-  m_gui->shaderGraphPage->SetShaderGraph(m_shaderGraph);
+//  m_gui->shaderGraphPage->SetShaderGraph(m_shaderGraph);
 
   m_gui->pallet->setModel(m_palletModel);
   connect(this, SIGNAL(finished(int)), this, SLOT(deleteLater()));
   connect(m_gui->btnSave, &QPushButton::clicked, this, &ShaderGraphEditorWidget::onBtnSaveClicked);
-
+  connect(m_gui->graph,
+          &ShaderGraphGraphicsView::SelectionChanged,
+          this,
+          &ShaderGraphEditorWidget::onNodeSelectionChanged);
 
 //  m_gui->graph->setScene(m_scene);
   m_gui->graph->setRenderHints(QPainter::Antialiasing);
   m_gui->graph->SetShaderGraph(m_shaderGraph);
+  m_gui->nodePage->SetShaderGraph(m_shaderGraph);
   m_gui->preview->setObjectName(QString("Shader graph preview"));
   CompileMaterial();
 
@@ -63,7 +70,7 @@ ShaderGraphEditorWidget::ShaderGraphEditorWidget(csShaderGraph *shaderGraph, con
         << 250;
   m_gui->mainSplitter->setSizes(sizes);
 
-  on_graph_SelectionChanged();
+  onNodeSelectionChanged();
 }
 
 
@@ -142,32 +149,34 @@ void ShaderGraphEditorWidget::onBtnSaveClicked(bool)
   }
 }
 
-void ShaderGraphEditorWidget::on_graph_SelectionChanged()
+void ShaderGraphEditorWidget::onNodeSelectionChanged()
 {
   std::vector<csSGNode *> nodes = m_gui->graph->GetSelection();
 
   if (nodes.empty() || nodes.size() > 1)
   {
     m_gui->propertiesStack->setCurrentWidget(m_gui->noSelection);
-    return;
-  }
-
-  csSGNode *node = nodes[0];
-  if (csInstanceOf<csShaderGraph>(node))
-  {
-    m_gui->propertiesStack->setCurrentWidget(m_gui->shaderGraphPage);
   }
   else
   {
     m_gui->propertiesStack->setCurrentWidget(m_gui->nodePage);
-    m_gui->nodePage->SetNode(node);
+    m_gui->nodePage->SetNode(nodes[0]);
   }
+
+//  csSGNode *node = nodes[0];
+//  if (m_shaderGraph->Root() ==node)
+//  {
+//    m_gui->propertiesStack->setCurrentWidget(m_gui->shaderGraphPage);
+//  }
+//  else
+//  {
+//  }
 
 }
 
 void ShaderGraphEditorWidget::on_graph_ConnectionsChanged()
 {
-  m_gui->shaderGraphPage->UpdateState();
+//  m_gui->shaderGraphPage->UpdateState();
   m_gui->nodePage->UpdateState();
 }
 
