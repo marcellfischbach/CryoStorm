@@ -70,6 +70,7 @@ void ShaderGraphEditorNodePropertiesWidget::UpdateState()
 
 void ShaderGraphEditorNodePropertiesWidget::WriteValuesToNode()
 {
+  bool resourceNameChanged = false;
   for (auto &input: m_inputWidgets)
   {
     input.input->SetScalar(input.value->value());
@@ -78,6 +79,16 @@ void ShaderGraphEditorNodePropertiesWidget::WriteValuesToNode()
   if (m_node->IsInstanceOf<csSGResourceNode>())
   {
     csSGResourceNode* resource = m_node->Query<csSGResourceNode>();
+
+    if (m_resourceWidgets.lineEditName)
+    {
+      std::string resourceName = m_resourceWidgets.lineEditName->text().toStdString();
+      if (resource->GetResourceName() != resourceName)
+      {
+        resource->SetResourceName(m_resourceWidgets.lineEditName->text().toStdString());
+        resourceNameChanged = true;
+      }
+    }
 
     std::array<float, 16> floats = resource->GetDefaultFloats();
     for (size_t i=0; i<16; i++)
@@ -98,10 +109,15 @@ void ShaderGraphEditorNodePropertiesWidget::WriteValuesToNode()
       }
     }
     resource->SetDefault(ints);
-    if (m_resourceWidgets.lineEditName)
+    if (m_resourceWidgets.valueLocator)
     {
-      resource->SetDefault(csAssetLocator(m_resourceWidgets.lineEditName->text().toStdString()));
+      resource->SetDefault(csAssetLocator(m_resourceWidgets.valueLocator->text().toStdString()));
     }
+  }
+
+  if (resourceNameChanged)
+  {
+    emit ResourceNameChanged();
   }
 }
 
@@ -182,6 +198,10 @@ int ShaderGraphEditorNodePropertiesWidget::CreateWidgetsForInputs(int rowStart)
   for (int i = 0; i < m_node->GetNumberOfInputs(); ++i)
   {
     csSGNodeInput *input = m_node->GetInput(i);
+    if (input->IsNoValue())
+    {
+      continue;
+    }
     QLabel *label = new QLabel(input->GetName().c_str(), this);
     label->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
     m_layout->addWidget(label, rowStart + i, 0, 1, 1);
@@ -197,6 +217,7 @@ int ShaderGraphEditorNodePropertiesWidget::CreateWidgetsForInputs(int rowStart)
       spinBox->setEnabled(false);
     }
 
+    spinBox->setValue(input->GetScalar());
     m_inputWidgets.emplace_back(input, label, spinBox);
 
     Bind(spinBox);

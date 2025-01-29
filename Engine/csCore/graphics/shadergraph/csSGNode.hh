@@ -57,7 +57,7 @@ protected:
 
 private:
 
-  csRef<csSGNode> m_node;
+  csSGNode *m_node;
   std::string m_name;
   eSGValueType m_types = eSGValueType::Invalid;
 
@@ -107,6 +107,7 @@ public:
 
   enum eModifiable {
     eM_Modifiable,
+    eM_NoValue,
     eM_Const,
   };
 
@@ -137,6 +138,18 @@ public:
   {
     return m_modifiable == eM_Const;
   }
+
+  bool IsModifiable()
+  {
+    return m_modifiable == eM_Modifiable;
+  }
+
+  bool IsNoValue()
+  {
+    return m_modifiable == eM_NoValue;
+  }
+
+
 
   eSGValueType GetInputValueType() const;
 

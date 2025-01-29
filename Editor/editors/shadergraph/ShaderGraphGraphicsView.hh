@@ -41,6 +41,9 @@ public:
 
   std::vector<cs::csSGNode* > GetSelection () const;
 
+public slots:
+  void UpdateSelectedNodes ();
+
 signals:
   void SelectionChanged ();
   void ConnectionsChanged ();

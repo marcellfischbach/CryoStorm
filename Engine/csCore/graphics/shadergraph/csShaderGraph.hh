@@ -114,7 +114,7 @@ private:
     csRef<csSGNodeInput> m_metallic = nullptr;
   };
 
-  ShaderGraphNode m_node;
+  csRef<ShaderGraphNode> m_node = csRef<ShaderGraphNode>(new ShaderGraphNode());
 
 
 };

@@ -36,6 +36,9 @@ public:
 
   void UpdateState();
 
+signals:
+  void ResourceNameChanged ();
+
 private:
   void RemoveAll();
   int CreateWidgetsForResource(int rowStart);
@@ -53,6 +56,8 @@ private:
   void Unbind (QLineEdit *lineEdit);
 
   void WriteValuesToNode ();
+
+
 
 private slots:
   void OnLineEditTextChanged (const QString &text);

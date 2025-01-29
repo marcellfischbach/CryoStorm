@@ -321,18 +321,25 @@ bool csShaderGraphLoader::LoadValue(const csCryoFileElement *valueElement,
                                     csSGNode *node,
                                     csShaderGraph *sg) const
 {
-  size_t idx = valueElement->GetAttribute(0, 0xffff);
-  if (idx == 0xffff)
+  std::string inputName = valueElement->GetAttribute(0, "");
+  if (inputName.empty())
   {
-    fprintf(stderr, "Invalid value index of '%s'\n", node->GetKey().c_str());
+    fprintf(stderr, "Invalid input name of '%s'\n", node->GetKey().c_str());
     return false;
   }
 
 
+  int idx = node->IndexOfInput(inputName);
+  if (idx == -1)
+  {
+    fprintf(stderr, "Input '%s' not found in node '%s'\n", inputName.c_str(), node->GetKey().c_str());
+    return false;
+  }
+
   csSGNodeInput *input = node->GetInput(idx);
   if (!input)
   {
-    fprintf(stderr, "The index %zu is no valid input index of '%s'\n", idx, node->GetKey().c_str());
+    fprintf(stderr, "The index %d is no valid input index of '%s'\n", idx, node->GetKey().c_str());
     return false;
   }
 

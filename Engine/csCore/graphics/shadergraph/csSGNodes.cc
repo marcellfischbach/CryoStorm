@@ -538,7 +538,7 @@ void csSGTexture1D::CalcIOTypes()
 csSGTexture2D::csSGTexture2D()
   : csSGResourceNode("Texture2D", eMAT_Texture)
 {
-  DefineInput("UV", eSGValueType::Vector2, csSGNodeInput::eM_Modifiable);
+  DefineInput("UV", eSGValueType::Vector2, csSGNodeInput::eM_NoValue);
   DefineOutput("Color", eSGValueType::Vector4);
 }
 

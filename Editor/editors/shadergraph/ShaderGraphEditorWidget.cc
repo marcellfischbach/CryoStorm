@@ -54,6 +54,11 @@ ShaderGraphEditorWidget::ShaderGraphEditorWidget(csShaderGraph *shaderGraph,
           this,
           &ShaderGraphEditorWidget::onNodeSelectionChanged);
 
+  connect(m_gui->nodePage,
+          &ShaderGraphEditorNodePropertiesWidget::ResourceNameChanged,
+          m_gui->graph,
+          &ShaderGraphGraphicsView::UpdateSelectedNodes);
+
 //  m_gui->graph->setScene(m_scene);
   m_gui->graph->setRenderHints(QPainter::Antialiasing);
   m_gui->graph->SetShaderGraph(m_shaderGraph);
@@ -147,6 +152,11 @@ void ShaderGraphEditorWidget::onBtnSaveClicked(bool)
     m_shaderGraph->SetLocator(m_locator.AsAnonymous());
     csAssetPool::Instance().Put(m_shaderGraph);
   }
+}
+
+void ShaderGraphEditorWidget::onResourceNameChanged()
+{
+  m_gui->graph->UpdateSelectedNodes();
 }
 
 void ShaderGraphEditorWidget::onNodeSelectionChanged()

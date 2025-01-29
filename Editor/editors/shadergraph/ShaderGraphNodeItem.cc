@@ -5,6 +5,7 @@
 #include <editors/shadergraph/ShaderGraphNodeItem.hh>
 #include <editors/shadergraph/ShaderGraphEditorWidget.hh>
 #include <csCore/graphics/shadergraph/csSGNode.hh>
+#include <csCore/graphics/shadergraph/csSGNodes.hh>
 #include <QGraphicsEllipseItem>
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
@@ -36,8 +37,7 @@ ShaderGraphNodeItem::ShaderGraphNodeItem(csSGNode *node, ShaderGraphEditorWidget
   CalculateSizes();
 
   UpdateSizeAndPositions();
-
-  UpdateHandles();
+  UpdateHandlesAndResource();
 }
 
 
@@ -59,7 +59,7 @@ void ShaderGraphNodeItem::SetSelected(bool selected)
   );
 }
 
-bool  ShaderGraphNodeItem::IsHeader(const QPointF &scenePos)
+bool ShaderGraphNodeItem::IsHeader(const QPointF &scenePos)
 {
   QPointF localPos = mapFromScene(scenePos);
   return m_titleRect->contains(localPos);
@@ -125,14 +125,45 @@ void ShaderGraphNodeItem::GenerateSurroundingRect()
 
   setBrush(QBrush(QColor(32, 32, 32, 255)));
   setPen(QPen(QColor(32, 32, 32, 255)));
-
-  m_titleRect = new QGraphicsRectItem(0, 0, 198, 25, this);
-  m_titleRect->setBrush(QBrush(QColor(192, 0, 0, 255)));
-  m_titleRect->setPen(QPen(QColor(192, 0, 0, 255)));
+  
+  QColor rectColor = QColor(0, 0, 192);
+  
+  m_titleRect = new QGraphicsRectItem(0, 0, 198, 50, this);
 
   m_title = new QGraphicsTextItem(m_node->GetName().c_str(), m_titleRect);
   m_title->setDefaultTextColor(QColor(255, 255, 255, 255));
   m_title->setPos(TITLE_MARGIN, TITLE_MARGIN);
+
+  if (m_node->IsInstanceOf<csSGResourceNode>())
+  {
+    csSGResourceNode *resource = m_node->Query<csSGResourceNode>();
+    m_resourceName = new QGraphicsTextItem(resource->GetResourceName().c_str(), m_titleRect);
+    m_resourceName->setDefaultTextColor(QColor(255, 255, 255, 255));
+    m_resourceName->setPos(TITLE_MARGIN, TITLE_MARGIN);
+
+    rectColor = QColor(192, 0, 0, 255);
+  }
+  else
+  {
+    bool allInputAreConst = true;
+    for (int i = 0; i < m_node->GetNumberOfInputs(); ++i)
+    {
+      csSGNodeInput *input = m_node->GetInput(i);
+      if (!input->IsConst())
+      {
+        allInputAreConst = false;
+      }
+    }
+    if (allInputAreConst)
+    {
+      rectColor = QColor(192, 192, 0);
+    }
+  }
+  
+
+
+  m_titleRect->setBrush(QBrush(rectColor));
+  m_titleRect->setPen(QPen(rectColor));
 }
 
 void ShaderGraphNodeItem::GenerateInputsAndOutputs()
@@ -193,6 +224,7 @@ void ShaderGraphNodeItem::CalculateSizes()
 QRectF ShaderGraphNodeItem::CalculateTotalSize()
 {
   QRectF titleSize = m_title->boundingRect();
+
   double inputWidth = 0.0;
   double inputHeight = 0.0;
   double outputWidth = 0.0;
@@ -216,6 +248,13 @@ QRectF ShaderGraphNodeItem::CalculateTotalSize()
 
   totalWidth = std::max(totalWidth, titleSize.width() + TITLE_MARGIN * 2);
   totalHeight += titleSize.height() + TITLE_BODY_GAP + 2;
+  if (m_resourceName)
+  {
+    const QRectF &resourceSize = m_resourceName->boundingRect();
+
+    totalWidth = std::max(totalWidth, resourceSize.width() + TITLE_MARGIN * 2);
+    totalHeight += resourceSize.height() + TITLE_MARGIN;
+  }
   return {0, 0, totalWidth, totalHeight};
 }
 
@@ -230,7 +269,20 @@ void ShaderGraphNodeItem::UpdateSizeAndPositions()
 
 
   setRect(0, 0, totalSize.width(), totalSize.height());
-  m_titleRect->setRect(TITLE_MARGIN, TITLE_MARGIN, totalSize.width() - TITLE_MARGIN * 2, titleSize.height());
+  m_title->setPos(TITLE_MARGIN, TITLE_MARGIN);
+  double titleHeight = titleSize.height();
+  if (m_resourceName)
+  {
+    m_resourceName->setPos(TITLE_MARGIN, TITLE_MARGIN + titleSize.height() + TITLE_MARGIN);
+
+    const QRectF &resourceSize = m_resourceName->boundingRect();
+    titleHeight += resourceSize.height() + TITLE_MARGIN;
+    inputPosY += resourceSize.height() + TITLE_MARGIN;
+    outputPosY += resourceSize.height() + TITLE_MARGIN;
+  }
+
+  m_titleRect->setRect(TITLE_MARGIN, TITLE_MARGIN, totalSize.width() - TITLE_MARGIN * 2, titleHeight);
+
 
   for (const auto &handle: m_handles)
   {
@@ -261,8 +313,20 @@ void ShaderGraphNodeItem::UpdateSizeAndPositions()
 
 }
 
-void ShaderGraphNodeItem::UpdateHandles()
+void ShaderGraphNodeItem::UpdateHandlesAndResource()
 {
+  if (m_node->IsInstanceOf<csSGResourceNode>())
+  {
+    csSGResourceNode* resource = m_node->Query<csSGResourceNode>();
+    QString resourceName = QString(resource->GetResourceName().c_str());
+    if (m_resourceName->toPlainText() != resourceName)
+    {
+      m_resourceName->setPlainText(resourceName);
+      UpdateSizeAndPositions();
+    }
+  }
+  
+  
   for (auto &handle: m_handles)
   {
     UpdateHandle(handle);

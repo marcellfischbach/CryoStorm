@@ -10,6 +10,8 @@ static const size_t IDX_ROUGHNESS = 2;
 static const size_t IDX_NORMAL = 3;
 static const size_t IDX_METALLIC = 4;
 
+
+
 csShaderGraph::ShaderGraphNode::ShaderGraphNode()
 : csSGNode("Shader Graph")
 {
@@ -34,7 +36,7 @@ void csShaderGraph::ShaderGraphNode::CalcIOTypes()
 
 csSGNode *csShaderGraph::Root()
 {
-  return &m_node;
+  return m_node;
 }
 
 csOwned<csSGNode> csShaderGraph::Add(const cs::csClass *nodeClass, const std::string &key)
@@ -124,53 +126,53 @@ bool csShaderGraph::Remove(cs::csSGNode *node)
 
 void csShaderGraph::BindDiffuse(csSGNode *node, size_t outputIdx)
 {
-  m_node.Bind(IDX_DIFFUSE, node, outputIdx);
+  m_node->Bind(IDX_DIFFUSE, node, outputIdx);
 }
 
 csSGNodeInput *csShaderGraph::GetDiffuseInput() const
 {
-  return m_node.m_diffuse;
+  return m_node->m_diffuse;
 }
 
 
 void csShaderGraph::BindAlpha(csSGNode *node, size_t outputIdx)
 {
-  m_node.Bind(IDX_ALPHA, node, outputIdx);
+  m_node->Bind(IDX_ALPHA, node, outputIdx);
 }
 
 csSGNodeInput *csShaderGraph::GetAlphaInput() const
 {
-  return m_node.m_alpha;
+  return m_node->m_alpha;
 }
 
 void csShaderGraph::BindRoughness(cs::csSGNode *node, size_t outputIdx)
 {
-  m_node.Bind(IDX_ROUGHNESS, node, outputIdx);
+  m_node->Bind(IDX_ROUGHNESS, node, outputIdx);
 }
 
 csSGNodeInput *csShaderGraph::GetRoughnessInput() const
 {
-  return m_node.m_roughness;
+  return m_node->m_roughness;
 }
 
 void csShaderGraph::BindNormal(cs::csSGNode *node, size_t outputIdx)
 {
-  m_node.Bind(IDX_NORMAL, node, outputIdx);
+  m_node->Bind(IDX_NORMAL, node, outputIdx);
 }
 
 csSGNodeInput *csShaderGraph::GetNormalInput() const
 {
-  return m_node.m_normal;
+  return m_node->m_normal;
 }
 
 void csShaderGraph::BindMetallic(cs::csSGNode *node, size_t outputIdx)
 {
-  m_node.Bind(IDX_METALLIC, node, outputIdx);
+  m_node->Bind(IDX_METALLIC, node, outputIdx);
 }
 
 csSGNodeInput *csShaderGraph::GetMetallicInput() const
 {
-  return m_node.m_metallic;
+  return m_node->m_metallic;
 }
 
 

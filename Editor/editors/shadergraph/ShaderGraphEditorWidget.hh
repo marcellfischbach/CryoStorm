@@ -57,6 +57,8 @@ private slots:
   void onNodeSelectionChanged ();
   void on_graph_ConnectionsChanged ();
 
+  void onResourceNameChanged ();
+
 private:
   bool CompileMaterial();
 

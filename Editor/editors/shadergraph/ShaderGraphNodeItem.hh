@@ -38,7 +38,7 @@ public:
 
   void SyncPosition ();
 
-  void UpdateHandles ();
+  void UpdateHandlesAndResource ();
 
 
   cs::csSGNode *GetNode();
@@ -69,10 +69,10 @@ private:
   void UpdateHandle (InputOutputHandle &handle);
 
 
-  ShaderGraphEditorWidget *m_edito2rWidget;
   cs::csRef<cs::csSGNode> m_node;
   QGraphicsRectItem *m_titleRect;
   QGraphicsTextItem *m_title;
+  QGraphicsTextItem *m_resourceName = nullptr;
 
   bool m_dragNode;
   QPointF m_dragNodeMoveStartPointer;

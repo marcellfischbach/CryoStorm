@@ -168,6 +168,15 @@ std::vector<csSGNode *> ShaderGraphGraphicsView::GetSelection() const
   return selection;
 }
 
+void ShaderGraphGraphicsView::UpdateSelectedNodes()
+{
+  for (auto &selectedNode: m_selectedNodes)
+  {
+    selectedNode->UpdateHandlesAndResource();
+  }
+  UpdateWiresOfSelectedNodes();
+}
+
 void ShaderGraphGraphicsView::UpdateDragSelectedNodes(const QPointF &scenePos)
 {
   QPointF   delta = scenePos - m_nodeDrag.startPosClick;
@@ -464,11 +473,11 @@ void ShaderGraphGraphicsView::UpdateWireHandles(ShaderGraphGraphicsView::Wire &w
 {
   if (wire.Source)
   {
-    wire.Source->UpdateHandles();
+    wire.Source->UpdateHandlesAndResource();
   }
   if (wire.Destination)
   {
-    wire.Destination->UpdateHandles();
+    wire.Destination->UpdateHandlesAndResource();
   }
 
 }
@@ -734,12 +743,18 @@ void ShaderGraphGraphicsView::InsertNode(const csClass *cls, const QPointF &posi
     }
 
     csRef<csSGNode> tmpNode = cls->CreateInstance<csSGNode>();
+    if (!tmpNode)
+    {
+      printf ("Unable to create node: %s\n", cls->GetName().c_str());
+      fflush(stdout);
+      return;
+    }
     std::string     key     = "id_" + std::to_string(GetFreeNodeId());
 
     csRef<csSGNode> node;
     if (cls->IsInstanceOf<csSGResourceNode>())
     {
-      node = m_shaderGraph->AddResource(cls, key, node->GetName());
+      node = m_shaderGraph->AddResource(cls, key, tmpNode->GetName());
     }
     else
     {
