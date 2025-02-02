@@ -107,6 +107,7 @@ bool csGL4Device::Initialize()
   printf("  Max texture units: %d\n", units);
   printf("  Max images units: %d\n", imageUnits);
   printf("  Max combined textures: %d\n", combinedUnits);
+  fflush(stdout);
 
   CS_GL_ERROR()
   glPixelStorei(GL_PACK_ALIGNMENT, 1);

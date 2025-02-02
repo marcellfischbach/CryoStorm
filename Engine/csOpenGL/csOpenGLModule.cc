@@ -40,6 +40,8 @@ bool csOpenGLModule::Register(const std::vector<std::string> &args, csEngine *en
       i++;
       if (args[i] == "compat" || args[i] == "compatibility")
       {
+        printf ("Initialize OpenGL in compatibility mode\n");
+        fflush(stdout);
         compatMode = true;
       }
     }

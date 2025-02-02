@@ -52,15 +52,33 @@ private:
   void onBtnSaveClicked(bool);
 
 private slots:
-  void on_preview_initialize(cs::csWorld* world);
+  void onPreviewInitialized(cs::csWorld* world);
+  void onPreviewMousePressed(QMouseEvent *event);
+  void onPreviewMouseReleased(QMouseEvent *event);
+  void onPreviewMouseMoved(QMouseEvent *event);
+
   void on_btnCompile_clicked();
   void onNodeSelectionChanged ();
   void on_graph_ConnectionsChanged ();
 
   void onResourceNameChanged ();
 
+
 private:
   bool CompileMaterial();
+
+  bool m_leftButtonArmed = false;
+  bool m_rightButtonArmed = false;
+  double m_cameraRotationH = 0.0;
+  double m_cameraRotationV = 0.0;
+  double m_lightRotationH = 0.0;
+  double m_lightRotationV = 0.0;
+  QPoint m_buttonPos;
+
+  double RotationHFrom(double baseRotation, const QPoint &point, bool invert);
+  double RotationVFrom(double baseRotation, const QPoint &point, bool invert4);
+  void UpdateCamera (double rotationH, double rotationV);
+  void UpdateLight (double rotationH, double rotationV);
 
 
 

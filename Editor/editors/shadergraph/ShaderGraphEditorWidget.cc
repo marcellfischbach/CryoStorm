@@ -4,10 +4,8 @@
 
 #include <editors/shadergraph/ShaderGraphEditorWidget.hh>
 #include <editors/shadergraph/ShaderGraphNodeItem.hh>
-#include <editors/shadergraph/ShaderGraphNodePropertiesWidget.hh>
 #include <editors/shadergraph/ShaderGraphNodePalletTreeModel.hh>
 #include <editors/shadergraph/ShaderGraphSaver.hh>
-#include <editors/shadergraph/ShaderGraphShaderGraphPropertiesWidget.hh>
 #include <csCore/graphics/shadergraph/csShaderGraph.hh>
 #include <csCore/graphics/shadergraph/iShaderGraphCompiler.hh>
 #include <csCore/graphics/iDevice.hh>
@@ -23,6 +21,7 @@
 #include <csCore/resource/iFile.hh>
 #include <csCore/csObjectRegistry.hh>
 
+#include <QMouseEvent>
 #include <QGraphicsScene>
 #include <QGraphicsPathItem>
 #include "ui_ShaderGraphEditorWidget.h"
@@ -58,8 +57,17 @@ ShaderGraphEditorWidget::ShaderGraphEditorWidget(csShaderGraph *shaderGraph,
           &ShaderGraphEditorNodePropertiesWidget::ResourceNameChanged,
           m_gui->graph,
           &ShaderGraphGraphicsView::UpdateSelectedNodes);
-
-//  m_gui->graph->setScene(m_scene);
+  connect(m_gui->preview,
+          &SceneViewWidget::initialize,
+          this,
+          &ShaderGraphEditorWidget::onPreviewInitialized);
+  connect(m_gui->preview, &SceneViewWidget::mousePressed,
+          this, &ShaderGraphEditorWidget::onPreviewMousePressed);
+  connect(m_gui->preview, &SceneViewWidget::mouseReleased,
+          this, &ShaderGraphEditorWidget::onPreviewMouseReleased);
+  connect(m_gui->preview, &SceneViewWidget::mouseMoved,
+          this, &ShaderGraphEditorWidget::onPreviewMouseMoved);
+  //  m_gui->graph->setScene(m_scene);
   m_gui->graph->setRenderHints(QPainter::Antialiasing);
   m_gui->graph->SetShaderGraph(m_shaderGraph);
   m_gui->nodePage->SetShaderGraph(m_shaderGraph);
@@ -85,7 +93,7 @@ ShaderGraphEditorWidget::~ShaderGraphEditorWidget()
 }
 
 
-void ShaderGraphEditorWidget::on_preview_initialize(cs::csWorld *world)
+void ShaderGraphEditorWidget::onPreviewInitialized(cs::csWorld *world)
 {
   m_world = world;
   if (!m_world)
@@ -102,9 +110,9 @@ void ShaderGraphEditorWidget::on_preview_initialize(cs::csWorld *world)
   m_cameraEntity = new csEntity("Camera");
   m_cameraEntity->AttachState(m_camera);
   m_camera->GetTransform()
-      .SetTranslation(-2.0f, 2.0f, -2.0f)
-      .LookAt(csVector3f(0.0f, 0.0f, 0.0f), csVector3f(0.0f, 1.0f, 0.0f))
-      .Finish();
+          .SetTranslation(-2.0f, 2.0f, -2.0f)
+          .LookAt(csVector3f(0.0f, 0.0f, 0.0f), csVector3f(0.0f, 1.0f, 0.0f))
+          .Finish();
   m_world->Attach(m_cameraEntity);
 
 
@@ -112,19 +120,19 @@ void ShaderGraphEditorWidget::on_preview_initialize(cs::csWorld *world)
   m_light->SetType(eLightType::eLT_Directional);
   m_light->SetColor(csColor4f(1.0f, 1.0f, 1.0f, 1.0f));
   m_light->SetCastShadow(true);
-  m_light->SetShadowMapBias(0.003);
+  m_light->SetShadowMapBias(0.03);
   m_lightEntity = new csEntity("Light");
   m_lightEntity->AttachState(m_light);
 
   m_light->GetTransform()
-      .SetRotation(csQuaternion::FromAxisAngle(cs::csVector3f(1.0f, 0.5f, 0.5f).Normalized(),
-                                               cs::ceDeg2Rad(45.0f)))
-      .Finish();
+         .SetRotation(csQuaternion::FromAxisAngle(cs::csVector3f(1.0f, 0.5f, 0.5f).Normalized(),
+                                                  cs::ceDeg2Rad(45.0f)))
+         .Finish();
   m_world->Attach(m_lightEntity);
 
 
   auto cubeRenderMesh = csCubeMeshGenerator().Generate();
-  auto cubeMesh = new csMesh();
+  auto cubeMesh       = new csMesh();
   cubeMesh->AddMaterialSlot("Slot0", nullptr);
   cubeMesh->AddSubMesh(cubeRenderMesh.Data(), 0);
   m_cube = new csStaticMeshState();
@@ -135,6 +143,123 @@ void ShaderGraphEditorWidget::on_preview_initialize(cs::csWorld *world)
 
   m_world->Attach(m_cubeEntity);
 }
+
+void ShaderGraphEditorWidget::onPreviewMousePressed(QMouseEvent *event)
+{
+  if (event->button() == Qt::LeftButton)
+  {
+    if (m_rightButtonArmed)
+    {
+      return;
+    }
+    m_leftButtonArmed = true;
+    m_buttonPos   = event->pos();
+  }
+  if (event->button() == Qt::RightButton)
+  {
+    if (m_leftButtonArmed)
+    {
+      return;
+    }
+    m_rightButtonArmed = true;
+    m_buttonPos = event->pos();
+  }
+}
+
+void ShaderGraphEditorWidget::onPreviewMouseReleased(QMouseEvent *event)
+{
+  if (event->button() == Qt::LeftButton)
+  {
+    if (m_leftButtonArmed)
+    {
+      m_leftButtonArmed = false;
+      m_cameraRotationV = RotationVFrom(m_cameraRotationV, event->pos(), false);
+      m_cameraRotationH = RotationHFrom(m_cameraRotationH, event->pos(), false);
+      UpdateCamera(m_cameraRotationH, m_cameraRotationV);
+    }
+  }
+  if (event->button() == Qt::RightButton)
+  {
+    if (m_rightButtonArmed)
+    {
+      m_rightButtonArmed = false;
+      m_lightRotationV = RotationVFrom(m_lightRotationV, event->pos(), true);
+      m_lightRotationH = RotationHFrom(m_lightRotationH, event->pos(), true);
+      UpdateLight(m_lightRotationH, m_lightRotationV);
+    }
+  }
+}
+
+void ShaderGraphEditorWidget::onPreviewMouseMoved(QMouseEvent *event)
+{
+  if (m_leftButtonArmed)
+  {
+    double rotationV = RotationVFrom(m_cameraRotationV, event->pos(), false);
+    double rotationH = RotationHFrom(m_cameraRotationH, event->pos(), false);
+    UpdateCamera(rotationH, rotationV);
+  }
+  if (m_rightButtonArmed)
+  {
+    double rotationV = RotationVFrom(m_lightRotationV, event->pos(), true);
+    double rotationH = RotationHFrom(m_lightRotationH, event->pos(), true);
+    UpdateLight(rotationH, rotationV);
+  }
+}
+
+double ShaderGraphEditorWidget::RotationHFrom(double baseRotation, const QPoint &point, bool invert)
+{
+  QPoint delta     = point - m_buttonPos;
+  if (invert)
+  {
+    delta *= -1;
+  }
+  double rotationH = baseRotation - (delta.y() * 0.01);
+  rotationH = std::max(rotationH, -M_PI_2 + 0.1);
+  rotationH = std::min(rotationH, M_PI_2 - 0.1);
+
+  return rotationH;
+}
+
+
+double ShaderGraphEditorWidget::RotationVFrom(double baseRotation, const QPoint &point, bool invert)
+{
+  QPoint delta     = point - m_buttonPos;
+  if (invert)
+  {
+    delta *= -1;
+  }
+  double rotationV = baseRotation + (delta.x() * 0.01);
+  rotationV = std::fmod(rotationV, M_PI * 2.0);
+
+  return rotationV;
+}
+
+void ShaderGraphEditorWidget::UpdateCamera(double rotationH, double rotationV)
+{
+  csMatrix4f matV     = csMatrix4f::Rotation(csVector3f(0.0f, 1.0f, 0.0f), rotationV);
+  csMatrix4f matH     = csMatrix4f::Rotation(csVector3f(1.0f, 0.0f, 0.0f), rotationH);
+  csMatrix4f rotation = matV * matH;
+
+  csVector3f eye = rotation * csVector3f(0.0f, 0.0f, 3.0f);
+  m_camera->GetTransform()
+          .SetTranslation(eye)
+          .LookAt(csVector3f(0.0f, 0.0f, 0.0f), csVector3f(0.0f, 1.0f, 0.0f))
+          .Finish();
+}
+
+void ShaderGraphEditorWidget::UpdateLight(double rotationH, double rotationV)
+{
+  csMatrix4f matV     = csMatrix4f::Rotation(csVector3f(0.0f, 1.0f, 0.0f), rotationV);
+  csMatrix4f matH     = csMatrix4f::Rotation(csVector3f(1.0f, 0.0f, 0.0f), rotationH);
+  csMatrix4f rotation = matV * matH;
+
+  csVector3f eye = rotation * csVector3f(0.0f, 0.0f, 3.0f);
+  m_light->GetTransform()
+          .SetTranslation(eye)
+          .LookAt(csVector3f(0.0f, 0.0f, 0.0f), csVector3f(0.0f, 1.0f, 0.0f))
+          .Finish();
+}
+
 
 void ShaderGraphEditorWidget::on_btnCompile_clicked()
 {
@@ -205,7 +330,7 @@ bool ShaderGraphEditorWidget::CompileMaterial()
   }
 
 
-  iShaderGraphCompiler::Parameters params{};
+  iShaderGraphCompiler::Parameters params {};
   params.DebugSources = false;
   if (!compiler->Compile(m_shaderGraph, params))
   {

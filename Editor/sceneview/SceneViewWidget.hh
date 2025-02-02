@@ -66,12 +66,21 @@ public:
 
 signals:
   void initialize(cs::csWorld *world);
-
+  void mouseDoubleClicked(QMouseEvent* event);
+  void mousePressed(QMouseEvent* event);
+  void mouseReleased(QMouseEvent* event);
+  void mouseMoved (QMouseEvent* event);
 
 protected:
   void initializeGL() override;
   void resizeGL(int w, int h) override;
   void paintGL() override;
+
+  void mouseDoubleClickEvent(QMouseEvent* event) override;
+  void mousePressEvent(QMouseEvent* event) override;
+  void mouseReleaseEvent(QMouseEvent* event) override;
+  void mouseMoveEvent(QMouseEvent* event) override;
+
 
 private:
   bool m_engineInitialized = false;

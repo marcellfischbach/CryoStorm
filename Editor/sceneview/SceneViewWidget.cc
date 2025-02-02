@@ -121,6 +121,25 @@ void SceneViewWidget::paintGL()
   m_viewport->ProcessFrame(&rt);
 }
 
+void SceneViewWidget::mouseDoubleClickEvent(QMouseEvent *event)
+{
+  emit mouseDoubleClicked(event);
+}
+
+void SceneViewWidget::mousePressEvent(QMouseEvent *event)
+{
+  emit mousePressed(event);
+}
+
+void SceneViewWidget::mouseReleaseEvent(QMouseEvent *event)
+{
+  emit mouseReleased(event);
+}
+void SceneViewWidget::mouseMoveEvent(QMouseEvent *event)
+{
+  emit mouseMoved(event);
+}
+
 
 SceneViewWidget_WindowPriv::SceneViewWidget_WindowPriv(SceneViewWidget *window)
     : iWindow()

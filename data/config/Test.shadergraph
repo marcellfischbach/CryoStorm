@@ -6,7 +6,7 @@ shaderGraph {
   blending Off,
 
   nodes {
-    resource "cs::csSGResourceColor3" id_0 "Diffuse" x:-326.000000 y:160.000000 {
+    resource "cs::csSGResourceColor3" id_0 "Diffuse" x:-355.000000 y:213.000000 {
       defaultFloat 1 0 0,
     },
     resource "cs::csSGResourceFloat" id_1 "Alpha" x:-312.000000 y:302.000000 {
@@ -29,10 +29,13 @@ shaderGraph {
       binding  "Y" id_4 "Y",
       binding  "Z" id_4 "Z",
     },
+    node "cs::csSGConstFloat" id_3 x:-418.000000 y:143.000000 {
+      value "X" 1.000000,
+    },
     shaderGraph x:141.000000 y:-39.000000 {
       binding  "Diffuse" id_6 "V",
       binding  "Alpha" id_1 "V",
-      value "Roughness" 0.500000,
+      binding  "Roughness" id_3 "V",
       value "Normal" 0.000000,
       binding  "Metallic" id_2 "V",
     },

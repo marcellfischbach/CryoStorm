@@ -59,6 +59,7 @@ int main(int argc, char** argv)
   format.setAlphaBufferSize(8);
   format.setDepthBufferSize(24);
   format.setStencilBufferSize(8);
+  format.setRenderableType(QSurfaceFormat::OpenGL);
   format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);
   format.setSwapInterval(0);
   format.setMajorVersion(4);
