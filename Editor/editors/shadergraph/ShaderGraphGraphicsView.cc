@@ -76,8 +76,12 @@ void ShaderGraphGraphicsView::mousePressEvent(QMouseEvent *event)
   }
   else if (event->button() == Qt::RightButton)
   {
-    RollbackDragSelectedNodes();
-    RollbackDragIO();
+    if (m_nodeDrag.IsDragging())
+    {
+      RollbackDragSelectedNodes();
+      RollbackDragIO();
+      UpdateWires();
+    }
   }
 }
 
