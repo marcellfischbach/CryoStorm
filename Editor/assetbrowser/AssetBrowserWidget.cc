@@ -10,13 +10,16 @@
 #include <assetbrowser/AssetBrowserNewItemDialog.hh>
 #include <assetbrowser/AssetBrowserNewItemRegistry.hh>
 #include <assetbrowser/iAssetBrowserNewItem.hh>
+#include <editors/EditorDialog.hh>
 #include <editors/EditorRegistry.hh>
+#include <editors/EditorWidget.hh>
 #include "ui_AssetBrowserWidget.h"
 
 #include <csCore/resource/csAssetLocator.hh>
 #include <csCore/resource/csFileSystemArchive.hh>
 
 #include <QMenu>
+#include <QGridLayout>
 
 using namespace cs;
 
@@ -26,7 +29,7 @@ AssetBrowserWidget::AssetBrowserWidget(QWidget *parent)
 {
   ui->setupUi(this);
 
-  m_treeModel = new AssetBrowserTreeModel(this);
+  m_treeModel   = new AssetBrowserTreeModel(this);
   m_folderModel = new AssetBrowserFolderModel(this);
   m_treeModel->Reload();
 
@@ -48,7 +51,7 @@ AssetBrowserWidget::~AssetBrowserWidget()
 {
   delete ui;
   m_folderModel = nullptr;
-  m_treeModel = nullptr;
+  m_treeModel   = nullptr;
 }
 
 
@@ -70,9 +73,9 @@ void AssetBrowserWidget::onTreeViewActivated(const QModelIndex &index)
   const std::string &path = m_treeModel->GetPath(index);
   m_folderModel->SetFolder(path);
 
-  const AssetBrowserTreeModel::Item *item = m_treeModel->GetItem(index);
+  const AssetBrowserTreeModel::Item        *item     = m_treeModel->GetItem(index);
   const AssetBrowserTreeModel::ArchiveItem *pArchive = find_archive(item);
-  m_archive = pArchive ? pArchive->m_fsArchive : nullptr;
+  m_archive     = pArchive ? pArchive->m_fsArchive : nullptr;
   m_currentPath = path;
 }
 
@@ -103,7 +106,7 @@ void AssetBrowserWidget::FillNewMenu(QMenu *menu)
     if (item->DefaultNamingBehaviour())
     {
       connect(action, &QAction::triggered, this, [this, item, menu, action]() {
-        QPoint point = menu->actionGeometry(action).center();
+        QPoint point  = menu->actionGeometry(action).center();
         QPoint global = menu->mapToGlobal(point);
         CreateNewItem(global, item);
       });
@@ -137,9 +140,9 @@ void AssetBrowserWidget::CreateNewItem(const QPoint &globalPoint, iAssetBrowserN
 
 void AssetBrowserWidget::onFolderContentDoubleClicked(const QModelIndex &index)
 {
-  const csFileSystemArchive *pArchive = m_treeModel->ExtractArchive(ui->treeView->currentIndex());
-  std::string archivePath = m_treeModel->ConstructArchivePath(ui->treeView->currentIndex());
-  std::string fileName = m_folderModel->GetName(index);
+  const csFileSystemArchive *pArchive   = m_treeModel->ExtractArchive(ui->treeView->currentIndex());
+  std::string               archivePath = m_treeModel->ConstructArchivePath(ui->treeView->currentIndex());
+  std::string               fileName    = m_folderModel->GetName(index);
 
   cs::csAssetLocator locator(pArchive->GetName() + "@" + archivePath + fileName);
   iEditorFactory     *editorFactory = EditorRegistry::Get().GetEditor(locator);
@@ -148,6 +151,14 @@ void AssetBrowserWidget::onFolderContentDoubleClicked(const QModelIndex &index)
     return;
   }
 
-  editorFactory->Edit(locator, this);
+  EditorWidget* editor = editorFactory->Create(locator);
+  if (!editor)
+  {
+    return;
+  }
+
+
+  EditorDialog *dlg = new EditorDialog(editor, this);
+  dlg->show();
 
 }

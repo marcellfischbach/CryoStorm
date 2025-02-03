@@ -32,21 +32,18 @@ using namespace cs;
 ShaderGraphEditorWidget::ShaderGraphEditorWidget(csShaderGraph *shaderGraph,
                                                  const csAssetLocator &locator,
                                                  QWidget *parent)
-    : QDialog(parent, Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint)
+    : EditorWidget(parent)
     , m_gui(new Ui::ShaderGraphEditorWidget)
     , m_shaderGraph(shaderGraph)
     , m_locator(locator)
     , m_palletModel(new ShaderGraphNodePalletTreeModel())
 {
   m_gui->setupUi(this);
-  fflush(stdout);
-  fflush(stderr);
 
   m_gui->propertiesStack->setCurrentWidget(m_gui->noSelection);
 //  m_gui->shaderGraphPage->SetShaderGraph(m_shaderGraph);
 
   m_gui->pallet->setModel(m_palletModel);
-  connect(this, SIGNAL(finished(int)), this, SLOT(deleteLater()));
   connect(m_gui->btnSave, &QPushButton::clicked, this, &ShaderGraphEditorWidget::onBtnSaveClicked);
   connect(m_gui->graph,
           &ShaderGraphGraphicsView::SelectionChanged,

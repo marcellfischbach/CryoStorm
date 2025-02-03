@@ -13,6 +13,7 @@ namespace cs
 struct iObject;
 }
 
+class EditorWidget;
 class QWidget;
 struct iEditorFactory
 {
@@ -20,7 +21,7 @@ struct iEditorFactory
 
   virtual bool CanEdit(const cs::csAssetLocator &locator) const = 0;
 
-  virtual void Edit(const cs::csAssetLocator &locator, QWidget *path = nullptr) const = 0;
+  virtual EditorWidget *Create(const cs::csAssetLocator &locator) const = 0;
 
 };
 

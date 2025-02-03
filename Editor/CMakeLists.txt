@@ -35,9 +35,22 @@ set(ALL_SOURCES
         assetbrowser/AssetBrowserNewItemRegistry.hh
         assetbrowser/iAssetBrowserNewItem.hh
 
+        editors/EditorDialog.cc
+        editors/EditorDialog.hh
         editors/EditorRegistry.cc
         editors/EditorRegistry.hh
+        editors/EditorWidget.cc
+        editors/EditorWidget.hh
         editors/iEditorFactory.hh
+
+        editors/image/ImageEditorFactory.cc
+        editors/image/ImageEditorFactory.hh
+        editors/image/ImageEditorWidget.cc
+        editors/image/ImageEditorWidget.hh
+        editors/image/ImageWidget.cc
+        editors/image/ImageWidget.hh
+
+
 
         editors/shadergraph/ShaderGraphEditorFactory.cc
         editors/shadergraph/ShaderGraphEditorFactory.hh

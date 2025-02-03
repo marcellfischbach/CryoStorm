@@ -18,39 +18,15 @@ bool ShaderGraphEditorFactory::CanEdit(const cs::csAssetLocator &locator) const
   return locator.GetExtension() == "SHADERGRAPH";
 }
 
-MySpinBox::MySpinBox(QWidget *parent, QString styleSheet)
-    : QDoubleSpinBox(parent)
-    , m_styleSheet(styleSheet)
-{
-  setStyleSheet(styleSheet);
-}
 
-void MySpinBox::focusInEvent(QFocusEvent *evt)
-{
-  QDoubleSpinBox::focusInEvent(evt);
-  setStyleSheet("");
-  emit focusGained();
-}
-
-
-void MySpinBox::focusOutEvent(QFocusEvent *evt)
-{
-  QDoubleSpinBox::focusOutEvent(evt);
-  setStyleSheet(m_styleSheet);
-  emit focusLost();
-}
-
-
-
-void ShaderGraphEditorFactory::Edit(const cs::csAssetLocator &locator, QWidget *parent) const
+EditorWidget * ShaderGraphEditorFactory::Create(const cs::csAssetLocator &locator) const
 {
   auto shaderGraph = csAssetManager::Get()->Load<csShaderGraph>(locator);
   if (!shaderGraph)
   {
-    return;
+    return nullptr;
   }
 
 
-  ShaderGraphEditorWidget *dlg = new ShaderGraphEditorWidget (shaderGraph.Data(), locator, parent);
- dlg->show();
+  return new ShaderGraphEditorWidget(shaderGraph.Data(), locator);
 }

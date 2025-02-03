@@ -5,6 +5,7 @@
 #include <editors/shadergraph/ShaderGraphNewItem.hh>
 
 #include <editors/EditorRegistry.hh>
+#include <editors/image/ImageEditorFactory.hh>
 #include <editors/shadergraph/ShaderGraphEditorFactory.hh>
 
 
@@ -14,8 +15,10 @@ void register_defaults()
   AssetBrowserNewItemRegistry::Get()
       .RegisterNewItem(new ShaderGraphNewItem());
 
-
   EditorRegistry::Get()
-      .RegisterEditor(new ShaderGraphEditorFactory());
+      .RegisterEditor(new ImageEditorFactory())
+      .RegisterEditor(new ShaderGraphEditorFactory())
+      ;
+
 
 }

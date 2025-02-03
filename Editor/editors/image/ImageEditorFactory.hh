@@ -1,20 +1,16 @@
 //
-// Created by Marcell on 02.01.2025.
+// Created by MCEL on 03.02.2025.
 //
 
 #pragma once
 
 #include <editors/iEditorFactory.hh>
 
-class ShaderGraphEditorFactory : public iEditorFactory
+class ImageEditorFactory : public iEditorFactory
 {
 public:
-  ShaderGraphEditorFactory() = default;
-  ~ShaderGraphEditorFactory() override = default;
 
   bool CanEdit(const cs::csAssetLocator &locator) const override;
 
   EditorWidget *Create(const cs::csAssetLocator &locator) const override;
-
-
 };
