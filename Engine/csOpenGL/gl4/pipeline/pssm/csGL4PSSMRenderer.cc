@@ -59,10 +59,10 @@ void csGL4PSSMRenderer::Initialize()
     m_shadowSamplingMode = ShadowSamplingMode::VSM;
   }
 
-  csVector2f distance      = settings.GetVector2f("directional_light.shadow_map.filter.distance", csVector2f(1, 25));
-  float      radiusPerCent = settings.GetFloat("directional_light.shadow_map.filter.radius", 1.0f);
-  float    samplesFactor  = settings.GetFloat("directional_light.shadow_map.filter.samplesFactor", 1.0f);
-  float    sampleDistance = settings.GetFloat("directional_light.shadow_map.filter.sampleDistance", 0.1f);
+  csVector2f distance       = settings.GetVector2f("directional_light.shadow_map.filter.distance", csVector2f(1, 25));
+  float      radiusPerCent  = settings.GetFloat("directional_light.shadow_map.filter.radius", 1.0f);
+  float      samplesFactor  = settings.GetFloat("directional_light.shadow_map.filter.samplesFactor", 1.0f);
+  float      sampleDistance = settings.GetFloat("directional_light.shadow_map.filter.sampleDistance", 0.1f);
 
   m_shadowMapFilter.Initialize(csVector2f(distance.x, distance.y - distance.x),
                                radiusPerCent / 100.0f,
@@ -70,14 +70,23 @@ void csGL4PSSMRenderer::Initialize()
                                sampleDistance);
 
 
-  m_shadowMappingShader = csAssetManager::Get()->Get<iShader>(
-      csAssetLocator("${engine}/opengl/gl4/pssm/directional_light_shadow_map.shader"));
+  if (m_shadowSamplingMode == ShadowSamplingMode::VSM)
+  {
+    m_shadowMappingShader = csAssetManager::Get()->Get<iShader>(
+        csAssetLocator("${engine}/opengl/gl4/pssm/directional_light_shadow_map_vsm.shader"));
+  }
+  else
+  {
+    m_shadowMappingShader = csAssetManager::Get()->Get<iShader>(
+        csAssetLocator("${engine}/opengl/gl4/pssm/directional_light_shadow_map.shader"));
+  }
   if (m_shadowMappingShader)
   {
-    m_attrLayersDepth   = m_shadowMappingShader->GetShaderAttribute("LayersDepth");
-    m_attrLayersBias    = m_shadowMappingShader->GetShaderAttribute("LayersBias");
-    m_attrShadowBuffers = m_shadowMappingShader->GetShaderAttribute("ShadowBuffers");
-    m_attrDepthBuffer   = m_shadowMappingShader->GetShaderAttribute("DepthBuffer");
+    m_attrLayersDepth       = m_shadowMappingShader->GetShaderAttribute("LayersDepth");
+    m_attrLayersBias        = m_shadowMappingShader->GetShaderAttribute("LayersBias");
+    m_attrShadowBuffers     = m_shadowMappingShader->GetShaderAttribute("ShadowBuffers");
+    m_attrShadowBufferDatas = m_shadowMappingShader->GetShaderAttribute("ShadowBufferDatas");
+    m_attrDepthBuffer       = m_shadowMappingShader->GetShaderAttribute("DepthBuffer");
   }
 
 }
@@ -143,7 +152,7 @@ void csGL4PSSMRenderer::RenderShadow(const csGL4DirectionalLight *directionalLig
 
   RenderShadowBuffer(directionalLight, camera, projector);
   RenderShadowMap(directionalLight, camera, projector);
-  FilterShadowMap();
+//  FilterShadowMap();
 }
 
 static void calc_projection_matrix(csGL4Device *device,
@@ -260,15 +269,15 @@ void csGL4PSSMRenderer::RenderShadowBuffer(const csGL4DirectionalLight *directio
     viewInv.SetLookAtInv(centerPosition, centerPosition + directionalLight->GetDirection(), csVector3f(0, 1, 0));
 
 
-    csVector3f xAxis     = viewInv.GetXAxis().Normalize();
-    csVector3f yAxis     = viewInv.GetYAxis().Normalize();
-    float      sizeSplit = GetSplitSize(splitPoints[i], splitPoints[i + 1]) / 2.0f;
-    auto     shadowBufferSize = static_cast<float>(m_directionalLightShadowBufferSize);
-    float    modV             = sizeSplit * 2.0f / shadowBufferSize;
-    float    onAxisX          = xAxis.Dot(centerPosition);
-    float    onAxisY          = yAxis.Dot(centerPosition);
-    float    modX             = fmodf(onAxisX, modV);
-    float    modY             = fmodf(onAxisY, modV);
+    csVector3f xAxis            = viewInv.GetXAxis().Normalize();
+    csVector3f yAxis            = viewInv.GetYAxis().Normalize();
+    float      sizeSplit        = GetSplitSize(splitPoints[i], splitPoints[i + 1]) / 2.0f;
+    auto       shadowBufferSize = static_cast<float>(m_directionalLightShadowBufferSize);
+    float      modV             = sizeSplit * 2.0f / shadowBufferSize;
+    float      onAxisX          = xAxis.Dot(centerPosition);
+    float      onAxisY          = yAxis.Dot(centerPosition);
+    float      modX             = fmodf(onAxisX, modV);
+    float      modY             = fmodf(onAxisY, modV);
 
 
     calc_projection_matrix_inv(m_device, splitPoints[i], splitPoints[i + 1], -1.0f, 1.0f, view, projInv);
@@ -288,7 +297,7 @@ void csGL4PSSMRenderer::RenderShadowBuffer(const csGL4DirectionalLight *directio
       if (mesh->IsCastShadow())
       {
         const csVector3f *bboxPoints = mesh->GetBoundingBox().GetPoints();
-        for (unsigned  j           = 0; j < 8; j++)
+        for (unsigned    j           = 0; j < 8; j++)
         {
           csVector3f point = bboxPoints[j];
           float      v     = csMatrix4f::TransformZ(view, point);
@@ -322,20 +331,25 @@ void csGL4PSSMRenderer::RenderShadowBuffer(const csGL4DirectionalLight *directio
     m_device->SetDepthWrite(true);
     m_device->SetDepthTest(true);
     m_device->SetBlending(false);
-    m_device->SetColorWrite(false, false, false, false);
-    m_device->Clear(false, csColor4f(0.0f, 0.0f, 0.0f, 1.0f), true, 1.0f, false, 0);
+    m_device->SetColorWrite(true, true, true, true);
+    m_device->Clear(true, csColor4f(1.0f, 1.0f, 1.0f, 1.0f), true, 1.0f, false, 0);
 
     m_device->SetProjectionMatrix(proj);
     m_device->SetViewMatrix(view);
 
 
-    uint64_t        startTime = csTime::GetTime();
-    size_t          c         = 0;
+    uint64_t    startTime = csTime::GetTime();
+    size_t      c         = 0;
+    eRenderPass pass      = eRP_Depth;
+    if (m_shadowSamplingMode == ShadowSamplingMode::VSM)
+    {
+      pass = eRP_VSM;
+    }
     for (const auto &mesh: meshes)
     {
       if (mesh->IsCastShadow())
       {
-        mesh->RenderUnlit(m_device, eRP_Depth);
+        mesh->RenderUnlit(m_device, pass);
         c++;
       }
     }
@@ -356,8 +370,8 @@ void csGL4PSSMRenderer::RenderShadowMap(const csGL4DirectionalLight *directional
                                         const cs::csProjector &projector)
 {
   m_device->ResetTextures();
-  csGL4RenderTarget2D *target = GetDirectionalLightShadowMapTemp();// m_directionalLightShadowMap;
-//  GL4RenderTarget2D *target = m_directionalLightShadowMap;
+//  csGL4RenderTarget2D *target = GetDirectionalLightShadowMapTemp();// m_directionalLightShadowMap;
+  csGL4RenderTarget2D *target = m_directionalLightShadowMap;
   m_device->SetRenderTarget(target);
   m_device->SetRenderBuffer(0);
   m_device->SetDepthWrite(true);
@@ -383,11 +397,15 @@ void csGL4PSSMRenderer::RenderShadowMap(const csGL4DirectionalLight *directional
   if (m_attrShadowBuffers)
   {
 //    for (size_t i = 0; i < 4; i++)
-    {
-      eTextureUnit unit = m_device->BindTexture(GetShadowBuffer().ShadowDepth);
-      m_attrShadowBuffers->SetArrayIndex(0);
-      m_attrShadowBuffers->Bind(unit);
-    }
+    eTextureUnit unit = m_device->BindTexture(GetShadowBuffer().ShadowDepth);
+    m_attrShadowBuffers->SetArrayIndex(0);
+    m_attrShadowBuffers->Bind(unit);
+  }
+  if (m_attrShadowBufferDatas && m_shadowSamplingMode == ShadowSamplingMode::VSM)
+  {
+    eTextureUnit unit = m_device->BindTexture(GetShadowBuffer().ShadowColor);
+    m_attrShadowBufferDatas->SetArrayIndex(0);
+    m_attrShadowBufferDatas->Bind(unit);
   }
   if (m_attrDepthBuffer)
   {
@@ -424,9 +442,9 @@ csGL4PSSMShadowBufferObject csGL4PSSMRenderer::CreateDirectionalLightShadowBuffe
     colorDesc.Width   = m_directionalLightShadowBufferSize;
     colorDesc.Height  = m_directionalLightShadowBufferSize;
     colorDesc.Layers  = 4;
-    colorDesc.Format  = ePF_RGBA;
+    colorDesc.Format  = ePF_RG16F;
     colorDesc.MipMaps = false;
-    sbo.ShadowColor = m_device->CreateTexture(colorDesc).Query<csGL4Texture2DArray>();
+    sbo.ShadowColor   = m_device->CreateTexture(colorDesc).Query<csGL4Texture2DArray>();
     sbo.ShadowColor->SetSampler(GetShadowBufferColorSampler());
   }
 
@@ -436,7 +454,7 @@ csGL4PSSMShadowBufferObject csGL4PSSMRenderer::CreateDirectionalLightShadowBuffe
   depthDesc.Layers  = 4;
   depthDesc.Format  = ePF_Depth;
   depthDesc.MipMaps = false;
-  sbo.ShadowDepth = m_device->CreateTexture(depthDesc).Query<csGL4Texture2DArray>();
+  sbo.ShadowDepth   = m_device->CreateTexture(depthDesc).Query<csGL4Texture2DArray>();
   sbo.ShadowDepth->SetSampler(GetShadowBufferDepthSampler());
 
 
@@ -629,10 +647,10 @@ csGL4PSSMShadowBufferObject::csGL4PSSMShadowBufferObject(csGL4PSSMShadowBufferOb
 {
   ShadowDepth = sbo.ShadowDepth;
   ShadowColor = sbo.ShadowColor;
-  ShadowBuffers[0]     = sbo.ShadowBuffers[0];
-  ShadowBuffers[1]     = sbo.ShadowBuffers[1];
-  ShadowBuffers[2]     = sbo.ShadowBuffers[2];
-  ShadowBuffers[3]     = sbo.ShadowBuffers[3];
+  ShadowBuffers[0] = sbo.ShadowBuffers[0];
+  ShadowBuffers[1] = sbo.ShadowBuffers[1];
+  ShadowBuffers[2] = sbo.ShadowBuffers[2];
+  ShadowBuffers[3] = sbo.ShadowBuffers[3];
   sbo.ShadowDepth = nullptr;
   sbo.ShadowColor = nullptr;
   sbo.ShadowBuffers[0] = nullptr;
@@ -650,10 +668,10 @@ csGL4PSSMShadowBufferObject &csGL4PSSMShadowBufferObject::operator=(const csGL4P
 {
   ShadowDepth = sbo.ShadowDepth;
   ShadowColor = sbo.ShadowColor;
-  ShadowBuffers[0]     = sbo.ShadowBuffers[0];
-  ShadowBuffers[1]     = sbo.ShadowBuffers[1];
-  ShadowBuffers[2]     = sbo.ShadowBuffers[2];
-  ShadowBuffers[3]     = sbo.ShadowBuffers[3];
+  ShadowBuffers[0] = sbo.ShadowBuffers[0];
+  ShadowBuffers[1] = sbo.ShadowBuffers[1];
+  ShadowBuffers[2] = sbo.ShadowBuffers[2];
+  ShadowBuffers[3] = sbo.ShadowBuffers[3];
   return *this;
 }
 

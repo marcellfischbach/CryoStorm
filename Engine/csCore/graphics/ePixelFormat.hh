@@ -13,7 +13,8 @@ enum ePixelFormat
   ePF_RGBA,
   ePF_RGB10A2,
   ePF_Depth,
-  ePF_DepthStencil
+  ePF_DepthStencil,
+  ePF_RG16F
 };
 
 }

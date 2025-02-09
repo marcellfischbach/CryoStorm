@@ -22,6 +22,7 @@ void main()
     // Generate diffuse roughness
     float roughness = texture(cs_RoughnessMap, texCoord).r * cs_Roughness;
     vec4 color = texture(cs_Diffuse, texCoord) * cs_Color;
+    color = vec4(1.0, 0.8, 0.8, 1.0f);
     cs_FragDiffuseRoughness = vec4(color.rgb, roughness);
 
     //

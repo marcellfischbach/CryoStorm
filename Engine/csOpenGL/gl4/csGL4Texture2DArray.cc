@@ -73,7 +73,7 @@ bool csGL4Texture2DArray::Initialize(uint16_t width, uint16_t height, uint16_t l
     glTexImage3D(
         GL_TEXTURE_2D_ARRAY,
         level,
-        csGL4PixelFormatInternal[format],
+        csGL4PixelFormatSizedInternal[format],
         width,
         height,
         m_layer,

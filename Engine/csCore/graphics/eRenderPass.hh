@@ -11,6 +11,7 @@ enum eRenderPass
   eRP_GBuffer,
   eRP_Forward,
   eRP_Shadow,
+  eRP_VSM,
   eRP_ShadowPSSM,
   eRP_ShadowCube,
 

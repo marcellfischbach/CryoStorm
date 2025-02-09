@@ -53,7 +53,7 @@ void main()
 //        diffuse += diffuseRoughness.rgb * layer.w;
 //        roughness += diffuseRoughness.a * layer.w;
 //    }
-
+    diffuse = vec3(1, 1, 1);
 
     cs_FragDiffuseRoughness = vec4(diffuse, loc_roughness);
 //    cs_FragDiffuseRoughness = vec4(loc_roughness, loc_roughness, loc_roughness, 1.0);

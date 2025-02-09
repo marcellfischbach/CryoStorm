@@ -130,6 +130,7 @@ private:
   iShaderAttribute *m_attrLayersDepth     = nullptr;
   iShaderAttribute *m_attrLayersBias      = nullptr;
   iShaderAttribute *m_attrShadowBuffers   = nullptr;
+  iShaderAttribute *m_attrShadowBufferDatas   = nullptr;
   iShaderAttribute *m_attrDepthBuffer     = nullptr;
 
 
