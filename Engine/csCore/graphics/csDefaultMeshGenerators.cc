@@ -91,6 +91,7 @@ csOwned<iRenderMesh> csCubeMeshGenerator::GenerateFlat()
                       csVector3f(-hl.x, -hl.y, -hl.z)
   );
   AddFlatFaceNormals(csVector3f(-1.0f, 0.0, 0.0));
+  AddFlatFaceTangents(csVector3f(0.0f, 0.0, -1.0));
   AddFaceTexCoords();
   AddFlatFaceIndices(o);
 
@@ -102,6 +103,7 @@ csOwned<iRenderMesh> csCubeMeshGenerator::GenerateFlat()
                       csVector3f(hl.x, -hl.y, hl.z)
   );
   AddFlatFaceNormals(csVector3f(1.0f, 0.0, 0.0));
+  AddFlatFaceTangents(csVector3f(0.0f, 0.0, 1.0));
   AddFaceTexCoords();
   AddFlatFaceIndices(o);
 
@@ -114,6 +116,7 @@ csOwned<iRenderMesh> csCubeMeshGenerator::GenerateFlat()
                       csVector3f(hl.x, -hl.y, hl.z)
   );
   AddFlatFaceNormals(csVector3f(0.0f, -1.0, 0.0));
+  AddFlatFaceTangents(csVector3f(1.0f, 0.0, 0.0));
   AddFaceTexCoords();
   AddFlatFaceIndices(o);
 
@@ -125,6 +128,7 @@ csOwned<iRenderMesh> csCubeMeshGenerator::GenerateFlat()
                       csVector3f(hl.x, hl.y, -hl.z)
   );
   AddFlatFaceNormals(csVector3f(0.0f, 1.0, 0.0));
+  AddFlatFaceTangents(csVector3f(1.0f, 0.0, 0.0));
   AddFaceTexCoords();
   AddFlatFaceIndices(o);
 
@@ -136,6 +140,7 @@ csOwned<iRenderMesh> csCubeMeshGenerator::GenerateFlat()
                       csVector3f(hl.x, -hl.y, -hl.z)
   );
   AddFlatFaceNormals(csVector3f(0.0f, 0.0, -1.0));
+  AddFlatFaceTangents(csVector3f(1.0f, 0.0, 0.0));
   AddFaceTexCoords();
   AddFlatFaceIndices(o);
 
@@ -147,11 +152,13 @@ csOwned<iRenderMesh> csCubeMeshGenerator::GenerateFlat()
                       csVector3f(-hl.x, -hl.y, hl.z)
   );
   AddFlatFaceNormals(csVector3f(0.0f, 0.0, 1.0));
+  AddFlatFaceTangents(csVector3f(1.0f, 0.0, 0.0));
   AddFaceTexCoords();
   AddFlatFaceIndices(o);
 
   gen->SetVertices(m_vertices);
   gen->SetNormals(m_normals);
+  gen->SetTangents(m_tangents);
   if (m_generateTexCoords)
   {
     gen->SetUV0(m_texCoords);
@@ -179,6 +186,15 @@ void csCubeMeshGenerator::AddFlatFaceNormals(const cs::csVector3f &normal)
   m_normals.push_back(normal);
   m_normals.push_back(normal);
   m_normals.push_back(normal);
+}
+
+
+void csCubeMeshGenerator::AddFlatFaceTangents(const cs::csVector3f &tangent)
+{
+  m_tangents.push_back(tangent);
+  m_tangents.push_back(tangent);
+  m_tangents.push_back(tangent);
+  m_tangents.push_back(tangent);
 }
 
 void csCubeMeshGenerator::AddFaceTexCoords()

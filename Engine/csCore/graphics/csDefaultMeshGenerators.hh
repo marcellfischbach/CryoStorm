@@ -34,6 +34,7 @@ private:
 
   void AddFlatFaceVertices(const csVector3f &v0, const csVector3f &v1, const csVector3f &v2, const csVector3f &v3);
   void AddFlatFaceNormals(const csVector3f &normal);
+  void AddFlatFaceTangents(const csVector3f &tangents);
   void AddFaceTexCoords();
   void AddFlatFaceIndices(uint32_t &offset);
 
@@ -45,6 +46,7 @@ private:
 
   std::vector<csVector3f> m_vertices;
   std::vector<csVector3f> m_normals;
+  std::vector<csVector3f> m_tangents;
   std::vector<csVector2f> m_texCoords;
   std::vector<uint32_t> m_indices;
 };
