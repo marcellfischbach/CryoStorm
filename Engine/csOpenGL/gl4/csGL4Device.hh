@@ -50,6 +50,8 @@ public:
                       eBlendFactor srcFactorAlpha,
                       eBlendFactor dstFactorColor,
                       eBlendFactor dstFactorAlpha) override;
+  void SetCulling (eCullMode cullMode) override;
+  eCullMode GetCulling () const override;
 
   void SetModelMatrix(const csMatrix4f &modelMatrix) override;
   void SetViewMatrix(const csMatrix4f &viewMatrix) override;
@@ -196,7 +198,8 @@ private:
   eBlendFactor m_srcFactorAlpha;
   eBlendFactor m_dstFactorColor;
   eBlendFactor m_dstFactorAlpha;
-
+  eCullMode    m_cullMode;
+  bool          m_cullEnabled;
 
   csMatrix4f m_modelMatrix;
   csMatrix4f m_viewMatrix;

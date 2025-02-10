@@ -130,6 +130,9 @@ bool csGL4Device::Initialize()
   CS_GL_ERROR()
 
 
+  m_cullEnabled = true;
+  m_cullMode = eCM_BackFace;
+
   CS_GL_ERROR()
   glEnable(GL_CULL_FACE);
   CS_GL_ERROR()
@@ -363,6 +366,53 @@ void csGL4Device::SetBlendFactor(eBlendFactor srcFactorColor,
     glBlendFuncSeparate(glSrcColor, glDstColor, glSrcAlpha, glDstAlpha);
     CS_GL_ERROR()
   }
+}
+
+void csGL4Device::SetCulling(cs::eCullMode cullMode)
+{
+  if (m_cullMode != cullMode)
+  {
+    m_cullMode = cullMode;
+    switch (m_cullMode)
+    {
+      case eCM_Disable:
+        if (m_cullEnabled)
+        {
+          glDisable(GL_CULL_FACE);
+          m_cullEnabled = false;
+        }
+        break;
+      case eCM_BackFace:
+        if (!m_cullEnabled)
+        {
+          glEnable(GL_CULL_FACE);
+          m_cullEnabled = true;
+        }
+        glCullFace(GL_BACK);
+        break;
+      case eCM_FrontFace:
+        if (!m_cullEnabled)
+        {
+          glEnable(GL_CULL_FACE);
+          m_cullEnabled = true;
+        }
+        glCullFace(GL_FRONT);
+        break;
+      case eCM_All:
+        if (!m_cullEnabled)
+        {
+          glEnable(GL_CULL_FACE);
+          m_cullEnabled = true;
+        }
+        glCullFace(GL_FRONT_AND_BACK);
+        break;
+    }
+  }
+}
+
+eCullMode csGL4Device::GetCulling() const
+{
+  return m_cullMode;
 }
 
 void csGL4Device::SetModelMatrix(const csMatrix4f &modelMatrix)
