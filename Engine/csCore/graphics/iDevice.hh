@@ -8,6 +8,7 @@
 #include <csCore/csClass.hh>
 #include <csCore/graphics/eBlendFactor.hh>
 #include <csCore/graphics/eCompareFunc.hh>
+#include <csCore/graphics/eCullMode.hh>
 #include <csCore/graphics/eFillMode.hh>
 #include <csCore/graphics/eRenderPass.hh>
 #include <csCore/graphics/eTextureUnit.hh>
@@ -57,6 +58,8 @@ CS_CLASS_GEN;
   virtual void SetDepthTest(bool depthTest) = 0;
   virtual void SetFillMode(eFillMode fillMode) = 0;
   virtual void SetDepthFunc(eCompareFunc func) = 0;
+  virtual void SetCulling (eCullMode cullMode) = 0;
+  virtual eCullMode GetCulling () const = 0;
 
   virtual void SetBlending(bool blending) = 0;
   virtual void SetBlendFactor(eBlendFactor srcFactor, eBlendFactor dstFactor) = 0;
