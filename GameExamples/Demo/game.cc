@@ -78,7 +78,7 @@ csOwned<cs::iTerrainMesh> create_terrain_mesh(float size)
       generator = cs::csObjectRegistry::Get<cs::iTerrainMeshGeneratorFactory>()->Create();
 
   std::vector<float> heightData;
-  for (int           i = 0; i < 1025; i++)
+  for (int i = 0; i < 1025; i++)
   {
 #ifndef FLAT
     float    fi = (float) i / 1024.0f;
@@ -111,21 +111,21 @@ csOwned<cs::iTerrainMesh> create_terrain_mesh(float size)
 csOwned<cs::iRenderMesh> create_sphere_mesh(float radius, uint32_t detail, float uv_f)
 {
   csOwned<cs::iRenderMeshGenerator> generator = cs::csObjectRegistry::Get<cs::iRenderMeshGeneratorFactory>()->Create();
-  std::vector<cs::csVector3f>       positions;
-  std::vector<cs::csVector3f>       normals;
-  std::vector<cs::csVector3f>       tangents;
-  std::vector<cs::csVector2f>       uv;
-  std::vector<cs::csColor4f>        colors;
-  std::vector<uint32_t>             indices;
+  std::vector<cs::csVector3f> positions;
+  std::vector<cs::csVector3f> normals;
+  std::vector<cs::csVector3f> tangents;
+  std::vector<cs::csVector2f> uv;
+  std::vector<cs::csColor4f> colors;
+  std::vector<uint32_t> indices;
 
   for (uint32_t v = 0; v < detail; v++)
   {
-    float factV  = (float) v / (float) (detail - 1);
+    float factV = (float) v / (float) (detail - 1);
     float angleV = -(float) M_PI_2 + factV * (float) M_PI;
 
     for (uint32_t h = 0; h < detail * 2; h++)
     {
-      float factH  = (float) h / (float) (detail * 2 - 1);
+      float factH = (float) h / (float) (detail * 2 - 1);
       float angleH = factH * (float) M_PI * 2.0f;
 
       cs::csVector3f normal(
@@ -148,9 +148,9 @@ csOwned<cs::iRenderMesh> create_sphere_mesh(float radius, uint32_t detail, float
 
   for (uint32_t v = 0; v < detail - 1; v++)
   {
-    uint32_t      i0 = v * detail * 2;
-    uint32_t      i1 = i0 + detail * 2;
-    for (uint32_t h  = 0; h < detail * 2 - 1; h++)
+    uint32_t i0 = v * detail * 2;
+    uint32_t i1 = i0 + detail * 2;
+    for (uint32_t h = 0; h < detail * 2 - 1; h++)
     {
       uint32_t i00 = i0 + h;
       uint32_t i01 = i00 + 1;
@@ -184,25 +184,25 @@ csOwned<cs::iRenderMesh> create_multi_sphere_mesh(float radius,
                                                   cs::csVector3f *sphere_positions)
 {
   csOwned<cs::iRenderMeshGenerator> generator = cs::csObjectRegistry::Get<cs::iRenderMeshGeneratorFactory>()->Create();
-  std::vector<cs::csVector3f>       positions;
-  std::vector<cs::csVector3f>       normals;
-  std::vector<cs::csVector3f>       tangents;
-  std::vector<cs::csVector2f>       uv;
-  std::vector<cs::csColor4f>        colors;
-  std::vector<uint32_t>             indices;
+  std::vector<cs::csVector3f> positions;
+  std::vector<cs::csVector3f> normals;
+  std::vector<cs::csVector3f> tangents;
+  std::vector<cs::csVector2f> uv;
+  std::vector<cs::csColor4f> colors;
+  std::vector<uint32_t> indices;
 
-  size_t      idxOrigin = 0;
-  for (size_t i         = 0; i < num_spheres; i++)
+  size_t idxOrigin = 0;
+  for (size_t i = 0; i < num_spheres; i++)
   {
     cs::csVector3f origin = sphere_positions[i];
-    for (uint32_t  v      = 0; v < detail; v++)
+    for (uint32_t v = 0; v < detail; v++)
     {
-      float factV  = (float) v / (float) (detail - 1);
+      float factV = (float) v / (float) (detail - 1);
       float angleV = -(float) M_PI_2 + factV * (float) M_PI;
 
       for (uint32_t h = 0; h < detail * 2; h++)
       {
-        float factH  = (float) h / (float) (detail * 2 - 1);
+        float factH = (float) h / (float) (detail * 2 - 1);
         float angleH = factH * (float) M_PI * 2.0f;
 
         cs::csVector3f normal(
@@ -225,9 +225,9 @@ csOwned<cs::iRenderMesh> create_multi_sphere_mesh(float radius,
 
     for (uint32_t v = 0; v < detail - 1; v++)
     {
-      uint32_t      i0 = v * detail * 2;
-      uint32_t      i1 = i0 + detail * 2;
-      for (uint32_t h  = 0; h < detail * 2 - 1; h++)
+      uint32_t i0 = v * detail * 2;
+      uint32_t i1 = i0 + detail * 2;
+      for (uint32_t h = 0; h < detail * 2 - 1; h++)
       {
         uint32_t i00 = i0 + h;
         uint32_t i01 = i00 + 1;
@@ -281,39 +281,39 @@ cs::csOwned<cs::iRenderTarget2D>
 create_render_target(cs::iDevice *device, uint32_t width, uint32_t height, uint16_t multiSamples)
 {
   auto oColorSampler = device->CreateSampler();
-  auto colorSampler  = oColorSampler.Data();
+  auto colorSampler = oColorSampler.Data();
   colorSampler->SetFilterMode(cs::eFM_MinMagNearest);
 
   auto oDepthSampler = device->CreateSampler();
-  auto depthSampler  = oDepthSampler.Data();
+  auto depthSampler = oDepthSampler.Data();
   depthSampler->SetFilterMode(cs::eFM_MinMagNearest);
   depthSampler->SetTextureCompareFunc(cs::eCF_LessOrEqual);
   depthSampler->SetTextureCompareMode(cs::eTCM_None);
 
   cs::iTexture2D::Descriptor rt_col_desc = {};
-  rt_col_desc.Width        = width;
-  rt_col_desc.Height       = height;
-  rt_col_desc.Format       = cs::ePF_RGBA;
-  rt_col_desc.MipMaps      = false;
+  rt_col_desc.Width = width;
+  rt_col_desc.Height = height;
+  rt_col_desc.Format = cs::ePF_RGBA;
+  rt_col_desc.MipMaps = false;
   rt_col_desc.MultiSamples = multiSamples;
   auto oColorTexture = device->CreateTexture(rt_col_desc);
-  auto colorTexture  = oColorTexture.Data();
+  auto colorTexture = oColorTexture.Data();
   colorTexture->SetSampler(colorSampler);
 
   cs::iTexture2D::Descriptor rt_dpth_desc = {};
-  rt_dpth_desc.Width        = width;
-  rt_dpth_desc.Height       = height;
-  rt_dpth_desc.Format       = cs::ePF_DepthStencil;
-  rt_dpth_desc.MipMaps      = false;
+  rt_dpth_desc.Width = width;
+  rt_dpth_desc.Height = height;
+  rt_dpth_desc.Format = cs::ePF_DepthStencil;
+  rt_dpth_desc.MipMaps = false;
   rt_dpth_desc.MultiSamples = multiSamples;
   auto oDepthTexture = device->CreateTexture(rt_dpth_desc);
-  auto depthTexture  = oDepthTexture.Data();
+  auto depthTexture = oDepthTexture.Data();
   depthTexture->SetSampler(depthSampler);
   printf("CreateDepthTexture: %p\n", depthTexture);
 
 
   cs::iRenderTarget2D::Descriptor rt_desc = {};
-  rt_desc.Width  = width;
+  rt_desc.Width = width;
   rt_desc.Height = height;
 
   auto renderTarget = device->CreateRenderTarget(rt_desc);
@@ -386,9 +386,9 @@ void generate_camera(cs::csWorld *world)
   cameraEntity->AttachState(cameraState);
   cameraEntity->AttachState(cameraHandler);
   cameraEntity->GetRoot()->GetTransform()
-              .SetTranslation(cs::csVector3f(0.24f, 2.07f, -4.15f))
+      .SetTranslation(cs::csVector3f(0.24f, 2.07f, -4.15f))
 //              .LookAt(cs::csVector3f(0, 0, 0))
-              .Finish();
+      .Finish();
   world->Attach(cameraEntity);
   world->SetMainCamera(cameraState);
 
@@ -411,12 +411,12 @@ void generate_terrain(cs::csWorld *world)
   cs::csAssetManager *assetMan = cs::csAssetManager::Get();
 
   auto greenGrassLayer = assetMan->Get<cs::csTerrainLayer>("/terrain/green_grass.terrainlayer");
-  auto dirtLayer       = assetMan->Get<cs::csTerrainLayer>("/terrain/dirt.terrainlayer");
+  auto dirtLayer = assetMan->Get<cs::csTerrainLayer>("/terrain/dirt.terrainlayer");
   auto fieldstoneLayer = assetMan->Get<cs::csTerrainLayer>("/terrain/fieldstone.terrainlayer");
-  auto terrainLayers   = assetMan->Get<cs::csTerrainLayerMask>("/terrain/terrain.terrainmask");
+  auto terrainLayers = assetMan->Get<cs::csTerrainLayerMask>("/terrain/terrain.terrainmask");
 
-  auto terrainMesh  = create_terrain_mesh(40.0f);
-  auto entity0      = new cs::csEntity("Terrain");
+  auto terrainMesh = create_terrain_mesh(40.0f);
+  auto entity0 = new cs::csEntity("Terrain");
   auto terrainState = new cs::csTerrainMeshState();
   terrainState->SetTerrainMesh(terrainMesh.Data());
   terrainState->SetLayerMask(terrainLayers.Data());
@@ -424,8 +424,8 @@ void generate_terrain(cs::csWorld *world)
   terrainState->AddLayer(dirtLayer.Data());
   terrainState->AddLayer(fieldstoneLayer.Data());
   terrainState->GetTransform()
-              .SetTranslation(cs::csVector3f(0, 0, 0))
-              .Finish();
+      .SetTranslation(cs::csVector3f(0, 0, 0))
+      .Finish();
   terrainState->SetStatic(true);
   entity0->AttachState(terrainState);
   world->Attach(entity0);
@@ -455,7 +455,7 @@ void generate_test_cube(cs::csWorld *world, cs::csAssetRef<cs::iMaterial> materi
 void generate_test_grid(cs::csWorld *world, cs::csAssetRef<cs::iMaterial> &material)
 {
   csRef<iRenderMesh> sphere = create_sphere_mesh(0.25, 16, 12.0f);
-  auto               mesh   = new cs::csMesh();
+  auto mesh = new cs::csMesh();
   mesh->AddMaterialSlot("Default", material);
   mesh->AddSubMesh(sphere, 0);
   int gridSize = 100;
@@ -465,22 +465,22 @@ void generate_test_grid(cs::csWorld *world, cs::csAssetRef<cs::iMaterial> &mater
 
   for (int a = 0, i = 0; i < gridSize; i++)
   {
-    auto     fi = (float) i;
-    for (int j  = 0; j < gridSize; j++, a++)
+    auto fi = (float) i;
+    for (int j = 0; j < gridSize; j++, a++)
     {
-      auto fj     = (float) j;
+      auto fj = (float) j;
       auto entity = new cs::csEntity(std::string("Sphere: ") + std::to_string(i + 1) + ":" + std::to_string(j + 1));
 
       auto meshStateSphere = new cs::csStaticMeshState("Mesh");
       meshStateSphere->SetStatic(true);
       meshStateSphere->GetTransform()
-                     .SetTranslation(i - start, 0.25f, j - start)
-                     .Finish();
+          .SetTranslation(i - start, 0.25f, j - start)
+          .Finish();
       meshStateSphere->SetMesh(mesh);
       entity->AttachState(meshStateSphere);
 #if 1
       auto rnd = (float) rand() / (float) RAND_MAX;
-      int  ma  = a % 4;
+      int ma = a % 4;
       switch (ma)
       {
         case 0:
@@ -519,9 +519,9 @@ void generate_test_grid(cs::csWorld *world, cs::csAssetRef<cs::iMaterial> &mater
 
 }
 
-cs::csSkeleton                *global_skeleton  = nullptr;
-cs::csSkeletonAnimation       *global_animation = nullptr;
-cs::csSkeletonAnimationPlayer *global_player    = nullptr;
+cs::csSkeleton *global_skeleton = nullptr;
+cs::csSkeletonAnimation *global_animation = nullptr;
+cs::csSkeletonAnimationPlayer *global_player = nullptr;
 
 cs::csEntity *bones[4];
 
@@ -529,13 +529,13 @@ cs::csEntity *add_bone(cs::csWorld *world, cs::csAssetRef<cs::iMaterial> &materi
 {
 
   auto meshData = cs::csAssetManager::Get()->Load<cs::csMesh>("/bone_x.fbx");
-  auto mesh     = meshData.Data();
+  auto mesh = meshData.Data();
   if (!mesh)
   {
     return nullptr;
   }
 
-  cs::csEntity          *entity    = new cs::csEntity("Bone");
+  cs::csEntity *entity = new cs::csEntity("Bone");
   cs::csStaticMeshState *meshState = new cs::csStaticMeshState();
   meshState->SetMesh(mesh);
   meshState->SetMaterial(0, material);
@@ -550,9 +550,9 @@ void add_skeleton_mesh(cs::csWorld *world, cs::csAssetRef<cs::iMaterial> &materi
 {
 
   auto meshData = cs::csAssetManager::Get()->Load<cs::csSkeletonMesh>("/skinned_mesh.fbx");
-  auto mesh     = meshData.Data();
+  auto mesh = meshData.Data();
 
-  cs::csEntity            *entity    = new cs::csEntity("Skeleton Entity");
+  cs::csEntity *entity = new cs::csEntity("Skeleton Entity");
   cs::csSkeletonMeshState *meshState = new cs::csSkeletonMeshState();
   meshState->SetMesh(mesh);
   meshState->SetMaterial(0, material);
@@ -568,7 +568,7 @@ void add_skeleton_mesh(cs::csWorld *world, cs::csAssetRef<cs::iMaterial> &materi
 
 
   auto animationPackData = cs::csAssetManager::Get()->Load<cs::csSkeletonAnimationPack>("/skinned_mesh.fbx");
-  auto animationPack     = animationPackData.Data();
+  auto animationPack = animationPackData.Data();
   global_animation = animationPack->Get("Armature|MyAnimation01");
   global_animation->SetLoop(true);
 
@@ -581,7 +581,7 @@ void add_skeleton_mesh(cs::csWorld *world, cs::csAssetRef<cs::iMaterial> &materi
 void generate_batched_test_grid(cs::csWorld *world, csAssetRef<cs::iMaterial> &material)
 {
 
-  csRef<iRenderMesh> sphere = create_multi_sphere_mesh(0.25, 16, 12.0f, 25, new cs::csVector3f[] {
+  csRef<iRenderMesh> sphere = create_multi_sphere_mesh(0.25, 16, 12.0f, 25, new cs::csVector3f[]{
       cs::csVector3f(-2, 0.0f, -2.0f),
       cs::csVector3f(-1, 0.0f, -2.0f),
       cs::csVector3f(0, 0.0f, -2.0f),
@@ -612,7 +612,7 @@ void generate_batched_test_grid(cs::csWorld *world, csAssetRef<cs::iMaterial> &m
       cs::csVector3f(1, 0.0f, 2.0f),
       cs::csVector3f(2, 0.0f, 2.0f)
   });
-  csRef<csMesh>      mesh   = new cs::csMesh();
+  csRef<csMesh> mesh = new cs::csMesh();
   mesh->AddMaterialSlot("Default", material);
   mesh->AddSubMesh(sphere, 0);
   int gridSize = 100;
@@ -621,17 +621,17 @@ void generate_batched_test_grid(cs::csWorld *world, csAssetRef<cs::iMaterial> &m
 
   for (int i = 0; i < gridSize; i += 5)
   {
-    auto     fi = (float) i;
-    for (int j  = 0; j < gridSize; j += 5)
+    auto fi = (float) i;
+    for (int j = 0; j < gridSize; j += 5)
     {
-      auto fj     = (float) j;
+      auto fj = (float) j;
       auto entity = new cs::csEntity(std::string("Sphere: ") + std::to_string(i + 1) + ":" + std::to_string(j + 1));
 
       auto meshStateSphere = new cs::csStaticMeshState("Mesh");
       meshStateSphere->SetStatic(true);
       meshStateSphere->GetTransform()
-                     .SetTranslation(i - start + 2, 0.25f, j - start + 2)
-                     .Finish();
+          .SetTranslation(i - start + 2, 0.25f, j - start + 2)
+          .Finish();
       meshStateSphere->SetMesh(mesh);
       entity->AttachState(meshStateSphere);
 
@@ -657,8 +657,8 @@ void generate_physics(cs::csWorld *world, csAssetRef<cs::iMaterial> &material)
   physWorld->AddCollider(floorCollider);
   */
 
-  csRef<cs::csEntity>              floorEntity         = new cs::csEntity("Floor");
-  csRef<cs::csBoxColliderState>    floorBoxCollider    = new cs::csBoxColliderState();
+  csRef<cs::csEntity> floorEntity = new cs::csEntity("Floor");
+  csRef<cs::csBoxColliderState> floorBoxCollider = new cs::csBoxColliderState();
   csRef<cs::csStaticColliderState> floorStaticCollider = new cs::csStaticColliderState();
   floorBoxCollider->SetHalfExtends(cs::csVector3f(100.0f, 1.0f, 100.0f));
   floorEntity->AttachState(floorBoxCollider);
@@ -674,11 +674,11 @@ void generate_physics(cs::csWorld *world, csAssetRef<cs::iMaterial> &material)
     for (int i = 0; i < 10; i++)
     {
       {
-        cs::csMesh                *meshSphere          = new cs::csMesh();
-        cs::csEntity              *entitySphere        = new cs::csEntity("Sphere");
-        cs::csStaticMeshState     *meshStateSphere     = new cs::csStaticMeshState("Mesh.Sphere");
+        cs::csMesh *meshSphere = new cs::csMesh();
+        cs::csEntity *entitySphere = new cs::csEntity("Sphere");
+        cs::csStaticMeshState *meshStateSphere = new cs::csStaticMeshState("Mesh.Sphere");
         cs::csSphereColliderState *sphereColliderState = new cs::csSphereColliderState();
-        cs::csRigidBodyState      *rigidBodyState      = new cs::csRigidBodyState("RigidBody.Sphere");
+        cs::csRigidBodyState *rigidBodyState = new cs::csRigidBodyState("RigidBody.Sphere");
 
 
         meshSphere->AddMaterialSlot("Default", material);
@@ -690,8 +690,8 @@ void generate_physics(cs::csWorld *world, csAssetRef<cs::iMaterial> &material)
         rigidBodyState->AttachSpatial(meshStateSphere);
 
         rigidBodyState->GetTransform()
-                      .SetTranslation(cs::csVector3f(0.0f, sphereRadius * 2.5f, 0.0f) * ((float) i + 2.0f))
-                      .Finish();
+            .SetTranslation(cs::csVector3f(0.0f, sphereRadius * 2.5f, 0.0f) * ((float) i + 2.0f))
+            .Finish();
         meshStateSphere->SetMesh(meshSphere);
         world->Attach(entitySphere);
 
@@ -706,40 +706,40 @@ void generate_physics(cs::csWorld *world, csAssetRef<cs::iMaterial> &material)
          */
       }
       {
-        cs::csMesh            *meshSphere      = new cs::csMesh();
-        cs::csEntity          *entitySphere    = new cs::csEntity("Sphere");
+        cs::csMesh *meshSphere = new cs::csMesh();
+        cs::csEntity *entitySphere = new cs::csEntity("Sphere");
         cs::csStaticMeshState *meshStateSphere = new cs::csStaticMeshState("Mesh.Sphere");
         meshSphere->AddMaterialSlot("Default", material);
         meshSphere->AddSubMesh(renderMeshSphere, 0);
         meshStateSphere->GetTransform()
-                       .SetTranslation(cs::csVector3f(i * sphereRadius * 0.5, 0.0f, 0.0f))
-                       .Finish();
+            .SetTranslation(cs::csVector3f(i * sphereRadius * 0.5, 0.0f, 0.0f))
+            .Finish();
         meshStateSphere->SetMesh(meshSphere);
         entitySphere->AttachState(meshStateSphere);
         world->Attach(entitySphere);
       }
       {
-        cs::csMesh            *meshSphere      = new cs::csMesh();
-        cs::csEntity          *entitySphere    = new cs::csEntity("Sphere");
+        cs::csMesh *meshSphere = new cs::csMesh();
+        cs::csEntity *entitySphere = new cs::csEntity("Sphere");
         cs::csStaticMeshState *meshStateSphere = new cs::csStaticMeshState("Mesh.Sphere");
         meshSphere->AddMaterialSlot("Default", material);
         meshSphere->AddSubMesh(renderMeshSphere, 0);
         meshStateSphere->GetTransform()
-                       .SetTranslation(cs::csVector3f(0.0f, i * sphereRadius, 0.0f))
-                       .Finish();
+            .SetTranslation(cs::csVector3f(0.0f, i * sphereRadius, 0.0f))
+            .Finish();
         meshStateSphere->SetMesh(meshSphere);
         entitySphere->AttachState(meshStateSphere);
         world->Attach(entitySphere);
       }
       {
-        cs::csMesh            *meshSphere      = new cs::csMesh();
-        cs::csEntity          *entitySphere    = new cs::csEntity("Sphere");
+        cs::csMesh *meshSphere = new cs::csMesh();
+        cs::csEntity *entitySphere = new cs::csEntity("Sphere");
         cs::csStaticMeshState *meshStateSphere = new cs::csStaticMeshState("Mesh.Sphere");
         meshSphere->AddMaterialSlot("Default", material);
         meshSphere->AddSubMesh(renderMeshSphere, 0);
         meshStateSphere->GetTransform()
-                       .SetTranslation(cs::csVector3f(0.0f, 0.0f, i * 2.0f * sphereRadius))
-                       .Finish();
+            .SetTranslation(cs::csVector3f(0.0f, 0.0f, i * 2.0f * sphereRadius))
+            .Finish();
         meshStateSphere->SetMesh(meshSphere);
         entitySphere->AttachState(meshStateSphere);
         world->Attach(entitySphere);
@@ -758,7 +758,7 @@ cs::csLightState *add_directional_light(cs::csWorld *world,
                                         bool isStatic,
                                         bool castsShadow)
 {
-  cs::csEntity     *entity     = new cs::csEntity("Directional");
+  cs::csEntity *entity = new cs::csEntity("Directional");
   cs::csLightState *lightState = new cs::csLightState("DirectionalLight");
   entity->AttachState(lightState);
   lightState->SetType(cs::eLT_Directional);
@@ -768,8 +768,8 @@ cs::csLightState *add_directional_light(cs::csWorld *world,
   lightState->SetStatic(isStatic);
   lightState->SetCastShadow(castsShadow);
   lightState->GetTransform()
-            .SetRotation(cs::csQuaternion(axis.Normalized(), rad))
-            .Finish();
+      .SetRotation(cs::csQuaternion(axis.Normalized(), rad))
+      .Finish();
   world->Attach(entity);
   const cs::csVector3f &direction = lightState->GetTransform().GetForward();
   printf("%.2f %.2f %.2f\n", direction.x, direction.y, direction.z);
@@ -785,7 +785,7 @@ cs::csLightState *add_point_light(cs::csWorld *world,
 {
   float rnd = (float) rand() / (float) RAND_MAX;
 
-  auto entity     = new cs::csEntity("Point");
+  auto entity = new cs::csEntity("Point");
   auto lightState = new cs::csLightState("PointLight");
 //  auto testState  = new TestHandler01(position, range * 0.25f, 0.5f * rnd);
   entity->AttachState(lightState);
@@ -810,9 +810,9 @@ csOwned<cs::iMaterial> generate_color_material(const cs::csColor4f &color)
 
 
   auto roughness = sg->Add<cs::csSGConstFloat>("Roughness").toRef();
-  auto diffuse   = sg->Add<cs::csSGConstColor3>("Diffuse").toRef();
-  auto alpha     = sg->Add<cs::csSGConstFloat>("Alpha").toRef();
-  auto normal    = sg->Add<cs::csSGConstColor3>("Normal").toRef();
+  auto diffuse = sg->Add<cs::csSGConstColor3>("Diffuse").toRef();
+  auto alpha = sg->Add<cs::csSGConstFloat>("Alpha").toRef();
+  auto normal = sg->Add<cs::csSGConstColor3>("Normal").toRef();
 
   roughness->SetValue(1.0f);
   diffuse->SetValue(color.r, color.g, color.b);
@@ -833,7 +833,7 @@ csOwned<cs::iMaterial> generate_color_material(const cs::csColor4f &color)
     csOwned<cs::iShaderGraphCompiler> compiler = compilerFactory->Create();
     if (compiler)
     {
-      cs::iShaderGraphCompiler::Parameters parameters {};
+      cs::iShaderGraphCompiler::Parameters parameters{};
       memset(&parameters, 0, sizeof(parameters));
       if (compiler->Compile(sg, parameters))
       {
@@ -849,9 +849,9 @@ csOwned<cs::iMaterial> generate_color_material(const cs::csColor4f &color)
 void generate_axis_grid(cs::csWorld *world)
 {
   auto sphere = create_sphere_mesh(0.25, 16, 12.0f).toRef();
-  auto matR   = cs::csAssetManager::Get()->Get<cs::iMaterial>("/materials/DefaultRed.matinstance").toRef();
-  auto matG   = cs::csAssetManager::Get()->Get<cs::iMaterial>("/materials/DefaultGreen.matinstance").toRef();
-  auto matB   = cs::csAssetManager::Get()->Get<cs::iMaterial>("/materials/DefaultBlue.matinstance").toRef();
+  auto matR = cs::csAssetManager::Get()->Get<cs::iMaterial>("/materials/DefaultRed.matinstance").toRef();
+  auto matG = cs::csAssetManager::Get()->Get<cs::iMaterial>("/materials/DefaultGreen.matinstance").toRef();
+  auto matB = cs::csAssetManager::Get()->Get<cs::iMaterial>("/materials/DefaultBlue.matinstance").toRef();
 
   auto meshR = new cs::csMesh();
   auto meshG = new cs::csMesh();
@@ -864,11 +864,11 @@ void generate_axis_grid(cs::csWorld *world)
   meshB->AddSubMesh(sphere, 0);
 
 
-  int      gridSize = 10;
-  for (int i        = 0; i < gridSize; i++)
+  int gridSize = 10;
+  for (int i = 0; i < gridSize; i++)
   {
     {
-      auto entity          = new cs::csEntity();
+      auto entity = new cs::csEntity();
       auto meshStateSphere = new cs::csStaticMeshState("Mesh");
       meshStateSphere->SetStatic(true);
       meshStateSphere->GetTransform().SetTranslation((float) (i + 1) * 0.5f, 0.0f, 0.0f).Finish();
@@ -877,7 +877,7 @@ void generate_axis_grid(cs::csWorld *world)
       world->Attach(entity);
     }
     {
-      auto entity          = new cs::csEntity();
+      auto entity = new cs::csEntity();
       auto meshStateSphere = new cs::csStaticMeshState("Mesh");
       meshStateSphere->SetStatic(true);
       meshStateSphere->GetTransform().SetTranslation(0.0f, (float) (i + 1) * 0.5f, 0.0f).Finish();
@@ -886,7 +886,7 @@ void generate_axis_grid(cs::csWorld *world)
       world->Attach(entity);
     }
     {
-      auto entity          = new cs::csEntity();
+      auto entity = new cs::csEntity();
       auto meshStateSphere = new cs::csStaticMeshState("Mesh");
       meshStateSphere->SetStatic(true);
       meshStateSphere->GetTransform().SetTranslation(0.0f, 0.0f, (float) (i + 1) * 0.5f).Finish();
@@ -902,7 +902,7 @@ void generate_cube_fbx(cs::csWorld *world)
 {
 
   auto meshData = cs::csAssetManager::Get()->Get<cs::csMesh>("/cube2.fbx");
-  auto mesh     = meshData.Data();
+  auto mesh = meshData.Data();
 
   csAssetRef<iMaterial> mat;
   mesh = new cs::csMesh();
@@ -916,7 +916,7 @@ void generate_cube_fbx(cs::csWorld *world)
     mesh->SetDefaultMaterial(i, dustMaterial);
   }
 
-  auto entity          = new cs::csEntity();
+  auto entity = new cs::csEntity();
   auto meshStateSphere = new cs::csStaticMeshState("Mesh");
   meshStateSphere->SetStatic(true);
   meshStateSphere->GetTransform().SetTranslation(5.0f, 0.0f, 0.4f).Finish();
@@ -935,12 +935,51 @@ void generate_exit_game(cs::csWorld *world)
 }
 
 
+class LightHandle : public csEntityState
+{
+public:
+  LightHandle()
+      : csEntityState()
+  {
+    SetNeedUpdate(true);
+  }
+
+  void Update(float tpf) override
+  {
+    m_rotation += tpf * 0.1f;
+
+    csVector3f p = csVector3f(::cos(m_rotation) * 10.0f, 5.0f, ::sin(m_rotation) * 10.0f);
+
+    GetRoot()->GetTransform()
+        .SetTranslation(p)
+        .LookAt(csVector3f(0.0f, 0.0f, 0.0f))
+        .Finish();
+
+    csVector3f t = GetRoot()->GetTransform().GetTranslation();
+
+    float pi2 = M_PI * 2.0f;
+    if (m_rotation > pi2)
+    {
+      m_rotation -= pi2;
+    }
+
+    if (csInput::IsKeyPressed(eK_Space))
+    {
+      printf("%.2f\n", m_rotation);
+      fflush(stdout);
+    }
+  }
+
+private:
+  float m_rotation = 0.0f;//M_PI_2;
+};
+
 void setup_world(cs::csWorld *world)
 {
 
-  auto                  assetMan        = cs::csAssetManager::Get();
-  auto                  rawMatData      = assetMan->Get<cs::iMaterial>("/materials/Default.mat");
-  auto                  rawMat          = rawMatData.Data();
+  auto assetMan = cs::csAssetManager::Get();
+  auto rawMatData = assetMan->Get<cs::iMaterial>("/materials/Default.mat");
+  auto rawMat = rawMatData.Data();
 //  csAssetPool::Instance().Put(rawMat);
   csAssetRef<iMaterial> material(rawMat);
   csAssetRef<iMaterial> skinnedMaterial = assetMan->Get<cs::iMaterial>("/materials/DefaultSkinned.mat");
@@ -951,7 +990,7 @@ void setup_world(cs::csWorld *world)
   generate_camera(world);
   generate_physics(world, material);
 //  generate_batched_test_grid(world, material);
-  //generate_test_grid(world, material);
+  generate_test_grid(world, material);
   generate_test_cube(world, material);
   generate_axis_grid(world);
 //  generate_cube_fbx(world);
@@ -970,9 +1009,10 @@ void setup_world(cs::csWorld *world)
                                            cs::csColor4f(1.0f, 1.0f, 1.0f, 1.0f) * 0.9f,
                                            true,
                                            true);
-  shadowLightState->GetTransform().SetTranslation(0.5, 5, 5)
-                  .LookAt(csVector3f(0, 0, 0), csVector3f(0, 1, 0))
-                  .Finish();
+  shadowLightState->GetEntity()->AttachState(new LightHandle());
+//  shadowLightState->GetTransform().SetTranslation(0.5, 5, 5)
+//      .LookAt(csVector3f(0, 0, 0), csVector3f(0, 1, 0))
+//      .Finish();
 
   add_directional_light(world,
                         cs::csVector3f(1.0f, 0.2f, 0.0f),
@@ -1020,7 +1060,7 @@ csOwned<cs::iMaterial> create_sg_material()
     csOwned<cs::iShaderGraphCompiler> compiler = compilerFactory->Create();
     if (compiler)
     {
-      cs::iShaderGraphCompiler::Parameters parameters {};
+      cs::iShaderGraphCompiler::Parameters parameters{};
       memset(&parameters, 0, sizeof(parameters));
       if (compiler->Compile(sg, parameters))
       {

@@ -268,6 +268,15 @@ void csGL4PSSMRenderer::RenderShadowBuffer(const csGL4DirectionalLight *directio
     view.SetLookAt(centerPosition, centerPosition + directionalLight->GetDirection(), csVector3f(0, 1, 0));
     viewInv.SetLookAtInv(centerPosition, centerPosition + directionalLight->GetDirection(), csVector3f(0, 1, 0));
 
+//    printf ("%.2f %.2f %.2f -> %.2f %.2f %.2f\n",
+//            centerPosition.x,
+//            centerPosition.y,
+//            centerPosition.z,
+//            directionalLight->GetDirection().x,
+//            directionalLight->GetDirection().y,
+//            directionalLight->GetDirection().z
+//            );
+//    fflush(stdout);
 
     csVector3f xAxis            = viewInv.GetXAxis().Normalize();
     csVector3f yAxis            = viewInv.GetYAxis().Normalize();

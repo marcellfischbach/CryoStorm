@@ -61,8 +61,8 @@ struct CS_CORE_API csQuaternion
   CS_FORCEINLINE void SetAxisAngle(float axisX, float axisY, float axisZ, float angle)
   {
     float angle2 = angle / 2.0f;
-    float c      = std::cos(angle2);
-    float s      = std::sin(angle2);
+    float c = std::cos(angle2);
+    float s = std::sin(angle2);
     this->x = axisX * s;
     this->y = axisY * s;
     this->z = axisZ * s;
@@ -83,35 +83,102 @@ struct CS_CORE_API csQuaternion
   CS_NODISCARD CS_FORCEINLINE static csQuaternion FromAxisAngle(float x, float y, float z, float angle)
   {
     float angle2 = angle / 2.0f;
-    float c      = ceCos(angle2);
-    float s      = ceSin(angle2);
+    float c = ceCos(angle2);
+    float s = ceSin(angle2);
     return csQuaternion(x * s, y * s, z * s, c);
   }
 
 
   CS_NODISCARD CS_FORCEINLINE static csQuaternion FromMatrix(const csMatrix3f &m)
   {
-    float qw  = ceSqrt(1.0f + m.m00 + m.m11 + m.m22) / 2.0f;
-    float qw4 = qw * 4.0f;
-    return csQuaternion(
-        (m.m21 - m.m12) / qw4,
-        (m.m02 - m.m20) / qw4,
-        (m.m10 - m.m01) / qw4,
-        qw
-    );
+    float tr = m.m00 + m.m11 + m.m22;
+
+    float qx = 0;
+    float qy = 0;
+    float qz = 0;
+    float qw = 1;
+
+    if (tr > 0)
+    {
+      float S = ceSqrt(tr + 1.0f) * 2; // S=4*qw
+      qx = (m.m21 - m.m12) / S;
+      qy = (m.m02 - m.m20) / S;
+      qz = (m.m10 - m.m01) / S;
+      qw = 0.25f * S;
+    }
+    else if ((m.m00 > m.m11) & (m.m00 > m.m22))
+    {
+      float S = ceSqrt(1.0f + m.m00 - m.m11 - m.m22) * 2; // S=4*qx
+      qx = 0.25f * S;
+      qy = (m.m01 + m.m10) / S;
+      qz = (m.m02 + m.m20) / S;
+      qw = (m.m21 - m.m12) / S;
+    }
+    else if (m.m11 > m.m22)
+    {
+      float S = ceSqrt(1.0f + m.m11 - m.m00 - m.m22) * 2; // S=4*qy
+      qx = (m.m01 + m.m10) / S;
+      qy = 0.25f * S;
+      qz = (m.m12 + m.m21) / S;
+      qw = (m.m02 - m.m20) / S;
+    }
+    else
+    {
+      float S = ceSqrt(1.0f + m.m22 - m.m00 - m.m11) * 2; // S=4*qz
+      qx = (m.m02 + m.m20) / S;
+      qy = (m.m12 + m.m21) / S;
+      qz = 0.25f * S;
+      qw = (m.m10 - m.m01) / S;
+    }
+
+    return csQuaternion(qx, qy, qz, qw);
+
   }
 
 
   CS_NODISCARD CS_FORCEINLINE static csQuaternion FromMatrix(const csMatrix4f &m)
   {
-    float qw  = ceSqrt(1.0f + m.m00 + m.m11 + m.m22) / 2.0f;
-    float qw4 = qw * 4.0f;
-    return csQuaternion(
-        (m.m21 - m.m12) / qw4,
-        (m.m02 - m.m20) / qw4,
-        (m.m10 - m.m01) / qw4,
-        qw
-    );
+    float tr = m.m00 + m.m11 + m.m22;
+
+    float qx = 0;
+    float qy = 0;
+    float qz = 0;
+    float qw = 1;
+
+    if (tr > 0)
+    {
+      float S = ceSqrt(tr + 1.0f) * 2; // S=4*qw
+      qx = (m.m21 - m.m12) / S;
+      qy = (m.m02 - m.m20) / S;
+      qz = (m.m10 - m.m01) / S;
+      qw = 0.25f * S;
+    }
+    else if ((m.m00 > m.m11) & (m.m00 > m.m22))
+    {
+      float S = ceSqrt(1.0f + m.m00 - m.m11 - m.m22) * 2; // S=4*qx
+      qx = 0.25f * S;
+      qy = (m.m01 + m.m10) / S;
+      qz = (m.m02 + m.m20) / S;
+      qw = (m.m21 - m.m12) / S;
+    }
+    else if (m.m11 > m.m22)
+    {
+      float S = ceSqrt(1.0f + m.m11 - m.m00 - m.m22) * 2; // S=4*qy
+      qx = (m.m01 + m.m10) / S;
+      qy = 0.25f * S;
+      qz = (m.m12 + m.m21) / S;
+      qw = (m.m02 - m.m20) / S;
+    }
+    else
+    {
+      float S = ceSqrt(1.0f + m.m22 - m.m00 - m.m11) * 2; // S=4*qz
+      qx = (m.m02 + m.m20) / S;
+      qy = (m.m12 + m.m21) / S;
+      qz = 0.25f * S;
+      qw = (m.m10 - m.m01) / S;
+    }
+
+    return csQuaternion(qx, qy, qz, qw);
   }
 
 
@@ -166,7 +233,7 @@ struct CS_CORE_API csQuaternion
         q0.y * f0 + q1.y * f1,
         q0.z * f0 + q1.z * f1,
         q0.w * f0 + q1.w * f1
-        );
+    );
   }
 
   CS_FORCEINLINE friend csQuaternion operator*(const csQuaternion &q, float f)
@@ -177,20 +244,19 @@ struct CS_CORE_API csQuaternion
   CS_FORCEINLINE friend csQuaternion operator+(const csQuaternion &q0, const csQuaternion &q1)
   {
     return csQuaternion(q0.x + q1.x,
-                      q0.y + q1.y,
-                      q0.z + q1.z,
-                      q0.w + q1.w);
+                        q0.y + q1.y,
+                        q0.z + q1.z,
+                        q0.w + q1.w);
   }
 
 
   CS_FORCEINLINE friend csQuaternion operator-(const csQuaternion &q0, const csQuaternion &q1)
   {
     return csQuaternion(q0.x - q1.x,
-                      q0.y - q1.y,
-                      q0.z - q1.z,
-                      q0.w - q1.w);
+                        q0.y - q1.y,
+                        q0.z - q1.z,
+                        q0.w - q1.w);
   }
-
 
 
   CS_FORCEINLINE friend csQuaternion operator*(const csQuaternion &q0, const csQuaternion &q1)

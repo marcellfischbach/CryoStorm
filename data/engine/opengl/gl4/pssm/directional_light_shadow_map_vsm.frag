@@ -15,7 +15,7 @@ uniform mat4 cs_ViewProjectionMatrixInv;
 
 const float g_VSMMinVariance = 0.000001;// Minimum variance for VSM
 
-const float g_LBRAmount = 0.01;
+const float g_LBRAmount = 0.5;
 
 in vec2 texCoord;
 
@@ -89,19 +89,14 @@ float calc_directional_shadow(vec3 world_position, float distance_to_camera)
     }
 
     vec4 camSpace = cs_ShadowMapViewProjectionMatrix[matIndex] * vec4(world_position, 1.0);
-//    camSpace.xy /= camSpace.w;
-//    camSpace.xy = camSpace.xy * 0.5 + 0.5;
     camSpace /= camSpace.w;
     camSpace = camSpace * 0.5 + 0.5;
-    //    camSpace.z -= cs_LayersBias;
 
-    float shadow = 0.0;
-    {
-        vec2 moments = texture (cs_ShadowBufferDatas, vec3(camSpace.xy, layer)).xy + vec2(cs_LayersBias, 0.0);
-        shadow +=  ChebyshevUpperBound(moments, camSpace.z, g_VSMMinVariance);
-    }
 
-    shadow = LBR(shadow);
+    vec2 moments = texture (cs_ShadowBufferDatas, vec3(camSpace.xy, layer)).xy + vec2(cs_LayersBias, 0.0);
+    float shadow = ChebyshevUpperBound(moments, camSpace.z, g_VSMMinVariance);
+
+//    shadow = LBR(shadow);
     return shadow;
 
     //    float shadow_value = texture(cs_ShadowBuffers, vec4(camSpace.xy, layer , camSpace.z));
