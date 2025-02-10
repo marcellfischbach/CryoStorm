@@ -10,7 +10,7 @@ using namespace cs;
 
 CameraHandler::CameraHandler()
 //        : EntityState(), m_speed(4.0f), m_rotSpeed(0.0025f), m_rotY(1.88), m_rotX(-0.96)
-        : csEntityState(), m_speed(4.0f), m_rotSpeed(0.0025f), m_rotY(4.02), m_rotX(0.33)
+        : csEntityState(), m_speed(4.0f), m_rotSpeed(0.0025f), m_rotY(0.46), m_rotX(-0.58)
 {
 
   SetNeedUpdate(true);
@@ -84,6 +84,18 @@ void CameraHandler::Update(float tpf)
   csQuaternion rotX = csQuaternion::FromAxisAngle(1.0f, 0.0f, 0.0f, m_rotX);
   csQuaternion rot  = rotX * rotY;
 
+
+  if (csInput::IsKeyPressed(eKey::eK_P))
+  {
+    printf ("(%.2f %.2f %.2f) @ (%.2f %.2f)\n",
+            tr.GetTranslation().x,
+            tr.GetTranslation().y,
+            tr.GetTranslation().z,
+            m_rotX,
+            m_rotY
+            );
+    fflush(stdout);
+  }
 
   tr.SetTranslation(tr.GetTranslation() + dir)
     .SetRotation(rot)

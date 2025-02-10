@@ -5,15 +5,22 @@ layout (location = 0) out vec2 cs_FragColor;
 //
 //in vec2 texCoord;
 
+in vec2 depth;
+
+
 void main()
 {
-    cs_FragColor.x = gl_FragDepth;
+    // this actually is gl_Position.z / gl_Position.w
+    float fragDepth = depth.x / depth.y;
+    fragDepth = fragDepth * 0.5 + 0.5;
+//    float fragDepth = depth.x;
+    cs_FragColor.x = fragDepth;
 
     // Compute partial derivatives of depth.
-    float dx = dFdx(gl_FragDepth);
-    float dy = dFdy(gl_FragDepth);
-    // Compute second moment over the pixel extents.
-    cs_FragColor.y = gl_FragDepth * gl_FragDepth + 0.25 * (dx * dx + dy * dy);
+    float dx = dFdx(fragDepth);
+    float dy = dFdy(fragDepth);
+    cs_FragColor.y = fragDepth * fragDepth + 0.25 * (dx * dx + dy * dy);
+//    cs_FragColor.y = fragDepth * fragDepth; // + 0.25 * (dx * dx + dy * dy);
     //
 //    float alpha = texture(cs_Diffuse, texCoord).a;
 //    if (alpha < 0.5)

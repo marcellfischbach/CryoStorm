@@ -442,7 +442,7 @@ csGL4PSSMShadowBufferObject csGL4PSSMRenderer::CreateDirectionalLightShadowBuffe
     colorDesc.Width   = m_directionalLightShadowBufferSize;
     colorDesc.Height  = m_directionalLightShadowBufferSize;
     colorDesc.Layers  = 4;
-    colorDesc.Format  = ePF_RG16F;
+    colorDesc.Format  = ePF_RG32F;
     colorDesc.MipMaps = false;
     sbo.ShadowColor   = m_device->CreateTexture(colorDesc).Query<csGL4Texture2DArray>();
     sbo.ShadowColor->SetSampler(GetShadowBufferColorSampler());
@@ -591,7 +591,7 @@ iSampler *csGL4PSSMRenderer::GetShadowBufferColorSampler()
   if (!m_shadowBufferColorSampler)
   {
     m_shadowBufferColorSampler = m_device->CreateSampler();
-    m_shadowBufferColorSampler->SetFilterMode(eFM_MinMagNearest);
+    m_shadowBufferColorSampler->SetFilterMode(eFM_MinMagLinear);
     m_shadowBufferColorSampler->SetAnisotropy(1);
     m_shadowBufferColorSampler->SetAddressU(eTAM_Clamp);
     m_shadowBufferColorSampler->SetAddressV(eTAM_Clamp);

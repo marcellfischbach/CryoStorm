@@ -17,6 +17,7 @@ static GLint csGL4PixelFormatInternal[] = {
     GL_DEPTH_COMPONENT, // ePF_Depth
     GL_DEPTH_STENCIL,   // ePF_DepthStencil
     GL_RG,              // ePF_RG16F
+    GL_RG,              // ePF_RG32F
 };
 
 static GLint csGL4PixelFormatSizedInternal[] = {
@@ -29,6 +30,7 @@ static GLint csGL4PixelFormatSizedInternal[] = {
     GL_DEPTH_COMPONENT32, // ePF_Depth
     GL_DEPTH24_STENCIL8,  // ePF_DepthStencil
     GL_RG16F,             // ePF_RG16F
+    GL_RG32F,             // ePF_RG32F
 };
 
 static GLint csGL4PixelFormatClient[] = {
@@ -40,6 +42,7 @@ static GLint csGL4PixelFormatClient[] = {
     GL_DEPTH_COMPONENT, // ePF_Depth
     GL_DEPTH_STENCIL, // ePF_DepthStencil
     GL_RG,    // ePF_RG16F,
+    GL_RG,    // ePF_RG32F,
 };
 
 
@@ -52,6 +55,7 @@ static GLint csGL4PixelFormatClientDataType[] = {
     GL_UNSIGNED_INT,      // ePF_DepthStencil
     GL_UNSIGNED_INT_24_8,  // ePF_DepthStencil
     GL_FLOAT,             // ePF_RG16F
+    GL_FLOAT,             // ePF_RG32F
 };
 
 }

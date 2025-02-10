@@ -13,22 +13,44 @@ uniform sampler2D cs_DepthBuffer;
 uniform mat4 cs_ViewMatrix;
 uniform mat4 cs_ViewProjectionMatrixInv;
 
-const float g_MinVariance = 0.0;
+const float g_VSMMinVariance = 0.000001;// Minimum variance for VSM
+
+const float g_LBRAmount = 0.01;
 
 in vec2 texCoord;
 
-float ChebyshevUpperBound(vec2 Moments, float distance_to_light)
+float linstep(float min, float max, float v)
 {
-    // One-tailed inequality valid if t > Moments.x
-    float p = (distance_to_light <= Moments.x) ? 1.0 : 0.0;
-    // Compute variance.
-    float Variance = Moments.y - (Moments.x * Moments.x);
-    Variance = max(Variance, g_MinVariance);
-    // Compute probabilistic upper bound.
-    float d = distance_to_light - Moments.x;
-    float p_max = Variance / (Variance + d * d);
-    return p;
-    //return max(p, p_max);
+    return clamp((v - min) / (max - min), 0, 1);
+}
+
+// Light bleeding reduction
+float LBR(float p)
+{
+    // Lots of options here if we don't care about being an upper bound.
+    // Use whatever falloff function works well for your scene.
+    return linstep(g_LBRAmount, 1, p);
+    //return smoothstep(g_LBRAmount, 1, p);
+}
+
+
+float ChebyshevUpperBound(vec2 shadow_buffer, float distance_to_light, float MinVariance)
+{
+    // Standard shadow map comparison
+    float p = (distance_to_light <= shadow_buffer.x) ? 1.0 : 0.0;
+//    return p;
+
+
+    // Compute variance
+    float Variance = shadow_buffer.y - (shadow_buffer.x * shadow_buffer.x);
+    Variance = max(Variance, MinVariance);
+//    Variance = MinVariance;
+
+    // Compute probabilistic upper bound
+    float d     = distance_to_light - shadow_buffer.x;
+    float p_max = Variance / (Variance + d*d);
+
+    return max(p, p_max);
 }
 
 float calc_directional_shadow(vec3 world_position, float distance_to_camera)
@@ -67,16 +89,23 @@ float calc_directional_shadow(vec3 world_position, float distance_to_camera)
     }
 
     vec4 camSpace = cs_ShadowMapViewProjectionMatrix[matIndex] * vec4(world_position, 1.0);
+//    camSpace.xy /= camSpace.w;
+//    camSpace.xy = camSpace.xy * 0.5 + 0.5;
     camSpace /= camSpace.w;
-    camSpace  = camSpace * 0.5 + 0.5;
-//    camSpace.z -= cs_LayersBias;
+    camSpace = camSpace * 0.5 + 0.5;
+    //    camSpace.z -= cs_LayersBias;
 
-    vec2 moments = texture (cs_ShadowBufferDatas, vec3(camSpace.xy, layer)).xy;
-    return moments.x * 1000000.0;
-    return ChebyshevUpperBound(moments, camSpace.z);
+    float shadow = 0.0;
+    {
+        vec2 moments = texture (cs_ShadowBufferDatas, vec3(camSpace.xy, layer)).xy + vec2(cs_LayersBias, 0.0);
+        shadow +=  ChebyshevUpperBound(moments, camSpace.z, g_VSMMinVariance);
+    }
 
-//    float shadow_value = texture(cs_ShadowBuffers, vec4(camSpace.xy, layer , camSpace.z));
-//    return mix(shadow_value, 1.0, fadeOut);
+    shadow = LBR(shadow);
+    return shadow;
+
+    //    float shadow_value = texture(cs_ShadowBuffers, vec4(camSpace.xy, layer , camSpace.z));
+    //    return mix(shadow_value, 1.0, fadeOut);
 }
 
 

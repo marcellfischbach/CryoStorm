@@ -386,8 +386,8 @@ void generate_camera(cs::csWorld *world)
   cameraEntity->AttachState(cameraState);
   cameraEntity->AttachState(cameraHandler);
   cameraEntity->GetRoot()->GetTransform()
-              .SetTranslation(cs::csVector3f(-5, 5, -5))
-              .LookAt(cs::csVector3f(0, 0, 0))
+              .SetTranslation(cs::csVector3f(0.24f, 2.07f, -4.15f))
+//              .LookAt(cs::csVector3f(0, 0, 0))
               .Finish();
   world->Attach(cameraEntity);
   world->SetMainCamera(cameraState);
@@ -764,7 +764,7 @@ cs::csLightState *add_directional_light(cs::csWorld *world,
   lightState->SetType(cs::eLT_Directional);
   lightState->SetColor(color);
   lightState->SetShadowMapBias(0.003f);
-  lightState->SetShadowMapBias(0.00f);
+  lightState->SetShadowMapBias(0.001f);
   lightState->SetStatic(isStatic);
   lightState->SetCastShadow(castsShadow);
   lightState->GetTransform()
@@ -970,7 +970,7 @@ void setup_world(cs::csWorld *world)
                                            cs::csColor4f(1.0f, 1.0f, 1.0f, 1.0f) * 0.9f,
                                            true,
                                            true);
-  shadowLightState->GetTransform().SetTranslation(5, 5, 5)
+  shadowLightState->GetTransform().SetTranslation(0.5, 5, 5)
                   .LookAt(csVector3f(0, 0, 0), csVector3f(0, 1, 0))
                   .Finish();
 

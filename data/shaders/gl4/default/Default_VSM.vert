@@ -8,11 +8,13 @@ uniform mat4 cs_ModelViewProjectionMatrix;
 
 //out vec2 texCoord;
 
+out vec2 depth;
 
 void main()
 {
     gl_Position = cs_ModelViewProjectionMatrix * cs_Position;
 
+    depth = vec2(gl_Position.z, gl_Position.w);
 //    texCoord = cs_UV;
  }
 
