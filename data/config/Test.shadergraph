@@ -6,13 +6,10 @@ shaderGraph {
   blending Off,
 
   nodes {
-    resource "cs::csSGResourceColor3" id_0 "Diffuse" x:-355.000000 y:213.000000 {
-      defaultFloat 1 0 0,
+    resource "cs::csSGResourceFloat" id_1 "Alpha" x:-549.000000 y:44.000000 {
+      defaultFloat 1,
     },
-    resource "cs::csSGResourceFloat" id_1 "Alpha" x:-312.000000 y:302.000000 {
-      defaultFloat 0.1,
-    },
-    resource "cs::csSGResourceFloat" id_2 "Metallic" x:-239.000000 y:453.000000 {
+    resource "cs::csSGResourceFloat" id_2 "Metallic" x:-530.000000 y:323.000000 {
       defaultFloat 0,
     },
     node "cs::csSGConstColor4" id_5 x:-557.000000 y:-49.000000 {
@@ -21,19 +18,11 @@ shaderGraph {
       value "B" 0.000000,
       value "A" 0.000000,
     },
-    node "cs::csSGDecomposeVec4" id_4 x:-422.000000 y:-51.000000 {
-      binding  "V" id_5 "V",
-    },
-    node "cs::csSGVec3" id_6 x:-272.000000 y:-51.000000 {
-      binding  "X" id_4 "X",
-      binding  "Y" id_4 "Y",
-      binding  "Z" id_4 "Z",
-    },
-    node "cs::csSGConstFloat" id_3 x:-418.000000 y:143.000000 {
-      value "X" 1.000000,
+    node "cs::csSGConstFloat" id_3 x:-481.000000 y:193.000000 {
+      value "X" 0.000000,
     },
     shaderGraph x:141.000000 y:-39.000000 {
-      binding  "Diffuse" id_6 "V",
+      binding  "Diffuse" id_5 "V",
       binding  "Alpha" id_1 "V",
       binding  "Roughness" id_3 "V",
       value "Normal" 0.000000,

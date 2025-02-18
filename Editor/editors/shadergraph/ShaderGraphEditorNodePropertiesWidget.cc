@@ -6,6 +6,8 @@
 #include <csCore/graphics/shadergraph/csShaderGraph.hh>
 #include <csCore/graphics/shadergraph/csSGNode.hh>
 
+#include <QCheckBox>
+#include <QComboBox>
 #include <QGridLayout>
 #include <QLabel>
 #include <QLineEdit>
@@ -31,6 +33,17 @@ ShaderGraphEditorNodePropertiesWidget::ShaderGraphEditorNodePropertiesWidget(QWi
   memset(m_resourceWidgets.valueInt, 0, sizeof(QSpinBox *) * 4);
   m_resourceWidgets.valueLocator = nullptr;
 
+  m_shaderGraphWidget.receiveShadow = nullptr;
+  m_shaderGraphWidget.alphaThresholdLabel = nullptr;
+  m_shaderGraphWidget.alphaThreshold = nullptr;
+  m_shaderGraphWidget.alphaDiscardLabel = nullptr;
+  m_shaderGraphWidget.alphaDiscard = nullptr;
+  m_shaderGraphWidget.blendingModeLabel = nullptr;
+  m_shaderGraphWidget.blendingMode = nullptr;
+  m_shaderGraphWidget.lightingModeLabel = nullptr;
+  m_shaderGraphWidget.lightingMode = nullptr;
+  m_shaderGraphWidget.separator = nullptr;
+
 }
 
 ShaderGraphEditorNodePropertiesWidget::~ShaderGraphEditorNodePropertiesWidget()
@@ -51,8 +64,13 @@ void ShaderGraphEditorNodePropertiesWidget::SetNode(cs::csSGNode *node)
   RemoveAll();
 
   int row = 1;
+  if (node == m_shaderGraph->Root())
+  {
+    row += CreateShaderGraphProperties(row);
+  }
   row += CreateWidgetsForResource(row);
   row += CreateWidgetsForInputs(row);
+
 
   m_layout->addItem(m_spacer, row, 0);
 
@@ -75,10 +93,10 @@ void ShaderGraphEditorNodePropertiesWidget::WriteValuesToNode()
   {
     input.input->SetScalar(input.value->value());
   }
-  
+
   if (m_node->IsInstanceOf<csSGResourceNode>())
   {
-    csSGResourceNode* resource = m_node->Query<csSGResourceNode>();
+    csSGResourceNode *resource = m_node->Query<csSGResourceNode>();
 
     if (m_resourceWidgets.lineEditName)
     {
@@ -91,7 +109,7 @@ void ShaderGraphEditorNodePropertiesWidget::WriteValuesToNode()
     }
 
     std::array<float, 16> floats = resource->GetDefaultFloats();
-    for (size_t i=0; i<16; i++)
+    for (size_t i = 0; i < 16; i++)
     {
       if (m_resourceWidgets.valueFloat[i])
       {
@@ -101,7 +119,7 @@ void ShaderGraphEditorNodePropertiesWidget::WriteValuesToNode()
     resource->SetDefault(floats);
 
     std::array<int, 4> ints = resource->GetDefaultInts();
-    for (size_t i=0; i<4; i++)
+    for (size_t i = 0; i < 4; i++)
     {
       if (m_resourceWidgets.valueInt[i])
       {
@@ -114,6 +132,34 @@ void ShaderGraphEditorNodePropertiesWidget::WriteValuesToNode()
       resource->SetDefault(csAssetLocator(m_resourceWidgets.valueLocator->text().toStdString()));
     }
   }
+  if (m_node == m_shaderGraph->Root())
+  {
+    if (m_shaderGraphWidget.receiveShadow)
+    {
+      m_shaderGraph->SetReceiveShadow(m_shaderGraphWidget.receiveShadow->isChecked());
+    }
+    if (m_shaderGraphWidget.lightingMode)
+    {
+      m_shaderGraph->SetLightingMode((csShaderGraph::eLightingMode) m_shaderGraphWidget.lightingMode->currentIndex());
+    }
+    if (m_shaderGraphWidget.blendingMode)
+    {
+      m_shaderGraph->SetBlendingMode((csShaderGraph::eBlendingMode) m_shaderGraphWidget.blendingMode->currentIndex());
+    }
+    if (m_shaderGraphWidget.alphaThreshold && m_shaderGraphWidget.alphaDiscard)
+    {
+      m_shaderGraph->SetAlphaDiscard((float) m_shaderGraphWidget.alphaThreshold->value(),
+                                     (eCompareFunc) m_shaderGraphWidget.alphaDiscard->currentIndex());
+    }
+    printf("ShaderGraph RS[%d] L[%d] B[%d] A[%d:%f]\n",
+           m_shaderGraph->IsReceiveShadow(),
+           m_shaderGraph->GetLightingMode(),
+           m_shaderGraph->GetBlendingMode(),
+           m_shaderGraph->GetAlphaDiscard_Func(),
+           m_shaderGraph->GetAlphaDiscard_Threshold()
+    );
+    fflush(stdout);
+  }
 
   if (resourceNameChanged)
   {
@@ -124,73 +170,146 @@ void ShaderGraphEditorNodePropertiesWidget::WriteValuesToNode()
 
 void ShaderGraphEditorNodePropertiesWidget::RemoveAll()
 {
-  for (const auto &item: m_inputWidgets)
+#define REMOVE_AND_DELETE(v) \
+  if (v)\
+  {                          \
+    m_layout->removeWidget(v); \
+    v->deleteLater();        \
+    v = nullptr;             \
+  }
+
+#define REMOVE_DELETE_AND_UNBIND(v) \
+  if (v)\
+  {                          \
+    m_layout->removeWidget(v);      \
+    Unbind(v);\
+    v->deleteLater();        \
+    v = nullptr;             \
+  }
+
+  for (auto &item: m_inputWidgets)
   {
-    if (item.label)
-    {
-      m_layout->removeWidget(item.label);
-      item.label->deleteLater();
-    }
-    if (item.value)
-    {
-      m_layout->removeWidget(item.value);
-      Unbind(item.value);
-      item.value->deleteLater();
-    }
+    REMOVE_AND_DELETE(item.label);
+    REMOVE_DELETE_AND_UNBIND(item.value);
   }
   m_inputWidgets.clear();
 
-  if (m_resourceWidgets.labelName)
-  {
-    m_layout->removeWidget(m_resourceWidgets.labelName);
-    m_resourceWidgets.labelName->deleteLater();
-    m_resourceWidgets.labelName = nullptr;
-  }
+  REMOVE_AND_DELETE(m_resourceWidgets.labelName);
+  REMOVE_AND_DELETE(m_resourceWidgets.labelValues);
+  REMOVE_DELETE_AND_UNBIND(m_resourceWidgets.lineEditName);
 
-  if (m_resourceWidgets.labelValues)
-  {
-    m_layout->removeWidget(m_resourceWidgets.labelValues);
-    m_resourceWidgets.labelValues->deleteLater();
-    m_resourceWidgets.labelValues = nullptr;
-  }
-  if (m_resourceWidgets.lineEditName)
-  {
-    m_layout->removeWidget(m_resourceWidgets.lineEditName);
-    Unbind(m_resourceWidgets.lineEditName);
-    m_resourceWidgets.lineEditName->deleteLater();
-    m_resourceWidgets.lineEditName = nullptr;
-  }
 
   for (size_t i = 0; i < 16; i++)
   {
-    if (m_resourceWidgets.valueFloat[i])
-    {
-      m_layout->removeWidget(m_resourceWidgets.valueFloat[i]);
-      Unbind(m_resourceWidgets.valueFloat[i]);
-      m_resourceWidgets.valueFloat[i]->deleteLater();
-      m_resourceWidgets.valueFloat[i] = nullptr;
-    }
+    REMOVE_DELETE_AND_UNBIND(m_resourceWidgets.valueFloat[i])
   }
   for (size_t i = 0; i < 4; i++)
   {
-    if (m_resourceWidgets.valueInt[i])
-    {
-      m_layout->removeWidget(m_resourceWidgets.valueInt[i]);
-      Unbind(m_resourceWidgets.valueInt[i]);
-      m_resourceWidgets.valueInt[i]->deleteLater();
-      m_resourceWidgets.valueInt[i] = nullptr;
-    }
+    REMOVE_DELETE_AND_UNBIND(m_resourceWidgets.valueInt[i])
   }
-  if (m_resourceWidgets.valueLocator)
-  {
-    m_layout->removeWidget(m_resourceWidgets.valueLocator);
-    Unbind(m_resourceWidgets.valueLocator);
-    m_resourceWidgets.valueLocator->deleteLater();
-    m_resourceWidgets.valueLocator = nullptr;
-  }
+  REMOVE_DELETE_AND_UNBIND(m_resourceWidgets.valueLocator);
+
+
+  REMOVE_AND_DELETE(m_shaderGraphWidget.alphaDiscardLabel);
+  REMOVE_AND_DELETE(m_shaderGraphWidget.alphaThresholdLabel);
+  REMOVE_AND_DELETE(m_shaderGraphWidget.blendingModeLabel);
+  REMOVE_AND_DELETE(m_shaderGraphWidget.lightingModeLabel);
+  REMOVE_AND_DELETE(m_shaderGraphWidget.separator);
+  REMOVE_DELETE_AND_UNBIND(m_shaderGraphWidget.receiveShadow);
+  REMOVE_DELETE_AND_UNBIND(m_shaderGraphWidget.alphaDiscard);
+  REMOVE_DELETE_AND_UNBIND(m_shaderGraphWidget.alphaThreshold);
+  REMOVE_DELETE_AND_UNBIND(m_shaderGraphWidget.blendingMode);
+  REMOVE_DELETE_AND_UNBIND(m_shaderGraphWidget.lightingMode);
+
+
+#undef REMOVE_AND_DELETE
+#undef REMOVE_DELETE_AND_UNBIND
 
 
   m_layout->removeItem(m_spacer);
+}
+
+int ShaderGraphEditorNodePropertiesWidget::CreateShaderGraphProperties(int rowStart)
+{
+  m_shaderGraphWidget.blendingModeLabel = new QLabel(tr("Blending"), this);
+  m_shaderGraphWidget.lightingModeLabel = new QLabel(tr("Lighting"), this);
+  m_shaderGraphWidget.alphaDiscardLabel = new QLabel(tr("Alpha Discard"), this);
+  m_shaderGraphWidget.alphaThresholdLabel = new QLabel(tr("Alpha threshold"), this);
+
+  m_shaderGraphWidget.separator = new QFrame(this);
+  m_shaderGraphWidget.separator->setFrameShape(QFrame::HLine);
+  m_shaderGraphWidget.separator->setFrameShadow(QFrame::Sunken);
+  m_shaderGraphWidget.separator->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
+
+  m_shaderGraphWidget.blendingModeLabel->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+  m_shaderGraphWidget.lightingModeLabel->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+  m_shaderGraphWidget.alphaDiscardLabel->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+  m_shaderGraphWidget.alphaThresholdLabel->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+
+
+  m_shaderGraphWidget.receiveShadow = new QCheckBox(tr("Receive shadow"), this);
+  m_shaderGraphWidget.blendingMode = new QComboBox(this);
+  m_shaderGraphWidget.lightingMode = new QComboBox(this);
+  m_shaderGraphWidget.alphaDiscard = new QComboBox(this);
+  m_shaderGraphWidget.alphaThreshold = new QDoubleSpinBox(this);
+
+
+  m_shaderGraphWidget.blendingMode->addItem(tr("Off"));
+  m_shaderGraphWidget.blendingMode->addItem(tr("Alpha"));
+  m_shaderGraphWidget.blendingMode->addItem(tr("Add"));
+  m_shaderGraphWidget.blendingMode->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
+
+  m_shaderGraphWidget.lightingMode->addItem(tr("Default"));
+  m_shaderGraphWidget.lightingMode->addItem(tr("Attenuated"));
+  m_shaderGraphWidget.lightingMode->addItem(tr("Unlit"));
+  m_shaderGraphWidget.lightingMode->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
+
+  m_shaderGraphWidget.alphaDiscard->addItem(tr("Less"));
+  m_shaderGraphWidget.alphaDiscard->addItem(tr("LessOrEqual"));
+  m_shaderGraphWidget.alphaDiscard->addItem(tr("Greater"));
+  m_shaderGraphWidget.alphaDiscard->addItem(tr("GreaterOrEqual"));
+  m_shaderGraphWidget.alphaDiscard->addItem(tr("Equal"));
+  m_shaderGraphWidget.alphaDiscard->addItem(tr("NotEqual"));
+  m_shaderGraphWidget.alphaDiscard->addItem(tr("Always"));
+  m_shaderGraphWidget.alphaDiscard->addItem(tr("Never"));
+  m_shaderGraphWidget.alphaDiscard->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
+
+  m_shaderGraphWidget.alphaThreshold->setButtonSymbols(QAbstractSpinBox::NoButtons);
+  m_shaderGraphWidget.alphaThreshold->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
+
+
+  m_shaderGraphWidget.receiveShadow->setChecked(m_shaderGraph->IsReceiveShadow());
+  m_shaderGraphWidget.lightingMode->setCurrentIndex(m_shaderGraph->GetLightingMode());
+  m_shaderGraphWidget.blendingMode->setCurrentIndex(m_shaderGraph->GetBlendingMode());
+  m_shaderGraphWidget.alphaDiscard->setCurrentIndex(m_shaderGraph->GetAlphaDiscard_Func());
+  m_shaderGraphWidget.alphaThreshold->setValue(m_shaderGraph->GetAlphaDiscard_Threshold());
+
+  Bind(m_shaderGraphWidget.receiveShadow);
+  Bind(m_shaderGraphWidget.lightingMode);
+  Bind(m_shaderGraphWidget.blendingMode);
+  Bind(m_shaderGraphWidget.alphaDiscard);
+  Bind(m_shaderGraphWidget.alphaThreshold);
+
+  int i = 0;
+  m_layout->addWidget(m_shaderGraphWidget.receiveShadow, rowStart + i, 0, 1, 13);
+  i++;
+  m_layout->addWidget(m_shaderGraphWidget.blendingModeLabel, rowStart + i, 0, 1, 1);
+  m_layout->addWidget(m_shaderGraphWidget.blendingMode, rowStart + i, 1, 1, 12);
+  i++;
+  m_layout->addWidget(m_shaderGraphWidget.lightingModeLabel, rowStart + i, 0, 1, 1);
+  m_layout->addWidget(m_shaderGraphWidget.lightingMode, rowStart + i, 1, 1, 12);
+  i++;
+
+  m_layout->addWidget(m_shaderGraphWidget.alphaDiscardLabel, rowStart + i, 0, 1, 1);
+  m_layout->addWidget(m_shaderGraphWidget.alphaDiscard, rowStart + i, 1, 1, 12);
+  i++;
+
+  m_layout->addWidget(m_shaderGraphWidget.alphaThresholdLabel, rowStart + i, 0, 1, 1);
+  m_layout->addWidget(m_shaderGraphWidget.alphaThreshold, rowStart + i, 1, 1, 12);
+  i++;
+  m_layout->addWidget(m_shaderGraphWidget.separator, rowStart + i, 0, 1, 13);
+  i++;
+  return i;
 }
 
 int ShaderGraphEditorNodePropertiesWidget::CreateWidgetsForInputs(int rowStart)
@@ -363,6 +482,36 @@ void ShaderGraphEditorNodePropertiesWidget::CreateLocator(size_t row)
   Bind(lineEdit);
 }
 
+
+void ShaderGraphEditorNodePropertiesWidget::Bind(QCheckBox *checkBox)
+{
+  connect(checkBox, &QCheckBox::checkStateChanged, this, &ShaderGraphEditorNodePropertiesWidget::OnCheckStateChanged);
+}
+
+void ShaderGraphEditorNodePropertiesWidget::Unbind(QCheckBox *checkBox)
+{
+  disconnect(checkBox,
+             &QCheckBox::checkStateChanged,
+             this,
+             &ShaderGraphEditorNodePropertiesWidget::OnCheckStateChanged);
+}
+
+void ShaderGraphEditorNodePropertiesWidget::Bind(QComboBox *comboBox)
+{
+  connect(comboBox,
+          &QComboBox::currentIndexChanged,
+          this,
+          &ShaderGraphEditorNodePropertiesWidget::OnComboBoxChanged);
+}
+
+void ShaderGraphEditorNodePropertiesWidget::Unbind(QComboBox *comboBox)
+{
+  disconnect(comboBox,
+             &QComboBox::currentIndexChanged,
+             this,
+             &ShaderGraphEditorNodePropertiesWidget::OnComboBoxChanged);
+}
+
 void ShaderGraphEditorNodePropertiesWidget::Bind(QLineEdit *lineEdit)
 {
   connect(lineEdit, &QLineEdit::textEdited, this, &ShaderGraphEditorNodePropertiesWidget::OnLineEditTextChanged);
@@ -401,6 +550,15 @@ void ShaderGraphEditorNodePropertiesWidget::Unbind(QDoubleSpinBox *spinBox)
 
 }
 
+void ShaderGraphEditorNodePropertiesWidget::OnCheckStateChanged(Qt::CheckState state)
+{
+  WriteValuesToNode();
+}
+
+void ShaderGraphEditorNodePropertiesWidget::OnComboBoxChanged(int index)
+{
+  WriteValuesToNode();
+}
 
 void ShaderGraphEditorNodePropertiesWidget::OnLineEditTextChanged(const QString &text)
 {
