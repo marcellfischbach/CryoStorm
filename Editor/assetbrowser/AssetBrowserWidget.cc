@@ -144,7 +144,7 @@ void AssetBrowserWidget::onFolderContentDoubleClicked(const QModelIndex &index)
   std::string               archivePath = m_treeModel->ConstructArchivePath(ui->treeView->currentIndex());
   std::string               fileName    = m_folderModel->GetName(index);
 
-  cs::csAssetLocator locator(pArchive->GetName() + "@" + archivePath + fileName);
+  cs::csAssetLocator locator(pArchive->GetName() + "|" + archivePath + fileName);
   iEditorFactory     *editorFactory = EditorRegistry::Get().GetEditor(locator);
   if (!editorFactory)
   {

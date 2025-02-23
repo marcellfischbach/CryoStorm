@@ -75,6 +75,9 @@ protected:
 
 
 private:
+  csOwned<iAsset> LoadInternal(const csAssetLocator &locator);
+  csOwned<iAsset> ResolveSubAsset (const csAssetLocator &locator, iAsset* asset);
+
   static csAssetManager *s_assetManager;
 
 

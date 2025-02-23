@@ -33,11 +33,11 @@ csOwned<iAsset> csAssetManager::Get(const csAssetLocator &locator)
   iAsset *pooled = csAssetPool::Instance().Get(locator);
   if (pooled)
   {
-    return csOwned<iAsset>(pooled);
+    return ResolveSubAsset(locator, pooled);
   }
 
 
-  csOwned<iAsset> resource = Load(locator);
+  csOwned<iAsset> resource = LoadInternal(locator);
   iAsset* asset = resource.Data();
   if (asset)
   {
@@ -45,11 +45,16 @@ csOwned<iAsset> csAssetManager::Get(const csAssetLocator &locator)
     csAssetPool::Instance().Put(asset);
   }
 
-  return resource;
+  return ResolveSubAsset(locator, resource.Data());
 }
 
-
 csOwned<iAsset> csAssetManager::Load(const csAssetLocator &locator)
+{
+  csOwned<iAsset> asset = LoadInternal(locator);
+  return ResolveSubAsset(locator, asset.Data());
+}
+
+csOwned<iAsset> csAssetManager::LoadInternal(const csAssetLocator &locator)
 {
   for (csAssetLoader *loader: m_assetLoaders)
   {
@@ -74,6 +79,22 @@ csOwned<iAsset> csAssetManager::Load(const csAssetLocator &locator)
   return csOwned<iAsset>(nullptr);
 }
 
+
+csOwned<iAsset> csAssetManager::ResolveSubAsset(const cs::csAssetLocator &locator, cs::iAsset *asset)
+{
+  if (!asset)
+  {
+    return csOwned<iAsset>(nullptr);
+  }
+
+  std::string &subAssetName = locator.GetSubAssetName();
+  if (subAssetName.empty())
+  {
+    return csOwned<iAsset>()
+  }
+
+  asset->GetSubAsset()
+}
 
 void csAssetManager::Set(csAssetManager *assetManager)
 {

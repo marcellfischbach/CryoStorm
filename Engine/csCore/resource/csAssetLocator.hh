@@ -19,8 +19,10 @@ public:
   CS_NODISCARD const std::string& GetExtension() const;
   CS_NODISCARD const std::string& Encoded() const;
   CS_NODISCARD const std::string& Canonical() const;
+  CS_NODISCARD const std::string& GetSubAssetName() const;
 
   csAssetLocator AsAnonymous() const;
+  csAssetLocator AsRootLocator() const;
 
 	bool operator<(const csAssetLocator& locator) const;
 	bool operator==(const csAssetLocator& locator) const;
@@ -68,6 +70,14 @@ private:
    * there is no folder '.' or '..' in the normalized locator.
    */
   std::string m_canonical;
+
+  /**
+   * \brief Request just a single sub part of the asset.
+   *
+   * The real asset (e.g. the file in an archive) is still the one defined by m_encoded or m_canonical. This
+   * subAssetName is queried from the iAsset object once the object is loaded.
+   */
+  std::string m_subAssetName;
 };
 
 }

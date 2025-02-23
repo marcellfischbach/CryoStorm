@@ -802,7 +802,7 @@ std::string name(ShaderGraphNodeItem *node, cs::csSGNodeIO *io)
 {
   std::string name;
   name += node->GetNode()->GetName().c_str();
-  name += "@";
+  name += "|";
   name += io->GetName();
   return name;
 }

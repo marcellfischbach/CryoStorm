@@ -29,9 +29,9 @@ public:
 
   CS_NODISCARD const std::vector<csRef<const iArchive>> &GetArchives () const;
 
-  CS_NODISCARD csOwned<iFile> Open(const csAssetLocator &resourceLocator, eAccessMode accessMode, eOpenMode openMode) const;
+  CS_NODISCARD csOwned<iFile> Open(const csAssetLocator &assetLocator, eAccessMode accessMode, eOpenMode openMode) const;
 
-  bool IsMasterLocator (const csAssetLocator &resourceLocator) const;
+  bool IsMasterLocator (const csAssetLocator &assetLocator) const;
 
 private:
   csVFS();

@@ -8,7 +8,7 @@ namespace cs
 
 std::string extract_archive(const std::string &locator)
 {
-  size_t endPos = locator.find_last_of('@');
+  size_t endPos = locator.find_last_of('|');
   if (endPos == std::string::npos)
   {
     return "";
@@ -21,13 +21,19 @@ std::string extract_archive(const std::string &locator)
 
 std::string extract_path(const std::string &locator)
 {
-  size_t endPos = locator.find_last_of('/');
+  size_t path_end_pos = locator.find_first_of('?');
+  if (path_end_pos == std::string::npos)
+  {
+    path_end_pos = locator.length();
+  }
+
+  size_t endPos = locator.rfind('/', path_end_pos);
   if (endPos == std::string::npos)
   {
     return "";
   }
 
-  size_t startPos = locator.find_last_of('@');
+  size_t startPos = locator.find_last_of('|');
   if (startPos == std::string::npos)
   {
     startPos = 0;
@@ -43,27 +49,63 @@ std::string extract_path(const std::string &locator)
 
 std::string extract_filename(const std::string &locator)
 {
-  size_t pos = locator.find_last_of('/');
-  if (pos == std::string::npos)
+  size_t path_end_pos = locator.find_first_of('?');
+  if (path_end_pos == std::string::npos)
   {
-    pos = 0;
+    path_end_pos = locator.length();
+  }
+
+  size_t startPos = locator.rfind('/', path_end_pos);
+  if (startPos == std::string::npos)
+  {
+    startPos = 0;
   }
   else
   {
-    pos++;
+    startPos++;
   }
-  return locator.substr(pos);
+
+  size_t endPos = locator.find_first_of('?');
+  if (endPos == std::string::npos)
+  {
+    endPos = locator.length();
+  }
+
+
+  return locator.substr(startPos, endPos - startPos);
 }
 
 std::string extract_extension(const std::string &locator)
 {
-  size_t idx = locator.rfind(".");
-  if (idx != -1)
+  size_t endPos = locator.find_first_of('?');
+  if (endPos == std::string::npos)
   {
-    return cs::to_upper(locator.substr(idx + 1));
+    endPos = locator.length();
   }
-  return "";
+
+  size_t startPos = locator.rfind('.', endPos);
+  if (startPos == std::string::npos)
+  {
+    return "";
+  }
+
+  std::string ext = locator.substr(startPos + 1, endPos - startPos-1);
+  return cs::to_upper(ext);
 }
+
+
+std::string extract_sub_name(const std::string &locator)
+{
+  size_t startPos = locator.find_first_of('?');
+  if (startPos == std::string::npos)
+  {
+    return "";
+  }
+
+
+  return locator.substr(startPos + 1);
+}
+
 
 std::string canonicalize_encoded(const std::string &encoded)
 {
@@ -74,19 +116,20 @@ std::string canonicalize_encoded(const std::string &encoded)
 csAssetLocator::csAssetLocator(const std::string &locator)
     : m_encoded(locator)
 {
-  m_archive   = extract_archive(locator);
-  m_path      = extract_path(locator);
-  m_filename  = extract_filename(locator);
+  m_archive = extract_archive(locator);
+  m_path = extract_path(locator);
+  m_filename = extract_filename(locator);
   m_extension = extract_extension(locator);
+  m_subAssetName = extract_sub_name(locator);
 
   m_canonical = canonicalize_encoded(m_path + m_filename);
 }
 
 csAssetLocator::csAssetLocator(const csAssetLocator &parent, const std::string &locator)
 {
-  m_archive   = extract_archive(locator);
-  m_path      = extract_path(locator);
-  m_filename  = extract_filename(locator);
+  m_archive = extract_archive(locator);
+  m_path = extract_path(locator);
+  m_filename = extract_filename(locator);
   m_extension = extract_extension(locator);
 
   if (m_path.empty() || m_path[0] != '/')
@@ -94,17 +137,30 @@ csAssetLocator::csAssetLocator(const csAssetLocator &parent, const std::string &
     m_path = parent.m_path + m_path;
   }
 
-  m_encoded    = m_path + m_filename;
+  m_encoded = m_path + m_filename;
   if (!m_archive.empty())
   {
     m_encoded = m_archive + "@" + m_encoded;
   }
+
+  m_subAssetName = extract_sub_name(locator);
+
   m_canonical = canonicalize_encoded(m_path + m_filename);
 }
 
 csAssetLocator csAssetLocator::AsAnonymous() const
 {
-  return csAssetLocator(m_canonical);
+ if (m_subAssetName.empty())
+ {
+   return csAssetLocator(m_canonical);
+ }
+ return csAssetLocator(m_canonical + "?" + m_subAssetName);
+}
+
+csAssetLocator csAssetLocator::AsRootLocator() const
+{
+  m_encoded.find_first_of('?')
+  return csAssetLocator(m_encoded);
 }
 
 
@@ -138,6 +194,11 @@ const std::string &csAssetLocator::Encoded() const
 const std::string &csAssetLocator::Canonical() const
 {
   return m_canonical;
+}
+
+const std::string &csAssetLocator::GetSubAssetName() const
+{
+  return m_subAssetName;
 }
 
 
