@@ -3,7 +3,6 @@
 
 #include <csCore/csCoreExport.hh>
 #include <csCore/csClass.hh>
-#include <csCore/resource/iAssetLoader.hh>
 #include <string>
 
 namespace cs

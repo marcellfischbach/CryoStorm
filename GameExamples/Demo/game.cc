@@ -927,6 +927,12 @@ void generate_cube_fbx(cs::csWorld *world)
   world->Attach(entity);
 }
 
+void generate_suzanne(cs::csWorld* world)
+{
+  auto meshData = cs::csAssetManager::Get()->Get<cs::iRenderMesh>("/suzanne/suzanne_Suzanne.rmesh");
+
+}
+
 void generate_exit_game(cs::csWorld *world)
 {
   cs::csEntity *entity = new cs::csEntity();
@@ -993,6 +999,7 @@ void setup_world(cs::csWorld *world)
   generate_test_grid(world, material);
   generate_test_cube(world, material);
   generate_axis_grid(world);
+  generate_suzanne(world);
 //  generate_cube_fbx(world);
 
 //  add_skeleton_mesh(world, skinnedMaterial);

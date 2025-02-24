@@ -1,12 +1,11 @@
 #include <csCore/csCoreModule.hh>
 #include <master.refl.cc>
-#include <csCore/csObjectRegistry.hh>
 #include <csCore/resource/csAssetManager.hh>
 #include <csCore/loaders/csMaterialLoader.hh>
+#include <csCore/loaders/csRenderMeshLoader.hh>
 #include <csCore/loaders/csSamplerLoader.hh>
 #include <csCore/loaders/csShaderGraphLoader.hh>
 #include <csCore/loaders/csTerrainLayerLoader.hh>
-#include <csCore/loaders/csTextFileLoader.hh>
 #include <csCore/loaders/csTextureLoader.hh>
 
 
@@ -27,6 +26,7 @@ bool csCoreModule::Register(const std::vector<std::string> &args, csEngine *engi
 {
   csAssetManager * assetMan = csAssetManager::Get();
   assetMan->RegisterLoader(new csMaterialLoader());
+  assetMan->RegisterLoader(new csRenderMeshLoader());
   assetMan->RegisterLoader(new csSamplerLoader());
   assetMan->RegisterLoader(new csShaderGraphLoader());
   assetMan->RegisterLoader(new csTerrainLayerLoader());

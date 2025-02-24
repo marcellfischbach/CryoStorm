@@ -4,7 +4,6 @@
 
 #include <csCore/csCoreExport.hh>
 #include <csCore/graphics/ePixelFormat.hh>
-#include <csCore/resource/iAssetLoader.hh>
 #include <csCore/resource/csBaseCSFAssetLoader.hh>
 #include <csCore/csRef.hh>
 

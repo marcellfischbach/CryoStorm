@@ -10,6 +10,7 @@
 #include <csCore/math/csColor4f.hh>
 #include <csCore/graphics/ePrimitiveType.hh>
 #include <csCore/graphics/eRenderPass.hh>
+#include <csCore/resource/iAsset.hh>
 #include <vector>
 
 namespace cs
@@ -19,7 +20,7 @@ struct iDevice;
 class csVertexDeclaration;
 
 CS_CLASS(jclass="org.cryo.core.graphics.IRenderMesh")
-struct CS_CORE_API iRenderMesh : public CS_SUPER(iObject)
+struct CS_CORE_API iRenderMesh : public CS_SUPER(iAsset)
 {
   CS_CLASS_GEN;
   ~iRenderMesh() override = default;
