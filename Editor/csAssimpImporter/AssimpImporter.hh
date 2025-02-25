@@ -28,6 +28,7 @@ public:
 
 private:
   void GenerateRenderMeshes(const std::fs::path &path, const aiScene *scene) const;
+  void GenerateMesh(const std::fs::path &path, const aiMesh* mesh, const aiScene *scene) const;
   void GenerateRenderMesh(const std::fs::path &path, const aiMesh* mesh, const aiScene *scene) const;
 
 };

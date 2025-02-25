@@ -103,8 +103,43 @@ void AssimpImporter::GenerateRenderMeshes(const std::fs::path &path, const aiSce
 {
   for (int i = 0; i < scene->mNumMeshes; ++i)
   {
+    GenerateMesh(path, scene->mMeshes[i], scene);
     GenerateRenderMesh(path, scene->mMeshes[i], scene);
   }
+}
+
+void write_string(std::ofstream& out, const std::string& string)
+{
+  uint32_t length = string.length();
+  out.write(reinterpret_cast<const char*>(&length), sizeof(uint32_t));
+  out.write(string.c_str(), sizeof(char) * length);
+}
+
+void AssimpImporter::GenerateMesh(const std::fs::path& path, const aiMesh* mesh, const aiScene* scene) const
+{
+  std::string   outputFileName = path.generic_string() + "_" + mesh->mName.C_Str() + ".mesh";
+  std::fs::path outFile(outputFileName);
+  std::ofstream out;
+  out.open(outputFileName.c_str(), std::ios::out | std::ios::binary | std::ios::trunc);
+
+
+  uint32_t magic = 0x12341234;
+  uint32_t version = 1;
+  out.write(reinterpret_cast<char*>(&magic), sizeof(uint32_t));
+  out.write(reinterpret_cast<char*>(&version), sizeof(uint32_t));
+
+
+  uint32_t numMaterialSlots = 1;
+  out.write(reinterpret_cast<char*>(&numMaterialSlots), sizeof(uint32_t));
+  write_string(out, "Default");
+  write_string(out, "/materials/Default.mat");
+
+  uint32_t numSubMeshes = 1;
+  out.write(reinterpret_cast<char*>(&numSubMeshes), sizeof(uint32_t));
+  uint32_t materialSlot = 0;
+  out.write(reinterpret_cast<char*>(&materialSlot), sizeof(uint32_t));
+  write_mesh(out, mesh);
+  out.close();
 }
 
 
@@ -114,6 +149,15 @@ void AssimpImporter::GenerateRenderMesh(const std::fs::path &path, const aiMesh 
   std::fs::path outFile(outputFileName);
   std::ofstream out;
   out.open(outputFileName.c_str(), std::ios::out | std::ios::binary | std::ios::trunc);
+
+
+  uint32_t magic = 0x12341234;
+  uint32_t version = 1;
+  uint32_t numVertices = mesh->mNumVertices;
+
+  out.write(reinterpret_cast<char*>(&magic), sizeof(uint32_t));
+  out.write(reinterpret_cast<char*>(&version), sizeof(uint32_t));
+
   write_mesh(out, mesh);
   out.close();
 }
@@ -223,17 +267,7 @@ void write_values_c4(std::ofstream &out, VDataType dataType, size_t numValues, a
 
 void write_mesh(std::ofstream &out, const aiMesh *mesh)
 {
-
-
-  uint32_t magic       = 0x12341234;
-  uint32_t version     = 1;
   uint32_t numVertices = mesh->mNumVertices;
-
-  out.write(reinterpret_cast<char *>(&magic), sizeof(uint32_t));
-  out.write(reinterpret_cast<char *>(&version), sizeof(uint32_t));
-
-
-
   out.write(reinterpret_cast<char *>(&numVertices), sizeof(uint32_t));
 
   write_values_v3(out, VERTEX, mesh->mNumVertices, mesh->mVertices);
