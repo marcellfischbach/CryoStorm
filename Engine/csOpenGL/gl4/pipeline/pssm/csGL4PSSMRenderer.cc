@@ -245,6 +245,8 @@ void csGL4PSSMRenderer::RenderShadowBuffer(const csGL4DirectionalLight *directio
 
   csMatrix4f shadowMapView[4];
   csMatrix4f shadowMapProjection[4];
+  csMatrix4f shadowMapViewInv[4];
+  csMatrix4f shadowMapProjectionInv[4];
 
   for (size_t i = 0; i < 4; i++)
   {
@@ -327,10 +329,20 @@ void csGL4PSSMRenderer::RenderShadowBuffer(const csGL4DirectionalLight *directio
                                         near,
                                         far,
                                         proj);
+    m_device->GetOrthographicProjectionInv(-sizeSplit - modX,
+                                           sizeSplit - modX,
+                                           -sizeSplit - modY,
+                                           sizeSplit - modY,
+                                           near,
+                                           far,
+                                           projInv);
+
 //    calc_projection_matrix(m_device, splitPoints[i], splitPoints[i + 1], near, far, view, proj);
 
     shadowMapView[i]       = view;
+    shadowMapViewInv[i]       = viewInv;
     shadowMapProjection[i] = proj;
+    shadowMapProjectionInv[i] = projInv;
 
     m_shadowMatrices[i] = proj * view;
 
@@ -368,8 +380,8 @@ void csGL4PSSMRenderer::RenderShadowBuffer(const csGL4DirectionalLight *directio
   // 66 430 580 401
   // 521 3599 4183 2539
 
-  m_device->SetShadowMapProjectionMatrices(shadowMapProjection, 4);
-  m_device->SetShadowMapViewMatrices(shadowMapView, 4);
+  m_device->SetShadowMapProjectionMatrices(shadowMapProjection,  shadowMapProjectionInv, 4);
+  m_device->SetShadowMapViewMatrices(shadowMapView, shadowMapViewInv, 4);
 
 }
 

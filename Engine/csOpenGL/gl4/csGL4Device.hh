@@ -64,6 +64,9 @@ public:
   void SetShadowMapViewMatrices(const csMatrix4f *viewMatrices, Size numMatrices) override;
   void SetShadowMapProjectionMatrices(const csMatrix4f *projectionMatrices, Size numMatrices) override;
 
+  void SetShadowMapViewMatrices(const csMatrix4f *viewMatrices, const csMatrix4f *viewMatricesInv, Size numMatrices) override;
+  void SetShadowMapProjectionMatrices(const csMatrix4f *projectionMatrices, const csMatrix4f *projectionMatricesInv, Size numMatrices) override;
+
   void SetSkeletonMatrices(const csMatrix4f *skeletonMatrices, Size numMatrices) override;
 
   const csMatrix4f &GetViewMatrix() const override;
@@ -187,6 +190,9 @@ private:
   void UpdateViewProjectionMatrixInv();
   void UpdateModelViewProjectionMatrixInv();
   void UpdateShadowMapViewProjectionMatrix();
+  void UpdateShadowMapViewMatrixInv();
+  void UpdateShadowMapProjectionMatrixInv();
+  void UpdateShadowMapViewProjectionMatrixInv();
 
   uint8_t      m_colorWrite;
   bool         m_depthWrite;
@@ -234,7 +240,13 @@ private:
   csMatrix4f m_shadowMapViewMatrices[6];
   csMatrix4f m_shadowMapProjectionMatrices[6];
   csMatrix4f m_shadowMapViewProjectionMatrices[6];
+  csMatrix4f m_shadowMapViewMatricesInv[6];
+  csMatrix4f m_shadowMapProjectionMatricesInv[6];
+  csMatrix4f m_shadowMapViewProjectionMatricesInv[6];
   bool       m_shadowMapViewProjectionMatrixDirty;
+  bool       m_shadowMapViewMatrixInvDirty;
+  bool       m_shadowMapProjectionMatrixInvDirty;
+  bool       m_shadowMapViewProjectionMatrixInvDirty;
 
   Size       m_skeletonMatrixCount;
   csMatrix4f m_skeletonMatrices[256];

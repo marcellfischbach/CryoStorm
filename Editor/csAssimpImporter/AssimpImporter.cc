@@ -11,6 +11,8 @@
 namespace cs::imp
 {
 
+void write_mesh(std::ofstream &out, const aiMesh *mesh);
+
 
 bool AssimpImporter::CanImport(const std::fs::path &path, const std::vector<std::string> &args) const
 {
@@ -96,6 +98,7 @@ bool AssimpImporter::Import(const std::fs::path &path, const std::vector<std::st
   return scene != nullptr;
 }
 
+
 void AssimpImporter::GenerateRenderMeshes(const std::fs::path &path, const aiScene *scene) const
 {
   for (int i = 0; i < scene->mNumMeshes; ++i)
@@ -104,189 +107,226 @@ void AssimpImporter::GenerateRenderMeshes(const std::fs::path &path, const aiSce
   }
 }
 
+
 void AssimpImporter::GenerateRenderMesh(const std::fs::path &path, const aiMesh *mesh, const aiScene *scene) const
 {
-  std::string outputFileName = path.generic_string() + "_" + mesh->mName.C_Str() + ".rmesh";
-  std::fs::path outFile (outputFileName);
+  std::string   outputFileName = path.generic_string() + "_" + mesh->mName.C_Str() + ".rmesh";
+  std::fs::path outFile(outputFileName);
   std::ofstream out;
   out.open(outputFileName.c_str(), std::ios::out | std::ios::binary | std::ios::trunc);
+  write_mesh(out, mesh);
+  out.close();
+}
 
-  enum VDataType
+enum VDataType
+{
+  END,
+  VERTEX,
+  NORMAL,
+  TANGENT,
+  COLOR0,
+  COLOR1,
+  TEX_COORD0_1,
+  TEX_COORD0_2,
+  TEX_COORD0_3,
+  TEX_COORD1_1,
+  TEX_COORD1_2,
+  TEX_COORD1_3,
+  TEX_COORD2_1,
+  TEX_COORD2_2,
+  TEX_COORD2_3
+};
+
+enum PrimitiveType
+{
+  POINTS,
+  LINES,
+  TRIANGLES,
+};
+
+enum IndexType
+{
+  UINT16,
+  UINT32
+};
+
+void write_values_v1(std::ofstream &out, VDataType dataType, size_t numValues, aiVector3D *vertices)
+{
+  if (!vertices)
   {
-    END,
-    VERTEX,
-    NORMAL,
-    TANGENT,
-    COLOR0,
-    COLOR1,
-    TEX_COORD0_1,
-    TEX_COORD0_2,
-    TEX_COORD0_3,
-    TEX_COORD1_1,
-    TEX_COORD1_2,
-    TEX_COORD1_3,
-    TEX_COORD2_1,
-    TEX_COORD2_2,
-    TEX_COORD2_3
-  };
-
-
-  uint32_t magic = 0x12341234;
-  uint32_t version = 1;
-  out.write(reinterpret_cast<char*>(&magic), sizeof(uint32_t));
-  out.write(reinterpret_cast<char*>(&version), sizeof(uint32_t));
-
-
-
-  VDataType type = VERTEX;
-  out.write(reinterpret_cast<char*>(&type), sizeof(uint8_t));
-
-  if (mesh->mNormals)
-  {
-    type = NORMAL;
-    out.write(reinterpret_cast<char*>(&type), sizeof(uint8_t));
+    return;
   }
-  if (mesh->mTangents)
+  uint8_t  type = dataType;
+  uint32_t size = numValues * sizeof(float) * 1;
+  out.write(reinterpret_cast<char *>(&type), sizeof(uint8_t));
+  out.write(reinterpret_cast<char *>(&size), sizeof(uint32_t));
+  for (size_t i = 0; i < numValues; i++)
   {
-    type = TANGENT;
-    out.write(reinterpret_cast<char*>(&type), sizeof(uint8_t));
+    aiVector3D &v = vertices[i];
+    out.write(reinterpret_cast<char *>(&v), sizeof(float) * 1);
   }
-  if (mesh->mColors[0])
-  {
-    type = COLOR0;
-    out.write(reinterpret_cast<char*>(&type), sizeof(uint8_t));
-  }
-  if (mesh->mColors[1])
-  {
-    type = COLOR1;
-    out.write(reinterpret_cast<char*>(&type), sizeof(uint8_t));
-  }
+}
 
-  if (mesh->mTextureCoords[0] && mesh->mNumUVComponents[0] == 2)
+void write_values_v2(std::ofstream &out, VDataType dataType, size_t numValues, aiVector3D *vertices)
+{
+  if (!vertices)
   {
-    switch (mesh->mNumUVComponents[0])
-    {
-      case 1:
-        type = TEX_COORD0_1;
-        out.write(reinterpret_cast<char *>(&type), sizeof(uint8_t));
-        break;
-      case 2:
-        type = TEX_COORD0_2;
-        out.write(reinterpret_cast<char *>(&type), sizeof(uint8_t));
-        break;
-      case 3:
-        type = TEX_COORD0_2;
-        out.write(reinterpret_cast<char *>(&type), sizeof(uint8_t));
-        break;
-    }
+    return;
   }
-  if (mesh->mTextureCoords[1] && mesh->mNumUVComponents[1] == 2)
+  uint8_t  type = dataType;
+  uint32_t size = numValues * sizeof(float) * 2;
+  out.write(reinterpret_cast<char *>(&type), sizeof(uint8_t));
+  out.write(reinterpret_cast<char *>(&size), sizeof(uint32_t));
+  for (size_t i = 0; i < numValues; i++)
   {
-    switch (mesh->mNumUVComponents[1])
-    {
-      case 1:
-        type = TEX_COORD1_1;
-        out.write(reinterpret_cast<char *>(&type), sizeof(uint8_t));
-        break;
-      case 2:
-        type = TEX_COORD1_2;
-        out.write(reinterpret_cast<char *>(&type), sizeof(uint8_t));
-        break;
-      case 3:
-        type = TEX_COORD1_2;
-        out.write(reinterpret_cast<char *>(&type), sizeof(uint8_t));
-        break;
-    }
+    aiVector3D &v = vertices[i];
+    out.write(reinterpret_cast<char *>(&v), sizeof(float) * 2);
   }
-  if (mesh->mTextureCoords[2] && mesh->mNumUVComponents[2] == 2)
+}
+
+
+void write_values_v3(std::ofstream &out, VDataType dataType, size_t numValues, aiVector3D *vertices)
+{
+  if (!vertices)
   {
-    switch (mesh->mNumUVComponents[2])
-    {
-      case 1:
-        type = TEX_COORD2_1;
-        out.write(reinterpret_cast<char *>(&type), sizeof(uint8_t));
-        break;
-      case 2:
-        type = TEX_COORD2_2;
-        out.write(reinterpret_cast<char *>(&type), sizeof(uint8_t));
-        break;
-      case 3:
-        type = TEX_COORD2_2;
-        out.write(reinterpret_cast<char *>(&type), sizeof(uint8_t));
-        break;
-    }
+    return;
   }
-  type = END;
+  uint8_t  type = dataType;
+  uint32_t size = numValues * sizeof(float) * 3;
+  out.write(reinterpret_cast<char *>(&type), sizeof(uint8_t));
+  out.write(reinterpret_cast<char *>(&size), sizeof(uint32_t));
+  for (size_t i = 0; i < numValues; i++)
+  {
+    aiVector3D &v = vertices[i];
+    out.write(reinterpret_cast<char *>(&v), sizeof(float) * 3);
+  }
+}
+
+
+void write_values_c4(std::ofstream &out, VDataType dataType, size_t numValues, aiColor4D *colors)
+{
+  if (!colors)
+  {
+    return;
+  }
+  uint8_t  type = dataType;
+  uint32_t size = numValues * sizeof(float) * 4;
+  out.write(reinterpret_cast<char *>(&type), sizeof(uint8_t));
+  out.write(reinterpret_cast<char *>(&size), sizeof(uint32_t));
+  for (size_t i = 0; i < numValues; i++)
+  {
+    aiColor4D &v = colors[i];
+    out.write(reinterpret_cast<char *>(&v), sizeof(float) * 4);
+  }
+}
+
+
+void write_mesh(std::ofstream &out, const aiMesh *mesh)
+{
+
+
+  uint32_t magic       = 0x12341234;
+  uint32_t version     = 1;
+  uint32_t numVertices = mesh->mNumVertices;
+
+  out.write(reinterpret_cast<char *>(&magic), sizeof(uint32_t));
+  out.write(reinterpret_cast<char *>(&version), sizeof(uint32_t));
+
+
+
+  out.write(reinterpret_cast<char *>(&numVertices), sizeof(uint32_t));
+
+  write_values_v3(out, VERTEX, mesh->mNumVertices, mesh->mVertices);
+  write_values_v3(out, NORMAL, mesh->mNumVertices, mesh->mNormals);
+  write_values_v3(out, TANGENT, mesh->mNumVertices, mesh->mTangents);
+  write_values_c4(out, COLOR0, mesh->mNumVertices, mesh->mColors[0]);
+  write_values_c4(out, COLOR1, mesh->mNumVertices, mesh->mColors[1]);
+
+  write_values_v3(out, NORMAL, mesh->mNumVertices, mesh->mNormals);
+  write_values_v3(out, NORMAL, mesh->mNumVertices, mesh->mNormals);
+  write_values_v3(out, NORMAL, mesh->mNumVertices, mesh->mNormals);
+
+  switch (mesh->mNumUVComponents[0])
+  {
+    case 1:
+      write_values_v1(out, TEX_COORD0_1, mesh->mNumVertices, mesh->mTextureCoords[0]);
+      break;
+    case 2:
+      write_values_v2(out, TEX_COORD0_2, mesh->mNumVertices, mesh->mTextureCoords[0]);
+      break;
+    case 3:
+      write_values_v3(out, TEX_COORD0_3, mesh->mNumVertices, mesh->mTextureCoords[0]);
+      break;
+    default:
+      break;
+  }
+  switch (mesh->mNumUVComponents[1])
+  {
+    case 1:
+      write_values_v1(out, TEX_COORD1_1, mesh->mNumVertices, mesh->mTextureCoords[1]);
+      break;
+    case 2:
+      write_values_v2(out, TEX_COORD1_2, mesh->mNumVertices, mesh->mTextureCoords[1]);
+      break;
+    case 3:
+      write_values_v3(out, TEX_COORD1_3, mesh->mNumVertices, mesh->mTextureCoords[1]);
+      break;
+    default:
+      break;
+  }
+  switch (mesh->mNumUVComponents[2])
+  {
+    case 1:
+      write_values_v1(out, TEX_COORD2_1, mesh->mNumVertices, mesh->mTextureCoords[2]);
+      break;
+    case 2:
+      write_values_v2(out, TEX_COORD2_2, mesh->mNumVertices, mesh->mTextureCoords[2]);
+      break;
+    case 3:
+      write_values_v3(out, TEX_COORD2_3, mesh->mNumVertices, mesh->mTextureCoords[2]);
+      break;
+    default:
+      break;
+  }
+  uint8_t  type = END;
   out.write(reinterpret_cast<char *>(&type), sizeof(uint8_t));
 
 
-  
-  uint32_t numVertices = mesh->mNumVertices;
-  out.write(reinterpret_cast<char *>(&numVertices), sizeof(uint32_t));
-  
-  for (int i = 0; i < mesh->mNumVertices; ++i)
+
+
+  uint8_t primType = TRIANGLES;
+  out.write(reinterpret_cast<char *>(&primType), sizeof(uint8_t));
+
+  uint32_t numIndex = mesh->mNumFaces * 3;
+  out.write(reinterpret_cast<char *>(&numIndex), sizeof(uint32_t));
+
+
+  if (numVertices >= 65336)
   {
-    aiVector3D &pos = mesh->mVertices[i];
-    out.write (reinterpret_cast<char*>(&pos), sizeof(aiVector3D));
-    
-
-    if (mesh->mNormals)
+    uint8_t indexType = UINT32;
+    out.write(reinterpret_cast<char *>(&indexType), sizeof(uint8_t));
+    uint32_t indexSize = mesh->mNumFaces * 3 * sizeof(uint32_t);
+    out.write(reinterpret_cast<char *>(&indexSize), sizeof(uint32_t));
+    for (int i = 0; i < mesh->mNumFaces; ++i)
     {
-      aiVector3D &norm = mesh->mNormals[i];
-      out.write (reinterpret_cast<char*>(&norm), sizeof(aiVector3D));
-    }
-
-    if (mesh->mTangents)
-    {
-      aiVector3D &tan = mesh->mTangents[i];
-      out.write (reinterpret_cast<char*>(&tan), sizeof(aiVector3D));
-    }
-    for (size_t j=0; j<2; j++)
-    {
-      if (mesh->mColors[j])
-      {
-        aiColor4D &color = mesh->mColors[j][i];
-        out.write (reinterpret_cast<char*>(&color), sizeof(aiColor4D));
-      }
-    }
-
-    for (size_t j = 0; j < 3; j++)
-    {
-
-      switch (mesh->mNumUVComponents[j])
-      {
-        case 1:
-          out.write (reinterpret_cast<char*>(&mesh->mTextureCoords[j][i]), sizeof(float)*1);
-          break;
-        case 2:
-          out.write (reinterpret_cast<char*>(&mesh->mTextureCoords[j][i]), sizeof(float)*2);
-          break;
-        case 3:
-          out.write (reinterpret_cast<char*>(&mesh->mTextureCoords[j][i]), sizeof(float)*3);
-          break;
-        default:
-          break;
-      }
-    }
-  }
-
-
-  uint32_t numFaces = mesh->mNumFaces;
-  out.write(reinterpret_cast<char*>(&numFaces), sizeof(uint32_t));
-  for (int i = 0; i < mesh->mNumFaces; ++i)
-  {
-    const aiFace &face = mesh->mFaces[i];
-    if (numVertices >= 65336)
-    {
-      uint32_t f0 = face.mIndices[0];
-      uint32_t f1 = face.mIndices[1];
-      uint32_t f2 = face.mIndices[2];
+      const aiFace &face = mesh->mFaces[i];
+      uint32_t     f0    = face.mIndices[0];
+      uint32_t     f1    = face.mIndices[1];
+      uint32_t     f2    = face.mIndices[2];
       out.write(reinterpret_cast<char *>(&f0), sizeof(uint32_t));
       out.write(reinterpret_cast<char *>(&f1), sizeof(uint32_t));
       out.write(reinterpret_cast<char *>(&f2), sizeof(uint32_t));
     }
-    else
+  }
+  else
+  {
+    uint8_t indexType = UINT16;
+    out.write(reinterpret_cast<char *>(&indexType), sizeof(uint8_t));
+    uint32_t indexSize = mesh->mNumFaces * 3 * sizeof(uint16_t);
+    out.write(reinterpret_cast<char *>(&indexSize), sizeof(uint32_t));
+    for (int i = 0; i < mesh->mNumFaces; ++i)
     {
+      const aiFace &face = mesh->mFaces[i];
       uint16_t f0 = face.mIndices[0];
       uint16_t f1 = face.mIndices[1];
       uint16_t f2 = face.mIndices[2];
@@ -294,11 +334,8 @@ void AssimpImporter::GenerateRenderMesh(const std::fs::path &path, const aiMesh 
       out.write(reinterpret_cast<char *>(&f1), sizeof(uint16_t));
       out.write(reinterpret_cast<char *>(&f2), sizeof(uint16_t));
     }
-
   }
 
-
-  out.close();
 }
 
 void AssimpImporter::PrintUsage() const

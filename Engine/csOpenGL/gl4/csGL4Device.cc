@@ -73,7 +73,6 @@ csGL4Device::csGL4Device()
 {
 
 
-
 }
 
 csGL4Device::~csGL4Device()
@@ -131,7 +130,7 @@ bool csGL4Device::Initialize()
 
 
   m_cullEnabled = true;
-  m_cullMode = eCM_BackFace;
+  m_cullMode    = eCM_BackFace;
 
   CS_GL_ERROR()
   glEnable(GL_CULL_FACE);
@@ -171,7 +170,7 @@ bool csGL4Device::Initialize()
   return true;
 }
 
-void csGL4Device::Shutdown ()
+void csGL4Device::Shutdown()
 {
 
 }
@@ -494,6 +493,9 @@ void csGL4Device::SetShadowMapViewMatrices(const csMatrix4f *matrices, Size numb
   m_shadowMapMatrixCount = numberOfMatrices;
   memcpy(m_shadowMapViewMatrices, matrices, sizeof(csMatrix4f) * numberOfMatrices);
   m_shadowMapViewProjectionMatrixDirty = true;
+  m_shadowMapViewMatrixInvDirty = true;
+  m_shadowMapViewProjectionMatrixInvDirty = true;
+
 }
 
 void csGL4Device::SetShadowMapProjectionMatrices(const csMatrix4f *matrices, Size numberOfMatrices)
@@ -501,6 +503,28 @@ void csGL4Device::SetShadowMapProjectionMatrices(const csMatrix4f *matrices, Siz
   m_shadowMapMatrixCount = numberOfMatrices;
   memcpy(m_shadowMapProjectionMatrices, matrices, sizeof(csMatrix4f) * numberOfMatrices);
   m_shadowMapViewProjectionMatrixDirty = true;
+  m_shadowMapProjectionMatrixInvDirty = true;
+  m_shadowMapViewProjectionMatrixInvDirty = true;
+}
+
+
+void csGL4Device::SetShadowMapViewMatrices(const csMatrix4f *matrices, const csMatrix4f *matricesInv, Size numberOfMatrices)
+{
+  m_shadowMapMatrixCount = numberOfMatrices;
+  memcpy(m_shadowMapViewMatrices, matrices, sizeof(csMatrix4f) * numberOfMatrices);
+  memcpy(m_shadowMapViewMatricesInv, matricesInv, sizeof(csMatrix4f) * numberOfMatrices);
+  m_shadowMapViewProjectionMatrixDirty = true;
+  m_shadowMapViewProjectionMatrixInvDirty = true;
+
+}
+
+void csGL4Device::SetShadowMapProjectionMatrices(const csMatrix4f *matrices, const csMatrix4f *matricesInv, Size numberOfMatrices)
+{
+  m_shadowMapMatrixCount = numberOfMatrices;
+  memcpy(m_shadowMapProjectionMatrices, matrices, sizeof(csMatrix4f) * numberOfMatrices);
+  memcpy(m_shadowMapProjectionMatricesInv, matricesInv, sizeof(csMatrix4f) * numberOfMatrices);
+  m_shadowMapViewProjectionMatrixDirty = true;
+  m_shadowMapViewProjectionMatrixInvDirty = true;
 }
 
 void csGL4Device::SetSkeletonMatrices(const cs::csMatrix4f *skeletonMatrices, Size numMatrices)
@@ -726,7 +750,8 @@ void csGL4Device::SetRenderTarget(iRenderTarget *renderTarget)
         SetViewport(0, 0, rtcube->GetSize(), rtcube->GetSize());
         break;
       }
-      default:break;
+      default:
+        break;
     }
   }
   else
@@ -946,7 +971,7 @@ csOwned<iPointLight> csGL4Device::CreatePointLight()
 csOwned<iDirectionalLight> csGL4Device::CreateDirectionalLight()
 {
   csGL4DirectionalLight *gl4Light = new csGL4DirectionalLight();
-  iDirectionalLight* dirLight = static_cast<iDirectionalLight*>(gl4Light);
+  iDirectionalLight *dirLight = static_cast<iDirectionalLight *>(gl4Light);
   csOwned oLight = csOwned<iDirectionalLight>(dirLight);
   return oLight;
 }
@@ -1028,14 +1053,20 @@ void csGL4Device::BindUnsafe(iTexture *texture)
   }
   switch (texture->GetType())
   {
-    case eTextureType::Texture1D:break;
-    case eTextureType::Texture1DArray:break;
-    case eTextureType::Texture2D:static_cast<csGL4Texture2D *>(texture)->Bind();
+    case eTextureType::Texture1D:
       break;
-    case eTextureType::Texture2DArray:static_cast<csGL4Texture2DArray *>(texture)->Bind();
+    case eTextureType::Texture1DArray:
       break;
-    case eTextureType::Texture3D:break;
-    case eTextureType::TextureCube:static_cast<csGL4TextureCube *>(texture)->Bind();
+    case eTextureType::Texture2D:
+      static_cast<csGL4Texture2D *>(texture)->Bind();
+      break;
+    case eTextureType::Texture2DArray:
+      static_cast<csGL4Texture2DArray *>(texture)->Bind();
+      break;
+    case eTextureType::Texture3D:
+      break;
+    case eTextureType::TextureCube:
+      static_cast<csGL4TextureCube *>(texture)->Bind();
       break;
   }
 }
@@ -1048,14 +1079,20 @@ void csGL4Device::UnbindUnsafe(iTexture *texture)
   }
   switch (texture->GetType())
   {
-    case eTextureType::Texture1D:break;
-    case eTextureType::Texture1DArray:break;
-    case eTextureType::Texture2D:static_cast<csGL4Texture2D *>(texture)->Unbind();
+    case eTextureType::Texture1D:
       break;
-    case eTextureType::Texture2DArray:static_cast<csGL4Texture2DArray *>(texture)->Unbind();
+    case eTextureType::Texture1DArray:
       break;
-    case eTextureType::Texture3D:break;
-    case eTextureType::TextureCube:static_cast<csGL4TextureCube *>(texture)->Unbind();
+    case eTextureType::Texture2D:
+      static_cast<csGL4Texture2D *>(texture)->Unbind();
+      break;
+    case eTextureType::Texture2DArray:
+      static_cast<csGL4Texture2DArray *>(texture)->Unbind();
+      break;
+    case eTextureType::Texture3D:
+      break;
+    case eTextureType::TextureCube:
+      static_cast<csGL4TextureCube *>(texture)->Unbind();
       break;
   }
 
@@ -1185,7 +1222,7 @@ void csGL4Device::RenderFullscreen(iTexture2D *texture)
   csGL4Program *prog = multiSampling ? FullscreenBlitMSProgram() : FullscreenBlitProgram();
   SetShader(prog);
   ResetTextures();
-  eTextureUnit unit = BindTexture(texture);
+  eTextureUnit     unit    = BindTexture(texture);
   iShaderAttribute *attrib = prog->GetShaderAttribute("Diffuse");
   if (attrib)
   {
@@ -1564,14 +1601,44 @@ void csGL4Device::BindMatrices()
   attr = m_shader->GetShaderAttribute(eSA_ShadowMapViewProjectionMatrix);
   if (attr)
   {
-    if (m_shadowMapViewProjectionMatrixDirty)
-    {
-      UpdateShadowMapViewProjectionMatrix();
-    }
+    UpdateShadowMapViewProjectionMatrix();
     for (Size i = 0; i < m_shadowMapMatrixCount; i++)
     {
       attr->SetArrayIndex(i);
       attr->Bind(m_shadowMapViewProjectionMatrices[i]);
+    }
+  }
+
+  attr = m_shader->GetShaderAttribute(eSA_ShadowMapViewMatrixInv);
+  if (attr)
+  {
+    UpdateShadowMapViewMatrixInv();
+    for (Size i = 0; i < m_shadowMapMatrixCount; i++)
+    {
+      attr->SetArrayIndex(i);
+      attr->Bind(m_shadowMapViewMatricesInv[i]);
+    }
+  }
+
+  attr = m_shader->GetShaderAttribute(eSA_ShadowMapProjectionMatrixInv);
+  if (attr)
+  {
+    UpdateShadowMapProjectionMatrixInv();
+    for (Size i = 0; i < m_shadowMapMatrixCount; i++)
+    {
+      attr->SetArrayIndex(i);
+      attr->Bind(m_shadowMapProjectionMatricesInv[i]);
+    }
+  }
+
+  attr = m_shader->GetShaderAttribute(eSA_ShadowMapViewProjectionMatrixInv);
+  if (attr)
+  {
+    UpdateShadowMapViewProjectionMatrixInv();
+    for (Size i = 0; i < m_shadowMapMatrixCount; i++)
+    {
+      attr->SetArrayIndex(i);
+      attr->Bind(m_shadowMapViewProjectionMatricesInv[i]);
     }
   }
 
@@ -1671,12 +1738,56 @@ void csGL4Device::UpdateModelViewProjectionMatrixInv()
 
 void csGL4Device::UpdateShadowMapViewProjectionMatrix()
 {
-  for (Size i = 0; i < m_shadowMapMatrixCount; i++)
+  if (m_shadowMapViewProjectionMatrixDirty)
   {
-    m_shadowMapViewProjectionMatrices[i] = m_shadowMapProjectionMatrices[i] * m_shadowMapViewMatrices[i];
+    for (Size i = 0; i < m_shadowMapMatrixCount; i++)
+    {
+      m_shadowMapViewProjectionMatrices[i] = m_shadowMapProjectionMatrices[i] * m_shadowMapViewMatrices[i];
 
+    }
+    m_shadowMapViewProjectionMatrixDirty = false;
   }
-  m_shadowMapViewProjectionMatrixDirty = false;
+}
+
+void csGL4Device::UpdateShadowMapViewMatrixInv()
+{
+  if (m_shadowMapViewMatrixInvDirty)
+  {
+    for (Size i = 0; i < m_shadowMapMatrixCount; i++)
+    {
+      m_shadowMapViewMatricesInv[i] = m_shadowMapViewMatrices[i].Inverted();
+
+    }
+    m_shadowMapViewMatrixInvDirty = false;
+  }
+}
+
+void csGL4Device::UpdateShadowMapProjectionMatrixInv()
+{
+  if (m_shadowMapProjectionMatrixInvDirty)
+  {
+    for (Size i = 0; i < m_shadowMapMatrixCount; i++)
+    {
+      m_shadowMapProjectionMatricesInv[i] = m_shadowMapProjectionMatricesInv[i].Inverted();
+
+    }
+    m_shadowMapProjectionMatrixInvDirty = false;
+  }
+}
+
+void csGL4Device::UpdateShadowMapViewProjectionMatrixInv()
+{
+  if (m_shadowMapViewProjectionMatrixInvDirty)
+  {
+    UpdateShadowMapViewMatrixInv();
+    UpdateShadowMapProjectionMatrixInv();
+    for (Size i = 0; i < m_shadowMapMatrixCount; i++)
+    {
+      m_shadowMapViewProjectionMatricesInv[i] = m_shadowMapProjectionMatricesInv[i] * m_shadowMapViewMatricesInv[i];
+
+    }
+    m_shadowMapViewProjectionMatrixInvDirty = false;
+  }
 }
 
 csGL4Program *csGL4Device::FullscreenBlitProgram()
@@ -1749,7 +1860,7 @@ iRenderMesh *csGL4Device::PixelRenderMesh()
   if (!m_fullscreenBlitRenderMesh)
   {
     csOwned<iRenderMeshGenerator> gen = csObjectRegistry::Get<iRenderMeshGeneratorFactory>()->Create();
-    std::vector<csVector4f> vertices4;
+    std::vector<csVector4f>       vertices4;
     vertices4.push_back(csVector4f(0.0f, 0.0f, 0.0f, 1.0f));
     std::vector<uint32_t> indices;
     indices.push_back(0);
@@ -1817,7 +1928,8 @@ iRenderMesh *csGL4Device::FullscreenBlitCubeRenderMesh(int layer)
       { return m_fullscreenBlitCubeNegZRenderMesh; }
       else
       { break; }
-    default:break;
+    default:
+      break;
   }
 
 

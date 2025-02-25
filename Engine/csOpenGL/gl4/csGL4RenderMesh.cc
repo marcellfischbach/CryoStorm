@@ -217,6 +217,18 @@ void csGL4RenderMeshGenerator::SetBoneWeights(const std::vector<csVector4f> &bon
   m_boneWeights = boneWeights;
 }
 
+void csGL4RenderMeshGenerator::SetIndices(const std::vector<uint16_t> &indices)
+{
+  std::vector<uint32_t> indices32;
+  indices32.reserve(indices.size());
+  for (auto i : indices)
+  {
+    indices32.push_back(i);
+  }
+  m_indices = indices32;
+}
+
+
 void csGL4RenderMeshGenerator::SetIndices(const std::vector<uint32_t> &indices)
 {
   m_indices = indices;

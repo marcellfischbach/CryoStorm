@@ -58,6 +58,7 @@ struct CS_CORE_API iRenderMeshGenerator : CS_SUPER(iObject)
   virtual void SetUV3(const std::vector<csVector2f> & uv) = 0;
   virtual void SetBoneIndices(const std::vector<csVector4i> & boneIndices) = 0;
   virtual void SetBoneWeights(const std::vector<csVector4f> & boneWeights) = 0;
+  virtual void SetIndices(const std::vector<uint16_t> & indices) = 0;
   virtual void SetIndices(const std::vector<uint32_t> & indices) = 0;
   CS_NODISCARD virtual csOwned<iRenderMesh> Generate() = 0;
 };

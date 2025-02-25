@@ -83,6 +83,7 @@ public:
   void SetUV1(const std::vector<csVector2f> &uv) override;
   void SetUV2(const std::vector<csVector2f> &uv) override;
   void SetUV3(const std::vector<csVector2f> &uv) override;
+  void SetIndices(const std::vector<uint16_t> &indices) override;
   void SetIndices(const std::vector<uint32_t> &indices) override;
   void SetUV0(const std::vector<csVector2f> &uv) override;
   void SetBoneIndices(const std::vector<csVector4i> &boneIndices) override;

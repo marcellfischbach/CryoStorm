@@ -117,7 +117,9 @@ void csGL4Program::RegisterRenderAttributes()
   RegisterAttribute("ShadowMapViewMatrix");
   RegisterAttribute("ShadowMapProjectionMatrix");
   RegisterAttribute("ShadowMapViewProjectionMatrix");
-
+  RegisterAttribute("ShadowMapViewMatrixInv");
+  RegisterAttribute("ShadowMapProjectionMatrixInv");
+  RegisterAttribute("ShadowMapViewProjectionMatrixInv");
   RegisterAttribute("RenderLayer");
 
   RegisterAttribute("LightColor");
