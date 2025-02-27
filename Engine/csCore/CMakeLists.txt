@@ -192,6 +192,8 @@ set(SOURCES
 
         loaders/csMaterialLoader.cc
         loaders/csMaterialLoader.hh
+        loaders/csMeshLoader.cc
+        loaders/csMeshLoader.hh
         loaders/csRenderMeshLoader.cc
         loaders/csRenderMeshLoader.hh
         loaders/csSamplerLoader.cc

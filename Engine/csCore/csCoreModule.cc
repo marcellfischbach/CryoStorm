@@ -2,6 +2,7 @@
 #include <master.refl.cc>
 #include <csCore/resource/csAssetManager.hh>
 #include <csCore/loaders/csMaterialLoader.hh>
+#include <csCore/loaders/csMeshLoader.hh>
 #include <csCore/loaders/csRenderMeshLoader.hh>
 #include <csCore/loaders/csSamplerLoader.hh>
 #include <csCore/loaders/csShaderGraphLoader.hh>
@@ -26,6 +27,7 @@ bool csCoreModule::Register(const std::vector<std::string> &args, csEngine *engi
 {
   csAssetManager * assetMan = csAssetManager::Get();
   assetMan->RegisterLoader(new csMaterialLoader());
+  assetMan->RegisterLoader(new csMeshLoader());
   assetMan->RegisterLoader(new csRenderMeshLoader());
   assetMan->RegisterLoader(new csSamplerLoader());
   assetMan->RegisterLoader(new csShaderGraphLoader());

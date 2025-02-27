@@ -14,7 +14,6 @@ namespace cs
 
 csRenderMeshLoader::csRenderMeshLoader()
 {
-  RegisterType("MESH");
   RegisterType("RMESH");
   RegisterType("RENDERMESH");
 }

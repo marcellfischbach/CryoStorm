@@ -41,12 +41,12 @@ bool AssimpImporter::Import(const std::fs::path &path, const std::vector<std::st
     return false;
   }
 
-  bool noSkeletons  = HasOption(args, "--no-skeletons");
-  bool noAnimations = HasOption(args, "--no-animations");
-  bool noMaterials  = HasOption(args, "--no-materials");
-  bool noMeshes     = HasOption(args, "--no-meshes");
-  bool noSingleMesh = HasOption(args, "--no-single-mesh");
-  bool noEntity     = HasOption(args, "--no-entity");
+  bool skeletons  = HasOption(args, "--skeletons");
+  bool animations = HasOption(args, "--animations");
+  bool materials  = HasOption(args, "--materials");
+  bool meshes     = HasOption(args, "--meshes");
+  bool singleMesh = HasOption(args, "--single-mesh");
+  bool entity     = HasOption(args, "--entity");
 
   std::cout << "Import: " << path << " -> " << outFile << std::endl;
 
@@ -62,34 +62,34 @@ bool AssimpImporter::Import(const std::fs::path &path, const std::vector<std::st
   );
 
 
-  if (!noSkeletons)
+  if (skeletons)
   {
     std::cout << "Generate skeletons: " << outFile.generic_string() << "_skeleton.skel" << std::endl;
   }
 
-  if (!noAnimations)
+  if (animations)
   {
     std::cout << "Generate animations: " << outFile.generic_string() << "_animation.skelAnim" << std::endl;
   }
 
 
-  if (!noMaterials)
+  if (materials)
   {
     std::cout << "Generate materials: " << outFile.generic_string() << "_skeleton.materialInstance" << std::endl;
   }
 
-  if (!noMeshes)
+  if (meshes)
   {
     GenerateRenderMeshes(outFile, scene);
   }
 
-  if (!noSingleMesh)
+  if (singleMesh)
   {
     std::cout << "Generate single mesh: " << outFile.generic_string() << "_singleMesh.mesh" << std::endl;
   }
 
 
-  if (!noEntity)
+  if (!entity)
   {
     std::cout << "Generate entity: " << outFile.generic_string() << "_entity.entity" << std::endl;
   }
@@ -115,30 +115,51 @@ void write_string(std::ofstream& out, const std::string& string)
   out.write(string.c_str(), sizeof(char) * length);
 }
 
-void AssimpImporter::GenerateMesh(const std::fs::path& path, const aiMesh* mesh, const aiScene* scene) const
+
+static std::string extract_file_name(const std::string &str)
 {
-  std::string   outputFileName = path.generic_string() + "_" + mesh->mName.C_Str() + ".mesh";
+  size_t i = str.rfind("/");
+  if (i == std::string::npos)
+  {
+    return "";
+  }
+  return str.substr(i+1);
+}
+
+void AssimpImporter::GenerateMesh(const std::fs::path &path, const aiMesh *mesh, const aiScene *scene) const
+{
+  std::string outputFileName = path.generic_string() + "_" + mesh->mName.C_Str() + ".mesh";
+  std::string renderMeshName = extract_file_name(path.generic_string()) + "_" + mesh->mName.C_Str() + ".rmesh";
   std::fs::path outFile(outputFileName);
   std::ofstream out;
   out.open(outputFileName.c_str(), std::ios::out | std::ios::binary | std::ios::trunc);
 
-
-  uint32_t magic = 0x12341234;
-  uint32_t version = 1;
-  out.write(reinterpret_cast<char*>(&magic), sizeof(uint32_t));
-  out.write(reinterpret_cast<char*>(&version), sizeof(uint32_t));
-
-
-  uint32_t numMaterialSlots = 1;
-  out.write(reinterpret_cast<char*>(&numMaterialSlots), sizeof(uint32_t));
-  write_string(out, "Default");
-  write_string(out, "/materials/Default.mat");
-
-  uint32_t numSubMeshes = 1;
-  out.write(reinterpret_cast<char*>(&numSubMeshes), sizeof(uint32_t));
-  uint32_t materialSlot = 0;
-  out.write(reinterpret_cast<char*>(&materialSlot), sizeof(uint32_t));
-  write_mesh(out, mesh);
+  out
+      << "mesh {" << std::endl
+      << "  materialSlots {" << std::endl
+      << "    materialSlot name:\"Default\" locator:\"/materials/Default.mat\", " << std::endl
+      << "  }," << std::endl
+      << "  meshes {" << std::endl
+      << "    mesh slot: 0 locator: \"" << renderMeshName << "\"," << std::endl
+      << "  }," << std::endl
+      << "}" << std::endl;
+//
+//  uint32_t magic   = 0x12341234;
+//  uint32_t version = 1;
+//  out.write(reinterpret_cast<char *>(&magic), sizeof(uint32_t));
+//  out.write(reinterpret_cast<char *>(&version), sizeof(uint32_t));
+//
+//
+//  uint32_t numMaterialSlots = 1;
+//  out.write(reinterpret_cast<char *>(&numMaterialSlots), sizeof(uint32_t));
+//  write_string(out, "Default");
+//  write_string(out, "/materials/Default.mat");
+//
+//  uint32_t numSubMeshes = 1;
+//  out.write(reinterpret_cast<char *>(&numSubMeshes), sizeof(uint32_t));
+//  uint32_t materialSlot = 0;
+//  out.write(reinterpret_cast<char *>(&materialSlot), sizeof(uint32_t));
+//  write_mesh(out, mesh);
   out.close();
 }
 
@@ -375,13 +396,13 @@ void write_mesh(std::ofstream &out, const aiMesh *mesh)
 void AssimpImporter::PrintUsage() const
 {
   std::cout << "Assimp importer [options]: *.fbx *.obj" << std::endl;
-  std::cout << "   --out-file        prefix of the generated files. " << std::endl;
-  std::cout << "   --no-skeletons     skip export of skeletons" << std::endl;
-  std::cout << "   --no-animations   skip export of animations" << std::endl;
-  std::cout << "   --no-materials    skip export of materials. Must be assigned in editor" << std::endl;
-  std::cout << "   --no-meshes       skip export of each mesh" << std::endl;
-  std::cout << "   --no-single-mesh  skip export of one single mesh" << std::endl;
-  std::cout << "   --no-entity       skip export of entities" << std::endl;
+  std::cout << "   --out-file     prefix of the generated files. " << std::endl;
+  std::cout << "   --skeletons    export skeletons" << std::endl;
+  std::cout << "   --animations   export animations" << std::endl;
+  std::cout << "   --materials    export materials. Must be assigned in editor" << std::endl;
+  std::cout << "   --meshes       export each mesh" << std::endl;
+  std::cout << "   --single-mesh  export one single mesh" << std::endl;
+  std::cout << "   --entity       export entities" << std::endl;
 }
 
 
