@@ -4,7 +4,9 @@
 
 #include <csCore/loaders/csRenderMeshLoader.hh>
 #include <csCore/resource/csVFS.hh>
+#include <csCore/graphics/csMesh.hh>
 #include <csCore/graphics/iRenderMesh.hh>
+#include <csCore/resource/csAssetManager.hh>
 #include <csCore/csObjectRegistry.hh>
 
 namespace cs
@@ -12,6 +14,7 @@ namespace cs
 
 csRenderMeshLoader::csRenderMeshLoader()
 {
+  RegisterType("MESH");
   RegisterType("RMESH");
   RegisterType("RENDERMESH");
 }
@@ -65,6 +68,72 @@ csOwned<iAsset> csRenderMeshLoader::Load(const csAssetLocator &locator) const
     return csOwned<iAsset>();
   }
 
+
+  const std::string &extension = locator.GetExtension();
+  if (extension == "MESH")
+  {
+
+
+    return LoadMesh(file, locator);
+  }
+  else if (extension == "RMESH" || extension == "RENDERMESH")
+  {
+
+
+
+
+    return LoadRenderMesh(file);
+  }
+  return csOwned<iAsset>();
+}
+
+csOwned<iAsset> csRenderMeshLoader::LoadMesh(cs::iFile *file, const csAssetLocator &locator) const
+{
+  struct Header
+  {
+    uint32_t magic   = 0;
+    uint32_t version = 0;
+  };
+
+  Header       header = file->Read<Header>();
+  if (header.magic != 0x12341234 || header.version != 1)
+  {
+    return csOwned<iAsset>();
+  }
+
+
+  csRef<csMesh> mesh = new csMesh();
+  
+  uint32_t numMaterialSlots = file->Read<uint32_t>();
+  for (uint32_t i=0; i<numMaterialSlots; i++)
+  {
+    std::string slotName = file->ReadString();
+    std::string materialResource = file->ReadString();
+    
+    csAssetLocator materialLocator (locator, materialResource);
+    csRef<iMaterial> material = csAssetManager::Get()->Get<iMaterial>(materialLocator);
+    
+    mesh->AddMaterialSlot(slotName, material);
+  }
+  
+  
+  uint32_t numSubMeshes = file->Read<uint32_t>();
+  for (size_t i=0; i<numSubMeshes; i++)
+  {
+    uint32_t materialSlot = file->Read<uint32_t>();
+    csRef<iRenderMesh> renderMesh = ReadRenderMesh(file);
+
+    mesh->AddSubMesh(renderMesh, materialSlot);
+  }
+
+
+
+
+  return csOwned<iAsset>(mesh);
+}
+
+csOwned<iAsset> csRenderMeshLoader::LoadRenderMesh(cs::iFile *file) const
+{
   struct Header
   {
     uint32_t magic   = 0;
@@ -77,6 +146,12 @@ csOwned<iAsset> csRenderMeshLoader::Load(const csAssetLocator &locator) const
     return csOwned<iAsset>();
   }
 
+  return ReadRenderMesh(file);
+}
+
+
+csOwned<iRenderMesh> csRenderMeshLoader::ReadRenderMesh(cs::iFile *file) const
+{
   csRef<iRenderMeshGenerator> generator = csObjectRegistry::Get<iRenderMeshGeneratorFactory>()->Create();
 
 

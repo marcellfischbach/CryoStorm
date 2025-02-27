@@ -10,6 +10,9 @@
 namespace cs
 {
 
+struct iFile;
+struct iRenderMesh;
+
 class CS_CORE_API csRenderMeshLoader : public CS_SUPER(csAssetLoader)
 {
 public:
@@ -17,6 +20,11 @@ public:
   ~csRenderMeshLoader() override = default;
 
   csOwned<iAsset> Load(const csAssetLocator &locator) const override;
+
+private:
+  csOwned<iAsset> LoadMesh (iFile* file, const csAssetLocator &locator) const;
+  csOwned<iAsset> LoadRenderMesh (iFile* file) const;
+  csOwned<iRenderMesh> ReadRenderMesh (iFile* file) const;
 };
 
 } // cs
