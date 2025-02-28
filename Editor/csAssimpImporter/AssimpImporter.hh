@@ -31,6 +31,7 @@ private:
   void GenerateMesh(const std::fs::path &path, const aiMesh* mesh, const aiScene *scene) const;
   void GenerateRenderMesh(const std::fs::path &path, const aiMesh* mesh, const aiScene *scene) const;
 
+  void GeneratesMeshesEntity(const std::fs::path& path, const aiScene* scene) const;
 };
 
 
