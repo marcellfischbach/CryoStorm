@@ -1,18 +1,20 @@
 
 #include <csCore/resource/csVFSConfigReader.hh>
 #include <csCore/resource/csVFS.hh>
-#include <csCore/resource/csCryoFile.hh>
 #include <csCore/resource/csFileSystemArchive.hh>
 #include <csCore/resource/csFileSystemFile.hh>
 #include <csCore/resource/csJavaArchive.hh>
 #include <csCore/resource/csAssetLocator.hh>
 #include <csCore/csAutoDelete.hh>
+#include <csCryoFile/csCryoFile.hh>
 
 
 #define CS_NOT_NULL(e) if (e == nullptr) return
 namespace cs
 {
 
+
+using namespace file;
 
 csVFSConfigReader::csVFSConfigReader()
 {
@@ -121,7 +123,7 @@ csCryoFile* csVFSConfigReader::OpenConfigFile(const std::string& configPath, con
   }
 
   csCryoFile * file = new csCryoFile();
-  if (!file->Parse(fsFile))
+  if (!file->Parse(fsFile->ReadAll()))
   {
     delete file;
     return nullptr;

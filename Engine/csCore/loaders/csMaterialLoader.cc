@@ -8,6 +8,8 @@
 namespace cs
 {
 
+using namespace file;
+
 #define IF(prefix, name, text) if (std::string(#name) == (text)) return prefix##name
 #define IF_CLASS(prefix, name, text) if (std::string(#name) == (text)) return prefix::name
 

@@ -10,18 +10,18 @@ namespace cs
 
 
 
-bool csBaseCSFAssetLoader::Open(const csAssetLocator& locator, csCryoFile &file)
+bool csBaseCSFAssetLoader::Open(const csAssetLocator& locator, file::csCryoFile &file)
 {
   csRef<iFile> fd = cs::csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
 
-  return file.Parse(fd);
+  return file.Parse(fd->ReadAll());
 }
 
 
 
 csOwned<iAsset> csBaseCSFAssetLoader::Load(const csAssetLocator &locator) const
 {
-  csCryoFile file;
+  file::csCryoFile file;
   if (!Open(locator, file))
   {
     return nullptr;

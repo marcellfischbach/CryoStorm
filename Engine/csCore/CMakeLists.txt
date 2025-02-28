@@ -259,8 +259,6 @@ set(SOURCES
         resource/csBaseCSFAssetLoader.hh
         resource/csBinaryData.cc
         resource/csBinaryData.hh
-        resource/csCryoFile.cc
-        resource/csCryoFile.hh
         resource/csFileSystemArchive.cc
         resource/csFileSystemArchive.hh
         resource/csFileSystemFile.cc
@@ -332,6 +330,7 @@ add_library(csCore SHARED
 
 target_link_libraries(csCore
         ${PNG_LIBRARIES}
+        csCryoFile
 )
 
 if (${JAVA_BINDINGS})

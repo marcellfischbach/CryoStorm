@@ -2,9 +2,9 @@
 #include <csCore/resource/csVFS.hh>
 #include <csCore/resource/csVFSConfigReader.hh>
 #include <csCore/resource/csAssetLocator.hh>
-#include <csCore/resource/csCryoFile.hh>
 #include <csCore/resource/csFileSystemFile.hh>
 #include <csCore/resource/iArchive.hh>
+#include <csCryoFile/csCryoFile.hh>
 
 #include <regex>
 #include <iostream>

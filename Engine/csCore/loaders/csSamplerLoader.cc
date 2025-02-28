@@ -9,6 +9,8 @@
 namespace cs
 {
 
+using namespace file;
+
 csSamplerLoader::csSamplerLoader()
 : csBaseCSFAssetLoader()
 {

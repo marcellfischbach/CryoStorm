@@ -15,6 +15,8 @@
 namespace cs
 {
 
+using namespace file;
+
 csTextureLoader::csTextureLoader()
 {
   RegisterType("TEX2D");

@@ -11,8 +11,11 @@
 namespace cs
 {
 
+namespace file
+{
 class csCryoFile;
 class csCryoFileElement;
+}
 
 class CS_CORE_API csSettingsFile
 {
@@ -35,9 +38,9 @@ public:
 
 private:
   void Initialize(const csAssetLocator &locator);
-  CS_NODISCARD csCryoFileElement* GetElement(const std::string &path) const;
+  CS_NODISCARD file::csCryoFileElement* GetElement(const std::string &path) const;
 
-  csCryoFile * m_file;
+  file::csCryoFile * m_file;
 };
 
 class CS_CORE_API csSettings

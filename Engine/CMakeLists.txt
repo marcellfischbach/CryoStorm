@@ -4,6 +4,7 @@
 add_subdirectory(csAssimpLoader)
 add_subdirectory(csBullet)
 add_subdirectory(csCore)
+add_subdirectory(csCryoFile)
 add_subdirectory(csImgLoader)
 add_subdirectory(csLauncher)
 add_subdirectory(csOpenGL)

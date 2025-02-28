@@ -14,6 +14,9 @@ using namespace tinyxml2;
 
 namespace cs::opengl
 {
+
+using namespace file;
+
 csGL4ProgramLoader::csGL4ProgramLoader()
   : csBaseCSFAssetLoader()
 {

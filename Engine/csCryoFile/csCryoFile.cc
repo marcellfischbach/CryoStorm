@@ -1,10 +1,9 @@
 
-#include <csCore/resource/csCryoFile.hh>
-#include <csCore/resource/iFile.hh>
+#include <csCryoFile/csCryoFile.hh>
 #include <stdio.h>
 
 
-namespace cs
+namespace cs::file
 {
 
 enum class TokenType
@@ -210,7 +209,7 @@ const csCryoFileElement *csCryoFileElement::GetChild(const std::string &childNam
       }
     }
 
-    Size idx = path.find_last_of('.');
+    size_t idx = path.find_last_of('.');
     if (idx == std::string::npos)
     {
       break;
@@ -396,34 +395,11 @@ bool csCryoFile::Parse(const std::string &filename)
   return success;
 }
 
-bool csCryoFile::Parse(iFile *file)
+bool csCryoFile::Parse(const std::vector<char> &data)
 {
-  if (!file)
-  {
-    return false;
-  }
 
-  file->Seek(eSM_End, 0);
-  long size = file->Tell();
-  file->Seek(eSM_Set, 0);
-
-  char *buffer = new char[size + 1];
-  memset(buffer, 0, sizeof(char) * (size + 1));
-  size_t readSize = file->Read(1, size, buffer);
-  if (readSize != size)
-  {
-    printf("%s size: %ld  readSize: %zu\n", file->GetName().c_str(), size, readSize);
-  }
-
-  BufferBuffer bBuf(buffer, size);
-  bool         success = Parse(&bBuf);
-  if (!success)
-  {
-    printf ("Parse failed: %s\n", file->GetName().c_str());
-    printf ("%s\n", buffer);
-  }
-  delete[] buffer;
-  return success;
+  BufferBuffer bBuf(data.data(), data.size());
+  return Parse(&bBuf);
 }
 
 bool csCryoFile::Parse(const char *buffer, size_t bufferSize)
@@ -771,7 +747,7 @@ void Debug(const csCryoFileElement *element, int indent)
 
 void csCryoFile::Debug() const
 {
-  cs::Debug(&m_root, 0);
+  cs::file::Debug(&m_root, 0);
 }
 
 std::string Print(const csCryoFileElement *element, bool format, int ind, const std::string &indent, bool &endWithCurly)
@@ -854,7 +830,7 @@ std::string csCryoFile::ToString(bool format, int indent)
   for (size_t i = 0, in = m_root.GetNumberOfChildren(); i < in; i++)
   {
     bool ewc = false;
-    print += cs::Print(m_root.GetChild(i), format, 0, indentStr, ewc);
+    print += cs::file::Print(m_root.GetChild(i), format, 0, indentStr, ewc);
     if (!ewc && i + 1 < in)
     {
       print += ",";

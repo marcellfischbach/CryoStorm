@@ -16,11 +16,11 @@
 #include <csCore/window/iWindow.hh>
 #include <csCore/resource/csAssetManager.hh>
 #include <csCore/resource/csAssetPool.hh>
-#include <csCore/resource/csCryoFile.hh>
 #include <csCore/resource/csAssetLocator.hh>
 #include <csCore/resource/csVFS.hh>
 #include <csCore/iModule.hh>
 #include <csCore/iGame.hh>
+#include <csCryoFile/csCryoFile.hh>
 
 #include <iostream>
 
@@ -32,6 +32,8 @@
 
 namespace cs
 {
+
+using namespace file;
 
 csEngine::csEngine()
 {
@@ -149,7 +151,7 @@ bool csModuleConfig::LoadModuleConfigEx(const std::string &configFilename)
   }
 
   csCryoFile file;
-  if (!file.Parse(modulesConfig))
+  if (!file.Parse(modulesConfig->ReadAll()))
   {
     return false;
   }

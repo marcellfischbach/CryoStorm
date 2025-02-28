@@ -1,21 +1,16 @@
 
 #pragma once
 
-#include <csCore/csCoreExport.hh>
+#include <csCryoFile/csCryoFileExport.hh>
 #include <csCore/csDefs.hh>
 #include <string>
 #include <vector>
 
-namespace cs
-{
-struct iFile;
-}
-
-namespace cs
+namespace cs::file
 {
 
 
-class CS_CORE_API csCryoFileAttribute
+class CS_CRYOFILE_API csCryoFileAttribute
 {
 public:
   enum class AttributeType
@@ -41,7 +36,7 @@ private:
   AttributeType m_type;
 };
 
-class CS_CORE_API csCryoFileElement
+class CS_CRYOFILE_API csCryoFileElement
 {
 public:
   csCryoFileElement();
@@ -97,7 +92,7 @@ private:
 
 struct iBuffer;
 
-class CS_CORE_API csCryoFile
+class CS_CRYOFILE_API csCryoFile
 {
 public:
   csCryoFile();
@@ -105,7 +100,7 @@ public:
 
 
   CS_NODISCARD bool Parse(const std::string &filename);
-  CS_NODISCARD bool Parse(iFile *file);
+  CS_NODISCARD bool Parse(const std::vector<char>& data);
   CS_NODISCARD bool Parse(const char *buffer, size_t bufferSize);
 
   std::string ToString  (bool format, int indent);

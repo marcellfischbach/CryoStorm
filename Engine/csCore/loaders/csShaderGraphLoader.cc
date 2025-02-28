@@ -15,6 +15,8 @@
 namespace cs
 {
 
+using namespace file;
+
 csShaderGraphLoader::csShaderGraphLoader()
     : csBaseCSFAssetLoader()
 {

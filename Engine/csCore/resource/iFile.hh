@@ -28,6 +28,17 @@ struct CS_CORE_API iFile : public CS_SUPER(iObject)
   virtual Size Write(Size elementSize, Size elementCount, const void* buffer) = 0;
   virtual void Close() = 0;
 
+  virtual std::vector<char> ReadAll()
+  {
+    Seek(eSM_End, 0);
+    long size = Tell();
+    Seek(eSM_Set, 0);
+    std::vector<char> data;
+    data.resize(size);
+    Read(sizeof(char), size, data.data());
+    return data;
+  }
+
   template<typename T>
   T Read ()
   {

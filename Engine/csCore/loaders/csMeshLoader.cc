@@ -9,6 +9,7 @@
 namespace cs
 {
 
+using namespace file;
 
 csMeshLoader::csMeshLoader()
     : csBaseCSFAssetLoader()

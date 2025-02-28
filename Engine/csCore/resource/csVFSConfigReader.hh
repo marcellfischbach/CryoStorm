@@ -7,8 +7,11 @@
 
 namespace cs
 {
+namespace file
+{
 class csCryoFile;
 class csCryoFileElement;
+}
 
 class CS_CORE_API csVFSConfigReader
 {
@@ -19,13 +22,13 @@ public:
   static void Read(const std::string &configPath, const std::string &filename);
 
 private:
-  static void ReadConfig(const csCryoFile *file);
-  static void ReadVFS(const csCryoFileElement *vfsElement);
-  static void ReadArchives(const csCryoFileElement *archivesElement);
-  static void ReadArchive(const csCryoFileElement *archiveElement);
-  static void ReadAliases(const csCryoFileElement *aliasesElement);
-  static void ReadAlias(const csCryoFileElement *aliasElement);
-  static csCryoFile *OpenConfigFile(const std::string &configPath, const std::string &filename) ;
+  static void ReadConfig(const file::csCryoFile* file);
+  static void ReadVFS(const file::csCryoFileElement *vfsElement);
+  static void ReadArchives(const file::csCryoFileElement *archivesElement);
+  static void ReadArchive(const file::csCryoFileElement *archiveElement);
+  static void ReadAliases(const file::csCryoFileElement *aliasesElement);
+  static void ReadAlias(const file::csCryoFileElement *aliasElement);
+  static file::csCryoFile *OpenConfigFile(const std::string &configPath, const std::string &filename) ;
 };
 
 } // ce

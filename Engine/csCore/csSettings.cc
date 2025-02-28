@@ -1,11 +1,12 @@
 #include <csCore/csSettings.hh>
-#include <csCore/resource/csCryoFile.hh>
 #include <csCore/resource/csAssetLocator.hh>
 #include <csCore/resource/csVFS.hh>
-#
+#include <csCryoFile/csCryoFile.hh>
 
 namespace cs
 {
+
+using namespace file;
 
 csSettingsFile::csSettingsFile(const std::string& locator)
   : m_file(nullptr)
@@ -24,8 +25,8 @@ void csSettingsFile::Initialize(const csAssetLocator& locator)
   csRef<iFile> file = csVFS::Get()->Open(locator, eAM_Read, eOM_Binary);
   if (file)
   {
-    m_file = new csCryoFile();
-    if (!m_file->Parse(file))
+    m_file = new file::csCryoFile();
+    if (!m_file->Parse(file->ReadAll()))
     {
       delete m_file;
       m_file = nullptr;

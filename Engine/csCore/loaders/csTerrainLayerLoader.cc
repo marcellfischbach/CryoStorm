@@ -10,6 +10,10 @@
 
 namespace cs
 {
+
+using namespace file;
+
+
 csTerrainLayerLoader::csTerrainLayerLoader()
 {
   RegisterType("TERRAINLAYER");

@@ -6,7 +6,7 @@
 #include <csCore/resource/csVFS.hh>
 #include <csCore/graphics/eVertexStream.hh>
 #include <csCore/math/csMath.hh>
-#include <csCore/resource/csCryoFile.hh>
+#include <csCryoFile/csCryoFile.hh>
 #include <regex>
 #include <iostream>
 #include <set>
@@ -14,6 +14,8 @@
 
 namespace cs::opengl
 {
+
+using namespace file;
 
 std::vector<std::string> replace_includes(const csAssetLocator *parent,
                                           std::vector<std::string> &lines,
@@ -116,8 +118,8 @@ loadExternalLinesRaw(const csAssetLocator &locator, iFile *file, std::set<csAsse
 std::vector<std::string>
 loadExternalLinesSpc(const csAssetLocator &locator, iFile *file, std::set<csAssetLocator> &included)
 {
-  cs::csCryoFile fFile;
-  bool             res = fFile.Parse(file);
+  cs::file::csCryoFile fFile;
+  bool             res = fFile.Parse(file->ReadAll());
   if (!res)
   {
     return std::vector<std::string>();

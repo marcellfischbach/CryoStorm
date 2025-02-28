@@ -7,7 +7,7 @@
 #include <csCore/csCoreExport.hh>
 #include <csCore/csClass.hh>
 #include <csCore/resource/csAssetLoader.hh>
-#include <csCore/resource/csCryoFile.hh>
+#include <csCryoFile/csCryoFile.hh>
 #include <vector>
 
 namespace cs
@@ -22,7 +22,7 @@ class CS_CORE_API csBaseCSFAssetLoader : public CS_SUPER(csAssetLoader)
 protected:
   csBaseCSFAssetLoader() = default;
 
-  virtual csOwned<iAsset> Load(const csCryoFile *file, const csAssetLocator &locator) const = 0;
+  virtual csOwned<iAsset> Load(const file::csCryoFile *file, const csAssetLocator &locator) const = 0;
 
 public:
   ~csBaseCSFAssetLoader() override = default;
@@ -30,7 +30,7 @@ public:
   CS_NODISCARD csOwned<iAsset> Load(const csAssetLocator &locator) const override;
 
 private:
-  CS_NODISCARD static bool Open(const csAssetLocator &locator, csCryoFile &file);
+  CS_NODISCARD static bool Open(const csAssetLocator &locator, file::csCryoFile &file);
 
 
 };
