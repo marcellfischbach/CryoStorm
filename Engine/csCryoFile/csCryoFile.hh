@@ -5,6 +5,8 @@
 #include <csCore/csDefs.hh>
 #include <string>
 #include <vector>
+#include <iostream>
+#include <fstream>
 
 namespace cs::file
 {
@@ -42,6 +44,8 @@ public:
   csCryoFileElement();
   ~csCryoFileElement();
 
+  void Write(std::ostream& out, bool format, const std::string &indent, unsigned indentDepth = 2);
+
   void SetTagName(const std::string &tagName);
   CS_NODISCARD const std::string &GetTagName() const;
 
@@ -76,7 +80,6 @@ public:
   CS_NODISCARD double GetAttribute(size_t idx, double defaultValue) const;
   CS_NODISCARD double GetAttribute(const std::string &attributeName, double defaultValue) const;
 
-
 private:
   std::string m_tagName;
 
@@ -102,8 +105,9 @@ public:
   CS_NODISCARD bool Parse(const std::string &filename);
   CS_NODISCARD bool Parse(const std::vector<char>& data);
   CS_NODISCARD bool Parse(const char *buffer, size_t bufferSize);
+  void Write(std::ostream& out, bool format = true, unsigned indent = 2);
 
-  std::string ToString  (bool format, int indent);
+  std::string ToString2  (bool format, int indent);
 
   CS_NODISCARD csCryoFileElement *Root();
   CS_NODISCARD const csCryoFileElement *Root() const;
@@ -111,14 +115,37 @@ public:
   CS_NODISCARD const char *GetData() const;
   CS_NODISCARD size_t GetDataSize() const;
 
+  CS_NODISCARD std::vector<std::string> GetDataNames() const;
+  CS_NODISCARD size_t GetNumberOfDatas() const;
+  CS_NODISCARD const std::vector<uint8_t>& GetData(size_t idx) const;
+  CS_NODISCARD const std::vector<uint8_t>& GetData(const std::string &name) const;
+
+  void AddData(const std::string& name, uint32_t size, uint8_t* data);
+  void AddData(const std::string& name, std::vector<uint8_t> data);
+
   void Debug() const;
 
+
+
 private:
+
+  void WriteData(std::ostream& out);
+
   CS_NODISCARD bool Parse(iBuffer *buffer);
+  void ParseData(size_t size, char* buffer);
+  void ParseData_V1(std::istream &in);
   csCryoFileElement m_root;
 
   char   *m_data;
   size_t m_dataSize;
+
+  struct Data
+  {
+    std::string name;
+    std::vector<uint8_t> data;
+  };
+
+  std::vector<Data> m_datas;
 
 };
 

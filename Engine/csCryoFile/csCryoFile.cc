@@ -1,6 +1,7 @@
 
 #include <csCryoFile/csCryoFile.hh>
 #include <stdio.h>
+#include <streambuf>
 
 
 namespace cs::file
@@ -25,15 +26,17 @@ struct Token
   std::string value;
 
   Token(TokenType type)
-      : type(type)
-  {}
+    : type(type)
+  {
+  }
 
   Token(TokenType type, std::string value)
-      : type(type), value(value)
-  {}
+    : type(type), value(value)
+  {
+  }
 
   Token(TokenType type, char ch)
-      : type(type), value("")
+    : type(type), value("")
   {
     value += ch;
   }
@@ -50,13 +53,13 @@ struct iBuffer
 
   virtual void Put() = 0;
 
-  virtual void ReadRest(char **outBuffer, size_t &size) = 0;
+  virtual void ReadRest(char** outBuffer, size_t& size) = 0;
 };
 
 class BufferBuffer : public iBuffer
 {
 public:
-  BufferBuffer(const char *buffer, size_t bufferSize);
+  BufferBuffer(const char* buffer, size_t bufferSize);
 
   ~BufferBuffer() override;
 
@@ -66,33 +69,33 @@ public:
 
   void Put() override;
 
-  void ReadRest(char **outBuffer, size_t &size) override;
+  void ReadRest(char** outBuffer, size_t& size) override;
 
 private:
-  const char *m_buffer;
+  const char* m_buffer;
   size_t     m_bufferSize;
   size_t     m_idx;
 
 };
 
-Token GetNextToken(iBuffer *buffer);
+Token GetNextToken(iBuffer* buffer);
 
-csCryoFileAttribute::csCryoFileAttribute(const std::string &value, AttributeType type)
-    : m_name(""), m_value(value), m_type(type)
+csCryoFileAttribute::csCryoFileAttribute(const std::string& value, AttributeType type)
+  : m_name(""), m_value(value), m_type(type)
 {
 }
 
-csCryoFileAttribute::csCryoFileAttribute(const std::string &name, const std::string &value, AttributeType type)
-    : m_name(name), m_value(value), m_type(type)
+csCryoFileAttribute::csCryoFileAttribute(const std::string& name, const std::string& value, AttributeType type)
+  : m_name(name), m_value(value), m_type(type)
 {
 }
 
-const std::string &csCryoFileAttribute::GetName() const
+const std::string& csCryoFileAttribute::GetName() const
 {
   return m_name;
 }
 
-const std::string &csCryoFileAttribute::GetValue() const
+const std::string& csCryoFileAttribute::GetValue() const
 {
   return m_value;
 }
@@ -104,7 +107,7 @@ int csCryoFileAttribute::GetIntValue() const
 
 float csCryoFileAttribute::GetFloatValue() const
 {
-  return (float) atof(m_value.c_str());
+  return (float)atof(m_value.c_str());
 }
 
 
@@ -119,14 +122,14 @@ csCryoFileAttribute::AttributeType csCryoFileAttribute::GetType() const
 }
 
 csCryoFileElement::csCryoFileElement()
-    : m_parent(nullptr)
+  : m_parent(nullptr)
 {
 
 }
 
 csCryoFileElement::~csCryoFileElement()
 {
-  for (csCryoFileElement *element: m_children)
+  for (csCryoFileElement* element : m_children)
   {
     delete element;
   }
@@ -134,28 +137,28 @@ csCryoFileElement::~csCryoFileElement()
   m_parent = nullptr;
 }
 
-void csCryoFileElement::SetTagName(const std::string &tagName)
+void csCryoFileElement::SetTagName(const std::string& tagName)
 {
   m_tagName = tagName;
 }
 
-const std::string &csCryoFileElement::GetTagName() const
+const std::string& csCryoFileElement::GetTagName() const
 {
   return m_tagName;
 }
 
-void csCryoFileElement::AddChild(csCryoFileElement *element)
+void csCryoFileElement::AddChild(csCryoFileElement* element)
 {
   element->m_parent = this;
   m_children.push_back(element);
 }
 
-csCryoFileElement *csCryoFileElement::GetParent()
+csCryoFileElement* csCryoFileElement::GetParent()
 {
   return m_parent;
 }
 
-const csCryoFileElement *csCryoFileElement::GetParent() const
+const csCryoFileElement* csCryoFileElement::GetParent() const
 {
   return m_parent;
 }
@@ -165,12 +168,12 @@ size_t csCryoFileElement::GetNumberOfChildren() const
   return m_children.size();
 }
 
-csCryoFileElement *csCryoFileElement::GetChild(size_t idx)
+csCryoFileElement* csCryoFileElement::GetChild(size_t idx)
 {
-  return const_cast<csCryoFileElement *>(static_cast<const csCryoFileElement *>(this)->GetChild(idx));
+  return const_cast<csCryoFileElement*>(static_cast<const csCryoFileElement*>(this)->GetChild(idx));
 }
 
-const csCryoFileElement *csCryoFileElement::GetChild(size_t idx) const
+const csCryoFileElement* csCryoFileElement::GetChild(size_t idx) const
 {
   if (idx >= m_children.size())
   {
@@ -179,17 +182,17 @@ const csCryoFileElement *csCryoFileElement::GetChild(size_t idx) const
   return m_children[idx];
 }
 
-csCryoFileElement *csCryoFileElement::GetChild(const std::string &childName)
+csCryoFileElement* csCryoFileElement::GetChild(const std::string& childName)
 {
-  return const_cast<csCryoFileElement *>(static_cast<const csCryoFileElement *>(this)->GetChild(childName));
+  return const_cast<csCryoFileElement*>(static_cast<const csCryoFileElement*>(this)->GetChild(childName));
 }
 
-const csCryoFileElement *csCryoFileElement::GetChild(const std::string &childName) const
+const csCryoFileElement* csCryoFileElement::GetChild(const std::string& childName) const
 {
   std::string path = childName;
   while (true)
   {
-    for (auto child: m_children)
+    for (auto child : m_children)
     {
       if (path == child->m_tagName)
       {
@@ -199,8 +202,8 @@ const csCryoFileElement *csCryoFileElement::GetChild(const std::string &childNam
         }
         else
         {
-          std::string             tail     = childName.substr(path.length() + 1);
-          const csCryoFileElement *element = child->GetChild(tail);
+          std::string             tail = childName.substr(path.length() + 1);
+          const csCryoFileElement* element = child->GetChild(tail);
           if (element)
           {
             return element;
@@ -220,12 +223,12 @@ const csCryoFileElement *csCryoFileElement::GetChild(const std::string &childNam
 }
 
 
-bool csCryoFileElement::HasChild(const std::string &childName) const
+bool csCryoFileElement::HasChild(const std::string& childName) const
 {
   return GetChild(childName) != nullptr;
 }
 
-void csCryoFileElement::AddAttribute(const csCryoFileAttribute &attribute)
+void csCryoFileElement::AddAttribute(const csCryoFileAttribute& attribute)
 {
   m_attributes.push_back(attribute);
 }
@@ -235,9 +238,9 @@ size_t csCryoFileElement::GetNumberOfAttributes() const
   return m_attributes.size();
 }
 
-bool csCryoFileElement::HasAttribute(const std::string &attributeName) const
+bool csCryoFileElement::HasAttribute(const std::string& attributeName) const
 {
-  for (const csCryoFileAttribute &attr: m_attributes)
+  for (const csCryoFileAttribute& attr : m_attributes)
   {
     if (attr.GetName() == attributeName)
     {
@@ -247,7 +250,7 @@ bool csCryoFileElement::HasAttribute(const std::string &attributeName) const
   return false;
 }
 
-const csCryoFileAttribute *csCryoFileElement::GetAttribute(size_t idx) const
+const csCryoFileAttribute* csCryoFileElement::GetAttribute(size_t idx) const
 {
   if (idx >= m_attributes.size())
   {
@@ -256,9 +259,9 @@ const csCryoFileAttribute *csCryoFileElement::GetAttribute(size_t idx) const
   return &m_attributes[idx];
 }
 
-const csCryoFileAttribute *csCryoFileElement::GetAttribute(const std::string &attributeName) const
+const csCryoFileAttribute* csCryoFileElement::GetAttribute(const std::string& attributeName) const
 {
-  for (const csCryoFileAttribute &attr: m_attributes)
+  for (const csCryoFileAttribute& attr : m_attributes)
   {
     if (attr.GetName() == attributeName)
     {
@@ -268,63 +271,63 @@ const csCryoFileAttribute *csCryoFileElement::GetAttribute(const std::string &at
   return nullptr;
 }
 
-const std::string csCryoFileElement::GetAttribute(size_t idx, const std::string &defaultValue) const
+const std::string csCryoFileElement::GetAttribute(size_t idx, const std::string& defaultValue) const
 {
-  const csCryoFileAttribute *attr = GetAttribute(idx);
+  const csCryoFileAttribute* attr = GetAttribute(idx);
   return attr ? attr->GetValue() : defaultValue;
 }
 
 
-const std::string csCryoFileElement::GetAttribute(const std::string &attributeName, const std::string &defaultValue) const
+const std::string csCryoFileElement::GetAttribute(const std::string& attributeName, const std::string& defaultValue) const
 {
-  const csCryoFileAttribute *attr = GetAttribute(attributeName);
+  const csCryoFileAttribute* attr = GetAttribute(attributeName);
   return attr ? attr->GetValue() : defaultValue;
 }
 
 
 int csCryoFileElement::GetAttribute(size_t idx, int defaultValue) const
 {
-  const csCryoFileAttribute *attr = GetAttribute(idx);
+  const csCryoFileAttribute* attr = GetAttribute(idx);
   return attr ? attr->GetIntValue() : defaultValue;
 }
 
 
-int csCryoFileElement::GetAttribute(const std::string &attributeName, int defaultValue) const
+int csCryoFileElement::GetAttribute(const std::string& attributeName, int defaultValue) const
 {
-  const csCryoFileAttribute *attr = GetAttribute(attributeName);
+  const csCryoFileAttribute* attr = GetAttribute(attributeName);
   return attr ? attr->GetIntValue() : defaultValue;
 }
 
 float csCryoFileElement::GetAttribute(size_t idx, float defaultValue) const
 {
-  const csCryoFileAttribute *attr = GetAttribute(idx);
+  const csCryoFileAttribute* attr = GetAttribute(idx);
   return attr ? attr->GetFloatValue() : defaultValue;
 }
 
 
-float csCryoFileElement::GetAttribute(const std::string &attributeName, float defaultValue) const
+float csCryoFileElement::GetAttribute(const std::string& attributeName, float defaultValue) const
 {
-  const csCryoFileAttribute *attr = GetAttribute(attributeName);
+  const csCryoFileAttribute* attr = GetAttribute(attributeName);
   return attr ? attr->GetFloatValue() : defaultValue;
 }
 
 
 double csCryoFileElement::GetAttribute(size_t idx, double defaultValue) const
 {
-  const csCryoFileAttribute *attr = GetAttribute(idx);
+  const csCryoFileAttribute* attr = GetAttribute(idx);
   return attr ? attr->GetDoubleValue() : defaultValue;
 }
 
 
-double csCryoFileElement::GetAttribute(const std::string &attributeName, double defaultValue) const
+double csCryoFileElement::GetAttribute(const std::string& attributeName, double defaultValue) const
 {
-  const csCryoFileAttribute *attr = GetAttribute(attributeName);
+  const csCryoFileAttribute* attr = GetAttribute(attributeName);
   return attr ? attr->GetDoubleValue() : defaultValue;
 }
 
 
 csCryoFile::csCryoFile()
-    : m_data(nullptr), m_dataSize(0)
+  : m_data(nullptr), m_dataSize(0)
 {
 
 }
@@ -339,17 +342,17 @@ csCryoFile::~csCryoFile()
   m_dataSize = 0;
 }
 
-csCryoFileElement *csCryoFile::Root()
+csCryoFileElement* csCryoFile::Root()
 {
   return &m_root;
 }
 
-const csCryoFileElement *csCryoFile::Root() const
+const csCryoFileElement* csCryoFile::Root() const
 {
   return &m_root;
 }
 
-const char *csCryoFile::GetData() const
+const char* csCryoFile::GetData() const
 {
   return m_data;
 }
@@ -359,10 +362,65 @@ size_t csCryoFile::GetDataSize() const
   return m_dataSize;
 }
 
-bool csCryoFile::Parse(const std::string &filename)
+static std::vector<uint8_t> NULL_DATA;
+
+std::vector<std::string> csCryoFile::GetDataNames() const
+{
+  std::vector<std::string> names;
+  for (auto data : m_datas)
+  {
+    names.push_back(data.name);
+  }
+  return names;
+}
+
+size_t csCryoFile::GetNumberOfDatas() const
+{
+  return m_datas.size();
+}
+
+const std::vector<uint8_t>& csCryoFile::GetData(size_t idx) const
+{
+  if (idx >= m_datas.size())
+  {
+    return NULL_DATA;
+  }
+  return m_datas[idx].data;
+}
+
+const std::vector<uint8_t>& csCryoFile::GetData(const std::string& name) const
+{
+  for (auto& data : m_datas)
+  {
+    if (data.name == name)
+    {
+      return data.data;
+    }
+  }
+  return NULL_DATA;
+}
+
+
+void csCryoFile::AddData(const std::string& name, uint32_t size, uint8_t* data)
+{
+  std::vector<uint8_t> dataBuffer;
+  dataBuffer.resize(size);
+  memcpy(dataBuffer.data(), data, size);
+
+  m_datas.emplace_back(name, dataBuffer);
+}
+
+
+void csCryoFile::AddData(const std::string& name, std::vector<uint8_t> data)
+{
+  m_datas.emplace_back(name, data);
+}
+
+
+bool csCryoFile::Parse(const std::string& filename)
 {
 #ifdef CS_WIN32
-  FILE *file = nullptr;
+  FILE* file = nullptr;
   if (fopen_s(&file, filename.c_str(), "rb") != 0)
   {
     return false;
@@ -379,7 +437,7 @@ bool csCryoFile::Parse(const std::string &filename)
   long size = ftell(file);
   fseek(file, 0, SEEK_SET);
 
-  char *buffer         = new char[size];
+  char* buffer = new char[size];
   fread(buffer, 1, size, file);
   fclose(file);
 
@@ -388,42 +446,42 @@ bool csCryoFile::Parse(const std::string &filename)
   bool         success = Parse(&bBuf);
   if (!success)
   {
-    printf ("Parse failed %s\n", filename.c_str());
-    printf ("%s\n", buffer);
+    printf("Parse failed %s\n", filename.c_str());
+    printf("%s\n", buffer);
   }
   delete[] buffer;
   return success;
 }
 
-bool csCryoFile::Parse(const std::vector<char> &data)
+bool csCryoFile::Parse(const std::vector<char>& data)
 {
 
   BufferBuffer bBuf(data.data(), data.size());
   return Parse(&bBuf);
 }
 
-bool csCryoFile::Parse(const char *buffer, size_t bufferSize)
+bool csCryoFile::Parse(const char* buffer, size_t bufferSize)
 {
   BufferBuffer bBuf(buffer, bufferSize);
   bool  success = Parse(&bBuf);
   if (!success)
   {
-    printf ("Parse failed:\n%s\n", buffer);
+    printf("Parse failed:\n%s\n", buffer);
   }
 
   return success;
 }
 
 
-bool csCryoFile::Parse(iBuffer *buffer)
+bool csCryoFile::Parse(iBuffer* buffer)
 {
   if (!buffer)
   {
     return false;
   }
 
-  csCryoFileElement *parent         = &m_root;
-  csCryoFileElement *currentElement = nullptr;
+  csCryoFileElement* parent = &m_root;
+  csCryoFileElement* currentElement = nullptr;
   while (true)
   {
     Token token = GetNextToken(buffer);
@@ -438,11 +496,11 @@ bool csCryoFile::Parse(iBuffer *buffer)
       switch (token.type)
       {
       case TokenType::CurlyBraceOpen:
-        parent         = currentElement;
+        parent = currentElement;
         currentElement = nullptr;
         break;
       case TokenType::CurlyBraceClose:
-        parent         = parent->GetParent();
+        parent = parent->GetParent();
         currentElement = nullptr;
         break;
       case TokenType::Comma:
@@ -457,8 +515,15 @@ bool csCryoFile::Parse(iBuffer *buffer)
           printf("Unexpected End of Document found\n");
           return false;
         }
-        buffer->ReadRest(&m_data, m_dataSize);
-        return true;
+        else
+        {
+          char* dataBuffer = nullptr;
+          size_t dataSize= 0;
+          buffer->ReadRest(&dataBuffer, dataSize);
+          ParseData(dataSize, dataBuffer);
+          delete[] dataBuffer;
+          return true;
+        }
 
       case TokenType::Identifier:
         if (!currentElement)
@@ -525,15 +590,16 @@ bool csCryoFile::Parse(iBuffer *buffer)
 }
 
 
-BufferBuffer::BufferBuffer(const char *buffer, size_t bufferSize)
-    : m_buffer(buffer), m_bufferSize(bufferSize), m_idx(0)
+
+BufferBuffer::BufferBuffer(const char* buffer, size_t bufferSize)
+  : m_buffer(buffer), m_bufferSize(bufferSize), m_idx(0)
 {
 
 }
 
 BufferBuffer::~BufferBuffer()
 {
-  m_buffer     = nullptr;
+  m_buffer = nullptr;
   m_bufferSize = 0;
 }
 
@@ -557,7 +623,7 @@ void BufferBuffer::Put()
   }
 }
 
-void BufferBuffer::ReadRest(char **outBuffer, size_t &bufferSize)
+void BufferBuffer::ReadRest(char** outBuffer, size_t& bufferSize)
 {
   bufferSize = m_bufferSize - m_idx;
   *outBuffer = new char[bufferSize];
@@ -565,7 +631,7 @@ void BufferBuffer::ReadRest(char **outBuffer, size_t &bufferSize)
 }
 
 
-Token GetNextToken(iBuffer *buffer)
+Token GetNextToken(iBuffer* buffer)
 {
 
   char ch = ' ';
@@ -621,8 +687,8 @@ Token GetNextToken(iBuffer *buffer)
 
   // check identifier
   if (ch == '_'
-      || ch >= 'a' && ch <= 'z'
-      || ch >= 'A' && ch <= 'Z')
+    || ch >= 'a' && ch <= 'z'
+    || ch >= 'A' && ch <= 'Z')
   {
     std::string id;
     id += ch;
@@ -630,10 +696,10 @@ Token GetNextToken(iBuffer *buffer)
     {
       ch = buffer->GetNext();
       if (ch == '_'
-          || ch == '.'
-          || ch >= 'a' && ch <= 'z'
-          || ch >= 'A' && ch <= 'Z'
-          || ch >= '0' && ch <= '9')
+        || ch == '.'
+        || ch >= 'a' && ch <= 'z'
+        || ch >= 'A' && ch <= 'Z'
+        || ch >= '0' && ch <= '9')
       {
         id += ch;
       }
@@ -680,12 +746,12 @@ Token GetNextToken(iBuffer *buffer)
     {
       ch = buffer->GetNext();
       if (ch >= '0' && ch <= '9'
-          || ch == '-'
-          || ch == '+'
-          || ch == 'e'
-          || ch == 'E'
-          || ch == '.'
-          )
+        || ch == '-'
+        || ch == '+'
+        || ch == 'e'
+        || ch == 'E'
+        || ch == '.'
+        )
       {
         num += ch;
       }
@@ -702,7 +768,7 @@ Token GetNextToken(iBuffer *buffer)
   return Token(TokenType::Invalid);
 }
 
-void Debug(const csCryoFileElement *element, int indent)
+void Debug(const csCryoFileElement* element, int indent)
 {
   for (int i = 0; i < indent; i++)
   {
@@ -715,7 +781,7 @@ void Debug(const csCryoFileElement *element, int indent)
   }
   for (size_t i = 0; i < element->GetNumberOfAttributes(); i++)
   {
-    const csCryoFileAttribute *attr = element->GetAttribute(i);
+    const csCryoFileAttribute* attr = element->GetAttribute(i);
     if (attr->GetName().length() > 0)
     {
       printf("<%s:%s> ", attr->GetName().c_str(), attr->GetValue().c_str());
@@ -733,7 +799,7 @@ void Debug(const csCryoFileElement *element, int indent)
     {
       Debug(element->GetChild(i), indent + 1);
     }
-    for (int    i = 0; i < indent; i++)
+    for (int i = 0; i < indent; i++)
     {
       printf("  ");
     }
@@ -750,7 +816,7 @@ void csCryoFile::Debug() const
   cs::file::Debug(&m_root, 0);
 }
 
-std::string Print(const csCryoFileElement *element, bool format, int ind, const std::string &indent, bool &endWithCurly)
+std::string Print(const csCryoFileElement* element, bool format, int ind, const std::string& indent, bool& endWithCurly)
 {
   endWithCurly = false;
   std::string line;
@@ -765,7 +831,7 @@ std::string Print(const csCryoFileElement *element, bool format, int ind, const 
   line += element->GetTagName();
   for (size_t i = 0; i < element->GetNumberOfAttributes(); i++)
   {
-    const csCryoFileAttribute *attr = element->GetAttribute(i);
+    const csCryoFileAttribute* attr = element->GetAttribute(i);
     line += " ";
     if (attr->GetName().length() > 0)
     {
@@ -813,15 +879,15 @@ std::string Print(const csCryoFileElement *element, bool format, int ind, const 
       }
     }
     line += "}";
-    endWithCurly  = true;
+    endWithCurly = true;
   }
   return line;
 }
 
-std::string csCryoFile::ToString(bool format, int indent)
+std::string csCryoFile::ToString2(bool format, int indent)
 {
   std::string indentStr;
-  for (int    i = 0; i < indent; i++)
+  for (int i = 0; i < indent; i++)
   {
     indentStr += " ";
   }
@@ -848,5 +914,166 @@ std::string csCryoFile::ToString(bool format, int indent)
   return print;
 
 }
+
+void csCryoFile::Write(std::ostream& out, bool format, unsigned indent)
+{
+
+  for (size_t i = 0, in = m_root.GetNumberOfChildren(); i < in; i++)
+  {
+    auto child = m_root.GetChild(i);
+    child->Write(out, format, "", indent);
+  }
+
+  if (!m_datas.empty())
+  {
+    WriteData(out);
+  }
+}
+
+std::string indent_str(unsigned depth)
+{
+  std::string res;
+  res.resize(depth, ' ');
+  return res;
+}
+
+void csCryoFileElement::Write(std::ostream& out, bool format, const std::string& indent, unsigned indentDepth)
+{
+  if (format)
+  {
+    out << indent;
+  }
+  out << m_tagName;
+
+  // write attributes
+  for (auto attrib : m_attributes)
+  {
+    out << " ";
+    if (!attrib.GetName().empty())
+    {
+      out << attrib.GetName() << ":";
+    }
+    if (attrib.GetType() == csCryoFileAttribute::AttributeType::String)
+    {
+      out << '"';
+    }
+    out << attrib.GetValue();
+    if (attrib.GetType() == csCryoFileAttribute::AttributeType::String)
+    {
+      out << '"';
+    }
+  }
+
+  if (!m_children.empty())
+  {
+    out << " {";
+    if (format)
+    {
+      out << std::endl;
+    }
+
+    std::string totalIndent = indent + indent_str(indentDepth);
+    for (auto child : m_children)
+    {
+      child->Write(out, format, totalIndent, indentDepth);
+    }
+    if (format)
+    {
+      out << indent;
+    }
+    out << "}";
+  }
+  out << ",";
+  if (format)
+  {
+    out << std::endl;
+  }
+}
+
+
+void write_string(std::ostream& out, const std::string& str)
+{
+  uint32_t strLength = str.length();
+  out.write(reinterpret_cast<char*>(&strLength), sizeof(uint32_t));
+  out.write(str.c_str(), strLength);
+}
+
+std::string read_string(std::istream& in)
+{
+  uint32_t strLength;
+  in.read(reinterpret_cast<char*>(&strLength), sizeof(uint32_t));
+  std::string str;
+  str.resize(strLength, ' ');
+  in.read(str.data(), strLength);
+  return str;
+}
+
+uint32_t get_string_length(const std::string& str)
+{
+  return str.length() + sizeof(uint32_t);
+}
+
+
+void csCryoFile::WriteData(std::ostream& out)
+{
+  out << "@";
+
+
+  uint32_t version = 0x01; 
+  out.write(reinterpret_cast<char*>(&version), sizeof(uint32_t));
+
+  uint32_t numData = m_datas.size();
+  out.write(reinterpret_cast<char*>(&numData), sizeof(uint32_t));
+
+  for (auto& data : m_datas)
+  {
+    write_string(out, data.name);
+    uint32_t bufferSize = data.data.size();
+    out.write(reinterpret_cast<char*>(&bufferSize), sizeof(uint32_t));
+    out.write(reinterpret_cast<char*>(data.data.data()), data.data.size());
+  }
+}
+
+
+struct membuf : std::streambuf
+{
+  membuf(char* begin, char* end) {
+    this->setg(begin, begin, end);
+  }
+};
+
+void csCryoFile::ParseData(size_t size, char* buffer)
+{
+  membuf sbuf(buffer, buffer + size);
+  std::istream in(&sbuf);
+
+  uint32_t version;
+  in.read(reinterpret_cast<char*>(&version), sizeof(uint32_t));
+  if (version == 0x01)
+  {
+    ParseData_V1(in);
+  }
+}
+
+void csCryoFile::ParseData_V1(std::istream &in)
+{
+  uint32_t numData;
+  in.read(reinterpret_cast<char*>(&numData), sizeof(uint32_t));
+
+  for (uint32_t i = 0; i < numData; i++)
+  {
+    std::string name = read_string(in);
+    uint32_t dataSize;
+    in.read(reinterpret_cast<char*>(&dataSize), sizeof(uint32_t));
+
+    std::vector<uint8_t> data;
+    data.resize(dataSize);
+    in.read(reinterpret_cast<char*>(data.data()), dataSize);
+
+    m_datas.emplace_back(name, data);
+  }
+}
+
+
 
 }
