@@ -3,9 +3,10 @@
 
 #include <csCore/csCoreExport.hh>
 #include <csCore/csTypes.hh>
-#include <string>
 #include <exception>
 #include <map>
+#include <string>
+#include <vector>
 
 namespace cs
 {
@@ -77,6 +78,8 @@ private:
 class CS_CORE_API csBinaryInputStream
 {
 public:
+  csBinaryInputStream(const std::vector<char> &data);
+  csBinaryInputStream(const std::vector<uint8_t> &data);
   csBinaryInputStream(const uint8_t* m_buffer, Size bufferSize);
   ~csBinaryInputStream();
 
@@ -93,6 +96,29 @@ public:
   const csBinaryInputStream& operator>>(bool& d) const;
   const csBinaryInputStream& operator>>(std::string& d) const;
   const csBinaryInputStream& Read(uint8_t* data, Size size) const;
+
+
+  std::string ReadString() const;
+
+  template<typename T>
+  const csBinaryInputStream& Read(T &out) const
+  {
+    CheckSize(sizeof(T));
+    Read(sizeof(T), 1, &out);
+    return *this;
+  }
+
+
+  template<typename T>
+  T Read() const
+  {
+    CheckSize(sizeof(T));
+
+    T t;
+    Read(reinterpret_cast<uint8_t*>(&t), sizeof(T));
+    return t;
+  }
+
 
   Size Tell() const
   {

@@ -1,5 +1,6 @@
 
 #include <csAssimpImporter/AssimpImporter.hh>
+#include <csCryoFile/csCryoFile.hh>
 #include <iostream>
 #include <fstream>
 
@@ -7,11 +8,12 @@
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 
+using namespace cs::file;
 
 namespace cs::imp
 {
 
-void write_mesh(std::ofstream& out, const aiMesh* mesh);
+
 
 
 bool AssimpImporter::CanImport(const std::fs::path& path, const std::vector<std::string>& args) const
@@ -144,16 +146,45 @@ void AssimpImporter::GenerateMesh(const std::fs::path& path, const aiMesh* mesh,
   std::ofstream out;
   out.open(outputFileName.c_str(), std::ios::out | std::ios::binary | std::ios::trunc);
 
+  /*
   out
     << "mesh {" << std::endl
     << "  materialSlots {" << std::endl
     << "    materialSlot name:\"Default\" locator:\"/materials/Default.mat\", " << std::endl
     << "  }," << std::endl
-    << "  meshes {" << std::endl
-    << "    mesh slot: 0 locator: \"" << renderMeshName << "\"," << std::endl
+    << "  subMeshes {" << std::endl
+    << "    subMesh slot: 0 locator: \"" << renderMeshName << "\"," << std::endl
     << "  }," << std::endl
     << "}" << std::endl;
+  */
+
+  csCryoFile file;
+  auto elemMesh = new csCryoFileElement("mesh", file.Root());
+  auto elemMaterialSlots = new csCryoFileElement("materialSlots", elemMesh);
+  auto elemMaterialSlot0 = new csCryoFileElement("materialSlot", elemMaterialSlots);
+  auto elemSubMeshes = new csCryoFileElement("meshes", elemMesh);
+  auto elemSubMesh0 = new csCryoFileElement("mesh", elemSubMeshes);
+
+  elemMaterialSlot0->AddStringAttribute("name", "Default");
+  elemMaterialSlot0->AddStringAttribute("locator", "/materials/Default.mat");
+
+  elemSubMesh0->AddAttribute("slot", "0");
+  elemSubMesh0->AddStringAttribute("dataIdx", create_mesh_filename(mesh));
+
+
+  std::ostringstream ostream;
+  WriteMesh(ostream, mesh);
+  std::string dataStream = ostream.str();
+
+  file.AddData(create_mesh_filename(mesh), dataStream.size(), reinterpret_cast<uint8_t*>(dataStream.data()));
+
+
+
+
+  file.Write(out, true, 2);
+
   out.close();
+
 }
 
 
@@ -174,7 +205,7 @@ void AssimpImporter::GenerateRenderMesh(const std::fs::path& path, const aiMesh*
   out.write(reinterpret_cast<char*>(&magic), sizeof(uint32_t));
   out.write(reinterpret_cast<char*>(&version), sizeof(uint32_t));
 
-  write_mesh(out, mesh);
+  WriteMesh(out, mesh);
   out.close();
 }
 
@@ -268,7 +299,7 @@ enum IndexType
   UINT32
 };
 
-void write_values_v1(std::ofstream& out, VDataType dataType, size_t numValues, aiVector3D* vertices)
+void write_values_v1(std::ostream& out, VDataType dataType, size_t numValues, aiVector3D* vertices)
 {
   if (!vertices)
   {
@@ -285,7 +316,7 @@ void write_values_v1(std::ofstream& out, VDataType dataType, size_t numValues, a
   }
 }
 
-void write_values_v2(std::ofstream& out, VDataType dataType, size_t numValues, aiVector3D* vertices)
+void write_values_v2(std::ostream& out, VDataType dataType, size_t numValues, aiVector3D* vertices)
 {
   if (!vertices)
   {
@@ -303,7 +334,7 @@ void write_values_v2(std::ofstream& out, VDataType dataType, size_t numValues, a
 }
 
 
-void write_values_v3(std::ofstream& out, VDataType dataType, size_t numValues, aiVector3D* vertices)
+void write_values_v3(std::ostream& out, VDataType dataType, size_t numValues, aiVector3D* vertices)
 {
   if (!vertices)
   {
@@ -321,7 +352,7 @@ void write_values_v3(std::ofstream& out, VDataType dataType, size_t numValues, a
 }
 
 
-void write_values_c4(std::ofstream& out, VDataType dataType, size_t numValues, aiColor4D* colors)
+void write_values_c4(std::ostream& out, VDataType dataType, size_t numValues, aiColor4D* colors)
 {
   if (!colors)
   {
@@ -339,8 +370,12 @@ void write_values_c4(std::ofstream& out, VDataType dataType, size_t numValues, a
 }
 
 
-void write_mesh(std::ofstream& out, const aiMesh* mesh)
+void AssimpImporter::WriteMesh(std::ostream& out, const aiMesh* mesh) const
 {
+  uint32_t version = 0x01;
+  out.write(reinterpret_cast<char*>(&version), sizeof(uint32_t));
+
+
   uint32_t numVertices = mesh->mNumVertices;
   out.write(reinterpret_cast<char*>(&numVertices), sizeof(uint32_t));
 
@@ -349,10 +384,6 @@ void write_mesh(std::ofstream& out, const aiMesh* mesh)
   write_values_v3(out, TANGENT, mesh->mNumVertices, mesh->mTangents);
   write_values_c4(out, COLOR0, mesh->mNumVertices, mesh->mColors[0]);
   write_values_c4(out, COLOR1, mesh->mNumVertices, mesh->mColors[1]);
-
-  write_values_v3(out, NORMAL, mesh->mNumVertices, mesh->mNormals);
-  write_values_v3(out, NORMAL, mesh->mNumVertices, mesh->mNormals);
-  write_values_v3(out, NORMAL, mesh->mNumVertices, mesh->mNormals);
 
   switch (mesh->mNumUVComponents[0])
   {

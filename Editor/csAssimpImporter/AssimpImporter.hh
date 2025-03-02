@@ -6,6 +6,7 @@
 
 #include <csAssimpImporter/Export.hh>
 #include <csImporter/Importer.hh>
+#include <ostream>
 
 struct aiMesh;
 struct aiScene;
@@ -32,6 +33,8 @@ private:
   void GenerateRenderMesh(const std::fs::path &path, const aiMesh* mesh, const aiScene *scene) const;
 
   void GeneratesMeshesEntity(const std::fs::path& path, const aiScene* scene) const;
+
+  void WriteMesh(std::ostream& out, const aiMesh* mesh) const;
 };
 
 

@@ -127,6 +127,16 @@ csCryoFileElement::csCryoFileElement()
 
 }
 
+csCryoFileElement::csCryoFileElement(const std::string &tagName, csCryoFileElement *parent)
+  : m_parent(nullptr)
+  , m_tagName (tagName)
+{
+  if (parent)
+  {
+    parent->AddChild(this);
+  }
+}
+
 csCryoFileElement::~csCryoFileElement()
 {
   for (csCryoFileElement* element : m_children)
@@ -233,6 +243,27 @@ void csCryoFileElement::AddAttribute(const csCryoFileAttribute& attribute)
   m_attributes.push_back(attribute);
 }
 
+void csCryoFileElement::AddAttribute(const std::string& value)
+{
+  AddAttribute(csCryoFileAttribute(value, csCryoFileAttribute::AttributeType::Number));
+}
+
+void csCryoFileElement::AddAttribute(const std::string& name, const std::string& value)
+{
+  AddAttribute(csCryoFileAttribute(name, value, csCryoFileAttribute::AttributeType::Number));
+}
+
+
+void csCryoFileElement::AddStringAttribute(const std::string &value)
+{
+  AddAttribute(csCryoFileAttribute(value, csCryoFileAttribute::AttributeType::String));
+}
+
+void csCryoFileElement::AddStringAttribute(const std::string &name, const std::string& value)
+{
+  AddAttribute(csCryoFileAttribute(name, value, csCryoFileAttribute::AttributeType::String));
+}
+
 size_t csCryoFileElement::GetNumberOfAttributes() const
 {
   return m_attributes.size();
@@ -327,19 +358,13 @@ double csCryoFileElement::GetAttribute(const std::string& attributeName, double 
 
 
 csCryoFile::csCryoFile()
-  : m_data(nullptr), m_dataSize(0)
 {
 
 }
 
 csCryoFile::~csCryoFile()
 {
-  if (m_data)
-  {
-    delete[] m_data;
-    m_data = nullptr;
-  }
-  m_dataSize = 0;
+
 }
 
 csCryoFileElement* csCryoFile::Root()
@@ -352,15 +377,6 @@ const csCryoFileElement* csCryoFile::Root() const
   return &m_root;
 }
 
-const char* csCryoFile::GetData() const
-{
-  return m_data;
-}
-
-size_t csCryoFile::GetDataSize() const
-{
-  return m_dataSize;
-}
 
 static std::vector<uint8_t> NULL_DATA;
 
@@ -884,36 +900,6 @@ std::string Print(const csCryoFileElement* element, bool format, int ind, const 
   return line;
 }
 
-std::string csCryoFile::ToString2(bool format, int indent)
-{
-  std::string indentStr;
-  for (int i = 0; i < indent; i++)
-  {
-    indentStr += " ";
-  }
-  std::string print;
-
-  for (size_t i = 0, in = m_root.GetNumberOfChildren(); i < in; i++)
-  {
-    bool ewc = false;
-    print += cs::file::Print(m_root.GetChild(i), format, 0, indentStr, ewc);
-    if (!ewc && i + 1 < in)
-    {
-      print += ",";
-    }
-    if (format)
-    {
-      print += "\n";
-    }
-  }
-  if (m_data && m_dataSize)
-  {
-    print += "@" + std::string(m_data, m_dataSize);
-  }
-
-  return print;
-
-}
 
 void csCryoFile::Write(std::ostream& out, bool format, unsigned indent)
 {

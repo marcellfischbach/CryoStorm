@@ -929,12 +929,6 @@ void generate_cube_fbx(cs::csWorld *world)
 
 void generate_suzanne(cs::csWorld *world)
 {
-//  csRef<iRenderMesh> meshData = cs::csAssetManager::Get()->Get<cs::iRenderMesh>("/suzanne/suzanne_Suzanne.rmesh");
-//  csRef<iMaterial>   material = cs::csAssetManager::Get()->Get<cs::iMaterial>("/materials/Default.mat");
-//
-//  csRef<csMesh> mesh = new csMesh();
-//  mesh->AddSubMesh(meshData, 0);
-//  mesh->AddMaterialSlot("Default", material);
 
   csRef<csMesh> mesh = csAssetManager::Get()->Get<csMesh>("/suzanne/suzanne_Suzanne.mesh");
 

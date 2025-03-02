@@ -1,5 +1,6 @@
 
 #include <csImporter/Importer.hh>
+#include <csCryoFile/csCryoFile.hh>
 
 #include <iostream>
 #include <vector>
@@ -9,6 +10,7 @@
 #include <csAssimpImporter/AssimpImporter.hh>
 
 using namespace cs::imp;
+using namespace cs::file;
 
 void print_usage (const char* name, const std::vector<iImporter*> &importer)
 {
@@ -19,9 +21,75 @@ void print_usage (const char* name, const std::vector<iImporter*> &importer)
   }
 }
 
+std::vector<uint8_t> randomData(uint32_t size)
+{
+  std::vector<uint8_t> d;
+  d.reserve(size);
+  for (uint32_t i = 0; i < size; i++)
+  {
+    d.push_back(i);
+  }
+  return d;
+}
+
+void test_cryo_file()
+{
+  csCryoFile cryoFile;
+
+  csCryoFileElement* elemMesh = new csCryoFileElement();
+  elemMesh->SetTagName("mesh");
+
+  csCryoFileElement* elemMaterialSlots = new csCryoFileElement();
+  elemMaterialSlots->SetTagName("materialSlots");
+
+  csCryoFileElement* elemMaterialSlot = new csCryoFileElement();
+  elemMaterialSlot->SetTagName("materialSlot");
+  elemMaterialSlot->AddAttribute(csCryoFileAttribute("name", "Default", csCryoFileAttribute::AttributeType::String));
+  elemMaterialSlot->AddAttribute(csCryoFileAttribute("locator", "/materials/Default.mat", csCryoFileAttribute::AttributeType::String));
+
+  csCryoFileElement* elemSubMeshes= new csCryoFileElement();
+  elemSubMeshes->SetTagName("subMeshes");
+
+
+
+  csCryoFileElement* elemSubMesh = new csCryoFileElement();
+  elemSubMesh->SetTagName("subMesh");
+  elemSubMesh->AddAttribute(csCryoFileAttribute("Plain Text", csCryoFileAttribute::AttributeType::String));
+  elemSubMesh->AddAttribute(csCryoFileAttribute("1.0", csCryoFileAttribute::AttributeType::Number));
+  elemSubMesh->AddAttribute(csCryoFileAttribute("slot", "0", csCryoFileAttribute::AttributeType::Number));
+  elemSubMesh->AddAttribute(csCryoFileAttribute("locator", "/materials/Default.mesh", csCryoFileAttribute::AttributeType::String));
+
+
+  cryoFile.Root()->AddChild(elemMesh);
+  elemMesh->AddChild(elemMaterialSlots);
+  elemMaterialSlots->AddChild(elemMaterialSlot);
+  elemMesh->AddChild(elemSubMeshes);
+  elemSubMeshes->AddChild(elemSubMesh);
+
+
+  cryoFile.AddData("Something", randomData(256));
+  cryoFile.AddData("AnotherThing", randomData(256));
+
+  std::ofstream out;
+  out.open("F:\\DEV\\C++\\CryoStorm\\Data\\test.cryoFile", std::ios::out | std::ios::binary | std::ios::trunc);
+  cryoFile.Write(out, true, 2);
+  out.close();
+
+
+  csCryoFile newFile;
+  newFile.Parse("F:\\DEV\\C++\\CryoStorm\\Data\\test.cryoFile");
+
+}
+
+
 
 int main (int argc, char** argv)
 {
+
+  test_cryo_file();
+
+
+
 
   std::vector<iImporter*> importers;
   importers.push_back(new AssimpImporter);

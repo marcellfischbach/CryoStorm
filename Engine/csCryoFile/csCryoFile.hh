@@ -42,6 +42,7 @@ class CS_CRYOFILE_API csCryoFileElement
 {
 public:
   csCryoFileElement();
+  csCryoFileElement(const std::string &tagName, csCryoFileElement *parent = nullptr);
   ~csCryoFileElement();
 
   void Write(std::ostream& out, bool format, const std::string &indent, unsigned indentDepth = 2);
@@ -61,6 +62,10 @@ public:
   CS_NODISCARD const csCryoFileElement *GetChild(const std::string &childName) const;
 
   void AddAttribute(const csCryoFileAttribute &attribute);
+  void AddAttribute(const std::string& value);
+  void AddAttribute(const std::string& name, const std::string& value);
+  void AddStringAttribute(const std::string& value);
+  void AddStringAttribute(const std::string &name, const std::string& value);
 
   CS_NODISCARD size_t GetNumberOfAttributes() const;
   CS_NODISCARD bool HasAttribute(const std::string &attributeName) const;
@@ -107,13 +112,8 @@ public:
   CS_NODISCARD bool Parse(const char *buffer, size_t bufferSize);
   void Write(std::ostream& out, bool format = true, unsigned indent = 2);
 
-  std::string ToString2  (bool format, int indent);
-
   CS_NODISCARD csCryoFileElement *Root();
   CS_NODISCARD const csCryoFileElement *Root() const;
-
-  CS_NODISCARD const char *GetData() const;
-  CS_NODISCARD size_t GetDataSize() const;
 
   CS_NODISCARD std::vector<std::string> GetDataNames() const;
   CS_NODISCARD size_t GetNumberOfDatas() const;
@@ -136,8 +136,6 @@ private:
   void ParseData_V1(std::istream &in);
   csCryoFileElement m_root;
 
-  char   *m_data;
-  size_t m_dataSize;
 
   struct Data
   {

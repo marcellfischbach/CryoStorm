@@ -6,6 +6,7 @@
 
 #include <csCore/csCoreExport.hh>
 #include <csCore/resource/csAssetLoader.hh>
+#include <csCore/resource/csBinaryData.hh>
 
 namespace cs
 {
@@ -24,7 +25,7 @@ public:
 private:
   csOwned<iAsset> LoadMesh (iFile* file, const csAssetLocator &locator) const;
   csOwned<iAsset> LoadRenderMesh (iFile* file) const;
-  csOwned<iRenderMesh> ReadRenderMesh (iFile* file) const;
+  csOwned<iRenderMesh> ReadRenderMesh (csBinaryInputStream &is) const;
 };
 
 } // cs

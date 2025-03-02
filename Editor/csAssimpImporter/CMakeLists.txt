@@ -10,4 +10,5 @@ add_library(csAssimpImporter SHARED
 
 target_link_libraries(csAssimpImporter
         ${assimp_LIBRARIES}
+        csCryoFile
 )

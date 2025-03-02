@@ -259,6 +259,8 @@ set(SOURCES
         resource/csBaseCSFAssetLoader.hh
         resource/csBinaryData.cc
         resource/csBinaryData.hh
+        resource/csBufferFile.cc
+        resource/csBufferFile.hh
         resource/csFileSystemArchive.cc
         resource/csFileSystemArchive.hh
         resource/csFileSystemFile.cc

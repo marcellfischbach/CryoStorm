@@ -7,6 +7,7 @@
 #include <csCore/graphics/csMesh.hh>
 #include <csCore/graphics/iRenderMesh.hh>
 #include <csCore/resource/csAssetManager.hh>
+#include <csCore/resource/csBinaryData.hh>
 #include <csCore/csObjectRegistry.hh>
 
 namespace cs
@@ -47,14 +48,13 @@ enum IndexType
 
 
 template<typename T>
-std::vector<T> read_v(iFile* file, uint32_t numValues)
+std::vector<T> read_v(csBinaryInputStream &is, uint32_t numValues)
 {
   std::vector<T> values;
   values.resize(numValues);
 
-  uint32_t size;
-  file->Read(sizeof(uint32_t), 1, &size);
-  file->Read(sizeof(T), numValues, values.data());
+  uint32_t size = is.Read<uint32_t>();
+  is.Read(reinterpret_cast<uint8_t*>(values.data()), numValues *sizeof(T));
   return values;
 }
 
@@ -86,7 +86,7 @@ csOwned<iAsset> csRenderMeshLoader::Load(const csAssetLocator &locator) const
   return csOwned<iAsset>();
 }
 
-csOwned<iAsset> csRenderMeshLoader::LoadMesh(cs::iFile *file, const csAssetLocator &locator) const
+csOwned<iAsset> csRenderMeshLoader::LoadMesh(cs::iFile *fil2e, const csAssetLocator &locator) const
 {
   struct Header
   {
@@ -94,7 +94,11 @@ csOwned<iAsset> csRenderMeshLoader::LoadMesh(cs::iFile *file, const csAssetLocat
     uint32_t version = 0;
   };
 
-  Header       header = file->Read<Header>();
+  std::vector<char> data = fil2e->ReadAll();
+  csBinaryInputStream is(data);
+
+
+  Header       header = is.Read<Header>();
   if (header.magic != 0x12341234 || header.version != 1)
   {
     return csOwned<iAsset>();
@@ -103,12 +107,13 @@ csOwned<iAsset> csRenderMeshLoader::LoadMesh(cs::iFile *file, const csAssetLocat
 
   csRef<csMesh> mesh = new csMesh();
   
-  uint32_t numMaterialSlots = file->Read<uint32_t>();
+  uint32_t numMaterialSlots = is.Read<uint32_t>();
   for (uint32_t i=0; i<numMaterialSlots; i++)
   {
-    std::string slotName = file->ReadString();
-    std::string materialResource = file->ReadString();
-    
+
+    std::string slotName = is.ReadString();
+    std::string materialResource = is.ReadString();
+
     csAssetLocator materialLocator (locator, materialResource);
     csRef<iMaterial> material = csAssetManager::Get()->Get<iMaterial>(materialLocator);
     
@@ -116,11 +121,11 @@ csOwned<iAsset> csRenderMeshLoader::LoadMesh(cs::iFile *file, const csAssetLocat
   }
   
   
-  uint32_t numSubMeshes = file->Read<uint32_t>();
+  uint32_t numSubMeshes = is.Read<uint32_t>();
   for (size_t i=0; i<numSubMeshes; i++)
   {
-    uint32_t materialSlot = file->Read<uint32_t>();
-    csRef<iRenderMesh> renderMesh = ReadRenderMesh(file);
+    uint32_t materialSlot = is.Read<uint32_t>();
+    csRef<iRenderMesh> renderMesh = ReadRenderMesh(is);
 
     mesh->AddSubMesh(renderMesh, materialSlot);
   }
@@ -133,33 +138,33 @@ csOwned<iAsset> csRenderMeshLoader::LoadMesh(cs::iFile *file, const csAssetLocat
 
 csOwned<iAsset> csRenderMeshLoader::LoadRenderMesh(cs::iFile *file) const
 {
+  std::vector<char> data = file->ReadAll();
+  csBinaryInputStream is(data);
+
   struct Header
   {
     uint32_t magic   = 0;
     uint32_t version = 0;
   };
-  Header       header;
-  file->Read(sizeof(Header), 1, &header);
+  Header       header = is.Read<Header>();
   if (header.magic != 0x12341234 || header.version != 1)
   {
     return csOwned<iAsset>();
   }
 
-  return ReadRenderMesh(file);
+  return ReadRenderMesh(is);
 }
 
 
-csOwned<iRenderMesh> csRenderMeshLoader::ReadRenderMesh(cs::iFile *file) const
+csOwned<iRenderMesh> csRenderMeshLoader::ReadRenderMesh(csBinaryInputStream &is) const
 {
   csRef<iRenderMeshGenerator> generator = csObjectRegistry::Get<iRenderMeshGeneratorFactory>()->Create();
 
 
-  uint32_t numVertices;
-  file->Read(sizeof(uint32_t), 1, &numVertices);
+  uint32_t numVertices = is.Read<uint32_t>();
   while (true)
   {
-    uint8_t type;
-    file->Read(sizeof(uint8_t), 1, &type);
+    uint8_t type = is.Read<uint8_t>();
     if (type == END)
     {
       break;
@@ -167,46 +172,46 @@ csOwned<iRenderMesh> csRenderMeshLoader::ReadRenderMesh(cs::iFile *file) const
     switch (type)
     {
       case VERTEX:
-        generator->SetVertices(read_v<csVector3f>(file, numVertices));
+        generator->SetVertices(read_v<csVector3f>(is, numVertices));
         break;
       case NORMAL:
-        generator->SetNormals(read_v<csVector3f>(file, numVertices));
+        generator->SetNormals(read_v<csVector3f>(is, numVertices));
         break;
       case TANGENT:
-        generator->SetTangents(read_v<csVector3f>(file, numVertices));
+        generator->SetTangents(read_v<csVector3f>(is, numVertices));
         break;
       case COLOR0:
-        generator->SetColors(read_v<csColor4f>(file, numVertices));
+        generator->SetColors(read_v<csColor4f>(is, numVertices));
         break;
       case COLOR1:
-        read_v<csColor4f>(file, numVertices);
+        read_v<csColor4f>(is, numVertices);
         break;
       case TEX_COORD0_1:
-        read_v<float>(file, numVertices);
+        read_v<float>(is, numVertices);
         break;
       case TEX_COORD0_2:
-        generator->SetUV0(read_v<csVector2f>(file, numVertices));
+        generator->SetUV0(read_v<csVector2f>(is, numVertices));
         break;
       case TEX_COORD0_3:
-        generator->SetUV0(read_v<csVector3f>(file, numVertices));
+        generator->SetUV0(read_v<csVector3f>(is, numVertices));
         break;
       case TEX_COORD1_1:
-        read_v<float>(file, numVertices);
+        read_v<float>(is, numVertices);
         break;
       case TEX_COORD1_2:
-        generator->SetUV1(read_v<csVector2f>(file, numVertices));
+        generator->SetUV1(read_v<csVector2f>(is, numVertices));
         break;
       case TEX_COORD1_3:
-        read_v<csVector3f>(file, numVertices);
+        read_v<csVector3f>(is, numVertices);
         break;
       case TEX_COORD2_1:
-        read_v<float>(file, numVertices);
+        read_v<float>(is, numVertices);
         break;
       case TEX_COORD2_2:
-        generator->SetUV1(read_v<csVector2f>(file, numVertices));
+        generator->SetUV1(read_v<csVector2f>(is, numVertices));
         break;
       case TEX_COORD2_3:
-        read_v<csVector3f>(file, numVertices);
+        read_v<csVector3f>(is, numVertices);
         break;
       default:
         break;
@@ -217,26 +222,23 @@ csOwned<iRenderMesh> csRenderMeshLoader::ReadRenderMesh(cs::iFile *file) const
 
 
 
-  uint32_t numIndices;
-  uint8_t primtiveType;
-  uint8_t indexType;
-  file->Read(sizeof(uint8_t), 1, &primtiveType);
-  file->Read(sizeof(uint32_t), 1, &numIndices);
-  file->Read(sizeof(uint8_t), 1, &indexType);
+  uint32_t numIndices = is.Read<uint32_t>();
+  uint8_t primtiveType = is.Read<uint8_t>();
+  uint8_t indexType = is.Read<uint8_t>();
+
 
   generator->SetPrimitiveType(static_cast<ePrimitiveType>(primtiveType));
   switch (indexType)
   {
     case UINT16:
-      generator->SetIndices(read_v<uint16_t>(file, numIndices));
+      generator->SetIndices(read_v<uint16_t>(is, numIndices));
       break;
     case UINT32:
-      generator->SetIndices(read_v<uint32_t>(file, numIndices));
+      generator->SetIndices(read_v<uint32_t>(is, numIndices));
       break;
     default:
       break;
   }
-  file->Close();
 
 
   return generator->Generate();
