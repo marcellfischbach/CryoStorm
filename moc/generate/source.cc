@@ -24,6 +24,7 @@ void SourceGenerator::Output(iOutput *output, const std::string &headerFilename)
 
   if (!headerFilename.empty())
   {
+    source += "#include <" + headerFilename + ".hh>\n";
     source += "#include <" + headerFilename + ".refl.hh>\n";
   }
 
@@ -735,6 +736,8 @@ std::string ClassGenerator::GenerateClass(ClassNode *classNode, std::list<Namesp
   std::string classClassName = classNode->GetName() + "Class";
 
 
+  cls += "// ens: '" + ens + "'\n";
+  cls += "// className: '" + className + "'\n";
   cls += "extern \"C\" __declspec(dllexport) const cs::csClass *" + ens + className + "_GetStaticClass()\n";
   cls += "{\n";
   cls += "  return " + fns + classClassName + "::Get();\n";

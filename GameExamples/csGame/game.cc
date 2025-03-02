@@ -2,7 +2,7 @@
 // Created by MCEL on 08.05.2024.
 //
 
-#include "game.hh"
+#include <csGame/game.hh>
 #include <csCore/graphics/shadergraph/iShaderGraphCompiler.hh>
 #include <csCore/graphics/shadergraph/csShaderGraph.hh>
 #include <csCore/graphics/shadergraph/csSGNodes.hh>
@@ -12,8 +12,8 @@ CS_DEFINE_GAME(Game)
 
 
 #include <csLauncher/csLauncherModule.hh>
-#include "exitgamestate.hh"
-#include "testhandler.hh"
+#include <csGame/exitgamestate.hh>
+#include <csGame/testhandler.hh>
 #include <csCore/csEngine.hh>
 #include <csCore/csSettings.hh>
 #include <csCore/csTicker.hh>
@@ -58,7 +58,7 @@ CS_DEFINE_GAME(Game)
 #include <csCore/csTime.hh>
 
 
-#include "../../GameExamples/Demo/camerahandler.hh"
+#include <csGame/camerahandler.hh>
 
 #include <iostream>
 #include <regex>

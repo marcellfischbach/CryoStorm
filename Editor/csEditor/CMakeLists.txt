@@ -76,16 +76,16 @@ set(ALL_SOURCES
 
 
 add_executable(
-        EdLauncher
+        csEditor
         ${ALL_SOURCES}
 )
-add_dependencies(EdLauncher csAssimpLoader)
-add_dependencies(EdLauncher csBullet)
-add_dependencies(EdLauncher csImgLoader)
-add_dependencies(EdLauncher csOpenGL)
+add_dependencies(csEditor csAssimpLoader)
+add_dependencies(csEditor csBullet)
+add_dependencies(csEditor csImgLoader)
+add_dependencies(csEditor csOpenGL)
 
 
-target_link_libraries(EdLauncher
+target_link_libraries(csEditor
         PRIVATE
         csCore
         csOpenGL
@@ -98,5 +98,5 @@ target_link_libraries(EdLauncher
         )
 
 
-add_dependencies(EdLauncher csMOC)
-CS_MOC(EdLauncher "")
+add_dependencies(csEditor csMOC)
+CS_MOC(csEditor "")

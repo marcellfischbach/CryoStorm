@@ -1,5 +1,29 @@
 
 
+function (extract_refl filename refl_filename)
+	set(${refl_filename} "" PARENT_SCOPE)
+	string(LENGTH "${filename}" len)
+	math(EXPR offset "${len} - 3")
+
+	string(SUBSTRING "${filename}" 0 ${offset}  filename_part)
+	string(SUBSTRING "${filename}" ${offset} -1 extension)
+
+	if ("${extension}" STREQUAL ".cc")
+		return ()
+	endif()
+
+	set (${refl_filename} "${filename_part}.refl.cc" PARENT_SCOPE)
+
+endfunction(extract_refl)
+
+function (touch filename)
+
+	if (NOT EXISTS ${filename})
+		file(WRITE ${filename} "")
+	endif()
+
+endfunction()
+
 
 
 function(CS_MOC trgt javaPath)
@@ -8,8 +32,6 @@ function(CS_MOC trgt javaPath)
 
 	target_include_directories(${trgt} PUBLIC "${CMAKE_CURRENT_BINARY_DIR}/__cmake__build__moc__")
 
-	#message("MOC: ${CMAKE_CURRENT_SOURCE_DIR}")
-	#message("MOC: ${CMAKE_SOURCE_DIR}")
 
 	set (EXEC_PATH "")
 	if (CryoStorm_BINARY_DIR)
@@ -17,7 +39,6 @@ function(CS_MOC trgt javaPath)
 	endif()
 	
 	#string(REGEX REPLACE ".*/" "" ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-
 	string(MAKE_C_IDENTIFIER ${trgt} TARGET_IDENTIFIER)
 
 	# construct java path parameter when parameter javaPath is not empty
@@ -29,16 +50,27 @@ function(CS_MOC trgt javaPath)
 	endif()
 	#message ("JavaPathCmd: ${CMD_JAVA_PATH}")
 
+	touch("${MOC_DIRECTORY}/master.refl.cc")
+	set(REFL_SOURCES "${MOC_DIRECTORY}/master.refl.cc")
+
 	#Get the source files associated with the executable and write it to .../sources.txt
 	get_property(SOURCE_FILES TARGET ${trgt} PROPERTY SOURCES)
 	set(OUTPUT_FILE "${MOC_DIRECTORY}/sources.txt")
 	file(WRITE ${OUTPUT_FILE} "")
 	foreach(FILE ${SOURCE_FILES})
 		file(APPEND ${OUTPUT_FILE} "${FILE}\n")
+
+		EXTRACT_REFL(${FILE} refl_file)
+		if (NOT ${refl_file} STREQUAL "")
+			set(abs_refl_file "${MOC_DIRECTORY}/${refl_file}")
+			touch(${abs_refl_file})
+			set (REFL_SOURCES ${REFL_SOURCES} ${abs_refl_file})
+		endif()
     endforeach()
 
 	# Print the source files
-	message(STATUS "Source files for ${trgt}: ${SOURCE_FILES}")
+	message(STATUS "Source files for     ${trgt}: ${SOURCE_FILES}")
+	message(STATUS "Reflection files for ${trgt}: ${REFL_SOURCES}")
 
 	set(TARGET_NAME "${trgt}-MOC")
 	add_custom_target(${TARGET_NAME}
@@ -52,10 +84,9 @@ function(CS_MOC trgt javaPath)
 	endif()
 	add_dependencies(${trgt} ${TARGET_NAME})
 
+	target_sources(${trgt} PRIVATE ${REFL_SOURCES})
 
-    target_include_directories(${trgt} BEFORE PUBLIC ${MOC_DIRECTORY})
+    target_include_directories(${trgt} BEFORE PRIVATE ${MOC_DIRECTORY})
 
-	file(GLOB_RECURSE GENERATED_SOURCES "${MOC_DIRECTORY}/*.cc")
-	message(STATUS "Generated sources: ${GENERATED_SOURCES}")
 	
 endfunction(CS_MOC)

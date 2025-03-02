@@ -1,6 +1,7 @@
 
 #include <csLauncher/csLauncherModule.hh>
 #include <csLauncher/window/csSDLWindow.hh>
+#include <csLauncher/window/csSDLInputSystem.hh>
 #include <csCore/csObjectRegistry.hh>
 #include <csCore/csEngine.hh>
 #include <csCore/csSettings.hh>

@@ -1,6 +1,5 @@
 
 #include <csCore/graphics/material/csMaterialInstance.hh>
-#include <csCore/graphics/material/csMaterialInstance.refl.cc>
 
 
 

@@ -85,15 +85,24 @@ std::string Generator::GetFullNamespaceName(std::list<NamespaceNode*>& namespace
 
   return name;
 }
+
+static std::string replace(const std::string& str)
+{
+  std::string res;
+  for (auto ch : str)
+  {
+    if (ch == ':')
+    {
+      ch = '_';
+    }
+    res += ch;
+  }
+  return res;
+}
+
 std::string Generator::GetEscapedNamespaceName(std::list<NamespaceNode*>& namespaceNodes)
 {
-  std::string name;
-  for (auto ns : namespaceNodes)
-  {
-    name += ns->GetName() + "__";
-  }
-
-  return name;
+  return replace(GetFullNamespaceName(namespaceNodes));
 }
 
 

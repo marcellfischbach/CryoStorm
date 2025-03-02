@@ -1,6 +1,5 @@
 
 #include <csCore/entity/csTerrainMeshState.hh>
-#include <csCore/entity/csTerrainMeshState.refl.cc>
 #include <csCore/entity/csCameraState.hh>
 #include <csCore/entity//csWorld.hh>
 #include <csCore/graphics/iTerrainMesh.hh>

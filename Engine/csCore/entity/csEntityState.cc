@@ -1,5 +1,4 @@
 #include <csCore/entity/csEntityState.hh>
-#include <csCore/entity/csEntityState.refl.cc>
 #include "csEntity.hh"
 #include <csCore/entity/csWorld.hh>
 

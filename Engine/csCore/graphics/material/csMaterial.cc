@@ -1,6 +1,5 @@
 
 #include <csCore/graphics/material/csMaterial.hh>
-#include <csCore/graphics/material/csMaterial.refl.cc>
 #include <csCore/graphics/shading/iShader.hh>
 #include <csCore/graphics/shading/iShaderAttribute.hh>
 #include <bit>

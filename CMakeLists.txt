@@ -81,6 +81,7 @@ include_directories(${BULLET_INCLUDE_DIRS})
 include_directories(${CryoStorm_SOURCE_DIR}/Engine)
 #include_directories(${CryoStorm_BINARY_DIR}/Engine)
 include_directories(${CryoStorm_SOURCE_DIR}/Editor)
+include_directories(${CryoStorm_SOURCE_DIR}/GameExamples)
 #include_directories(${CryoStorm_BINARY_DIR}/csEditor)
 
 

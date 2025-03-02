@@ -20,12 +20,50 @@ void MasterGenerator::Generate(Cache& cache, iOutput* output, const std::string 
   source += "#include <stdarg.h>\n";
   source += "#ifdef CS_WIN32\n";
   source += "#include <Windows.h>\n";
+
+  source += R"(
+static HMODULE GetCurrentModuleHandle()
+{
+  HMODULE hModule = NULL;
+  GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS, (LPCTSTR)GetCurrentModuleHandle, &hModule);
+  return hModule;
+}
+
+static std::string CreateClassResolver(const std::string& name)
+{
+  std::string res;
+  res.reserve(name.length() + 15);
+  for (auto ch : name)
+  {
+    if (ch == ':')
+    {
+      ch = '_';
+    }
+    res += ch;
+  }
+
+  res += "_GetStaticClass";
+  return res;
+}
+
+static const cs::csClass* GetClassInstance(HMODULE hModule, const std::string& name)
+{
+  FARPROC proc = GetProcAddress(hModule, CreateClassResolver(name).c_str());
+  if (proc == nullptr)
+  {
+    return nullptr;
+  }
+  typedef const cs::csClass* (*GetClass)();  return reinterpret_cast<GetClass>(proc)();
+}
+)";
+  /*
   source += "static HMODULE GetCurrentModuleHandle()\n";
   source += "{\n";
   source += "  HMODULE hModule = NULL;\n";
   source += "  GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS, (LPCTSTR)GetCurrentModuleHandle, &hModule);\n";
   source += "  return hModule;\n";
   source += "}\n\n";
+
   source += "static const cs::csClass* GetClassInstance(HMODULE hModule, const std::string& name)\n";
   source += "{\n";
   source += "  FARPROC proc = GetProcAddress(hModule, name.c_str());\n";
@@ -36,6 +74,7 @@ void MasterGenerator::Generate(Cache& cache, iOutput* output, const std::string 
   source += "  typedef const cs::csClass* (*GetClass)();";
   source += "  return reinterpret_cast<GetClass>(proc)();\n";
   source += "}\n\n";
+  */
   source += "#endif\n\n";
 
   std::string register_classes = "";

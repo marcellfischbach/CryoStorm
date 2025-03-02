@@ -49,6 +49,8 @@ std::string HeaderGenerator::OutputClass(ClassNode* clsNode)
 
   source += "#pragma once\n";
   source += "\n";
+  source += "#include <csCore/csClass.hh>\n";
+  source += "\n";
   for (auto ns : nss)
   {
     source += "namespace " + ns->GetName() + "\n";

@@ -1,6 +1,5 @@
 
 #include <csCore/animation/csSkeletonAnimationPlayer.hh>
-#include <csCore/animation/csSkeletonAnimationPlayer.refl.cc>
 #include <csCore/animation/csSkeletonAnimation.hh>
 #include <csCore/graphics/csSkeleton.hh>
 
