@@ -1,5 +1,6 @@
 
 #include <csCore/entity/csLightState.hh>
+#include <csCore/entity/csLightState.refl.cc>
 #include <csCore/entity/csWorld.hh>
 #include <csCore/graphics/iLight.hh>
 #include <csCore/graphics/iPointLight.hh>

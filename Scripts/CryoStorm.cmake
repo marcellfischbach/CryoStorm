@@ -4,7 +4,9 @@
 
 function(CS_MOC trgt javaPath)
 
-	set(MOC_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/__cmake__build__moc__")
+	set(MOC_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/__cmake__build__moc__/${trgt}")
+
+	target_include_directories(${trgt} PUBLIC "${CMAKE_CURRENT_BINARY_DIR}/__cmake__build__moc__")
 
 	#message("MOC: ${CMAKE_CURRENT_SOURCE_DIR}")
 	#message("MOC: ${CMAKE_SOURCE_DIR}")
@@ -27,12 +29,10 @@ function(CS_MOC trgt javaPath)
 	endif()
 	#message ("JavaPathCmd: ${CMD_JAVA_PATH}")
 
-	#Get the source files associated with the executable
+	#Get the source files associated with the executable and write it to .../sources.txt
 	get_property(SOURCE_FILES TARGET ${trgt} PROPERTY SOURCES)
 	set(OUTPUT_FILE "${MOC_DIRECTORY}/sources.txt")
-	# Write the source files to the file, one per line
 	file(WRITE ${OUTPUT_FILE} "")
-	# Clear the file first
 	foreach(FILE ${SOURCE_FILES})
 		file(APPEND ${OUTPUT_FILE} "${FILE}\n")
     endforeach()
@@ -42,7 +42,7 @@ function(CS_MOC trgt javaPath)
 
 	set(TARGET_NAME "${trgt}-MOC")
 	add_custom_target(${TARGET_NAME}
-                            COMMAND ${EXEC_PATH}csMOC  --path ${MOC_DIRECTORY} --sourcepath ${CMAKE_CURRENT_SOURCE_DIR} --sourceInput ${MOC_DIRECTORY}/sources.txt --javaConverter ${CryoStorm_SOURCE_DIR}/Scripts\;${CryoStorm_SOURCE_DIR}/data ${CMD_JAVA_PATH}
+                            COMMAND ${EXEC_PATH}csMOC --module ${trgt} --path ${MOC_DIRECTORY} --sourcepath ${CMAKE_CURRENT_SOURCE_DIR} --sourceInput ${MOC_DIRECTORY}/sources.txt --javaConverter ${CryoStorm_SOURCE_DIR}/Scripts\;${CryoStorm_SOURCE_DIR}/data ${CMD_JAVA_PATH}
 			WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 			BYPRODUCTS "${MOC_DIRECTORY}/.csCache"
 	)
@@ -55,5 +55,7 @@ function(CS_MOC trgt javaPath)
 
     target_include_directories(${trgt} BEFORE PUBLIC ${MOC_DIRECTORY})
 
+	file(GLOB_RECURSE GENERATED_SOURCES "${MOC_DIRECTORY}/*.cc")
+	message(STATUS "Generated sources: ${GENERATED_SOURCES}")
 	
 endfunction(CS_MOC)

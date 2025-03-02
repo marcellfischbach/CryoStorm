@@ -1,5 +1,6 @@
 
 #include <csCore/entity/csStaticColliderState.hh>
+#include <csCore/entity/csStaticColliderState.refl.cc>
 #include <csCore/entity/csCollisionState.hh>
 #include <csCore/entity/csWorld.hh>
 #include <csCore/physics/iPhysicsSystem.hh>

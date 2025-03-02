@@ -9,6 +9,8 @@
 // the importers
 #include <csAssimpImporter/AssimpImporter.hh>
 
+#include <Windows.h>
+
 using namespace cs::imp;
 using namespace cs::file;
 
@@ -81,13 +83,27 @@ void test_cryo_file()
 
 }
 
+void test_import()
+{
+  HMODULE hModule = GetModuleHandle("csAssimpImporter.dll");
+  void *funcPointer = GetProcAddress(hModule, "cs__imp__AssimpImporter_create");
+  printf("       hModule    : %p\n", hModule);
+  printf("       funcPointer: %p\n", funcPointer);
+
+  AssimpImporter::Test();
+}
 
 
 int main (int argc, char** argv)
 {
 
-  test_cryo_file();
 
+  test_cryo_file();
+  if (true)
+  {
+    test_import();
+    return 0;
+  }
 
 
 

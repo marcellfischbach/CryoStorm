@@ -1,5 +1,8 @@
 #include <csCore/animation/csSkeletonAnimation.hh>
+#include <csCore/animation/csSkeletonAnimation.refl.cc>
 #include <csCore/graphics/csSkeleton.hh>
+
+
 
 namespace cs
 {

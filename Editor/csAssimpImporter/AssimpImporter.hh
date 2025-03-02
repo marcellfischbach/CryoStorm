@@ -27,6 +27,8 @@ public:
   void PrintUsage() const override;
 
 
+  static void Test();
+
 private:
   void GenerateRenderMeshes(const std::fs::path &path, const aiScene *scene) const;
   void GenerateMesh(const std::fs::path &path, const aiMesh* mesh, const aiScene *scene) const;
@@ -35,7 +37,11 @@ private:
   void GeneratesMeshesEntity(const std::fs::path& path, const aiScene* scene) const;
 
   void WriteMesh(std::ostream& out, const aiMesh* mesh) const;
+
+
 };
 
 
 }
+
+extern "C" CS_ASS_IMP_API void cs__imp__AssimpImporter_create();

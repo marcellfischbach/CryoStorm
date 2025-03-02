@@ -8,11 +8,36 @@
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 
+#include <Windows.h>
+
 using namespace cs::file;
+
+void cs__imp__AssimpImporter_create()
+{
+  printf("do something\n");
+}
+
+HMODULE GetCurrentModuleHandle()
+{
+  HMODULE hModule = NULL;
+  // Use GetModuleHandleEx to get the module handle of the current DLL
+  GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS,
+    (LPCTSTR)GetCurrentModuleHandle,
+    &hModule);
+  return hModule;
+}
 
 namespace cs::imp
 {
 
+
+void AssimpImporter::Test()
+{
+  HMODULE hModule = GetCurrentModuleHandle();
+  void* funcPointer = GetProcAddress(hModule, "cs__imp__AssimpImporter_create");
+  printf("in mod hModule    : %p\n", hModule);
+  printf("in mod funcPointer: %p\n", funcPointer);
+}
 
 
 

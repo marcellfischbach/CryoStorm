@@ -15,12 +15,17 @@ SourceGenerator::SourceGenerator()
 
 }
 
-void SourceGenerator::Output(iOutput *output)
+void SourceGenerator::Output(iOutput *output, const std::string &headerFilename)
 {
 
   std::vector<ClassNode *> classes = FindAllMajorClasses();
 
   std::string source;
+
+  if (!headerFilename.empty())
+  {
+    source += "#include <" + headerFilename + ".refl.hh>\n";
+  }
 
 
   for (auto cls: classes)
@@ -724,10 +729,16 @@ std::string ClassGenerator::GenerateClass(ClassNode *classNode, std::list<Namesp
 {
   std::string cls;
   std::string fns = Generator::GetFullNamespaceName(nss);
+  std::string ens = Generator::GetEscapedNamespaceName(nss);
 
   std::string className      = classNode->GetName();
   std::string classClassName = classNode->GetName() + "Class";
 
+
+  cls += "extern \"C\" __declspec(dllexport) const cs::csClass *" + ens + className + "_GetStaticClass()\n";
+  cls += "{\n";
+  cls += "  return " + fns + classClassName + "::Get();\n";
+  cls += "}\n\n\n";
   //
   // Singleton getter
   cls += fns + classClassName + " *" + fns + classClassName + "::Get()\n";

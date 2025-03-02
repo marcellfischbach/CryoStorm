@@ -32,7 +32,8 @@ void print_usage(char* name)
   printf("usage: %s [options]\n", name);
   printf("-----------------------------------\n");
   printf("  options:\n");
-  printf("    --file   <file>        a single file that should be process\n");
+  printf("    --module <module>      the name of the module that should be built\n");
+  printf("    --file <file>          a single file that should be process\n");
   printf("    --source <source>      the cc file when a single file is processed\n");
   printf("    --sourceInput <file>   a file containing a list of files that should be processed\n");
   printf("    --sourcepath <path>    the base path where the source code is located\n");
@@ -93,7 +94,8 @@ void generate(
   cs::moc::Cache* cache,
   const std::string& input,
   const std::string& outputHeader,
-  const std::string& outputSource)
+  const std::string& outputSource,
+  const std::string& plainFilename)
 {
 
   cs::moc::SourceFile sourceFile;
@@ -131,7 +133,7 @@ void generate(
       FileOutput output(outputSource);
       cs::moc::SourceGenerator sg;
       sg.SetRoot(ns);
-      sg.Output(&output);
+      sg.Output(&output, plainFilename);
     }
     //    ns->DebugNode(0);
   }
@@ -225,9 +227,9 @@ std::vector<std::string> scan_directory()
   scan_directory(path, path, result);
   return result;
 }
-void generate_list(const std::string& path, const std::string &sourcePath, std::vector<std::string> &scanned_filenames);
+void generate_list(const std::string& path, const std::string &sourcePath, std::vector<std::string> &scanned_filenames, const std::string &moduleName);
 
-void generate_list_by_sourcesfile (const std::string& path, const std::string &sourcePath, const std::string &sourceFiles)
+void generate_list_by_sourcesfile (const std::string& path, const std::string &sourcePath, const std::string &sourceFiles, const std::string &sourceOutput, const std::string &moduleName)
 {
   std::ifstream stream(sourceFiles);
   std::string filename;
@@ -237,20 +239,22 @@ void generate_list_by_sourcesfile (const std::string& path, const std::string &s
     scanned_filenames.push_back(filename);
   }
 
-  generate_list(path, sourcePath, scanned_filenames);
+  generate_list(path, sourcePath, scanned_filenames, moduleName);
 }
 
 
-void generate_list_by_directory (const std::string& path, const std::string &sourcePath)
+void generate_list_by_directory (const std::string& path, const std::string &sourcePath, const std::string& moduleName)
 {
   std::vector<std::string> scanned_filenames = scan_directory();
-  generate_list(path, sourcePath, scanned_filenames);
+  generate_list(path, sourcePath, scanned_filenames, moduleName);
 }
 
-void generate_list(const std::string& path, const std::string &sourcePath, std::vector<std::string> &scanned_filenames)
+void generate_list(const std::string& path, const std::string &sourcePath, std::vector<std::string> &scanned_filenames, const std::string& moduleName)
 {
   cs::moc::Cache cache;
   cache.Load(path);
+
+  std::vector<std::string> result;
 
   //std::vector<std::string> all_filenames = read_all_filenames(path + "/.spicemoc");
   //std::ifstream stream(path + "/.spicemoc");
@@ -286,7 +290,8 @@ void generate_list(const std::string& path, const std::string &sourcePath, std::
           &cache,
           filename,
           path + "/" + plainFilename + ".refl.hh",
-          path + "/" + plainFilename + ".refl.cc"
+          path + "/" + plainFilename + ".refl.cc",
+          moduleName + "/" + plainFilename
         );
       }
       catch (cs::moc::BaseException& e)
@@ -327,9 +332,11 @@ int main(int argc, char** argv)
   std::string header;
   std::string sourcePath;
   std::string sourceInput;
+  std::string sourceOutput;
   std::string path;
   std::string javaConverter;
   std::string javaBasePath;
+  std::string moduleName;
 
   header = "header";
   source = "source";
@@ -396,6 +403,16 @@ int main(int argc, char** argv)
       sourceInput = std::string(argv[++i]);
       // std::cout << " file: '" << file << "'";
     }
+    else if (arg == "--sourceOutput")
+    {
+      if (i + 1 >= argc)
+      {
+        print_usage(argv[0]);
+        return -1;
+      }
+      sourceOutput = std::string(argv[++i]);
+      // std::cout << " file: '" << file << "'";
+    }
     else if (arg == "--path")
     {
       if (i + 1 >= argc)
@@ -426,6 +443,15 @@ int main(int argc, char** argv)
 
       javaBasePath = std::string(argv[++i]);
     }
+    else if (arg == "--module")
+    {
+      if (i + 1 >= argc)
+      {
+        print_usage(argv[0]);
+        return -1;
+      }
+      moduleName = std::string(argv[++i]);
+    }
     else
     {
       printf("Invalid arg %s\n", arg.c_str());
@@ -445,15 +471,15 @@ int main(int argc, char** argv)
 
   if (!file.empty() && !source.empty() && !header.empty())
   {
-    generate(nullptr, file, header, source);
+    generate(nullptr, file, header, source, moduleName + "/" + header);
   }
   else if (!path.empty() && !sourceInput.empty())
   {
-    generate_list_by_sourcesfile(path, sourcePath, sourceInput);
+    generate_list_by_sourcesfile(path, sourcePath, sourceInput, sourceOutput, moduleName);
   }
   else if (!path.empty())
   {
-    generate_list_by_directory(path, sourcePath);
+    generate_list_by_directory(path, sourcePath, moduleName);
   }
 
   return 0;

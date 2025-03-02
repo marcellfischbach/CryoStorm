@@ -1,5 +1,6 @@
 
 #include <csCore/entity/csStaticMeshState.hh>
+#include <csCore/entity/csStaticMeshState.refl.cc>
 #include <csCore/entity/csEntity.hh>
 #include <csCore/entity/csWorld.hh>
 #include <csCore/graphics/csMesh.hh>

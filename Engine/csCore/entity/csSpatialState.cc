@@ -1,4 +1,5 @@
 #include <csCore/entity/csSpatialState.hh>
+#include <csCore/entity/csSpatialState.refl.cc>
 
 //#define CS_IS_TRANSFORM_FLAG(f)  ((m_transformationState & (f)) == (f))
 //#define CS_SET_TRANSFORM_FLAG(f)  m_transformationState |= (f)

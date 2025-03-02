@@ -1,5 +1,6 @@
 
 #include <csCore/entity/csWorld.hh>
+#include <csCore/entity/csWorld.refl.cc>
 #include <csCore/entity/csCameraState.hh>
 #include <csCore/entity/csEntity.hh>
 #include <csCore/entity/csSpatialState.hh>

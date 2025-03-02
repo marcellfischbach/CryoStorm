@@ -26,6 +26,7 @@ public:
   std::vector<ClassNode*> FindAllMajorClasses();
   static std::list<NamespaceNode*> GetAllNamespaces(ASTNode* node);
   static std::string GetFullNamespaceName(std::list<NamespaceNode*>& namespaceNodes);
+  static std::string GetEscapedNamespaceName(std::list<NamespaceNode*>& namespaceNodes);
 
 private:
   static void ScanClasses(ASTNode* node, std::vector<ClassNode*>& classes);

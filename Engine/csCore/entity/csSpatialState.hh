@@ -12,7 +12,6 @@
 namespace cs
 {
 
-
 CS_CLASS(jclass="org.cryo.core.entity.SpatialState")
 class CS_CORE_API csSpatialState : public CS_SUPER(csEntityState)
 {

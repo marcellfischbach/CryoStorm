@@ -3,6 +3,7 @@
 //
 
 #include <csCore/entity/csSkeletonMeshState.hh>
+#include <csCore/entity/csSkeletonMeshState.refl.cc>
 #include <csCore/graphics/csSkeletonMesh.hh>
 #include <csCore/graphics/scene/csGfxMesh.hh>
 

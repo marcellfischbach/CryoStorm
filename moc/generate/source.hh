@@ -22,7 +22,7 @@ class SourceGenerator : public Generator
 public:
   SourceGenerator();
 
-  void Output(iOutput *output);
+  void Output(iOutput *output, const std::string& headerFilename);
 
 private:
 };

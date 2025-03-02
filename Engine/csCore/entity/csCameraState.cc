@@ -1,6 +1,7 @@
 
 
 #include <csCore/entity/csCameraState.hh>
+#include <csCore/entity/csCameraState.refl.cc>
 #include <csCore/math/csMatrix4f.hh>
 #include <csCore/math/csVector3f.hh>
 #include <csCore/math/csVector4f.hh>

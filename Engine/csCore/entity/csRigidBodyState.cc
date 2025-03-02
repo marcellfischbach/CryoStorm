@@ -1,5 +1,6 @@
 
 #include <csCore/entity/csRigidBodyState.hh>
+#include <csCore/entity/csRigidBodyState.refl.cc>
 #include <csCore/entity/csCollisionState.hh>
 #include <csCore/entity/csWorld.hh>
 #include <csCore/physics/iCollider.hh>
