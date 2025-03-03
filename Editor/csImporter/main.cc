@@ -83,16 +83,6 @@ void test_cryo_file()
 
 }
 
-void test_import()
-{
-  HMODULE hModule = GetModuleHandle("csAssimpImporter.dll");
-  void *funcPointer = GetProcAddress(hModule, "cs__imp__AssimpImporter_create");
-  printf("       hModule    : %p\n", hModule);
-  printf("       funcPointer: %p\n", funcPointer);
-
-  AssimpImporter::Test();
-}
-
 
 int main (int argc, char** argv)
 {
