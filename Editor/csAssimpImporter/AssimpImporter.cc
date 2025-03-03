@@ -12,32 +12,9 @@
 
 using namespace cs::file;
 
-void cs__imp__AssimpImporter_create()
-{
-  printf("do something\n");
-}
-
-HMODULE GetCurrentModuleHandle()
-{
-  HMODULE hModule = NULL;
-  // Use GetModuleHandleEx to get the module handle of the current DLL
-  GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS,
-    (LPCTSTR)GetCurrentModuleHandle,
-    &hModule);
-  return hModule;
-}
-
 namespace cs::imp
 {
 
-
-void AssimpImporter::Test()
-{
-  HMODULE hModule = GetCurrentModuleHandle();
-  void* funcPointer = GetProcAddress(hModule, "cs__imp__AssimpImporter_create");
-  printf("in mod hModule    : %p\n", hModule);
-  printf("in mod funcPointer: %p\n", funcPointer);
-}
 
 
 
@@ -72,7 +49,7 @@ bool AssimpImporter::Import(const std::fs::path& path, const std::vector<std::st
   bool animations = HasOption(args, "--animations");
   bool materials = HasOption(args, "--materials");
   bool meshes = HasOption(args, "--meshes");
-  bool singleMesh = HasOption(args, "--single-mesh");
+  bool mesh = HasOption(args, "--mesh");
   bool entity = HasOption(args, "--entity");
 
   std::cout << "Import: " << path << " -> " << outFile << std::endl;
@@ -107,7 +84,7 @@ bool AssimpImporter::Import(const std::fs::path& path, const std::vector<std::st
 
   if (meshes)
   {
-    GenerateRenderMeshes(outFile, scene);
+    GenerateMeshes(outFile, scene);
 
     if (entity)
     {
@@ -115,8 +92,9 @@ bool AssimpImporter::Import(const std::fs::path& path, const std::vector<std::st
     }
   }
 
-  if (singleMesh)
+  if (mesh)
   {
+    GenerateSingleMesh(outFile, scene);
     std::cout << "Generate single mesh: " << outFile.generic_string() << "_singleMesh.mesh" << std::endl;
   }
 
@@ -131,12 +109,11 @@ bool AssimpImporter::Import(const std::fs::path& path, const std::vector<std::st
 }
 
 
-void AssimpImporter::GenerateRenderMeshes(const std::fs::path& path, const aiScene* scene) const
+void AssimpImporter::GenerateMeshes(const std::fs::path& path, const aiScene* scene) const
 {
   for (int i = 0; i < scene->mNumMeshes; ++i)
   {
     GenerateMesh(path, scene->mMeshes[i], scene);
-    GenerateRenderMesh(path, scene->mMeshes[i], scene);
   }
 }
 
@@ -170,18 +147,6 @@ void AssimpImporter::GenerateMesh(const std::fs::path& path, const aiMesh* mesh,
   std::fs::path outFile(outputFileName);
   std::ofstream out;
   out.open(outputFileName.c_str(), std::ios::out | std::ios::binary | std::ios::trunc);
-
-  /*
-  out
-    << "mesh {" << std::endl
-    << "  materialSlots {" << std::endl
-    << "    materialSlot name:\"Default\" locator:\"/materials/Default.mat\", " << std::endl
-    << "  }," << std::endl
-    << "  subMeshes {" << std::endl
-    << "    subMesh slot: 0 locator: \"" << renderMeshName << "\"," << std::endl
-    << "  }," << std::endl
-    << "}" << std::endl;
-  */
 
   csCryoFile file;
   auto elemMesh = new csCryoFileElement("mesh", file.Root());
@@ -502,6 +467,26 @@ void AssimpImporter::WriteMesh(std::ostream& out, const aiMesh* mesh) const
 
 }
 
+
+struct MeshData
+{
+  std::vector<aiVector3D> vertices;
+  std::vector<aiVector3D> normals;
+  std::vector<aiVector3D> tangents;
+  std::vector<aiColor4D>  colors0;
+  std::vector<aiColor4D>  colors1;
+  std::vector<aiVector3D> texCoords0;
+  std::vector<aiVector3D> texCoords1;
+  std::vector<aiVector3D> texCoords2;
+  std::vector<uint32_t>   indices;
+};
+
+void AssimpImporter::AssimpImporter::GenerateSingleMesh(const std::fs::path& path, const aiScene* scene) const
+{
+  std::map<
+
+}
+
 void AssimpImporter::PrintUsage() const
 {
   std::cout << "Assimp importer [options]: *.fbx *.obj" << std::endl;
@@ -510,7 +495,7 @@ void AssimpImporter::PrintUsage() const
   std::cout << "   --animations   export animations" << std::endl;
   std::cout << "   --materials    export materials. Must be assigned in editor" << std::endl;
   std::cout << "   --meshes       export each mesh" << std::endl;
-  std::cout << "   --single-mesh  export one single mesh" << std::endl;
+  std::cout << "   --mesh         export one single mesh" << std::endl;
   std::cout << "   --entity       export entities" << std::endl;
 }
 

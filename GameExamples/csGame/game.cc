@@ -930,7 +930,7 @@ void generate_cube_fbx(cs::csWorld *world)
 void generate_suzanne(cs::csWorld *world)
 {
 
-  csRef<csMesh> mesh = csAssetManager::Get()->Get<csMesh>("/suzanne/suzanne_Suzanne.mesh");
+  csRef<csMesh> mesh = csAssetManager::Get()->Get<csMesh>("/suzanne/suzanne_Suzanne_0.mesh");
 
   csRef<csStaticMeshState> meshState = new csStaticMeshState();
   meshState->SetMesh(mesh);

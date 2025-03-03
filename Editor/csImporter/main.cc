@@ -96,17 +96,6 @@ void test_import()
 
 int main (int argc, char** argv)
 {
-
-
-  test_cryo_file();
-  if (true)
-  {
-    test_import();
-    return 0;
-  }
-
-
-
   std::vector<iImporter*> importers;
   importers.push_back(new AssimpImporter);
 

@@ -30,11 +30,14 @@ public:
   static void Test();
 
 private:
-  void GenerateRenderMeshes(const std::fs::path &path, const aiScene *scene) const;
+  void GenerateMeshes(const std::fs::path &path, const aiScene *scene) const;
   void GenerateMesh(const std::fs::path &path, const aiMesh* mesh, const aiScene *scene) const;
   void GenerateRenderMesh(const std::fs::path &path, const aiMesh* mesh, const aiScene *scene) const;
 
   void GeneratesMeshesEntity(const std::fs::path& path, const aiScene* scene) const;
+
+
+  void GenerateSingleMesh(const std::fs::path& path, const aiScene* scene) const;
 
   void WriteMesh(std::ostream& out, const aiMesh* mesh) const;
 

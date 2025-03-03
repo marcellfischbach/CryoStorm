@@ -7,6 +7,9 @@
 namespace cs
 {
 
+class csBinaryInputStream;
+struct iRenderMesh;
+
 CS_CLASS()
 class csMeshLoader : public CS_SUPER(csBaseCSFAssetLoader)
 {
@@ -17,7 +20,8 @@ public:
 
 protected:
   csOwned<iAsset> Load(const file::csCryoFile *file, const csAssetLocator &locator) const override ;
-
+  csOwned<iRenderMesh> ReadRenderMesh(csBinaryInputStream & is) const;
+  csOwned<iRenderMesh> ReadRenderMesh_V1(csBinaryInputStream & is) const;
 };
 
 } // cs
