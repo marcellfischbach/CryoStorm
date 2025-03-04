@@ -109,7 +109,8 @@ static void push(std::vector<aiVector3D> &values,
   values.reserve(values.size() * srcValueCount);
   for (int i = 0; i < srcValueCount; ++i)
   {
-    aiVector3D v = matrix * srcValues[i];
+    aiVector3D &srcV = srcValues[i];
+    aiVector3D v     = matrix * srcV;
     values.push_back(v);
   }
 }

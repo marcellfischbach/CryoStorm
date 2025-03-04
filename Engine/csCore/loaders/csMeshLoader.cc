@@ -29,8 +29,8 @@ csOwned<iAsset> csMeshLoader::Load(const csCryoFile *file, const csAssetLocator 
   }
 
   const csCryoFileElement *materialSlotsElement = meshElement->GetChild("materialSlots");
-  const csCryoFileElement *meshesElement        = meshElement->GetChild("meshes");
-  if (!materialSlotsElement || !meshesElement)
+  const csCryoFileElement *subMeshesElement     = meshElement->GetChild("subMeshes");
+  if (!materialSlotsElement || !subMeshesElement)
   {
     return csOwned<iAsset>();
   }
@@ -53,10 +53,10 @@ csOwned<iAsset> csMeshLoader::Load(const csCryoFile *file, const csAssetLocator 
     mesh->AddMaterialSlot(slotName, material);
   }
 
-  for (int i = 0; i < meshesElement->GetNumberOfChildren(); ++i)
+  for (int i = 0; i < subMeshesElement->GetNumberOfChildren(); ++i)
   {
-    const csCryoFileElement *meshElement = meshesElement->GetChild(i);
-    if (meshElement->GetTagName() != "mesh")
+    const csCryoFileElement *meshElement = subMeshesElement->GetChild(i);
+    if (meshElement->GetTagName() != "subMesh")
     {
       continue;
     }

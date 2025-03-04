@@ -931,7 +931,7 @@ void generate_suzanne(cs::csWorld *world)
 {
 
 //  csRef<csMesh> mesh = csAssetManager::Get()->Get<csMesh>("/suzanne/suzanne_Suzanne_0.mesh");
-  csRef<csMesh> mesh = csAssetManager::Get()->Get<csMesh>("/brickwall-2/bw-2.mesh");
+  csRef<csMesh> mesh = csAssetManager::Get()->Get<csMesh>("/brickwall/brickwall.mesh");
 
   csRef<csStaticMeshState> meshState = new csStaticMeshState();
   meshState->SetMesh(mesh);
@@ -940,7 +940,7 @@ void generate_suzanne(cs::csWorld *world)
   csRef<csEntity> entity = new csEntity();
   entity->AttachState(meshState);
   entity->GetRoot()->GetTransform()
-        .SetRotation(csQuaternion::FromAxisAngle(1.0, 0.0, 0.0, -M_PI_2))
+//        .SetRotation(csQuaternion::FromAxisAngle(1.0, 0.0, 0.0, -M_PI_2))
         .Finish();
 
   world->Attach(entity);

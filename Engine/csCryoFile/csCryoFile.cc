@@ -567,7 +567,7 @@ bool csCryoFile::Parse(iBuffer* buffer)
           else
           {
             token = GetNextToken(buffer);
-            if (token.type == TokenType::String)
+            if (token.type == TokenType::String || token.type == TokenType::Identifier)
             {
               currentElement->AddAttribute(csCryoFileAttribute(attributeName, token.value, csCryoFileAttribute::AttributeType::String));
             }
