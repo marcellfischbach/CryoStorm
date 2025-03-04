@@ -5,6 +5,8 @@ add_definitions(-D_USE_MATH_DEFINES)
 add_library(csAssimpImporter SHARED
         AssimpImporter.cc
         AssimpImporter.hh
+        AssimpMeshExporter.cc
+        AssimpMeshExporter.hh
         Export.hh
 )
 

@@ -157,6 +157,13 @@ const std::string& csCryoFileElement::GetTagName() const
   return m_tagName;
 }
 
+csCryoFileElement *csCryoFileElement::AddChild(const std::string &tagName)
+{
+  csCryoFileElement* element = new csCryoFileElement(tagName);
+  AddChild(element);
+  return element;
+}
+
 void csCryoFileElement::AddChild(csCryoFileElement* element)
 {
   element->m_parent = this;

@@ -1,5 +1,6 @@
 
 #include <csAssimpImporter/AssimpImporter.hh>
+#include <csAssimpImporter/AssimpMeshExporter.hh>
 #include <csCryoFile/csCryoFile.hh>
 #include <iostream>
 #include <fstream>
@@ -87,40 +88,21 @@ bool AssimpImporter::Import(const std::fs::path &path, const std::vector<std::st
 
     if (entity)
     {
-      GeneratesMeshesEntity(outFile, scene);
+      GenerateMeshesEntity(outFile, scene);
     }
   }
 
   if (mesh)
   {
-    GenerateSingleMesh(outFile, scene);
-    std::cout << "Generate single mesh: " << outFile.generic_string() << "_singleMesh.mesh" << std::endl;
-  }
-
-
-  if (entity)
-  {
-    std::cout << "Generate entity: " << outFile.generic_string() << "_entity.entity" << std::endl;
+    GenerateMesh(outFile, scene);
+    if (entity)
+    {
+      GenerateMeshEntity(outFile, scene);
+    }
   }
 
 
   return scene != nullptr;
-}
-
-
-void AssimpImporter::GenerateMeshes(const std::fs::path &path, const aiScene *scene) const
-{
-  for (int i = 0; i < scene->mNumMeshes; ++i)
-  {
-    GenerateMesh(path, scene->mMeshes[i], scene);
-  }
-}
-
-void write_string(std::ofstream &out, const std::string &string)
-{
-  uint32_t length = string.length();
-  out.write(reinterpret_cast<const char *>(&length), sizeof(uint32_t));
-  out.write(string.c_str(), sizeof(char) * length);
 }
 
 
@@ -139,61 +121,28 @@ static std::string extract_file_name(const std::string &str)
   return str.substr(i + 1);
 }
 
-void AssimpImporter::GenerateMesh(const std::fs::path &path, const aiMesh *mesh, const aiScene *scene) const
+
+void AssimpImporter::GenerateMeshes(const std::fs::path &path, const aiScene *scene) const
 {
-  std::string   outputFileName = path.generic_string() + "_" + create_mesh_filename(mesh) + ".mesh";
-  std::string   renderMeshName = extract_file_name(path.generic_string()) + "_" + create_mesh_filename(mesh) + ".rmesh";
-  std::fs::path outFile(outputFileName);
-  std::ofstream out;
-  out.open(outputFileName.c_str(), std::ios::out | std::ios::binary | std::ios::trunc);
+  for (int i = 0; i < scene->mNumMeshes; ++i)
+  {
+    aiMesh             *mesh = scene->mMeshes[i];
 
-  csCryoFile file;
-  auto       elemMesh          = new csCryoFileElement("mesh", file.Root());
-  auto       elemMaterialSlots = new csCryoFileElement("materialSlots", elemMesh);
-  auto       elemMaterialSlot0 = new csCryoFileElement("materialSlot", elemMaterialSlots);
-  auto       elemSubMeshes     = new csCryoFileElement("meshes", elemMesh);
-  auto       elemSubMesh0      = new csCryoFileElement("mesh", elemSubMeshes);
+    std::string outputFileName = path.generic_string() + "_" + create_mesh_filename(mesh) + ".mesh";
 
-  elemMaterialSlot0->AddStringAttribute("name", "Default");
-  elemMaterialSlot0->AddStringAttribute("locator", "/materials/Default.mat");
-
-  elemSubMesh0->AddAttribute("slot", "0");
-  elemSubMesh0->AddStringAttribute("dataIdx", create_mesh_filename(mesh));
-
-
-  std::ostringstream ostream;
-  WriteMesh(ostream, mesh);
-  std::string dataStream = ostream.str();
-
-  file.AddData(create_mesh_filename(mesh), dataStream.size(), reinterpret_cast<uint8_t *>(dataStream.data()));
-
-
-  file.Write(out, true, 2);
-
-  out.close();
-
+    AssimpMeshExporter exporter;
+    exporter.combine(scene, mesh);
+    exporter.Export(outputFileName);
+  }
 }
 
 
-void AssimpImporter::GenerateRenderMesh(const std::fs::path &path, const aiMesh *mesh, const aiScene *scene) const
+void AssimpImporter::GenerateMesh(const std::fs::path &path, const aiScene *scene) const
 {
-  std::string   outputFileName = path.generic_string() + "_" + create_mesh_filename(mesh) + ".rmesh";
-  std::fs::path outFile(outputFileName);
-
-  std::cout << "Generate Render Mesh: " << outputFileName << " numFaces : " << mesh->mNumFaces << std::endl;
-  std::ofstream out;
-  out.open(outputFileName.c_str(), std::ios::out | std::ios::binary | std::ios::trunc);
-
-
-  uint32_t magic       = 0x12341234;
-  uint32_t version     = 1;
-  uint32_t numVertices = mesh->mNumVertices;
-
-  out.write(reinterpret_cast<char *>(&magic), sizeof(uint32_t));
-  out.write(reinterpret_cast<char *>(&version), sizeof(uint32_t));
-
-  WriteMesh(out, mesh);
-  out.close();
+  std::string        outputFileName = path.generic_string() + ".mesh";
+  AssimpMeshExporter exporter;
+  exporter.combine(scene, scene->mRootNode);
+  exporter.Export(outputFileName);
 }
 
 
@@ -243,7 +192,7 @@ export_aiNode(const std::fs::path &path, std::ofstream &out, std::string indent,
 }
 
 
-void AssimpImporter::GeneratesMeshesEntity(const std::fs::path &path, const aiScene *scene) const
+void AssimpImporter::GenerateMeshesEntity(const std::fs::path &path, const aiScene *scene) const
 {
   std::string   outputFileName = path.generic_string() + "_compound.entity";
   std::fs::path outFile(outputFileName);
@@ -256,313 +205,52 @@ void AssimpImporter::GeneratesMeshesEntity(const std::fs::path &path, const aiSc
   out.close();
 };
 
-enum VDataType
+
+void AssimpImporter::GenerateMeshEntity(const std::fs::path &path, const aiScene *scene) const
 {
-  END,
-  VERTEX,
-  NORMAL,
-  TANGENT,
-  COLOR0,
-  COLOR1,
-  TEX_COORD0_1,
-  TEX_COORD0_2,
-  TEX_COORD0_3,
-  TEX_COORD1_1,
-  TEX_COORD1_2,
-  TEX_COORD1_3,
-  TEX_COORD2_1,
-  TEX_COORD2_2,
-  TEX_COORD2_3
+  std::string entityFileName = path.generic_string() + ".entity";
+  std::string meshLocator    = extract_file_name(path.generic_string()) + ".mesh";
+
+
+  csCryoFile        file;
+  csCryoFileElement *entityElement = file.Root()->AddChild("entity");
+
+  csCryoFileElement *transformElement = entityElement->AddChild("transform");
+  csCryoFileElement *matrixElement    = transformElement->AddChild("matrix4");
+  matrixElement->AddAttribute("1");
+  matrixElement->AddAttribute("0");
+  matrixElement->AddAttribute("0");
+  matrixElement->AddAttribute("0");
+
+  matrixElement->AddAttribute("0");
+  matrixElement->AddAttribute("1");
+  matrixElement->AddAttribute("0");
+  matrixElement->AddAttribute("0");
+
+  matrixElement->AddAttribute("0");
+  matrixElement->AddAttribute("0");
+  matrixElement->AddAttribute("1");
+  matrixElement->AddAttribute("0");
+
+  matrixElement->AddAttribute("0");
+  matrixElement->AddAttribute("0");
+  matrixElement->AddAttribute("0");
+  matrixElement->AddAttribute("1");
+
+
+  csCryoFileElement *stateElement = entityElement->AddChild("state");
+  stateElement->AddStringAttribute("cls", "cs::csStaticMeshState");
+
+  csCryoFileElement *meshElement = stateElement->AddChild("mesh");
+  meshElement->AddStringAttribute("locator", meshLocator);
+
+
+  std::ofstream out;
+  out.open(entityFileName, std::ios::out | std::ios::binary | std::ios::trunc);
+  file.Write(out, true, 2);
+  out.close();
 };
 
-enum PrimitiveType
-{
-  POINTS,
-  LINES,
-  TRIANGLES,
-};
-
-enum IndexType
-{
-  UINT16,
-  UINT32
-};
-
-void write_values_v1(std::ostream &out, VDataType dataType, size_t numValues, aiVector3D *vertices)
-{
-  if (!vertices)
-  {
-    return;
-  }
-  uint8_t  type = dataType;
-  uint32_t size = numValues * sizeof(float) * 1;
-  out.write(reinterpret_cast<char *>(&type), sizeof(uint8_t));
-  out.write(reinterpret_cast<char *>(&size), sizeof(uint32_t));
-  for (size_t i = 0; i < numValues; i++)
-  {
-    aiVector3D &v = vertices[i];
-    out.write(reinterpret_cast<char *>(&v), sizeof(float) * 1);
-  }
-}
-
-void write_values_v2(std::ostream &out, VDataType dataType, size_t numValues, aiVector3D *vertices)
-{
-  if (!vertices)
-  {
-    return;
-  }
-  uint8_t  type = dataType;
-  uint32_t size = numValues * sizeof(float) * 2;
-  out.write(reinterpret_cast<char *>(&type), sizeof(uint8_t));
-  out.write(reinterpret_cast<char *>(&size), sizeof(uint32_t));
-  for (size_t i = 0; i < numValues; i++)
-  {
-    aiVector3D &v = vertices[i];
-    out.write(reinterpret_cast<char *>(&v), sizeof(float) * 2);
-  }
-}
-
-
-void write_values_v3(std::ostream &out, VDataType dataType, size_t numValues, aiVector3D *vertices)
-{
-  if (!vertices)
-  {
-    return;
-  }
-  uint8_t  type = dataType;
-  uint32_t size = numValues * sizeof(float) * 3;
-  out.write(reinterpret_cast<char *>(&type), sizeof(uint8_t));
-  out.write(reinterpret_cast<char *>(&size), sizeof(uint32_t));
-  for (size_t i = 0; i < numValues; i++)
-  {
-    aiVector3D &v = vertices[i];
-    out.write(reinterpret_cast<char *>(&v), sizeof(float) * 3);
-  }
-}
-
-
-void write_values_c4(std::ostream &out, VDataType dataType, size_t numValues, aiColor4D *colors)
-{
-  if (!colors)
-  {
-    return;
-  }
-  uint8_t  type = dataType;
-  uint32_t size = numValues * sizeof(float) * 4;
-  out.write(reinterpret_cast<char *>(&type), sizeof(uint8_t));
-  out.write(reinterpret_cast<char *>(&size), sizeof(uint32_t));
-  for (size_t i = 0; i < numValues; i++)
-  {
-    aiColor4D &v = colors[i];
-    out.write(reinterpret_cast<char *>(&v), sizeof(float) * 4);
-  }
-}
-
-
-void AssimpImporter::WriteMesh(std::ostream &out, const aiMesh *mesh) const
-{
-  uint32_t version = 0x01;
-  out.write(reinterpret_cast<char *>(&version), sizeof(uint32_t));
-
-
-  uint32_t numVertices = mesh->mNumVertices;
-  out.write(reinterpret_cast<char *>(&numVertices), sizeof(uint32_t));
-
-  write_values_v3(out, VERTEX, mesh->mNumVertices, mesh->mVertices);
-  write_values_v3(out, NORMAL, mesh->mNumVertices, mesh->mNormals);
-  write_values_v3(out, TANGENT, mesh->mNumVertices, mesh->mTangents);
-  write_values_c4(out, COLOR0, mesh->mNumVertices, mesh->mColors[0]);
-  write_values_c4(out, COLOR1, mesh->mNumVertices, mesh->mColors[1]);
-
-  switch (mesh->mNumUVComponents[0])
-  {
-    case 1:
-      write_values_v1(out, TEX_COORD0_1, mesh->mNumVertices, mesh->mTextureCoords[0]);
-      break;
-    case 2:
-      write_values_v2(out, TEX_COORD0_2, mesh->mNumVertices, mesh->mTextureCoords[0]);
-      break;
-    case 3:
-      write_values_v3(out, TEX_COORD0_3, mesh->mNumVertices, mesh->mTextureCoords[0]);
-      break;
-    default:
-      break;
-  }
-  switch (mesh->mNumUVComponents[1])
-  {
-    case 1:
-      write_values_v1(out, TEX_COORD1_1, mesh->mNumVertices, mesh->mTextureCoords[1]);
-      break;
-    case 2:
-      write_values_v2(out, TEX_COORD1_2, mesh->mNumVertices, mesh->mTextureCoords[1]);
-      break;
-    case 3:
-      write_values_v3(out, TEX_COORD1_3, mesh->mNumVertices, mesh->mTextureCoords[1]);
-      break;
-    default:
-      break;
-  }
-  switch (mesh->mNumUVComponents[2])
-  {
-    case 1:
-      write_values_v1(out, TEX_COORD2_1, mesh->mNumVertices, mesh->mTextureCoords[2]);
-      break;
-    case 2:
-      write_values_v2(out, TEX_COORD2_2, mesh->mNumVertices, mesh->mTextureCoords[2]);
-      break;
-    case 3:
-      write_values_v3(out, TEX_COORD2_3, mesh->mNumVertices, mesh->mTextureCoords[2]);
-      break;
-    default:
-      break;
-  }
-  uint8_t type = END;
-  out.write(reinterpret_cast<char *>(&type), sizeof(uint8_t));
-
-
-  uint8_t primType = TRIANGLES;
-  out.write(reinterpret_cast<char *>(&primType), sizeof(uint8_t));
-
-  uint32_t numIndex = mesh->mNumFaces * 3;
-  out.write(reinterpret_cast<char *>(&numIndex), sizeof(uint32_t));
-
-
-  if (numVertices >= 65336)
-  {
-    uint8_t indexType = UINT32;
-    out.write(reinterpret_cast<char *>(&indexType), sizeof(uint8_t));
-    uint32_t indexSize = mesh->mNumFaces * 3 * sizeof(uint32_t);
-    out.write(reinterpret_cast<char *>(&indexSize), sizeof(uint32_t));
-    for (int i = 0; i < mesh->mNumFaces; ++i)
-    {
-      const aiFace &face = mesh->mFaces[i];
-      uint32_t     f0    = face.mIndices[0];
-      uint32_t     f1    = face.mIndices[1];
-      uint32_t     f2    = face.mIndices[2];
-      out.write(reinterpret_cast<char *>(&f0), sizeof(uint32_t));
-      out.write(reinterpret_cast<char *>(&f1), sizeof(uint32_t));
-      out.write(reinterpret_cast<char *>(&f2), sizeof(uint32_t));
-    }
-  }
-  else
-  {
-    uint8_t indexType = UINT16;
-    out.write(reinterpret_cast<char *>(&indexType), sizeof(uint8_t));
-    uint32_t indexSize = mesh->mNumFaces * 3 * sizeof(uint16_t);
-    out.write(reinterpret_cast<char *>(&indexSize), sizeof(uint32_t));
-    for (int i = 0; i < mesh->mNumFaces; ++i)
-    {
-      const aiFace &face = mesh->mFaces[i];
-      uint16_t     f0    = face.mIndices[0];
-      uint16_t     f1    = face.mIndices[1];
-      uint16_t     f2    = face.mIndices[2];
-      out.write(reinterpret_cast<char *>(&f0), sizeof(uint16_t));
-      out.write(reinterpret_cast<char *>(&f1), sizeof(uint16_t));
-      out.write(reinterpret_cast<char *>(&f2), sizeof(uint16_t));
-    }
-  }
-
-}
-
-
-struct MeshData
-{
-  std::set<VDataType>     vertexDeclaration;
-  std::vector<aiVector3D> vertices;
-  std::vector<aiVector3D> normals;
-  std::vector<aiVector3D> tangents;
-  std::vector<aiColor4D>  colors0;
-  std::vector<aiColor4D>  colors1;
-  std::vector<aiVector3D> texCoords0;
-  std::vector<aiVector3D> texCoords1;
-  std::vector<aiVector3D> texCoords2;
-  std::vector<uint32_t>   indices;
-};
-
-std::set<VDataType> extract_vertex_declaration(const aiMesh *mesh);
-
-
-void AssimpImporter::AssimpImporter::GenerateSingleMesh(const std::fs::path &path, const aiScene *scene) const
-{
-
-}
-
-
-
-std::set<VDataType> extract_vertex_declaration(const aiMesh *mesh)
-{
-  std::set<VDataType> decl;
-  if (mesh->mVertices)
-  {
-    decl.insert(VERTEX);
-  }
-  if (mesh->mNormals)
-  {
-    decl.insert(NORMAL);
-  }
-  if (mesh->mTangents)
-  {
-    decl.insert(TANGENT);
-  }
-  if (mesh->mVertices)
-  {
-    decl.insert(VERTEX);
-  }
-  if (mesh->mColors[0])
-  {
-    decl.insert(COLOR0);
-  }
-  if (mesh->mColors[1])
-  {
-    decl.insert(COLOR1);
-  }
-  if (mesh->mTextureCoords[0])
-  {
-    switch (mesh->mNumUVComponents[0])
-    {
-      case 1:
-        decl.insert(TEX_COORD0_1);
-        break;
-      case 2:
-        decl.insert(TEX_COORD0_2);
-        break;
-      case 3:
-        decl.insert(TEX_COORD0_3);
-        break;
-    }
-  }
-  if (mesh->mTextureCoords[1])
-  {
-    switch (mesh->mNumUVComponents[1])
-    {
-      case 1:
-        decl.insert(TEX_COORD1_1);
-        break;
-      case 2:
-        decl.insert(TEX_COORD1_2);
-        break;
-      case 3:
-        decl.insert(TEX_COORD1_3);
-        break;
-    }
-  }
-  if (mesh->mTextureCoords[2])
-  {
-    switch (mesh->mNumUVComponents[2])
-    {
-      case 1:
-        decl.insert(TEX_COORD2_1);
-        break;
-      case 2:
-        decl.insert(TEX_COORD2_2);
-        break;
-      case 3:
-        decl.insert(TEX_COORD2_3);
-        break;
-    }
-  }
-  return decl;
-}
 
 void AssimpImporter::PrintUsage() const
 {

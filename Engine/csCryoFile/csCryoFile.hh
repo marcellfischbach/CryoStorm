@@ -50,6 +50,7 @@ public:
   void SetTagName(const std::string &tagName);
   CS_NODISCARD const std::string &GetTagName() const;
 
+  CS_NODISCARD csCryoFileElement* AddChild(const std::string &tagName);
   void AddChild(csCryoFileElement *child);
   CS_NODISCARD csCryoFileElement *GetParent();
   CS_NODISCARD const csCryoFileElement *GetParent() const;
