@@ -3,12 +3,12 @@ material {
     blend Blend,
     depth Write Test,
     shaders {
-        shader Forward    "/${shaders}/default/Default.shader",
-        shader Depth      "/${shaders}/default/Default_Depth.shader",
-        shader GBuffer    "/${shaders}/default/Default_GBuffer.shader",
-        shader ShadowCube "/${shaders}/default/Default_PointShadow.shader",
-        shader ShadowPSSM "/${shaders}/default/Default_PSSM.shader",
-        shader Shadow     "/${shaders}/default/Default_Shadow.shader"
+        shader Forward    "/shaders/gl4/default/Default.shader",
+        shader Depth      "/shaders/gl4/default/Default_Depth.shader",
+        shader GBuffer    "/shaders/gl4/default/Default_GBuffer.shader",
+        shader ShadowCube "/shaders/gl4/default/Default_PointShadow.shader",
+        shader ShadowPSSM "/shaders/gl4/default/Default_PSSM.shader",
+        shader Shadow     "/shaders/gl4/default/Default_Shadow.shader"
     },
     attributes {
         attribute Texture "Diffuse" "/textures/dust.tex2d",

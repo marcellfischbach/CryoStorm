@@ -14,7 +14,7 @@ DemoPostProcess::DemoPostProcess()
   DeclareInput(cs::ePPImageType::Color, "Color");
   DeclareOutput(cs::ePPImageType::Color, "Color");
 
-  m_shader      = cs::csAssetManager::Get()->Get<cs::iShader>("${shaders}/pp/demo.shader");
+  m_shader      = cs::csAssetManager::Get()->Get<cs::iShader>("shaders/gl4/pp/demo.shader");
   m_attribColor = m_shader ? m_shader->GetShaderAttribute("Color") : nullptr;
 }
 

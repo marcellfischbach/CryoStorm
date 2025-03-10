@@ -10,7 +10,7 @@ csPPHighPass::csPPHighPass(float highValue)
   DeclareInput(ePPImageType::Color, "Color");
   DeclareOutput(ePPImageType::Color, "Color");
 
-  m_shader               = cs::csAssetManager::Get()->Get<cs::iShader>("${shaders}/pp/high_pass/high_pass.shader");
+  m_shader               = cs::csAssetManager::Get()->Get<cs::iShader>("shaders/gl4/pp/high_pass/high_pass.shader");
   m_attribColor          = m_shader ? m_shader->GetShaderAttribute("Color") : nullptr;
   m_attribHighValue = m_shader ? m_shader->GetShaderAttribute("HighValue") : nullptr;
 }

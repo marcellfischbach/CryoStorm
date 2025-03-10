@@ -9,7 +9,7 @@ csPPScaleDown::csPPScaleDown()
   DeclareInput(ePPImageType::Color, "Color");
   DeclareOutput(ePPImageType::Color, "Color");
 
-  m_shader               = cs::csAssetManager::Get()->Get<cs::iShader>("${shaders}/pp/scale_down/scale_down.shader");
+  m_shader               = cs::csAssetManager::Get()->Get<cs::iShader>("shaders/gl4/pp/scale_down/scale_down.shader");
   m_attribColor          = m_shader ? m_shader->GetShaderAttribute("Color") : nullptr;
   m_attribTextureSizeInv = m_shader ? m_shader->GetShaderAttribute("TextureSizeInv") : nullptr;
 }

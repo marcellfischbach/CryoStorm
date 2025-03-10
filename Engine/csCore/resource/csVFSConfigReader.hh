@@ -26,8 +26,6 @@ private:
   static void ReadVFS(const file::csCryoFileElement *vfsElement);
   static void ReadArchives(const file::csCryoFileElement *archivesElement);
   static void ReadArchive(const file::csCryoFileElement *archiveElement);
-  static void ReadAliases(const file::csCryoFileElement *aliasesElement);
-  static void ReadAlias(const file::csCryoFileElement *aliasElement);
   static file::csCryoFile *OpenConfigFile(const std::string &configPath, const std::string &filename) ;
 };
 

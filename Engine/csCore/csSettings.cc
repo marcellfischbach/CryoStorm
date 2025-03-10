@@ -219,8 +219,8 @@ csSettings::csSettings()
   }
   else
   {
-    m_graphics = new csSettingsFile("/${config}/graphics.config");
-    m_display = new csSettingsFile("/${config}/display.config");
+    m_graphics = new csSettingsFile("/config/graphics.config");
+    m_display = new csSettingsFile("/config/display.config");
   }
 }
 

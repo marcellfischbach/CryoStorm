@@ -11,7 +11,7 @@ csPPBlurV::csPPBlurV(size_t sampleCount, float sampleScale)
   DeclareInput(ePPImageType::Color, "Color");
   DeclareOutput(ePPImageType::Color, "Color");
 
-  m_shader               = cs::csAssetManager::Get()->Get<cs::iShader>("${shaders}/pp/blur_v/blur_v.shader");
+  m_shader               = cs::csAssetManager::Get()->Get<cs::iShader>("shaders/gl4/pp/blur_v/blur_v.shader");
   m_attribColor          = m_shader ? m_shader->GetShaderAttribute("Color") : nullptr;
   m_attribTextureSizeInv = m_shader ? m_shader->GetShaderAttribute("TextureSizeInv") : nullptr;
   m_attribSampleCount = m_shader ? m_shader->GetShaderAttribute("SampleCount") : nullptr;

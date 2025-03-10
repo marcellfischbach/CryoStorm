@@ -36,11 +36,9 @@ public:
 private:
   csVFS();
   CS_NODISCARD iFile *File(const csAssetLocator &resourceLocator) const;
-  CS_NODISCARD std::string ReplaceAliases(const std::string &str) const;
 
   std::vector<csRef<iArchive>>            m_archives;
   std::string                        m_rootPath;
-  std::map<std::string, std::string> m_aliases;
 };
 
 }

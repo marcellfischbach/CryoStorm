@@ -10,7 +10,7 @@ csPPCombine::csPPCombine()
   DeclareInput(ePPImageType::Color, "Color1");
   DeclareOutput(ePPImageType::Color, "Color");
 
-  m_shader               = cs::csAssetManager::Get()->Get<cs::iShader>("${shaders}/pp/combine/combine.shader");
+  m_shader               = cs::csAssetManager::Get()->Get<cs::iShader>("shaders/gl4/pp/combine/combine.shader");
   m_attribColor0          = m_shader ? m_shader->GetShaderAttribute("Color0") : nullptr;
   m_attribColor1          = m_shader ? m_shader->GetShaderAttribute("Color1") : nullptr;
 }

@@ -11,18 +11,16 @@ uniform mat4 cs_ViewProjectionMatrixInv;
 uniform vec3 cs_CameraPosition;
 uniform vec4 cs_LightColor;
 uniform vec4 cs_LightAmbientColor;
-uniform vec3 cs_NegLightDirection;
+uniform vec3 cs_LightPosition;
+uniform float cs_LightRange;
 
 in vec2 texCoord;
 
 in vec2 ndc;
 
 
-#include</${shaders}/common/cook-torrance.glsl>
-#include</${shaders}/common/oren-nayar.glsl>
-
-
-
+#include</shaders/gl4/common/cook-torrance.glsl>
+#include</shaders/gl4/common/oren-nayar.glsl>
 
 void main ()
 {
@@ -51,7 +49,14 @@ void main ()
 
     vec3 to_viewer = normalize(cs_CameraPosition - worldPosition.xyz);
 
-    vec3 light_dir = normalize(cs_NegLightDirection.xyz);
+    vec3 to_light = cs_LightPosition - worldPosition.xyz;
+    float distance_to_light = length(to_light);
+    if (distance_to_light > cs_LightRange)
+    {
+        discard;
+    }
+
+    vec3 light_dir = normalize(to_light);
 
     vec3 H = normalize(light_dir + to_viewer);
     float n_dot_l = clamp(dot (normal, light_dir), 0, 1);
@@ -62,14 +67,12 @@ void main ()
     float diffuse = oren_nayar(n_dot_l, n_dot_v, diffuseRoughness.a);
     vec3 color = diffuseRoughness.rgb;
 
+    float range_factor = clamp(1.0 - (distance_to_light / cs_LightRange), 0.0, 1.0);
 
     cs_FragColor = vec4(
-        color * diffuse * cs_LightColor.rgb +
-        specular * cs_LightColor.rgb +
+        range_factor * color * diffuse * cs_LightColor.rgb +
+        range_factor * specular * cs_LightColor.rgb +
         cs_LightAmbientColor.rgb,
         1.0);
-
-
-
 }
 

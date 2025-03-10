@@ -54,16 +54,12 @@ const std::vector<csRef<const iArchive>> &csVFS::GetArchives() const
 
 }
 
-void csVFS::InsertAlias(const std::string& alias, const std::string& replacement)
-{
-  m_aliases[alias] = replacement;
-}
 
 csOwned<iFile> csVFS::Open(const csAssetLocator& resourceLocator, eAccessMode accessMode, eOpenMode openMode) const
 {
 
   const std::string &archiveName = resourceLocator.GetArchive();
-  std::string resourcePathWithReplacedAliases = ReplaceAliases(resourceLocator.Canonical());
+  std::string       resourcePath = resourceLocator.Canonical();
   for (const auto &archive: m_archives)
   {
     if (!archiveName.empty() && archive->GetName() != archiveName)
@@ -71,7 +67,7 @@ csOwned<iFile> csVFS::Open(const csAssetLocator& resourceLocator, eAccessMode ac
       continue;
     }
 
-    csOwned<iFile> file = archive->Open(resourcePathWithReplacedAliases, accessMode, openMode);
+    csOwned<iFile> file = archive->Open(resourcePath, accessMode, openMode);
     if (file)
     {
       return file;
@@ -84,36 +80,8 @@ csOwned<iFile> csVFS::Open(const csAssetLocator& resourceLocator, eAccessMode ac
 
 iFile* csVFS::File(const csAssetLocator& resourceLocator) const
 {
-  std::string resourcePathWithReplacedAliases = ReplaceAliases(resourceLocator.Encoded());
-  return new csFileSystemFile(m_rootPath + "/" + resourcePathWithReplacedAliases);
-}
-
-std::string csVFS::ReplaceAliases(const std::string& str) const
-{
-  std::string result(str);
-
-  std::regex  reg("(.*)\\$\\{(.*)\\}(.*)");
-  std::smatch sm;
-  while (std::regex_match(result, sm, reg))
-  {
-    std::string front     = sm[1];
-    std::string aliasName = sm[2];
-    std::string back      = sm[3];
-
-    std::string aliasReplacement = "";
-    auto        aliasIt          = m_aliases.find(aliasName);
-    if (aliasIt != m_aliases.end())
-    {
-      aliasReplacement = aliasIt->second;
-    }
-
-    result = std::string()
-      .append(front)
-      .append(aliasReplacement)
-      .append(back);
-  }
-
-  return result;
+  std::string resource = resourceLocator.Encoded();
+  return new csFileSystemFile(m_rootPath + "/" + resource);
 }
 
 
@@ -125,11 +93,11 @@ bool csVFS::IsMasterLocator(const cs::csAssetLocator &resourceLocator) const
     // no specific archive set... so this is the master per definition
     return true;
   }
-  std::string resourcePathWithReplacedAliases = ReplaceAliases(resourceLocator.Canonical());
+  std::string resource = resourceLocator.Canonical();
 
   for (const auto &archive : m_archives)
   {
-    if (archive->IsExisting(resourcePathWithReplacedAliases))
+    if (archive->IsExisting(resource))
     {
       if (archive->GetName() == archiveName)
       {

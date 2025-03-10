@@ -41,10 +41,6 @@ void csVFSConfigReader::ReadVFS(const csCryoFileElement* vfsElement)
   const csCryoFileElement * archivesElement = vfsElement->GetChild("archives");
   ReadArchives(archivesElement);
 
-  const csCryoFileElement * aliasesElement = vfsElement->GetChild("aliases");
-  ReadAliases(aliasesElement);
-
-
 }
 
 void csVFSConfigReader::ReadArchives(const cs::csCryoFileElement *archivesElement)
@@ -83,28 +79,6 @@ void csVFSConfigReader::ReadArchive(const cs::csCryoFileElement *archiveElement)
 #endif
 }
 
-void csVFSConfigReader::ReadAliases(const csCryoFileElement* aliasesElement)
-{
-  CS_NOT_NULL(aliasesElement);
-
-  for (size_t i=0, in=aliasesElement->GetNumberOfChildren(); i<in; i++)
-  {
-    const csCryoFileElement * child = aliasesElement->GetChild(i);
-    ReadAlias(child);
-  }
-}
-
-void csVFSConfigReader::ReadAlias(const csCryoFileElement* aliasElement)
-{
-  CS_NOT_NULL(aliasElement);
-
-  const std::string& aliasName = aliasElement->GetTagName();
-  const std::string &aliasReplacement = aliasElement->GetAttribute(0, "");
-  if (!aliasReplacement.empty())
-  {
-    csVFS::Get()->InsertAlias(aliasName, aliasReplacement);
-  }
-}
 
 csCryoFile* csVFSConfigReader::OpenConfigFile(const std::string& configPath, const std::string &filename)
 {

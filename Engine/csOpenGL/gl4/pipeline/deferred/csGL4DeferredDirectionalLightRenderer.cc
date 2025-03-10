@@ -23,7 +23,7 @@ bool csGL4DeferredDirectionalLightRenderer::Initialize()
   m_pssmRenderer.Initialize();
 
   m_nonShadow.m_shader = csAssetManager::Get()->Get<iShader>(
-      csAssetLocator("${engine}/opengl/gl4/deferred/directional_light_deferred_no_shadow.shader"));
+      csAssetLocator("/graphics/gl4/deferred/directional_light_deferred_no_shadow.shader"));
   if (m_nonShadow.m_shader)
   {
     m_nonShadow.m_attrDiffuseRoughness       = m_nonShadow.m_shader->GetShaderAttribute("DiffuseRoughness");
@@ -37,7 +37,7 @@ bool csGL4DeferredDirectionalLightRenderer::Initialize()
   }
 
   m_shadow.m_shader = csAssetManager::Get()->Get<iShader>(
-      csAssetLocator("${engine}/opengl/gl4/deferred/directional_light_deferred_shadow.shader"));
+      csAssetLocator("/graphics/gl4/deferred/directional_light_deferred_shadow.shader"));
   if (m_shadow.m_shader)
   {
 

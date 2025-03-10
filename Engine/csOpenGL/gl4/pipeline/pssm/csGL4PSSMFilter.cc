@@ -31,7 +31,7 @@ bool csGL4PSSMFilter::Initialize(const csVector2f &distance, float radius, float
 
 
   m_shadowMapFilterShader = csAssetManager::Get()->Get<iShader>(
-      csAssetLocator("${engine}/opengl/gl4/pssm/directional_light_shadow_map_filter.shader")
+      csAssetLocator("/graphics/gl4/pssm/directional_light_shadow_map_filter.shader")
   );
   if (!m_shadowMapFilterShader)
   {

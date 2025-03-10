@@ -73,12 +73,12 @@ void csGL4PSSMRenderer::Initialize()
   if (m_shadowSamplingMode == ShadowSamplingMode::VSM)
   {
     m_shadowMappingShader = csAssetManager::Get()->Get<iShader>(
-        csAssetLocator("${engine}/opengl/gl4/pssm/directional_light_shadow_map_vsm.shader"));
+        csAssetLocator("/graphics/gl4/pssm/directional_light_shadow_map_vsm.shader"));
   }
   else
   {
     m_shadowMappingShader = csAssetManager::Get()->Get<iShader>(
-        csAssetLocator("${engine}/opengl/gl4/pssm/directional_light_shadow_map.shader"));
+        csAssetLocator("/graphics/gl4/pssm/directional_light_shadow_map.shader"));
   }
   if (m_shadowMappingShader)
   {

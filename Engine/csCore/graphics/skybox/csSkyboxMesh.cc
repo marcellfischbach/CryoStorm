@@ -172,7 +172,7 @@ iShader *csSkyboxMesh::ShaderDeferred(iDevice *device)
 {
   if (!m_shaderDeferred)
   {
-    m_shaderDeferred = csAssetManager::Get()->Get<iShader>("${shaders}/skybox/skybox_on_screen_deferred.shader");
+    m_shaderDeferred = csAssetManager::Get()->Get<iShader>("shaders/gl4/skybox/skybox_on_screen_deferred.shader");
     if (!m_shaderDeferred)
     {
       return nullptr;
@@ -190,7 +190,7 @@ iShader *csSkyboxMesh::ShaderForward(iDevice *device)
 {
   if (!m_shaderForward)
   {
-    m_shaderForward = csAssetManager::Get()->Get<iShader>("${shaders}/skybox/skybox_on_screen_forward.shader");
+    m_shaderForward = csAssetManager::Get()->Get<iShader>("shaders/gl4/skybox/skybox_on_screen_forward.shader");
     if (!m_shaderForward)
     {
       return nullptr;

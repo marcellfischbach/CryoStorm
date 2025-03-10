@@ -1,12 +1,12 @@
 material {
     shaders {
-        shader Forward "/${shaders}/terrain/terrain4.shader",
-        shader GBuffer "/${shaders}/terrain/terrain4_GBuffer.shader",
-        shader Depth "/${shaders}/default/Default_Depth.shader",
-        shader ShadowCube "/${shaders}/default/Default_PointShadow.shader",
-        shader ShadowPSSM "/${shaders}/default/Default_PSSM.shader",
-        shader Shadow "/${shaders}/default/Default_Shadow.shader",
-        shader VSM "/${shaders}/default/Default_VSM.shader",
+        shader Forward "/shaders/gl4/terrain/terrain4.shader",
+        shader GBuffer "/shaders/gl4/terrain/terrain4_GBuffer.shader",
+        shader Depth "/shaders/gl4/default/Default_Depth.shader",
+        shader ShadowCube "/shaders/gl4/default/Default_PointShadow.shader",
+        shader ShadowPSSM "/shaders/gl4/default/Default_PSSM.shader",
+        shader Shadow "/shaders/gl4/default/Default_Shadow.shader",
+        shader VSM "/shaders/gl4/default/Default_VSM.shader",
     },
     attributes {
         attribute Texture "Layer",

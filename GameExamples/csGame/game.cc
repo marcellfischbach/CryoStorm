@@ -931,7 +931,7 @@ void generate_suzanne(cs::csWorld *world)
 {
 
 //  csRef<csMesh> mesh = csAssetManager::Get()->Get<csMesh>("/suzanne/suzanne_Suzanne_0.mesh");
-  csRef<csMesh> mesh = csAssetManager::Get()->Get<csMesh>("/brickwall/brickwall.mesh");
+  csRef<csMesh> mesh = csAssetManager::Get()->Get<csMesh>("/brickwall-2/bw-2.mesh");
 
   csRef<csStaticMeshState> meshState = new csStaticMeshState();
   meshState->SetMesh(mesh);

@@ -16,48 +16,6 @@ Project *Project::Get()
   return &project;
 }
 
-bool read_vfs_alias(const xml::csElement *aliasElement)
-{
-  if (!aliasElement->HasAttribute("name"))
-  {
-    fprintf(stderr, "<vfs><aliases><alias> has no name.\n");
-    return false;
-  }
-
-  const std::string &name = aliasElement->GetAttribute("name");
-  const std::string &replacement = aliasElement->GetContent();
-
-
-  printf("Add alias ${%s} -> '%s'\n", name.c_str(), replacement.c_str());
-  csVFS::Get()->InsertAlias(name, replacement);
-  return true;
-}
-
-bool read_vfs_aliases(const xml::csElement *vfsElement)
-{
-  const xml::csElement *aliasesElement = vfsElement->FindElement("aliases");
-  if (!aliasesElement)
-  {
-    // aliases are optional
-    return true;
-  }
-
-  for (int i = 0; i < aliasesElement->GetNumberOfChildren(); ++i)
-  {
-    const xml::csElement *aliasElement = aliasesElement->GetChild(i)->AsElement();
-    if (!aliasElement || aliasElement->GetTagName() != "alias")
-    {
-      continue;
-    }
-
-    if (!read_vfs_alias(aliasElement))
-    {
-      return false;
-    }
-  }
-
-  return true;
-}
 
 bool read_vfs_archive(const xml::csElement *archiveElement)
 {
@@ -155,10 +113,6 @@ bool read_vfs(const xml::csElement *rootElement, const std::string &projectFolde
   set_root_path(rootPath, projectFolder);
 
   if (!read_vfs_archives(vfsElement))
-  {
-    return false;
-  }
-  if (!read_vfs_aliases(vfsElement))
   {
     return false;
   }
