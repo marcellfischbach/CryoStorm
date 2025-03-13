@@ -126,7 +126,7 @@ void AssimpImporter::GenerateMeshes(const std::fs::path &path, const aiScene *sc
 {
   for (int i = 0; i < scene->mNumMeshes; ++i)
   {
-    aiMesh             *mesh = scene->mMeshes[i];
+    aiMesh *mesh = scene->mMeshes[i];
 
     std::string outputFileName = path.generic_string() + "_" + create_mesh_filename(mesh) + ".mesh";
 
@@ -156,23 +156,27 @@ export_aiNode(const std::fs::path &path, std::ofstream &out, std::string indent,
   auto &trans = node->mTransformation;
   out
       << indent << "entity name:\"" << node->mName.C_Str() << "\" {" << std::endl
-      << indent << "  transform {" << std::endl
-      << indent << "    matrix4 " << trans.a1 << " " << trans.b1 << " " << trans.c1 << "  " << trans.d1 << std::endl
-      << indent << "            " << trans.a2 << " " << trans.b2 << " " << trans.c2 << "  " << trans.d2 << std::endl
-      << indent << "            " << trans.a3 << " " << trans.b3 << " " << trans.c3 << "  " << trans.d3 << std::endl
-      << indent << "            " << trans.a4 << " " << trans.b4 << " " << trans.c4 << "  " << trans.d4 << ", "
-      << std::endl
-      << indent << "  }," << std::endl;
+      << indent << "  states {" << std::endl;
 
   for (unsigned i = 0; i < node->mNumMeshes; i++)
   {
     aiMesh      *mesh       = scene->mMeshes[node->mMeshes[i]];
     std::string meshLocator = extract_file_name(path.generic_string()) + "_" + create_mesh_filename(mesh) + ".mesh";
     out
-        << indent << "  state cls:\"cs::csStaticMeshState\" {" << std::endl
-        << indent << "    mesh locator:\"" << meshLocator << "\", " << std::endl
-        << indent << "  }," << std::endl;
+        << indent << "    state cls:\"cs::csStaticMeshState\" {" << std::endl
+        << indent << "      transform {" << std::endl
+        << indent << "        matrix4 " << trans.a1 << " " << trans.b1 << " " << trans.c1 << "  " << trans.d1 << std::endl
+        << indent << "                " << trans.a2 << " " << trans.b2 << " " << trans.c2 << "  " << trans.d2 << std::endl
+        << indent << "                " << trans.a3 << " " << trans.b3 << " " << trans.c3 << "  " << trans.d3 << std::endl
+        << indent << "                " << trans.a4 << " " << trans.b4 << " " << trans.c4 << "  " << trans.d4 << ", "
+        << std::endl
+        << indent << "      }," << std::endl
+
+        << indent << "      mesh locator:\"" << meshLocator << "\", " << std::endl
+        << indent << "    }," << std::endl;
   }
+
+  out << indent << "  }," << std::endl;
 
 
   if (node->mNumChildren)

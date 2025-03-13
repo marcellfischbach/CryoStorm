@@ -122,7 +122,10 @@ void csSceneLoader::LoadChildren(const csCryoFile *file,
                                  csEntity *entity,
                                  csSceneLoaderData *data) const
 {
-
+  if (!childrenElement)
+  {
+    return;
+  }
   for (int i = 0; i < childrenElement->GetNumberOfChildren(); ++i)
   {
     const csCryoFileElement *childElement = childrenElement->GetChild(i);
