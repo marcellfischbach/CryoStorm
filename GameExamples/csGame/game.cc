@@ -929,9 +929,9 @@ void generate_cube_fbx(cs::csWorld *world)
 
 void generate_suzanne(cs::csWorld *world)
 {
-
+#if 0
 //  csRef<csMesh> mesh = csAssetManager::Get()->Get<csMesh>("/suzanne/suzanne_Suzanne_0.mesh");
-  csRef<csMesh> mesh = csAssetManager::Get()->Get<csMesh>("/brickwall-2/bw-2.mesh");
+  csRef<csMesh> mesh = csAssetManager::Get()->Get<csMesh>("/brickwall/brickwall.mesh");
 
   csRef<csStaticMeshState> meshState = new csStaticMeshState();
   meshState->SetMesh(mesh);
@@ -944,7 +944,11 @@ void generate_suzanne(cs::csWorld *world)
         .Finish();
 
   world->Attach(entity);
+#else
+  csRef<csEntity> entity = csAssetManager::Get()->Get<csEntity>("/brickwall/brickwall.entity");
+  world->Attach(entity);
 
+#endif
 }
 
 void generate_exit_game(cs::csWorld *world)

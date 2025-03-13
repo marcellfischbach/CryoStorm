@@ -5,6 +5,7 @@
 #include <csCore/csClass.hh>
 #include <csCore/csTypes.hh>
 #include <csCore/csRef.hh>
+#include <csCore/resource/iAsset.hh>
 #include <string>
 #include <vector>
 
@@ -18,7 +19,7 @@ class csSpatialState;
 
 
 CS_CLASS(jclass = "org.cryo.core.entity.Entity")
-class CS_CORE_API csEntity : public CS_SUPER(iObject)
+class CS_CORE_API csEntity : public CS_SUPER(iAsset)
 {
 CS_CLASS_GEN_OBJECT;
 public:

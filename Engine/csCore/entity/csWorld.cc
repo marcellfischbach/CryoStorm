@@ -78,6 +78,10 @@ const csCameraState *csWorld::GetMainCamera() const
 
 bool csWorld::Attach(csEntity *entity)
 {
+  if (!entity)
+  {
+    return false;
+  }
   if (std::find(m_entities.begin(), m_entities.end(), entity) != m_entities.end()
       || entity->GetWorld())
   {

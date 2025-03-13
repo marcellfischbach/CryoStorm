@@ -204,6 +204,14 @@ set(SOURCES
         loaders/csTextFileLoader.hh
         loaders/csTextureLoader.cc
         loaders/csTextureLoader.hh
+        loaders/scene/csEntityStateLoaderBase.cc
+        loaders/scene/csEntityStateLoaderBase.hh
+        loaders/scene/csSceneLoader.cc
+        loaders/scene/csSceneLoader.hh
+        loaders/scene/csSpatialStateLoader.cc
+        loaders/scene/csSpatialStateLoader.hh
+        loaders/scene/csStaticMeshStateLoader.cc
+        loaders/scene/csStaticMeshStateLoader.hh
 
 
         math/csBoundingBox.cc

@@ -7,7 +7,7 @@ namespace cs
 {
 
 csEntity::csEntity(const std::string &name)
-    : iObject()
+    : iAsset()
     , m_name(name)
     , m_rootState(nullptr)
     , m_parent(nullptr)

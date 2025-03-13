@@ -23,7 +23,7 @@ public:
   static void Set(csAssetManager *manager);
   static csAssetManager *Get();
 
-  void RegisterLoader(csAssetLoader* loader);
+  csAssetManager *RegisterLoader(csAssetLoader* loader);
 
   template<typename T>
   csOwned<T> Get(const std::string &locator)

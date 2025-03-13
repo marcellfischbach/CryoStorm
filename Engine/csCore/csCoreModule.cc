@@ -7,12 +7,9 @@
 #include <csCore/loaders/csShaderGraphLoader.hh>
 #include <csCore/loaders/csTerrainLayerLoader.hh>
 #include <csCore/loaders/csTextureLoader.hh>
+#include <csCore/loaders/scene/csSceneLoader.hh>
+#include <csCore/loaders/scene/csStaticMeshStateLoader.hh>
 
-
-void initialize_core_module()
-{
-  printf ("initialize_core_module\n");
-}
 
 namespace cs
 {
@@ -24,14 +21,18 @@ void csCoreModule::RegisterClasses()
 
 bool csCoreModule::Register(const std::vector<std::string> &args, csEngine *engine)
 {
-  csAssetManager * assetMan = csAssetManager::Get();
-  assetMan->RegisterLoader(new csMaterialLoader());
-  assetMan->RegisterLoader(new csMeshLoader());
-  assetMan->RegisterLoader(new csSamplerLoader());
-  assetMan->RegisterLoader(new csShaderGraphLoader());
-  assetMan->RegisterLoader(new csTerrainLayerLoader());
-  assetMan->RegisterLoader(new csTerrainLayerMaskLoader());
-  assetMan->RegisterLoader(new csTextureLoader());
+  csAssetManager::Get()
+      ->RegisterLoader(new csMaterialLoader())
+      ->RegisterLoader(new csMeshLoader())
+      ->RegisterLoader(new csSamplerLoader())
+      ->RegisterLoader(new csShaderGraphLoader())
+      ->RegisterLoader(new csSceneLoader())
+      ->RegisterLoader(new csTerrainLayerLoader())
+      ->RegisterLoader(new csTerrainLayerMaskLoader())
+      ->RegisterLoader(new csTextureLoader());
+
+  csEntityStateLoaderRegistry::Get()
+      .Register(new csStaticMeshStateLoader());
 
   return true;
 }
@@ -46,7 +47,6 @@ bool csCoreModule::Initialize(const std::vector<std::string> &args, csEngine *en
 void csCoreModule::Shutdown(const std::vector<std::string> &args, cs::csEngine *engine)
 {
 }
-
 
 
 }
