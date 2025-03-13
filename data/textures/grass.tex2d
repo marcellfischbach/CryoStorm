@@ -1,6 +1,0 @@
-texture2d {
-
-    image "grass.jpg",
-    sampler "Default",
-    mipmaps
-}

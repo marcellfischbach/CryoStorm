@@ -1,6 +1,0 @@
-texture2d {
-
-    image "fieldstone_glossmap.jpg",
-    sampler "Default",
-    mipmaps
-}

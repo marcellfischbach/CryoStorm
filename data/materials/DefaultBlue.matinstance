@@ -1,6 +1,0 @@
-materialinstance {
-    material "/materials/Default.sg",
-    attributes {
-        attribute Color4 "Diffuse" 0 0.0 1 1,
-    }
-}

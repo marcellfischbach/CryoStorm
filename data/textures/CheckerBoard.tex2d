@@ -1,6 +1,0 @@
-texture2d {
-
-    image "CheckerBoard.jpg",
-    sampler "Default",
-    mipmaps
-}

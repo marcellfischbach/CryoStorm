@@ -1,9 +1,0 @@
-materialinstance {
-    material "/materials/Default.mat",
-    attributes {
-        attribute Texture "Diffuse" "/textures/fieldstone_diffuse.tex2d",
-        attribute Texture "Normal" "/textures/fieldstone_normal.tex2d",
-        attribute Texture "RoughnessMap" "/textures/fieldstone_roughness.tex2d",
-        attribute Float "Roughness" 0.5,
-    }
-}

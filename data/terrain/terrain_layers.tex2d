@@ -1,8 +1,0 @@
-texture2d {
-
-    image "terrain_layers.png",
-    sampler "Default",
-    colorCorrection "Clamp3",
-    mipmaps
-
-}

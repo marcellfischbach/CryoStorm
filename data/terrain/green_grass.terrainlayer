@@ -1,3 +1,0 @@
-terrainLayer "GreenGrass" {
-    diffuseRoughness "/textures/grass.tex2d"
-}

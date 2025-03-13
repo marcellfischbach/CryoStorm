@@ -1,6 +1,0 @@
-texture2d {
-
-    image "dirt_diffuse.png",
-    sampler "Default",
-    mipmaps
-}
