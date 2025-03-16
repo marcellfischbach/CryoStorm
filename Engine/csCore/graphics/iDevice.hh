@@ -33,6 +33,7 @@ namespace cs
 
 struct iShader;
 
+
 CS_CLASS(jclass = "org.cryo.core.graphics.IDevice")
 struct CS_CORE_API iDevice : public CS_SUPER(iObject)
 {
@@ -121,17 +122,16 @@ CS_CLASS_GEN;
                                          const std::array<csMatrix4f, 4> &matrices) = 0;
 //  virtual void SetLightShadowMap(iLight *light, iTexture2D *shadowMap) = 0;
 
-  virtual csOwned<iSampler> CreateSampler() = 0;
+  virtual cs::csOwned<iSampler> CreateSampler() = 0;
   CS_FUNCTION()
-  virtual csOwned<cs::iTexture2D> CreateTexture(const cs::iTexture2D::Descriptor &descriptor) = 0;
-  virtual csOwned<iTexture2DArray> CreateTexture(const iTexture2DArray::Descriptor &descriptor) = 0;
-  virtual csOwned<iTextureCube> CreateTexture(const iTextureCube::Descriptor &descriptor) = 0;
-  virtual csOwned<iRenderTarget2D> CreateRenderTarget(const iRenderTarget2D::Descriptor &descriptor) = 0;
-  virtual csOwned<iRenderTarget2DArray> CreateRenderTarget(const iRenderTarget2DArray::Descriptor &descriptor) = 0;
-  virtual csOwned<iRenderTargetCube> CreateRenderTarget(const iRenderTargetCube::Descriptor &descriptor) = 0;
-  virtual csOwned<iDirectionalLight> CreateDirectionalLight() = 0;
-  virtual csOwned<iPointLight> CreatePointLight() = 0;
-
+  virtual cs::csOwned<cs::iTexture2D> CreateTexture(const cs::iTexture2D::Descriptor &descriptor) = 0;
+  virtual cs::csOwned<iTexture2DArray> CreateTexture(const iTexture2DArray::Descriptor &descriptor) = 0;
+  virtual cs::csOwned<iTextureCube> CreateTexture(const iTextureCube::Descriptor &descriptor) = 0;
+  virtual cs::csOwned<iRenderTarget2D> CreateRenderTarget(const iRenderTarget2D::Descriptor &descriptor) = 0;
+  virtual cs::csOwned<iRenderTarget2DArray> CreateRenderTarget(const iRenderTarget2DArray::Descriptor &descriptor) = 0;
+  virtual cs::csOwned<iRenderTargetCube> CreateRenderTarget(const iRenderTargetCube::Descriptor &descriptor) = 0;
+  virtual cs::csOwned<iDirectionalLight> CreateDirectionalLight() = 0;
+  virtual cs::csOwned<iPointLight> CreatePointLight() = 0;
 
   virtual void ClearTextureCache() = 0;
   virtual void ResetTextures() = 0;

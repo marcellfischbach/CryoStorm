@@ -73,6 +73,7 @@ public:
 
   bool IsValue() const;
   bool IsReference() const;
+  bool IsRefCounted () const;
   bool IsPointer() const;
   bool IsPointerToPointer() const;
 

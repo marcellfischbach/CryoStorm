@@ -29,10 +29,10 @@ public:
   csViewport();
   ~csViewport() override;
 
-  CS_FUNCTION()
-  void SetRenderPipeline (eRenderPipeline pipeline);
-  CS_FUNCTION()
-  eRenderPipeline GetRenderPipeline () const;
+  CS_FUNCTION(jenum="cs::eRenderPipeline")
+  void SetRenderPipeline (cs::eRenderPipeline pipeline);
+  CS_FUNCTION(jenum="cs::eRenderPipeline")
+  cs::eRenderPipeline GetRenderPipeline () const;
 
   CS_FUNCTION()
   void SetDevice(cs::iDevice *device);

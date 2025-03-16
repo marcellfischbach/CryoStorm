@@ -5,10 +5,7 @@ import org.cryo.core.Viewport;
 import org.cryo.core.entity.CameraState;
 import org.cryo.core.entity.Entity;
 import org.cryo.core.entity.World;
-import org.cryo.core.graphics.EClearColorMode;
-import org.cryo.core.graphics.EClearMode;
-import org.cryo.core.graphics.IDevice;
-import org.cryo.core.graphics.IFrameRenderer;
+import org.cryo.core.graphics.*;
 import org.cryo.core.graphics.material.IMaterial;
 import org.cryo.core.math.Color4f;
 import org.cryo.core.resource.AssetManager;
@@ -62,7 +59,7 @@ public class TestCanvas extends AWTGLCanvas {
         viewport.setWindow(this.window);
         viewport.setDevice(ObjectRegistry.get(IDevice.class));
         viewport.setWorld(world);
-        viewport.setFrameRenderer(ObjectRegistry.get(IFrameRenderer.class));
+        viewport.setRenderPipeline(ERenderPipeline.DEFERRED);
 
 
         IMaterial defaultMat = AssetManager.instance().get(IMaterial.class, "materials/Default.mat");
@@ -74,7 +71,7 @@ public class TestCanvas extends AWTGLCanvas {
     @Override
     public void paintGL() {
 
-        viewport.processFrame();
+        viewport.processFrame(null);
 
         swapBuffers();
     }

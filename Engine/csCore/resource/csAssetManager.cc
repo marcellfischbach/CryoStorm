@@ -104,56 +104,48 @@ JNIEXPORT jlong JNICALL Java_org_cryo_core_resource_AssetManager_nGet__(JNIEnv *
 }
 
 
-JNIEXPORT jobject JNICALL Java_org_cryo_core_resource_AssetManager_nGet__JLjava_lang_String_2Ljava_lang_String_2
+JNIEXPORT jobject JNICALL Java_org_cryo_core_resource_AssetManager_nGet__JLjava_lang_String_2
     (JNIEnv *env,
-     jclass cls,
+     jclass,
      jlong ref,
-     jstring csClass,
      jstring resourceLocator)
 {
   auto assetManager = reinterpret_cast<cs::csAssetManager*>(ref);
-  const char* csClassPtr = env->GetStringUTFChars(csClass, nullptr);
   const char* resourceLocatorPtr = env->GetStringUTFChars(resourceLocator, nullptr);
-  std::string csClassStr (csClassPtr);
   std::string resourceLocatorStr (resourceLocatorPtr);
-  env->ReleaseStringUTFChars(csClass, csClassPtr);
   env->ReleaseStringUTFChars(resourceLocator, resourceLocatorPtr);
 
-  const cs::csClass *csClassClass = cs::csClassRegistry::Get()->GetClass(csClassStr);
-  if (!csClassClass)
+
+  cs::csRef<cs::iObject> pObject = assetManager->Get(resourceLocatorStr);
+  jobject result = pObject ? pObject->GetJObject() : nullptr;
+  if (result)
   {
-    csJavaThrowNoCsClassFoundException(env, csClassStr.c_str());
-    return nullptr;
+    pObject->AddRef();
   }
-  cs::iObject *pObject = assetManager->Get(csClassClass, resourceLocatorStr);
-  return pObject ? pObject->GetJObject() : nullptr;
+  
+  return result;
 }
 
 
-JNIEXPORT jobject JNICALL Java_org_cryo_core_resource_AssetManager_nLoad__JLjava_lang_String_2Ljava_lang_String_2
+JNIEXPORT jobject JNICALL Java_org_cryo_core_resource_AssetManager_nLoad__JLjava_lang_String_2
     (JNIEnv *env,
      jclass cls,
      jlong ref,
-     jstring csClass,
      jstring resourceLocator)
 {
   auto assetManager = reinterpret_cast<cs::csAssetManager*>(ref);
-  const char* csClassPtr = env->GetStringUTFChars(csClass, nullptr);
   const char* resourceLocatorPtr = env->GetStringUTFChars(resourceLocator, nullptr);
-  std::string csClassStr (csClassPtr);
   std::string resourceLocatorStr (resourceLocatorPtr);
-  env->ReleaseStringUTFChars(csClass, csClassPtr);
   env->ReleaseStringUTFChars(resourceLocator, resourceLocatorPtr);
 
-  const cs::csClass *csClassClass = cs::csClassRegistry::Get()->GetClass(csClassStr);
-  if (!csClassClass)
+  cs::csRef<cs::iObject> pObject = assetManager->Load(resourceLocatorStr);
+  jobject result = pObject ? pObject->GetJObject() : nullptr;
+  if (result)
   {
-    csJavaThrowNoCsClassFoundException(env, csClassStr.c_str());
-    return nullptr;
+    pObject->AddRef();
   }
-  cs::iObject *pObject = assetManager->Load(csClassClass, resourceLocatorStr);
-  return pObject ? pObject->GetJObject() : nullptr;
-}
+
+  return result; }
 
 };
 

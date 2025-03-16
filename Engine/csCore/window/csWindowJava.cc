@@ -80,7 +80,7 @@ int16_t csWindowJava::GetHeight() const
  * Optional.
  * @param iconName
  */
-void csWindowJava::SetWindowIcon(const csResourceLocator &iconName)
+void csWindowJava::SetWindowIcon(const csAssetLocator &iconName)
 {
 
 }

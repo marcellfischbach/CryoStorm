@@ -143,7 +143,7 @@ std::string convert_return_type_to_jni_type(FunctionNode *function, CSMetaNode *
     return converter->GetOutputReturnType();
   }
 
-  if (def.IsPointer())
+  if (def.IsPointer() || def.IsRefCounted())
   {
     if (meta->Has("jrawPtr"))
     {
@@ -308,6 +308,30 @@ std::string convert_result(const FunctionNode *function, CSMetaNode *functionMet
       return "return csReturnValue ? reinterpret_cast<" + _const + "cs::iObject*>(csReturnValue)->GetJObject() : nullptr;";
     }
   }
+  else if (def.IsRefCounted())
+  {
+    std::string _const = def.IsConst() ? "const " : "";
+    std::string result;
+    result += "cs::iObject* rawObject = csReturnValue ?  reinterpret_cast<" + _const + "cs::iObject*>(csReturnValue.raw()) : nullptr;\n";
+    if (functionMeta->Has("jrawPtr"))
+    {
+      result += "if (rawObject)\n";
+      result += "{\n";
+      result += "  rawObject->AddRef();\n";
+      result += "}\n";
+      result += "return reinterpret_cast<jlong>(rawObject);";
+    }
+    else
+    {
+      result += "jobject result = rawObject ? rawObject->GetJObject() : nullptr;";
+      result += "if (result)\n";
+      result += "{\n";
+      result += "  rawObject->AddRef ();\n";
+      result += "}\n";
+      result += "return result;\n";
+    }
+    return result;
+  }
   else if (def.IsReference())
   {
     return "return reinterpret_cast<jlong>(&csReturnValue);";
@@ -367,6 +391,9 @@ JavaJNIGenerator::GenerateFunction(ClassNode *classNode, std::list<NamespaceNode
 
   functionArguments += convert_function_output_parameter_to_jni_type(functionNode, functionMeta, m_sourceGenerator);
 
+  source += "/*\n";
+  source += "ReturnType: " + functionNode->GetReturnValue().GetText() + "\n";
+  source += "*/\n";
   source += "JNIEXPORT " + jniReturnType + "\n";
   source += "JNICALL " + methodName + "(JNIEnv* env, jclass cls, jlong ref" + functionArguments + ")\n"
             + "{\n"

@@ -35,7 +35,7 @@ public:
    * Optional.
    * @param iconName
    */
-  void SetWindowIcon(const csResourceLocator &iconName) override;
+  void SetWindowIcon(const csAssetLocator &iconName) override;
 
   void Show () override;
   void Hide () override;

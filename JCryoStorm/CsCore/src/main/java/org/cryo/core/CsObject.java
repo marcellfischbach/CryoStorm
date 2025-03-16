@@ -4,6 +4,7 @@ public class CsObject implements ICsObject {
 
     private long ref;
 
+    private static native long nReleaseObject(long ref);
     private static native long nCreateClass(Object obj, String className);
 
     public CsObject() {

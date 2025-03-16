@@ -43,7 +43,7 @@ public class Main {
         SwingUtilities.invokeLater(() -> {
             CsCoreLibrary.load();
 
-            String rootPath = "d:/dev/cryostorm/data";
+            String rootPath = "F:\\DEV\\C++\\CryoStormDemoData\\data";
             String configFileName = "vfs_java.config";
 
             for (int i = 0; i < args.length; i++) {

@@ -54,7 +54,7 @@ ASTNode *ASTNode::FindPrevSibling(ASTNodeType type)
   }
 
   std::vector<ASTNode *>::iterator it = std::find(m_parent->m_children.begin(), m_parent->m_children.end(),
-                                                          this);
+                                                  this);
   if (it != m_parent->m_children.begin())
   {
     --it;
@@ -83,7 +83,7 @@ ASTNode *ASTNode::FindNextSibling(ASTNodeType type)
   }
 
   std::vector<ASTNode *>::iterator it = std::find(m_parent->m_children.begin(), m_parent->m_children.end(),
-                                                          this);
+                                                  this);
   if (it != m_parent->m_children.end())
   {
     for (++it; it != m_parent->m_children.end(); it++)
@@ -109,7 +109,7 @@ ASTNode *ASTNode::FindPrevSibling()
   }
 
   std::vector<ASTNode *>::iterator it = std::find(m_parent->m_children.begin(), m_parent->m_children.end(),
-                                                          this);
+                                                  this);
   if (it == m_parent->m_children.end() || it == m_parent->m_children.begin())
   {
     return nullptr;
@@ -127,7 +127,7 @@ ASTNode *ASTNode::FindNextSibling()
   }
 
   std::vector<ASTNode *>::iterator it = std::find(m_parent->m_children.begin(), m_parent->m_children.end(),
-                                                          this);
+                                                  this);
   if (it == m_parent->m_children.end())
   {
     return nullptr;
@@ -318,20 +318,20 @@ std::string CSMetaNode::Get(const std::string &key) const
 
 static std::string trim(const std::string &text)
 {
-  size_t start = 0;
-  size_t end = text.length();
-  bool testStart = true;
-  bool testEnd = true;
-  for (size_t i = 0, in = text.length(); i < in && (testStart || testEnd); i++)
+  size_t      start     = 0;
+  size_t      end       = text.length();
+  bool        testStart = true;
+  bool        testEnd   = true;
+  for (size_t i         = 0, in = text.length(); i < in && (testStart || testEnd); i++)
   {
     if (testStart && text[i] != ' ' && text[i] != '\t')
     {
-      start = i;
+      start     = i;
       testStart = false;
     }
     if (testEnd && text[in - i - 1] != ' ' && text[in - i - 1] != '\t')
     {
-      end = in - i;
+      end     = in - i;
       testEnd = false;
     }
   }
@@ -342,8 +342,8 @@ static std::string trim(const std::string &text)
 static std::vector<std::string> separate(const std::string &text, char delimiter)
 {
   std::vector<std::string> res;
-  std::string v;
-  for (const auto &ch: text)
+  std::string              v;
+  for (const auto          &ch: text)
   {
     if (ch == delimiter)
     {
@@ -466,8 +466,8 @@ bool ClassNode::HasPublicDefaultConstructor()
     return false;
   }
 
-  bool hasConstructor = false;
-  FunctionNode *functionNode = static_cast<FunctionNode *>(blockNode->FindChildNode(eANT_Function));
+  bool         hasConstructor = false;
+  FunctionNode *functionNode  = static_cast<FunctionNode *>(blockNode->FindChildNode(eANT_Function));
   while (functionNode)
   {
     if (!functionNode->GetReturnValue().IsValid() &&
@@ -481,7 +481,7 @@ bool ClassNode::HasPublicDefaultConstructor()
       {
 
         // this is a constructor .. but is it a default constructor???
-        bool hasParameter = false;
+        bool      hasParameter = false;
         for (auto argument: functionNode->GetArguments())
         {
           if (!argument.HasDefaultValue())
@@ -670,7 +670,7 @@ std::string FunctionNode::PrettyPrint()
 void FunctionNode::Debug()
 {
   std::string arguments = "";
-  for (size_t i = 0, in = m_arguments.size(); i < in; ++i)
+  for (size_t i         = 0, in = m_arguments.size(); i < in; ++i)
   {
     arguments += m_arguments[i].GetText();
     if (i + 1 < m_arguments.size())
@@ -773,7 +773,7 @@ void TypeDef::AddFront(const Token &token)
     case eTT_Asterisk:
     case eTT_DoubleAsterisk:
       m_constPtr = m_constPtr || m_const;
-      m_const = false;
+      m_const    = false;
       m_mems.insert(m_mems.begin(), token);
       break;
     default:
@@ -805,6 +805,24 @@ bool TypeDef::IsReference() const
   for (auto mem: m_mems)
   {
     if (mem.GetType() == eTT_Ampersand)
+    {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool TypeDef::IsRefCounted() const
+{
+  for (auto token: m_tokens)
+  {
+    const std::string &tokenValue = token.Get();
+    if (tokenValue == std::string("csRef")
+        || tokenValue == std::string("cs::csRef")
+        || tokenValue == std::string("csAssetRef")
+        || tokenValue == std::string("cs::csAssetRef")
+        || tokenValue == std::string("csOwned")
+        || tokenValue == std::string("cs::csOwned"))
     {
       return true;
     }
@@ -854,7 +872,7 @@ const std::vector<TypeDef> &TypeDef::GetSubTypes() const
 std::string TypeDef::GetTypeName(bool withSubTypes) const
 {
   std::string typeName;
-  for (auto tkn: m_tokens)
+  for (auto   tkn: m_tokens)
   {
     typeName += tkn.Get();
   }
@@ -909,7 +927,6 @@ std::string TypeDef::GetText() const
   }
   return text;
 }
-
 
 
 std::string TypeDef::GetTextStripMem(const std::string &mem) const

@@ -23,8 +23,13 @@ JNIEXPORT jobject JNICALL Java_org_crimsonedge_core_graphics_IDevice_nCreateText
       (bool) mipMaps,
       (cs::uint16_t) multiSamples
   };
-  cs::iTexture2D             *texture = device->CreateTexture(desc);
-  return texture ? texture->GetJObject() : nullptr;
+  cs::csOwned<cs::iTexture2D> texture = device->CreateTexture(desc);
+  jobject  result = texture ? texture->GetJObject() : nullptr;
+  if (result)
+  {
+    texture->AddRef();
+  }
+  return result;
 }
 
 

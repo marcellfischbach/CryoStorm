@@ -531,6 +531,11 @@ public:
     return m_ptr;
   }
 
+  T* raw() const
+  {
+    return m_ptr;
+  }
+
   T *Consume()
   {
     T *t = m_ptr;

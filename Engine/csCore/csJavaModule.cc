@@ -47,8 +47,15 @@ bool csJavaModule::Initialize(const std::vector<std::string> &args, csEngine *en
 
 
 
+
   static csJavaCallBoolean2<jobjectArray, jobject> callInitialize (env, this, THIS_CLASS_NAME, "initialize", "[Ljava/lang/String;", "Lorg/cryo/core/Engine;");
   return callInitialize.call(env, stringArray, engine->GetJObject(), false);
+}
+
+
+void csJavaModule::Shutdown(const std::vector<std::string> &args, cs::csEngine *engine)
+{
+
 }
 
 } // cs

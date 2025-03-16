@@ -1,8 +1,10 @@
 package org.cryo.core;
 
 import org.cryo.core.entity.World;
+import org.cryo.core.graphics.ERenderPipeline;
 import org.cryo.core.graphics.IDevice;
 import org.cryo.core.graphics.IFrameRenderer;
+import org.cryo.core.graphics.IRenderTarget2D;
 import org.cryo.core.window.IWindow;
 
 @CsClass(ViewportNative.CS_CLASS_NAME)
@@ -33,8 +35,12 @@ public class Viewport extends CsObject {
         return world instanceof World ? (World) world : null;
     }
 
-    public void setFrameRenderer(IFrameRenderer frameRenderer) {
-        ViewportNative.nSetFrameRenderer(getRef(), frameRenderer != null ? frameRenderer.getRef() : 0);
+    public void setRenderPipeline(ERenderPipeline renderPipeline) {
+        ViewportNative.nSetRenderPipeline(getRef(), renderPipeline.ordinal());
+    }
+
+    public ERenderPipeline getRenderPipeline() {
+        return ERenderPipeline.values()[ViewportNative.nGetRenderPipeline(getRef())];
     }
 
     public IFrameRenderer getFrameRenderer() {
@@ -52,8 +58,8 @@ public class Viewport extends CsObject {
         return window instanceof IWindow ? (IWindow) window : null;
     }
 
-    public void processFrame () {
-        ViewportNative.nProcessFrame(getRef());
+    public void processFrame(IRenderTarget2D renderTarget) {
+        ViewportNative.nProcessFrame(getRef(), renderTarget != null ? renderTarget.getRef() : 0);
     }
 
 }

@@ -77,6 +77,17 @@ void csJAvaThrowCsClassInstantiationException(JNIEnv *env, const char *message )
   env->ThrowNew(exClass, message );
 }
 
+JNIEXPORT void
+JNICALL Java_org_cryo_core_CsObject_nReleaseObject(JNIEnv *env, jclass cls, jlong ref)
+{
+  const cs::iObject* obj = reinterpret_cast<const cs::iObject*> (ref);
+  if (obj)
+  {
+    obj->ReleaseJObject();
+  }
+}
+
+
 JNIEXPORT jlong
 JNICALL Java_org_cryo_core_CsObject_nCreateClass(JNIEnv *env, jclass cls, jobject coreObject, jstring classNameStr)
 {
@@ -102,7 +113,7 @@ JNICALL Java_org_cryo_core_CsObject_nCreateClass(JNIEnv *env, jclass cls, jobjec
       return 0;
     }
 
-    obj->SetJObject(coreObject);
+    obj->SetJObject(coreObject, cs::iObject::eMM_Weak);
     return reinterpret_cast<jlong>(obj);
   }
   catch (std::exception &e)

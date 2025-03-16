@@ -12,9 +12,9 @@ public class AssetManager {
 
     }
 
-    private static native Object nGet(long ref, String cls, String locator);
+    private static native Object nGet(long ref, String locator);
 
-    private static native Object nLoad(long ref, String cls, String locator);
+    private static native Object nLoad(long ref, String locator);
 
     public <T extends ICsObject> T get (Class<T> cls, String locator) {
         CsClass csClass = CsObject.getCsClass(cls);
@@ -22,7 +22,7 @@ public class AssetManager {
             return null;
         }
 
-        Object obj = nGet(ref, csClass.value(), locator);
+        Object obj = nGet(ref, locator);
         return cls.isInstance(obj) ? cls.cast(obj) : null;
     }
 
@@ -32,7 +32,7 @@ public class AssetManager {
             return null;
         }
 
-        Object obj = nLoad(ref, csClass.value(), locator);
+        Object obj = nLoad(ref, locator);
         return cls.isInstance(obj) ? cls.cast(obj) : null;
     }
 

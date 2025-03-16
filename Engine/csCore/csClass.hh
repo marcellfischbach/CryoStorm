@@ -47,6 +47,11 @@
 /*      printf ("Release: %lld\n", m_refCount);*/ \
       if (m_refCount <= 0) \
       {                     \
+        if (m_jweak)        \
+        {                   \
+          cs::csJava::Get()->DeleteWeakGlobalRef(m_jweak); \
+          m_jweak = nullptr;\
+        }\
         if (m_jobject)        \
         {                     \
           cs::csJava::Get()->DeleteGlobalRef(m_jobject);          \
@@ -60,26 +65,44 @@
     { \
       return m_refCount; \
     }                       \
-    void SetJObject(jobject object) const override \
+    void ReleaseJObject () const override \
     {                       \
-      jobject tmp = cs::csJava::Get()->NewGlobalRef(object); \
-      if (m_jobject) cs::csJava::Get()->DeleteGlobalRef(m_jobject);\
-      m_jobject = tmp; \
+      if (m_jweak) cs::csJava::Get()->DeleteWeakGlobaRef(m_jweak);\
+      m_jweak = nullptr; \
+    }\
+    void SetJObject(jobject object, eMemoryMode mode) const override \
+    {                       \
+      if (mode == eMM_Weak)             \
+      {                     \
+        jweak tmp = cs::csJava::Get()->NewWeakGlobalRef(object);  \
+        if (m_jweak) cs::csJava::Get()->DeleteWeakGlobalRef(m_jweak);\
+        m_jweak = tmp;\
+      }                     \
+      else                  \
+      {\
+        jobject tmp = cs::csJava::Get()->NewGlobalRef(object); \
+        if (m_jobject) cs::csJava::Get()->DeleteGlobalRef(m_jobject);\
+        m_jobject = tmp;     \
+      }; \
     }                       \
     CS_NODISCARD jobject GetJObject() const override\
     {                       \
+      if (m_jweak)          \
+      {                     \
+        return cs::csJava::Get()->NewLocalRef (m_jweak); \
+      }                     \
       if (!m_jobject && !m_jobjectChecked)       \
       {                     \
-        SetJObject(CreateJObject());                \
+        SetJObject(CreateJObject(), eMM_Strong);                \
         m_jobjectChecked = true; \
       }                     \
       return m_jobject;\
     }                       \
 private: \
-      int64_t m_refCount = 1; \
+      mutable int64_t m_refCount = 1; \
       mutable bool m_jobjectChecked = false; \
-      mutable jobject m_jobject = nullptr
-
+      mutable jobject m_jobject = nullptr;       \
+      mutable jweak m_jweak = nullptr
 
 #define CS_DECLARE_JAVA(fqcn) \
 private: \
@@ -240,7 +263,13 @@ struct CS_CORE_API iObject
 
 
 #ifdef CS_JAVA
-  virtual void SetJObject(jobject object) const = 0;
+  enum eMemoryMode
+  {
+    eMM_Strong,
+    eMM_Weak,
+  };
+  virtual void ReleaseJObject () const = 0;
+  virtual void SetJObject(jobject object, eMemoryMode memMode) const = 0;
   CS_NODISCARD virtual jobject GetJObject() const = 0;
 #endif
 
@@ -276,13 +305,12 @@ public:
   ~csAutoRelease()
   { CS_RELEASE(obj); }
 
-  void Clear ()
+  void Clear()
   {
     obj = nullptr;
   }
 
 };
-
 
 
 template<typename T>
@@ -340,8 +368,8 @@ public:
 
   bool operator==(const csValueDeclaration &other) const;
 private:
-  eConstness m_constness;
-  std::string m_type;
+  eConstness       m_constness;
+  std::string      m_type;
   eValueMemoryMode m_mode;
 };
 
@@ -393,9 +421,9 @@ protected:
 
 
 private:
-  std::string m_name;
-  csValueDeclaration m_containerDecl;
-  csValueDeclaration m_decl;
+  std::string                        m_name;
+  csValueDeclaration                 m_containerDecl;
+  csValueDeclaration                 m_decl;
   std::map<std::string, std::string> m_properties;
 
 };
@@ -411,7 +439,7 @@ public:
 
 private:
   csValueDeclaration m_type;
-  std::string m_name;
+  std::string        m_name;
 };
 
 class CS_CORE_API csFunction
@@ -517,12 +545,12 @@ protected:
 
 private:
   eFunctionVirtuality m_virtuality;
-  eConstness m_constness;
-  std::string m_name;
-  csValueDeclaration m_returnType;
+  eConstness          m_constness;
+  std::string         m_name;
+  csValueDeclaration  m_returnType;
 
   std::vector<csFunctionAttribute> m_attributes;
-  csFunctionAttribute m_invalid;
+  csFunctionAttribute              m_invalid;
 };
 
 
@@ -591,10 +619,10 @@ protected:
   void AddFunction(const csFunction *function);
   void AddMeta(const std::string &key, const std::string &value);
 private:
-  std::string m_name;
-  std::vector<const csClass *> m_superClasses;
-  std::vector<const csProperty *> m_properties;
-  std::vector<const csFunction *> m_functions;
+  std::string                        m_name;
+  std::vector<const csClass *>       m_superClasses;
+  std::vector<const csProperty *>    m_properties;
+  std::vector<const csFunction *>    m_functions;
   std::map<std::string, std::string> m_meta;
 };
 
@@ -642,8 +670,6 @@ bool iObject::IsInstanceOf() const
 namespace cs
 {
 #endif
-
-
 
 
 }

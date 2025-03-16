@@ -43,12 +43,12 @@ public class WindowLwjgl extends WindowJava {
 
     @Override
     public int getWidth() {
-        return (short) this.canvas.getWidth();
+        return this.canvas.getWidth();
     }
 
     @Override
     public int getHeight() {
-        return (short) this.canvas.getHeight();
+        return this.canvas.getHeight();
     }
 
     @Override

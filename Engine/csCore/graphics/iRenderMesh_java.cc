@@ -127,16 +127,27 @@ JNIEXPORT jobject
 JNICALL Java_org_crimsonedge_core_graphics_IRenderMeshGenerator_nGenerate(JNIEnv *env, jclass cls, jlong ref)
 {
   auto generator = reinterpret_cast<cs::iRenderMeshGenerator *>(ref);
-  cs::iRenderMesh *pMesh = generator->Generate();
-  return pMesh ? pMesh->GetJObject() : nullptr;
+  auto pMesh = generator->Generate();
+  jobject result =  pMesh ? pMesh->GetJObject() : nullptr;
+  if (result)
+  {
+    pMesh->AddRef();
+  }
+  return result;
 }
 
 JNIEXPORT jobject
 JNICALL Java_org_crimsonedge_core_graphics_IRenderMeshGeneratorFactory_nCreate(JNIEnv *env, jclass cls, jlong ref)
 {
   auto                     generatorFactory = reinterpret_cast<cs::iRenderMeshGeneratorFactory *>(ref);
-  cs::iRenderMeshGenerator *pGenerator      = generatorFactory ? generatorFactory->Create() : nullptr;
-  return pGenerator ? pGenerator->CreateJObject() : nullptr;
+  auto pGenerator      = generatorFactory ? generatorFactory->Create() : nullptr;
+
+  jobject result =  pGenerator ? pGenerator->GetJObject() : nullptr;
+  if (result)
+  {
+    pGenerator->AddRef();
+  }
+  return result;
 }
 
 }
