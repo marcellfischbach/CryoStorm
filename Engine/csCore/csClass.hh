@@ -47,11 +47,6 @@
 /*      printf ("Release: %lld\n", m_refCount);*/ \
       if (m_refCount <= 0) \
       {                     \
-        if (m_jweak)        \
-        {                   \
-          cs::csJava::Get()->DeleteWeakGlobalRef(m_jweak); \
-          m_jweak = nullptr;\
-        }\
         if (m_jobject)        \
         {                     \
           cs::csJava::Get()->DeleteGlobalRef(m_jobject);          \
@@ -65,35 +60,17 @@
     { \
       return m_refCount; \
     }                       \
-    void ReleaseJObject () const override \
+    void SetJObject(jobject object) const override \
     {                       \
-      if (m_jweak) cs::csJava::Get()->DeleteWeakGlobaRef(m_jweak);\
-      m_jweak = nullptr; \
-    }\
-    void SetJObject(jobject object, eMemoryMode mode) const override \
-    {                       \
-      if (mode == eMM_Weak)             \
-      {                     \
-        jweak tmp = cs::csJava::Get()->NewWeakGlobalRef(object);  \
-        if (m_jweak) cs::csJava::Get()->DeleteWeakGlobalRef(m_jweak);\
-        m_jweak = tmp;\
-      }                     \
-      else                  \
-      {\
-        jobject tmp = cs::csJava::Get()->NewGlobalRef(object); \
-        if (m_jobject) cs::csJava::Get()->DeleteGlobalRef(m_jobject);\
-        m_jobject = tmp;     \
-      }; \
+      jobject tmp = cs::csJava::Get()->NewGlobalRef(object); \
+      if (m_jobject) cs::csJava::Get()->DeleteGlobalRef(m_jobject);\
+      m_jobject = tmp;     \
     }                       \
     CS_NODISCARD jobject GetJObject() const override\
     {                       \
-      if (m_jweak)          \
-      {                     \
-        return cs::csJava::Get()->NewLocalRef (m_jweak); \
-      }                     \
       if (!m_jobject && !m_jobjectChecked)       \
       {                     \
-        SetJObject(CreateJObject(), eMM_Strong);                \
+        SetJObject(CreateJObject());                \
         m_jobjectChecked = true; \
       }                     \
       return m_jobject;\
@@ -101,8 +78,7 @@
 private: \
       mutable int64_t m_refCount = 1; \
       mutable bool m_jobjectChecked = false; \
-      mutable jobject m_jobject = nullptr;       \
-      mutable jweak m_jweak = nullptr
+      mutable jobject m_jobject = nullptr
 
 #define CS_DECLARE_JAVA(fqcn) \
 private: \
@@ -263,13 +239,7 @@ struct CS_CORE_API iObject
 
 
 #ifdef CS_JAVA
-  enum eMemoryMode
-  {
-    eMM_Strong,
-    eMM_Weak,
-  };
-  virtual void ReleaseJObject () const = 0;
-  virtual void SetJObject(jobject object, eMemoryMode memMode) const = 0;
+  virtual void SetJObject(jobject object) const = 0;
   CS_NODISCARD virtual jobject GetJObject() const = 0;
 #endif
 
