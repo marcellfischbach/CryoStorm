@@ -1010,14 +1010,14 @@ void csGL4Device::ResetTexturesToMark()
 
 eTextureUnit csGL4Device::ShiftTextureUnit()
 {
-  if (m_nextTextureUnit == eTU_Invalid)
+  if (m_nextTextureUnit == eTU_NullUnit)
   {
     return eTU_Invalid;
   }
 
   eTextureUnit unit = m_nextTextureUnit;
   m_nextTextureUnit = static_cast<eTextureUnit>(m_nextTextureUnit + 1);
-  while (m_texturesUsed[unit] && unit < eTU_COUNT)
+  while (m_texturesUsed[unit] && unit < eTU_NullUnit)
   {
     unit              = m_nextTextureUnit;
     m_nextTextureUnit = static_cast<eTextureUnit>(m_nextTextureUnit + 1);
@@ -1103,11 +1103,12 @@ eTextureUnit csGL4Device::BindTexture(iTexture *texture)
 #ifndef CS_DISABLE_RENDERING
   if (!texture)
   {
-    return eTU_Invalid;
+    SetActiveTexture(eTU_NullUnit);
+    return eTU_NullUnit;
   }
 
 
-  for (size_t i = 0; i < eTU_COUNT; i++)
+  for (size_t i = 0; i < eTU_NullUnit; i++)
   {
     if (m_textures[i] == texture)
     {
@@ -1119,7 +1120,7 @@ eTextureUnit csGL4Device::BindTexture(iTexture *texture)
     }
   }
 
-  if (m_nextTextureUnit == eTU_Invalid)
+  if (m_nextTextureUnit == eTU_NullUnit)
   {
     return eTU_Invalid;
   }

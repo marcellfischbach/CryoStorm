@@ -23,6 +23,7 @@ enum eTextureUnit
   eTU_Unit13,
   eTU_Unit14,
   eTU_Unit15,
+  eTU_NullUnit,
   eTU_Invalid,
   eTU_COUNT = eTU_Invalid
 };
