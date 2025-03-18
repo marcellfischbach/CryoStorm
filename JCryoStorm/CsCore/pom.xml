@@ -14,15 +14,37 @@
     <artifactId>CsCore</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
-    <properties>
-        <native.build.dir>cmake-build-debug/bin</native.build.dir>
-    </properties>
-
     <dependencies>
 
 
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>cmake-build-debug</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <native.build.dir>cmake-build-debug/bin</native.build.dir>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>cmake-build-release</id>
+            <properties>
+                <native.build.dir>cmake-build-release/bin</native.build.dir>
+            </properties>
+        </profile>
+        <profile>
+            <id>cmake-build-relwithdebinfo</id>
+            <properties>
+                <native.build.dir>cmake-build-relwithdebinfo/bin</native.build.dir>
+            </properties>
+        </profile>
+
+
+    </profiles>
 
     <build>
         <plugins>
@@ -67,6 +89,7 @@
                                     </includes>
                                 </resource>
                             </resources>
+                            <overwrite>true</overwrite>
                         </configuration>
                     </execution>
                 </executions>
