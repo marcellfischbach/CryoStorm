@@ -17,3 +17,7 @@ CMakeSettings.json
 *.class
 *.iml
 **/target
+
+JCryoStorm/*.dll
+
+JCryoStorm/CsCore/src/main/resources/natives/*.dll

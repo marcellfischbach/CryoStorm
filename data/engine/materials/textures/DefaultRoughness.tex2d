@@ -1,0 +1,6 @@
+texture2d {
+
+    image "DefaultRoughness.jpg",
+    sampler "/samplers/Default.sampler",
+    mipmaps
+}

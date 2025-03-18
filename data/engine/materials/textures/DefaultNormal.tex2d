@@ -1,0 +1,6 @@
+texture2d {
+
+    image "DefaultNormal.jpg",
+    sampler "/samplers/DefaultNormal.sampler",
+    mipmaps
+}

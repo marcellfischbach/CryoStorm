@@ -1,0 +1,5 @@
+texture2d {
+    image "DefaultDiffuse.jpg",
+    sampler "/samplers/Default.sampler",
+    mipmaps
+}
