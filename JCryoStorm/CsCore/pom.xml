@@ -14,9 +14,63 @@
     <artifactId>CsCore</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
+    <properties>
+        <native.build.dir>cmake-build-debug/bin</native.build.dir>
+    </properties>
 
     <dependencies>
 
+
     </dependencies>
 
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/main/generated</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.basedir}/src/main/resources/natives</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/../../${native.build.dir}</directory>
+                                    <includes>
+                                        <include>*.dll</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
