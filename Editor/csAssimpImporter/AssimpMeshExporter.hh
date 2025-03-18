@@ -15,17 +15,18 @@ namespace cs::imp
 class AssimpMeshExporter
 {
 public:
-  AssimpMeshExporter();
+  AssimpMeshExporter(const aiScene* scene);
 
-  void combine(const aiScene* scene, const aiMesh *mesh);
-  void combine(const aiScene* scene, const aiNode *node);
+  void combine(const aiMesh *mesh);
+  void combine(const aiNode *node);
 
-  void Export(const std::string &filename) const;
+  void Export(const std::string &filename, const std::string &referenceName) const;
 
 
 private:
+  const aiScene* m_scene;
 
-  void combine(const aiScene* scene, const aiNode *node, const aiMatrix4x4 &parent);
+  void combine(const aiNode *node, const aiMatrix4x4 &parent);
 
   enum VDataType
   {

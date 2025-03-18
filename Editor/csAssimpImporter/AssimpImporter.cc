@@ -79,7 +79,7 @@ bool AssimpImporter::Import(const std::fs::path &path, const std::vector<std::st
 
   if (materials)
   {
-    std::cout << "Generate materials: " << outFile.generic_string() << "_skeleton.materialInstance" << std::endl;
+    GenerateMaterials(outFile, scene);
   }
 
   if (meshes)
@@ -130,9 +130,9 @@ void AssimpImporter::GenerateMeshes(const std::fs::path &path, const aiScene *sc
 
     std::string outputFileName = path.generic_string() + "_" + create_mesh_filename(mesh) + ".mesh";
 
-    AssimpMeshExporter exporter;
-    exporter.combine(scene, mesh);
-    exporter.Export(outputFileName);
+    AssimpMeshExporter exporter(scene);
+    exporter.combine(mesh);
+    exporter.Export(outputFileName, extract_file_name(path.generic_string()));
   }
 }
 
@@ -140,9 +140,9 @@ void AssimpImporter::GenerateMeshes(const std::fs::path &path, const aiScene *sc
 void AssimpImporter::GenerateMesh(const std::fs::path &path, const aiScene *scene) const
 {
   std::string        outputFileName = path.generic_string() + ".mesh";
-  AssimpMeshExporter exporter;
-  exporter.combine(scene, scene->mRootNode);
-  exporter.Export(outputFileName);
+  AssimpMeshExporter exporter(scene);
+  exporter.combine(scene->mRootNode);
+  exporter.Export(outputFileName, extract_file_name(path.generic_string()));
 }
 
 
@@ -165,9 +165,12 @@ export_aiNode(const std::fs::path &path, std::ofstream &out, std::string indent,
     out
         << indent << "    state cls:\"cs::csStaticMeshState\" {" << std::endl
         << indent << "      transform {" << std::endl
-        << indent << "        matrix4 " << trans.a1 << " " << trans.b1 << " " << trans.c1 << "  " << trans.d1 << std::endl
-        << indent << "                " << trans.a2 << " " << trans.b2 << " " << trans.c2 << "  " << trans.d2 << std::endl
-        << indent << "                " << trans.a3 << " " << trans.b3 << " " << trans.c3 << "  " << trans.d3 << std::endl
+        << indent << "        matrix4 " << trans.a1 << " " << trans.b1 << " " << trans.c1 << "  " << trans.d1
+        << std::endl
+        << indent << "                " << trans.a2 << " " << trans.b2 << " " << trans.c2 << "  " << trans.d2
+        << std::endl
+        << indent << "                " << trans.a3 << " " << trans.b3 << " " << trans.c3 << "  " << trans.d3
+        << std::endl
         << indent << "                " << trans.a4 << " " << trans.b4 << " " << trans.c4 << "  " << trans.d4 << ", "
         << std::endl
         << indent << "      }," << std::endl
@@ -242,7 +245,8 @@ void AssimpImporter::GenerateMeshEntity(const std::fs::path &path, const aiScene
   matrixElement->AddAttribute("1");
 
 
-  csCryoFileElement *stateElement = entityElement->AddChild("state");
+  csCryoFileElement *statesElement = entityElement->AddChild("states");
+  csCryoFileElement *stateElement  = statesElement->AddChild("state");
   stateElement->AddStringAttribute("cls", "cs::csStaticMeshState");
 
   csCryoFileElement *meshElement = stateElement->AddChild("mesh");
@@ -254,6 +258,39 @@ void AssimpImporter::GenerateMeshEntity(const std::fs::path &path, const aiScene
   file.Write(out, true, 2);
   out.close();
 };
+
+void AssimpImporter::GenerateMaterials(const std::fs::path &path, const aiScene *scene) const
+{
+  for (size_t i = 0; i < scene->mNumMaterials; i++)
+  {
+    aiMaterial *material = scene->mMaterials[i];
+
+    aiString name = material->GetName();
+
+    std::string materialFileName = path.generic_string() + "_" + name.C_Str() + ".matinstance";
+
+    std::ofstream out;
+    out.open(materialFileName, std::ios::out | std::ios::trunc);
+
+    aiColor4D color4;
+
+    out << "materialinstance {" << std::endl
+        << "  material \"/materials/Default.mat\"," << std::endl
+        << "  attributes {" << std::endl;
+
+    if (material->Get(AI_MATKEY_COLOR_DIFFUSE, color4) == aiReturn_SUCCESS)
+    {
+      out << "    attribute Color4 \"Color\" "
+          << color4.r << " " << color4.g << " " << color4.b << " " << color4.a << "," << std::endl;
+    }
+
+    out << "  }," << std::endl
+        << "}," << std::endl;
+
+    out.close();
+
+  }
+}
 
 
 void AssimpImporter::PrintUsage() const

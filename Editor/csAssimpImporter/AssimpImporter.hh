@@ -34,6 +34,7 @@ private:
   void GenerateMeshEntity(const std::fs::path& path, const aiScene* scene) const;
 
 
+  void GenerateMaterials (const std::fs::path &path, const aiScene* scene) const;
 
 };
 

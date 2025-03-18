@@ -12,35 +12,36 @@ using namespace cs::file;
 namespace cs::imp
 {
 
-AssimpMeshExporter::AssimpMeshExporter()
+AssimpMeshExporter::AssimpMeshExporter(const aiScene* scene)
+: m_scene(scene)
 {
 
 }
 
-void AssimpMeshExporter::combine(const aiScene *scene, const aiMesh *mesh)
+void AssimpMeshExporter::combine(const aiMesh *mesh)
 {
   aiMatrix4x4 identity;
   PushMesh(identity, mesh);
 }
 
-void AssimpMeshExporter::combine(const aiScene *scene, const aiNode *node)
+void AssimpMeshExporter::combine(const aiNode *node)
 {
   aiMatrix4x4 root;
-  combine(scene, node, root);
+  combine(node, root);
 }
 
 
-void AssimpMeshExporter::combine(const aiScene *scene, const aiNode *node, const aiMatrix4x4 &parent)
+void AssimpMeshExporter::combine(const aiNode *node, const aiMatrix4x4 &parent)
 {
   aiMatrix4x4 mat = parent * node->mTransformation;
   for (int    i   = 0; i < node->mNumMeshes; ++i)
   {
     unsigned int meshId = node->mMeshes[i];
-    if (meshId >= scene->mNumMeshes)
+    if (meshId >= m_scene->mNumMeshes)
     {
       continue;
     }
-    aiMesh *mesh = scene->mMeshes[meshId];
+    aiMesh *mesh = m_scene->mMeshes[meshId];
     if (!mesh)
     {
       continue;
@@ -53,7 +54,7 @@ void AssimpMeshExporter::combine(const aiScene *scene, const aiNode *node, const
   for (int i = 0; i < node->mNumChildren; ++i)
   {
     aiNode *child = node->mChildren[i];
-    combine(scene, child, mat);
+    combine(child, mat);
   }
 }
 
@@ -355,7 +356,8 @@ void write_values_c4(std::ostream &out, uint8_t dataType, const std::vector<aiCo
   }
 }
 
-void AssimpMeshExporter::Export(const std::string &filename) const
+
+void AssimpMeshExporter::Export(const std::string &filename, const std::string &referenceName) const
 {
   csCryoFile file;
 
@@ -369,10 +371,18 @@ void AssimpMeshExporter::Export(const std::string &filename) const
     std::string idxStr = std::to_string(idx);
     std::string dataName = "#" + idxStr;
 
+    std::string materialSlotName = "Material_" + idxStr;
+    std::string materialName = "/materials/Default.mat";
+    if (meshData.materialIdx < m_scene->mNumMaterials)
+    {
+      aiMaterial *material = m_scene->mMaterials[meshData.materialIdx];
+      materialSlotName = material->GetName().C_Str();
+      materialName = referenceName + "_" + materialSlotName + ".matinstance";
+    }
 
     csCryoFileElement *matSlotElement = materialSlotsElement->AddChild("materialSlot");
-    matSlotElement->AddAttribute("name", "Material_" + idxStr);
-    matSlotElement->AddStringAttribute("locator", "/materials/Default.mat");
+    matSlotElement->AddStringAttribute("name", materialSlotName);
+    matSlotElement->AddStringAttribute("locator", materialName);
 
 
     csCryoFileElement *subMeshElement = subMeshesElement->AddChild("subMesh");

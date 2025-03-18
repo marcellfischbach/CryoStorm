@@ -930,22 +930,27 @@ void generate_cube_fbx(cs::csWorld *world)
 void generate_suzanne(cs::csWorld *world)
 {
 #if 0
-//  csRef<csMesh> mesh = csAssetManager::Get()->Get<csMesh>("/suzanne/suzanne_Suzanne_0.mesh");
-  csRef<csMesh> mesh = csAssetManager::Get()->Get<csMesh>("/brickwall/brickwall.mesh");
+  //  csRef<csMesh> mesh = csAssetManager::Get()->Get<csMesh>("/suzanne/suzanne_Suzanne_0.mesh");
+    csRef<csMesh> mesh = csAssetManager::Get()->Get<csMesh>("/brickwall/brickwall.mesh");
 
-  csRef<csStaticMeshState> meshState = new csStaticMeshState();
-  meshState->SetMesh(mesh);
+    csRef<csStaticMeshState> meshState = new csStaticMeshState();
+    meshState->SetMesh(mesh);
 
 
-  csRef<csEntity> entity = new csEntity();
-  entity->AttachState(meshState);
-  entity->GetRoot()->GetTransform()
-//        .SetRotation(csQuaternion::FromAxisAngle(1.0, 0.0, 0.0, -M_PI_2))
-        .Finish();
+    csRef<csEntity> entity = new csEntity();
+    entity->AttachState(meshState);
+    entity->GetRoot()->GetTransform()
+  //        .SetRotation(csQuaternion::FromAxisAngle(1.0, 0.0, 0.0, -M_PI_2))
+          .Finish();
 
-  world->Attach(entity);
+    world->Attach(entity);
 #else
-  csRef<csEntity> entity = csAssetManager::Get()->Get<csEntity>("/brickwall/brickwall.entity");
+//  csRef<csEntity> entity = csAssetManager::Get()->Get<csEntity>("/brickwall/brickwall.entity");
+  csRef<csEntity> entity = csAssetManager::Get()->Get<csEntity>("/stc/stc.entity");
+  entity->GetRoot()->GetTransform()
+        .SetScale(csVector3f(0.01, 0.01f, 0.01f))
+        .SetTranslation(0.0f, 5.0f, 0.0f)
+        .Finish();
   world->Attach(entity);
 
 #endif
