@@ -9,31 +9,58 @@
 namespace cs
 {
 
+struct csJavaStatePrivate
+{
+  csJavaStatePrivate(csJavaState *state)
+  {
+    JNIEnv *env = csJava::Get();
+    onAttachedToWorld = csJavaCallVoid1<jobject>(env,
+                                                 state,
+                                                 THIS_CLASS_NAME,
+                                                 "onAttachedToWorld",
+                                                 "Lorg/cryo/core/entity/World;");
+    onDetachedFromWorld = csJavaCallVoid1<jobject>(env,
+                                                   state,
+                                                   THIS_CLASS_NAME,
+                                                   "onDetachedFromWorld",
+                                                   "Lorg/cryo/core/entity/World;");
+    update              = csJavaCallVoid1<jfloat>(env, state, THIS_CLASS_NAME, "update", JAVA_FLOAT);
+
+  }
+
+  csJavaCallVoid1<jobject> onAttachedToWorld;
+  csJavaCallVoid1<jobject> onDetachedFromWorld;
+  csJavaCallVoid1<jfloat>  update;
+};
 
 csJavaState::csJavaState()
-: csEntityState()
+    : csEntityState()
+    , m_priv(new csJavaStatePrivate(this))
 {
   SetNeedUpdate(true);
 }
 
+csJavaState::~csJavaState()
+{
+  delete m_priv;
+  m_priv = nullptr;
+}
+
 void csJavaState::OnAttachedToWorld(cs::csWorld *world)
 {
-  static csJavaCallVoid1<jobject> onAttachedToWorld (csJava::Get(), this, THIS_CLASS_NAME, "onAttachedToWorld", "Lorg/cryo/core/entity/World;");
-  onAttachedToWorld.call(csJava::Get(), world->GetJObject());
+  m_priv->onAttachedToWorld.call(csJava::Get(), world->GetJObject());
 }
 
 
 void csJavaState::OnDetachedFromWorld(cs::csWorld *world)
 {
-  static csJavaCallVoid1<jobject> onDetachedFromWorld (csJava::Get(), this, THIS_CLASS_NAME, "onDetachedFromWorld", "Lorg/cryo/core/entity/World;");
-  onDetachedFromWorld.call(csJava::Get(), world->GetJObject());
+  m_priv->onDetachedFromWorld.call(csJava::Get(), world->GetJObject());
 }
 
 
 void csJavaState::Update(float tpf)
 {
-  static csJavaCallVoid1<jfloat> update (csJava::Get(), this, THIS_CLASS_NAME, "update", JAVA_FLOAT);
-  update.call(csJava::Get(), tpf);
+  m_priv->update.call(csJava::Get(), tpf);
 }
 
 }
