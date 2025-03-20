@@ -19,7 +19,7 @@ in vec3 camera_space_position;
 in vec3 viewer_world_position;
 in vec2 screen_coord;
 
-#include </shaders/common/lighting.glsl>
+#include <../common/lighting.glsl>
 
 lighting_result_t calc_lighting (float n_dot_l, float n_dot_v, float n_dot_h, float h_dot_l, float h_dot_v)
 {

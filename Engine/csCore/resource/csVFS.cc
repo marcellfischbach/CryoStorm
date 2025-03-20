@@ -60,6 +60,7 @@ csOwned<iFile> csVFS::Open(const csAssetLocator& resourceLocator, eAccessMode ac
 
   const std::string &archiveName = resourceLocator.GetArchive();
   std::string       resourcePath = resourceLocator.Canonical();
+  resourcePath = ResolveAliases(resourcePath);
   for (const auto &archive: m_archives)
   {
     if (!archiveName.empty() && archive->GetName() != archiveName)
@@ -73,7 +74,7 @@ csOwned<iFile> csVFS::Open(const csAssetLocator& resourceLocator, eAccessMode ac
       return file;
     }
   }
-  std::cerr << "File " << resourceLocator.Encoded() << " could not be found in any archive." << std::endl;
+  std::cerr << "File " << resourceLocator.Encoded() << " (" << resourcePath << ") could not be found in any archive." << std::endl;
 
   return nullptr;
 }
@@ -111,6 +112,40 @@ bool csVFS::IsMasterLocator(const cs::csAssetLocator &resourceLocator) const
   }
   return true;
 }
+
+
+void csVFS::SetRenderingApi(const std::string &renderingApi)
+{
+  m_renderingApi = renderingApi;
+}
+
+const std::string &csVFS::GetRenderingApi () const
+{
+  return m_renderingApi;
+}
+
+
+static std::string replace (const std::string &line, const std::string &alias, const std::string &replacement)
+{
+  size_t idx = line.find(alias);
+  if (idx == std::string::npos)
+  {
+    return line;
+  }
+
+  return line.substr(0, idx) + replacement + line.substr(idx + alias.length());
+
+}
+
+
+std::string csVFS::ResolveAliases(const std::string &locator) const
+{
+  std::string res = replace (locator, "${rendering-api}", m_renderingApi);
+
+  return res;
+}
+
+
 
 }
 

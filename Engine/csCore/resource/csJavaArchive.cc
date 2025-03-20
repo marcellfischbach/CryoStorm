@@ -12,52 +12,69 @@ namespace cs
 {
 
 
-csJavaArchive::csJavaArchive(const std::string &name, const std::string &rootPath, int priority)
+struct csJavaArchivePrivate
 {
+  csJavaArchivePrivate(csJavaArchive *archive)
+  {
+    JNIEnv *env = csJava::Get();
+    setRootPath = csJavaCallVoid1<jstring>(env, archive, THIS_JAVA_CLASS, "setRootPath", JAVA_STRING);
+    open        = csJavaCallObject3<jobject, jstring, jint, jint>(env,
+                                                                  archive,
+                                                                  THIS_JAVA_CLASS,
+                                                                  "open",
+                                                                  "Lorg/cryo/core/resource/IFile;",
+                                                                  JAVA_STRING,
+                                                                  JAVA_INT,
+                                                                  JAVA_INT);
+    getPriority = csJavaCallInt(csJava::Get(), archive, THIS_JAVA_CLASS, "getPriority");
+    setPriority = csJavaCallVoid1<jint>(csJava::Get(), archive, THIS_JAVA_CLASS, "setPriority", JAVA_INT);
+
+  }
+  csJavaCallVoid1<jstring>                        setRootPath;
+  csJavaCallObject3<jobject, jstring, jint, jint> open;
+  csJavaCallInt                                   getPriority;
+  csJavaCallVoid1<jint> setPriority;
+
+};
+
+
+csJavaArchive::csJavaArchive(const std::string &name, const std::string &rootPath, int priority)
+    : m_priv(new csJavaArchivePrivate(this))
+{
+
   m_name = name;
   SetRootPath(rootPath);
   SetPriority(priority);
 }
 
-const std::string& csJavaArchive::GetName() const
+const std::string &csJavaArchive::GetName() const
 {
   return m_name;
 }
 
 void csJavaArchive::SetRootPath(const std::string &rootPath)
 {
-  static csJavaCallVoid1<jstring> setRootPath(csJava::Get(), this, THIS_JAVA_CLASS, "setRootPath", JAVA_STRING);
-  setRootPath.call(csJava::Get(), csJava::Get()->NewStringUTF(rootPath.c_str()));
+  m_priv->setRootPath.call(csJava::Get(), csJava::Get()->NewStringUTF(rootPath.c_str()));
 }
 
 int csJavaArchive::GetPriority() const
 {
-  static csJavaCallInt getPriority(csJava::Get(), this, THIS_JAVA_CLASS, "getPriority");
-  return getPriority.call(csJava::Get(), 0);
+  return m_priv->getPriority.call(csJava::Get(), 0);
 }
 
 void csJavaArchive::SetPriority(int priority)
 {
-  static csJavaCallVoid1<jint> setPriority(csJava::Get(), this, THIS_JAVA_CLASS, "setPriority", JAVA_INT);
-  setPriority.call(csJava::Get(), priority);
+  m_priv->setPriority.call(csJava::Get(), priority);
 }
 
 #define IF_NULL(obj) if (!(obj)) return nullptr
 
 csOwned<iFile> csJavaArchive::Open(const std::string &locator, eAccessMode accessMode, eOpenMode openMode)
 {
-  JNIEnv                                                 *env = csJava::Get();
-  static csJavaCallObject3<jobject, jstring, jint, jint> open(env,
-                                                              this,
-                                                              THIS_JAVA_CLASS,
-                                                              "open",
-                                                              "Lorg/cryo/core/resource/IFile;",
-                                                              JAVA_STRING,
-                                                              JAVA_INT,
-                                                              JAVA_INT);
+  JNIEnv *env = csJava::Get();
 
   jstring arg0 = env->NewStringUTF(locator.c_str());
-  jobject res  = open.call(env, arg0, accessMode, openMode, nullptr);
+  jobject res  = m_priv->open.call(env, arg0, accessMode, openMode, nullptr);
   IF_NULL(res);
 
   static jclass coreObjectClass = env->FindClass("org/cryo/core/ICsObject");

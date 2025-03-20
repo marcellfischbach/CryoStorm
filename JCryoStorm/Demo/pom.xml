@@ -26,6 +26,11 @@
             <artifactId>CsLwjglWindow</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.cryo</groupId>
+            <artifactId>CsEngineResources</artifactId>
+        </dependency>
+
 
     </dependencies>
 </project>

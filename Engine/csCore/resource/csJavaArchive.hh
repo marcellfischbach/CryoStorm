@@ -27,6 +27,8 @@ private:
   std::string m_name;
   std::string m_rootPath;
   int m_priority;
+
+  struct csJavaArchivePrivate *m_priv;
 };
 
 }

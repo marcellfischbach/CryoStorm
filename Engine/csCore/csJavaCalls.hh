@@ -35,16 +35,23 @@ namespace cs
 class csJavaCallVoid
 {
 public:
+  csJavaCallVoid()
+  {
+    obj      = nullptr;
+    jobj     = nullptr;
+    cls      = nullptr;
+    methodId = nullptr;
+  }
   csJavaCallVoid(JNIEnv *env, jobject jobj, const std::string &className, const std::string &methodName)
   {
-    this->obj = nullptr;
+    this->obj  = nullptr;
     this->jobj = jobj;
     cls      = env->FindClass(className.c_str());
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), "()V") : nullptr;
   }
   csJavaCallVoid(JNIEnv *env, const iObject *obj, const std::string &className, const std::string &methodName)
   {
-    this->obj = obj;
+    this->obj  = obj;
     this->jobj = nullptr;
     cls      = env->FindClass(className.c_str());
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), "()V") : nullptr;
@@ -73,13 +80,20 @@ template<typename T0>
 class csJavaCallVoid1
 {
 public:
+  csJavaCallVoid1()
+  {
+    obj      = nullptr;
+    jobj     = nullptr;
+    cls      = nullptr;
+    methodId = nullptr;
+  }
   csJavaCallVoid1(JNIEnv *env,
                   jobject jobj,
                   const std::string &className,
                   const std::string &methodName,
                   const std::string &arg0)
   {
-    this->obj = nullptr;
+    this->obj  = nullptr;
     this->jobj = jobj;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + ")V";
@@ -91,7 +105,7 @@ public:
                   const std::string &methodName,
                   const std::string &arg0)
   {
-    this->obj = obj;
+    this->obj  = obj;
     this->jobj = nullptr;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + ")V";
@@ -121,8 +135,15 @@ template<typename T0, typename T1>
 class csJavaCallVoid2
 {
 public:
+  csJavaCallVoid2()
+  {
+    obj = nullptr;
+    jobj = nullptr;
+    cls = nullptr;
+    methodId = nullptr;
+  }
   csJavaCallVoid2(JNIEnv
-                *env,
+                  *env,
                   jobject jobj,
                   const std::string &className,
                   const std::string &methodName,
@@ -130,7 +151,7 @@ public:
                   const std::string &arg1
                  )
   {
-    this->obj = nullptr;
+    this->obj  = nullptr;
     this->jobj = jobj;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + arg1 + ")V";
@@ -138,7 +159,7 @@ public:
   }
 
   csJavaCallVoid2(JNIEnv
-             *env,
+                  *env,
                   const iObject *obj,
                   const std::string &className,
                   const std::string &methodName,
@@ -146,7 +167,7 @@ public:
                   const std::string &arg1
                  )
   {
-    this->obj = obj;
+    this->obj  = obj;
     this->jobj = nullptr;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + arg1 + ")V";
@@ -177,8 +198,15 @@ template<typename T0, typename T1, typename T2>
 class csJavaCallVoid3
 {
 public:
+  csJavaCallVoid3()
+  {
+    obj = nullptr;
+    jobj = nullptr;
+    cls = nullptr;
+    methodId = nullptr;
+  }
   csJavaCallVoid3(JNIEnv
-                *env,
+                  *env,
                   jobject jobj,
                   const std::string &className,
                   const std::string &methodName,
@@ -187,14 +215,14 @@ public:
                   const std::string &arg2
                  )
   {
-    this->obj = nullptr;
+    this->obj  = nullptr;
     this->jobj = jobj;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + arg1 + arg2 + ")V";
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), sig.c_str()) : nullptr;
   }
   csJavaCallVoid3(JNIEnv
-             *env,
+                  *env,
                   const iObject *obj,
                   const std::string &className,
                   const std::string &methodName,
@@ -203,14 +231,14 @@ public:
                   const std::string &arg2
                  )
   {
-    this->obj = obj;
+    this->obj  = obj;
     this->jobj = nullptr;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + arg1 + arg2 + ")V";
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), sig.c_str()) : nullptr;
   }
 
-  void call(JNIEnv *env, T0 arg0, T1 arg1, T2  arg2)
+  void call(JNIEnv *env, T0 arg0, T1 arg1, T2 arg2)
   {
     if (methodId)
     {
@@ -230,20 +258,26 @@ private:
 };
 
 
-
 class csJavaCallBoolean
 {
 public:
+  csJavaCallBoolean()
+  {
+    obj = nullptr;
+    jobj = nullptr;
+    cls = nullptr;
+    methodId = nullptr;
+  }
   csJavaCallBoolean(JNIEnv *env, jobject jobj, const std::string &className, const std::string &methodName)
   {
-    this->obj = nullptr;
+    this->obj  = nullptr;
     this->jobj = jobj;
     cls      = env->FindClass(className.c_str());
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), "()Z") : nullptr;
   }
   csJavaCallBoolean(JNIEnv *env, const iObject *obj, const std::string &className, const std::string &methodName)
   {
-    this->obj = obj;
+    this->obj  = obj;
     this->jobj = nullptr;
     cls      = env->FindClass(className.c_str());
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), "()Z") : nullptr;
@@ -274,13 +308,20 @@ template<typename T0>
 class csJavaCallBoolean1
 {
 public:
+  csJavaCallBoolean1()
+  {
+    obj = nullptr;
+    jobj = nullptr;
+    cls = nullptr;
+    methodId = nullptr;
+  }
   csJavaCallBoolean1(JNIEnv *env,
                      jobject jobj,
                      const std::string &className,
                      const std::string &methodName,
                      const std::string &arg0)
   {
-    this->obj = nullptr;
+    this->obj  = nullptr;
     this->jobj = jobj;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + ")Z";
@@ -292,7 +333,7 @@ public:
                      const std::string &methodName,
                      const std::string &arg0)
   {
-    this->obj = obj;
+    this->obj  = obj;
     this->jobj = nullptr;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + ")Z";
@@ -324,8 +365,15 @@ template<typename T0, typename T1>
 class csJavaCallBoolean2
 {
 public:
+  csJavaCallBoolean2 ()
+  {
+    obj = nullptr;
+    jobj = nullptr;
+    cls = nullptr;
+    methodId = nullptr;
+  }
   csJavaCallBoolean2(JNIEnv
-                   *env,
+                     *env,
                      jobject jobj,
                      const std::string &className,
                      const std::string &methodName,
@@ -333,14 +381,14 @@ public:
                      const std::string &arg1
                     )
   {
-    this->obj = nullptr;
+    this->obj  = nullptr;
     this->jobj = jobj;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + arg1 + ")Z";
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), sig.c_str()) : nullptr;
   }
   csJavaCallBoolean2(JNIEnv
-               *env,
+                     *env,
                      const iObject *obj,
                      const std::string &className,
                      const std::string &methodName,
@@ -348,7 +396,7 @@ public:
                      const std::string &arg1
                     )
   {
-    this->obj = obj;
+    this->obj  = obj;
     this->jobj = nullptr;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + arg1 + ")Z";
@@ -381,8 +429,15 @@ template<typename T0, typename T1, typename T2>
 class csJavaCallBoolean3
 {
 public:
+  csJavaCallBoolean3()
+  {
+    obj = nullptr;
+    jobj = nullptr;
+    cls = nullptr;
+    methodId = nullptr;
+  }
   csJavaCallBoolean3(JNIEnv
-                   *env,
+                     *env,
                      jobject jobj,
                      const std::string &className,
                      const std::string &methodName,
@@ -391,14 +446,14 @@ public:
                      const std::string &arg2
                     )
   {
-    this->obj = nullptr;
+    this->obj  = nullptr;
     this->jobj = jobj;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + arg1 + arg2 + ")Z";
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), sig.c_str()) : nullptr;
   }
   csJavaCallBoolean3(JNIEnv
-               *env,
+                     *env,
                      const iObject *obj,
                      const std::string &className,
                      const std::string &methodName,
@@ -407,14 +462,14 @@ public:
                      const std::string &arg2
                     )
   {
-    this->obj = obj;
+    this->obj  = obj;
     this->jobj = nullptr;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + arg1 + arg2 + ")Z";
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), sig.c_str()) : nullptr;
   }
 
-  jboolean call(JNIEnv *env, T0 arg0, T1 arg1, T2  arg2, jboolean def)
+  jboolean call(JNIEnv *env, T0 arg0, T1 arg1, T2 arg2, jboolean def)
   {
     jboolean res = def;
     if (methodId)
@@ -436,20 +491,26 @@ private:
 };
 
 
-
 class csJavaCallByte
 {
 public:
+  csJavaCallByte ()
+  {
+    obj = nullptr;
+    jobj = nullptr;
+    cls = nullptr;
+    methodId = nullptr;
+  }
   csJavaCallByte(JNIEnv *env, jobject jobj, const std::string &className, const std::string &methodName)
   {
-    this->obj = nullptr;
+    this->obj  = nullptr;
     this->jobj = jobj;
     cls      = env->FindClass(className.c_str());
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), "()B") : nullptr;
   }
   csJavaCallByte(JNIEnv *env, const iObject *obj, const std::string &className, const std::string &methodName)
   {
-    this->obj = obj;
+    this->obj  = obj;
     this->jobj = nullptr;
     cls      = env->FindClass(className.c_str());
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), "()B") : nullptr;
@@ -480,13 +541,20 @@ template<typename T0>
 class csJavaCallByte1
 {
 public:
+  csJavaCallByte1 ()
+  {
+    obj = nullptr;
+    jobj = nullptr;
+    cls = nullptr;
+    methodId = nullptr;
+  }
   csJavaCallByte1(JNIEnv *env,
                   jobject jobj,
                   const std::string &className,
                   const std::string &methodName,
                   const std::string &arg0)
   {
-    this->obj = nullptr;
+    this->obj  = nullptr;
     this->jobj = jobj;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + ")B";
@@ -498,7 +566,7 @@ public:
                   const std::string &methodName,
                   const std::string &arg0)
   {
-    this->obj = obj;
+    this->obj  = obj;
     this->jobj = nullptr;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + ")B";
@@ -530,8 +598,15 @@ template<typename T0, typename T1>
 class csJavaCallByte2
 {
 public:
+  csJavaCallByte2 ()
+  {
+    obj = nullptr;
+    jobj = nullptr;
+    cls = nullptr;
+    methodId = nullptr;
+  }
   csJavaCallByte2(JNIEnv
-                *env,
+                  *env,
                   jobject jobj,
                   const std::string &className,
                   const std::string &methodName,
@@ -539,14 +614,14 @@ public:
                   const std::string &arg1
                  )
   {
-    this->obj = nullptr;
+    this->obj  = nullptr;
     this->jobj = jobj;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + arg1 + ")B";
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), sig.c_str()) : nullptr;
   }
   csJavaCallByte2(JNIEnv
-               *env,
+                  *env,
                   const iObject *obj,
                   const std::string &className,
                   const std::string &methodName,
@@ -554,7 +629,7 @@ public:
                   const std::string &arg1
                  )
   {
-    this->obj = obj;
+    this->obj  = obj;
     this->jobj = nullptr;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + arg1 + ")B";
@@ -587,8 +662,15 @@ template<typename T0, typename T1, typename T2>
 class csJavaCallByte3
 {
 public:
+  csJavaCallByte3 ()
+  {
+    obj = nullptr;
+    jobj = nullptr;
+    cls = nullptr;
+    methodId = nullptr;
+  }
   csJavaCallByte3(JNIEnv
-                *env,
+                  *env,
                   jobject jobj,
                   const std::string &className,
                   const std::string &methodName,
@@ -597,14 +679,14 @@ public:
                   const std::string &arg2
                  )
   {
-    this->obj = nullptr;
+    this->obj  = nullptr;
     this->jobj = jobj;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + arg1 + arg2 + ")B";
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), sig.c_str()) : nullptr;
   }
   csJavaCallByte3(JNIEnv
-               *env,
+                  *env,
                   const iObject *obj,
                   const std::string &className,
                   const std::string &methodName,
@@ -613,14 +695,14 @@ public:
                   const std::string &arg2
                  )
   {
-    this->obj = obj;
+    this->obj  = obj;
     this->jobj = nullptr;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + arg1 + arg2 + ")B";
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), sig.c_str()) : nullptr;
   }
 
-  jbyte call(JNIEnv *env, T0 arg0, T1 arg1, T2  arg2, jbyte def)
+  jbyte call(JNIEnv *env, T0 arg0, T1 arg1, T2 arg2, jbyte def)
   {
     jbyte res = def;
     if (methodId)
@@ -642,21 +724,26 @@ private:
 };
 
 
-
-
 class csJavaCallShort
 {
 public:
+  csJavaCallShort ()
+  {
+    obj = nullptr;
+    jobj = nullptr;
+    cls = nullptr;
+    methodId = nullptr;
+  }
   csJavaCallShort(JNIEnv *env, jobject jobj, const std::string &className, const std::string &methodName)
   {
-    this->obj = nullptr;
+    this->obj  = nullptr;
     this->jobj = jobj;
     cls      = env->FindClass(className.c_str());
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), "()S") : nullptr;
   }
   csJavaCallShort(JNIEnv *env, const iObject *obj, const std::string &className, const std::string &methodName)
   {
-    this->obj = obj;
+    this->obj  = obj;
     this->jobj = nullptr;
     cls      = env->FindClass(className.c_str());
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), "()S") : nullptr;
@@ -687,13 +774,20 @@ template<typename T0>
 class csJavaCallShort1
 {
 public:
+  csJavaCallShort1 ()
+  {
+    obj = nullptr;
+    jobj = nullptr;
+    cls = nullptr;
+    methodId = nullptr;
+  }
   csJavaCallShort1(JNIEnv *env,
                    jobject jobj,
                    const std::string &className,
                    const std::string &methodName,
                    const std::string &arg0)
   {
-    this->obj = nullptr;
+    this->obj  = nullptr;
     this->jobj = jobj;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + ")S";
@@ -705,7 +799,7 @@ public:
                    const std::string &methodName,
                    const std::string &arg0)
   {
-    this->obj = obj;
+    this->obj  = obj;
     this->jobj = nullptr;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + ")S";
@@ -737,8 +831,15 @@ template<typename T0, typename T1>
 class csJavaCallShort2
 {
 public:
+  csJavaCallShort2 ()
+  {
+    obj = nullptr;
+    jobj = nullptr;
+    cls = nullptr;
+    methodId = nullptr;
+  }
   csJavaCallShort2(JNIEnv
-                 *env,
+                   *env,
                    jobject jobj,
                    const std::string &className,
                    const std::string &methodName,
@@ -746,14 +847,14 @@ public:
                    const std::string &arg1
                   )
   {
-    this->obj = nullptr;
+    this->obj  = nullptr;
     this->jobj = jobj;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + arg1 + ")S";
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), sig.c_str()) : nullptr;
   }
   csJavaCallShort2(JNIEnv
-               *env,
+                   *env,
                    const iObject *obj,
                    const std::string &className,
                    const std::string &methodName,
@@ -761,7 +862,7 @@ public:
                    const std::string &arg1
                   )
   {
-    this->obj = obj;
+    this->obj  = obj;
     this->jobj = nullptr;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + arg1 + ")S";
@@ -794,8 +895,15 @@ template<typename T0, typename T1, typename T2>
 class csJavaCallShort3
 {
 public:
+  csJavaCallShort3 ()
+  {
+    obj = nullptr;
+    jobj = nullptr;
+    cls = nullptr;
+    methodId = nullptr;
+  }
   csJavaCallShort3(JNIEnv
-                 *env,
+                   *env,
                    jobject jobj,
                    const std::string &className,
                    const std::string &methodName,
@@ -804,14 +912,14 @@ public:
                    const std::string &arg2
                   )
   {
-    this->obj = nullptr;
+    this->obj  = nullptr;
     this->jobj = jobj;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + arg1 + arg2 + ")S";
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), sig.c_str()) : nullptr;
   }
   csJavaCallShort3(JNIEnv
-               *env,
+                   *env,
                    const iObject *obj,
                    const std::string &className,
                    const std::string &methodName,
@@ -820,14 +928,14 @@ public:
                    const std::string &arg2
                   )
   {
-    this->obj = obj;
+    this->obj  = obj;
     this->jobj = nullptr;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + arg1 + arg2 + ")S";
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), sig.c_str()) : nullptr;
   }
 
-  jshort call(JNIEnv *env, T0 arg0, T1 arg1, T2  arg2, jshort def)
+  jshort call(JNIEnv *env, T0 arg0, T1 arg1, T2 arg2, jshort def)
   {
     jshort res = def;
     if (methodId)
@@ -849,24 +957,28 @@ private:
 };
 
 
-
-
-
-
-
 class csJavaCallInt
 {
 public:
+
+  csJavaCallInt()
+  {
+    obj      = nullptr;
+    jobj     = nullptr;
+    cls      = nullptr;
+    methodId = nullptr;
+  }
+
   csJavaCallInt(JNIEnv *env, jobject jobj, const std::string &className, const std::string &methodName)
   {
-    this->obj = nullptr;
+    this->obj  = nullptr;
     this->jobj = jobj;
     cls      = env->FindClass(className.c_str());
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), "()I") : nullptr;
   }
   csJavaCallInt(JNIEnv *env, const iObject *obj, const std::string &className, const std::string &methodName)
   {
-    this->obj = obj;
+    this->obj  = obj;
     this->jobj = nullptr;
     cls      = env->FindClass(className.c_str());
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), "()I") : nullptr;
@@ -897,13 +1009,20 @@ template<typename T0>
 class csJavaCallInt1
 {
 public:
+  csJavaCallInt1()
+  {
+    obj      = nullptr;
+    jobj     = nullptr;
+    cls      = nullptr;
+    methodId = nullptr;
+  }
   csJavaCallInt1(JNIEnv *env,
                  jobject jobj,
                  const std::string &className,
                  const std::string &methodName,
                  const std::string &arg0)
   {
-    this->obj = nullptr;
+    this->obj  = nullptr;
     this->jobj = jobj;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + ")I";
@@ -915,7 +1034,7 @@ public:
                  const std::string &methodName,
                  const std::string &arg0)
   {
-    this->obj = obj;
+    this->obj  = obj;
     this->jobj = nullptr;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + ")I";
@@ -947,8 +1066,15 @@ template<typename T0, typename T1>
 class csJavaCallInt2
 {
 public:
+  csJavaCallInt2()
+  {
+    obj      = nullptr;
+    jobj     = nullptr;
+    cls      = nullptr;
+    methodId = nullptr;
+  }
   csJavaCallInt2(JNIEnv
-               *env,
+                 *env,
                  jobject jobj,
                  const std::string &className,
                  const std::string &methodName,
@@ -956,14 +1082,14 @@ public:
                  const std::string &arg1
                 )
   {
-    this->obj = nullptr;
+    this->obj  = nullptr;
     this->jobj = jobj;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + arg1 + ")I";
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), sig.c_str()) : nullptr;
   }
   csJavaCallInt2(JNIEnv
-                *env,
+                 *env,
                  const iObject *obj,
                  const std::string &className,
                  const std::string &methodName,
@@ -971,7 +1097,7 @@ public:
                  const std::string &arg1
                 )
   {
-    this->obj = obj;
+    this->obj  = obj;
     this->jobj = nullptr;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + arg1 + ")I";
@@ -1004,8 +1130,15 @@ template<typename T0, typename T1, typename T2>
 class csJavaCallInt3
 {
 public:
+  csJavaCallInt3()
+  {
+    obj      = nullptr;
+    jobj     = nullptr;
+    cls      = nullptr;
+    methodId = nullptr;
+  }
   csJavaCallInt3(JNIEnv
-               *env,
+                 *env,
                  jobject jobj,
                  const std::string &className,
                  const std::string &methodName,
@@ -1014,14 +1147,14 @@ public:
                  const std::string &arg2
                 )
   {
-    this->obj = nullptr;
+    this->obj  = nullptr;
     this->jobj = jobj;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + arg1 + arg2 + ")I";
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), sig.c_str()) : nullptr;
   }
   csJavaCallInt3(JNIEnv
-                *env,
+                 *env,
                  const iObject *obj,
                  const std::string &className,
                  const std::string &methodName,
@@ -1030,14 +1163,14 @@ public:
                  const std::string &arg2
                 )
   {
-    this->obj = obj;
+    this->obj  = obj;
     this->jobj = nullptr;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + arg1 + arg2 + ")I";
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), sig.c_str()) : nullptr;
   }
 
-  jint call(JNIEnv *env, T0 arg0, T1 arg1, T2  arg2, jint def)
+  jint call(JNIEnv *env, T0 arg0, T1 arg1, T2 arg2, jint def)
   {
     jint res = def;
     if (methodId)
@@ -1059,20 +1192,26 @@ private:
 };
 
 
-
 class csJavaCallLong
 {
 public:
+  csJavaCallLong()
+  {
+    obj      = nullptr;
+    jobj     = nullptr;
+    cls      = nullptr;
+    methodId = nullptr;
+  }
   csJavaCallLong(JNIEnv *env, jobject jobj, const std::string &className, const std::string &methodName)
   {
-    this->obj = nullptr;
+    this->obj  = nullptr;
     this->jobj = jobj;
     cls      = env->FindClass(className.c_str());
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), "()J") : nullptr;
   }
   csJavaCallLong(JNIEnv *env, const iObject *obj, const std::string &className, const std::string &methodName)
   {
-    this->obj = obj;
+    this->obj  = obj;
     this->jobj = nullptr;
     cls      = env->FindClass(className.c_str());
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), "()J") : nullptr;
@@ -1103,13 +1242,20 @@ template<typename T0>
 class csJavaCallLong1
 {
 public:
+  csJavaCallLong1()
+  {
+    obj      = nullptr;
+    jobj     = nullptr;
+    cls      = nullptr;
+    methodId = nullptr;
+  }
   csJavaCallLong1(JNIEnv *env,
                   jobject jobj,
                   const std::string &className,
                   const std::string &methodName,
                   const std::string &arg0)
   {
-    this->obj = nullptr;
+    this->obj  = nullptr;
     this->jobj = jobj;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + ")J";
@@ -1121,7 +1267,7 @@ public:
                   const std::string &methodName,
                   const std::string &arg0)
   {
-    this->obj = obj;
+    this->obj  = obj;
     this->jobj = nullptr;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + ")J";
@@ -1153,8 +1299,15 @@ template<typename T0, typename T1>
 class csJavaCallLong2
 {
 public:
+  csJavaCallLong2()
+  {
+    obj      = nullptr;
+    jobj     = nullptr;
+    cls      = nullptr;
+    methodId = nullptr;
+  }
   csJavaCallLong2(JNIEnv
-                *env,
+                  *env,
                   jobject jobj,
                   const std::string &className,
                   const std::string &methodName,
@@ -1162,7 +1315,7 @@ public:
                   const std::string &arg1
                  )
   {
-    this->obj = nullptr;
+    this->obj  = nullptr;
     this->jobj = jobj;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + arg1 + ")J";
@@ -1170,7 +1323,7 @@ public:
   }
 
   csJavaCallLong2(JNIEnv
-             *env,
+                  *env,
                   const iObject *obj,
                   const std::string &className,
                   const std::string &methodName,
@@ -1178,7 +1331,7 @@ public:
                   const std::string &arg1
                  )
   {
-    this->obj = obj;
+    this->obj  = obj;
     this->jobj = nullptr;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + arg1 + ")J";
@@ -1211,8 +1364,15 @@ template<typename T0, typename T1, typename T2>
 class csJavaCallLong3
 {
 public:
+  csJavaCallLong3()
+  {
+    obj      = nullptr;
+    jobj     = nullptr;
+    cls      = nullptr;
+    methodId = nullptr;
+  }
   csJavaCallLong3(JNIEnv
-                *env,
+                  *env,
                   jobject jobj,
                   const std::string &className,
                   const std::string &methodName,
@@ -1221,14 +1381,14 @@ public:
                   const std::string &arg2
                  )
   {
-    this->obj = nullptr;
+    this->obj  = nullptr;
     this->jobj = jobj;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + arg1 + arg2 + ")J";
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), sig.c_str()) : nullptr;
   }
   csJavaCallLong3(JNIEnv
-             *env,
+                  *env,
                   const iObject *obj,
                   const std::string &className,
                   const std::string &methodName,
@@ -1237,14 +1397,14 @@ public:
                   const std::string &arg2
                  )
   {
-    this->obj = obj;
+    this->obj  = obj;
     this->jobj = nullptr;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + arg1 + arg2 + ")J";
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), sig.c_str()) : nullptr;
   }
 
-  jlong call(JNIEnv *env, T0 arg0, T1 arg1, T2  arg2, jlong def)
+  jlong call(JNIEnv *env, T0 arg0, T1 arg1, T2 arg2, jlong def)
   {
     jlong res = def;
     if (methodId)
@@ -1266,22 +1426,26 @@ private:
 };
 
 
-
-
-
 class csJavaCallFloat
 {
 public:
+  csJavaCallFloat()
+  {
+    obj      = nullptr;
+    jobj     = nullptr;
+    cls      = nullptr;
+    methodId = nullptr;
+  }
   csJavaCallFloat(JNIEnv *env, jobject jobj, const std::string &className, const std::string &methodName)
   {
-    this->obj = nullptr;
+    this->obj  = nullptr;
     this->jobj = jobj;
     cls      = env->FindClass(className.c_str());
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), "()F") : nullptr;
   }
   csJavaCallFloat(JNIEnv *env, const iObject *obj, const std::string &className, const std::string &methodName)
   {
-    this->obj = obj;
+    this->obj  = obj;
     this->jobj = nullptr;
     cls      = env->FindClass(className.c_str());
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), "()F") : nullptr;
@@ -1312,13 +1476,20 @@ template<typename T0>
 class csJavaCallFloat1
 {
 public:
+  csJavaCallFloat1()
+  {
+    obj      = nullptr;
+    jobj     = nullptr;
+    cls      = nullptr;
+    methodId = nullptr;
+  }
   csJavaCallFloat1(JNIEnv *env,
                    jobject jobj,
                    const std::string &className,
                    const std::string &methodName,
                    const std::string &arg0)
   {
-    this->obj = nullptr;
+    this->obj  = nullptr;
     this->jobj = jobj;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + ")F";
@@ -1330,7 +1501,7 @@ public:
                    const std::string &methodName,
                    const std::string &arg0)
   {
-    this->obj = obj;
+    this->obj  = obj;
     this->jobj = nullptr;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + ")F";
@@ -1362,8 +1533,15 @@ template<typename T0, typename T1>
 class csJavaCallFloat2
 {
 public:
+  csJavaCallFloat2()
+  {
+    obj      = nullptr;
+    jobj     = nullptr;
+    cls      = nullptr;
+    methodId = nullptr;
+  }
   csJavaCallFloat2(JNIEnv
-                 *env,
+                   *env,
                    jobject jobj,
                    const std::string &className,
                    const std::string &methodName,
@@ -1371,14 +1549,14 @@ public:
                    const std::string &arg1
                   )
   {
-    this->obj = nullptr;
+    this->obj  = nullptr;
     this->jobj = jobj;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + arg1 + ")F";
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), sig.c_str()) : nullptr;
   }
   csJavaCallFloat2(JNIEnv
-                *env,
+                   *env,
                    const iObject *obj,
                    const std::string &className,
                    const std::string &methodName,
@@ -1386,7 +1564,7 @@ public:
                    const std::string &arg1
                   )
   {
-    this->obj = obj;
+    this->obj  = obj;
     this->jobj = nullptr;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + arg1 + ")F";
@@ -1419,8 +1597,15 @@ template<typename T0, typename T1, typename T2>
 class csJavaCallFloat3
 {
 public:
+  csJavaCallFloat3()
+  {
+    obj      = nullptr;
+    jobj     = nullptr;
+    cls      = nullptr;
+    methodId = nullptr;
+  }
   csJavaCallFloat3(JNIEnv
-                 *env,
+                   *env,
                    jobject jobj,
                    const std::string &className,
                    const std::string &methodName,
@@ -1429,14 +1614,14 @@ public:
                    const std::string &arg2
                   )
   {
-    this->obj = nullptr;
+    this->obj  = nullptr;
     this->jobj = jobj;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + arg1 + arg2 + ")F";
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), sig.c_str()) : nullptr;
   }
   csJavaCallFloat3(JNIEnv
-                *env,
+                   *env,
                    const iObject *obj,
                    const std::string &className,
                    const std::string &methodName,
@@ -1445,14 +1630,14 @@ public:
                    const std::string &arg2
                   )
   {
-    this->obj = obj;
+    this->obj  = obj;
     this->jobj = nullptr;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + arg1 + arg2 + ")F";
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), sig.c_str()) : nullptr;
   }
 
-  jfloat call(JNIEnv *env, T0 arg0, T1 arg1, T2  arg2, jfloat def)
+  jfloat call(JNIEnv *env, T0 arg0, T1 arg1, T2 arg2, jfloat def)
   {
     jfloat res = def;
     if (methodId)
@@ -1477,16 +1662,24 @@ private:
 class csJavaCallDouble
 {
 public:
+  csJavaCallDouble()
+  {
+    obj      = nullptr;
+    jobj     = nullptr;
+    cls      = nullptr;
+    methodId = nullptr;
+  }
+
   csJavaCallDouble(JNIEnv *env, jobject jobj, const std::string &className, const std::string &methodName)
   {
-    this->obj = nullptr;
+    this->obj  = nullptr;
     this->jobj = jobj;
     cls      = env->FindClass(className.c_str());
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), "()D") : nullptr;
   }
   csJavaCallDouble(JNIEnv *env, const iObject *obj, const std::string &className, const std::string &methodName)
   {
-    this->obj = obj;
+    this->obj  = obj;
     this->jobj = nullptr;
     cls      = env->FindClass(className.c_str());
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), "()D") : nullptr;
@@ -1517,13 +1710,21 @@ template<typename T0>
 class csJavaCallDouble1
 {
 public:
+  csJavaCallDouble1()
+  {
+    obj      = nullptr;
+    jobj     = nullptr;
+    cls      = nullptr;
+    methodId = nullptr;
+  }
+
   csJavaCallDouble1(JNIEnv *env,
                     jobject jobj,
                     const std::string &className,
                     const std::string &methodName,
                     const std::string &arg0)
   {
-    this->obj = nullptr;
+    this->obj  = nullptr;
     this->jobj = jobj;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + ")D";
@@ -1535,7 +1736,7 @@ public:
                     const std::string &methodName,
                     const std::string &arg0)
   {
-    this->obj = obj;
+    this->obj  = obj;
     this->jobj = nullptr;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + ")D";
@@ -1567,8 +1768,16 @@ template<typename T0, typename T1>
 class csJavaCallDouble2
 {
 public:
+  csJavaCallDouble2()
+  {
+    obj      = nullptr;
+    jobj     = nullptr;
+    cls      = nullptr;
+    methodId = nullptr;
+  }
+
   csJavaCallDouble2(JNIEnv
-                  *env,
+                    *env,
                     jobject jobj,
                     const std::string &className,
                     const std::string &methodName,
@@ -1576,7 +1785,7 @@ public:
                     const std::string &arg1
                    )
   {
-    this->obj = nullptr;
+    this->obj  = nullptr;
     this->jobj = jobj;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + arg1 + ")D";
@@ -1584,7 +1793,7 @@ public:
   }
 
   csJavaCallDouble2(JNIEnv
-                 *env,
+                    *env,
                     const iObject *obj,
                     const std::string &className,
                     const std::string &methodName,
@@ -1592,7 +1801,7 @@ public:
                     const std::string &arg1
                    )
   {
-    this->obj = obj;
+    this->obj  = obj;
     this->jobj = nullptr;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + arg1 + ")D";
@@ -1625,8 +1834,16 @@ template<typename T0, typename T1, typename T2>
 class csJavaCallDouble3
 {
 public:
+  csJavaCallDouble3()
+  {
+    obj      = nullptr;
+    jobj     = nullptr;
+    cls      = nullptr;
+    methodId = nullptr;
+  }
+
   csJavaCallDouble3(JNIEnv
-                  *env,
+                    *env,
                     jobject jobj,
                     const std::string &className,
                     const std::string &methodName,
@@ -1635,14 +1852,14 @@ public:
                     const std::string &arg2
                    )
   {
-    this->obj = nullptr;
+    this->obj  = nullptr;
     this->jobj = jobj;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + arg1 + arg2 + ")D";
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), sig.c_str()) : nullptr;
   }
   csJavaCallDouble3(JNIEnv
-                 *env,
+                    *env,
                     const iObject *obj,
                     const std::string &className,
                     const std::string &methodName,
@@ -1651,14 +1868,14 @@ public:
                     const std::string &arg2
                    )
   {
-    this->obj = obj;
+    this->obj  = obj;
     this->jobj = nullptr;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + arg1 + arg2 + ")D";
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), sig.c_str()) : nullptr;
   }
 
-  jdouble call(JNIEnv *env, T0 arg0, T1 arg1, T2  arg2, jdouble def)
+  jdouble call(JNIEnv *env, T0 arg0, T1 arg1, T2 arg2, jdouble def)
   {
     jdouble res = def;
     if (methodId)
@@ -1680,25 +1897,39 @@ private:
 };
 
 
-
-
 template<typename R>
 class csJavaCallObject
 {
 public:
-  csJavaCallObject(JNIEnv *env, jobject jobj, const std::string &className, const std::string &methodName, const std::string &returnType)
+  csJavaCallObject()
   {
-    this->obj = nullptr;
+    obj      = nullptr;
+    jobj     = nullptr;
+    cls      = nullptr;
+    methodId = nullptr;
+  }
+
+  csJavaCallObject(JNIEnv *env,
+                   jobject jobj,
+                   const std::string &className,
+                   const std::string &methodName,
+                   const std::string &returnType)
+  {
+    this->obj  = nullptr;
     this->jobj = jobj;
-    cls      = env->FindClass(className.c_str());
+    cls             = env->FindClass(className.c_str());
     std::string sig = "()" + returnType;
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), sig.c_str()) : nullptr;
   }
-  csJavaCallObject(JNIEnv *env, const iObject *obj, const std::string &className, const std::string &methodName, const std::string &returnType)
+  csJavaCallObject(JNIEnv *env,
+                   const iObject *obj,
+                   const std::string &className,
+                   const std::string &methodName,
+                   const std::string &returnType)
   {
-    this->obj = obj;
+    this->obj  = obj;
     this->jobj = nullptr;
-    cls      = env->FindClass(className.c_str());
+    cls             = env->FindClass(className.c_str());
     std::string sig = "()" + returnType;
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), sig.c_str()) : nullptr;
   }
@@ -1728,6 +1959,14 @@ template<typename R, typename T0>
 class csJavaCallObject1
 {
 public:
+  csJavaCallObject1()
+  {
+    obj      = nullptr;
+    jobj     = nullptr;
+    cls      = nullptr;
+    methodId = nullptr;
+  }
+
   csJavaCallObject1(JNIEnv *env,
                     jobject jobj,
                     const std::string &className,
@@ -1735,7 +1974,7 @@ public:
                     const std::string &returnType,
                     const std::string &arg0)
   {
-    this->obj = nullptr;
+    this->obj  = nullptr;
     this->jobj = jobj;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + ")" + returnType;
@@ -1748,7 +1987,7 @@ public:
                     const std::string &returnType,
                     const std::string &arg0)
   {
-    this->obj = obj;
+    this->obj  = obj;
     this->jobj = nullptr;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + ")" + returnType;
@@ -1780,8 +2019,16 @@ template<typename R, typename T0, typename T1>
 class csJavaCallObject2
 {
 public:
+  csJavaCallObject2()
+  {
+    obj      = nullptr;
+    jobj     = nullptr;
+    cls      = nullptr;
+    methodId = nullptr;
+  }
+
   csJavaCallObject2(JNIEnv
-                  *env,
+                    *env,
                     jobject jobj,
                     const std::string &className,
                     const std::string &methodName,
@@ -1790,14 +2037,14 @@ public:
                     const std::string &arg1
                    )
   {
-    this->obj = nullptr;
+    this->obj  = nullptr;
     this->jobj = jobj;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + arg1 + ")" + returnType;
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), sig.c_str()) : nullptr;
   }
   csJavaCallObject2(JNIEnv
-                  *env,
+                    *env,
                     const iObject *obj,
                     const std::string &className,
                     const std::string &methodName,
@@ -1806,7 +2053,7 @@ public:
                     const std::string &arg1
                    )
   {
-    this->obj = obj;
+    this->obj  = obj;
     this->jobj = nullptr;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + arg1 + ")" + returnType;
@@ -1839,8 +2086,15 @@ template<typename R, typename T0, typename T1, typename T2>
 class csJavaCallObject3
 {
 public:
+  csJavaCallObject3()
+  {
+    obj      = nullptr;
+    jobj     = nullptr;
+    cls      = nullptr;
+    methodId = nullptr;
+  }
   csJavaCallObject3(JNIEnv
-                  *env,
+                    *env,
                     jobject jobj,
                     const std::string &className,
                     const std::string &methodName,
@@ -1850,14 +2104,14 @@ public:
                     const std::string &arg2
                    )
   {
-    this->obj = nullptr;
+    this->obj  = nullptr;
     this->jobj = jobj;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + arg1 + arg2 + ")" + returnType;
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), sig.c_str()) : nullptr;
   }
   csJavaCallObject3(JNIEnv
-                  *env,
+                    *env,
                     const iObject *obj,
                     const std::string &className,
                     const std::string &methodName,
@@ -1867,14 +2121,14 @@ public:
                     const std::string &arg2
                    )
   {
-    this->obj = obj;
+    this->obj  = obj;
     this->jobj = nullptr;
     cls             = env->FindClass(className.c_str());
     std::string sig = std::string("(") + arg0 + arg1 + arg2 + ")" + returnType;
     methodId = cls ? env->GetMethodID(cls, methodName.c_str(), sig.c_str()) : nullptr;
   }
 
-  R call(JNIEnv *env, T0 arg0, T1 arg1, T2  arg2, R def)
+  R call(JNIEnv *env, T0 arg0, T1 arg1, T2 arg2, R def)
   {
     R res = def;
     if (methodId)

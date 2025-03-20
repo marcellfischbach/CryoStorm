@@ -33,12 +33,21 @@ public:
 
   bool IsMasterLocator (const csAssetLocator &resourceLocator) const;
 
+  void SetRenderingApi (const std::string &renderingApi);
+  const std::string &GetRenderingApi () const;
+
 private:
+
+  std::string ResolveAliases (const std::string &locator) const;
+
   csVFS();
   CS_NODISCARD iFile *File(const csAssetLocator &resourceLocator) const;
 
   std::vector<csRef<iArchive>>            m_archives;
   std::string                        m_rootPath;
+
+  /// \brief Defines a custom path variable (gl4, dx11, vk, ...) that will replaced during opening time
+  std::string m_renderingApi;
 };
 
 }

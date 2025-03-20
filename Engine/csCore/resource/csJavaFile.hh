@@ -19,6 +19,9 @@ class csJavaFile : public CS_SUPER(iFile)
 {
   CS_CLASS_GEN_OBJECT;
 public:
+  csJavaFile();
+  ~csJavaFile() override;
+
   const std::string &GetName() const override;
   bool Open(eAccessMode accessMode, eOpenMode openMode) override;
   bool IsOpen() const override;
@@ -31,6 +34,7 @@ public:
 
 private:
   mutable std::string m_name;
+  struct csJavaFilePrivate *m_priv;
 };
 
 

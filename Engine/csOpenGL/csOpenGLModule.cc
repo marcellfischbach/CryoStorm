@@ -7,6 +7,7 @@
 #include <csCore/csSettings.hh>
 #include <csCore/graphics/csSamplers.hh>
 #include <csCore/resource/csAssetManager.hh>
+#include <csCore/resource/csVFS.hh>
 #include <csOpenGL/gl4/csGL4Device.hh>
 #include <csOpenGL/gl4/csGL4RenderMesh.hh>
 #include <csOpenGL/gl4/csGL4TerrainMeshGeneratorFactory.hh>
@@ -31,19 +32,25 @@ bool csOpenGLModule::Register(const std::vector<std::string> &args, csEngine *en
   csObjectRegistry::Register<iFrameRendererFactory>(new csGL4FrameRendererFactory);
 
 
+  std::string renderingApi = "gl4";
 
-  bool compatMode = false;
-  for (size_t i=0, in=args.size(); i<in; i++)
+  bool        compatMode = false;
+  for (size_t i          = 0, in = args.size(); i < in; i++)
   {
-    if (args[i] == "--glProfile" && (i+1) < in)
+    if (args[i] == "--glProfile" && (i + 1) < in)
     {
       i++;
       if (args[i] == "compat" || args[i] == "compatibility")
       {
-        printf ("Initialize OpenGL in compatibility mode\n");
+        printf("Initialize OpenGL in compatibility mode\n");
         fflush(stdout);
         compatMode = true;
       }
+    }
+    if (args[i] == "--glApi" && (i + 1) < in)
+    {
+      i++;
+      renderingApi = args[i];
     }
   }
 
@@ -51,14 +58,17 @@ bool csOpenGLModule::Register(const std::vector<std::string> &args, csEngine *en
   csObjectRegistry::Register<iRenderMeshGeneratorFactory>(new csGL4RenderMeshGeneratorFactory(compatMode));
   csObjectRegistry::Register<iRenderMeshBatchGeneratorFactory>(new csGL4RenderMeshBatchGeneratorFactory(compatMode));
   csObjectRegistry::Register<iTerrainMeshGeneratorFactory>(new csGL4TerrainMeshGeneratorFactory(compatMode));
+
+  csVFS::Get()->SetRenderingApi(renderingApi);
+
   return true;
 }
 
 bool csOpenGLModule::Initialize(const std::vector<std::string> &args, csEngine *engine)
 {
-  auto gl4Graphics = (csGL4Device*)csObjectRegistry::Get<iDevice>();
+  auto gl4Graphics = (csGL4Device *) csObjectRegistry::Get<iDevice>();
   bool initialized = gl4Graphics->Initialize();
-  if (initialized) 
+  if (initialized)
   {
     csRef<csSamplers> samplers = new csSamplers();
     samplers->Load();
@@ -73,7 +83,7 @@ bool csOpenGLModule::Initialize(const std::vector<std::string> &args, csEngine *
 
 void csOpenGLModule::Shutdown(const std::vector<std::string> &args, cs::csEngine *engine)
 {
-  auto gl4Graphics = (csGL4Device*)csObjectRegistry::Get<iDevice>();
+  auto gl4Graphics = (csGL4Device *) csObjectRegistry::Get<iDevice>();
   gl4Graphics->Shutdown();
 
   csObjectRegistry::Remove<iRenderPipeline>();

@@ -73,6 +73,7 @@ void csVFSConfigReader::ReadArchive(const cs::csCryoFileElement *archiveElement)
     std::string path = archiveElement->GetAttribute(2, "");
     if (!path.empty())
     {
+      printf ("VFSConfigReader: '%s' %d -> '%s'\n", name.c_str(), priority, path.c_str());
       csVFS::Get()->AddArchive (new csJavaArchive(name, path, priority));
     }
   }
