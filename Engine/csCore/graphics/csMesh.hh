@@ -17,7 +17,7 @@ namespace cs
 {
 
 
-CS_CLASS()
+CS_CLASS(jclass="org.cryo.core.graphics.Mesh")
 class CS_CORE_API csMesh : public CS_SUPER(iAsset)
 {
   CS_CLASS_GEN_OBJECT;
@@ -74,16 +74,22 @@ public:
 
   const csBoundingBox& GetBoundingBox() const;
 
-  Size AddMaterialSlot(const std::string& name, iMaterial *defaultMaterial = nullptr);
-  void SetDefaultMaterial(Size idx, iMaterial *defaultMaterial);
-  Size GetNumberOfMaterialSlots() const;
-  const MaterialSlot& GetMaterialSlot(Size idx) const;
+  CS_FUNCTION()
+  size_t AddMaterialSlot(const std::string& name, cs::iMaterial *defaultMaterial = nullptr);
+  CS_FUNCTION()
+  void SetDefaultMaterial(size_t idx, cs::iMaterial *defaultMaterial);
+  CS_FUNCTION()
+  size_t GetNumberOfMaterialSlots() const;
+  const MaterialSlot& GetMaterialSlot(size_t idx) const;
+  CS_FUNCTION()
   size_t IndexOfMaterialSlot(const std::string &materialName) const;
 
 
 
-  void AddSubMesh(iRenderMesh* mesh, Size materialSlotIdx);
-  Size GetNumberOfSubMeshes() const;
+  CS_FUNCTION()
+  void AddSubMesh(cs::iRenderMesh* mesh, size_t materialSlotIdx);
+  CS_FUNCTION()
+  size_t GetNumberOfSubMeshes() const;
   const SubMesh& GetSubMesh(Size idx) const;
 
 

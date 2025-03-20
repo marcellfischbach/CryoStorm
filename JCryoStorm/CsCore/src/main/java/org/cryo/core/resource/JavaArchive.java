@@ -48,19 +48,19 @@ public class JavaArchive extends CsObject implements IArchive {
         }
 
 
-        String path = this.rootPath + "/" + locator;
+        String path = this.rootPath + locator;
         InputStream resourceAsStream = JavaArchive.class.getResourceAsStream(path);
         if (resourceAsStream == null) {
-            System.err.println("JavaArchive.open failed 0 '" + this.rootPath + "' " + locator);
+            System.err.println("JavaArchive.open failed 0 '" + path + "'");
             return null;
         }
 
         JavaFile file = new JavaFile(path, resourceAsStream);
         if (!file.open(accessMode, openMode)) {
-            System.err.println("JavaArchive.open failed 1 '" + this.rootPath + "' " + locator);
+            System.err.println("JavaArchive.open failed 1 '" + path + "'");
             return null;
         }
-        System.out.println("JavaArchive.open success '" + this.rootPath + "' " + locator);
+        System.out.println("JavaArchive.open success '" + path + "'");
         return file;
     }
 }

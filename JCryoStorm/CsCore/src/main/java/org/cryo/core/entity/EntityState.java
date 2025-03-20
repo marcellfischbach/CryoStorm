@@ -43,6 +43,7 @@ public class EntityState extends CsObject {
     public SpatialState getRoot () {
         return (SpatialState) nGetRoot(getRef());
     }
+
 }
 
 

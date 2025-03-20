@@ -64,7 +64,7 @@ void csSamplers::Load()
 
   // mock the default stuff
 
-  m_default = csAssetManager::Get()->Load<iSampler>("/samplers/default.sampler");
+  m_default = csAssetManager::Get()->Load<iSampler>("/samplers/Default.sampler");
   m_test = csAssetManager::Get()->Load<iSampler>("/samplers/test.sampler");
   m_normalMap = csAssetManager::Get()->Load<iSampler>("/samplers/normal_map.sampler");
   m_uiSprite = csAssetManager::Get()->Load<iSampler>("/samplers/ui_sprite.sampler");

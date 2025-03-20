@@ -48,4 +48,9 @@ public class CsObject implements ICsObject {
         return ref;
     }
 
+    public static long refOf(CsObject obj)
+    {
+        return obj != null ? obj.ref : 0;
+    }
+
 }

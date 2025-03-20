@@ -88,20 +88,6 @@ public class Main
 				shared = testCanvas;
 			}
 
-			{
-				JFrame frame = new JFrame();
-				frame.setLayout(new BorderLayout());
-				AwtGlCanvas testCanvas = new AwtGlCanvas(shared, () -> {
-				}, Main::canvasInitialized);
-				testCanvas.name = "Red";
-				frame.add(testCanvas, BorderLayout.CENTER);
-				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				frame.setSize(1024, 768);
-				frame.setLocation(-2400, 100);
-				frame.setVisible(true);
-
-				testCanvas.startRenderLoop();
-			}
 
 		});
 	}

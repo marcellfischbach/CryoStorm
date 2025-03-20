@@ -16,7 +16,7 @@ class csGfxMesh;
 class csSkeleton;
 struct iMaterial;
 
-CS_CLASS()
+CS_CLASS(jclass="org.cryo.core.entity.StaticMeshState")
 class CS_CORE_API csStaticMeshState : public CS_SUPER(csSpatialState)
 {
 CS_CLASS_GEN ;
@@ -24,19 +24,26 @@ public:
   csStaticMeshState(const std::string& name = std::string(""));
   ~csStaticMeshState() override;
 
-
-  virtual void SetMesh(csMesh* mesh);
+  CS_FUNCTION()
+  virtual void SetMesh(cs::csMesh* mesh);
   CS_NODISCARD const csMesh* GetMesh() const;
-  CS_NODISCARD csMesh* GetMesh();
+  CS_FUNCTION()
+  CS_NODISCARD cs::csMesh* GetMesh();
 
-  void SetMaterial(Size idx, iMaterial *material);
-  CS_NODISCARD const iMaterial* GetMaterial(Size idx) const;
-  CS_NODISCARD iMaterial* GetMaterial(Size idx);
+  CS_FUNCTION()
+  void SetMaterial(size_t idx, cs::iMaterial *material);
+  CS_NODISCARD const cs::iMaterial* GetMaterial(size_t idx) const;
+  CS_FUNCTION()
+  CS_NODISCARD cs::iMaterial* GetMaterial(size_t idx);
 
+  CS_FUNCTION()
   void SetReceiveShadow (bool receiveShadow);
+  CS_FUNCTION()
   CS_NODISCARD bool IsReceiveShadow () const;
 
+  CS_FUNCTION()
   void SetCastShadow (bool castShadow);
+  CS_FUNCTION()
   CS_NODISCARD bool IsCastShadow () const;
 
   /**
