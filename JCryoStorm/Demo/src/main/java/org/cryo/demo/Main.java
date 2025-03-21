@@ -76,7 +76,7 @@ public class Main
 			{
 				JFrame frame = new JFrame();
 				frame.setLayout(new BorderLayout());
-				AwtGlCanvas testCanvas = new AwtGlCanvas(shared, () -> initializeEngine(args), Main::canvasInitialized);
+				AwtGlCanvas testCanvas = new AwtGlCanvas(null, () -> initializeEngine(args), Main::canvasInitialized);
 				testCanvas.name = "Red";
 				frame.add(testCanvas, BorderLayout.CENTER);
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

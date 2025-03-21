@@ -1,6 +1,7 @@
 
 #include <csCore/resource/csAssetLocator.hh>
 #include <csCore/csString.hh>
+#include <vector>
 
 namespace cs
 {
@@ -65,10 +66,105 @@ std::string extract_extension(const std::string &locator)
   return "";
 }
 
+std::string replace_string(const std::string &str, char search, char replace)
+{
+  std::string res;
+  for (char   ch: str)
+  {
+    if (ch == search)
+    {
+      res += replace;
+    }
+    else
+    {
+      res += ch;
+    }
+  }
+  return res;
+}
+
+std::string replace_string(const std::string &str, const std::string &search, const std::string &replace)
+{
+  std::string result = str;
+  size_t      len    = search.length();
+  size_t      idx;
+
+  while ((idx = result.find(search)) != std::string::npos)
+  {
+    result = result.replace(idx, len, replace);
+  }
+
+  return result;
+}
+
+std::vector<std::string> split_string(const std::string &str, char delimiter)
+{
+  std::vector<std::string> result;
+  std::string              temp;
+
+  for (char ch: str)
+  {
+    if (ch == delimiter)
+    {
+      result.push_back(temp);
+      temp.clear();
+    }
+    else
+    {
+      temp += ch;
+    }
+  }
+
+  // Add the last part if any
+  result.push_back(temp);
+
+  return result;
+}
+
 std::string canonicalize_encoded(const std::string &encoded)
 {
-  // TODO: Implement path normalization
-  return encoded;
+  std::string plain = replace_string(encoded, '\\', '/');
+  plain = replace_string(plain, "//", "/");
+  std::vector<std::string> parts = split_string(plain, '/');
+
+  std::vector<std::string> resultParts;
+  for (const std::string &part : parts)
+  {
+    if (part == ".")
+    {
+      continue;
+    }
+    else if (part == "..")
+    {
+      if (resultParts.empty())
+      {
+        return encoded;
+      }
+      else
+      {
+        resultParts.pop_back();
+      }
+    }
+    else
+    {
+      resultParts.push_back(part);
+    }
+  }
+
+  std::string result;
+  bool first = true;
+  for (const std::string &part : resultParts)
+  {
+    if (!first)
+    {
+      result += "/";
+    }
+    first = false;
+    result += part;
+  }
+
+
+  return result;
 }
 
 csAssetLocator::csAssetLocator(const std::string &locator)
@@ -94,7 +190,7 @@ csAssetLocator::csAssetLocator(const csAssetLocator &parent, const std::string &
     m_path = parent.m_path + m_path;
   }
 
-  m_encoded    = m_path + m_filename;
+  m_encoded   = m_path + m_filename;
   if (!m_archive.empty())
   {
     m_encoded = m_archive + "@" + m_encoded;

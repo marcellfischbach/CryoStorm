@@ -77,6 +77,7 @@ cs::iGame *open_game(const std::string &moduleName)
 
 int main(int argc, char **argv)
 {
+  cs::csAssetLocator locator ("/models/metals-static-world/metals-static-world.mesh");
   cs::csClassRegistry::Get();
   std::vector<std::string> args;
   for (int i = 0; i < argc; i++)

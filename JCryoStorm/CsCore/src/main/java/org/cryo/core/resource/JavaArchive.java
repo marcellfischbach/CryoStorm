@@ -51,7 +51,6 @@ public class JavaArchive extends CsObject implements IArchive {
         String path = this.rootPath + locator;
         InputStream resourceAsStream = JavaArchive.class.getResourceAsStream(path);
         if (resourceAsStream == null) {
-            System.err.println("JavaArchive.open failed 0 '" + path + "'");
             return null;
         }
 
@@ -60,7 +59,7 @@ public class JavaArchive extends CsObject implements IArchive {
             System.err.println("JavaArchive.open failed 1 '" + path + "'");
             return null;
         }
-        System.out.println("JavaArchive.open success '" + path + "'");
+
         return file;
     }
 }

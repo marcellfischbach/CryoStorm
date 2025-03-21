@@ -21,3 +21,5 @@ CMakeSettings.json
 JCryoStorm/*.dll
 
 JCryoStorm/CsCore/src/main/resources/natives/*.dll
+JCryoStorm/CsEngineResources/src/main/resources/engine/**
+hs_err_pid*.log

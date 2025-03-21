@@ -6,13 +6,15 @@ import org.cryo.core.graphics.ERenderPipeline;
 import org.cryo.core.graphics.IDevice;
 import org.cryo.core.graphics.IFrameRenderer;
 import org.cryo.core.window.IWindow;
+import org.cryo.lwjgl.window.internal.IntGlCanvas;
 import org.lwjgl.opengl.awt.AWTGLCanvas;
 import org.lwjgl.opengl.awt.GLData;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class AwtGlCanvas extends AWTGLCanvas {
+public class AwtGlCanvas extends AWTGLCanvas
+{
 
     public String name;
 
@@ -38,10 +40,10 @@ public class AwtGlCanvas extends AWTGLCanvas {
     private AfterRenderCallback afterRenderCallback = null;
 
 
-    public AwtGlCanvas(AWTGLCanvas sharedCanvas,
+    public AwtGlCanvas(IntGlCanvas sharedCanvas,
                        InitEngineCallback initEngineCallback,
                        CanvasInitializedCallback canvasInitializedCallback) {
-        super(glData(sharedCanvas));
+        super(glData(null)); //sharedCanvas));
 
 
         this.initEngineCallback = initEngineCallback;
@@ -152,7 +154,7 @@ public class AwtGlCanvas extends AWTGLCanvas {
         data.api = GLData.API.GL;
         data.profile = GLData.Profile.COMPATIBILITY;
         data.swapInterval = 0;
-        data.shareContext = sharedCanvas;
+        data.shareContext = null; //sharedCanvas;
         data.robustness = true;
         data.forwardCompatible = false;
         System.out.println("Shared context: " + sharedCanvas);
