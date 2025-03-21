@@ -2,6 +2,8 @@ package org.cryo.demo;
 
 import org.cryo.core.entity.JavaState;
 import org.cryo.core.entity.Transform;
+import org.cryo.core.input.EMouseButton;
+import org.cryo.core.input.Input;
 import org.cryo.core.math.Matrix4f;
 import org.cryo.core.math.Vector3f;
 
@@ -27,6 +29,15 @@ public class CameraHandler extends JavaState {
                 .lookAt(target, Vector3f.Y)
                 .finish();
 
+        if (Input.getMouse().isButtonPressed(EMouseButton.RIGHT))
+        {
+            System.out.println("Pressed right");
+        }
+        if (Input.getMouse().isButtonReleased(EMouseButton.RIGHT))
+        {
+            System.out.println("Released right");
+        }
 
+//        System.out.println("MousePosition: " + Input.getMousePosition() + "  Delta: " + Input.getMouseDelta());
     }
 }

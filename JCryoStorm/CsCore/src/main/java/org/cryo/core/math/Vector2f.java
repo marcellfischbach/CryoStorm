@@ -108,4 +108,10 @@ public class Vector2f {
     public Vector2f normalize() {
         return div(length());
     }
+
+    @Override public String toString()
+    {
+        return "{" + x + ", " + y + '}';
+    }
+
 }

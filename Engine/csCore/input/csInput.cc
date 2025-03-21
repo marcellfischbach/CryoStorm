@@ -7,9 +7,9 @@ namespace cs
 {
 
 
-iInputSystem* csInput::m_cache = nullptr;
+iInputSystem *csInput::m_cache = nullptr;
 
-iInputSystem* csInput::Get()
+iInputSystem *csInput::Get()
 {
   if (!m_cache)
   {
@@ -18,6 +18,10 @@ iInputSystem* csInput::Get()
   return m_cache;
 }
 
+void csInput::Invalidate()
+{
+  m_cache = nullptr;
+}
 
 bool csInput::IsKeyDown(eKey key)
 {
@@ -41,20 +45,20 @@ bool csInput::IsKeyReleased(eKey key)
 
 csVector2f csInput::GetMousePosition()
 {
-  const iMouse* mouse = Get()->GetMouse();
-  return csVector2f((float)mouse->GetX(), (float)mouse->GetY());
+  const iMouse *mouse = Get()->GetMouse();
+  return csVector2f((float) mouse->GetX(), (float) mouse->GetY());
 }
 
 csVector2f csInput::GetMouseDelta()
 {
-  const iMouse* mouse = Get()->GetMouse();
-  return csVector2f((float)mouse->GetDeltaX(), (float)mouse->GetDeltaY());
+  const iMouse *mouse = Get()->GetMouse();
+  return csVector2f((float) mouse->GetDeltaX(), (float) mouse->GetDeltaY());
 }
 
 csVector2f csInput::GetWheel()
 {
-  const iMouse* mouse = Get()->GetMouse();
-  return csVector2f((float)mouse->GetWheelHorizontal(), (float)mouse->GetWheel());
+  const iMouse *mouse = Get()->GetMouse();
+  return csVector2f((float) mouse->GetWheelHorizontal(), (float) mouse->GetWheel());
 }
 
 
@@ -90,3 +94,35 @@ iKeyboard *csInput::GetKeyboard()
 
 
 }
+
+
+#ifdef CS_JAVA
+
+extern "C"
+{
+
+JNIEXPORT void
+JNICALL Java_org_cryo_core_input_Input_nInvalidate(JNIEnv *env, jclass)
+{
+  cs::csInput::Invalidate();
+}
+
+
+JNIEXPORT jobject
+JNICALL Java_org_cryo_core_input_Input_nGetKeyboard(JNIEnv *env, jclass)
+{
+  cs::iKeyboard *pKeyboard = cs::csInput::GetKeyboard();
+  return pKeyboard ? pKeyboard->GetJObject() : nullptr;
+}
+
+
+JNIEXPORT jobject
+JNICALL Java_org_cryo_core_input_Input_nGetMouse(JNIEnv *env, jclass)
+{
+  cs::iMouse *pMouse = cs::csInput::GetMouse();
+  return pMouse ? pMouse->GetJObject() : nullptr;
+}
+
+}
+
+#endif

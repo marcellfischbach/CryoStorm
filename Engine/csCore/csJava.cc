@@ -105,6 +105,8 @@ JNICALL Java_org_cryo_core_CsObject_nCreateClass(JNIEnv *env, jclass cls, jobjec
   }
   catch (std::exception &e)
   {
+    printf ("nCreateClass: %s\n", e.what());
+    fflush(stdout);
     csJavaThrowRuntimeException(env, e.what());
     return 0;
   }

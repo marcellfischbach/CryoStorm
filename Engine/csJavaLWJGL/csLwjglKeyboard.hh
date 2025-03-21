@@ -10,11 +10,13 @@
 namespace cs::java
 {
 
+CS_CLASS()
 class csLwjglKeyboard : public iKeyboard
 {
+  CS_CLASS_GEN_OBJECT;
 public:
   csLwjglKeyboard();
-  ~csLwjglKeyboard() = default;
+  ~csLwjglKeyboard() override = default;
 
   jobject GetJObject ();
 

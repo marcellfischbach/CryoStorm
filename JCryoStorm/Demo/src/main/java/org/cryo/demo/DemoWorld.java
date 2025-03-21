@@ -61,7 +61,8 @@ public class DemoWorld {
         cameraState.setClearColorMode(EClearColorMode.PLAIN_COLOR);
 
         cameraEntity.attachState(cameraState);
-        cameraEntity.attachState(new CameraHandler());
+//        cameraEntity.attachState(new CameraHandler());
+        cameraEntity.attachState(new CameraHandlerComponent());
         world.attach(cameraEntity);
         world.setMainCamera(cameraState);
 

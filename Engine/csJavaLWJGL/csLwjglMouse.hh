@@ -10,8 +10,10 @@
 namespace cs::java
 {
 
+CS_CLASS()
 class csLwjglMouse : public iMouse
 {
+  CS_CLASS_GEN_OBJECT
 public:
   csLwjglMouse();
   ~csLwjglMouse() = default;

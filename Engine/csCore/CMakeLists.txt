@@ -319,6 +319,12 @@ if (${JAVA_BINDINGS})
             graphics/shading/iShaderAttribute_java.cc
 
             input/csInput_java.cc
+            input/csJavaInputSystem.cc
+            input/csJavaInputSystem.hh
+            input/csJavaKeyboard.cc
+            input/csJavaKeyboard.hh
+            input/csJavaMouse.cc
+            input/csJavaMouse.hh
 
             resource/csJavaArchive.cc
             resource/csJavaArchive.hh
@@ -330,6 +336,7 @@ if (${JAVA_BINDINGS})
     )
 
 endif ()
+
 
 
 add_library(csCore SHARED

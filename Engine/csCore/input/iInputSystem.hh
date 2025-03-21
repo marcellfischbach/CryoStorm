@@ -13,14 +13,16 @@ namespace cs
 {
 
 
-CS_CLASS()
+CS_CLASS(jclass="org.cryo.core.input.IInputSystem")
 struct CS_CORE_API iInputSystem : public CS_SUPER(iObject)
 {
   CS_CLASS_GEN;
   ~iInputSystem() override = default;
 
-  CS_NODISCARD virtual iKeyboard* GetKeyboard() const = 0;
-  CS_NODISCARD virtual iMouse* GetMouse() const = 0;
+  CS_FUNCTION()
+  CS_NODISCARD virtual cs::iKeyboard* GetKeyboard() const = 0;
+  CS_FUNCTION()
+  CS_NODISCARD virtual cs::iMouse* GetMouse() const = 0;
 
 
 };

@@ -9,15 +9,21 @@
 namespace cs
 {
 
-struct iKeyboard
+CS_CLASS(jclass = "org.cryo.core.input.IKeyboard")
+struct CS_CORE_API iKeyboard : public CS_SUPER(iObject)
 {
-    virtual ~iKeyboard() { }
+CS_CLASS_GEN;
+  ~iKeyboard() override = default;
 
-    virtual bool IsKeyDown(eKey key) const = 0;
-    virtual bool IsKeyUp(eKey key) const = 0;
+  CS_FUNCTION(jenum="org.cryo.core.input.EKey")
+  virtual bool IsKeyDown(cs::eKey key) const = 0;
+  CS_FUNCTION(jenum="org.cryo.core.input.EKey")
+  virtual bool IsKeyUp(cs::eKey key) const = 0;
 
-    virtual bool IsKeyPressed(eKey key) const = 0;
-    virtual bool IsKeyReleased(eKey key) const = 0;
+  CS_FUNCTION(jenum="org.cryo.core.input.EKey")
+  virtual bool IsKeyPressed(cs::eKey key) const = 0;
+  CS_FUNCTION(jenum="org.cryo.core.input.EKey")
+  virtual bool IsKeyReleased(cs::eKey key) const = 0;
 
 };
 

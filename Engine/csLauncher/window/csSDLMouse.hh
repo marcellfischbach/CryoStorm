@@ -8,8 +8,10 @@ namespace cs::launcher
 {
 
 
+CS_CLASS()
 class csSDLMouse : public iMouse
 {
+  CS_CLASS_GEN_OBJECT;
 public:
   csSDLMouse();
   ~csSDLMouse() override = default;

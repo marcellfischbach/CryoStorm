@@ -16,6 +16,8 @@ class CS_CORE_API csInput
 {
 public:
 
+  static void Invalidate ();
+
   static bool IsKeyDown(eKey key);
   static bool IsKeyUp(eKey key);
   static bool IsKeyPressed(eKey key);
