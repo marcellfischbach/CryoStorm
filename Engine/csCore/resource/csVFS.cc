@@ -156,7 +156,7 @@ extern "C"
 {
 
 JNIEXPORT void
-JNICALL Java_org_cryo_core_resource_VFS_nSetRootPath(JNIEnv *env, jclass cls, jstring rootPath)
+JNICALL Java_org_cryo_core_resource_CsVFS_nSetRootPath(JNIEnv *env, jclass cls, jstring rootPath)
 {
   cs::csJava::Set(env);
 
@@ -167,7 +167,7 @@ JNICALL Java_org_cryo_core_resource_VFS_nSetRootPath(JNIEnv *env, jclass cls, js
 
 
 JNIEXPORT jstring
-JNICALL Java_org_cryo_core_resource_VFS_nGetRootPath(JNIEnv *env, jclass cls)
+JNICALL Java_org_cryo_core_resource_CsVFS_nGetRootPath(JNIEnv *env, jclass cls)
 {
   cs::csJava::Set(env);
   const std::string &rootPath = cs::csVFS::Get()->GetRootPath();

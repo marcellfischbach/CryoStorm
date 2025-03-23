@@ -14,7 +14,7 @@ namespace cs
 
 
 
-CS_CLASS(jclass="org.cryo.core.resource.JavaFile")
+CS_CLASS(jclass="org.cryo.core.resource.CsJavaFile")
 class csJavaFile : public CS_SUPER(iFile)
 {
   CS_CLASS_GEN_OBJECT;

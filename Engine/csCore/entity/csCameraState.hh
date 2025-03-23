@@ -17,7 +17,7 @@ struct iRenderTarget2D;
 struct iSkyboxRenderer;
 class csPostProcessing;
 
-CS_CLASS(jclass="org.cryo.core.entity.CameraState")
+CS_CLASS(jclass="org.cryo.core.entity.CsCameraState")
 class CS_CORE_API csCameraState : public CS_SUPER(csSpatialState)
 {
 CS_CLASS_GEN_OBJECT;

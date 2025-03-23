@@ -18,7 +18,7 @@ class csSpatialState;
 class csCameraState;
 
 
-CS_CLASS(jclass="org.cryo.core.entity.World")
+CS_CLASS(jclass="org.cryo.core.entity.CsWorld")
 class CS_CORE_API csWorld : public CS_SUPER(iObject)
 {
   CS_CLASS_GEN_OBJECT;

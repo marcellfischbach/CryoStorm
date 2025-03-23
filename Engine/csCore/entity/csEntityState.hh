@@ -13,7 +13,7 @@ class csEntity;
 class csWorld;
 class csSpatialState;
 
-CS_CLASS(jclass = "org.cryo.core.entity.EntityState")
+CS_CLASS(jclass = "org.cryo.core.entity.CsEntityState")
 class CS_CORE_API csEntityState : public CS_SUPER(iObject)
 {
 CS_CLASS_GEN_OBJECT;

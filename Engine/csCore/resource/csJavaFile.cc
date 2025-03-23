@@ -5,6 +5,8 @@
 namespace cs
 {
 
+#define THIS_JAVA_CLASS "org/cryo/core/resource/CsJavaFile"
+
 static std::string s_name = "";
 
 struct csJavaFilePrivate
@@ -14,20 +16,20 @@ struct csJavaFilePrivate
   {
 
     JNIEnv *pEnv = csJava::Get();
-    getName = csJavaCallObject<jstring>(pEnv, file, "org/cryo/core/resource/JavaFile", "getName", JAVA_STRING);
-    open    = csJavaCallBoolean2<jint, jint>(pEnv, file, "org/cryo/core/resource/JavaFile", "open", JAVA_INT, JAVA_INT);
-    isOpen  = csJavaCallBoolean(pEnv, file, "org/cryo/core/resource/JavaFile", "isOpen");
-    isEOF   = csJavaCallBoolean(pEnv, file, "org/cryo/core/resource/JavaFile", "isEOF");
-    seek    = csJavaCallVoid2<jint, jlong>(pEnv, file, "org/cryo/core/resource/JavaFile", "seek", JAVA_INT, JAVA_LONG);
-    tell    = csJavaCallLong(pEnv, file, "org/cryo/core/resource/JavaFile", "tell");
+    getName = csJavaCallObject<jstring>(pEnv, file, THIS_JAVA_CLASS, "getName", JAVA_STRING);
+    open    = csJavaCallBoolean2<jint, jint>(pEnv, file, THIS_JAVA_CLASS, "open", JAVA_INT, JAVA_INT);
+    isOpen  = csJavaCallBoolean(pEnv, file, THIS_JAVA_CLASS, "isOpen");
+    isEOF   = csJavaCallBoolean(pEnv, file, THIS_JAVA_CLASS, "isEOF");
+    seek    = csJavaCallVoid2<jint, jlong>(pEnv, file, THIS_JAVA_CLASS, "seek", JAVA_INT, JAVA_LONG);
+    tell    = csJavaCallLong(pEnv, file, THIS_JAVA_CLASS, "tell");
     read    = csJavaCallInt3<jint, jint, jbyteArray>(pEnv,
                                                      file,
-                                                     "org/cryo/core/resource/JavaFile",
+                                                     THIS_JAVA_CLASS,
                                                      "read",
                                                      JAVA_INT,
                                                      JAVA_INT,
                                                      JAVA_BYTE_ARRAY);
-    close   = csJavaCallVoid(pEnv, file, "org/cryo/core/resource/JavaFile", "close");
+    close   = csJavaCallVoid(pEnv, file, THIS_JAVA_CLASS, "close");
   }
 
   csJavaCallObject<jstring>              getName;

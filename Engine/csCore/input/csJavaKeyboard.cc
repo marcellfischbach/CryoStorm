@@ -7,7 +7,7 @@
 #include <csCore/csJavaCalls.hh>
 
 
-#define THIS_JAVA_CLASS "org/cryo/core/input/KeyboardJava"
+#define THIS_JAVA_CLASS "org/cryo/core/input/CsKeyboardJava"
 
 namespace cs
 {

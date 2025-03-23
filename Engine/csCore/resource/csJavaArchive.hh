@@ -7,7 +7,7 @@
 namespace cs
 {
 
-CS_CLASS(jclass = "org.cryo.core.resource.JavaArchive")
+CS_CLASS(jclass = "org.cryo.core.resource.CsJavaArchive")
 class csJavaArchive : public CS_SUPER(iArchive)
 {
 CS_CLASS_GEN_OBJECT;

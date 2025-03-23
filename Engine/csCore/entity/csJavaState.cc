@@ -4,7 +4,7 @@
 #include <csCore/csJavaCalls.hh>
 #include <csCore/entity/csWorld.hh>
 
-#define THIS_CLASS_NAME  "org/cryo/core/entity/JavaState"
+#define THIS_CLASS_NAME  "org/cryo/core/entity/CsJavaState"
 
 namespace cs
 {
@@ -18,12 +18,12 @@ struct csJavaStatePrivate
                                                  state,
                                                  THIS_CLASS_NAME,
                                                  "onAttachedToWorld",
-                                                 "Lorg/cryo/core/entity/World;");
+                                                 "Lorg/cryo/core/entity/CsWorld;");
     onDetachedFromWorld = csJavaCallVoid1<jobject>(env,
                                                    state,
                                                    THIS_CLASS_NAME,
                                                    "onDetachedFromWorld",
-                                                   "Lorg/cryo/core/entity/World;");
+                                                   "Lorg/cryo/core/entity/CsWorld;");
     update              = csJavaCallVoid1<jfloat>(env, state, THIS_CLASS_NAME, "update", JAVA_FLOAT);
 
   }

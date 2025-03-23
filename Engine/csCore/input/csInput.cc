@@ -102,14 +102,14 @@ extern "C"
 {
 
 JNIEXPORT void
-JNICALL Java_org_cryo_core_input_Input_nInvalidate(JNIEnv *env, jclass)
+JNICALL Java_org_cryo_core_input_CsInput_nInvalidate(JNIEnv *env, jclass)
 {
   cs::csInput::Invalidate();
 }
 
 
 JNIEXPORT jobject
-JNICALL Java_org_cryo_core_input_Input_nGetKeyboard(JNIEnv *env, jclass)
+JNICALL Java_org_cryo_core_input_CsInput_nGetKeyboard(JNIEnv *env, jclass)
 {
   cs::iKeyboard *pKeyboard = cs::csInput::GetKeyboard();
   return pKeyboard ? pKeyboard->GetJObject() : nullptr;
@@ -117,7 +117,7 @@ JNICALL Java_org_cryo_core_input_Input_nGetKeyboard(JNIEnv *env, jclass)
 
 
 JNIEXPORT jobject
-JNICALL Java_org_cryo_core_input_Input_nGetMouse(JNIEnv *env, jclass)
+JNICALL Java_org_cryo_core_input_CsInput_nGetMouse(JNIEnv *env, jclass)
 {
   cs::iMouse *pMouse = cs::csInput::GetMouse();
   return pMouse ? pMouse->GetJObject() : nullptr;

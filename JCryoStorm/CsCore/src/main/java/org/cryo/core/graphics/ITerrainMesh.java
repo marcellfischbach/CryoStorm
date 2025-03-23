@@ -1,7 +1,7 @@
 package org.cryo.core.graphics;
 
 import org.cryo.core.CsClass;
-import org.cryo.core.math.Vector3f;
+import org.cryo.core.math.CsVector3f;
 
 import static org.cryo.core.graphics.ITerrainMeshNative.*;
 
@@ -11,7 +11,7 @@ public class ITerrainMesh extends IRenderMesh {
         super(ref);
     }
 
-    public void setReferencePoint (Vector3f pos) {
+    public void setReferencePoint (CsVector3f pos) {
         nSetReferencePoint(getRef(), pos.x, pos.y, pos.z);
     }
 }

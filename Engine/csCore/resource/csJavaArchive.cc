@@ -6,7 +6,7 @@
 #include <csCore/csJava.hh>
 #include <csCore/csJavaCalls.hh>
 
-#define THIS_JAVA_CLASS "org/cryo/core/resource/JavaArchive"
+#define THIS_JAVA_CLASS "org/cryo/core/resource/CsJavaArchive"
 
 namespace cs
 {

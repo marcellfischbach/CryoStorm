@@ -1,15 +1,15 @@
 package org.cryo.demo;
 
-import org.cryo.core.ObjectRegistry;
+import org.cryo.core.CsObjectRegistry;
 import org.cryo.core.Viewport;
-import org.cryo.core.entity.CameraState;
-import org.cryo.core.entity.Entity;
-import org.cryo.core.entity.World;
+import org.cryo.core.entity.CsCameraState;
+import org.cryo.core.entity.CsEntity;
+import org.cryo.core.entity.CsWorld;
 import org.cryo.core.graphics.*;
 import org.cryo.core.graphics.material.IMaterial;
-import org.cryo.core.math.Color4f;
-import org.cryo.core.resource.AssetManager;
-import org.cryo.core.window.WindowJava;
+import org.cryo.core.math.CsColor4f;
+import org.cryo.core.resource.CsAssetManager;
+import org.cryo.core.window.CsWindowJava;
 import org.lwjgl.opengl.awt.AWTGLCanvas;
 import org.lwjgl.opengl.awt.GLData;
 
@@ -35,7 +35,7 @@ public class TestCanvas extends AWTGLCanvas {
         SwingUtilities.invokeLater(loop);
     }
 
-    public WindowJava getWindow() {
+    public CsWindowJava getWindow() {
         return this.window;
     }
 
@@ -43,12 +43,12 @@ public class TestCanvas extends AWTGLCanvas {
     public void initGL() {
         Main.initializeEngine(new String[0]);
 
-        World world = new World();
+        CsWorld world = new CsWorld();
 
-        Entity cameraEntity = new Entity();
-        CameraState cameraState = new CameraState();
+        CsEntity cameraEntity = new CsEntity();
+        CsCameraState cameraState = new CsCameraState();
         cameraState.setClearMode(EClearMode.DEPTH_COLOR);
-        cameraState.setClearColor(new Color4f(0.5f, 0.0f, 0.0f, 1.0f));
+        cameraState.setClearColor(new CsColor4f(0.5f, 0.0f, 0.0f, 1.0f));
         cameraState.setClearColorMode(EClearColorMode.PLAIN_COLOR);
 
         cameraEntity.attachState(cameraState);
@@ -57,13 +57,13 @@ public class TestCanvas extends AWTGLCanvas {
 
 
         viewport.setWindow(this.window);
-        viewport.setDevice(ObjectRegistry.get(IDevice.class));
+        viewport.setDevice(CsObjectRegistry.get(IDevice.class));
         viewport.setWorld(world);
         viewport.setRenderPipeline(ERenderPipeline.DEFERRED);
 
 
-        IMaterial defaultMat = AssetManager.instance().get(IMaterial.class, "materials/Default.mat");
-        IMaterial defaultMatBlue = AssetManager.instance().get(IMaterial.class, "materials/DefaultBlue.matinstance");
+        IMaterial defaultMat = CsAssetManager.instance().get(IMaterial.class, "materials/Default.mat");
+        IMaterial defaultMatBlue = CsAssetManager.instance().get(IMaterial.class, "materials/DefaultBlue.matinstance");
 
         System.out.println();
     }
@@ -87,7 +87,8 @@ public class TestCanvas extends AWTGLCanvas {
     }
 
 
-    private class Window extends WindowJava {
+    private class Window extends CsWindowJava
+    {
 
 
         @Override

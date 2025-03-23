@@ -18,7 +18,7 @@ class csEntityState;
 class csSpatialState;
 
 
-CS_CLASS(jclass = "org.cryo.core.entity.Entity")
+CS_CLASS(jclass = "org.cryo.core.entity.CsEntity")
 class CS_CORE_API csEntity : public CS_SUPER(iAsset)
 {
 CS_CLASS_GEN_OBJECT;

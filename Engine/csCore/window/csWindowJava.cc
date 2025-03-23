@@ -5,7 +5,7 @@
 #include <csCore/window/csWindowJava.hh>
 #include <csCore/csJavaCalls.hh>
 
-#define DEF_ARGS env, GetJObject(), "org/cryo/core/window/WindowJava"
+#define DEF_ARGS env, GetJObject(), "org/cryo/core/window/CsWindowJava"
 
 namespace cs
 {

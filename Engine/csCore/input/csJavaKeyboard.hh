@@ -12,7 +12,7 @@
 namespace cs
 {
 
-CS_CLASS(jclass="org.cryo.core.input.KeyboardJava")
+CS_CLASS(jclass="org.cryo.core.input.CsKeyboardJava")
 class CS_CORE_API csJavaKeyboard : public CS_SUPER(iKeyboard)
 {
   CS_CLASS_GEN_OBJECT;

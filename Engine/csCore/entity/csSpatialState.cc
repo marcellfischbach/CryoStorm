@@ -33,14 +33,17 @@ bool csSpatialState::AttachSpatial(cs::csSpatialState *child)
 {
   if (!child)
   {
+//    printf ("csSpatialState::AttachSpatial(%p)\n", child);
     return false;
   }
   if (child->m_parent)
   {
+//    printf ("csSpatialState::AttachSpatial(%p)-> parent != null\n", child);
     return false;
   }
   if (std::find(m_children.begin(), m_children.end(), child) != m_children.end())
   {
+//    printf ("csSpatialState::AttachSpatial(%p) alread attached\n", child);
     return false;
   }
 
@@ -50,6 +53,7 @@ bool csSpatialState::AttachSpatial(cs::csSpatialState *child)
   {
     child->SetEntity(GetEntity());
   }
+  child->UpdateTransformation();
   return true;
 }
 
@@ -76,6 +80,7 @@ bool csSpatialState::DetachSpatial(cs::csSpatialState *child)
 
   m_children.erase(it);
   child->m_parent = nullptr;
+  child->UpdateTransformation();
   return true;
 }
 

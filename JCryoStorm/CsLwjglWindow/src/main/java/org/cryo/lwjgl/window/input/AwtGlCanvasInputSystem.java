@@ -5,7 +5,7 @@ import org.cryo.core.input.IInputSystem;
 import org.cryo.core.input.IKeyboard;
 import org.cryo.core.input.IMouse;
 
-import static org.cryo.core.input.InputSystemJavaNative.*;
+import static org.cryo.core.input.CsInputSystemJavaNative.*;
 
 
 @CsClass("cs::csJavaInputSystem")

@@ -10,7 +10,7 @@
 namespace cs
 {
 
-CS_CLASS(jclass="org.cryo.core.input.MouseJava")
+CS_CLASS(jclass="org.cryo.core.input.CsMouseJava")
 class CS_CORE_API csJavaMouse : public CS_SUPER(iMouse)
 {
   CS_CLASS_GEN_OBJECT;

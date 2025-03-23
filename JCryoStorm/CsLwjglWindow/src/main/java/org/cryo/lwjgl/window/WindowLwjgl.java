@@ -1,8 +1,9 @@
 package org.cryo.lwjgl.window;
 
-import org.cryo.core.window.WindowJava;
+import org.cryo.core.window.CsWindowJava;
 
-public class WindowLwjgl extends WindowJava {
+public class WindowLwjgl extends CsWindowJava
+{
 
     private final AwtGlCanvas canvas;
 

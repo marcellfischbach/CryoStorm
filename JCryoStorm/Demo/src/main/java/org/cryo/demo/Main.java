@@ -2,11 +2,11 @@ package org.cryo.demo;
 
 
 import org.cryo.core.CsCoreLibrary;
-import org.cryo.core.Engine;
-import org.cryo.core.ModuleConfig;
-import org.cryo.core.entity.World;
-import org.cryo.core.resource.VFS;
-import org.cryo.core.resource.VFSConfigReader;
+import org.cryo.core.CsEngine;
+import org.cryo.core.CsModuleConfig;
+import org.cryo.core.entity.CsWorld;
+import org.cryo.core.resource.CsVFS;
+import org.cryo.core.resource.CsVFSConfigReader;
 import org.cryo.lwjgl.window.AwtGlCanvas;
 
 import javax.swing.*;
@@ -65,12 +65,12 @@ public class Main
 				}
 			}
 
-			VFS.instance().setRootPath(rootPath);
-			VFSConfigReader.read(rootPath, configFileName);
+			CsVFS.instance().setRootPath(rootPath);
+			CsVFSConfigReader.read(rootPath, configFileName);
 
 			// this causes on c++ side to initialize the reflection system
 			// without this call no connection between java and c++ is handled
-			Engine.get();
+			CsEngine.get();
 
 			AwtGlCanvas shared = null;
 			{
@@ -93,13 +93,13 @@ public class Main
 	}
 
 
-	private static World world = null;
+	private static CsWorld world = null;
 
 	private static void canvasInitialized(AwtGlCanvas canvas)
 	{
 		if (world == null)
 		{
-			world = new World();
+			world = new CsWorld();
 			canvas.getViewport().setWorld(world);
 			DemoWorld.create(world);
 		}
@@ -119,14 +119,14 @@ public class Main
 			return;
 		}
 
-		ModuleConfig moduleConfig = new ModuleConfig();
+		CsModuleConfig moduleConfig = new CsModuleConfig();
 		if (!moduleConfig.loadModuleConfig())
 		{
 			System.out.println("Failed to load module config");
 			return;
 		}
 
-		Engine.get().initializeEngine(args, moduleConfig);
+		CsEngine.get().initializeEngine(args, moduleConfig);
 
 		initialized = true;
 

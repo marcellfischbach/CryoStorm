@@ -1,11 +1,11 @@
 package org.cryo.lwjgl.window.input;
 
 import org.cryo.core.input.EKey;
-import org.cryo.core.input.KeyboardJava;
+import org.cryo.core.input.CsKeyboardJava;
 
 import java.awt.event.KeyEvent;
 
-public class AwtGlCanvasKeyboard extends KeyboardJava
+public class AwtGlCanvasKeyboard extends CsKeyboardJava
 {
 
 	private boolean[] primed = new boolean[EKey.values().length];

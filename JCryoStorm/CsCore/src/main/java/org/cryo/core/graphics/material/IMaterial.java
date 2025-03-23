@@ -4,10 +4,10 @@ import org.cryo.core.CsClass;
 import org.cryo.core.CsObject;
 import org.cryo.core.graphics.*;
 import org.cryo.core.graphics.shading.IShader;
-import org.cryo.core.math.Color4f;
-import org.cryo.core.math.Vector2f;
-import org.cryo.core.math.Vector3f;
-import org.cryo.core.math.Vector4f;
+import org.cryo.core.math.CsColor4f;
+import org.cryo.core.math.CsVector2f;
+import org.cryo.core.math.CsVector3f;
+import org.cryo.core.math.CsVector4f;
 
 import static org.cryo.core.graphics.material.IMaterialNative.*;
 
@@ -52,19 +52,19 @@ public class IMaterial extends CsObject {
         nSetFloat(getRef(), idx, val);
     }
 
-    public void setVector2f (long idx, Vector2f v) {
+    public void setVector2f (long idx, CsVector2f v) {
         nSetVector2f(getRef(), idx, v.x, v.y);
     }
 
-    public void setVector3f(long idx, Vector3f v) {
+    public void setVector3f(long idx, CsVector3f v) {
         nSetVector3f(getRef(), idx, v.x, v.y, v.z);
     }
 
-    public void setVector4f(long idx, Vector4f v) {
+    public void setVector4f(long idx, CsVector4f v) {
         nSetVector4f(getRef(), idx, v.x, v.y, v.z, v.w);
     }
 
-    public void setColor4f(long idx, Color4f v) {
+    public void setColor4f(long idx, CsColor4f v) {
         nSetColor4f(getRef(), idx, v.r, v.g, v.b, v.a);
     }
 

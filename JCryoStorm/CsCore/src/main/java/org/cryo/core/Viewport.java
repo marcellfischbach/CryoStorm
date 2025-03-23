@@ -1,6 +1,6 @@
 package org.cryo.core;
 
-import org.cryo.core.entity.World;
+import org.cryo.core.entity.CsWorld;
 import org.cryo.core.graphics.ERenderPipeline;
 import org.cryo.core.graphics.IDevice;
 import org.cryo.core.graphics.IFrameRenderer;
@@ -26,13 +26,13 @@ public class Viewport extends CsObject {
         return device instanceof IDevice ? (IDevice) device : null;
     }
 
-    public void setWorld(World world) {
+    public void setWorld(CsWorld world) {
         ViewportNative.nSetWorld(getRef(), world != null ? world.getRef() : 0);
     }
 
-    public World getWorld() {
+    public CsWorld getWorld() {
         Object world = ViewportNative.nGetWorld(getRef());
-        return world instanceof World ? (World) world : null;
+        return world instanceof CsWorld ? (CsWorld) world : null;
     }
 
     public void setRenderPipeline(ERenderPipeline renderPipeline) {

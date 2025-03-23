@@ -3,11 +3,11 @@ package org.cryo.lwjgl.window.input;
 import org.cryo.core.CsClass;
 import org.cryo.core.input.EKey;
 import org.cryo.core.input.EMouseButton;
-import org.cryo.core.input.MouseJava;
-import org.cryo.core.input.MouseJavaNative;
+import org.cryo.core.input.CsMouseJava;
+import static org.cryo.core.input.CsMouseJavaNative.*;
 
-@CsClass(MouseJavaNative.CS_CLASS_NAME)
-public class AwtGlCanvasMouse extends MouseJava
+@CsClass(CS_CLASS_NAME)
+public class AwtGlCanvasMouse extends CsMouseJava
 {
 
 	private int primedX;

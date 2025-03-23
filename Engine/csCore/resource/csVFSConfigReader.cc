@@ -117,7 +117,7 @@ extern "C"
 {
 
 JNIEXPORT void
-JNICALL Java_org_cryo_core_resource_VFSConfigReader_nRead(JNIEnv *env, jclass cls, jstring configPath, jstring fileName)
+JNICALL Java_org_cryo_core_resource_CsVFSConfigReader_nRead(JNIEnv *env, jclass cls, jstring configPath, jstring fileName)
 {
   const char *ptrConfigPath = env->GetStringUTFChars(configPath, nullptr);
   const char *ptrFileName = env->GetStringUTFChars(fileName, nullptr);

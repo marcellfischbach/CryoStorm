@@ -98,13 +98,13 @@ extern "C"
 {
 
 
-JNIEXPORT jlong JNICALL Java_org_cryo_core_resource_AssetManager_nGet__(JNIEnv *env, jclass cls)
+JNIEXPORT jlong JNICALL Java_org_cryo_core_resource_CsAssetManager_nGet__(JNIEnv *env, jclass cls)
 {
   return reinterpret_cast<jlong>(cs::csAssetManager::Get());
 }
 
 
-JNIEXPORT jobject JNICALL Java_org_cryo_core_resource_AssetManager_nGet__JLjava_lang_String_2
+JNIEXPORT jobject JNICALL Java_org_cryo_core_resource_CsAssetManager_nGet__JLjava_lang_String_2
     (JNIEnv *env,
      jclass,
      jlong ref,
@@ -127,7 +127,7 @@ JNIEXPORT jobject JNICALL Java_org_cryo_core_resource_AssetManager_nGet__JLjava_
 }
 
 
-JNIEXPORT jobject JNICALL Java_org_cryo_core_resource_AssetManager_nLoad__JLjava_lang_String_2
+JNIEXPORT jobject JNICALL Java_org_cryo_core_resource_CsAssetManager_nLoad__JLjava_lang_String_2
     (JNIEnv *env,
      jclass cls,
      jlong ref,

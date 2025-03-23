@@ -1,11 +1,10 @@
 package org.cryo.lwjgl.window;
 
-import org.cryo.core.ObjectRegistry;
+import org.cryo.core.CsObjectRegistry;
 import org.cryo.core.Viewport;
 import org.cryo.core.graphics.ERenderPipeline;
 import org.cryo.core.graphics.IDevice;
 import org.cryo.core.input.IInputSystem;
-import org.cryo.core.input.InputSystem;
 import org.cryo.core.window.IWindow;
 import org.cryo.lwjgl.window.input.AwtGlCanvasInputSystem;
 import org.lwjgl.opengl.awt.AWTGLCanvas;
@@ -14,7 +13,6 @@ import org.lwjgl.opengl.awt.GLData;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.security.Key;
 
 public class AwtGlCanvas extends AWTGLCanvas
 {
@@ -113,7 +111,7 @@ public class AwtGlCanvas extends AWTGLCanvas
 
 		this.viewport = new Viewport();
 		this.viewport.setWindow(this.window);
-		this.viewport.setDevice(ObjectRegistry.get(IDevice.class));
+		this.viewport.setDevice(CsObjectRegistry.get(IDevice.class));
 		this.viewport.setRenderPipeline(ERenderPipeline.DEFERRED);
 
 		this.canvasInitializedCallback.canvasInitialized(this);
@@ -156,7 +154,7 @@ public class AwtGlCanvas extends AWTGLCanvas
 	{
 
 		// this frame performs the updates on the input system of this frames window
-		ObjectRegistry.register(IInputSystem.class, inputSystem);
+		CsObjectRegistry.register(IInputSystem.class, inputSystem);
 
 		this.inputSystem.getKeyboard().update();
 		this.inputSystem.getMouse().update();

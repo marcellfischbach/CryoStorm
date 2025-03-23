@@ -9,7 +9,7 @@
 namespace cs
 {
 
-CS_CLASS(jclass="org.cryo.core.JavaModule")
+CS_CLASS(jclass="org.cryo.core.CsJavaModule")
 class CS_CORE_API csJavaModule : public CS_SUPER(iModule)
 {
   CS_CLASS_GEN_OBJECT;

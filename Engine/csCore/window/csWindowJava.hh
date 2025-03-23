@@ -11,7 +11,7 @@ namespace cs
 {
 
 
-CS_CLASS(jclass="org.cryo.core.window.WindowJava")
+CS_CLASS(jclass="org.cryo.core.window.CsWindowJava")
 class CS_CORE_API csWindowJava : public CS_SUPER(cs::iWindow)
 {
   CS_CLASS_GEN_OBJECT;

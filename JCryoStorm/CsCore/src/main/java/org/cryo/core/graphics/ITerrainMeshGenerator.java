@@ -1,7 +1,7 @@
 package org.cryo.core.graphics;
 
 import org.cryo.core.CsClass;
-import org.cryo.core.math.Vector3f;
+import org.cryo.core.math.CsVector3f;
 
 import static org.cryo.core.graphics.ITerrainMeshGeneratorNative.*;
 
@@ -19,7 +19,7 @@ public class ITerrainMeshGenerator extends IRenderMesh {
         nSetPatchSize(getRef(), size.size);
     }
 
-    public void setSize (Vector3f min, Vector3f max) {
+    public void setSize (CsVector3f min, CsVector3f max) {
         nSetSize(getRef(), min.x, min.y, min.z, max.x, max.y, max.z);
     }
 

@@ -17,7 +17,7 @@ namespace cs
 {
 
 
-CS_CLASS(jclass="org.cryo.core.graphics.Mesh")
+CS_CLASS(jclass="org.cryo.core.graphics.CsMesh")
 class CS_CORE_API csMesh : public CS_SUPER(iAsset)
 {
   CS_CLASS_GEN_OBJECT;

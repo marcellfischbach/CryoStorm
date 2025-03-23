@@ -23,7 +23,7 @@ struct iWindow;
 
 class csWorld;
 
-CS_CLASS(jclass="org.cryo.core.ModuleConfig")
+CS_CLASS(jclass="org.cryo.core.CsModuleConfig")
 class CS_CORE_API csModuleConfig : public CS_SUPER(iObject)
 {
 CS_CLASS_GEN_OBJECT;
@@ -51,7 +51,7 @@ private:
 };
 
 
-CS_CLASS(jclass="org.cryo.core.Engine")
+CS_CLASS(jclass="org.cryo.core.CsEngine")
 class CS_CORE_API csEngine : public CS_SUPER(iObject)
 {
   CS_CLASS_GEN_OBJECT;

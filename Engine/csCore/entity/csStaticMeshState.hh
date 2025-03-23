@@ -16,7 +16,7 @@ class csGfxMesh;
 class csSkeleton;
 struct iMaterial;
 
-CS_CLASS(jclass="org.cryo.core.entity.StaticMeshState")
+CS_CLASS(jclass="org.cryo.core.entity.CsStaticMeshState")
 class CS_CORE_API csStaticMeshState : public CS_SUPER(csSpatialState)
 {
 CS_CLASS_GEN ;

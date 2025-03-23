@@ -45,7 +45,7 @@ extern "C"
 {
 
 JNIEXPORT void
-JNICALL Java_org_cryo_core_ObjectRegistry_nRegister(JNIEnv *env, jclass, jstring clsName, jlong ref)
+JNICALL Java_org_cryo_core_CsObjectRegistry_nRegister(JNIEnv *env, jclass, jstring clsName, jlong ref)
 {
   cs::iObject* iObject = reinterpret_cast<cs::iObject*>(ref);
 
@@ -58,7 +58,7 @@ JNICALL Java_org_cryo_core_ObjectRegistry_nRegister(JNIEnv *env, jclass, jstring
 }
 
 JNIEXPORT jobject
-JNICALL Java_org_cryo_core_ObjectRegistry_nGet(JNIEnv *env, jclass, jstring clsName)
+JNICALL Java_org_cryo_core_CsObjectRegistry_nGet(JNIEnv *env, jclass, jstring clsName)
 {
   const char *clsString = env->GetStringUTFChars(clsName, 0);
   const cs::csClass *cls = cs::csClassRegistry::Get()->GetClass(clsString);
@@ -69,7 +69,7 @@ JNICALL Java_org_cryo_core_ObjectRegistry_nGet(JNIEnv *env, jclass, jstring clsN
 }
 
 JNIEXPORT void
-JNICALL Java_org_cryo_core_ObjectRegistry_nRemove(JNIEnv *env, jclass, jstring clsName)
+JNICALL Java_org_cryo_core_CsObjectRegistry_nRemove(JNIEnv *env, jclass, jstring clsName)
 {
   const char *clsString = env->GetStringUTFChars(clsName, 0);
   const cs::csClass *cls = cs::csClassRegistry::Get()->GetClass(clsString);

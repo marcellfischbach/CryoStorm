@@ -262,7 +262,7 @@ const std::vector<csRef<iModule>> &csModuleConfig::GetModules() const
 extern "C"
 {
 
-JNIEXPORT jobject JNICALL Java_org_cryo_core_Engine_nGet(JNIEnv *env, jclass cls)
+JNIEXPORT jobject JNICALL Java_org_cryo_core_CsEngine_nGet(JNIEnv *env, jclass cls)
 {
   cs::csJava::Set(env);
   return cs::csEngine::Get()->GetJObject();

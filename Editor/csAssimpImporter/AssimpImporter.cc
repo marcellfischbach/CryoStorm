@@ -116,7 +116,7 @@ static std::string extract_file_name(const std::string &str)
   size_t i = str.rfind("/");
   if (i == std::string::npos)
   {
-    return "";
+    return str;
   }
   return str.substr(i + 1);
 }

@@ -1,14 +1,15 @@
 package org.cryo.demo;
 
-import org.cryo.core.entity.JavaState;
-import org.cryo.core.entity.Transform;
-import org.cryo.core.entity.World;
+import org.cryo.core.entity.CsJavaState;
+import org.cryo.core.entity.CsTransform;
+import org.cryo.core.entity.CsWorld;
 import org.cryo.core.input.*;
-import org.cryo.core.math.Quaternion;
-import org.cryo.core.math.Vector2f;
-import org.cryo.core.math.Vector3f;
+import org.cryo.core.math.CsQuaternion;
+import org.cryo.core.math.CsVector2f;
+import org.cryo.core.math.CsVector3f;
 
-public class CameraHandlerComponent extends JavaState {
+public class CameraHandlerComponent extends CsJavaState
+{
 
     private float speed = 4.0f;
 
@@ -22,22 +23,22 @@ public class CameraHandlerComponent extends JavaState {
     }
 
     @Override
-    public void onAttachedToWorld(World world)
+    public void onAttachedToWorld(CsWorld world)
     {
         super.onAttachedToWorld(world);
-        getRoot().getTransform().setTranslation(new Vector3f(0.0f, 10.0f, 0.0f)).finish();
+        getRoot().getTransform().setTranslation(new CsVector3f(0.0f, 10.0f, 0.0f)).finish();
 
     }
 
     @Override
     public void update(float deltaTime) {
 
-        Transform tr = getRoot().getTransform();
+        CsTransform tr = getRoot().getTransform();
 
-        Vector3f dir = new Vector3f();
+        CsVector3f dir = new CsVector3f();
 
-        IMouse iMouse = Input.getMouse();
-        IKeyboard iKeyboard = Input.getKeyboard();
+        IMouse iMouse = CsInput.getMouse();
+        IKeyboard iKeyboard = CsInput.getKeyboard();
 
         if (iMouse.isButtonDown(EMouseButton.RIGHT))
         {
@@ -64,7 +65,7 @@ public class CameraHandlerComponent extends JavaState {
             }
 
 
-            Vector2f mouse = new Vector2f(iMouse.getDeltaX(), iMouse.getDeltaY());
+            CsVector2f mouse = new CsVector2f(iMouse.getDeltaX(), iMouse.getDeltaY());
             this.rotX += -mouse.y * this.rotSpeed;
             this.rotY += -mouse.x * this.rotSpeed;
 
@@ -83,9 +84,9 @@ public class CameraHandlerComponent extends JavaState {
         }
 
 
-        Quaternion qRotY = Quaternion.fromAxisAngle(0.0f, 1.0f, 0.0f, rotY);
-        Quaternion qRotX = Quaternion.fromAxisAngle(1.0f, 0.0f, 0.0f, rotX);
-        Quaternion qRot  = new Quaternion(qRotX).mul(qRotY);
+        CsQuaternion qRotY = CsQuaternion.fromAxisAngle(0.0f, 1.0f, 0.0f, rotY);
+        CsQuaternion qRotX = CsQuaternion.fromAxisAngle(1.0f, 0.0f, 0.0f, rotX);
+        CsQuaternion qRot  = new CsQuaternion(qRotX).mul(qRotY);
 
 
 //        if (csInput::IsKeyPressed(eKey::eK_P))
@@ -100,7 +101,7 @@ public class CameraHandlerComponent extends JavaState {
 //            fflush(stdout);
 //        }
 
-        tr.setTranslation(tr.getTranslation(new Vector3f()).add(dir))
+        tr.setTranslation(tr.getTranslation(new CsVector3f()).add(dir))
           .setRotation(qRot)
           .finish();
     }

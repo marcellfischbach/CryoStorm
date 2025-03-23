@@ -15,7 +15,7 @@ namespace cs
 class csJavaKeyboard;
 class csJavaMouse;
 
-CS_CLASS(jclass="org.cryo.core.input.InputSystemJava")
+CS_CLASS(jclass="org.cryo.core.input.CsInputSystemJava")
 class CS_CORE_API csJavaInputSystem : public CS_SUPER(iInputSystem)
 {
   CS_CLASS_GEN_OBJECT;

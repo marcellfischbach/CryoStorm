@@ -6,7 +6,7 @@
 #include <csCore/csJava.hh>
 #include <csCore/csJavaCalls.hh>
 
-#define THIS_JAVA_CLASS "org/cryo/core/input/MouseJava"
+#define THIS_JAVA_CLASS "org/cryo/core/input/CsMouseJava"
 
 namespace cs
 {

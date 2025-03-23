@@ -1,17 +1,18 @@
 package org.cryo.demo;
 
-import org.cryo.core.Engine;
-import org.cryo.core.JavaModule;
+import org.cryo.core.CsEngine;
+import org.cryo.core.CsJavaModule;
 
-public class TestModule extends JavaModule  {
+public class TestModule extends CsJavaModule
+{
 
     @Override
-    public boolean register(String[] args, Engine engine) {
+    public boolean register(String[] args, CsEngine engine) {
         return true;
     }
 
     @Override
-    public boolean initialize(String[] args, Engine engine) {
+    public boolean initialize(String[] args, CsEngine engine) {
         return true;
     }
 }

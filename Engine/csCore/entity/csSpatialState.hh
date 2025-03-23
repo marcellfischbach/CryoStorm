@@ -12,7 +12,7 @@
 namespace cs
 {
 
-CS_CLASS(jclass="org.cryo.core.entity.SpatialState")
+CS_CLASS(jclass="org.cryo.core.entity.CsSpatialState")
 class CS_CORE_API csSpatialState : public CS_SUPER(csEntityState)
 {
   CS_CLASS_GEN;
