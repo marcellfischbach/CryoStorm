@@ -57,6 +57,7 @@ enum eShaderAttribute
 
   /* Skeleton rendering */
   eSA_SkeletonMatrices,
+  eSA_SkeletonMapping
 };
 
 }

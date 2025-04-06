@@ -35,10 +35,10 @@ csOwned<iAsset> csMeshLoader::Load(const csCryoFile *file, const csAssetLocator 
     return csOwned<iAsset>();
   }
 
-  csAssetManager   *man               = csAssetManager::Get();
+  csAssetManager *man = csAssetManager::Get();
 
-  csMesh *mesh = new csMesh();
-  for (int i = 0; i < materialSlotsElement->GetNumberOfChildren(); ++i)
+  csMesh   *mesh = new csMesh();
+  for (int i     = 0; i < materialSlotsElement->GetNumberOfChildren(); ++i)
   {
     const csCryoFileElement *materialSlotElement = materialSlotsElement->GetChild(i);
     if (materialSlotElement->GetTagName() != "materialSlot")
@@ -61,12 +61,12 @@ csOwned<iAsset> csMeshLoader::Load(const csCryoFile *file, const csAssetLocator 
       continue;
     }
 
-    int         slot              = meshElement->GetAttribute("slot", 0);
+    int slot = meshElement->GetAttribute("slot", 0);
     if (meshElement->HasAttribute("locator"))
     {
-        std::string meshLocStr        = meshElement->GetAttribute("locator", "/narf");
-        csRef<iRenderMesh> rmesh = man->Get<iRenderMesh>(csAssetLocator(locator, meshLocStr));
-        mesh->AddSubMesh(rmesh, slot);
+      std::string        meshLocStr = meshElement->GetAttribute("locator", "/narf");
+      csRef<iRenderMesh> rmesh      = man->Get<iRenderMesh>(csAssetLocator(locator, meshLocStr));
+      mesh->AddSubMesh(rmesh, slot);
     }
     else if (meshElement->HasAttribute("dataIdx"))
     {
@@ -74,7 +74,7 @@ csOwned<iAsset> csMeshLoader::Load(const csCryoFile *file, const csAssetLocator 
       if (!data.empty())
       {
         csBinaryInputStream is(data);
-        csRef<iRenderMesh> rmesh = ReadRenderMesh(is);
+        csRef<iRenderMesh>  rmesh = ReadRenderMesh(is);
         mesh->AddSubMesh(rmesh, slot);
       }
     }
@@ -86,7 +86,7 @@ csOwned<iAsset> csMeshLoader::Load(const csCryoFile *file, const csAssetLocator 
 }
 
 
-csOwned<iRenderMesh> csMeshLoader::ReadRenderMesh(csBinaryInputStream& is) const
+csOwned<iRenderMesh> csMeshLoader::ReadRenderMesh(csBinaryInputStream &is) const
 {
   uint32_t version = is.Read<uint32_t>();
   if (version == 1)
@@ -105,6 +105,8 @@ enum VDataType
   TANGENT,
   COLOR0,
   COLOR1,
+  BONE_ID,
+  BONE_WEIGHT,
   TEX_COORD0_1,
   TEX_COORD0_2,
   TEX_COORD0_3,
@@ -125,18 +127,18 @@ enum IndexType
 
 
 template<typename T>
-std::vector<T> read_v(csBinaryInputStream& is, uint32_t numValues)
+std::vector<T> read_v(csBinaryInputStream &is, uint32_t numValues)
 {
   std::vector<T> values;
   values.resize(numValues);
 
   uint32_t size = is.Read<uint32_t>();
-  is.Read(reinterpret_cast<uint8_t*>(values.data()), numValues * sizeof(T));
+  is.Read(reinterpret_cast<uint8_t *>(values.data()), numValues * sizeof(T));
   return values;
 }
 
 
-csOwned<iRenderMesh> csMeshLoader::ReadRenderMesh_V1(csBinaryInputStream& is) const
+csOwned<iRenderMesh> csMeshLoader::ReadRenderMesh_V1(csBinaryInputStream &is) const
 {
 
   csRef<iRenderMeshGenerator> generator = csObjectRegistry::Get<iRenderMeshGeneratorFactory>()->Create();
@@ -152,73 +154,78 @@ csOwned<iRenderMesh> csMeshLoader::ReadRenderMesh_V1(csBinaryInputStream& is) co
     }
     switch (type)
     {
-    case VERTEX:
-      generator->SetVertices(read_v<csVector3f>(is, numVertices));
-      break;
-    case NORMAL:
-      generator->SetNormals(read_v<csVector3f>(is, numVertices));
-      break;
-    case TANGENT:
-      generator->SetTangents(read_v<csVector3f>(is, numVertices));
-      break;
-    case COLOR0:
-      generator->SetColors(read_v<csColor4f>(is, numVertices));
-      break;
-    case COLOR1:
-      read_v<csColor4f>(is, numVertices);
-      break;
-    case TEX_COORD0_1:
-      read_v<float>(is, numVertices);
-      break;
-    case TEX_COORD0_2:
-      generator->SetUV0(read_v<csVector2f>(is, numVertices));
-      break;
-    case TEX_COORD0_3:
-      generator->SetUV0(read_v<csVector3f>(is, numVertices));
-      break;
-    case TEX_COORD1_1:
-      read_v<float>(is, numVertices);
-      break;
-    case TEX_COORD1_2:
-      generator->SetUV1(read_v<csVector2f>(is, numVertices));
-      break;
-    case TEX_COORD1_3:
-      read_v<csVector3f>(is, numVertices);
-      break;
-    case TEX_COORD2_1:
-      read_v<float>(is, numVertices);
-      break;
-    case TEX_COORD2_2:
-      generator->SetUV1(read_v<csVector2f>(is, numVertices));
-      break;
-    case TEX_COORD2_3:
-      read_v<csVector3f>(is, numVertices);
-      break;
-    default:
-      break;
+      case VERTEX:
+        generator->SetVertices(read_v<csVector3f>(is, numVertices));
+        break;
+      case NORMAL:
+        generator->SetNormals(read_v<csVector3f>(is, numVertices));
+        break;
+      case TANGENT:
+        generator->SetTangents(read_v<csVector3f>(is, numVertices));
+        break;
+      case COLOR0:
+        generator->SetColors(read_v<csColor4f>(is, numVertices));
+        break;
+      case COLOR1:
+        read_v<csColor4f>(is, numVertices);
+        break;
+      case BONE_ID:
+        generator->SetBoneIndices(read_v<csVector4i>(is, numVertices));
+        break;
+      case BONE_WEIGHT:
+        generator->SetBoneWeights(read_v<csVector4f>(is, numVertices));
+        break;
+
+      case TEX_COORD0_1:
+        read_v<float>(is, numVertices);
+        break;
+      case TEX_COORD0_2:
+        generator->SetUV0(read_v<csVector2f>(is, numVertices));
+        break;
+      case TEX_COORD0_3:
+        generator->SetUV0(read_v<csVector3f>(is, numVertices));
+        break;
+      case TEX_COORD1_1:
+        read_v<float>(is, numVertices);
+        break;
+      case TEX_COORD1_2:
+        generator->SetUV1(read_v<csVector2f>(is, numVertices));
+        break;
+      case TEX_COORD1_3:
+        read_v<csVector3f>(is, numVertices);
+        break;
+      case TEX_COORD2_1:
+        read_v<float>(is, numVertices);
+        break;
+      case TEX_COORD2_2:
+        generator->SetUV1(read_v<csVector2f>(is, numVertices));
+        break;
+      case TEX_COORD2_3:
+        read_v<csVector3f>(is, numVertices);
+        break;
+      default:
+        break;
     }
 
   }
 
 
-
-
-  uint8_t primtiveType = is.Read<uint8_t>();
-  uint32_t numIndices = is.Read<uint32_t>();
-  uint8_t indexType = is.Read<uint8_t>();
+  uint8_t  primtiveType = is.Read<uint8_t>();
+  uint32_t numIndices   = is.Read<uint32_t>();
+  uint8_t  indexType    = is.Read<uint8_t>();
 
 
   generator->SetPrimitiveType(static_cast<ePrimitiveType>(primtiveType));
   switch (indexType)
   {
-  case UINT16:
-    generator->SetIndices(read_v<uint16_t>(is, numIndices));
-    break;
-  case UINT32:
-    generator->SetIndices(read_v<uint32_t>(is, numIndices));
-    break;
-  default:
-    break;
+    case UINT16:
+      generator->SetIndices(read_v<uint16_t>(is, numIndices));
+      break;
+    case UINT32:
+      generator->SetIndices(read_v<uint32_t>(is, numIndices));
+      break;
+    default:
+      break;
   }
 
 

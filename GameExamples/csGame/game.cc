@@ -945,8 +945,8 @@ void generate_suzanne(cs::csWorld *world)
 
     world->Attach(entity);
 #else
-//  csRef<csEntity> entity = csAssetManager::Get()->Get<csEntity>("/brickwall/brickwall.entity");
-  csRef<csEntity> entity = csAssetManager::Get()->Get<csEntity>("/stc/stc.entity");
+  csRef<csEntity> entity = csAssetManager::Get()->Get<csEntity>("/brickwall/brickwall.entity");
+//  csRef<csEntity> entity = csAssetManager::Get()->Get<csEntity>("/stc/stc.entity");
   entity->GetRoot()->GetTransform()
         .SetScale(csVector3f(0.01, 0.01f, 0.01f))
         .SetTranslation(0.0f, 5.0f, 0.0f)

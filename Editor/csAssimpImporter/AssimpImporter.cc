@@ -1,6 +1,7 @@
 
 #include <csAssimpImporter/AssimpImporter.hh>
 #include <csAssimpImporter/AssimpMeshExporter.hh>
+#include <csAssimpImporter/AssimpSkeletonExporter.hh>
 #include <csCryoFile/csCryoFile.hh>
 #include <iostream>
 #include <fstream>
@@ -45,7 +46,7 @@ bool AssimpImporter::Import(const std::fs::path &path, const std::vector<std::st
     return false;
   }
 
-  bool skeletons  = HasOption(args, "--skeletons");
+  bool skeleton   = HasOption(args, "--skeleton");
   bool animations = HasOption(args, "--animations");
   bool materials  = HasOption(args, "--materials");
   bool meshes     = HasOption(args, "--meshes");
@@ -65,10 +66,16 @@ bool AssimpImporter::Import(const std::fs::path &path, const std::vector<std::st
                                               | aiProcess_OptimizeMeshes
   );
 
-
-  if (skeletons)
+  if (!scene)
   {
-    std::cout << "Generate skeletons: " << outFile.generic_string() << "_skeleton.skel" << std::endl;
+    std::cerr << "File could not be imported. Error" << std::endl;
+    return false;
+  }
+
+
+  if (skeleton)
+  {
+    GenerateSkeleton(outFile, scene);
   }
 
   if (animations)
@@ -292,12 +299,28 @@ void AssimpImporter::GenerateMaterials(const std::fs::path &path, const aiScene 
   }
 }
 
+void AssimpImporter::GenerateSkeleton(const std::fs::path &path, const aiScene *scene) const
+{
+  AssimpSkeletonExporter exp (scene);
+  exp.ScanBones();
+  if (!exp.HasBones())
+  {
+    std::cerr << "File does not contain any bone data." << std::endl;
+    return;
+  }
+
+  std::string skeletonFileName = path.generic_string() + ".skeleton";
+
+  exp.Export(skeletonFileName);
+
+}
+
 
 void AssimpImporter::PrintUsage() const
 {
   std::cout << "Assimp importer [options]: *.fbx *.obj" << std::endl;
   std::cout << "   --out-file     prefix of the generated files. " << std::endl;
-  std::cout << "   --skeletons    export skeletons" << std::endl;
+  std::cout << "   --skeleton     export skeleton" << std::endl;
   std::cout << "   --animations   export animations" << std::endl;
   std::cout << "   --materials    export materials. Must be assigned in editor" << std::endl;
   std::cout << "   --meshes       export each mesh" << std::endl;

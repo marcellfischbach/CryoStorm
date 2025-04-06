@@ -7,6 +7,8 @@ add_library(csAssimpImporter SHARED
         AssimpImporter.hh
         AssimpMeshExporter.cc
         AssimpMeshExporter.hh
+        AssimpSkeletonExporter.cc
+        AssimpSkeletonExporter.hh
         Export.hh
 )
 

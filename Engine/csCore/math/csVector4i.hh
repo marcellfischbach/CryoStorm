@@ -12,10 +12,10 @@ namespace cs
 struct csVector4i
 {
 public:
-  int x;
-  int y;
-  int z;
-  int w;
+  int32_t x;
+  int32_t y;
+  int32_t z;
+  int32_tnt w;
 
 public:
   CS_FORCEINLINE csVector4i()
@@ -29,7 +29,7 @@ public:
 
   CS_FORCEINLINE csVector4i(const csVector4i &other) = default;
 
-  CS_FORCEINLINE explicit csVector4i(const int *f)
+  CS_FORCEINLINE explicit csVector4i(const int32_t *f)
       : x(f[0])
       , y(f[1])
       , z(f[2])
@@ -37,7 +37,7 @@ public:
   {
   }
 
-  CS_FORCEINLINE csVector4i(int x, int y, int z, int w)
+  CS_FORCEINLINE csVector4i(int32_t x, int32_t y, int32_t z, int32_t w)
       : x(x)
       , y(y)
       , z(z)
@@ -56,7 +56,7 @@ public:
     return *this;
   }
 
-  CS_FORCEINLINE csVector4i &operator+=(int v)
+  CS_FORCEINLINE csVector4i &operator+=(int32_t v)
   {
     x += v;
     y += v;
@@ -74,7 +74,7 @@ public:
     return *this;
   }
 
-  CS_FORCEINLINE csVector4i &operator-=(int v)
+  CS_FORCEINLINE csVector4i &operator-=(int32_t v)
   {
     x -= v;
     y -= v;
@@ -84,7 +84,7 @@ public:
   }
 
 
-  CS_FORCEINLINE csVector4i &operator*=(int v)
+  CS_FORCEINLINE csVector4i &operator*=(int32_t v)
   {
     x *= v;
     y *= v;
@@ -94,7 +94,7 @@ public:
   }
 
 
-  CS_FORCEINLINE csVector4i &operator/=(int v)
+  CS_FORCEINLINE csVector4i &operator/=(int32_t v)
   {
     x /= v;
     y /= v;
@@ -121,7 +121,7 @@ public:
                     v0.w + v1.w);
   }
 
-  CS_NODISCARD CS_FORCEINLINE friend csVector4i operator+(const csVector4i &v0, int v1)
+  CS_NODISCARD CS_FORCEINLINE friend csVector4i operator+(const csVector4i &v0, int32_t v1)
   {
     return csVector4i(v0.x + v1,
                     v0.y + v1,
@@ -129,7 +129,7 @@ public:
                     v0.w + v1);
   }
 
-  CS_NODISCARD CS_FORCEINLINE friend csVector4i operator+(int v0, const csVector4i &v1)
+  CS_NODISCARD CS_FORCEINLINE friend csVector4i operator+(int32_t v0, const csVector4i &v1)
   {
     return csVector4i(v0 + v1.x,
                     v0 + v1.y,
@@ -146,7 +146,7 @@ public:
                     v0.w - v1.w);
   }
 
-  CS_NODISCARD CS_FORCEINLINE friend csVector4i operator-(const csVector4i &v0, int v1)
+  CS_NODISCARD CS_FORCEINLINE friend csVector4i operator-(const csVector4i &v0, int32_t v1)
   {
     return csVector4i(v0.x - v1,
                     v0.y - v1,
@@ -154,7 +154,7 @@ public:
                     v0.w - v1);
   }
 
-  CS_NODISCARD CS_FORCEINLINE friend csVector4i operator-(int v0, const csVector4i &v1)
+  CS_NODISCARD CS_FORCEINLINE friend csVector4i operator-(int32_t v0, const csVector4i &v1)
   {
     return csVector4i(v0 - v1.x,
                     v0 - v1.y,
@@ -162,12 +162,12 @@ public:
                     v0 - v1.w);
   }
 
-  CS_NODISCARD CS_FORCEINLINE friend int operator*(const csVector4i &v0, const csVector4i &v1)
+  CS_NODISCARD CS_FORCEINLINE friend int32_t operator*(const csVector4i &v0, const csVector4i &v1)
   {
     return v0.x * v1.x + v0.y * v1.y + v0.z * v1.z + v0.w * v1.w;
   }
 
-  CS_NODISCARD CS_FORCEINLINE friend csVector4i operator*(const csVector4i &v0, int v1)
+  CS_NODISCARD CS_FORCEINLINE friend csVector4i operator*(const csVector4i &v0, int32_t v1)
   {
     return csVector4i(v0.x * v1,
                     v0.y * v1,
@@ -175,7 +175,7 @@ public:
                     v0.w * v1);
   }
 
-  CS_NODISCARD CS_FORCEINLINE friend csVector4i operator*(int v0, const csVector4i &v1)
+  CS_NODISCARD CS_FORCEINLINE friend csVector4i operator*(int32_t v0, const csVector4i &v1)
   {
     return csVector4i(v0 * v1.x,
                     v0 * v1.y,
@@ -184,7 +184,7 @@ public:
   }
 
 
-  CS_NODISCARD CS_FORCEINLINE friend csVector4i operator/(const csVector4i &v0, int v1)
+  CS_NODISCARD CS_FORCEINLINE friend csVector4i operator/(const csVector4i &v0, int32_t v1)
   {
     return csVector4i(v0.x / v1,
                     v0.y / v1,
@@ -192,7 +192,7 @@ public:
                     v0.w / v1);
   }
 
-  CS_NODISCARD CS_FORCEINLINE friend csVector4i operator/(int v0, const csVector4i &v1)
+  CS_NODISCARD CS_FORCEINLINE friend csVector4i operator/(int32_t v0, const csVector4i &v1)
   {
     return csVector4i(v0 / v1.x,
                     v0 / v1.y,
@@ -206,17 +206,17 @@ public:
   }
 
 
-  CS_NODISCARD CS_FORCEINLINE int Dot() const
+  CS_NODISCARD CS_FORCEINLINE int32_t Dot() const
   {
     return x * x + y * y + z * z + w * w;
   }
 
-  CS_NODISCARD CS_FORCEINLINE int Dot(const csVector4i &v) const
+  CS_NODISCARD CS_FORCEINLINE int32_t Dot(const csVector4i &v) const
   {
     return x * v.x + y * v.y + z * v.z + w * v.w;
   }
 
-  CS_NODISCARD CS_FORCEINLINE static int Dot(const csVector4i &v0, const csVector4i &v1)
+  CS_NODISCARD CS_FORCEINLINE static int32_t Dot(const csVector4i &v0, const csVector4i &v1)
   {
     return v0.x * v1.x + v0.y * v1.y + v0.z * v1.z + v0.w * v1.w;
   }

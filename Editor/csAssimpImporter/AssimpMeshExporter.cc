@@ -9,13 +9,14 @@
 
 using namespace cs::file;
 
+
 namespace cs::imp
 {
 
-AssimpMeshExporter::AssimpMeshExporter(const aiScene* scene)
-: m_scene(scene)
+AssimpMeshExporter::AssimpMeshExporter(const aiScene *scene)
+    : m_scene(scene)
+    , m_skeletonExporter(scene)
 {
-
 }
 
 void AssimpMeshExporter::combine(const aiMesh *mesh)
@@ -61,15 +62,15 @@ void AssimpMeshExporter::combine(const aiNode *node, const aiMatrix4x4 &parent)
 void AssimpMeshExporter::PushMesh(const aiMatrix4x4 &mat, const aiMesh *mesh)
 {
   VertexDecl vertDecl = ExtractVertexDecl(mesh);
-  MeshData   &data    = FindMeshData(vertDecl, TRIANGLES, mesh->mMaterialIndex);
+  MeshData &data = FindMeshData(vertDecl, TRIANGLES, mesh->mMaterialIndex);
 
   Push(data, mesh, mat);
 }
 
 
-static void push(std::vector<aiVector3D> &values,
-                 aiVector3D *srcValues,
-                 uint32_t srcValueCount)
+void AssimpMeshExporter::Push(std::vector<aiVector3D> &values,
+                              aiVector3D *srcValues,
+                              uint32_t srcValueCount)
 {
   if (!srcValues)
   {
@@ -82,9 +83,9 @@ static void push(std::vector<aiVector3D> &values,
   }
 }
 
-static void push(std::vector<aiColor4D> &values,
-                 aiColor4D *srcValues,
-                 uint32_t srcValueCount)
+void AssimpMeshExporter::Push(std::vector<aiColor4D> &values,
+                              aiColor4D *srcValues,
+                              uint32_t srcValueCount)
 {
   if (!srcValues)
   {
@@ -98,10 +99,10 @@ static void push(std::vector<aiColor4D> &values,
 }
 
 
-static void push(std::vector<aiVector3D> &values,
-                 const aiMatrix4x4 &matrix,
-                 aiVector3D *srcValues,
-                 uint32_t srcValueCount)
+void AssimpMeshExporter::Push(std::vector<aiVector3D> &values,
+                              const aiMatrix4x4 &matrix,
+                              aiVector3D *srcValues,
+                              uint32_t srcValueCount)
 {
   if (!srcValues)
   {
@@ -111,16 +112,16 @@ static void push(std::vector<aiVector3D> &values,
   for (int i = 0; i < srcValueCount; ++i)
   {
     aiVector3D &srcV = srcValues[i];
-    aiVector3D v     = matrix * srcV;
+    aiVector3D v = matrix * srcV;
     values.push_back(v);
   }
 }
 
 
-static void push(std::vector<aiVector3D> &values,
-                 const aiMatrix3x3 &matrix,
-                 aiVector3D *srcValues,
-                 uint32_t srcValueCount)
+void AssimpMeshExporter::Push(std::vector<aiVector3D> &values,
+                              const aiMatrix3x3 &matrix,
+                              aiVector3D *srcValues,
+                              uint32_t srcValueCount)
 {
   if (!srcValues)
   {
@@ -131,6 +132,21 @@ static void push(std::vector<aiVector3D> &values,
   {
     aiVector3D v = matrix * srcValues[i];
     values.push_back(v);
+  }
+}
+
+void AssimpMeshExporter::Push(std::vector<VertexBoneData> &boneData, aiBone *bone)
+{
+  std::string boneName(bone->mName.C_Str());
+  uint32_t    boneId = m_skeletonExporter.GetBoneIndex(boneName);
+
+  for (int i = 0, in = bone->mNumWeights; i < in; ++i)
+  {
+    aiVertexWeight &weight = bone->mWeights[i];
+    BoneWeight bw;
+    bw.boneId = boneId;
+    bw.weight = weight.mWeight;
+    boneData[weight.mVertexId].weights.push_back(bw);
   }
 }
 
@@ -145,14 +161,27 @@ void AssimpMeshExporter::Push(cs::imp::AssimpMeshExporter::MeshData &meshData,
   aiMatrix3x3 normalMatrix = aiMatrix3x3(aiMatrix4x4(matrix).Inverse().Transpose());
 
 
-  push(meshData.position, matrix, mesh->mVertices, numVertices);
-  push(meshData.normal, normalMatrix, mesh->mNormals, numVertices);
-  push(meshData.tangent, normalMatrix, mesh->mTangents, numVertices);
-  push(meshData.color0, mesh->mColors[0], numVertices);
-  push(meshData.color1, mesh->mColors[1], numVertices);
-  push(meshData.texCoord0, mesh->mTextureCoords[0], numVertices);
-  push(meshData.texCoord1, mesh->mTextureCoords[1], numVertices);
-  push(meshData.texCoord2, mesh->mTextureCoords[2], numVertices);
+  Push(meshData.position, matrix, mesh->mVertices, numVertices);
+  Push(meshData.normal, normalMatrix, mesh->mNormals, numVertices);
+  Push(meshData.tangent, normalMatrix, mesh->mTangents, numVertices);
+  Push(meshData.color0, mesh->mColors[0], numVertices);
+  Push(meshData.color1, mesh->mColors[1], numVertices);
+  Push(meshData.texCoord0, mesh->mTextureCoords[0], numVertices);
+  Push(meshData.texCoord1, mesh->mTextureCoords[1], numVertices);
+  Push(meshData.texCoord2, mesh->mTextureCoords[2], numVertices);
+  if (mesh->HasBones())
+  {
+    meshData.boneData.resize(meshData.position.size());
+    m_skeletonExporter.ScanBones();
+    if (VerifyMeshSkeletonMatchesBones(mesh))
+    {
+      for (uint32_t i = 0, in = mesh->mNumBones; i < in; i++)
+      {
+        Push(meshData.boneData, mesh->mBones[i]);
+      }
+      NormalizeBoneWeights(meshData);
+    }
+  }
 
 
   meshData.indices.reserve(meshData.indices.size() + mesh->mNumFaces * 3);
@@ -164,6 +193,73 @@ void AssimpMeshExporter::Push(cs::imp::AssimpMeshExporter::MeshData &meshData,
     meshData.indices.push_back(indexOffset + face.mIndices[2]);
   }
 
+}
+
+void AssimpMeshExporter::SetSkeletonRootNames(const std::set<std::string> &rootNames)
+{
+  m_skeletonRootNames = rootNames;
+}
+
+aiNode *AssimpMeshExporter::FindSkeletonRootNode(aiNode *node)
+{
+  std::string nodeName(node->mName.C_Str());
+  if (m_skeletonRootNames.contains(nodeName))
+  {
+    return node;
+  }
+  for (uint32_t i = 0, in = node->mNumChildren; i < in; i++)
+  {
+    aiNode *skelRoot = FindSkeletonRootNode(node->mChildren[i]);
+    if (skelRoot)
+    {
+      return skelRoot;
+    }
+  }
+
+  return nullptr;
+}
+
+
+
+bool AssimpMeshExporter::VerifyMeshSkeletonMatchesBones(const aiMesh *mesh)
+{
+  if (mesh->HasBones())
+  {
+
+    for (uint32_t i = 0, in = mesh->mNumBones; i < in; i++)
+    {
+      const aiBone *bone  = mesh->mBones[i];
+      std::string  boneName(bone->mName.C_Str());
+      uint32_t     boneId = m_skeletonExporter.GetBoneIndex(boneName);
+      if (boneId == AssimpSkeletonExporter::IllegalBoneID)
+      {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+void AssimpMeshExporter::NormalizeBoneWeights(cs::imp::AssimpMeshExporter::MeshData &meshData)
+{
+  for (auto &bd: meshData.boneData)
+  {
+    std::sort(bd.weights.begin(), bd.weights.end(), [](BoneWeight bw0, BoneWeight bw1) { return bw0.weight > bw1.weight;});
+
+    // sum the weight and normalize it, so that the first 4 bone sum up to 1.0
+    float sum = 0.0f;
+    for (uint32_t i=0, in=bd.weights.size(); i<in && i<4; i++)
+    {
+      sum += bd.weights[i].weight;
+    }
+    if (sum != 0.0f)
+    {
+      for (uint32_t i = 0, in = bd.weights.size(); i < in && i < 4; i++)
+      {
+        bd.weights[i].weight /= sum;
+      }
+    }
+  }
 }
 
 
@@ -223,6 +319,11 @@ AssimpMeshExporter::VertexDecl AssimpMeshExporter::ExtractVertexDecl(const aiMes
   if (mesh->mTextureCoords[2] && mesh->mNumUVComponents[2] == 3)
   {
     res.insert(TEX_COORD2_3);
+  }
+  if (mesh->HasBones())
+  {
+    res.insert(BONE_ID);
+    res.insert(BONE_WEIGHT);
   }
   return res;
 }
@@ -290,7 +391,8 @@ AssimpMeshExporter::MeshData &AssimpMeshExporter::FindMeshData(const VertexDecl 
 }
 
 
-void write_values_v1(std::ostream &out, uint8_t dataType, const std::vector<aiVector3D> &vertices)
+void
+AssimpMeshExporter::WriteValuesV1(std::ostream &out, uint8_t dataType, const std::vector<aiVector3D> &vertices) const
 {
   if (vertices.empty())
   {
@@ -306,7 +408,8 @@ void write_values_v1(std::ostream &out, uint8_t dataType, const std::vector<aiVe
   }
 }
 
-void write_values_v2(std::ostream &out, uint8_t dataType, const std::vector<aiVector3D> &vertices)
+void
+AssimpMeshExporter::WriteValuesV2(std::ostream &out, uint8_t dataType, const std::vector<aiVector3D> &vertices) const
 {
   if (vertices.empty())
   {
@@ -323,7 +426,8 @@ void write_values_v2(std::ostream &out, uint8_t dataType, const std::vector<aiVe
 }
 
 
-void write_values_v3(std::ostream &out, uint8_t dataType, const std::vector<aiVector3D> &vertices)
+void
+AssimpMeshExporter::WriteValuesV3(std::ostream &out, uint8_t dataType, const std::vector<aiVector3D> &vertices) const
 {
   if (vertices.empty())
   {
@@ -340,7 +444,7 @@ void write_values_v3(std::ostream &out, uint8_t dataType, const std::vector<aiVe
 }
 
 
-void write_values_c4(std::ostream &out, uint8_t dataType, const std::vector<aiColor4D> &colors)
+void AssimpMeshExporter::WriteValuesC4(std::ostream &out, uint8_t dataType, const std::vector<aiColor4D> &colors) const
 {
   if (colors.empty())
   {
@@ -356,6 +460,52 @@ void write_values_c4(std::ostream &out, uint8_t dataType, const std::vector<aiCo
   }
 }
 
+void AssimpMeshExporter::WriteValues(std::ostream &out, const std::vector<VertexBoneData> &boneData) const
+{
+  if (boneData.empty())
+  {
+    return;
+  }
+
+  uint8_t  type = BONE_ID;
+  uint32_t size = boneData.size() * sizeof(int32_t) * 4;
+  out.write(reinterpret_cast<char *>(&type), sizeof(uint8_t));
+  out.write(reinterpret_cast<char *>(&size), sizeof(uint32_t));
+  for (const auto &bone: boneData)
+  {
+    uint32_t      i  = 0;
+    for (uint32_t in = bone.weights.size(); i < in && i < 4; i++)
+    {
+      int32_t boneId = bone.weights[i].boneId;
+      out.write(reinterpret_cast<char *>(&boneId), sizeof(int32_t));
+    }
+    for (; i < 4; i++)
+    {
+      int32_t boneId = 0;
+      out.write(reinterpret_cast<char *>(&boneId), sizeof(int32_t));
+    }
+  }
+
+  type = BONE_WEIGHT;
+  size = boneData.size() * sizeof(float) * 4;
+  out.write(reinterpret_cast<char *>(&type), sizeof(uint8_t));
+  out.write(reinterpret_cast<char *>(&size), sizeof(uint32_t));
+  for (const auto &bone: boneData)
+  {
+    uint32_t      i  = 0;
+    for (uint32_t in = bone.weights.size(); i < in && i < 4; i++)
+    {
+      float boneWeight = bone.weights[i].weight;
+      out.write(reinterpret_cast<char *>(&boneWeight), sizeof(float));
+    }
+    for (; i < 4; i++)
+    {
+      float boneWeight = 0.0f;
+      out.write(reinterpret_cast<char *>(&boneWeight), sizeof(float));
+    }
+  }
+}
+
 
 void AssimpMeshExporter::Export(const std::string &filename, const std::string &referenceName) const
 {
@@ -365,19 +515,19 @@ void AssimpMeshExporter::Export(const std::string &filename, const std::string &
   csCryoFileElement *materialSlotsElement = meshElement->AddChild("materialSlots");
   csCryoFileElement *subMeshesElement     = meshElement->AddChild("subMeshes");
 
-  uint32_t        idx = 0;
+  uint32_t idx = 0;
   for (const auto &meshData: m_meshData)
   {
-    std::string idxStr = std::to_string(idx);
+    std::string idxStr   = std::to_string(idx);
     std::string dataName = "#" + idxStr;
 
     std::string materialSlotName = "Material_" + idxStr;
-    std::string materialName = "/materials/Default.mat";
+    std::string materialName     = "/materials/Default.mat";
     if (meshData.materialIdx < m_scene->mNumMaterials)
     {
       aiMaterial *material = m_scene->mMaterials[meshData.materialIdx];
       materialSlotName = material->GetName().C_Str();
-      materialName = referenceName + "_" + materialSlotName + ".matinstance";
+      materialName     = referenceName + "_" + materialSlotName + ".matinstance";
     }
 
     csCryoFileElement *matSlotElement = materialSlotsElement->AddChild("materialSlot");
@@ -416,22 +566,22 @@ void AssimpMeshExporter::WriteMesh(std::ostream &out, const MeshData &meshData) 
   uint32_t numVertices = meshData.position.size();
   out.write(reinterpret_cast<char *>(&numVertices), sizeof(uint32_t));
 
-  write_values_v3(out, VERTEX, meshData.position);
-  write_values_v3(out, NORMAL, meshData.normal);
-  write_values_v3(out, TANGENT, meshData.tangent);
-  write_values_c4(out, COLOR0, meshData.color0);
-  write_values_c4(out, COLOR1, meshData.color1);
+  WriteValuesV3(out, VERTEX, meshData.position);
+  WriteValuesV3(out, NORMAL, meshData.normal);
+  WriteValuesV3(out, TANGENT, meshData.tangent);
+  WriteValuesC4(out, COLOR0, meshData.color0);
+  WriteValuesC4(out, COLOR1, meshData.color1);
 
   switch (meshData.texCoord0Size)
   {
     case 1:
-      write_values_v1(out, TEX_COORD0_1, meshData.texCoord0);
+      WriteValuesV1(out, TEX_COORD0_1, meshData.texCoord0);
       break;
     case 2:
-      write_values_v2(out, TEX_COORD0_2, meshData.texCoord0);
+      WriteValuesV2(out, TEX_COORD0_2, meshData.texCoord0);
       break;
     case 3:
-      write_values_v3(out, TEX_COORD0_3, meshData.texCoord0);
+      WriteValuesV3(out, TEX_COORD0_3, meshData.texCoord0);
       break;
     default:
       break;
@@ -439,13 +589,13 @@ void AssimpMeshExporter::WriteMesh(std::ostream &out, const MeshData &meshData) 
   switch (meshData.texCoord1Size)
   {
     case 1:
-      write_values_v1(out, TEX_COORD1_1, meshData.texCoord1);
+      WriteValuesV1(out, TEX_COORD1_1, meshData.texCoord1);
       break;
     case 2:
-      write_values_v2(out, TEX_COORD1_2, meshData.texCoord1);
+      WriteValuesV2(out, TEX_COORD1_2, meshData.texCoord1);
       break;
     case 3:
-      write_values_v3(out, TEX_COORD1_3, meshData.texCoord1);
+      WriteValuesV3(out, TEX_COORD1_3, meshData.texCoord1);
       break;
     default:
       break;
@@ -453,17 +603,20 @@ void AssimpMeshExporter::WriteMesh(std::ostream &out, const MeshData &meshData) 
   switch (meshData.texCoord2Size)
   {
     case 1:
-      write_values_v1(out, TEX_COORD2_1, meshData.texCoord2);
+      WriteValuesV1(out, TEX_COORD2_1, meshData.texCoord2);
       break;
     case 2:
-      write_values_v2(out, TEX_COORD2_2, meshData.texCoord2);
+      WriteValuesV2(out, TEX_COORD2_2, meshData.texCoord2);
       break;
     case 3:
-      write_values_v3(out, TEX_COORD2_3, meshData.texCoord2);
+      WriteValuesV3(out, TEX_COORD2_3, meshData.texCoord2);
       break;
     default:
       break;
   }
+
+  WriteValues(out, meshData.boneData);
+
   uint8_t type = END;
   out.write(reinterpret_cast<char *>(&type), sizeof(uint8_t));
 

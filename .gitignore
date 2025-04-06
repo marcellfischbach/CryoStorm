@@ -10,6 +10,7 @@ Docs/latex
 
 cmake-build-*/
 
+Docs/Reference/book
 
 *.vpp.bak*
 CMakeLists.txt.user
