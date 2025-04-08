@@ -20,6 +20,37 @@ class csGL4VertexBuffer;
 class csGL4IndexBuffer;
 
 CS_CLASS()
+class CS_OGL_API csGL4RenderMeshModifier : public iRenderMeshModifier
+{
+  CS_CLASS_GEN_OBJECT;
+public:
+  csGL4RenderMeshModifier(uint32_t streamID,
+                          const csVertexDeclaration &declaration,
+                          csGL4VertexBuffer *vertexBuffer);
+  ~csGL4RenderMeshModifier() override;
+
+  bool Map();
+  void Update(eVertexStream stream, csVector2f *streamData) override;
+  void Update(eVertexStream stream, csVector3f *streamData) override;
+  void Update(eVertexStream stream, csVector4f *streamData) override;
+  void Update(eVertexStream stream, csColor4f *streamData) override;
+  void Update(eVertexStream stream, csVector4i *streamData) override;
+  void Finish() override;
+
+private:
+  uint8_t *GetStreamBuffer(eVertexStream stream);
+
+  void Unmap();
+  uint32_t                 m_streamID;
+  void                     *m_buffer;
+  size_t                   m_bufferSize;
+  size_t                   m_bufferCount;
+  uint16_t                 m_streamStride;
+  csVertexDeclaration      m_vertexDeclaration;
+  csRef<csGL4VertexBuffer> m_vertexBuffer;
+};
+
+CS_CLASS()
 class CS_OGL_API csGL4RenderMesh : public CS_SUPER(iRenderMesh)
 {
   friend class csGL4RenderMeshGenerator;
@@ -43,6 +74,8 @@ public:
   CS_NODISCARD const csBoundingBox &GetBoundingBox() const override;
   CS_NODISCARD const csVertexDeclaration &GetVertexDeclaration() const override;
 
+  CS_NODISCARD csOwned<iRenderMeshModifier> Modify() override;
+
   void Render(iDevice *graphics, eRenderPass pass) override;
 #if _DEBUG
   CS_NODISCARD virtual Size GetNumberOfTriangles() const override;
@@ -50,17 +83,17 @@ public:
 
 private:
 
-  uint32_t m_vao;
-  csVertexDeclaration m_vertexDeclaration;
+  uint32_t                 m_vao;
+  csVertexDeclaration      m_vertexDeclaration;
   csRef<csGL4VertexBuffer> m_vertexBuffer;
-  csRef<csGL4IndexBuffer> m_indexBuffer;
-  csBoundingBox m_boundingBox;
+  csRef<csGL4IndexBuffer>  m_indexBuffer;
+  csBoundingBox            m_boundingBox;
 
-  uint32_t m_indexType;
+  uint32_t  m_indexType;
   eDataType m_indexDataType;
-  uint32_t m_primType;
-  Size m_count;
-  Size m_vertexCount;
+  uint32_t  m_primType;
+  Size      m_count;
+  Size      m_vertexCount;
 };
 
 
@@ -106,13 +139,13 @@ public:
   CS_NODISCARD size_t GetNumberOfVertices() const;
   csOwned<iRenderMesh> Generate() override;
 private:
-  bool m_compatMode;
-  ePrimitiveType m_primitiveType;
+  bool                    m_compatMode;
+  ePrimitiveType          m_primitiveType;
   std::vector<csVector2f> m_vertices2;
   std::vector<csVector3f> m_vertices3;
   std::vector<csVector4f> m_vertices4;
   std::vector<csVector3f> m_normals;
-  std::vector<csColor4f> m_colors;
+  std::vector<csColor4f>  m_colors;
   std::vector<csVector3f> m_tangents;
   std::vector<csVector2f> m_uv02;
   std::vector<csVector3f> m_uv03;
@@ -121,7 +154,7 @@ private:
   std::vector<csVector2f> m_uv3;
   std::vector<csVector4i> m_boneIndices;
   std::vector<csVector4f> m_boneWeights;
-  std::vector<uint32_t> m_indices;
+  std::vector<uint32_t>   m_indices;
 
 
 };

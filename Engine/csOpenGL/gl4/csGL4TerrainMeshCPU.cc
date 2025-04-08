@@ -64,6 +64,10 @@ static GLenum DataTypeMap[] = {
     GL_DOUBLE
 };
 
+csOwned<iRenderMeshModifier> csGL4TerrainMeshCPU::Modify()
+{
+  return nullptr;
+}
 
 void csGL4TerrainMeshCPU::Render(iDevice *graphics, eRenderPass pass)
 {

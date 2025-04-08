@@ -195,6 +195,18 @@ void AssimpMeshExporter::Push(cs::imp::AssimpMeshExporter::MeshData &meshData,
 
 }
 
+bool AssimpMeshExporter::HasBoneData() const
+{
+  for (const auto &meshData: m_meshData)
+  {
+    if (!meshData.boneData.empty())
+    {
+      return true;
+    }
+  }
+  return true;
+}
+
 void AssimpMeshExporter::SetSkeletonRootNames(const std::set<std::string> &rootNames)
 {
   m_skeletonRootNames = rootNames;
@@ -460,7 +472,28 @@ void AssimpMeshExporter::WriteValuesC4(std::ostream &out, uint8_t dataType, cons
   }
 }
 
-void AssimpMeshExporter::WriteValues(std::ostream &out, const std::vector<VertexBoneData> &boneData) const
+void AssimpMeshExporter::WriteBoneWeights(std::ostream &out, const std::vector<VertexBoneData> &boneData) const
+{
+  if (boneData.empty())
+  {
+    return;
+  }
+
+  uint8_t type = BONE_WEIGHT;
+  uint32_t size = boneData.size() * sizeof(float) * 4;
+  out.write(reinterpret_cast<char *>(&type), sizeof(uint8_t));
+  out.write(reinterpret_cast<char *>(&size), sizeof(uint32_t));
+  for (const auto &bone: boneData)
+  {
+    for (size_t i=0; i<4; i++)
+    {
+      float weight = i < bone.weights.size() ? bone.weights[i].weight : 0.0f;
+      out.write(reinterpret_cast<char *>(&weight), sizeof(float));
+    }
+  }
+}
+
+void AssimpMeshExporter::WriteBoneIDs(std::ostream &out, const std::vector<VertexBoneData> &boneData) const
 {
   if (boneData.empty())
   {
@@ -473,37 +506,13 @@ void AssimpMeshExporter::WriteValues(std::ostream &out, const std::vector<Vertex
   out.write(reinterpret_cast<char *>(&size), sizeof(uint32_t));
   for (const auto &bone: boneData)
   {
-    uint32_t      i  = 0;
-    for (uint32_t in = bone.weights.size(); i < in && i < 4; i++)
+    for (size_t i=0; i<4; i++)
     {
-      int32_t boneId = bone.weights[i].boneId;
-      out.write(reinterpret_cast<char *>(&boneId), sizeof(int32_t));
-    }
-    for (; i < 4; i++)
-    {
-      int32_t boneId = 0;
-      out.write(reinterpret_cast<char *>(&boneId), sizeof(int32_t));
+      uint32_t idx = i < bone.weights.size() ? bone.weights[i].boneId : 0;
+      out.write(reinterpret_cast<char *>(&idx), sizeof(uint32_t));
     }
   }
 
-  type = BONE_WEIGHT;
-  size = boneData.size() * sizeof(float) * 4;
-  out.write(reinterpret_cast<char *>(&type), sizeof(uint8_t));
-  out.write(reinterpret_cast<char *>(&size), sizeof(uint32_t));
-  for (const auto &bone: boneData)
-  {
-    uint32_t      i  = 0;
-    for (uint32_t in = bone.weights.size(); i < in && i < 4; i++)
-    {
-      float boneWeight = bone.weights[i].weight;
-      out.write(reinterpret_cast<char *>(&boneWeight), sizeof(float));
-    }
-    for (; i < 4; i++)
-    {
-      float boneWeight = 0.0f;
-      out.write(reinterpret_cast<char *>(&boneWeight), sizeof(float));
-    }
-  }
 }
 
 
@@ -511,7 +520,11 @@ void AssimpMeshExporter::Export(const std::string &filename, const std::string &
 {
   csCryoFile file;
 
-  csCryoFileElement *meshElement          = file.Root()->AddChild("mesh");
+  bool  hasBone = HasBoneData();
+
+  csCryoFileElement *meshElement          = hasBone
+      ? file.Root()->AddChild("skeletonMesh")
+      : file.Root()->AddChild("mesh");
   csCryoFileElement *materialSlotsElement = meshElement->AddChild("materialSlots");
   csCryoFileElement *subMeshesElement     = meshElement->AddChild("subMeshes");
 
@@ -520,6 +533,7 @@ void AssimpMeshExporter::Export(const std::string &filename, const std::string &
   {
     std::string idxStr   = std::to_string(idx);
     std::string dataName = "#" + idxStr;
+    std::string dataNameBoneIndex = "#SkelBoneIndex-" + idxStr;
 
     std::string materialSlotName = "Material_" + idxStr;
     std::string materialName     = "/materials/Default.mat";
@@ -540,14 +554,31 @@ void AssimpMeshExporter::Export(const std::string &filename, const std::string &
     subMeshElement->AddStringAttribute("dataIdx", dataName);
 
 
-    std::ostringstream ostream;
-    WriteMesh(ostream, meshData);
-    std::string dataStream = ostream.str();
+
+    {
+      std::ostringstream ostream;
+      WriteMesh(ostream, meshData);
+      std::string dataStream = ostream.str();
 
 
-    file.AddData(dataName,
-                 dataStream.size(),
-                 reinterpret_cast<uint8_t *>(dataStream.data()));
+      file.AddData(dataName,
+                   dataStream.size(),
+                   reinterpret_cast<uint8_t *>(dataStream.data()));
+    }
+
+    if (!meshData.boneData.empty())
+    {
+      subMeshElement->AddStringAttribute("boneId", dataNameBoneIndex);
+
+      std::ostringstream ostream;
+      WriteMeshBoneIndex(ostream, meshData);
+      std::string dataStream = ostream.str();
+
+
+      file.AddData(dataNameBoneIndex,
+                   dataStream.size(),
+                   reinterpret_cast<uint8_t *>(dataStream.data()));
+    }
     idx++;
   }
 
@@ -561,6 +592,13 @@ void AssimpMeshExporter::WriteMesh(std::ostream &out, const MeshData &meshData) 
 {
   uint32_t version = 0x01;
   out.write(reinterpret_cast<char *>(&version), sizeof(uint32_t));
+
+  uint32_t meshType = 0x01;
+  if (!meshData.boneData.empty())
+  {
+    meshType = 0x02;
+  }
+  out.write(reinterpret_cast<char *>(&meshType), sizeof(uint32_t));
 
 
   uint32_t numVertices = meshData.position.size();
@@ -615,7 +653,8 @@ void AssimpMeshExporter::WriteMesh(std::ostream &out, const MeshData &meshData) 
       break;
   }
 
-  WriteValues(out, meshData.boneData);
+  WriteBoneIDs(out, meshData.boneData);
+  WriteBoneWeights(out, meshData.boneData);
 
   uint8_t type = END;
   out.write(reinterpret_cast<char *>(&type), sizeof(uint8_t));
@@ -652,6 +691,15 @@ void AssimpMeshExporter::WriteMesh(std::ostream &out, const MeshData &meshData) 
       out.write(reinterpret_cast<char *>(&idx), sizeof(uint16_t));
     }
   }
+
+}
+
+void AssimpMeshExporter::WriteMeshBoneIndex(std::ostream &out, const cs::imp::AssimpMeshExporter::MeshData &mesh) const
+{
+  uint32_t version = 0x01;
+  out.write(reinterpret_cast<char *>(&version), sizeof(uint32_t));
+
+  WriteBoneIDs(out, mesh.boneData);
 
 }
 

@@ -73,6 +73,8 @@ public:
   CS_NODISCARD virtual const csVertexDeclaration& GetVertexDeclaration() const override;
   void SetReferencePoint(const csVector3f& refPoint) override;
 
+  csOwned<iRenderMeshModifier> Modify () override;
+
   void Render(iDevice* graphics, eRenderPass pass) override;
 
 #if _DEBUG

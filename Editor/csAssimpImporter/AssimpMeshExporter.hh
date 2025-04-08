@@ -108,6 +108,8 @@ private:
 
   std::vector<MeshData> m_meshData;
 
+
+  bool HasBoneData () const;
   void Push(MeshData &meshData, const aiMesh *mesh, const aiMatrix4x4 &matrix);
   void Push(std::vector<aiVector3D> &values, aiVector3D *srcValues, uint32_t srcValueCount);
   void Push(std::vector<aiColor4D> &values, aiColor4D *srcValues, uint32_t srcValueCount);
@@ -133,12 +135,14 @@ private:
   void PushMesh(const aiMatrix4x4 &mat, const aiMesh *mesh);
 
   void WriteMesh(std::ostream &out, const MeshData &mesh) const;
+  void WriteMeshBoneIndex (std::ostream  &out, const MeshData &mesh) const;
 
   void WriteValuesV1(std::ostream& out, uint8_t dataType, const std::vector<aiVector3D>& vertices) const;
   void WriteValuesV2(std::ostream& out, uint8_t dataType, const std::vector<aiVector3D>& vertices) const;
   void WriteValuesV3(std::ostream& out, uint8_t dataType, const std::vector<aiVector3D>& vertices) const;
   void WriteValuesC4(std::ostream& out, uint8_t dataType, const std::vector<aiColor4D>& colors) const;
-  void WriteValues(std::ostream& out, const std::vector<VertexBoneData>& boneData) const;
+  void WriteBoneIDs(std::ostream& out, const std::vector<VertexBoneData>& boneData) const;
+  void WriteBoneWeights(std::ostream& out, const std::vector<VertexBoneData>& boneData) const;
 };
 
 }

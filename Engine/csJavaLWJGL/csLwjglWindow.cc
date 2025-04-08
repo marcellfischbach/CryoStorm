@@ -117,7 +117,7 @@ int16_t csLwjglWindow::GetHeight() const
 }
 
 
-void csLwjglWindow::SetWindowIcon(const csResourceLocator &iconName)
+void csLwjglWindow::SetWindowIcon(const csAssetLocator &iconName)
 {
 
 }

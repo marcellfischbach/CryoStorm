@@ -15,7 +15,7 @@ public:
   int32_t x;
   int32_t y;
   int32_t z;
-  int32_tnt w;
+  int32_t w;
 
 public:
   CS_FORCEINLINE csVector4i()

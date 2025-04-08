@@ -42,12 +42,14 @@ public:
   explicit csVertexDeclaration(const std::vector<Attribute>& attributes);
 
   CS_NODISCARD const std::vector<Attribute>& GetAttributes(uint8_t streamID) const;
+  size_t GetStreamStride (uint8_t streamID) const;
 
 private:
   void Init(const Attribute* attributes, Size count);
   struct Stream 
   {
     uint8_t StreamID;
+    uint16_t Stride;
     std::vector<Attribute> Attributes;
   };
 

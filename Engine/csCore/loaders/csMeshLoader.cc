@@ -140,6 +140,8 @@ std::vector<T> read_v(csBinaryInputStream &is, uint32_t numValues)
 
 csOwned<iRenderMesh> csMeshLoader::ReadRenderMesh_V1(csBinaryInputStream &is) const
 {
+  uint32_t meshType = is.Read<uint32_t>();
+  // meshType is currently ignored
 
   csRef<iRenderMeshGenerator> generator = csObjectRegistry::Get<iRenderMeshGeneratorFactory>()->Create();
 

@@ -38,6 +38,7 @@ void csVertexDeclaration::Init(const csVertexDeclaration::Attribute* attributes,
     {
       if (aptr->Stream == streamId)
       {
+        stream.Stride = ceMax(aptr->Stride, stream.Stride);
         stream.Attributes.push_back(*aptr);
       }
     }
@@ -53,6 +54,15 @@ const std::vector<csVertexDeclaration::Attribute>& csVertexDeclaration::GetAttri
   }
   return m_streams[streamID].Attributes;
 
+}
+
+size_t csVertexDeclaration::GetStreamStride(uint8_t streamID) const
+{
+  if (streamID >= m_streams.size())
+  {
+    throw csNoSuchStreamException(streamID);
+  }
+  return m_streams[streamID].Stride;
 }
 
 }

@@ -24,7 +24,7 @@
     static const cs::csClass *GetStaticClass (); \
     void *QueryClass(const cs::csClass *clazz) override; \
     const void *QueryClass(const cs::csClass *clazz) const override; \
-    virtual jobject CreateJObject () const
+    CS_NODISCARD jobject CreateJObject () const override
 #else
 #define CS_CLASS_GEN public: \
     const cs::csClass *GetClass () const override; \
@@ -241,6 +241,7 @@ struct CS_CORE_API iObject
 #ifdef CS_JAVA
   virtual void SetJObject(jobject object) const = 0;
   CS_NODISCARD virtual jobject GetJObject() const = 0;
+  CS_NODISCARD virtual jobject CreateJObject () const = 0;
 #endif
 
   template<typename T>
