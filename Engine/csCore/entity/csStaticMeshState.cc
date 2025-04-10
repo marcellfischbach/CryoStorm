@@ -154,8 +154,16 @@ void csStaticMeshState::AddMeshToScene(csWorld *world)
       }
 
       auto gfxMesh = CreateGfxMesh();
+
       gfxMesh->SetMesh(subMesh.GetMesh());
       gfxMesh->SetMaterial(material);
+
+      gfxMesh->SetBatchable(true);
+      gfxMesh->SetStatic(IsStatic());
+      gfxMesh->SetReceiveShadow(m_receiveShadow);
+      gfxMesh->SetCastShadow(m_castShadow);;
+      gfxMesh->SetModelMatrix(GetGlobalMatrix());
+
       m_gfxMeshes.emplace_back(gfxMesh, materialSlotIdx);
 
       scene->Add(gfxMesh);
@@ -166,13 +174,7 @@ void csStaticMeshState::AddMeshToScene(csWorld *world)
 
 csGfxMesh *csStaticMeshState::CreateGfxMesh()
 {
-  auto gfxMesh = new csGfxMesh();
-  gfxMesh->SetBatchable(true);
-  gfxMesh->SetStatic(IsStatic());
-  gfxMesh->SetReceiveShadow(m_receiveShadow);
-  gfxMesh->SetCastShadow(m_castShadow);;
-  gfxMesh->SetModelMatrix(GetGlobalMatrix());
-  return gfxMesh;
+  return new csGfxMesh();
 }
 
 

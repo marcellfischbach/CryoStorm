@@ -3,6 +3,7 @@
 //
 
 #include <csCore/entity/csSkeletonMeshState.hh>
+#include <csCore/entity/csSkeletonState.hh>
 #include <csCore/graphics/csSkeletonMesh.hh>
 #include <csCore/graphics/scene/csGfxMesh.hh>
 
@@ -21,30 +22,35 @@ csSkeletonMeshState::csSkeletonMeshState()
 void csSkeletonMeshState::SetMesh(cs::csMesh *mesh)
 {
   csStaticMeshState::SetMesh(mesh);
+  UpdateSkeletonMesh();
+}
 
-//  auto skeletonMesh = mesh->Query<SkeletonMesh>();
-  if (auto skeletonMesh = mesh->Query<csSkeletonMesh>())
+void csSkeletonMeshState::SetSkeletonState(cs::csSkeletonState *skeletonState)
+{
+  m_skeletonState = skeletonState;
+  UpdateSkeletonMesh();
+}
+
+
+void csSkeletonMeshState::UpdateSkeletonMesh()
+{
+  csMesh* mesh = GetMesh();
+  csSkeletonMesh *skeletonMesh = csQueryClass<csSkeletonMesh>(mesh);
+  if (skeletonMesh && m_skeletonState)
   {
-    // crete the duplicate of the origin skeleton of the SkeletonMesh
-    m_skeleton = skeletonMesh->GetSkeleton();
+    skeletonMesh->SetSkeleton(m_skeletonState->GetSkeleton());
   }
 }
 
 
-csSkeleton& csSkeletonMeshState::GetSkeleton()
-{
-  return m_skeleton;
-}
-
-const csSkeleton& csSkeletonMeshState::GetSkeleton() const
-{
-  return m_skeleton;
-}
 
 csGfxMesh *csSkeletonMeshState::CreateGfxMesh()
 {
   auto gfxMesh = csStaticMeshState::CreateGfxMesh();
-  gfxMesh->SetSkeleton(&m_skeleton);
+  if (m_skeletonState)
+  {
+    gfxMesh->SetSkeleton(m_skeletonState->GetSkeleton());
+  }
 
 
   return gfxMesh;

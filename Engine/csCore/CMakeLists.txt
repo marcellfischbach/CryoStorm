@@ -52,6 +52,8 @@ set(SOURCES
         entity/csLightState.hh
         entity/csRigidBodyState.cc
         entity/csRigidBodyState.hh
+        entity/csSkeletonState.cc
+        entity/csSkeletonState.hh
         entity/csSkeletonMeshState.cc
         entity/csSkeletonMeshState.hh
         entity/csSpatialState.cc

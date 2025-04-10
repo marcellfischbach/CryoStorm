@@ -62,7 +62,7 @@ void AssimpMeshExporter::combine(const aiNode *node, const aiMatrix4x4 &parent)
 void AssimpMeshExporter::PushMesh(const aiMatrix4x4 &mat, const aiMesh *mesh)
 {
   VertexDecl vertDecl = ExtractVertexDecl(mesh);
-  MeshData &data = FindMeshData(vertDecl, TRIANGLES, mesh->mMaterialIndex);
+  MeshData   &data    = FindMeshData(vertDecl, TRIANGLES, mesh->mMaterialIndex);
 
   Push(data, mesh, mat);
 }
@@ -112,7 +112,7 @@ void AssimpMeshExporter::Push(std::vector<aiVector3D> &values,
   for (int i = 0; i < srcValueCount; ++i)
   {
     aiVector3D &srcV = srcValues[i];
-    aiVector3D v = matrix * srcV;
+    aiVector3D v     = matrix * srcV;
     values.push_back(v);
   }
 }
@@ -143,9 +143,9 @@ void AssimpMeshExporter::Push(std::vector<VertexBoneData> &boneData, aiBone *bon
   for (int i = 0, in = bone->mNumWeights; i < in; ++i)
   {
     aiVertexWeight &weight = bone->mWeights[i];
-    BoneWeight bw;
-    bw.boneId = boneId;
-    bw.weight = weight.mWeight;
+    BoneWeight     bw;
+    bw.boneId   = boneId;
+    bw.weight   = weight.mWeight;
     boneData[weight.mVertexId].weights.push_back(bw);
   }
 }
@@ -232,7 +232,6 @@ aiNode *AssimpMeshExporter::FindSkeletonRootNode(aiNode *node)
 }
 
 
-
 bool AssimpMeshExporter::VerifyMeshSkeletonMatchesBones(const aiMesh *mesh)
 {
   if (mesh->HasBones())
@@ -256,11 +255,13 @@ void AssimpMeshExporter::NormalizeBoneWeights(cs::imp::AssimpMeshExporter::MeshD
 {
   for (auto &bd: meshData.boneData)
   {
-    std::sort(bd.weights.begin(), bd.weights.end(), [](BoneWeight bw0, BoneWeight bw1) { return bw0.weight > bw1.weight;});
+    std::sort(bd.weights.begin(),
+              bd.weights.end(),
+              [](BoneWeight bw0, BoneWeight bw1) { return bw0.weight > bw1.weight; });
 
     // sum the weight and normalize it, so that the first 4 bone sum up to 1.0
-    float sum = 0.0f;
-    for (uint32_t i=0, in=bd.weights.size(); i<in && i<4; i++)
+    float         sum = 0.0f;
+    for (uint32_t i   = 0, in = bd.weights.size(); i < in && i < 4; i++)
     {
       sum += bd.weights[i].weight;
     }
@@ -479,13 +480,13 @@ void AssimpMeshExporter::WriteBoneWeights(std::ostream &out, const std::vector<V
     return;
   }
 
-  uint8_t type = BONE_WEIGHT;
+  uint8_t  type = BONE_WEIGHT;
   uint32_t size = boneData.size() * sizeof(float) * 4;
   out.write(reinterpret_cast<char *>(&type), sizeof(uint8_t));
   out.write(reinterpret_cast<char *>(&size), sizeof(uint32_t));
   for (const auto &bone: boneData)
   {
-    for (size_t i=0; i<4; i++)
+    for (size_t i = 0; i < 4; i++)
     {
       float weight = i < bone.weights.size() ? bone.weights[i].weight : 0.0f;
       out.write(reinterpret_cast<char *>(&weight), sizeof(float));
@@ -506,7 +507,7 @@ void AssimpMeshExporter::WriteBoneIDs(std::ostream &out, const std::vector<Verte
   out.write(reinterpret_cast<char *>(&size), sizeof(uint32_t));
   for (const auto &bone: boneData)
   {
-    for (size_t i=0; i<4; i++)
+    for (size_t i = 0; i < 4; i++)
     {
       uint32_t idx = i < bone.weights.size() ? bone.weights[i].boneId : 0;
       out.write(reinterpret_cast<char *>(&idx), sizeof(uint32_t));
@@ -520,19 +521,19 @@ void AssimpMeshExporter::Export(const std::string &filename, const std::string &
 {
   csCryoFile file;
 
-  bool  hasBone = HasBoneData();
+  bool hasBone = HasBoneData();
 
   csCryoFileElement *meshElement          = hasBone
-      ? file.Root()->AddChild("skeletonMesh")
-      : file.Root()->AddChild("mesh");
+                                            ? file.Root()->AddChild("skeletonMesh")
+                                            : file.Root()->AddChild("mesh");
   csCryoFileElement *materialSlotsElement = meshElement->AddChild("materialSlots");
   csCryoFileElement *subMeshesElement     = meshElement->AddChild("subMeshes");
 
-  uint32_t idx = 0;
+  uint32_t        idx = 0;
   for (const auto &meshData: m_meshData)
   {
-    std::string idxStr   = std::to_string(idx);
-    std::string dataName = "#" + idxStr;
+    std::string idxStr            = std::to_string(idx);
+    std::string dataName          = "#" + idxStr;
     std::string dataNameBoneIndex = "#SkelBoneIndex-" + idxStr;
 
     std::string materialSlotName = "Material_" + idxStr;
@@ -552,7 +553,6 @@ void AssimpMeshExporter::Export(const std::string &filename, const std::string &
     csCryoFileElement *subMeshElement = subMeshesElement->AddChild("subMesh");
     subMeshElement->AddAttribute("slot", idxStr);
     subMeshElement->AddStringAttribute("dataIdx", dataName);
-
 
 
     {
@@ -578,6 +578,15 @@ void AssimpMeshExporter::Export(const std::string &filename, const std::string &
       file.AddData(dataNameBoneIndex,
                    dataStream.size(),
                    reinterpret_cast<uint8_t *>(dataStream.data()));
+
+      csCryoFileElement *boneMappingElement = subMeshElement->AddChild("boneMapping");
+      for (const auto &boneDecl: m_skeletonExporter.GetBoneDecl())
+      {
+        csCryoFileElement *boneElement = boneMappingElement->AddChild("bone");
+        boneElement->AddAttribute("idx", std::to_string(boneDecl.idx));
+        boneElement->AddStringAttribute("name", boneDecl.name);
+
+      }
     }
     idx++;
   }

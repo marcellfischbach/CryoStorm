@@ -4,6 +4,7 @@
 
 #include <csCore/loaders/csMeshLoader.hh>
 #include <csCore/graphics/csMesh.hh>
+#include <csCore/graphics/csSkeletonMesh.hh>
 #include <csCore/graphics/iRenderMesh.hh>
 #include <csCore/resource/csAssetManager.hh>
 #include <csCore/resource/csBinaryData.hh>
@@ -22,12 +23,34 @@ csMeshLoader::csMeshLoader()
 
 csOwned<iAsset> csMeshLoader::Load(const csCryoFile *file, const csAssetLocator &locator) const
 {
-  const csCryoFileElement *meshElement = file->Root()->GetChild("mesh");
-  if (!meshElement)
+  const csCryoFileElement *root = file->Root();
+  if (root->GetNumberOfChildren() == 0)
   {
-    return csOwned<iAsset>();
+    return nullptr;
   }
 
+  const csCryoFileElement *meshElement = file->Root()->GetChild(0);
+  if (!meshElement)
+  {
+    return nullptr;
+  }
+
+  if (meshElement->GetTagName() == "mesh")
+  {
+    return LoadMesh(file, meshElement, locator);
+  }
+  else if (meshElement->GetTagName() == "skeletonMesh")
+  {
+    return LoadSkeletonMesh(file, meshElement, locator);
+  }
+
+  return nullptr;
+}
+
+csOwned<iAsset> csMeshLoader::LoadMesh(const file::csCryoFile *file,
+                                       const file::csCryoFileElement *meshElement,
+                                       const cs::csAssetLocator &locator) const
+{
   const csCryoFileElement *materialSlotsElement = meshElement->GetChild("materialSlots");
   const csCryoFileElement *subMeshesElement     = meshElement->GetChild("subMeshes");
   if (!materialSlotsElement || !subMeshesElement)
@@ -55,27 +78,124 @@ csOwned<iAsset> csMeshLoader::Load(const csCryoFile *file, const csAssetLocator 
 
   for (int i = 0; i < subMeshesElement->GetNumberOfChildren(); ++i)
   {
-    const csCryoFileElement *meshElement = subMeshesElement->GetChild(i);
-    if (meshElement->GetTagName() != "subMesh")
+    const csCryoFileElement *subMeshElement = subMeshesElement->GetChild(i);
+    if (subMeshElement->GetTagName() != "subMesh")
     {
       continue;
     }
 
-    int slot = meshElement->GetAttribute("slot", 0);
-    if (meshElement->HasAttribute("locator"))
+    int slot = subMeshElement->GetAttribute("slot", 0);
+    if (subMeshElement->HasAttribute("locator"))
     {
-      std::string        meshLocStr = meshElement->GetAttribute("locator", "/narf");
+      std::string        meshLocStr = subMeshElement->GetAttribute("locator", "/narf");
       csRef<iRenderMesh> rmesh      = man->Get<iRenderMesh>(csAssetLocator(locator, meshLocStr));
       mesh->AddSubMesh(rmesh, slot);
     }
-    else if (meshElement->HasAttribute("dataIdx"))
+    else if (subMeshElement->HasAttribute("dataIdx"))
     {
-      auto data = file->GetData(meshElement->GetAttribute("dataIdx", ""));
+      auto data = file->GetData(subMeshElement->GetAttribute("dataIdx", ""));
       if (!data.empty())
       {
         csBinaryInputStream is(data);
         csRef<iRenderMesh>  rmesh = ReadRenderMesh(is);
         mesh->AddSubMesh(rmesh, slot);
+      }
+    }
+
+  }
+
+
+  return csOwned<csMesh>(mesh);
+}
+
+
+csOwned<iAsset> csMeshLoader::LoadSkeletonMesh(const file::csCryoFile *file,
+                                               const file::csCryoFileElement *meshElement,
+                                               const cs::csAssetLocator &locator) const
+{
+  const csCryoFileElement *materialSlotsElement = meshElement->GetChild("materialSlots");
+  const csCryoFileElement *subMeshesElement     = meshElement->GetChild("subMeshes");
+  if (!materialSlotsElement || !subMeshesElement)
+  {
+    return csOwned<iAsset>();
+  }
+
+  csAssetManager *man = csAssetManager::Get();
+
+  csSkeletonMesh   *mesh = new csSkeletonMesh();
+  for (int i     = 0; i < materialSlotsElement->GetNumberOfChildren(); ++i)
+  {
+    const csCryoFileElement *materialSlotElement = materialSlotsElement->GetChild(i);
+    if (materialSlotElement->GetTagName() != "materialSlot")
+    {
+      continue;
+    }
+
+    std::string      slotName  = materialSlotElement->GetAttribute("name", "Def");
+    std::string      matLocStr = materialSlotElement->GetAttribute("locator", "/narf");
+    csRef<iMaterial> material  = man->Get<iMaterial>(csAssetLocator(locator, matLocStr));
+
+    mesh->AddMaterialSlot(slotName, material);
+  }
+
+  for (int i = 0; i < subMeshesElement->GetNumberOfChildren(); ++i)
+  {
+    const csCryoFileElement *subMeshElement = subMeshesElement->GetChild(i);
+    if (subMeshElement->GetTagName() != "subMesh")
+    {
+      continue;
+    }
+
+    csSkeletonMesh::SubMesh* subMesh = nullptr;
+    int slot = subMeshElement->GetAttribute("slot", 0);
+    if (subMeshElement->HasAttribute("locator"))
+    {
+      std::string        meshLocStr = subMeshElement->GetAttribute("locator", "/narf");
+      csRef<iRenderMesh> rmesh      = man->Get<iRenderMesh>(csAssetLocator(locator, meshLocStr));
+      size_t             idx        = mesh->AddSubMesh(rmesh, slot);
+      subMesh = &static_cast<csSkeletonMesh::SubMesh&>(mesh->GetSubMesh(idx));
+    }
+    else if (subMeshElement->HasAttribute("dataIdx"))
+    {
+      auto data = file->GetData(subMeshElement->GetAttribute("dataIdx", ""));
+      if (!data.empty())
+      {
+        csBinaryInputStream is(data);
+        csRef<iRenderMesh>  rmesh = ReadRenderMesh(is);
+        size_t              idx   = mesh->AddSubMesh(rmesh, slot);
+        subMesh = &static_cast<csSkeletonMesh::SubMesh&>(mesh->GetSubMesh(idx));
+      }
+    }
+
+    if (subMesh)
+    {
+      if (subMeshElement->HasAttribute("boneId"))
+      {
+        auto data = file->GetData(subMeshElement->GetAttribute("boneId", ""));
+        if (!data.empty())
+        {
+          csBinaryInputStream is(data);
+          std::vector<csVector4i> boneIndices = ReadBoneIndices(is);
+          subMesh->SetOriginBoneIndices(boneIndices);
+        }
+      }
+
+      const csCryoFileElement *boneMappingElement = subMeshElement->GetChild("boneMapping");
+      if (boneMappingElement)
+      {
+        for (int m = 0; m < boneMappingElement->GetNumberOfChildren(); ++m)
+        {
+          const csCryoFileElement *boneElement = boneMappingElement->GetChild(m);
+          if (boneElement->HasAttribute("idx")  && boneElement->HasAttribute("name"))
+          {
+            int idx = boneElement->GetAttribute("idx", -1);
+            std::string name = boneElement->GetAttribute("name", "");
+            if (idx != -1 && !name.empty())
+            {
+              subMesh->AddBone(idx, name);
+            }
+          }
+        }
       }
     }
 
@@ -232,6 +352,39 @@ csOwned<iRenderMesh> csMeshLoader::ReadRenderMesh_V1(csBinaryInputStream &is) co
 
 
   return generator->Generate();
+}
+
+
+
+std::vector<csVector4i> csMeshLoader::ReadBoneIndices(cs::csBinaryInputStream &is) const
+{
+  uint32_t version = is.Read<uint32_t>();
+  if (version == 1)
+  {
+    return ReadBoneIndices_V1(is);
+  }
+  return std::vector<csVector4i>();
+}
+
+std::vector<csVector4i> csMeshLoader::ReadBoneIndices_V1(cs::csBinaryInputStream &is) const
+{
+  uint8_t type = is.Read<uint8_t>();
+  if (type != BONE_ID)
+  {
+    return std::vector<csVector4i>();
+  }
+
+  uint32_t size = is.Read<uint32_t>();
+  if ((size % sizeof(csVector4i) != 0))
+  {
+    return std::vector<csVector4i>();
+  };
+
+  std::vector<csVector4i> boneIds;
+  boneIds.resize(size / sizeof(csVector4i));
+  is.Read(reinterpret_cast<uint8_t *>(boneIds.data()), size);
+
+  return boneIds;
 }
 
 } // cs

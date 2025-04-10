@@ -7,21 +7,41 @@
 namespace cs
 {
 
+
 CS_CLASS()
 class CS_CORE_API csSkeletonMesh : public CS_SUPER(csMesh)
 {
 CS_CLASS_GEN;
 public:
+  class CS_CORE_API SubMesh : public csMesh::SubMesh
+  {
+    friend class csSkeletonMesh;
+  public:
+    SubMesh();
+
+    void SetOriginBoneIndices(const std::vector<csVector4i> &originBoneIndices);
+    const std::vector<csVector4i> &GetOriginBoneIndices() const;
+
+    void AddBone (int32_t idx, const std::string &boneName);
+
+    void ApplySkeleton (const csSkeleton* skeleton);
+
+  private:
+
+    std::vector<csVector4i> m_originBoneIndices;
+    std::map<int32_t, std::string> m_bones;
+
+  };
+
   csSkeletonMesh();
   ~csSkeletonMesh() override = default;
 
+  void SetSkeleton (const csSkeleton* skeleton);
 
-  CS_NODISCARD csSkeleton &GetSkeleton();
-  CS_NODISCARD const csSkeleton &GetSkeleton() const;
+protected:
+  csMesh::SubMesh *CreateSubMesh() override;
+  csRef<const csSkeleton> m_skeleton;
 
-
-private:
-  csSkeleton m_skeleton;
 };
 
 }

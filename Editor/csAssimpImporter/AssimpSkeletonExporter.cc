@@ -108,6 +108,17 @@ uint32_t AssimpSkeletonExporter::GetBoneIndex(const std::string &name) const
   return IllegalBoneID;
 }
 
+std::vector<AssimpSkeletonExporter::BoneDecl> AssimpSkeletonExporter::GetBoneDecl() const
+{
+  std::vector<BoneDecl> decl;
+  for (const auto bone : m_bones)
+  {
+    decl.emplace_back(bone->id, bone->name);
+  }
+
+  return decl;
+}
+
 void AssimpSkeletonExporter::Export(const std::string &filename) const
 {
   std::ofstream out;

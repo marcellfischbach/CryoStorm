@@ -8,6 +8,7 @@
 namespace cs
 {
 
+class csSkeletonState;
 class csSkeletonMesh;
 
 CS_CLASS()
@@ -19,15 +20,17 @@ public:
   ~csSkeletonMeshState() override = default;
 
   void SetMesh(csMesh* mesh) override;
+  void SetSkeletonState (csSkeletonState *skeletonState);
 
-  CS_NODISCARD csSkeleton &GetSkeleton();
-  CS_NODISCARD const csSkeleton &GetSkeleton() const;
 
 protected:
   csGfxMesh *CreateGfxMesh() override;
 
 private:
-  csSkeleton m_skeleton;
+  void UpdateSkeletonMesh ();
+
+private:
+  csRef<csSkeletonState> m_skeletonState = nullptr;
 };
 
 }

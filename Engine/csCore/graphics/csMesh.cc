@@ -51,13 +51,28 @@ Size csMesh::GetNumberOfSubMeshes() const
   return m_subMeshes.size();
 }
 
-void csMesh::AddSubMesh(iRenderMesh* mesh, Size materialSlotIdx)
+size_t csMesh::AddSubMesh(iRenderMesh* mesh, Size materialSlotIdx)
 {
-  SubMesh subMesh;
-  subMesh.SetMesh(mesh);
-  subMesh.SetMaterialSlotIdx(materialSlotIdx);
+  SubMesh* subMesh = CreateSubMesh();
+  subMesh->SetMesh(mesh);
+  subMesh->SetMaterialSlotIdx(materialSlotIdx);
   m_subMeshes.push_back(subMesh);
   m_boundingBox.Add(mesh->GetBoundingBox());
+  return m_subMeshes.size()-1;
+}
+
+csMesh::SubMesh* csMesh::CreateSubMesh()
+{
+  return new csMesh::SubMesh();
+}
+
+csMesh::SubMesh &csMesh::GetSubMesh(Size idx)
+{
+  if (idx >= m_subMeshes.size())
+  {
+    throw csOutOfBoundsException();
+  }
+  return *m_subMeshes[idx];
 }
 
 const csMesh::SubMesh &csMesh::GetSubMesh(Size idx) const
@@ -66,7 +81,7 @@ const csMesh::SubMesh &csMesh::GetSubMesh(Size idx) const
   {
     throw csOutOfBoundsException();
   }
-  return m_subMeshes[idx];
+  return *m_subMeshes[idx];
 }
 
 Size csMesh::GetNumberOfMaterialSlots() const
@@ -101,7 +116,7 @@ size_t csMesh::IndexOfMaterialSlot(const std::string &materialName) const
 /* *********************************************************************
  * ********************************************************************* 
  * 
- *      SubMesh
+ *      csMesh::SubMesh
  * 
  * *********************************************************************
  * *********************************************************************/
@@ -158,6 +173,7 @@ Size csMesh::SubMesh::GetMaterialSlotIdx() const
 {
   return m_materialSlotIdx;
 }
+
 
 /* *********************************************************************
  * *********************************************************************

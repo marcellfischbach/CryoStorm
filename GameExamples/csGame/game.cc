@@ -549,7 +549,7 @@ cs::csEntity *add_bone(cs::csWorld *world, cs::csAssetRef<cs::iMaterial> &materi
 void add_skeleton_mesh(cs::csWorld *world, cs::csAssetRef<cs::iMaterial> &material)
 {
 
-  auto meshData = cs::csAssetManager::Get()->Load<cs::csSkeletonMesh>("/skinned_mesh.fbx");
+  auto meshData = cs::csAssetManager::Get()->Load<cs::csSkeletonMesh>("/sm_test.mesh");
   auto mesh     = meshData.Data();
 
   cs::csEntity            *entity    = new cs::csEntity("Skeleton Entity");
@@ -564,7 +564,7 @@ void add_skeleton_mesh(cs::csWorld *world, cs::csAssetRef<cs::iMaterial> &materi
 
 //  world->Attach(entity);
 
-  global_skeleton = &meshState->GetSkeleton();
+//  global_skeleton = &meshState->GetSkeleton();
 
 
   auto animationPackData = cs::csAssetManager::Get()->Load<cs::csSkeletonAnimationPack>("/skinned_mesh.fbx");
@@ -1022,10 +1022,10 @@ void setup_world(cs::csWorld *world)
 //  generate_test_grid(world, material);
 //  generate_test_cube(world, material);
   generate_axis_grid(world);
-  generate_suzanne(world);
+//  generate_suzanne(world);
 //  generate_cube_fbx(world);
 
-//  add_skeleton_mesh(world, skinnedMaterial);
+  add_skeleton_mesh(world, skinnedMaterial);
 
 //  bones[0] = add_bone(world, material);
 //  bones[1] = add_bone(world, material);
@@ -1105,6 +1105,7 @@ csOwned<cs::iMaterial> create_sg_material()
 bool Game::Initialize(cs::csWorld *world)
 {
   setup_world(world);
+
   /*
   auto cameraEntity = new cs::csEntity("Camera");
 

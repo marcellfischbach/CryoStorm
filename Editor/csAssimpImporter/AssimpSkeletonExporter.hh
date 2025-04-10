@@ -17,6 +17,12 @@ namespace cs::imp
 class AssimpSkeletonExporter
 {
 public:
+  struct BoneDecl
+  {
+    uint32_t idx;
+    std::string name;
+  };
+public:
   AssimpSkeletonExporter(const aiScene* scene);
   ~AssimpSkeletonExporter();
   void SetSkeletonName (const std::set<std::string> &names);
@@ -24,11 +30,15 @@ public:
   void ScanBones ();
   bool  HasBones () const;
 
+
   uint32_t GetBoneIndex (const std::string &name) const;
+  std::vector<BoneDecl> GetBoneDecl () const;
 
   static const uint32_t IllegalBoneID = ~0x00;
 
   void Export(const std::string &filename) const;
+
+
 
 private:
   aiNode* FindRootNode (aiNode* node);

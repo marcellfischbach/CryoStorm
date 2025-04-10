@@ -110,6 +110,7 @@ private:
 
 
   bool HasBoneData () const;
+
   void Push(MeshData &meshData, const aiMesh *mesh, const aiMatrix4x4 &matrix);
   void Push(std::vector<aiVector3D> &values, aiVector3D *srcValues, uint32_t srcValueCount);
   void Push(std::vector<aiColor4D> &values, aiColor4D *srcValues, uint32_t srcValueCount);
