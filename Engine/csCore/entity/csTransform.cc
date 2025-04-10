@@ -20,16 +20,9 @@ csTransform::csTransform(csSpatialState *state, const csMatrix4f &matrix, const 
 
 void csTransform::ExtractTRS()
 {
-  m_translation = m_matrix.GetTranslation();
-  m_scale       = csVector3f(m_matrix.GetXAxis().Length(),
-                             m_matrix.GetYAxis().Length(),
-                             m_matrix.GetZAxis().Length());
-
-  csMatrix3f rotMat(m_matrix.m00 / m_scale.x, m_matrix.m01 / m_scale.x, m_matrix.m02 / m_scale.x,
-                  m_matrix.m10 / m_scale.y, m_matrix.m11 / m_scale.y, m_matrix.m12 / m_scale.y,
-                  m_matrix.m20 / m_scale.z, m_matrix.m21 / m_scale.z, m_matrix.m22 / m_scale.z
-  );
-  m_rotation = csQuaternion::FromMatrix(rotMat);
+  csMatrix3f rot;
+  m_matrix.ExtractTRS(m_translation, rot, m_scale);
+  m_rotation = csQuaternion::FromMatrix(rot);
 }
 
 csTransform &csTransform::SetTranslation(const csVector3f &translation)

@@ -550,6 +550,7 @@ void add_skeleton_mesh(cs::csWorld *world, cs::csAssetRef<cs::iMaterial> &materi
 {
 
   auto meshData = cs::csAssetManager::Get()->Load<cs::csSkeletonMesh>("/sm_test.mesh");
+  auto skeleton = cs::csAssetManager::Get()->Load<cs::csSkeleton>("/sm_test.skeleton");
   auto mesh     = meshData.Data();
 
   cs::csEntity            *entity    = new cs::csEntity("Skeleton Entity");

@@ -37,47 +37,77 @@ public:
 
 public:
 
-  CS_FORCEINLINE explicit csMatrix4f(float m00 = 1.0f, float m01 = 0.0f, float m02 = 0.0f, float m03 = 0.0f, float m10 = 0.0f, float m11 = 1.0f, float m12 = 0.0f, float m13 = 0.0f, float m20 = 0.0f, float m21 = 0.0f, float m22 = 1.0f, float m23 = 0.0f, float m30 = 0.0f, float m31 = 0.0f, float m32 = 0.0f, float m33 = 1.0f)
+  CS_FORCEINLINE explicit csMatrix4f(float m00 = 1.0f,
+                                     float m01 = 0.0f,
+                                     float m02 = 0.0f,
+                                     float m03 = 0.0f,
+                                     float m10 = 0.0f,
+                                     float m11 = 1.0f,
+                                     float m12 = 0.0f,
+                                     float m13 = 0.0f,
+                                     float m20 = 0.0f,
+                                     float m21 = 0.0f,
+                                     float m22 = 1.0f,
+                                     float m23 = 0.0f,
+                                     float m30 = 0.0f,
+                                     float m31 = 0.0f,
+                                     float m32 = 0.0f,
+                                     float m33 = 1.0f)
       : m00(m00)
-        , m01(m01)
-        , m02(m02)
-        , m03(m03)
-        , m10(m10)
-        , m11(m11)
-        , m12(m12)
-        , m13(m13)
-        , m20(m20)
-        , m21(m21)
-        , m22(m22)
-        , m23(m23)
-        , m30(m30)
-        , m31(m31)
-        , m32(m32)
-        , m33(m33)
+      , m01(m01)
+      , m02(m02)
+      , m03(m03)
+      , m10(m10)
+      , m11(m11)
+      , m12(m12)
+      , m13(m13)
+      , m20(m20)
+      , m21(m21)
+      , m22(m22)
+      , m23(m23)
+      , m30(m30)
+      , m31(m31)
+      , m32(m32)
+      , m33(m33)
   {
   }
 
   CS_FORCEINLINE explicit csMatrix4f(const float *f)
       : m00(f[0])
-        , m01(f[1])
-        , m02(f[2])
-        , m03(f[3])
-        , m10(f[4])
-        , m11(f[5])
-        , m12(f[6])
-        , m13(f[7])
-        , m20(f[8])
-        , m21(f[9])
-        , m22(f[10])
-        , m23(f[11])
-        , m30(f[12])
-        , m31(f[13])
-        , m32(f[14])
-        , m33(f[15])
+      , m01(f[1])
+      , m02(f[2])
+      , m03(f[3])
+      , m10(f[4])
+      , m11(f[5])
+      , m12(f[6])
+      , m13(f[7])
+      , m20(f[8])
+      , m21(f[9])
+      , m22(f[10])
+      , m23(f[11])
+      , m30(f[12])
+      , m31(f[13])
+      , m32(f[14])
+      , m33(f[15])
   {
   }
-  
-  CS_FORCEINLINE void Set(float m00, float m01, float m02, float m03, float m10, float m11, float m12, float m13, float m20, float m21, float m22, float m23, float m30, float m31, float m32, float m33)
+
+  CS_FORCEINLINE void Set(float m00,
+                          float m01,
+                          float m02,
+                          float m03,
+                          float m10,
+                          float m11,
+                          float m12,
+                          float m13,
+                          float m20,
+                          float m21,
+                          float m22,
+                          float m23,
+                          float m30,
+                          float m31,
+                          float m32,
+                          float m33)
   {
     this->m00 = m00;
     this->m01 = m01;
@@ -242,6 +272,20 @@ public:
     return csVector3f(m30, m31, m32);
   }
 
+  CS_FORCEINLINE void ExtractTRS(csVector3f &translation,
+                                 csMatrix3f &rotation,
+                                 csVector3f &scale)
+  {
+    translation = GetTranslation();
+    scale       = csVector3f(GetXAxis().Length(),
+                             GetYAxis().Length(),
+                             GetZAxis().Length());
+
+    rotation = csMatrix3f(m00 / scale.x, m01 / scale.x, m02 / scale.x,
+                          m10 / scale.y, m11 / scale.y, m12 / scale.y,
+                          m20 / scale.z, m21 / scale.z, m22 / scale.z
+    );
+  }
 
   CS_FORCEINLINE void ClearRotation()
   {
@@ -495,7 +539,6 @@ public:
   }
 
 
-
   CS_FORCEINLINE static csMatrix4f Rotation(float ax, float ay, float az, float angle)
   {
     csMatrix4f m;
@@ -504,15 +547,14 @@ public:
     return m;
   }
 
-  CS_FORCEINLINE static csMatrix4f Rotation(const csVector3f& axis, float angle)
+  CS_FORCEINLINE static csMatrix4f Rotation(const csVector3f &axis, float angle)
   {
     csMatrix4f m;
     m.SetIdentity();
-    m.SetRotation(axis,angle);
-      
+    m.SetRotation(axis, angle);
+
     return m;
   }
-
 
 
 #define SWAP(a, b, s) (s) = (a); (a)=(b); (b)=(s)
@@ -617,7 +659,6 @@ public:
   }
 
 
-
   CS_FORCEINLINE friend csVector4f operator*(const csMatrix4f &m, const csVector4f &v)
   {
     float x = m.m00 * v.x + m.m10 * v.y + m.m20 * v.z + m.m30 * v.w;
@@ -628,7 +669,6 @@ public:
   }
 
 
-
   CS_NODISCARD CS_FORCEINLINE static csVector4f Mult(const csMatrix4f &m, const csVector4f &v)
   {
     float x = m.m00 * v.x + m.m10 * v.y + m.m20 * v.z + m.m30 * v.w;
@@ -637,7 +677,6 @@ public:
     float w = m.m03 * v.x + m.m13 * v.y + m.m23 * v.z + m.m33 * v.w;
     return csVector4f(x, y, z, w);
   }
-
 
 
   CS_NODISCARD CS_FORCEINLINE static csVector3f Transform(const csMatrix4f &m, const csVector3f &v)
@@ -667,7 +706,7 @@ public:
         m00, m01, m02,
         m10, m11, m12,
         m20, m21, m22
-        );
+    );
   }
 
   CS_FORCEINLINE void Debug(const char *message = nullptr) const

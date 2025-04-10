@@ -200,6 +200,8 @@ set(SOURCES
         loaders/csSamplerLoader.hh
         loaders/csShaderGraphLoader.cc
         loaders/csShaderGraphLoader.hh
+        loaders/csSkeletonLoader.cc
+        loaders/csSkeletonLoader.hh
         loaders/csTerrainLayerLoader.cc
         loaders/csTerrainLayerLoader.hh
         loaders/csTextFileLoader.cc

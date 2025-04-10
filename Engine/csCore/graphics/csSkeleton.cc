@@ -19,7 +19,7 @@ csSkeleton::Bone csSkeleton::IllegalBone = {
 };
 
 csSkeleton::csSkeleton()
-    : iObject()
+    : iAsset()
     , m_base()
 {
 

@@ -5,6 +5,7 @@
 #include <csCore/loaders/csMeshLoader.hh>
 #include <csCore/loaders/csSamplerLoader.hh>
 #include <csCore/loaders/csShaderGraphLoader.hh>
+#include <csCore/loaders/csSkeletonLoader.hh>
 #include <csCore/loaders/csTerrainLayerLoader.hh>
 #include <csCore/loaders/csTextureLoader.hh>
 #include <csCore/loaders/scene/csSceneLoader.hh>
@@ -25,8 +26,9 @@ bool csCoreModule::Register(const std::vector<std::string> &args, csEngine *engi
       ->RegisterLoader(new csMaterialLoader())
       ->RegisterLoader(new csMeshLoader())
       ->RegisterLoader(new csSamplerLoader())
-      ->RegisterLoader(new csShaderGraphLoader())
       ->RegisterLoader(new csSceneLoader())
+      ->RegisterLoader(new csShaderGraphLoader())
+      ->RegisterLoader(new csSkeletonLoader())
       ->RegisterLoader(new csTerrainLayerLoader())
       ->RegisterLoader(new csTerrainLayerMaskLoader())
       ->RegisterLoader(new csTextureLoader());
