@@ -54,6 +54,8 @@ set(SOURCES
         entity/csRigidBodyState.hh
         entity/csSkeletonState.cc
         entity/csSkeletonState.hh
+        entity/csSkeletonAnimationState.cc
+        entity/csSkeletonAnimationState.hh
         entity/csSkeletonMeshState.cc
         entity/csSkeletonMeshState.hh
         entity/csSpatialState.cc
@@ -202,6 +204,8 @@ set(SOURCES
         loaders/csShaderGraphLoader.hh
         loaders/csSkeletonLoader.cc
         loaders/csSkeletonLoader.hh
+        loaders/csSkeletonAnimationLoader.cc
+        loaders/csSkeletonAnimationLoader.hh
         loaders/csTerrainLayerLoader.cc
         loaders/csTerrainLayerLoader.hh
         loaders/csTextFileLoader.cc

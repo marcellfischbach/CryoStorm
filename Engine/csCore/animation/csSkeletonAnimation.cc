@@ -7,7 +7,7 @@ namespace cs
 {
 
 csSkeletonAnimation::csSkeletonAnimation()
-    : m_name("")
+    : iAsset()
     , m_numberOfFrames(0.0f)
     , m_framesPerSecond(24.0f)
     , m_loop(false)

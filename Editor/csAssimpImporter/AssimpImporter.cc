@@ -1,6 +1,7 @@
 
 #include <csAssimpImporter/AssimpImporter.hh>
 #include <csAssimpImporter/AssimpMeshExporter.hh>
+#include <csAssimpImporter/AssimpSkeletonAnimationExporter.hh>
 #include <csAssimpImporter/AssimpSkeletonExporter.hh>
 #include <csCryoFile/csCryoFile.hh>
 #include <iostream>
@@ -26,24 +27,33 @@ bool AssimpImporter::CanImport(const std::fs::path &path, const std::vector<std:
     return false;
   }
 
-  if (!HasOption(args, "--out-file"))
-  {
-    return false;
-  }
-
-
   const std::filesystem::path &ext = path.extension();
 
   return ext == ".fbx";
 }
+
+std::fs::path extract_default_out_file(const std::fs::path &importFilename)
+{
+  const std::string &ext     = importFilename.extension().generic_string();
+  std::string       filename = importFilename.generic_string();
+  filename = filename.substr(0, filename.length() - ext.length());
+
+  return std::fs::path(filename);
+}
+
 
 bool AssimpImporter::Import(const std::fs::path &path, const std::vector<std::string> &args) const
 {
   std::fs::path outFile = std::fs::path(GetOption(args, "--out-file"));
   if (outFile.empty())
   {
-    std::cout << "[ERROR] No --out-file argument found." << std::endl;
-    return false;
+    outFile = extract_default_out_file(path);
+    if (outFile.empty())
+    {
+      std::cout << "[ERROR] No --out-file argument found." << std::endl;
+      return false;
+
+    }
   }
 
   bool skeleton   = HasOption(args, "--skeleton");
@@ -80,7 +90,7 @@ bool AssimpImporter::Import(const std::fs::path &path, const std::vector<std::st
 
   if (animations)
   {
-    std::cout << "Generate animations: " << outFile.generic_string() << "_animation.skelAnim" << std::endl;
+    GenerateAnimations(outFile, scene);
   }
 
 
@@ -301,7 +311,7 @@ void AssimpImporter::GenerateMaterials(const std::fs::path &path, const aiScene 
 
 void AssimpImporter::GenerateSkeleton(const std::fs::path &path, const aiScene *scene) const
 {
-  AssimpSkeletonExporter exp (scene);
+  AssimpSkeletonExporter exp(scene);
   exp.ScanBones();
   if (!exp.HasBones())
   {
@@ -315,6 +325,48 @@ void AssimpImporter::GenerateSkeleton(const std::fs::path &path, const aiScene *
 
 }
 
+
+// Armature|MyAnimation01
+std::string sanitize_filename(const std::string &filename)
+{
+  // Define illegal characters for filenames
+  std::set<char> illegalChars = {'/', '\\', ':', '*', '?', '"', '<', '>', '|'};
+  std::string    sanitized    = filename;
+
+  // Replace illegal characters with '_'
+  for (char &c: sanitized)
+  {
+    if (illegalChars.find(c) != illegalChars.end())
+    {
+      c = '_';
+    }
+  }
+  return sanitized;
+}
+
+
+void AssimpImporter::GenerateAnimations(const std::fs::path &path, const aiScene *scene) const
+{
+  AssimpSkeletonExporter skelExp(scene);
+  skelExp.ScanBones();
+
+  if (!skelExp.HasBones())
+  {
+    std::cerr << "Cannot export animations because the file does not contain any bone data." << std::endl;
+    return;
+  }
+
+  for (int i = 0; i < scene->mNumAnimations; ++i)
+  {
+    aiAnimation *animation    = scene->mAnimations[i];
+    std::string animationName = sanitize_filename(animation->mName.C_Str());
+
+    std::string skeletonFileName = path.generic_string() + "_" + animationName + ".skeleton_animation";
+
+    AssimpSkeletonAnimationExporter animExp(scene, animation, &skelExp);
+    animExp.Export(skeletonFileName);
+  }
+}
 
 void AssimpImporter::PrintUsage() const
 {

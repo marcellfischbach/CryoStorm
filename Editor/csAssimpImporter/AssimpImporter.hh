@@ -37,6 +37,7 @@ private:
   void GenerateMaterials (const std::fs::path &path, const aiScene* scene) const;
 
   void GenerateSkeleton(const std::fs::path &path, const aiScene* scene) const;
+  void GenerateAnimations(const std::fs::path &path, const aiScene* scene) const;
 
 };
 

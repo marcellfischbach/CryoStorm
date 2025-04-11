@@ -1,0 +1,21 @@
+material {
+    depth Test Write,
+    shaders {
+        shader Forward    "../shaders/${rendering-api}/default-skinned/DefaultSkinned.shader",
+        shader Depth      "../shaders/${rendering-api}/default-skinned/DefaultSkinned_Depth.shader",
+        shader GBuffer    "../shaders/${rendering-api}/default-skinned/DefaultSkinned_GBuffer.shader",
+        shader ShadowCube "../shaders/${rendering-api}/default-skinned/DefaultSkinned_PointShadow.shader",
+        shader ShadowPSSM "../shaders/${rendering-api}/default-skinned/DefaultSkinned_PSSM.shader",
+        shader Shadow     "../shaders/${rendering-api}/default-skinned/DefaultSkinned_Shadow.shader",
+        shader VSM        "../shaders/${rendering-api}/default-skinned/DefaultSkinned_VSM.shader",
+    },
+    attributes {
+        attribute Texture "Diffuse",
+        attribute Texture "Normal" "textures/DefaultNormal.tex2d",
+        attribute Texture "RoughnessMap" "textures/DefaultRoughness.tex2d",
+        attribute Color4 "Color" 0 0 0 0,
+        attribute Float "Roughness" 0.5,
+        attribute Float "Metallic" 0.0,
+        attribute Int "ReceiveShadow" 1,
+    }
+}

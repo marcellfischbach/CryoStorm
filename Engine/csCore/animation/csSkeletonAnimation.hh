@@ -14,7 +14,7 @@ namespace cs
 class csSkeleton;
 
 CS_CLASS()
-class CS_CORE_API csSkeletonAnimation : public CS_SUPER(iObject)
+class CS_CORE_API csSkeletonAnimation : public CS_SUPER(iAsset)
 {
 CS_CLASS_GEN_OBJECT;
 

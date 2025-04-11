@@ -24,6 +24,8 @@ CS_DEFINE_GAME(Game)
 #include <csCore/entity/csEntity.hh>
 #include <csCore/entity/csLightState.hh>
 #include <csCore/entity/csRigidBodyState.hh>
+#include <csCore/entity/csSkeletonState.hh>
+#include <csCore/entity/csSkeletonAnimationState.hh>
 #include <csCore/entity/csSkeletonMeshState.hh>
 #include <csCore/entity/csSpatialState.hh>
 #include <csCore/entity/csStaticColliderState.hh>
@@ -546,36 +548,51 @@ cs::csEntity *add_bone(cs::csWorld *world, cs::csAssetRef<cs::iMaterial> &materi
   return entity;
 }
 
-void add_skeleton_mesh(cs::csWorld *world, cs::csAssetRef<cs::iMaterial> &material)
+void add_skeleton_mesh(cs::csWorld *world)
 {
 
-  auto meshData = cs::csAssetManager::Get()->Load<cs::csSkeletonMesh>("/sm_test.mesh");
-  auto skeleton = cs::csAssetManager::Get()->Load<cs::csSkeleton>("/sm_test.skeleton");
-  auto mesh     = meshData.Data();
+  auto                       meshData  = cs::csAssetManager::Get()->Load<cs::csSkeletonMesh>("/skinned_mesh.mesh");
+  auto                       skeleton  = cs::csAssetManager::Get()->Load<cs::csSkeleton>("/skinned_mesh.skeleton");
+  auto                       mesh      = meshData.Data();
+  csRef<csSkeletonAnimation> animation = csAssetManager::Get()->Load<csSkeletonAnimation>(
+      "/skinned_mesh_Armature_MyAnimation01.skeleton_animation");
 
-  cs::csEntity            *entity    = new cs::csEntity("Skeleton Entity");
+  animation->SetLoop(true);
+
+  cs::csEntity *entity = new cs::csEntity("Skeleton Entity");
+
+  csSkeletonState *skeletonState = new csSkeletonState();
+  skeletonState->SetSkeleton(skeleton.raw());
+
+
   cs::csSkeletonMeshState *meshState = new cs::csSkeletonMeshState();
   meshState->SetMesh(mesh);
-  meshState->SetMaterial(0, material);
+//  meshState->SetMaterial(0, material);
+  meshState->SetSkeletonState(skeletonState);
+
+  cs::csSkeletonAnimationState *skeletonAnimationState = new csSkeletonAnimationState();
+  skeletonAnimationState->SetSkeleton(skeletonState);
+  skeletonAnimationState->SetAnimation(animation);
+  skeletonAnimationState->SetInitialStartTime(0.0f);
+  skeletonAnimationState->SetActive(true);
+
   entity->AttachState(meshState);
-
-//  entity->GetRoot()->GetTransform()
-//        .SetRotation(cs::Quaternion::FromAxisAngle(0.0f, 1.0f, 0.0f, M_PI / 1.0f * 1.0f))
-//        .Finish();
-
-//  world->Attach(entity);
-
-//  global_skeleton = &meshState->GetSkeleton();
+  entity->AttachState(skeletonState);
+  entity->AttachState(skeletonAnimationState);
 
 
+  entity->GetRoot()->GetTransform()
+        .SetRotation(csQuaternion::FromAxisAngle(0.0f, 0.0f, 1.0f, M_PI / 2.0f))
+        .Finish();
+  world->Attach(entity);
+
+
+
+  /*
   auto animationPackData = cs::csAssetManager::Get()->Load<cs::csSkeletonAnimationPack>("/skinned_mesh.fbx");
   auto animationPack     = animationPackData.Data();
-  global_animation = animationPack->Get("Armature|MyAnimation01");
-  global_animation->SetLoop(true);
 
-  global_player = new cs::csSkeletonAnimationPlayer();
-  global_player->SetSkeleton(global_skeleton);
-  global_player->SetAnimation(global_animation);
+  */
 }
 
 
@@ -1026,7 +1043,7 @@ void setup_world(cs::csWorld *world)
 //  generate_suzanne(world);
 //  generate_cube_fbx(world);
 
-  add_skeleton_mesh(world, skinnedMaterial);
+  add_skeleton_mesh(world);
 
 //  bones[0] = add_bone(world, material);
 //  bones[1] = add_bone(world, material);
@@ -1106,30 +1123,6 @@ csOwned<cs::iMaterial> create_sg_material()
 bool Game::Initialize(cs::csWorld *world)
 {
   setup_world(world);
-
-  /*
-  auto cameraEntity = new cs::csEntity("Camera");
-
-  auto cameraState  = new cs::csCameraState();
-  cameraState->SetClearMode(cs::eClearMode::Color);
-  cameraState->SetClearColor(cs::csColor4f(0.0f, 0.0f, 0.5f));
-  cameraState->SetClearColorMode(cs::eClearColorMode::PlainColor);
-//  cameraState->SetSkyboxRenderer(new cs::csSimpleSkybox());
-
-//  auto postProcessing = setup_post_processing ();
-//  cameraState->SetPostProcessing(postProcessing);
-
-
-//  auto cameraHandler = new CameraHandler();
-  cameraEntity->AttachState(cameraState);
-//  cameraEntity->AttachState(cameraHandler);
-//  cameraEntity->GetRoot()->GetTransform()
-//      .SetTranslation(cs::csVector3f(-5, 5, -5))
-//      .LookAt(cs::csVector3f(0, 0, 0))
-//      .Finish();
-  world->Attach(cameraEntity);
-  world->SetMainCamera(cameraState);
-   */
 
 
   return true;
