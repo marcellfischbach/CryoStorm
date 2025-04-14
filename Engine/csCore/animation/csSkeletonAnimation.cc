@@ -134,9 +134,11 @@ void csSkeletonAnimation::AddRotationFrame(const std::string &channelName,
                                            float frame,
                                            const csQuaternion &rotation)
 {
+  csQuaternion q = rotation;
+  q.Normalize();
   FrameRotation rotFrame {
       frame,
-      rotation,
+      q,
   };
 
   Channel   &channel = GetChannel(channelName);

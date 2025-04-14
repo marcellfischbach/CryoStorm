@@ -265,6 +265,7 @@ csOwned<iRenderMesh> csMeshLoader::ReadRenderMesh_V1(csBinaryInputStream &is) co
 
   csRef<iRenderMeshGenerator> generator = csObjectRegistry::Get<iRenderMeshGeneratorFactory>()->Create();
 
+  csMatrix3f rot = csQuaternion::FromAxisAngle(csVector3f(1.0f, 0.0f, 0.0f), M_PI_2).ToMatrix3();
 
   uint32_t numVertices = is.Read<uint32_t>();
   while (true)

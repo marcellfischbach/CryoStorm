@@ -9,7 +9,7 @@
 namespace cs
 {
 
-struct CS_CORE_API csQuaternion
+struct csQuaternion
 {
   float x;
   float y;
@@ -61,8 +61,8 @@ struct CS_CORE_API csQuaternion
   CS_FORCEINLINE void SetAxisAngle(float axisX, float axisY, float axisZ, float angle)
   {
     float angle2 = angle / 2.0f;
-    float c = std::cos(angle2);
-    float s = std::sin(angle2);
+    float c      = std::cos(angle2);
+    float s      = std::sin(angle2);
     this->x = axisX * s;
     this->y = axisY * s;
     this->z = axisZ * s;
@@ -83,8 +83,8 @@ struct CS_CORE_API csQuaternion
   CS_NODISCARD CS_FORCEINLINE static csQuaternion FromAxisAngle(float x, float y, float z, float angle)
   {
     float angle2 = angle / 2.0f;
-    float c = ceCos(angle2);
-    float s = ceSin(angle2);
+    float c      = ceCos(angle2);
+    float s      = ceSin(angle2);
     return csQuaternion(x * s, y * s, z * s, c);
   }
 
@@ -184,28 +184,51 @@ struct CS_CORE_API csQuaternion
 
   CS_NODISCARD CS_FORCEINLINE csMatrix3f ToMatrix3() const
   {
-    float sqx = x * x;
-    float sqy = y * y;
-    float sqz = z * z;
-    float sqw = w * w;
-    return csMatrix3f(
-        2.0f * (sqw + sqx) - 1.0f, 2.0f * (x * y - w * z), 2.0f * (x * z + w * y),
-        2.0f * (x * y + w * z), 2.0f * (sqw + sqy) - 1.0f, 2.0f * (y * z - w * x),
-        2.0f * (x * z - w * y), 2.0f * (y * z + w * x), 2.0f * (sqw + sqz) - 1.0f);
-
+    return csMatrix3f(1.0f - 2.0f * y * y - 2.0f * z * z, 2.0f * x * y - 2.0f * z * w, 2.0f * x * z + 2.0f * y * w,
+                      2.0f * x * y + 2.0f * z * w, 1.0f - 2.0f * x * x - 2.0f * z * z, 2.0f * y * z - 2.0f * x * w,
+                      2.0f * x * z - 2.0f * y * w, 2.0f * y * z + 2.0f * x * w, 1.0f - 2.0f * x * x - 2.0f * y * y);
+//
+//    float sqx = x * x;
+//    float sqy = y * y;
+//    float sqz = z * z;
+//    float sqw = w * w;
+//    return csMatrix3f(
+//        2.0f * (sqw + sqx) - 1.0f, 2.0f * (x * y - w * z), 2.0f * (x * z + w * y),
+//        2.0f * (x * y + w * z), 2.0f * (sqw + sqy) - 1.0f, 2.0f * (y * z - w * x),
+//        2.0f * (x * z - w * y), 2.0f * (y * z + w * x), 2.0f * (sqw + sqz) - 1.0f);
+//
   }
 
   CS_NODISCARD CS_FORCEINLINE csMatrix4f ToMatrix4() const
   {
-    float sqx = x * x;
-    float sqy = y * y;
-    float sqz = z * z;
-    float sqw = w * w;
-    return csMatrix4f(
-        2.0f * (sqw + sqx) - 1.0f, 2.0f * (x * y - w * z), 2.0f * (x * z + w * y), 0.0f,
-        2.0f * (x * y + w * z), 2.0f * (sqw + sqy) - 1.0f, 2.0f * (y * z - w * x), 0.0f,
-        2.0f * (x * z - w * y), 2.0f * (y * z + w * x), 2.0f * (sqw + sqz) - 1.0f, 0.0f,
-        0.0f, 0.0f, 0.0f, 1.0f);
+
+    return csMatrix4f(1.0f - 2.0f * y * y - 2.0f * z * z,
+                      2.0f * x * y - 2.0f * z * w,
+                      2.0f * x * z + 2.0f * y * w,
+                      0.0f,
+                      2.0f * x * y + 2.0f * z * w,
+                      1.0f - 2.0f * x * x - 2.0f * z * z,
+                      2.0f * y * z - 2.0f * x * w,
+                      0.0f,
+                      2.0f * x * z - 2.0f * y * w,
+                      2.0f * y * z + 2.0f * x * w,
+                      1.0f - 2.0f * x * x - 2.0f * y * y,
+                      0.0f,
+                      0.0f,
+                      0.0f,
+                      0.0f,
+                      1.0f);
+
+
+//    float sqx = x * x;
+//    float sqy = y * y;
+//    float sqz = z * z;
+//    float sqw = w * w;
+//    return csMatrix4f(
+//        2.0f * (sqw + sqx) - 1.0f, 2.0f * (x * y - w * z), 2.0f * (x * z + w * y), 0.0f,
+//        2.0f * (x * y + w * z), 2.0f * (sqw + sqy) - 1.0f, 2.0f * (y * z - w * x), 0.0f,
+//        2.0f * (x * z - w * y), 2.0f * (y * z + w * x), 2.0f * (sqw + sqz) - 1.0f, 0.0f,
+//        0.0f, 0.0f, 0.0f, 1.0f);
 
   }
 
@@ -224,7 +247,7 @@ struct CS_CORE_API csQuaternion
   }
 
 
-  CS_FORCEINLINE static csQuaternion Blend(const csQuaternion &q0, const csQuaternion &q1, float f)
+  CS_FORCEINLINE static csQuaternion Blend2(const csQuaternion &q0, const csQuaternion &q1, float f)
   {
     float f0 = 1.0f - f;
     float f1 = f;
@@ -233,6 +256,59 @@ struct CS_CORE_API csQuaternion
         q0.y * f0 + q1.y * f1,
         q0.z * f0 + q1.z * f1,
         q0.w * f0 + q1.w * f1
+    );
+  }
+
+
+  CS_FORCEINLINE static csQuaternion Blend(const csQuaternion &q1, const csQuaternion &q2, double t)
+  {
+    csQuaternion q1_norm = q1;
+    csQuaternion q2_norm = q2;
+    q1_norm.Normalize();
+    q2_norm.Normalize();
+
+    double dot = q1_norm.w * q2_norm.w + q1_norm.x * q2_norm.x + q1_norm.y * q2_norm.y + q1_norm.z * q2_norm.z;
+
+    // If the dot product is negative, invert one quaternion to take the shorter path
+    if (dot < 0.0)
+    {
+      dot = -dot;
+      q2_norm.w = -q2_norm.w;
+      q2_norm.x = -q2_norm.x;
+      q2_norm.y = -q2_norm.y;
+      q2_norm.z = -q2_norm.z;
+    }
+
+    const double THRESHOLD = 0.9995;
+    if (dot > THRESHOLD)
+    {
+      // If the quaternions are too close, use linear interpolation instead
+      csQuaternion result(
+          q1_norm.x + t * (q2_norm.x - q1_norm.x),
+          q1_norm.y + t * (q2_norm.y - q1_norm.y),
+          q1_norm.z + t * (q2_norm.z - q1_norm.z),
+          q1_norm.w + t * (q2_norm.w - q1_norm.w)
+      );
+      result.Normalize();
+      return result;
+    }
+
+    // Compute the angle
+    double theta_0 = std::acos(dot);
+    double theta   = theta_0 * t;
+
+    // Compute the interpolation coefficients
+    double sin_theta_0 = std::sin(theta_0);
+    double sin_theta   = std::sin(theta);
+
+    double s0 = std::cos(theta) - dot * sin_theta / sin_theta_0;
+    double s1 = sin_theta / sin_theta_0;
+
+    return csQuaternion(
+        s0 * q1_norm.x + s1 * q2_norm.x,
+        s0 * q1_norm.y + s1 * q2_norm.y,
+        s0 * q1_norm.z + s1 * q2_norm.z,
+        s0 * q1_norm.w + s1 * q2_norm.w
     );
   }
 

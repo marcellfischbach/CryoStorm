@@ -1,13 +1,13 @@
 material {
     depth Test Write,
     shaders {
-        shader Forward    "../shaders/${rendering-api}/default-skinned/DefaultSkinned.shader",
-        shader Depth      "../shaders/${rendering-api}/default-skinned/DefaultSkinned_Depth.shader",
-        shader GBuffer    "../shaders/${rendering-api}/default-skinned/DefaultSkinned_GBuffer.shader",
-        shader ShadowCube "../shaders/${rendering-api}/default-skinned/DefaultSkinned_PointShadow.shader",
-        shader ShadowPSSM "../shaders/${rendering-api}/default-skinned/DefaultSkinned_PSSM.shader",
-        shader Shadow     "../shaders/${rendering-api}/default-skinned/DefaultSkinned_Shadow.shader",
-        shader VSM        "../shaders/${rendering-api}/default-skinned/DefaultSkinned_VSM.shader",
+        shader Forward    "../shaders/${rendering-api}/default-skinned/Default-Skinned.shader",
+        shader Depth      "../shaders/${rendering-api}/default-skinned/Default-Skinned_Depth.shader",
+        shader GBuffer    "../shaders/${rendering-api}/default-skinned/Default-Skinned_GBuffer.shader",
+        shader ShadowCube "../shaders/${rendering-api}/default-skinned/Default-Skinned_PointShadow.shader",
+        shader ShadowPSSM "../shaders/${rendering-api}/default-skinned/Default-Skinned_PSSM.shader",
+        shader Shadow     "../shaders/${rendering-api}/default-skinned/Default-Skinned_Shadow.shader",
+        shader VSM        "../shaders/${rendering-api}/default-skinned/Default-Skinned_VSM.shader",
     },
     attributes {
         attribute Texture "Diffuse",

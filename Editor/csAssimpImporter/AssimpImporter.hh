@@ -27,8 +27,6 @@ public:
   void PrintUsage() const override;
 
 private:
-  void GenerateMeshes(const std::fs::path &path, const aiScene *scene) const;
-  void GenerateMeshesEntity(const std::fs::path& path, const aiScene* scene) const;
 
   void GenerateMesh(const std::fs::path &path, const aiScene *scene) const;
   void GenerateMeshEntity(const std::fs::path& path, const aiScene* scene) const;

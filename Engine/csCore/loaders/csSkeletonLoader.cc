@@ -27,14 +27,20 @@ csOwned<iAsset> csSkeletonLoader::Load(const file::csCryoFile *file, const cs::c
   }
 
   csSkeleton  *skeleton = new csSkeleton();
-  for (size_t i         = 0, in = skeletonElement->GetNumberOfChildren(); i < in; ++i)
+  ReadTransform(skeletonElement->GetChild("transform"), skeleton, csSkeleton::ILLEGAL_BONE_ID);
+
+
+  const file::csCryoFileElement *bonesElement = skeletonElement->GetChild("bones");
+  for (size_t i         = 0, in = bonesElement->GetNumberOfChildren(); i < in; ++i)
   {
-    const file::csCryoFileElement *boneElement = skeletonElement->GetChild(i);
+    const file::csCryoFileElement *boneElement = bonesElement->GetChild(i);
     if (boneElement->GetTagName() == "bone")
     {
       ScanBone(boneElement, skeleton, -1);
     }
   }
+
+  skeleton->InitializeFrom();
 
   return skeleton;
 }
@@ -77,7 +83,7 @@ void csSkeletonLoader::ScanBone(const file::csCryoFileElement *boneElement,
 
 void csSkeletonLoader::ReadTransform(const file::csCryoFileElement *transformElement,
                                      cs::csSkeleton *skeleton,
-                                     int32_t boneIdx) const
+                                     size_t boneIdx) const
 {
   if (!transformElement)
   {
@@ -85,10 +91,7 @@ void csSkeletonLoader::ReadTransform(const file::csCryoFileElement *transformEle
   }
 
   csSkeleton::Bone &bone = skeleton->GetBone(boneIdx);
-  if (bone.id == csSkeleton::ILLEGAL_BONE_ID)
-  {
-    return;
-  }
+
 
   const file::csCryoFileElement *matrixElement = transformElement->GetChild("matrix4");
   if (matrixElement)
@@ -113,13 +116,22 @@ void csSkeletonLoader::ReadTransform(const file::csCryoFileElement *transformEle
                    m10, m11, m12, m13,
                    m20, m21, m22, m23,
                    m30, m31, m32, m33);
-    csVector3f translation;
-    csMatrix3f rot;
-    csVector3f scale;
-    mat.ExtractTRS(translation, rot, scale);
-    csQuaternion rotation = csQuaternion::FromMatrix(rot);
-    bone.offset = translation;
-    bone.rotation = rotation;
+
+    if (bone.id == csSkeleton::ILLEGAL_BONE_ID)
+    {
+      skeleton->SetBase(mat);
+    }
+    else
+    {
+      csVector3f translation;
+      csMatrix3f rot;
+      csVector3f scale;
+      mat.ExtractTRS(translation, rot, scale);
+      csQuaternion rotation = csQuaternion::FromMatrix(rot);
+      bone.offset   = translation;
+      bone.rotation = rotation;
+      bone.poseRotation = rotation;
+    }
   }
 }
 

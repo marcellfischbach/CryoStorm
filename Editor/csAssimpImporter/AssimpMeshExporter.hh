@@ -18,7 +18,6 @@ class AssimpMeshExporter
 public:
   AssimpMeshExporter(const aiScene *scene);
 
-  void combine(const aiMesh *mesh);
   void combine(const aiNode *node);
 
   void Export(const std::string &filename, const std::string &referenceName) const;

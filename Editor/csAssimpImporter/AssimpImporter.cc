@@ -24,12 +24,20 @@ bool AssimpImporter::CanImport(const std::fs::path &path, const std::vector<std:
 {
   if (!path.has_extension())
   {
+    printf ("file name has no extension\n");
     return false;
   }
 
   const std::filesystem::path &ext = path.extension();
 
-  return ext == ".fbx";
+  bool extMatching = ext == ".fbx" || ext == ".glb";
+
+  if (!extMatching)
+  {
+    printf ("Extension is not matching\n");
+  }
+
+  return extMatching;
 }
 
 std::fs::path extract_default_out_file(const std::fs::path &importFilename)
@@ -59,7 +67,6 @@ bool AssimpImporter::Import(const std::fs::path &path, const std::vector<std::st
   bool skeleton   = HasOption(args, "--skeleton");
   bool animations = HasOption(args, "--animations");
   bool materials  = HasOption(args, "--materials");
-  bool meshes     = HasOption(args, "--meshes");
   bool mesh       = HasOption(args, "--mesh");
   bool entity     = HasOption(args, "--entity");
 
@@ -99,16 +106,6 @@ bool AssimpImporter::Import(const std::fs::path &path, const std::vector<std::st
     GenerateMaterials(outFile, scene);
   }
 
-  if (meshes)
-  {
-    GenerateMeshes(outFile, scene);
-
-    if (entity)
-    {
-      GenerateMeshesEntity(outFile, scene);
-    }
-  }
-
   if (mesh)
   {
     GenerateMesh(outFile, scene);
@@ -138,22 +135,6 @@ static std::string extract_file_name(const std::string &str)
   return str.substr(i + 1);
 }
 
-
-void AssimpImporter::GenerateMeshes(const std::fs::path &path, const aiScene *scene) const
-{
-  for (int i = 0; i < scene->mNumMeshes; ++i)
-  {
-    aiMesh *mesh = scene->mMeshes[i];
-
-    std::string outputFileName = path.generic_string() + "_" + create_mesh_filename(mesh) + ".mesh";
-
-    AssimpMeshExporter exporter(scene);
-    exporter.combine(mesh);
-    exporter.Export(outputFileName, extract_file_name(path.generic_string()));
-  }
-}
-
-
 void AssimpImporter::GenerateMesh(const std::fs::path &path, const aiScene *scene) const
 {
   std::string        outputFileName = path.generic_string() + ".mesh";
@@ -163,71 +144,6 @@ void AssimpImporter::GenerateMesh(const std::fs::path &path, const aiScene *scen
 }
 
 
-void
-export_aiNode(const std::fs::path &path, std::ofstream &out, std::string indent, aiNode *node, const aiScene *scene)
-{
-  int oldPrecision = out.precision();
-  out.precision(2);
-  out.setf(std::ios::fixed, std::ios::floatfield);
-
-  auto &trans = node->mTransformation;
-  out
-      << indent << "entity name:\"" << node->mName.C_Str() << "\" {" << std::endl
-      << indent << "  states {" << std::endl;
-
-  for (unsigned i = 0; i < node->mNumMeshes; i++)
-  {
-    aiMesh      *mesh       = scene->mMeshes[node->mMeshes[i]];
-    std::string meshLocator = extract_file_name(path.generic_string()) + "_" + create_mesh_filename(mesh) + ".mesh";
-    out
-        << indent << "    state cls:\"cs::csStaticMeshState\" {" << std::endl
-        << indent << "      transform {" << std::endl
-        << indent << "        matrix4 " << trans.a1 << " " << trans.b1 << " " << trans.c1 << "  " << trans.d1
-        << std::endl
-        << indent << "                " << trans.a2 << " " << trans.b2 << " " << trans.c2 << "  " << trans.d2
-        << std::endl
-        << indent << "                " << trans.a3 << " " << trans.b3 << " " << trans.c3 << "  " << trans.d3
-        << std::endl
-        << indent << "                " << trans.a4 << " " << trans.b4 << " " << trans.c4 << "  " << trans.d4 << ", "
-        << std::endl
-        << indent << "      }," << std::endl
-
-        << indent << "      mesh locator:\"" << meshLocator << "\", " << std::endl
-        << indent << "    }," << std::endl;
-  }
-
-  out << indent << "  }," << std::endl;
-
-
-  if (node->mNumChildren)
-  {
-    out << indent << "  children {" << std::endl;
-    for (unsigned i = 0; i < node->mNumChildren; i++)
-    {
-      auto child = node->mChildren[i];
-      export_aiNode(path, out, indent + "    ", child, scene);
-    }
-    out << indent << "  }," << std::endl;
-  }
-
-  out << indent << "}," << std::endl;
-
-  out.precision(oldPrecision);
-}
-
-
-void AssimpImporter::GenerateMeshesEntity(const std::fs::path &path, const aiScene *scene) const
-{
-  std::string   outputFileName = path.generic_string() + "_compound.entity";
-  std::fs::path outFile(outputFileName);
-  std::ofstream out;
-  out.open(outputFileName.c_str(), std::ios::out | std::ios::binary | std::ios::trunc);
-
-  export_aiNode(path, out, "", scene->mRootNode, scene);
-
-
-  out.close();
-};
 
 
 void AssimpImporter::GenerateMeshEntity(const std::fs::path &path, const aiScene *scene) const
@@ -278,6 +194,12 @@ void AssimpImporter::GenerateMeshEntity(const std::fs::path &path, const aiScene
 
 void AssimpImporter::GenerateMaterials(const std::fs::path &path, const aiScene *scene) const
 {
+  AssimpSkeletonExporter skeletonExporter(scene);
+  skeletonExporter.ScanBones();
+  std::string baseMaterial = skeletonExporter.HasBones()
+      ? "/materials/Default-Skinned.mat"
+      : "/materials/Default.mat";
+
   for (size_t i = 0; i < scene->mNumMaterials; i++)
   {
     aiMaterial *material = scene->mMaterials[i];
@@ -292,7 +214,7 @@ void AssimpImporter::GenerateMaterials(const std::fs::path &path, const aiScene 
     aiColor4D color4;
 
     out << "materialinstance {" << std::endl
-        << "  material \"/materials/Default.mat\"," << std::endl
+        << "  material \"" << baseMaterial << "\"," << std::endl
         << "  attributes {" << std::endl;
 
     if (material->Get(AI_MATKEY_COLOR_DIFFUSE, color4) == aiReturn_SUCCESS)

@@ -15,7 +15,7 @@ namespace cs
 {
 
 
-struct CS_CORE_API csMatrix4f
+struct csMatrix4f
 {
 public:
   float m00;

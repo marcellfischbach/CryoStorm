@@ -31,8 +31,10 @@ void main()
   vec3 normal = skinned_calc_normal(cs_Normal, m0, m1, m2, m3, cs_BoneWeights);
   vec3 tangent = skinned_calc_normal(cs_Tangent, m0, m1, m2, m3, cs_BoneWeights);
 
-  world_normal = (cs_ModelMatrix * vec4(normal, 0.0)).xyz;
-  world_tangent = (cs_ModelMatrix * vec4(tangent, 0.0)).xyz;
+  mat4 normal_matrix = transpose(inverse(cs_ModelMatrix));
+
+  world_normal = (normal_matrix * vec4(normal, 0.0)).xyz;
+  world_tangent = (normal_matrix * vec4(tangent, 0.0)).xyz;
 
   gl_Position = cs_ModelViewProjectionMatrix * position;
   texCoord = cs_UV;

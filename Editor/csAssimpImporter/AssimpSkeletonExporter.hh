@@ -7,6 +7,7 @@
 #include <set>
 #include <string>
 #include <vector>
+#include <assimp/matrix4x4.h>
 
 struct aiScene;
 struct aiNode;
@@ -43,6 +44,8 @@ public:
 private:
   aiNode* FindRootNode (aiNode* node);
 
+  void WriteTransform (std::ofstream &out, aiMatrix4x4 &matrix, std::string indent) const;
+
 
   struct Bone
   {
@@ -56,6 +59,7 @@ private:
   void ExportBone (std::ofstream &out, Bone* bone, std::string indent) const;
 
   std::vector<Bone*> m_bones;
+  aiNode* m_skeletonRoot;
 
   const aiScene* m_scene;
   std::set<std::string> m_skeletonRootNames;

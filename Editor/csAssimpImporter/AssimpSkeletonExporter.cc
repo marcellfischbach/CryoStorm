@@ -4,8 +4,11 @@
 
 #include <csAssimpImporter/AssimpSkeletonExporter.hh>
 #include <assimp/scene.h>
+#include <csCore/math/csMatrix4f.hh>
+#include <csCore/math/csQuaternion.hh>
 #include <iostream>
 #include <fstream>
+#include <iomanip>
 
 namespace cs::imp
 {
@@ -34,15 +37,15 @@ void AssimpSkeletonExporter::SetSkeletonName(const std::set<std::string> &names)
 
 void AssimpSkeletonExporter::ScanBones()
 {
-  aiNode *root = FindRootNode(m_scene->mRootNode);
-  if (!root)
+  m_skeletonRoot = FindRootNode(m_scene->mRootNode);
+  if (!m_skeletonRoot)
   {
     return;
   }
 
-  for (uint32_t i = 0, in = root->mNumChildren; i < in; i++)
+  for (uint32_t i = 0, in = m_skeletonRoot->mNumChildren; i < in; i++)
   {
-    ScanBones(root->mChildren[i], nullptr);
+    ScanBones(m_skeletonRoot->mChildren[i], nullptr);
   }
 }
 
@@ -111,12 +114,27 @@ uint32_t AssimpSkeletonExporter::GetBoneIndex(const std::string &name) const
 std::vector<AssimpSkeletonExporter::BoneDecl> AssimpSkeletonExporter::GetBoneDecl() const
 {
   std::vector<BoneDecl> decl;
-  for (const auto bone : m_bones)
+  for (const auto       bone: m_bones)
   {
     decl.emplace_back(bone->id, bone->name);
   }
 
   return decl;
+}
+
+static csMatrix4f to_matrix4f(const aiMatrix4x4 &mat)
+{
+  return csMatrix4f(
+      mat.a1, mat.b1, mat.c1, mat.d1,
+      mat.a2, mat.b2, mat.c2, mat.d2,
+      mat.a3, mat.b3, mat.c3, mat.d3,
+      mat.a4, mat.b4, mat.c4, mat.d4
+  );
+}
+
+static csQuaternion to_quaternion(const aiQuaternion &q)
+{
+  return csQuaternion(q.x, q.y, q.z, q.w);
 }
 
 void AssimpSkeletonExporter::Export(const std::string &filename) const
@@ -127,30 +145,44 @@ void AssimpSkeletonExporter::Export(const std::string &filename) const
 
   out << "skeleton {" << std::endl;
 
+  if (m_skeletonRoot)
+  {
+    WriteTransform(out, m_skeletonRoot->mTransformation, "  ");
+  }
+  out << "  bones  {" << std::endl;
+
   for (auto bone: m_bones)
   {
     if (!bone->parent)
     {
-      ExportBone(out, bone, "  ");
+      ExportBone(out, bone, "    ");
     }
   }
 
-  out << "}" << std::endl;
+  out << "  }" << std::endl
+      << "}" << std::endl;
 
   out.close();
+}
+
+void AssimpSkeletonExporter::WriteTransform(std::ofstream &out, aiMatrix4x4 &tr, std::string indent) const
+{
+  out << indent << "transform {" << std::endl
+      << indent << "  matrix4 " << std::fixed << tr.a1 << " " << tr.b1 << " " << tr.c1 << "  " << tr.d1 << std::endl
+      << indent << "          " << tr.a2 << " " << tr.b2 << " " << tr.c2 << "  " << tr.d2 << std::endl
+      << indent << "          " << tr.a3 << " " << tr.b3 << " " << tr.c3 << "  " << tr.d3 << std::endl
+      << indent << "          " << tr.a4 << " " << tr.b4 << " " << tr.c4 << "  " << tr.d4 << ", " << std::endl
+      << indent << "}," << std::endl;
 }
 
 void AssimpSkeletonExporter::ExportBone(std::ofstream &out, Bone *bone, std::string indent) const
 {
   aiMatrix4x4 &tr = bone->node->mTransformation;
-  out << indent << "bone id: " << bone->id << " name:\"" << bone->name << "\" {" << std::endl
-      << indent << "  transform {" << std::endl
-      << indent << "    matrix4 " << tr.a1 << " " << tr.b1 << " " << tr.c1 << "  " << tr.d1 << std::endl
-      << indent << "            " << tr.a2 << " " << tr.b2 << " " << tr.c2 << "  " << tr.d2 << std::endl
-      << indent << "            " << tr.a3 << " " << tr.b3 << " " << tr.c3 << "  " << tr.d3 << std::endl
-      << indent << "            " << tr.a4 << " " << tr.b4 << " " << tr.c4 << "  " << tr.d4 << ", " << std::endl
-      << indent << "  }," << std::endl;
+  out << indent << "bone id: " << bone->id << " name:\"" << bone->name << "\" {" << std::endl;
+  WriteTransform(out, tr, indent + "  ");
 
+  csMatrix4f mat = to_matrix4f(tr);
+  mat.Debug(bone->name.c_str());
   if (!bone->children.empty())
   {
     out << indent << "  children {" << std::endl;

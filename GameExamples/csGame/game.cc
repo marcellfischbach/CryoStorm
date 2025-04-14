@@ -548,16 +548,23 @@ cs::csEntity *add_bone(cs::csWorld *world, cs::csAssetRef<cs::iMaterial> &materi
   return entity;
 }
 
-void add_skeleton_mesh(cs::csWorld *world)
+void add_skeleton_mesh2(cs::csWorld *world)
 {
+  std::string name = "/test/sm_test";
 
-  auto                       meshData  = cs::csAssetManager::Get()->Load<cs::csSkeletonMesh>("/skinned_mesh.mesh");
-  auto                       skeleton  = cs::csAssetManager::Get()->Load<cs::csSkeleton>("/skinned_mesh.skeleton");
+  auto                       meshData  = cs::csAssetManager::Get()->Load<cs::csSkeletonMesh>(name + ".mesh");
+  auto                       skeleton  = cs::csAssetManager::Get()->Load<cs::csSkeleton>(name + "_skeleton.skeleton");
   auto                       mesh      = meshData.Data();
   csRef<csSkeletonAnimation> animation = csAssetManager::Get()->Load<csSkeletonAnimation>(
-      "/skinned_mesh_Armature_MyAnimation01.skeleton_animation");
+      name + "_Armature_armatureAction.skeleton_animation");
+  if (animation)
+  {
+    animation->SetLoop(true);
+  }
 
-  animation->SetLoop(true);
+  csQuaternion quat(0, 0, -0.707106829, 0.707106709);
+  csMatrix3f   mat = quat.ToMatrix3();
+
 
   cs::csEntity *entity = new cs::csEntity("Skeleton Entity");
 
@@ -582,7 +589,63 @@ void add_skeleton_mesh(cs::csWorld *world)
 
 
   entity->GetRoot()->GetTransform()
-        .SetRotation(csQuaternion::FromAxisAngle(0.0f, 0.0f, 1.0f, M_PI / 2.0f))
+        .SetTranslation(-2.0f, 0.0f, -2.0f)
+//        .SetRotation(csQuaternion::FromAxisAngle(1.0f, 0.0f, 0.0f, M_PI / 2.0f))
+        .Finish();
+  world->Attach(entity);
+
+
+
+  /*
+  auto animationPackData = cs::csAssetManager::Get()->Load<cs::csSkeletonAnimationPack>("/skinned_mesh.fbx");
+  auto animationPack     = animationPackData.Data();
+
+  */
+}
+
+void add_skeleton_mesh(cs::csWorld *world)
+{
+  std::string name = "/human_test/human_test";
+
+  auto                       meshData  = cs::csAssetManager::Get()->Load<cs::csSkeletonMesh>(name + "_skeleton.mesh");
+  auto                       skeleton  = cs::csAssetManager::Get()->Load<cs::csSkeleton>(name + "_skeleton.skeleton");
+  auto                       mesh      = meshData.Data();
+  csRef<csSkeletonAnimation> animation = csAssetManager::Get()->Load<csSkeletonAnimation>(
+      name + "_Skeleton_Walk.skeleton_animation");
+  if (animation)
+  {
+    animation->SetLoop(true);
+  }
+
+  csQuaternion quat(0, 0, -0.707106829, 0.707106709);
+  csMatrix3f   mat = quat.ToMatrix3();
+
+
+  cs::csEntity *entity = new cs::csEntity("Skeleton Entity");
+
+  csSkeletonState *skeletonState = new csSkeletonState();
+  skeletonState->SetSkeleton(skeleton.raw());
+
+
+  cs::csSkeletonMeshState *meshState = new cs::csSkeletonMeshState();
+  meshState->SetMesh(mesh);
+//  meshState->SetMaterial(0, material);
+  meshState->SetSkeletonState(skeletonState);
+
+  cs::csSkeletonAnimationState *skeletonAnimationState = new csSkeletonAnimationState();
+  skeletonAnimationState->SetSkeleton(skeletonState);
+  skeletonAnimationState->SetAnimation(animation);
+  skeletonAnimationState->SetInitialStartTime(0.0f);
+  skeletonAnimationState->SetActive(true);
+
+  entity->AttachState(meshState);
+  entity->AttachState(skeletonState);
+  entity->AttachState(skeletonAnimationState);
+
+
+  entity->GetRoot()->GetTransform()
+        .SetTranslation(-2.0f, 0.0f, -2.0f)
+//        .SetRotation(csQuaternion::FromAxisAngle(1.0f, 0.0f, 0.0f, M_PI / 2.0f))
         .Finish();
   world->Attach(entity);
 
@@ -1024,12 +1087,12 @@ private:
 void setup_world(cs::csWorld *world)
 {
 
-  auto                  assetMan        = cs::csAssetManager::Get();
-  auto                  rawMatData      = assetMan->Get<cs::iMaterial>("/materials/Default.mat");
-  auto                  rawMat          = rawMatData.Data();
+  auto                  assetMan   = cs::csAssetManager::Get();
+  auto                  rawMatData = assetMan->Get<cs::iMaterial>("/materials/Default.mat");
+  auto                  rawMat     = rawMatData.Data();
 //  csAssetPool::Instance().Put(rawMat);
   csAssetRef<iMaterial> material(rawMat);
-  csAssetRef<iMaterial> skinnedMaterial = assetMan->Get<cs::iMaterial>("/materials/DefaultSkinned.mat");
+//  csAssetRef<iMaterial> skinnedMaterial = assetMan->Get<cs::iMaterial>("/materials/DefaultSkinned.mat");
 
 
   generate_exit_game(world);

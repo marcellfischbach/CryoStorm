@@ -36,6 +36,7 @@ public:
   csSkeleton();
 
   void Clear();
+  void InitializeFrom();
   void InitializeFrom(const csSkeleton &skeleton);
 
   CS_NODISCARD size_t AddRoot(const std::string &name);
@@ -59,8 +60,10 @@ public:
 
 
 private:
+  void InitializePoseMatrices (size_t idx, const csMatrix4f &parent);
   size_t Add(const std::string &name);
   void UpdateBone(size_t idx, const csMatrix4f &parent);
+
 
 
 private:

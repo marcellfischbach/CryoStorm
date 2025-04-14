@@ -2,6 +2,8 @@
 
 vec4 skinned_calc_position (vec4 v, mat4 m0, mat4 m1, mat4 m2, mat4 m3, vec4 f)
 {
+    float l = f.x + f.y + f.z + f.w;
+    f /= l;
     return (m0 * v) * f.x
         + (m1 * v) * f.y
         + (m2 * v) * f.z

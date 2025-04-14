@@ -10,7 +10,6 @@ csFileSystemFile::csFileSystemFile(const std::string& path)
   , m_path(path)
   , m_file(nullptr)
 {
-
 }
 
 csFileSystemFile::~csFileSystemFile()

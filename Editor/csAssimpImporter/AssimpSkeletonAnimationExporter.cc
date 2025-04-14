@@ -6,6 +6,8 @@
 #include <csCryoFile/csCryoFile.hh>
 #include <assimp/scene.h>
 #include <sstream>
+#include <csCore/math/csQuaternion.hh>
+#include <csCore/math/csMatrix4f.hh>
 
 using namespace cs::file;
 
@@ -38,7 +40,14 @@ void AssimpSkeletonAnimationExporter::Export(const std::string &filename) const
   auto animationElement = file.Root()->AddChild("skeletonAnimation");
   animationElement->AddStringAttribute("name", m_animation->mName.C_Str());
   animationElement->AddChild("duration")->AddAttribute(std::to_string(m_animation->mDuration));
-  animationElement->AddChild("fps")->AddAttribute(std::to_string(m_animation->mTicksPerSecond));
+  if (m_animation->mTicksPerSecond == 0)
+  {
+    animationElement->AddChild("fps")->AddAttribute("1000");
+  }
+  else
+  {
+    animationElement->AddChild("fps")->AddAttribute(std::to_string(m_animation->mTicksPerSecond));
+  }
 
   auto channelsElement = animationElement->AddChild("channels");
   for (int i = 0; i < m_animation->mNumChannels; ++i)
@@ -94,11 +103,22 @@ void AssimpSkeletonAnimationExporter::Export(const std::string &filename) const
         auto rotationKey = channel->mRotationKeys[j];
 
         float time = (float) rotationKey.mTime;
+
+        float x = rotationKey.mValue.x;
+        float y = rotationKey.mValue.y;
+        float z = rotationKey.mValue.z;
+        float w = -rotationKey.mValue.w;
+        if (j== 0)
+        {
+          csQuaternion q (x, y, z, w);
+          csMatrix4f m = q.ToMatrix4();
+          m.Debug((std::string("anim:") +  m_animation->mName.C_Str() + ": " + channelName).c_str());
+        }
         ostream.write(reinterpret_cast<const char *>(&time), sizeof(float));
-        ostream.write(reinterpret_cast<const char *>(&rotationKey.mValue.x), sizeof(float));
-        ostream.write(reinterpret_cast<const char *>(&rotationKey.mValue.y), sizeof(float));
-        ostream.write(reinterpret_cast<const char *>(&rotationKey.mValue.z), sizeof(float));
-        ostream.write(reinterpret_cast<const char *>(&rotationKey.mValue.w), sizeof(float));
+        ostream.write(reinterpret_cast<const char *>(&x), sizeof(float));
+        ostream.write(reinterpret_cast<const char *>(&y), sizeof(float));
+        ostream.write(reinterpret_cast<const char *>(&z), sizeof(float));
+        ostream.write(reinterpret_cast<const char *>(&w), sizeof(float));
       }
 
       std::string streamData = ostream.str();

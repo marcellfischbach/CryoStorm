@@ -11,7 +11,7 @@ namespace cs
 {
 
 
-struct CS_CORE_API csMatrix3f
+struct csMatrix3f
 {
 public:
   float m00;
@@ -27,15 +27,38 @@ public:
 public:
   CS_FORCEINLINE csMatrix3f(const csMatrix3f &m) = default;
 
-  CS_FORCEINLINE explicit csMatrix3f(float m00 = 1.0f, float m01 = 0.0f, float m02 = 0.0f, float m10 = 0.0f, float m11 = 1.0f,
-                                     float m12 = 0.0f, float m20 = 0.0f, float m21 = 0.0f, float m22 = 1.0f)
-      : m00(m00), m01(m01), m02(m02), m10(m10), m11(m11), m12(m12), m20(m20), m21(m21), m22(m22)
+  CS_FORCEINLINE explicit csMatrix3f(float m00 = 1.0f,
+                                     float m01 = 0.0f,
+                                     float m02 = 0.0f,
+                                     float m10 = 0.0f,
+                                     float m11 = 1.0f,
+                                     float m12 = 0.0f,
+                                     float m20 = 0.0f,
+                                     float m21 = 0.0f,
+                                     float m22 = 1.0f)
+      : m00(m00)
+      , m01(m01)
+      , m02(m02)
+      , m10(m10)
+      , m11(m11)
+      , m12(m12)
+      , m20(m20)
+      , m21(m21)
+      , m22(m22)
   {
 
   }
 
   CS_FORCEINLINE explicit csMatrix3f(const float *f)
-      : m00(f[0]), m01(f[1]), m02(f[2]), m10(f[3]), m11(f[4]), m12(f[5]), m20(f[6]), m21(f[7]), m22(f[8])
+      : m00(f[0])
+      , m01(f[1])
+      , m02(f[2])
+      , m10(f[3])
+      , m11(f[4])
+      , m12(f[5])
+      , m20(f[6])
+      , m21(f[7])
+      , m22(f[8])
   {
   }
 
@@ -84,7 +107,6 @@ public:
   }
 
 
-
   CS_NODISCARD CS_FORCEINLINE csVector3f GetXAxis() const
   {
     return csVector3f(m00, m01, m02);
@@ -105,9 +127,12 @@ public:
   {
     switch (axis)
     {
-      case eAxis::X: return csVector3f(m00, m01, m02);
-      case eAxis::Y: return csVector3f(m10, m11, m12);
-      case eAxis::Z: return csVector3f(m20, m21, m22);
+      case eAxis::X:
+        return csVector3f(m00, m01, m02);
+      case eAxis::Y:
+        return csVector3f(m10, m11, m12);
+      case eAxis::Z:
+        return csVector3f(m20, m21, m22);
     }
     return csVector3f(0.0f, 0.0f, 0.0f);
   }
@@ -142,6 +167,21 @@ public:
     float y = m.m01 * v.x + m.m11 * v.y + m.m21 * v.z;
     float z = m.m02 * v.x + m.m12 * v.y + m.m22 * v.z;
     return csVector3f(x, y, z);
+  }
+
+#define CS_EQUAL(a, b) (abs((a) - (b)) < 1e-6)
+
+  CS_FORCEINLINE bool operator==(const csMatrix3f &o) const
+  {
+    return CS_EQUAL(m00, o.m00)
+           && CS_EQUAL(m01, o.m01)
+           && CS_EQUAL(m02, o.m02)
+           && CS_EQUAL(m10, o.m10)
+           && CS_EQUAL(m11, o.m11)
+           && CS_EQUAL(m12, o.m12)
+           && CS_EQUAL(m20, o.m20)
+           && CS_EQUAL(m21, o.m21)
+           && CS_EQUAL(m22, o.m22);
   }
 
   void Debug(const std::string &msg = "") const

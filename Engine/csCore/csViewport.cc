@@ -214,10 +214,12 @@ bool csViewport::ProcessFrame(iRenderTarget2D *renderTarget)
       m_window->SetTitle(title);
     }
 
-    float tpf = (float) frameTime / 1000.0f;
 
-    m_world->Update(tpf);
+
   }
+  float tpf = (float) frameTime / 1000.0f;
+
+  m_world->Update(tpf);
   m_device->CheckError();
 
 

@@ -1,5 +1,6 @@
 
 #include <csCore/graphics/csSkeleton.hh>
+#include <csCore/input/csInput.hh>
 
 namespace cs
 {
@@ -31,6 +32,40 @@ void csSkeleton::Clear()
   m_skeletonBones.clear();
   m_rootBones.clear();
 }
+
+void csSkeleton::InitializeFrom()
+{
+  for (const size_t &idx: m_rootBones)
+  {
+    csMatrix4f id;
+    InitializePoseMatrices(idx, id);
+  }
+//  m_poseMatrices  = m_skeletonBones;
+//  for (auto &matrix: m_poseMatrices)
+//  {
+//    matrix.Invert();
+//  }
+  UpdateBones();
+}
+
+void csSkeleton::InitializePoseMatrices(size_t idx, const cs::csMatrix4f &parent)
+{
+  Bone &bone = m_bones[idx];
+
+  csMatrix4f local;
+  bone.rotation.ToMatrix4(local);
+  local.SetTranslation(bone.offset);
+
+
+  csMatrix4f global = parent * local;
+  m_poseMatrices[idx] = global.Inverted();
+
+  for (const size_t &childIdx: bone.children)
+  {
+    InitializePoseMatrices(childIdx, global);
+  }
+}
+
 
 void csSkeleton::InitializeFrom(const cs::csSkeleton &skeleton)
 {
@@ -153,17 +188,22 @@ const csSkeleton::Bone &csSkeleton::GetBone(size_t idx) const
 
 void csSkeleton::UpdateBones()
 {
-  csMatrix4f identity;
-  identity.SetIdentity();
+
   for (const size_t &idx: m_rootBones)
   {
-    UpdateBone(idx, m_base);
+    csMatrix4f id;
+    UpdateBone(idx, id);
+  }
+  for (auto &item: m_skeletonBones)
+  {
+    item = m_base * item;
   }
 }
 
 void csSkeleton::UpdateBone(size_t idx, const cs::csMatrix4f &parent)
 {
   Bone &bone = m_bones[idx];
+//  bone.rotation.Normalize();
 
   csMatrix4f local;
   bone.rotation.ToMatrix4(local);
@@ -173,6 +213,16 @@ void csSkeleton::UpdateBone(size_t idx, const cs::csMatrix4f &parent)
   csMatrix4f global = parent * local;
   bone.globalMatrix = global;
   m_skeletonBones[idx] = global * m_poseMatrices[idx];
+
+
+  if (csInput::IsKeyPressed(eKey::eK_Space))
+  {
+//    printf ("%s: %.2f %.2f %.2f @ %.2f\n", bone.name.c_str(), bone.rotation.x, bone.rotation.y, bone.rotation.z, bone.rotation.w);
+//    local.Debug("local");
+//    global.Debug("Global");
+//    m_skeletonBones[idx].Debug("Skeleton bone");
+//    fflush(stdout);
+  }
 
   for (const size_t &childIdx: bone.children)
   {

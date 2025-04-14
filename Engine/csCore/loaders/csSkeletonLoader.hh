@@ -2,6 +2,7 @@
 #pragma once
 
 #include <csCore/csCoreExport.hh>
+#include <csCore/math/csMatrix4f.hh>
 #include <csCore/resource/csBaseCSFAssetLoader.hh>
 
 namespace cs
@@ -24,7 +25,7 @@ protected:
 private:
   void ScanBone (const file::csCryoFileElement *boneElement, csSkeleton *skeleton, int32_t parentBondIdx) const;
 
-  void ReadTransform (const file::csCryoFileElement *transformElement, csSkeleton* skeleton, int32_t boneIdx) const;
+  void ReadTransform (const file::csCryoFileElement *transformElement, csSkeleton* skeleton, size_t boneIdx) const;
 
 };
 

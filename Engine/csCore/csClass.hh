@@ -76,7 +76,7 @@
       return m_jobject;\
     }                       \
 private: \
-      mutable int64_t m_refCount = 1; \
+      mutable int64_t m_refCount = 0; \
       mutable bool m_jobjectChecked = false; \
       mutable jobject m_jobject = nullptr
 

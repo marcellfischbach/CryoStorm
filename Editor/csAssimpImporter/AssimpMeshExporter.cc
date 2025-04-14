@@ -19,11 +19,6 @@ AssimpMeshExporter::AssimpMeshExporter(const aiScene *scene)
 {
 }
 
-void AssimpMeshExporter::combine(const aiMesh *mesh)
-{
-  aiMatrix4x4 identity;
-  PushMesh(identity, mesh);
-}
 
 void AssimpMeshExporter::combine(const aiNode *node)
 {

@@ -67,6 +67,8 @@ void csSkeletonMesh::SubMesh::ApplySkeleton(const cs::csSkeleton *skeleton)
   }
 
 
+  int32_t maxId = -1;
+  int32_t minId = 100000;
   for (const auto &origBoneId: m_originBoneIndices)
   {
     csVector4i idx(boneMap[origBoneId.x],
@@ -74,6 +76,14 @@ void csSkeletonMesh::SubMesh::ApplySkeleton(const cs::csSkeleton *skeleton)
                    boneMap[origBoneId.z],
                    boneMap[origBoneId.w]);
     newSkeletonBoneIds.push_back(idx);
+    maxId = idx.x >= maxId ? idx.x : maxId;
+    maxId = idx.y >= maxId ? idx.y : maxId;
+    maxId = idx.z >= maxId ? idx.z : maxId;
+    maxId = idx.w >= maxId ? idx.w : maxId;
+    minId = idx.x <= minId ? idx.x : minId;
+    minId = idx.y <= minId ? idx.y : minId;
+    minId = idx.z <= minId ? idx.z : minId;
+    minId = idx.w <= minId ? idx.w : minId;
   }
 
   m_mesh->Modify()->Update(eVertexStream::eVS_BoneIndices, newSkeletonBoneIds.data());

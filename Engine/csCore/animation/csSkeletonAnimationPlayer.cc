@@ -2,6 +2,7 @@
 #include <csCore/animation/csSkeletonAnimationPlayer.hh>
 #include <csCore/animation/csSkeletonAnimation.hh>
 #include <csCore/graphics/csSkeleton.hh>
+#include <csCore/input/csInput.hh>
 
 namespace cs
 {
@@ -41,12 +42,12 @@ void csSkeletonAnimationPlayer::Start(float time)
 
 void csSkeletonAnimationPlayer::Update(float tpf)
 {
-  if (!m_active)
+  if (!m_active || !m_animation)
   {
     return;
   }
 
-  m_time += tpf;
+  m_time += tpf / 1.0f;
   float duration = m_animation->GetDuration();
   if (m_time > duration)
   {
@@ -65,7 +66,16 @@ void csSkeletonAnimationPlayer::Update(float tpf)
 
 void csSkeletonAnimationPlayer::UpdateFrame(float time)
 {
-  float    frame = time * m_animation->GetFramesPerSecond();
+  if (!m_animation || !m_skeleton)
+  {
+    return;
+  }
+  if (csInput::IsKeyPressed(eKey::eK_Space))
+  {
+    printf ("Update time: %f\n", time);
+  }
+
+    float    frame = time * m_animation->GetFramesPerSecond();
   for (int i     = 0; i < m_skeleton->GetNumberOfBones(); ++i)
   {
     csSkeleton::Bone &bone = m_skeleton->GetBone(i);
