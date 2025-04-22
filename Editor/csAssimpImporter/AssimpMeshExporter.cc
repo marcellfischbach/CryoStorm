@@ -4,6 +4,8 @@
 
 #include <csAssimpImporter/AssimpMeshExporter.hh>
 #include <csCryoFile/csCryoFile.hh>
+#include <csCore/math/csVector.hh>
+#include <csCore/math/csMatrix.hh>
 #include <sstream>
 #include <ostream>
 
@@ -17,6 +19,9 @@ AssimpMeshExporter::AssimpMeshExporter(const aiScene *scene)
     : m_scene(scene)
     , m_skeletonExporter(scene)
 {
+  m_skeletonExporter.ScanBones();
+  csMatrix4f id;
+  ScanMatrices(m_scene->mRootNode, id);
 }
 
 
@@ -63,9 +68,9 @@ void AssimpMeshExporter::PushMesh(const aiMatrix4x4 &mat, const aiMesh *mesh)
 }
 
 
-void AssimpMeshExporter::Push(std::vector<aiVector3D> &values,
-                              aiVector3D *srcValues,
-                              uint32_t srcValueCount)
+void AssimpMeshExporter::PushTexCoord(std::vector<aiVector3D> &values,
+                                      aiVector3D *srcValues,
+                                      uint32_t srcValueCount)
 {
   if (!srcValues)
   {
@@ -78,9 +83,9 @@ void AssimpMeshExporter::Push(std::vector<aiVector3D> &values,
   }
 }
 
-void AssimpMeshExporter::Push(std::vector<aiColor4D> &values,
-                              aiColor4D *srcValues,
-                              uint32_t srcValueCount)
+void AssimpMeshExporter::PushColor(std::vector<aiColor4D> &values,
+                                   aiColor4D *srcValues,
+                                   uint32_t srcValueCount)
 {
   if (!srcValues)
   {
@@ -94,29 +99,184 @@ void AssimpMeshExporter::Push(std::vector<aiColor4D> &values,
 }
 
 
-void AssimpMeshExporter::Push(std::vector<aiVector3D> &values,
-                              const aiMatrix4x4 &matrix,
-                              aiVector3D *srcValues,
-                              uint32_t srcValueCount)
+static csMatrix4f to_matrix4f(const aiMatrix4x4 &mat)
+{
+  return csMatrix4f(
+      mat.a1, mat.b1, mat.c1, mat.d1,
+      mat.a2, mat.b2, mat.c2, mat.d2,
+      mat.a3, mat.b3, mat.c3, mat.d3,
+      mat.a4, mat.b4, mat.c4, mat.d4
+  );
+}
+
+static csVector3f to_vector(const aiVector3D &v)
+{
+  return csVector3f(v.x, v.y, v.z);
+}
+
+static csVector4f to_vector4(const aiVector3D &v)
+{
+  return csVector4f(v.x, v.y, v.z, 1.0f);
+}
+
+
+static aiVector3D to_vector(const csVector3f &v)
+{
+  return aiVector3D(v.x, v.y, v.z);
+}
+
+static aiVector3D to_vector3(const csVector4f &v)
+{
+  return aiVector3D(v.x, v.y, v.z);
+}
+
+struct MyWeight
+{
+  aiBone *bone;
+  float  weight;
+};
+
+static std::vector<MyWeight> get_weights(const aiMesh *mesh, uint32_t vertexId, uint32_t maxInfluences)
+{
+  std::vector<MyWeight> weights;
+  for (int              bi = 0; bi < mesh->mNumBones; ++bi)
+  {
+    aiBone   *bone = mesh->mBones[bi];
+    for (int wi    = 0; wi < bone->mNumWeights; ++wi)
+    {
+      aiVertexWeight &weight = bone->mWeights[wi];
+      if (weight.mVertexId == vertexId)
+      {
+        weights.emplace_back(bone, weight.mWeight);
+      }
+    }
+  }
+
+  std::sort(weights.begin(), weights.end(), [](const MyWeight &w0, const MyWeight &w1)
+  {
+    return w0.weight > w1.weight;
+  });
+
+  if (weights.size() > maxInfluences)
+  {
+    weights.resize(maxInfluences);
+  }
+
+  float     total_weight = 0.0f;
+  for (auto &w: weights)
+  {
+    total_weight += w.weight;
+  }
+  for (auto &w: weights)
+  {
+    w.weight /= total_weight;
+  }
+
+
+  return weights;
+}
+
+void AssimpMeshExporter::ScanMatrices(const aiNode *node, const cs::csMatrix4f &parent)
+{
+  const csMatrix4f &mat   = to_matrix4f(node->mTransformation);
+  const csMatrix4f global = parent * mat;
+  m_matrices[node->mName.C_Str()] = global;
+
+  for (int i = 0; i < node->mNumChildren; ++i)
+  {
+    ScanMatrices(node->mChildren[i], global);
+  }
+}
+
+#define MIN(a, b) (a) < (b) ? (a) : (b)
+#define MAX(a, b) (a) > (b) ? (a) : (b)
+
+void AssimpMeshExporter::PushPosition(std::vector<aiVector3D> &values,
+                                      const aiMatrix4x4 &matrix,
+                                      const aiMesh *mesh,
+                                      aiVector3D *srcValues,
+                                      uint32_t srcValueCount)
 {
   if (!srcValues)
   {
     return;
   }
-  values.reserve(values.size() * srcValueCount);
-  for (int i = 0; i < srcValueCount; ++i)
+
+//  min = {cs::csVector3f} {x=-0.388848543, y=-1.36245489, z=-0.419072032}
+//  max = {cs::csVector3f} {x=0.382430077, y=0.280570477, z=0.571975946}
+  if (mesh->HasBones() && false)
   {
-    aiVector3D &srcV = srcValues[i];
-    aiVector3D v     = matrix * srcV;
-    values.push_back(v);
+    csMatrix4f skeletonMatrix = to_matrix4f(m_skeletonExporter.GetRootMatrix());
+
+    values.resize(srcValueCount);
+    
+//    for (size_t iv = 0; iv<srcValueCount; iv++)
+//    {
+//      csVector4f meshVert = to_vector4(srcValues[iv]);
+//      const std::vector<MyWeight> &weights = get_weights(mesh, iv, 4);
+//      csVector4f v (0.0f, 0.0f, 0.0f, 0.0f);
+//      for (const auto &w: weights)
+//      {
+//        aiBone *bone = w.bone;
+//        csMatrix4f bonePoseMatrix   = to_matrix4f(bone->mOffsetMatrix);
+//        csMatrix4f globalBoneMatrix = m_matrices[bone->mName.C_Str()];
+//
+//        v += (globalBoneMatrix * bonePoseMatrix * meshVert) * w.weight;
+//      }
+//      values[iv] = to_vector3(v);
+//    }
+    
+
+    std::vector<int> numWeights;
+    numWeights.resize(srcValueCount);
+    std::vector<float> weightValues;
+    weightValues.resize(srcValueCount);
+    int max = 0;
+    float maxWeight = 0.0f;
+    for (int b = 0; b < mesh->mNumBones; ++b)
+    {
+      aiBone     *bone            = mesh->mBones[b];
+      csMatrix4f bonePoseMatrix   = to_matrix4f(bone->mOffsetMatrix);
+      csMatrix4f invBonePoseMatrix   = bonePoseMatrix.Inverted();
+      csMatrix4f globalBoneMatrix = m_matrices[bone->mName.C_Str()];
+      csMatrix4f tr = globalBoneMatrix * bonePoseMatrix;
+      for (int   w                = 0; w < bone->mNumWeights; ++w)
+      {
+        aiVertexWeight &weight = bone->mWeights[w];
+        if (weight.mVertexId < srcValueCount)
+        {
+          const csVector4f &meshVert = to_vector4(srcValues[weight.mVertexId]);
+          csVector4f       v         = (tr * meshVert) * weight.mWeight;
+          values[weight.mVertexId] += to_vector3(v);
+          numWeights[weight.mVertexId]++;
+          weightValues[weight.mVertexId] += weight.mWeight;
+          max = MAX(max, numWeights[weight.mVertexId]);
+          maxWeight = MAX(maxWeight, weightValues[weight.mVertexId]);
+        }
+      }
+
+    }
+
+
+
+  }
+  else
+  {
+    values.reserve(srcValueCount);
+    for (int i = 0; i < srcValueCount; ++i)
+    {
+      aiVector3D &srcV = srcValues[i];
+      aiVector3D v     = matrix * srcV;
+      values.push_back(v);
+    }
   }
 }
 
 
-void AssimpMeshExporter::Push(std::vector<aiVector3D> &values,
-                              const aiMatrix3x3 &matrix,
-                              aiVector3D *srcValues,
-                              uint32_t srcValueCount)
+void AssimpMeshExporter::PushNormal(std::vector<aiVector3D> &values,
+                                    const aiMatrix3x3 &matrix,
+                                    aiVector3D *srcValues,
+                                    uint32_t srcValueCount)
 {
   if (!srcValues)
   {
@@ -130,19 +290,32 @@ void AssimpMeshExporter::Push(std::vector<aiVector3D> &values,
   }
 }
 
-void AssimpMeshExporter::Push(std::vector<VertexBoneData> &boneData, aiBone *bone)
+void AssimpMeshExporter::PushBones(std::vector<VertexBoneData> &boneData, aiBone *bone, uint32_t boneId)
 {
   std::string boneName(bone->mName.C_Str());
-  uint32_t    boneId = m_skeletonExporter.GetBoneIndex(boneName);
+
+  auto it = m_boneNames.find(boneName);
+  if (it != m_boneNames.end())
+  {
+    boneId = it->second;
+  }
+  else
+  {
+    boneId = ++m_boneId;
+    m_boneNames[boneName] = boneId;
+  }
+//  uint32_t    boneId = m_skeletonExporter.GetBoneIndex(boneName);
 
   for (int i = 0, in = bone->mNumWeights; i < in; ++i)
   {
     aiVertexWeight &weight = bone->mWeights[i];
-    BoneWeight     bw;
-    bw.boneId   = boneId;
-    bw.weight   = weight.mWeight;
-    boneData[weight.mVertexId].weights.push_back(bw);
+    boneData[weight.mVertexId].weights.emplace_back(boneId, weight.mWeight);
   }
+}
+
+csVector3f vec(const aiVector3D &v)
+{
+  return csVector3f(v.x, v.y, v.z);
 }
 
 
@@ -155,24 +328,38 @@ void AssimpMeshExporter::Push(cs::imp::AssimpMeshExporter::MeshData &meshData,
 
   aiMatrix3x3 normalMatrix = aiMatrix3x3(aiMatrix4x4(matrix).Inverse().Transpose());
 
+  aiMatrix4x4 id;
 
-  Push(meshData.position, matrix, mesh->mVertices, numVertices);
-  Push(meshData.normal, normalMatrix, mesh->mNormals, numVertices);
-  Push(meshData.tangent, normalMatrix, mesh->mTangents, numVertices);
-  Push(meshData.color0, mesh->mColors[0], numVertices);
-  Push(meshData.color1, mesh->mColors[1], numVertices);
-  Push(meshData.texCoord0, mesh->mTextureCoords[0], numVertices);
-  Push(meshData.texCoord1, mesh->mTextureCoords[1], numVertices);
-  Push(meshData.texCoord2, mesh->mTextureCoords[2], numVertices);
+  PushPosition(meshData.position, matrix, mesh, mesh->mVertices, numVertices);
+
+  csVector3f min(FLT_MAX, FLT_MAX, FLT_MAX);
+  csVector3f max(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+  for (auto  v: meshData.position)
+  {
+    min.x = MIN(min.x, v.x);
+    min.y = MIN(min.y, v.y);
+    min.z = MIN(min.z, v.z);
+    max.x = MAX(max.x, v.x);
+    max.y = MAX(max.y, v.y);
+    max.z = MAX(max.z, v.z);
+  }
+
+
+  PushNormal(meshData.normal, normalMatrix, mesh->mNormals, numVertices);
+  PushNormal(meshData.tangent, normalMatrix, mesh->mTangents, numVertices);
+  PushColor(meshData.color0, mesh->mColors[0], numVertices);
+  PushColor(meshData.color1, mesh->mColors[1], numVertices);
+  PushTexCoord(meshData.texCoord0, mesh->mTextureCoords[0], numVertices);
+  PushTexCoord(meshData.texCoord1, mesh->mTextureCoords[1], numVertices);
+  PushTexCoord(meshData.texCoord2, mesh->mTextureCoords[2], numVertices);
   if (mesh->HasBones())
   {
     meshData.boneData.resize(meshData.position.size());
-    m_skeletonExporter.ScanBones();
     if (VerifyMeshSkeletonMatchesBones(mesh))
     {
       for (uint32_t i = 0, in = mesh->mNumBones; i < in; i++)
       {
-        Push(meshData.boneData, mesh->mBones[i]);
+        PushBones(meshData.boneData, mesh->mBones[i], i);
       }
       NormalizeBoneWeights(meshData);
     }
@@ -252,7 +439,8 @@ void AssimpMeshExporter::NormalizeBoneWeights(cs::imp::AssimpMeshExporter::MeshD
   {
     std::sort(bd.weights.begin(),
               bd.weights.end(),
-              [](BoneWeight bw0, BoneWeight bw1) { return bw0.weight > bw1.weight; });
+              [](BoneWeight bw0, BoneWeight bw1)
+              { return bw0.weight > bw1.weight; });
 
     // sum the weight and normalize it, so that the first 4 bone sum up to 1.0
     float         sum = 0.0f;
@@ -575,11 +763,11 @@ void AssimpMeshExporter::Export(const std::string &filename, const std::string &
                    reinterpret_cast<uint8_t *>(dataStream.data()));
 
       csCryoFileElement *boneMappingElement = subMeshElement->AddChild("boneMapping");
-      for (const auto &boneDecl: m_skeletonExporter.GetBoneDecl())
+      for (auto e : m_boneNames)
       {
         csCryoFileElement *boneElement = boneMappingElement->AddChild("bone");
-        boneElement->AddAttribute("idx", std::to_string(boneDecl.idx));
-        boneElement->AddStringAttribute("name", boneDecl.name);
+        boneElement->AddAttribute("idx", std::to_string(e.second));
+        boneElement->AddStringAttribute("name", e.first);
 
       }
     }

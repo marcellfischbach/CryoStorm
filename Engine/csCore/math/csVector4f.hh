@@ -12,7 +12,7 @@ namespace cs
 
 struct csVector3f;
 
-struct CS_CORE_API csVector4f
+struct csVector4f
 {
 public:
   float x;

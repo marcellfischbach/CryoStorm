@@ -82,10 +82,14 @@ void skeleton_animation_update_bone_rotation(const csSkeletonAnimation::Channel 
     if (frameX1.frame >= frame)
     {
       auto &frameX0 = *last;
-      float a = (frame - frameX0.frame) / (frameX1.frame - frameX0.frame);
+      float a = 0.0f;
+      if (frameX1.frame != frameX0.frame)
+      {
+        a = (frame - frameX0.frame) / (frameX1.frame - frameX0.frame);
+      }
 
-      csQuaternion quat = csQuaternion::Blend(frameX0.rotation, frameX1.rotation, a);
-      bone.rotation = bone.rotation + quat  * blendFactor;
+      csQuaternion quat = csQuaternion::Serp(frameX0.rotation, frameX1.rotation, a);
+      bone.rotation += quat * blendFactor;
       return;
     }
 
@@ -99,7 +103,30 @@ void skeleton_animation_update_bone_position(const csSkeletonAnimation::Channel 
                                              float frame,
                                              float blendFactor)
 {
+  if (channel.positions.empty())
+  {
+    return;
+  }
 
+  auto last = &channel.positions[0];
+  for (const auto &frameX1: channel.positions)
+  {
+    if (frameX1.frame >= frame)
+    {
+      auto &frameX0 = *last;
+      float a = 0.0f;
+      if (frameX1.frame != frameX0.frame)
+      {
+        a = (frame - frameX0.frame) / (frameX1.frame - frameX0.frame);
+      }
+
+      csVector3f quat = csVector3f::Lerp(frameX0.position, frameX1.position, a);
+      bone.position += quat * blendFactor;
+      return;
+    }
+
+    last = &frameX1;
+  }
 }
 
 void skeleton_animation_update_bone_scale(const csSkeletonAnimation::Channel &channel,
@@ -173,17 +200,17 @@ void csSkeletonAnimation::AddPositionFrame(const std::string &channelName, float
 }
 
 
-void csSkeletonAnimation::AddScaleFrame(const std::string &channelName, float time, const cs::csVector3f &scale)
+void csSkeletonAnimation::AddScaleFrame(const std::string &channelName, float frame, const cs::csVector3f &scale)
 {
   FrameScale scaleFrame {
-      time,
+      frame,
       scale,
   };
 
   Channel   &channel = GetChannel(channelName);
   for (auto it       = channel.scales.begin(); it != channel.scales.end(); it++)
   {
-    if (it->frame > time)
+    if (it->frame > frame)
     {
       channel.scales.insert(it, scaleFrame);
       return;

@@ -23,9 +23,8 @@ public:
     size_t              id;
     std::string         name;
     std::vector<size_t> children;
-    csVector3f          offset;
+    csVector3f          position;
     csQuaternion        rotation;
-    csQuaternion        poseRotation;
     csMatrix4f          globalMatrix;
   };
 
@@ -36,7 +35,7 @@ public:
   csSkeleton();
 
   void Clear();
-  void InitializeFrom();
+  void InitializePoseMatrix();
   void InitializeFrom(const csSkeleton &skeleton);
 
   CS_NODISCARD size_t AddRoot(const std::string &name);

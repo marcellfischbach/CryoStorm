@@ -75,14 +75,22 @@ void csSkeletonAnimationPlayer::UpdateFrame(float time)
     printf ("Update time: %f\n", time);
   }
 
-    float    frame = time * m_animation->GetFramesPerSecond();
+  float    frame = time * m_animation->GetFramesPerSecond();
   for (int i     = 0; i < m_skeleton->GetNumberOfBones(); ++i)
   {
     csSkeleton::Bone &bone = m_skeleton->GetBone(i);
     bone.rotation = csQuaternion(0.0f, 0.0f, 0.0f, 0.0f);
+    bone.position = csVector3f(0.0f, 0.0f, 0.0f);
   }
 
   m_animation->PushSkeleton(m_skeleton, frame, 1.0f);
+  for (int i     = 0; i < m_skeleton->GetNumberOfBones(); ++i)
+  {
+    csSkeleton::Bone &bone = m_skeleton->GetBone(i);
+    bone.rotation.Normalize();
+  }
+
+
   m_skeleton->UpdateBones();
 }
 

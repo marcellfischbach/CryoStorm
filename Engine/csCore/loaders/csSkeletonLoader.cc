@@ -40,7 +40,7 @@ csOwned<iAsset> csSkeletonLoader::Load(const file::csCryoFile *file, const cs::c
     }
   }
 
-  skeleton->InitializeFrom();
+  skeleton->InitializePoseMatrix();
 
   return skeleton;
 }
@@ -64,6 +64,9 @@ void csSkeletonLoader::ScanBone(const file::csCryoFileElement *boneElement,
   {
     boneIdx = (int32_t) skeleton->AddChild(boneName, parentBondIdx);
   }
+
+  printf ("Bone '%s' @ %d\n", boneName.c_str(), boneIdx);
+
 
   ReadTransform(boneElement->GetChild("transform"), skeleton, boneIdx);
 
@@ -128,9 +131,8 @@ void csSkeletonLoader::ReadTransform(const file::csCryoFileElement *transformEle
       csVector3f scale;
       mat.ExtractTRS(translation, rot, scale);
       csQuaternion rotation = csQuaternion::FromMatrix(rot);
-      bone.offset   = translation;
+      bone.position = translation;
       bone.rotation = rotation;
-      bone.poseRotation = rotation;
     }
   }
 }

@@ -31,18 +31,18 @@ static GLenum DataTypeMap[] = {
 };
 
 
-csGL4RenderMeshModifier::csGL4RenderMeshModifier(uint32_t streamID,
-                                                 const cs::csVertexDeclaration &declaration,
+csGL4RenderMeshModifier::csGL4RenderMeshModifier(const cs::csVertexDeclaration &declaration,
                                                  cs::opengl::csGL4VertexBuffer *vertexBuffer)
     : iRenderMeshModifier()
-    , m_streamID(streamID)
     , m_vertexDeclaration(declaration)
     , m_vertexBuffer(vertexBuffer)
     , m_buffer(nullptr)
     , m_bufferSize(0)
     , m_bufferCount(0)
 {
+  Map();
 }
+
 csGL4RenderMeshModifier::~csGL4RenderMeshModifier()
 {
   Unmap();
@@ -57,7 +57,7 @@ bool csGL4RenderMeshModifier::Map()
 
 
   m_vertexBuffer->Map(&m_buffer, m_bufferSize);
-  m_streamStride = m_vertexDeclaration.GetStreamStride(m_streamID);
+  m_streamStride = m_vertexDeclaration.GetStreamStride(0);
   m_bufferCount  = m_bufferSize / m_streamStride;
   return m_buffer;
 }
@@ -123,8 +123,9 @@ void csGL4RenderMeshModifier::Update(cs::eVertexStream stream, cs::csVector4i *s
 
 uint8_t *csGL4RenderMeshModifier::GetStreamBuffer(cs::eVertexStream stream)
 {
-  const std::vector<csVertexDeclaration::Attribute> &streamAttribs = m_vertexDeclaration.GetAttributes(m_streamID);
-  for (auto                                         attrib: streamAttribs)
+  const std::vector<csVertexDeclaration::Attribute> &streamAttribs = m_vertexDeclaration.GetAttributes(0);
+
+  for (auto attrib: streamAttribs)
   {
     if (attrib.Location == stream)
     {
@@ -195,7 +196,7 @@ const csVertexDeclaration &csGL4RenderMesh::GetVertexDeclaration() const
 
 csOwned<iRenderMeshModifier> csGL4RenderMesh::Modify()
 {
-  return new csGL4RenderMeshModifier(0, m_vertexDeclaration, m_vertexBuffer);
+  return new csGL4RenderMeshModifier(m_vertexDeclaration, m_vertexBuffer);
 }
 
 void csGL4RenderMesh::Render(iDevice *graphics, eRenderPass pass)
@@ -552,9 +553,9 @@ csOwned<iRenderMesh> csGL4RenderMeshGenerator::Generate()
     {
       return nullptr;
     }
-    attributes.emplace_back(0, eVS_BoneIndices, 4, eDT_Float, 0, offset);
+    attributes.emplace_back(0, eVS_BoneIndices, 4, eDT_UnsignedInt, 0, offset);
     count += 4;
-    offset += 4 * sizeof(float);
+    offset += 4 * sizeof(uint32_t);
   }
   if (!m_boneWeights.empty())
   {
@@ -575,103 +576,133 @@ csOwned<iRenderMesh> csGL4RenderMeshGenerator::Generate()
   csBoundingBox bbox;
   bbox.Clear();
   csVertexDeclaration vd(attributes);
-  auto                vBuffer = new float[count * vertexCount];
+  auto                vBuffer = new uint8_t[offset * vertexCount];
 
+  uint8_t* vptr = vBuffer;
   for (Size i = 0, c = 0; i < vertexCount; ++i)
   {
     if (!m_vertices2.empty())
     {
       csVector2f &v = m_vertices2[i];
-      vBuffer[c++] = v.x;
-      vBuffer[c++] = v.y;
+      *reinterpret_cast<csVector2f*>(vptr) = v;
+      vptr += sizeof(csVector2f);
+//      vBuffer[c++] = v.x;
+//      vBuffer[c++] = v.y;
       bbox.Add(csVector3f(v.x, v.y, 0.0f));
     }
     else if (!m_vertices3.empty())
     {
       csVector3f &v = m_vertices3[i];
-      vBuffer[c++] = v.x;
-      vBuffer[c++] = v.y;
-      vBuffer[c++] = v.z;
+      *reinterpret_cast<csVector3f*>(vptr) = v;
+      vptr += sizeof(csVector3f);
+
+//      vBuffer[c++] = v.x;
+//      vBuffer[c++] = v.y;
+//      vBuffer[c++] = v.z;
       bbox.Add(v);
     }
     else if (!m_vertices4.empty())
     {
       csVector4f &v = m_vertices4[i];
-      vBuffer[c++] = v.x;
-      vBuffer[c++] = v.y;
-      vBuffer[c++] = v.z;
-      vBuffer[c++] = v.w;
+      *reinterpret_cast<csVector4f*>(vptr) = v;
+      vptr += sizeof(csVector4f);
+//      vBuffer[c++] = v.x;
+//      vBuffer[c++] = v.y;
+//      vBuffer[c++] = v.z;
+//      vBuffer[c++] = v.w;
       bbox.Add((csVector3f) v);
     }
 
     if (!m_normals.empty())
     {
       csVector3f &v = m_normals[i];
-      vBuffer[c++] = v.x;
-      vBuffer[c++] = v.y;
-      vBuffer[c++] = v.z;
+      *reinterpret_cast<csVector3f*>(vptr) = v;
+      vptr += sizeof(csVector3f);
+
+//      vBuffer[c++] = v.x;
+//      vBuffer[c++] = v.y;
+//      vBuffer[c++] = v.z;
     }
     if (!m_tangents.empty())
     {
       csVector3f &v = m_tangents[i];
-      vBuffer[c++]  = v.x;
-      vBuffer[c++]  = v.y;
-      vBuffer[c++]  = v.z;
+      *reinterpret_cast<csVector3f*>(vptr) = v;
+      vptr += sizeof(csVector3f);
+//      vBuffer[c++]  = v.x;
+//      vBuffer[c++]  = v.y;
+//      vBuffer[c++]  = v.z;
     }
     if (!m_uv02.empty())
     {
       csVector2f &v = m_uv02[i];
-      vBuffer[c++]  = v.x;
-      vBuffer[c++]  = v.y;
+      *reinterpret_cast<csVector2f*>(vptr) = v;
+      vptr += sizeof(csVector2f);
+//      vBuffer[c++]  = v.x;
+//      vBuffer[c++]  = v.y;
     }
     else if (!m_uv03.empty())
     {
       csVector3f &v = m_uv03[i];
-      vBuffer[c++] = v.x;
-      vBuffer[c++] = v.y;
-      vBuffer[c++] = v.z;
+      *reinterpret_cast<csVector3f*>(vptr) = v;
+      vptr += sizeof(csVector3f);
+
+//      vBuffer[c++] = v.x;
+//      vBuffer[c++] = v.y;
+//      vBuffer[c++] = v.z;
     }
     if (!m_uv1.empty())
     {
       csVector2f &v = m_uv1[i];
-      vBuffer[c++]  = v.x;
-      vBuffer[c++]  = v.y;
+      *reinterpret_cast<csVector2f*>(vptr) = v;
+      vptr += sizeof(csVector2f);
+//      vBuffer[c++]  = v.x;
+//      vBuffer[c++]  = v.y;
     }
     if (!m_uv2.empty())
     {
       csVector2f &v = m_uv2[i];
-      vBuffer[c++]  = v.x;
-      vBuffer[c++]  = v.y;
+      *reinterpret_cast<csVector2f*>(vptr) = v;
+      vptr += sizeof(csVector2f);
+//      vBuffer[c++]  = v.x;
+//      vBuffer[c++]  = v.y;
     }
     if (!m_uv3.empty())
     {
       csVector2f &v = m_uv3[i];
-      vBuffer[c++]  = v.x;
-      vBuffer[c++]  = v.y;
+      *reinterpret_cast<csVector2f*>(vptr) = v;
+      vptr += sizeof(csVector2f);
+//      vBuffer[c++]  = v.x;
+//      vBuffer[c++]  = v.y;
     }
     if (!m_colors.empty())
     {
       csColor4f &v = m_colors[i];
-      vBuffer[c++] = v.r;
-      vBuffer[c++] = v.g;
-      vBuffer[c++] = v.b;
-      vBuffer[c++] = v.a;
+      *reinterpret_cast<csColor4f*>(vptr) = v;
+      vptr += sizeof(csColor4f);
+//      vBuffer[c++] = v.r;
+//      vBuffer[c++] = v.g;
+//      vBuffer[c++] = v.b;
+//      vBuffer[c++] = v.a;
     }
     if (!m_boneIndices.empty())
     {
       csVector4i &v = m_boneIndices[i];
-      vBuffer[c++]  = (float) v.x + 0.25f;
-      vBuffer[c++]  = (float) v.y + 0.25f;
-      vBuffer[c++]  = (float) v.z + 0.25f;
-      vBuffer[c++]  = (float) v.w + 0.25f;
+      *reinterpret_cast<csVector4i*>(vptr) = v;
+      vptr += sizeof(csVector4i);
+//      vBuffer[c++]  = (float) v.x + 0.25f;
+//      vBuffer[c++]  = (float) v.y + 0.25f;
+//      vBuffer[c++]  = (float) v.z + 0.25f;
+//      vBuffer[c++]  = (float) v.w + 0.25f;
     }
     if (!m_boneWeights.empty())
     {
       csVector4f &v = m_boneWeights[i];
-      vBuffer[c++]  = v.x;
-      vBuffer[c++]  = v.y;
-      vBuffer[c++]  = v.z;
-      vBuffer[c++]  = v.w;
+      *reinterpret_cast<csVector4f*>(vptr) = v;
+      vptr += sizeof(csVector4f);
+//      vBuffer[c++]  = v.x;
+//      vBuffer[c++]  = v.y;
+//      vBuffer[c++]  = v.z;
+//      vBuffer[c++]  = v.w;
     }
   }
   bbox.Finish();

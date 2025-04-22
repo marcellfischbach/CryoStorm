@@ -68,7 +68,7 @@ material {
 | `Default`  (default) | The material is a __normal__ material for solid objects. It is rendered to the depth-buffer and is present in the GBufferr                                                                                  |
 | `Transparency`       | The material is a __transparent__ material and will be blended on top of other objects. Not present in the depth-buffer and not rendered to the GBuffer. Lighting must be performed in forward pass always. |
 
-### Blend
+### Serp
 
 ```blend <type>,```
 
@@ -82,7 +82,7 @@ or
 
 | `<type>` | Description                                                                                                                 |
 |----------|-----------------------------------------------------------------------------------------------------------------------------|
-| `Blend`  | Normal blending. The object is blended with the background. The higher the alpha value, the less is the background visible. |
+| `Serp`  | Normal blending. The object is blended with the background. The higher the alpha value, the less is the background visible. |
 | `Add`    | The material is not blended but just adding to the color buffer                                                             |
 
 For `<src>`, `<dst>`, `<src-color>`,`<src-alpha>`, `<dst-color>` and `<dst-alpha>`. One of the following values can be

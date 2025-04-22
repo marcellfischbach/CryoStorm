@@ -605,42 +605,45 @@ void add_skeleton_mesh2(cs::csWorld *world)
 
 void add_skeleton_mesh(cs::csWorld *world)
 {
-  std::string name = "/human_test/human_test";
+  std::string name = "/human_test_2/";
 
-  auto                       meshData  = cs::csAssetManager::Get()->Load<cs::csSkeletonMesh>(name + "_skeleton.mesh");
-  auto                       skeleton  = cs::csAssetManager::Get()->Load<cs::csSkeleton>(name + "_skeleton.skeleton");
-  auto                       mesh      = meshData.Data();
+  csRef<csSkeletonMesh>                       meshData  = cs::csAssetManager::Get()->Load<cs::csSkeletonMesh>(name + "human_mesh.mesh");
+  csRef<csSkeletonMesh>                       pauldronData  = cs::csAssetManager::Get()->Load<cs::csSkeletonMesh>(name + "left_pauldron.mesh");
+  auto                       skeleton  = cs::csAssetManager::Get()->Load<cs::csSkeleton>(name + "human_skeleton.skeleton");
   csRef<csSkeletonAnimation> animation = csAssetManager::Get()->Load<csSkeletonAnimation>(
-      name + "_Skeleton_Walk.skeleton_animation");
+      name + "human_animation_Skeleton_Walk.skeleton_animation");
   if (animation)
   {
     animation->SetLoop(true);
   }
 
-  csQuaternion quat(0, 0, -0.707106829, 0.707106709);
-  csMatrix3f   mat = quat.ToMatrix3();
+//  csQuaternion quat(0, 0, -0.707106829, 0.707106709);
+//  csMatrix3f   mat = quat.ToMatrix3();
 
 
   cs::csEntity *entity = new cs::csEntity("Skeleton Entity");
 
   csSkeletonState *skeletonState = new csSkeletonState();
   skeletonState->SetSkeleton(skeleton.raw());
+  entity->AttachState(skeletonState);
+
 
 
   cs::csSkeletonMeshState *meshState = new cs::csSkeletonMeshState();
-  meshState->SetMesh(mesh);
+  meshState->SetMesh(meshData);
 //  meshState->SetMaterial(0, material);
   meshState->SetSkeletonState(skeletonState);
+  entity->AttachState(meshState);
+
+
 
   cs::csSkeletonAnimationState *skeletonAnimationState = new csSkeletonAnimationState();
   skeletonAnimationState->SetSkeleton(skeletonState);
   skeletonAnimationState->SetAnimation(animation);
   skeletonAnimationState->SetInitialStartTime(0.0f);
   skeletonAnimationState->SetActive(true);
-
-  entity->AttachState(meshState);
-  entity->AttachState(skeletonState);
   entity->AttachState(skeletonAnimationState);
+
 
 
   entity->GetRoot()->GetTransform()
@@ -649,6 +652,17 @@ void add_skeleton_mesh(cs::csWorld *world)
         .Finish();
   world->Attach(entity);
 
+
+  {
+    csEntity *pauldronEntity = new csEntity();
+    cs::csSkeletonMeshState *pauldronState = new cs::csSkeletonMeshState();
+    pauldronState->SetMesh(pauldronData);
+//  meshState->SetMaterial(0, material);
+    pauldronState->SetSkeletonState(skeletonState);
+    pauldronEntity->AttachState(pauldronState);
+
+    entity->AttachEntity(pauldronEntity);
+  }
 
 
   /*

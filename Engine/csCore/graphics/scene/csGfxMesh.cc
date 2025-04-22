@@ -50,6 +50,8 @@ void csGfxMesh::Render(iDevice* device, eRenderPass pass)
       const std::vector<csMatrix4f> &bones = m_skeleton->GetSkeletonBones();
       device->SetSkeletonMatrices(bones.data(), bones.size());
     }
+
+
     device->SetModelMatrix(m_modelMatrix);
     device->Render(m_mesh, pass);
   }

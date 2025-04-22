@@ -24,8 +24,7 @@ class CS_OGL_API csGL4RenderMeshModifier : public iRenderMeshModifier
 {
   CS_CLASS_GEN_OBJECT;
 public:
-  csGL4RenderMeshModifier(uint32_t streamID,
-                          const csVertexDeclaration &declaration,
+  csGL4RenderMeshModifier(const csVertexDeclaration &declaration,
                           csGL4VertexBuffer *vertexBuffer);
   ~csGL4RenderMeshModifier() override;
 
@@ -38,10 +37,9 @@ public:
   void Finish() override;
 
 private:
-  uint8_t *GetStreamBuffer(eVertexStream stream);
+  uint8_t *GetStreamBuffer(cs::eVertexStream stream);
 
   void Unmap();
-  uint32_t                 m_streamID;
   void                     *m_buffer;
   size_t                   m_bufferSize;
   size_t                   m_bufferCount;

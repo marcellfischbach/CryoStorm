@@ -68,7 +68,7 @@ void csGL4VertexBuffer::Map(void **data, Size &dataSize)
 {
   Bind();
   CS_GL_ERROR()
-  *data = glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
+  *data = glMapBuffer(GL_ARRAY_BUFFER, GL_READ_WRITE );
   CS_GL_ERROR()
   dataSize = m_size;
 }

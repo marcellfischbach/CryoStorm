@@ -235,11 +235,18 @@ public:
     return *this;
   }
 
+
   CS_NODISCARD CS_FORCEINLINE csVector3f Normalized() const
   {
     float l = Length();
     return csVector3f(x / l, y / l, z / l);
   }
+
+  CS_FORCEINLINE static csVector3f Lerp(const csVector3f &v0, const csVector3f &v1, float f)
+  {
+    return v0 + (v1 - v0) * f;
+  }
+
 
   explicit operator csVector2f() const
   {

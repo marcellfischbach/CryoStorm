@@ -51,21 +51,21 @@ public class csJavaFile extends CoreObject implements IFile {
         return this.ptr >= this.data.length;
     }
 
-    public void seek(int seekMode, long offset) {
-        seek(ESeekMode.values()[seekMode], offset);
+    public void seek(int seekMode, long position) {
+        seek(ESeekMode.values()[seekMode], position);
     }
 
     @Override
-    public void seek(ESeekMode seekMode, long offset) {
+    public void seek(ESeekMode seekMode, long position) {
         switch (seekMode) {
             case SET:
-                this.ptr = (int)offset;
+                this.ptr = (int)position;
                 break;
             case CUR:
-                this.ptr += offset;
+                this.ptr += position;
                 break;
             case END:
-                this.ptr = this.data.length - (int)offset;
+                this.ptr = this.data.length - (int)position;
                 break;
         }
     }

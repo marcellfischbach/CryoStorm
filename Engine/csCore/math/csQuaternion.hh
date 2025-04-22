@@ -184,51 +184,57 @@ struct csQuaternion
 
   CS_NODISCARD CS_FORCEINLINE csMatrix3f ToMatrix3() const
   {
-    return csMatrix3f(1.0f - 2.0f * y * y - 2.0f * z * z, 2.0f * x * y - 2.0f * z * w, 2.0f * x * z + 2.0f * y * w,
-                      2.0f * x * y + 2.0f * z * w, 1.0f - 2.0f * x * x - 2.0f * z * z, 2.0f * y * z - 2.0f * x * w,
-                      2.0f * x * z - 2.0f * y * w, 2.0f * y * z + 2.0f * x * w, 1.0f - 2.0f * x * x - 2.0f * y * y);
-//
-//    float sqx = x * x;
-//    float sqy = y * y;
-//    float sqz = z * z;
-//    float sqw = w * w;
-//    return csMatrix3f(
-//        2.0f * (sqw + sqx) - 1.0f, 2.0f * (x * y - w * z), 2.0f * (x * z + w * y),
-//        2.0f * (x * y + w * z), 2.0f * (sqw + sqy) - 1.0f, 2.0f * (y * z - w * x),
-//        2.0f * (x * z - w * y), 2.0f * (y * z + w * x), 2.0f * (sqw + sqz) - 1.0f);
+//    return csMatrix3f(1.0f - 2.0f * y * y - 2.0f * z * z,
+//                      2.0f * x * y - 2.0f * z * w,
+//                      2.0f * x * z + 2.0f * y * w,
+//                      2.0f * x * y + 2.0f * z * w,
+//                      1.0f - 2.0f * x * x - 2.0f * z * z,
+//                      2.0f * y * z - 2.0f * x * w,
+//                      2.0f * x * z - 2.0f * y * w,
+//                      2.0f * y * z + 2.0f * x * w,
+//                      1.0f - 2.0f * x * x - 2.0f * y * y);
+
+    float sqx = x * x;
+    float sqy = y * y;
+    float sqz = z * z;
+    float sqw = w * w;
+    return csMatrix3f(
+        2.0f * (sqw + sqx) - 1.0f, 2.0f * (x * y - w * z), 2.0f * (x * z + w * y),
+        2.0f * (x * y + w * z), 2.0f * (sqw + sqy) - 1.0f, 2.0f * (y * z - w * x),
+        2.0f * (x * z - w * y), 2.0f * (y * z + w * x), 2.0f * (sqw + sqz) - 1.0f);
 //
   }
 
   CS_NODISCARD CS_FORCEINLINE csMatrix4f ToMatrix4() const
   {
 
-    return csMatrix4f(1.0f - 2.0f * y * y - 2.0f * z * z,
-                      2.0f * x * y - 2.0f * z * w,
-                      2.0f * x * z + 2.0f * y * w,
-                      0.0f,
-                      2.0f * x * y + 2.0f * z * w,
-                      1.0f - 2.0f * x * x - 2.0f * z * z,
-                      2.0f * y * z - 2.0f * x * w,
-                      0.0f,
-                      2.0f * x * z - 2.0f * y * w,
-                      2.0f * y * z + 2.0f * x * w,
-                      1.0f - 2.0f * x * x - 2.0f * y * y,
-                      0.0f,
-                      0.0f,
-                      0.0f,
-                      0.0f,
-                      1.0f);
+//    return csMatrix4f(1.0f - 2.0f * y * y - 2.0f * z * z,
+//                      2.0f * x * y - 2.0f * z * w,
+//                      2.0f * x * z + 2.0f * y * w,
+//                      0.0f,
+//                      2.0f * x * y + 2.0f * z * w,
+//                      1.0f - 2.0f * x * x - 2.0f * z * z,
+//                      2.0f * y * z - 2.0f * x * w,
+//                      0.0f,
+//                      2.0f * x * z - 2.0f * y * w,
+//                      2.0f * y * z + 2.0f * x * w,
+//                      1.0f - 2.0f * x * x - 2.0f * y * y,
+//                      0.0f,
+//                      0.0f,
+//                      0.0f,
+//                      0.0f,
+//                      1.0f);
 
 
-//    float sqx = x * x;
-//    float sqy = y * y;
-//    float sqz = z * z;
-//    float sqw = w * w;
-//    return csMatrix4f(
-//        2.0f * (sqw + sqx) - 1.0f, 2.0f * (x * y - w * z), 2.0f * (x * z + w * y), 0.0f,
-//        2.0f * (x * y + w * z), 2.0f * (sqw + sqy) - 1.0f, 2.0f * (y * z - w * x), 0.0f,
-//        2.0f * (x * z - w * y), 2.0f * (y * z + w * x), 2.0f * (sqw + sqz) - 1.0f, 0.0f,
-//        0.0f, 0.0f, 0.0f, 1.0f);
+    float sqx = x * x;
+    float sqy = y * y;
+    float sqz = z * z;
+    float sqw = w * w;
+    return csMatrix4f(
+        2.0f * (sqw + sqx) - 1.0f, 2.0f * (x * y - w * z), 2.0f * (x * z + w * y), 0.0f,
+        2.0f * (x * y + w * z), 2.0f * (sqw + sqy) - 1.0f, 2.0f * (y * z - w * x), 0.0f,
+        2.0f * (x * z - w * y), 2.0f * (y * z + w * x), 2.0f * (sqw + sqz) - 1.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f);
 
   }
 
@@ -247,7 +253,7 @@ struct csQuaternion
   }
 
 
-  CS_FORCEINLINE static csQuaternion Blend2(const csQuaternion &q0, const csQuaternion &q1, float f)
+  CS_FORCEINLINE static csQuaternion Lerp(const csQuaternion &q0, const csQuaternion &q1, float f)
   {
     float f0 = 1.0f - f;
     float f1 = f;
@@ -260,7 +266,7 @@ struct csQuaternion
   }
 
 
-  CS_FORCEINLINE static csQuaternion Blend(const csQuaternion &q1, const csQuaternion &q2, double t)
+  CS_FORCEINLINE static csQuaternion Serp(const csQuaternion &q1, const csQuaternion &q2, double t)
   {
     csQuaternion q1_norm = q1;
     csQuaternion q2_norm = q2;
@@ -325,6 +331,14 @@ struct csQuaternion
                         q0.w + q1.w);
   }
 
+  CS_FORCEINLINE csQuaternion &operator+= (const csQuaternion &o)
+  {
+    x += o.x;
+    y += o.y;
+    z += o.z;
+    w += o.w;
+    return *this;
+  }
 
   CS_FORCEINLINE friend csQuaternion operator-(const csQuaternion &q0, const csQuaternion &q1)
   {

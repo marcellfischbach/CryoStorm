@@ -41,6 +41,7 @@ public:
   csVertexDeclaration(const Attribute* attributes, Size count);
   explicit csVertexDeclaration(const std::vector<Attribute>& attributes);
 
+  uint8_t GetNumberOfStreams () const;
   CS_NODISCARD const std::vector<Attribute>& GetAttributes(uint8_t streamID) const;
   size_t GetStreamStride (uint8_t streamID) const;
 

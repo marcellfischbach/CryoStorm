@@ -9,6 +9,7 @@
 #include <set>
 #include <vector>
 #include <csAssimpImporter/AssimpSkeletonExporter.hh>
+#include <csCore/math/csMatrix.hh>
 
 namespace cs::imp
 {
@@ -106,23 +107,30 @@ private:
   AssimpSkeletonExporter m_skeletonExporter;
 
   std::vector<MeshData> m_meshData;
+  uint32_t m_boneId = 0;
+  std::map<std::string, uint32_t> m_boneNames;
+
+  std::map<std::string, csMatrix4f> m_matrices;
+  void ScanMatrices (const aiNode* node, const csMatrix4f& parent);
 
 
   bool HasBoneData () const;
 
   void Push(MeshData &meshData, const aiMesh *mesh, const aiMatrix4x4 &matrix);
-  void Push(std::vector<aiVector3D> &values, aiVector3D *srcValues, uint32_t srcValueCount);
-  void Push(std::vector<aiColor4D> &values, aiColor4D *srcValues, uint32_t srcValueCount);
-  void Push(std::vector<aiVector3D> &values,
-                   const aiMatrix4x4 &matrix,
-                   aiVector3D *srcValues,
-                   uint32_t srcValueCount);
-  void Push(std::vector<aiVector3D> &values,
-                   const aiMatrix3x3 &matrix,
-                   aiVector3D *srcValues,
-                   uint32_t srcValueCount);
-  void Push(std::vector<VertexBoneData> &boneData,
-            aiBone* bone);
+  void PushTexCoord(std::vector<aiVector3D> &values, aiVector3D *srcValues, uint32_t srcValueCount);
+  void PushColor(std::vector<aiColor4D> &values, aiColor4D *srcValues, uint32_t srcValueCount);
+  void PushPosition(std::vector<aiVector3D> &values,
+                    const aiMatrix4x4 &matrix,
+                    const aiMesh *mesh,
+                    aiVector3D *srcValues,
+                    uint32_t srcValueCount);
+  void PushNormal(std::vector<aiVector3D> &values,
+                  const aiMatrix3x3 &matrix,
+                  aiVector3D *srcValues,
+                  uint32_t srcValueCount);
+  void PushBones(std::vector<VertexBoneData> &boneData,
+                 aiBone* bone,
+                 uint32_t boneId);
   bool VerifyMeshSkeletonMatchesBones(const aiMesh* mesh);
 
   std::set<std::string> m_skeletonRootNames;

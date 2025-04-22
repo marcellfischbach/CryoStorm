@@ -46,6 +46,11 @@ void csVertexDeclaration::Init(const csVertexDeclaration::Attribute* attributes,
 
 }
 
+uint8_t csVertexDeclaration::GetNumberOfStreams() const
+{
+  return (uint8_t)m_streams.size();
+}
+
 const std::vector<csVertexDeclaration::Attribute>& csVertexDeclaration::GetAttributes(uint8_t streamID) const
 {
   if (streamID >= m_streams.size())

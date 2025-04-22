@@ -165,8 +165,8 @@ void csMaterialLoader::LoadBlending(csMaterial *material,
     if (blendElement->GetNumberOfAttributes() == 1)
     {
       blending = true;
-      const std::string &blendString = blendElement->GetAttribute(0, "Blend");
-      if (blendString == "Blend")
+      const std::string &blendString = blendElement->GetAttribute(0, "Serp");
+      if (blendString == "Serp")
       {
         srcColor = eBlendFactor::SrcAlpha;
         srcAlpha = eBlendFactor::SrcAlpha;

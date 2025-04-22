@@ -75,7 +75,7 @@ public:
                         const csVector3f &position);
 
   void AddScaleFrame(const std::string &channelName,
-                        float time,
+                        float frame,
                         const csVector3f &scale);
 
 private:

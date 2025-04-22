@@ -727,6 +727,24 @@ public:
     fflush(stdout);
   }
 
+  CS_FORCEINLINE void Debug(const char *message, const char* indent) const
+  {
+    if (message)
+    {
+      printf("%scs::Matrix4f: %s\n", indent, message);
+    }
+    else
+    {
+      printf("%scs::Matrix4f:\n", indent);
+    }
+
+    printf("%s  %.2f %.2f %.2f %.2f\n", indent, m00, m01, m02, m03);
+    printf("%s  %.2f %.2f %.2f %.2f\n", indent, m10, m11, m12, m13);
+    printf("%s  %.2f %.2f %.2f %.2f\n", indent, m20, m21, m22, m23);
+    printf("%s  %.2f %.2f %.2f %.2f\n", indent, m30, m31, m32, m33);
+    fflush(stdout);
+  }
+
 
   CS_NODISCARD CS_FORCEINLINE bool IsIdentity() const
   {

@@ -15,7 +15,6 @@ csSkeleton::Bone csSkeleton::IllegalBone = {
     std::vector<size_t>(),
     csVector3f(),
     csQuaternion(),
-    csQuaternion(),
     csMatrix4f()
 };
 
@@ -33,12 +32,12 @@ void csSkeleton::Clear()
   m_rootBones.clear();
 }
 
-void csSkeleton::InitializeFrom()
+void csSkeleton::InitializePoseMatrix()
 {
   for (const size_t &idx: m_rootBones)
   {
-    csMatrix4f id;
-    InitializePoseMatrices(idx, id);
+    csMatrix4f id = m_base;
+    InitializePoseMatrices(idx, m_base);
   }
 //  m_poseMatrices  = m_skeletonBones;
 //  for (auto &matrix: m_poseMatrices)
@@ -54,7 +53,7 @@ void csSkeleton::InitializePoseMatrices(size_t idx, const cs::csMatrix4f &parent
 
   csMatrix4f local;
   bone.rotation.ToMatrix4(local);
-  local.SetTranslation(bone.offset);
+  local.SetTranslation(bone.position);
 
 
   csMatrix4f global = parent * local;
@@ -111,7 +110,6 @@ size_t csSkeleton::Add(const std::string &name)
       name,
       std::vector<size_t>(),
       csVector3f(),
-      csQuaternion(),
       csQuaternion(),
       csMatrix4f()
   };
@@ -191,13 +189,13 @@ void csSkeleton::UpdateBones()
 
   for (const size_t &idx: m_rootBones)
   {
-    csMatrix4f id;
+    csMatrix4f id = m_base;
     UpdateBone(idx, id);
   }
-  for (auto &item: m_skeletonBones)
-  {
-    item = m_base * item;
-  }
+//  for (auto &item: m_skeletonBones)
+//  {
+//    item = m_base * item;
+//  }
 }
 
 void csSkeleton::UpdateBone(size_t idx, const cs::csMatrix4f &parent)
@@ -207,7 +205,7 @@ void csSkeleton::UpdateBone(size_t idx, const cs::csMatrix4f &parent)
 
   csMatrix4f local;
   bone.rotation.ToMatrix4(local);
-  local.SetTranslation(bone.offset);
+  local.SetTranslation(bone.position);
 
 
   csMatrix4f global = parent * local;

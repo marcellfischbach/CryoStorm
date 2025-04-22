@@ -39,6 +39,8 @@ public:
 
   void Export(const std::string &filename) const;
 
+  aiMatrix4x4 GetBoneMatrix (const std::string &boneName) const;
+  aiMatrix4x4 GetRootMatrix () const;
 
 
 private:
@@ -54,8 +56,9 @@ private:
     Bone* parent;
     aiNode* node;
     std::vector<Bone*> children;
+    aiMatrix4x4  globalMatrix;
   };
-  void ScanBones (aiNode* node, Bone* parent);
+  void ScanBones (aiNode* node, Bone* parent, const aiMatrix4x4 &parentMatrix, const std::string &indent);
   void ExportBone (std::ofstream &out, Bone* bone, std::string indent) const;
 
   std::vector<Bone*> m_bones;

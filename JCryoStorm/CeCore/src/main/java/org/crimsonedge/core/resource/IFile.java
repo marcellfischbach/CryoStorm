@@ -14,7 +14,7 @@ public interface IFile {
 
     boolean isEOF ();
 
-    void seek (ESeekMode seekMode, long offset);
+    void seek (ESeekMode seekMode, long position);
 
     long tell();
 
