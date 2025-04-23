@@ -34,8 +34,8 @@ set(SOURCES
         csViewport.cc
         csViewport.hh
 
-        animation/csSkeletonAnimation.cc
-        animation/csSkeletonAnimation.hh
+        animation/csSkeletonAnimationStrip.cc
+        animation/csSkeletonAnimationStrip.hh
         animation/csSkeletonAnimationPlayer.cc
         animation/csSkeletonAnimationPlayer.hh
 
@@ -204,8 +204,8 @@ set(SOURCES
         loaders/csShaderGraphLoader.hh
         loaders/csSkeletonLoader.cc
         loaders/csSkeletonLoader.hh
-        loaders/csSkeletonAnimationLoader.cc
-        loaders/csSkeletonAnimationLoader.hh
+        loaders/csSkeletonAnimationStripLoader.cc
+        loaders/csSkeletonAnimationStripLoader.hh
         loaders/csTerrainLayerLoader.cc
         loaders/csTerrainLayerLoader.hh
         loaders/csTextFileLoader.cc

@@ -17,7 +17,7 @@ CS_DEFINE_GAME(Game)
 #include <csCore/csEngine.hh>
 #include <csCore/csSettings.hh>
 #include <csCore/csTicker.hh>
-#include <csCore/animation/csSkeletonAnimation.hh>
+#include <csCore/animation/csSkeletonAnimationStrip.hh>
 #include <csCore/animation/csSkeletonAnimationPlayer.hh>
 #include <csCore/entity/csCameraState.hh>
 #include <csCore/entity/csCollisionState.hh>
@@ -522,7 +522,7 @@ void generate_test_grid(cs::csWorld *world, cs::csAssetRef<cs::iMaterial> &mater
 }
 
 cs::csSkeleton                *global_skeleton  = nullptr;
-cs::csSkeletonAnimation       *global_animation = nullptr;
+cs::csSkeletonAnimationStrip  *global_animation = nullptr;
 cs::csSkeletonAnimationPlayer *global_player    = nullptr;
 
 cs::csEntity *bones[4];
@@ -554,8 +554,8 @@ void add_skeleton_mesh2(cs::csWorld *world)
 
   auto                       meshData  = cs::csAssetManager::Get()->Load<cs::csSkeletonMesh>(name + ".mesh");
   auto                       skeleton  = cs::csAssetManager::Get()->Load<cs::csSkeleton>(name + "_skeleton.skeleton");
-  auto                       mesh      = meshData.Data();
-  csRef<csSkeletonAnimation> animation = csAssetManager::Get()->Load<csSkeletonAnimation>(
+  auto                            mesh      = meshData.Data();
+  csRef<csSkeletonAnimationStrip> animation = csAssetManager::Get()->Load<csSkeletonAnimationStrip>(
       name + "_Armature_armatureAction.skeleton_animation");
   if (animation)
   {
@@ -609,8 +609,8 @@ void add_skeleton_mesh(cs::csWorld *world)
 
   csRef<csSkeletonMesh>                       meshData  = cs::csAssetManager::Get()->Load<cs::csSkeletonMesh>(name + "human_mesh.mesh");
   csRef<csSkeletonMesh>                       pauldronData  = cs::csAssetManager::Get()->Load<cs::csSkeletonMesh>(name + "left_pauldron.mesh");
-  auto                       skeleton  = cs::csAssetManager::Get()->Load<cs::csSkeleton>(name + "human_skeleton.skeleton");
-  csRef<csSkeletonAnimation> animation = csAssetManager::Get()->Load<csSkeletonAnimation>(
+  auto                            skeleton  = cs::csAssetManager::Get()->Load<cs::csSkeleton>(name + "human_skeleton.skeleton");
+  csRef<csSkeletonAnimationStrip> animation = csAssetManager::Get()->Load<csSkeletonAnimationStrip>(
       name + "human_animation_Skeleton_Walk.skeleton_animation");
   if (animation)
   {

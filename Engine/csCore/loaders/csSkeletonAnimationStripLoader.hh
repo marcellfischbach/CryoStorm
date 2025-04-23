@@ -11,15 +11,15 @@
 namespace cs
 {
 class csBinaryInputStream;
-class csSkeletonAnimation;
+class csSkeletonAnimationStrip;
 
 CS_CLASS()
-class CS_CORE_API csSkeletonAnimationLoader : public CS_SUPER(csBaseCSFAssetLoader)
+class CS_CORE_API csSkeletonAnimationStripLoader : public CS_SUPER(csBaseCSFAssetLoader)
 {
 CS_CLASS_GEN_OBJECT;
 public:
-  csSkeletonAnimationLoader();
-  ~csSkeletonAnimationLoader() override = default;
+  csSkeletonAnimationStripLoader();
+  ~csSkeletonAnimationStripLoader() override = default;
 
 
 protected:
@@ -42,7 +42,7 @@ protected:
     csVector3f scale;
   };
 
-  static void ReadChannel (csSkeletonAnimation *animation, const file::csCryoFile* file, const file::csCryoFileElement* channelElement);
+  static void ReadChannel(csSkeletonAnimationStrip *animation, const file::csCryoFile* file, const file::csCryoFileElement* channelElement);
   static std::vector<PosKey> ReadPosKey (const file::csCryoFile *file, const std::string &name);
   static std::vector<PosKey> ReadPosKey_V1 (csBinaryInputStream &is);
   static std::vector<RotKey> ReadRotKey (const file::csCryoFile *file, const std::string &name);

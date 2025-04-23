@@ -1,4 +1,4 @@
-#include <csCore/animation/csSkeletonAnimation.hh>
+#include <csCore/animation/csSkeletonAnimationStrip.hh>
 #include <csCore/graphics/csSkeleton.hh>
 
 
@@ -6,7 +6,7 @@
 namespace cs
 {
 
-csSkeletonAnimation::csSkeletonAnimation()
+csSkeletonAnimationStrip::csSkeletonAnimationStrip()
     : iAsset()
     , m_numberOfFrames(0.0f)
     , m_framesPerSecond(24.0f)
@@ -16,57 +16,57 @@ csSkeletonAnimation::csSkeletonAnimation()
 
 }
 
-csSkeletonAnimation::~csSkeletonAnimation()
+csSkeletonAnimationStrip::~csSkeletonAnimationStrip()
 {
   m_channels.clear();
 }
 
-void csSkeletonAnimation::SetName(const std::string &name)
+void csSkeletonAnimationStrip::SetName(const std::string &name)
 {
   m_name = name;
 }
 
-const std::string &csSkeletonAnimation::GetName() const
+const std::string &csSkeletonAnimationStrip::GetName() const
 {
   return m_name;
 }
 
-void csSkeletonAnimation::SetNumberOfFrames(float numberOfFrames)
+void csSkeletonAnimationStrip::SetNumberOfFrames(float numberOfFrames)
 {
   m_numberOfFrames = numberOfFrames;
 }
 
-float csSkeletonAnimation::GetNumberOfFrames() const
+float csSkeletonAnimationStrip::GetNumberOfFrames() const
 {
   return m_numberOfFrames;
 }
 
-void csSkeletonAnimation::SetFramesPerSecond(float framesPerSecond)
+void csSkeletonAnimationStrip::SetFramesPerSecond(float framesPerSecond)
 {
   m_framesPerSecond = framesPerSecond;
 }
 
-float csSkeletonAnimation::GetFramesPerSecond() const
+float csSkeletonAnimationStrip::GetFramesPerSecond() const
 {
   return m_framesPerSecond;
 }
 
-void csSkeletonAnimation::SetLoop(bool loop)
+void csSkeletonAnimationStrip::SetLoop(bool loop)
 {
   m_loop = loop;
 }
 
-bool csSkeletonAnimation::IsLoop() const
+bool csSkeletonAnimationStrip::IsLoop() const
 {
   return m_loop;
 }
 
-float csSkeletonAnimation::GetDuration() const
+float csSkeletonAnimationStrip::GetDuration() const
 {
   return m_numberOfFrames / m_framesPerSecond;
 }
 
-void skeleton_animation_update_bone_rotation(const csSkeletonAnimation::Channel &channel,
+void skeleton_animation_update_bone_rotation(const csSkeletonAnimationStrip::Channel &channel,
                                              csSkeleton::Bone &bone,
                                              float frame,
                                              float blendFactor)
@@ -98,7 +98,7 @@ void skeleton_animation_update_bone_rotation(const csSkeletonAnimation::Channel 
 
 }
 
-void skeleton_animation_update_bone_position(const csSkeletonAnimation::Channel &channel,
+void skeleton_animation_update_bone_position(const csSkeletonAnimationStrip::Channel &channel,
                                              csSkeleton::Bone &bone,
                                              float frame,
                                              float blendFactor)
@@ -129,7 +129,7 @@ void skeleton_animation_update_bone_position(const csSkeletonAnimation::Channel 
   }
 }
 
-void skeleton_animation_update_bone_scale(const csSkeletonAnimation::Channel &channel,
+void skeleton_animation_update_bone_scale(const csSkeletonAnimationStrip::Channel &channel,
                                           csSkeleton::Bone &bone,
                                           float frame,
                                           float blendFactor)
@@ -137,7 +137,7 @@ void skeleton_animation_update_bone_scale(const csSkeletonAnimation::Channel &ch
 
 }
 
-void skeleton_animation_update_bone(const csSkeletonAnimation::Channel &channel,
+void skeleton_animation_update_bone(const csSkeletonAnimationStrip::Channel &channel,
                                     csSkeleton::Bone &bone,
                                     float frame,
                                     float blendFactor)
@@ -148,7 +148,7 @@ void skeleton_animation_update_bone(const csSkeletonAnimation::Channel &channel,
 }
 
 
-void csSkeletonAnimation::PushSkeleton(cs::csSkeleton *skeleton, float frame, float blendFactor) const
+void csSkeletonAnimationStrip::PushSkeleton(cs::csSkeleton *skeleton, float frame, float blendFactor) const
 {
   for (const auto &channel: m_channels)
   {
@@ -157,9 +157,9 @@ void csSkeletonAnimation::PushSkeleton(cs::csSkeleton *skeleton, float frame, fl
   }
 }
 
-void csSkeletonAnimation::AddRotationFrame(const std::string &channelName,
-                                           float frame,
-                                           const csQuaternion &rotation)
+void csSkeletonAnimationStrip::AddRotationFrame(const std::string &channelName,
+                                                float frame,
+                                                const csQuaternion &rotation)
 {
   csQuaternion q = rotation;
   q.Normalize();
@@ -180,7 +180,7 @@ void csSkeletonAnimation::AddRotationFrame(const std::string &channelName,
   channel.rotations.push_back(rotFrame);
 }
 
-void csSkeletonAnimation::AddPositionFrame(const std::string &channelName, float frame, const cs::csVector3f &position)
+void csSkeletonAnimationStrip::AddPositionFrame(const std::string &channelName, float frame, const cs::csVector3f &position)
 {
   FramePosition posFrame {
       frame,
@@ -200,7 +200,7 @@ void csSkeletonAnimation::AddPositionFrame(const std::string &channelName, float
 }
 
 
-void csSkeletonAnimation::AddScaleFrame(const std::string &channelName, float frame, const cs::csVector3f &scale)
+void csSkeletonAnimationStrip::AddScaleFrame(const std::string &channelName, float frame, const cs::csVector3f &scale)
 {
   FrameScale scaleFrame {
       frame,
@@ -220,7 +220,7 @@ void csSkeletonAnimation::AddScaleFrame(const std::string &channelName, float fr
 }
 
 
-csSkeletonAnimation::Channel &csSkeletonAnimation::GetChannel(const std::string &channelName)
+csSkeletonAnimationStrip::Channel &csSkeletonAnimationStrip::GetChannel(const std::string &channelName)
 {
   for (Channel &channel: m_channels)
   {
@@ -241,7 +241,7 @@ csSkeletonAnimation::Channel &csSkeletonAnimation::GetChannel(const std::string 
 }
 
 
-void csSkeletonAnimationPack::AddAnimation(csSkeletonAnimation *animation)
+void csSkeletonAnimationPack::AddAnimation(csSkeletonAnimationStrip *animation)
 {
   if (animation)
   {
@@ -249,7 +249,7 @@ void csSkeletonAnimationPack::AddAnimation(csSkeletonAnimation *animation)
   }
 }
 
-csSkeletonAnimation *csSkeletonAnimationPack::Get(const std::string &name)
+csSkeletonAnimationStrip *csSkeletonAnimationPack::Get(const std::string &name)
 {
   for (auto &animation: m_animations)
   {

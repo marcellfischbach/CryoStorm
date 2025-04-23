@@ -14,7 +14,7 @@ namespace cs
 class csSkeleton;
 
 CS_CLASS()
-class CS_CORE_API csSkeletonAnimation : public CS_SUPER(iAsset)
+class CS_CORE_API csSkeletonAnimationStrip : public CS_SUPER(iAsset)
 {
 CS_CLASS_GEN_OBJECT;
 
@@ -46,8 +46,8 @@ public:
 
 
 public:
-  csSkeletonAnimation();
-  ~csSkeletonAnimation() override;
+  csSkeletonAnimationStrip();
+  ~csSkeletonAnimationStrip() override;
 
   void SetName(const std::string &name);
   const std::string &GetName() const;
@@ -97,12 +97,12 @@ public:
   csSkeletonAnimationPack() = default;
   ~csSkeletonAnimationPack() override = default;
 
-  void AddAnimation(csSkeletonAnimation *animation);
-  csSkeletonAnimation *Get(const std::string &name);
+  void AddAnimation(csSkeletonAnimationStrip *animation);
+  csSkeletonAnimationStrip *Get(const std::string &name);
 
 
 private:
-  std::vector<csRef<csSkeletonAnimation>> m_animations;
+  std::vector<csRef<csSkeletonAnimationStrip>> m_animations;
 
 };
 

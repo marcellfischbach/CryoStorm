@@ -1,6 +1,6 @@
 
 #include <csCore/animation/csSkeletonAnimationPlayer.hh>
-#include <csCore/animation/csSkeletonAnimation.hh>
+#include <csCore/animation/csSkeletonAnimationStrip.hh>
 #include <csCore/graphics/csSkeleton.hh>
 #include <csCore/input/csInput.hh>
 
@@ -27,7 +27,7 @@ void csSkeletonAnimationPlayer::SetSkeleton(cs::csSkeleton *skeleton)
   m_skeleton = skeleton;
 }
 
-void csSkeletonAnimationPlayer::SetAnimation(cs::csSkeletonAnimation *animation)
+void csSkeletonAnimationPlayer::SetAnimation(cs::csSkeletonAnimationStrip *animation)
 {
   m_animation = animation;
 }

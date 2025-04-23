@@ -4,7 +4,7 @@
 
 #include <csCore/entity/csSkeletonAnimationState.hh>
 #include <csCore/entity/csSkeletonState.hh>
-#include <csCore/animation/csSkeletonAnimation.hh>
+#include <csCore/animation/csSkeletonAnimationStrip.hh>
 #include <csCore/animation/csSkeletonAnimationPlayer.hh>
 #include <csCore/graphics/csSkeleton.hh>
 
@@ -32,7 +32,7 @@ void csSkeletonAnimationState::SetSkeleton(cs::csSkeletonState *skeletonState)
   }
 }
 
-void csSkeletonAnimationState::SetAnimation(cs::csSkeletonAnimation *animation)
+void csSkeletonAnimationState::SetAnimation(cs::csSkeletonAnimationStrip *animation)
 {
   m_animation = animation;
   if (m_animation)

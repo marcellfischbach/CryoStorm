@@ -6,7 +6,7 @@
 #include <csCore/loaders/csSamplerLoader.hh>
 #include <csCore/loaders/csShaderGraphLoader.hh>
 #include <csCore/loaders/csSkeletonLoader.hh>
-#include <csCore/loaders/csSkeletonAnimationLoader.hh>
+#include <csCore/loaders/csSkeletonAnimationStripLoader.hh>
 #include <csCore/loaders/csTerrainLayerLoader.hh>
 #include <csCore/loaders/csTextureLoader.hh>
 #include <csCore/loaders/scene/csSceneLoader.hh>
@@ -30,7 +30,7 @@ bool csCoreModule::Register(const std::vector<std::string> &args, csEngine *engi
       ->RegisterLoader(new csSceneLoader())
       ->RegisterLoader(new csShaderGraphLoader())
       ->RegisterLoader(new csSkeletonLoader())
-      ->RegisterLoader(new csSkeletonAnimationLoader())
+      ->RegisterLoader(new csSkeletonAnimationStripLoader())
       ->RegisterLoader(new csTerrainLayerLoader())
       ->RegisterLoader(new csTerrainLayerMaskLoader())
       ->RegisterLoader(new csTextureLoader());

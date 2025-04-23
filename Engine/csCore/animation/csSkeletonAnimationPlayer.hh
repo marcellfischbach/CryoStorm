@@ -12,7 +12,7 @@ namespace cs
 {
 
 class csSkeleton;
-class csSkeletonAnimation;
+class csSkeletonAnimationStrip;
 
 CS_CLASS()
 class CS_CORE_API csSkeletonAnimationPlayer : public CS_SUPER(iObject)
@@ -23,7 +23,7 @@ public:
   ~csSkeletonAnimationPlayer() override;
 
   void SetSkeleton(csSkeleton *skeleton);
-  void SetAnimation(csSkeletonAnimation *animation);
+  void SetAnimation(csSkeletonAnimationStrip *animation);
 
   void Start (float time = 0.0f);
 
@@ -33,8 +33,8 @@ private:
   void UpdateFrame(float time);
 
 private:
-  csRef<csSkeleton>          m_skeleton;
-  csRef<csSkeletonAnimation> m_animation;
+  csRef<csSkeleton>               m_skeleton;
+  csRef<csSkeletonAnimationStrip> m_animation;
 
   bool m_active;
   float m_time;

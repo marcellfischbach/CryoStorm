@@ -2,19 +2,19 @@
 // Created by MCEL on 11.04.2025.
 //
 
-#include <csCore/loaders/csSkeletonAnimationLoader.hh>
-#include <csCore/animation/csSkeletonAnimation.hh>
+#include <csCore/loaders/csSkeletonAnimationStripLoader.hh>
+#include <csCore/animation/csSkeletonAnimationStrip.hh>
 #include <csCore/resource/csBinaryData.hh>
 
 namespace cs
 {
 
-csSkeletonAnimationLoader::csSkeletonAnimationLoader()
+csSkeletonAnimationStripLoader::csSkeletonAnimationStripLoader()
 {
   RegisterType("SKELETON_ANIMATION");
 }
 
-csOwned<iAsset> csSkeletonAnimationLoader::Load(const file::csCryoFile *file, const cs::csAssetLocator &locator) const
+csOwned<iAsset> csSkeletonAnimationStripLoader::Load(const file::csCryoFile *file, const cs::csAssetLocator &locator) const
 {
   const file::csCryoFileElement *root = file->Root();
 
@@ -25,7 +25,7 @@ csOwned<iAsset> csSkeletonAnimationLoader::Load(const file::csCryoFile *file, co
   }
 
 
-  auto animation = new csSkeletonAnimation();
+  auto animation = new csSkeletonAnimationStrip();
   animation->SetName(animationElement->GetAttribute("name", locator.GetFilename()));
 
 
@@ -54,9 +54,9 @@ csOwned<iAsset> csSkeletonAnimationLoader::Load(const file::csCryoFile *file, co
   return animation;
 }
 
-void csSkeletonAnimationLoader::ReadChannel(csSkeletonAnimation *animation,
-                                            const file::csCryoFile *file,
-                                            const file::csCryoFileElement *channelElement)
+void csSkeletonAnimationStripLoader::ReadChannel(csSkeletonAnimationStrip *animation,
+                                                 const file::csCryoFile *file,
+                                                 const file::csCryoFileElement *channelElement)
 {
   if (!channelElement || !channelElement->HasAttribute("name"))
   {
@@ -98,8 +98,8 @@ void csSkeletonAnimationLoader::ReadChannel(csSkeletonAnimation *animation,
   }
 }
 
-std::vector<csSkeletonAnimationLoader::PosKey> csSkeletonAnimationLoader::ReadPosKey(const file::csCryoFile *file, 
-                                                                                     const std::string &name)
+std::vector<csSkeletonAnimationStripLoader::PosKey> csSkeletonAnimationStripLoader::ReadPosKey(const file::csCryoFile *file,
+                                                                                               const std::string &name)
 {
   const std::vector<uint8_t> &data = file->GetData(name);
   if (!data.empty())
@@ -114,7 +114,7 @@ std::vector<csSkeletonAnimationLoader::PosKey> csSkeletonAnimationLoader::ReadPo
   return std::vector<PosKey>();
 }
 
-std::vector<csSkeletonAnimationLoader::PosKey> csSkeletonAnimationLoader::ReadPosKey_V1(csBinaryInputStream &is)
+std::vector<csSkeletonAnimationStripLoader::PosKey> csSkeletonAnimationStripLoader::ReadPosKey_V1(csBinaryInputStream &is)
 {
   auto                numValues = is.Read<uint32_t>();
   std::vector<PosKey> result;
@@ -125,8 +125,8 @@ std::vector<csSkeletonAnimationLoader::PosKey> csSkeletonAnimationLoader::ReadPo
 
 
 
-std::vector<csSkeletonAnimationLoader::RotKey> csSkeletonAnimationLoader::ReadRotKey(const file::csCryoFile *file,
-                                                                                     const std::string &name)
+std::vector<csSkeletonAnimationStripLoader::RotKey> csSkeletonAnimationStripLoader::ReadRotKey(const file::csCryoFile *file,
+                                                                                               const std::string &name)
 {
   const std::vector<uint8_t> &data = file->GetData(name);
   if (!data.empty())
@@ -141,7 +141,7 @@ std::vector<csSkeletonAnimationLoader::RotKey> csSkeletonAnimationLoader::ReadRo
   return std::vector<RotKey>();
 }
 
-std::vector<csSkeletonAnimationLoader::RotKey> csSkeletonAnimationLoader::ReadRotKey_V1(csBinaryInputStream &is)
+std::vector<csSkeletonAnimationStripLoader::RotKey> csSkeletonAnimationStripLoader::ReadRotKey_V1(csBinaryInputStream &is)
 {
   auto                numValues = is.Read<uint32_t>();
   std::vector<RotKey> result;
@@ -151,8 +151,8 @@ std::vector<csSkeletonAnimationLoader::RotKey> csSkeletonAnimationLoader::ReadRo
 }
 
 
-std::vector<csSkeletonAnimationLoader::ScaleKey> csSkeletonAnimationLoader::ReadScaleKey(const file::csCryoFile *file,
-                                                                                       const std::string &name)
+std::vector<csSkeletonAnimationStripLoader::ScaleKey> csSkeletonAnimationStripLoader::ReadScaleKey(const file::csCryoFile *file,
+                                                                                                   const std::string &name)
 {
   const std::vector<uint8_t> &data = file->GetData(name);
   if (!data.empty())
@@ -167,7 +167,7 @@ std::vector<csSkeletonAnimationLoader::ScaleKey> csSkeletonAnimationLoader::Read
   return std::vector<ScaleKey>();
 }
 
-std::vector<csSkeletonAnimationLoader::ScaleKey> csSkeletonAnimationLoader::ReadScaleKey_V1(csBinaryInputStream &is)
+std::vector<csSkeletonAnimationStripLoader::ScaleKey> csSkeletonAnimationStripLoader::ReadScaleKey_V1(csBinaryInputStream &is)
 {
   auto                numValues = is.Read<uint32_t>();
   std::vector<ScaleKey> result;

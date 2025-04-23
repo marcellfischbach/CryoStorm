@@ -12,7 +12,7 @@ namespace cs
 {
 
 class csSkeletonState;
-class csSkeletonAnimation;
+class csSkeletonAnimationStrip;
 class csSkeletonAnimationPlayer;
 
 CS_CLASS(jclass="org.cryo.core.entity.CsSkeletonAnimationState")
@@ -24,7 +24,7 @@ public:
   ~csSkeletonAnimationState() override = default;
 
   void SetSkeleton (csSkeletonState* skeletonState);
-  void SetAnimation (csSkeletonAnimation* animation);
+  void SetAnimation(csSkeletonAnimationStrip* animation);
 
   void SetActive (bool active);
   bool IsActive () const;
@@ -38,8 +38,8 @@ private:
   float m_initialStartTime = 0.0f;
   bool m_active = false;
 
-  csRef<csSkeletonState> m_skeletonState;
-  csRef<csSkeletonAnimation> m_animation;
+  csRef<csSkeletonState>           m_skeletonState;
+  csRef<csSkeletonAnimationStrip>  m_animation;
   csRef<csSkeletonAnimationPlayer> m_player;
 };
 
