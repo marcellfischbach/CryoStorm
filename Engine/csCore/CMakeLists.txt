@@ -36,8 +36,12 @@ set(SOURCES
 
         animation/csSkeletonAnimationStrip.cc
         animation/csSkeletonAnimationStrip.hh
+        animation/csSkeletonAnimationProperties.cc
+        animation/csSkeletonAnimationProperties.hh
         animation/csSkeletonAnimationPlayer.cc
         animation/csSkeletonAnimationPlayer.hh
+        animation/iSkeletonAnimation.cc
+        animation/iSkeletonAnimation.hh
 
 
         entity/csCameraState.cc

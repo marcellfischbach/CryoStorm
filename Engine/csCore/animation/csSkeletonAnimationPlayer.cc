@@ -1,5 +1,6 @@
 
 #include <csCore/animation/csSkeletonAnimationPlayer.hh>
+#include <csCore/animation/csSkeletonAnimationProperties.hh>
 #include <csCore/animation/csSkeletonAnimationStrip.hh>
 #include <csCore/graphics/csSkeleton.hh>
 #include <csCore/input/csInput.hh>
@@ -13,6 +14,7 @@ csSkeletonAnimationPlayer::csSkeletonAnimationPlayer()
     , m_animation(nullptr)
     , m_active(false)
     , m_time(0.0f)
+    , m_properties(new csSkeletonAnimationProperties())
 {
 
 }
@@ -20,6 +22,7 @@ csSkeletonAnimationPlayer::csSkeletonAnimationPlayer()
 
 csSkeletonAnimationPlayer::~csSkeletonAnimationPlayer()
 {
+  delete m_properties;
 }
 
 void csSkeletonAnimationPlayer::SetSkeleton(cs::csSkeleton *skeleton)

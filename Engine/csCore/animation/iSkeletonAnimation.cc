@@ -2,7 +2,7 @@
 // Created by mcel on 23.04.2025.
 //
 
-#include <iSkeletonAnimation.hh>
+#include <csCore/animation/iSkeletonAnimation.hh>
 
 namespace cs
 {
