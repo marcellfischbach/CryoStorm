@@ -419,7 +419,7 @@ void csGL4TwinPSSMRenderer::RenderShadowMap(const csGL4DirectionalLight *directi
 
   if (m_attrShadowBuffers)
   {
-    for (size_t i=0; i<2; i++)
+    for (size_t i = 0; i < 2; i++)
     {
       eTextureUnit unit = m_device->BindTexture(GetShadowBuffer()->View[i].ShadowDepth);
       m_attrShadowBuffers->SetArrayIndex(i);
@@ -429,7 +429,7 @@ void csGL4TwinPSSMRenderer::RenderShadowMap(const csGL4DirectionalLight *directi
 
   if (m_attrShadowBufferDatas && m_shadowSamplingMode == ShadowSamplingMode::VSM)
   {
-    for (size_t i=0; i<2; i++)
+    for (size_t i = 0; i < 2; i++)
     {
       eTextureUnit unit = m_device->BindTexture(GetShadowBuffer()->View[i].ShadowColor);
       m_attrShadowBufferDatas->SetArrayIndex(i);
@@ -470,26 +470,26 @@ csGL4TwinPSSMShadowBufferObject *csGL4TwinPSSMRenderer::CreateDirectionalLightSh
 {
   csGL4TwinPSSMShadowBufferObject *sbo = new csGL4TwinPSSMShadowBufferObject();
 
-  for (size_t viewSplit=0; viewSplit<2; viewSplit++)
+  for (size_t viewSplit = 0; viewSplit < 2; viewSplit++)
   {
     if (m_shadowSamplingMode == ShadowSamplingMode::VSM)
     {
       iTexture2DArray::Descriptor colorDesc {};
-      colorDesc.Width          = m_directionalLightShadowBufferSize;
-      colorDesc.Height         = m_directionalLightShadowBufferSize;
-      colorDesc.Layers         = 4;
-      colorDesc.Format         = ePF_RG32F;
-      colorDesc.MipMaps        = false;
+      colorDesc.Width                  = m_directionalLightShadowBufferSize;
+      colorDesc.Height                 = m_directionalLightShadowBufferSize;
+      colorDesc.Layers                 = 4;
+      colorDesc.Format                 = ePF_RG32F;
+      colorDesc.MipMaps                = false;
       sbo->View[viewSplit].ShadowColor = m_device->CreateTexture(colorDesc).Query<csGL4Texture2DArray>();
       sbo->View[viewSplit].ShadowColor->SetSampler(GetShadowBufferColorSampler());
     }
 
     iTexture2DArray::Descriptor depthDesc {};
-    depthDesc.Width          = m_directionalLightShadowBufferSize;
-    depthDesc.Height         = m_directionalLightShadowBufferSize;
-    depthDesc.Layers         = 4;
-    depthDesc.Format         = ePF_Depth;
-    depthDesc.MipMaps        = false;
+    depthDesc.Width                  = m_directionalLightShadowBufferSize;
+    depthDesc.Height                 = m_directionalLightShadowBufferSize;
+    depthDesc.Layers                 = 4;
+    depthDesc.Format                 = ePF_Depth;
+    depthDesc.MipMaps                = false;
     sbo->View[viewSplit].ShadowDepth = m_device->CreateTexture(depthDesc).Query<csGL4Texture2DArray>();
     sbo->View[viewSplit].ShadowDepth->SetSampler(GetShadowBufferDepthSampler());
 
@@ -524,15 +524,6 @@ csGL4TwinPSSMShadowBufferObject *csGL4TwinPSSMRenderer::CreateDirectionalLightSh
 
 }
 
-void csGL4TwinPSSMRenderer::DeleteDirectionalLightShadowBuffer(cs::opengl::iPSSMShadowBufferObject *sbo)
-{
-  if (!sbo)
-  {
-    return;
-  }
-  csGL4TwinPSSMShadowBufferObject *shadowBuffer = reinterpret_cast<csGL4TwinPSSMShadowBufferObject *>(sbo);
-  delete shadowBuffer;
-}
 
 bool csGL4TwinPSSMRenderer::IsShadowMapValid(csGL4RenderTarget2D *shadowMap) const
 {
@@ -543,11 +534,12 @@ bool csGL4TwinPSSMRenderer::IsShadowMapValid(csGL4RenderTarget2D *shadowMap) con
 
 bool csGL4TwinPSSMRenderer::IsShadowBufferValid(iPSSMShadowBufferObject *shadowMap) const
 {
-  if (!shadowMap)
+  if (!shadowMap || shadowMap->m_type != 1)
   {
     return false;
   }
-  csGL4RenderTarget2D *buffer = reinterpret_cast<csGL4TwinPSSMShadowBufferObject *>(shadowMap)->View[0].ShadowBuffers[0];
+  csGL4RenderTarget2D
+      *buffer = reinterpret_cast<csGL4TwinPSSMShadowBufferObject *>(shadowMap)->View[0].ShadowBuffers[0];
   return buffer
          && buffer->GetWidth() == m_directionalLightShadowBufferSize
          && buffer->GetHeight() == m_directionalLightShadowBufferSize;
@@ -676,7 +668,8 @@ iSampler *csGL4TwinPSSMRenderer::GetShadowBufferDepthSampler()
 
 csGL4TwinPSSMShadowBufferObject::csGL4TwinPSSMShadowBufferObject()
 {
-  for (size_t i=0; i<2; i++)
+  m_type = 1;
+  for (size_t i = 0; i < 2; i++)
   {
     View[i].ShadowDepth = nullptr;
     View[i].ShadowColor = nullptr;
@@ -689,7 +682,8 @@ csGL4TwinPSSMShadowBufferObject::csGL4TwinPSSMShadowBufferObject()
 
 csGL4TwinPSSMShadowBufferObject::csGL4TwinPSSMShadowBufferObject(const csGL4TwinPSSMShadowBufferObject &sbo)
 {
-  for(size_t i=0; i<2; i++)
+  m_type = 1;
+  for (size_t i = 0; i < 2; i++)
   {
     View[i].ShadowDepth = sbo.View[i].ShadowDepth;
     View[i].ShadowColor = sbo.View[i].ShadowColor;
@@ -702,7 +696,8 @@ csGL4TwinPSSMShadowBufferObject::csGL4TwinPSSMShadowBufferObject(const csGL4Twin
 
 csGL4TwinPSSMShadowBufferObject::csGL4TwinPSSMShadowBufferObject(csGL4TwinPSSMShadowBufferObject &&sbo)
 {
-  for(size_t i=0; i<2; i++)
+  m_type = 1;
+  for (size_t i = 0; i < 2; i++)
   {
     View[i].ShadowDepth = sbo.View[i].ShadowDepth;
     View[i].ShadowColor = sbo.View[i].ShadowColor;
@@ -727,7 +722,8 @@ csGL4TwinPSSMShadowBufferObject::~csGL4TwinPSSMShadowBufferObject()
 
 csGL4TwinPSSMShadowBufferObject &csGL4TwinPSSMShadowBufferObject::operator=(const csGL4TwinPSSMShadowBufferObject &sbo)
 {
-  for(size_t i=0; i<2; i++)
+  m_type = 1;
+  for (size_t i = 0; i < 2; i++)
   {
     View[i].ShadowDepth = sbo.View[i].ShadowDepth;
     View[i].ShadowColor = sbo.View[i].ShadowColor;
@@ -737,6 +733,11 @@ csGL4TwinPSSMShadowBufferObject &csGL4TwinPSSMShadowBufferObject::operator=(cons
     View[i].ShadowBuffers[3] = sbo.View[i].ShadowBuffers[3];
   }
   return *this;
+}
+
+void csGL4TwinPSSMShadowBufferObject::DeleteSelf()
+{
+  delete this;
 }
 
 

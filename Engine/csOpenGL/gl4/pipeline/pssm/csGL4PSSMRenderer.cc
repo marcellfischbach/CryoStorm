@@ -499,15 +499,6 @@ csGL4PSSMShadowBufferObject *csGL4PSSMRenderer::CreateDirectionalLightShadowBuff
 
 }
 
-void csGL4PSSMRenderer::DeleteDirectionalLightShadowBuffer(cs::opengl::iPSSMShadowBufferObject *sbo)
-{
-  if (!sbo)
-  {
-    return;
-  }
-  csGL4PSSMShadowBufferObject *shadowBuffer = reinterpret_cast<csGL4PSSMShadowBufferObject *>(sbo);
-  delete shadowBuffer;
-}
 
 bool csGL4PSSMRenderer::IsShadowMapValid(csGL4RenderTarget2D *shadowMap) const
 {
@@ -518,7 +509,7 @@ bool csGL4PSSMRenderer::IsShadowMapValid(csGL4RenderTarget2D *shadowMap) const
 
 bool csGL4PSSMRenderer::IsShadowBufferValid(iPSSMShadowBufferObject *shadowMap) const
 {
-  if (!shadowMap)
+  if (!shadowMap || shadowMap->m_type != 0)
   {
     return false;
   }
@@ -651,6 +642,8 @@ iSampler *csGL4PSSMRenderer::GetShadowBufferDepthSampler()
 
 csGL4PSSMShadowBufferObject::csGL4PSSMShadowBufferObject()
 {
+  m_type = 0;
+
   ShadowDepth = nullptr;
   ShadowColor = nullptr;
   ShadowBuffers[0] = nullptr;
@@ -661,6 +654,7 @@ csGL4PSSMShadowBufferObject::csGL4PSSMShadowBufferObject()
 
 csGL4PSSMShadowBufferObject::csGL4PSSMShadowBufferObject(const csGL4PSSMShadowBufferObject &sbo)
 {
+  m_type = 0;
   ShadowDepth = sbo.ShadowDepth;
   ShadowColor = sbo.ShadowColor;
   ShadowBuffers[0] = sbo.ShadowBuffers[0];
@@ -671,6 +665,7 @@ csGL4PSSMShadowBufferObject::csGL4PSSMShadowBufferObject(const csGL4PSSMShadowBu
 
 csGL4PSSMShadowBufferObject::csGL4PSSMShadowBufferObject(csGL4PSSMShadowBufferObject &&sbo)
 {
+  m_type = 0;
   ShadowDepth = sbo.ShadowDepth;
   ShadowColor = sbo.ShadowColor;
   ShadowBuffers[0] = sbo.ShadowBuffers[0];
@@ -692,6 +687,7 @@ csGL4PSSMShadowBufferObject::~csGL4PSSMShadowBufferObject()
 
 csGL4PSSMShadowBufferObject &csGL4PSSMShadowBufferObject::operator=(const csGL4PSSMShadowBufferObject &sbo)
 {
+  m_type = 0;
   ShadowDepth = sbo.ShadowDepth;
   ShadowColor = sbo.ShadowColor;
   ShadowBuffers[0] = sbo.ShadowBuffers[0];
@@ -701,5 +697,9 @@ csGL4PSSMShadowBufferObject &csGL4PSSMShadowBufferObject::operator=(const csGL4P
   return *this;
 }
 
+void csGL4PSSMShadowBufferObject::DeleteSelf()
+{
+  delete this;
+}
 
 }

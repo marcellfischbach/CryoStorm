@@ -53,6 +53,7 @@ struct csGL4TwinPSSMShadowBufferObject : public iPSSMShadowBufferObject
 
   csGL4TwinPSSMShadowBufferObject &operator=(const csGL4TwinPSSMShadowBufferObject &sbo);
 
+  void DeleteSelf() override;
 };
 
 class csGL4TwinPSSMRenderer : public iPSSMRenderer
@@ -73,7 +74,6 @@ public:
 
 
   csGL4TwinPSSMShadowBufferObject *CreateDirectionalLightShadowBuffer() override;
-  void DeleteDirectionalLightShadowBuffer(iPSSMShadowBufferObject *sbo) override;
 
   void SetShadowBuffer(iPSSMShadowBufferObject *shadowBuffer) override;
   csGL4TwinPSSMShadowBufferObject *GetShadowBuffer();

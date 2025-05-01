@@ -153,7 +153,10 @@ iPSSMShadowBufferObject *csGL4ForwardDirectionalLightRenderer::GetDirectionalLig
   iPSSMShadowBufferObject *shadowBuffer = m_directionalLightShadowBuffer[lightIdx];
   if (!m_pssmRenderer.IsShadowBufferValid(shadowBuffer))
   {
-    m_pssmRenderer.DeleteDirectionalLightShadowBuffer(shadowBuffer);
+    if (shadowBuffer)
+    {
+      shadowBuffer->DeleteSelf();
+    }
     m_directionalLightShadowBuffer[lightIdx] = m_pssmRenderer.CreateDirectionalLightShadowBuffer();
   }
 

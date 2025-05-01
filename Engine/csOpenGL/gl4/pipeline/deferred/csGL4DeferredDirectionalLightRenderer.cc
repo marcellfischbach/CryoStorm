@@ -212,7 +212,12 @@ iPSSMShadowBufferObject *csGL4DeferredDirectionalLightRenderer::GetShadowBuffer(
   {
     if (!m_pssmRenderer->IsShadowBufferValid(m_shadowBuffers[m_lightIdx]))
     {
-      m_pssmRenderer->DeleteDirectionalLightShadowBuffer(m_shadowBuffers[m_lightIdx]);
+      if (m_shadowBuffers[m_lightIdx])
+      {
+        m_shadowBuffers[m_lightIdx]->DeleteSelf();
+        m_shadowBuffers[m_lightIdx] = nullptr;
+
+      }
       m_shadowBuffers[m_lightIdx] = m_pssmRenderer->CreateDirectionalLightShadowBuffer();
     }
 
@@ -222,7 +227,11 @@ iPSSMShadowBufferObject *csGL4DeferredDirectionalLightRenderer::GetShadowBuffer(
   {
     if (!m_pssmRenderer->IsShadowBufferValid(m_shadowBuffer))
     {
-      m_pssmRenderer->DeleteDirectionalLightShadowBuffer(m_shadowBuffer);
+      if (m_shadowBuffer)
+      {
+        m_shadowBuffer->DeleteSelf();
+        m_shadowBuffer = nullptr;
+      }
       m_shadowBuffer = m_pssmRenderer->CreateDirectionalLightShadowBuffer();
     }
 

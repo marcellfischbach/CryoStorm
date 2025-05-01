@@ -20,7 +20,8 @@ class csGL4RenderTarget2D;
 
 struct iPSSMShadowBufferObject
 {
-
+  uint8_t m_type;
+  virtual void DeleteSelf () = 0;
 };
 
 
@@ -36,7 +37,6 @@ struct iPSSMRenderer
 
 
   virtual iPSSMShadowBufferObject *CreateDirectionalLightShadowBuffer() = 0;
-  virtual void DeleteDirectionalLightShadowBuffer(iPSSMShadowBufferObject *sbo) = 0;
 
   virtual void SetShadowBuffer(iPSSMShadowBufferObject *shadowBuffer) = 0;
 

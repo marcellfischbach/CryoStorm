@@ -46,6 +46,7 @@ struct csGL4PSSMShadowBufferObject : public iPSSMShadowBufferObject
 
   csGL4PSSMShadowBufferObject &operator=(const csGL4PSSMShadowBufferObject &sbo);
 
+  void DeleteSelf() override;
 };
 
 class csGL4PSSMRenderer : public iPSSMRenderer
@@ -66,7 +67,6 @@ public:
 
 
   csGL4PSSMShadowBufferObject *CreateDirectionalLightShadowBuffer() override;
-  void DeleteDirectionalLightShadowBuffer(iPSSMShadowBufferObject *sbo) override;
 
   void SetShadowBuffer(iPSSMShadowBufferObject *shadowBuffer) override;
   csGL4PSSMShadowBufferObject *GetShadowBuffer();
