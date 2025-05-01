@@ -14,6 +14,7 @@ enum eRenderPass
   eRP_VSM,
   eRP_ShadowPSSM,
   eRP_ShadowCube,
+  eRP_ShadowTwinPSSM,
 
   eRP_COUNT
 };

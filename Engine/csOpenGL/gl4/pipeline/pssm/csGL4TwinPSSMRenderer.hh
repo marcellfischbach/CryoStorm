@@ -1,6 +1,7 @@
 #pragma once
 
-#include <csOpenGL/gl4/pipeline/pssm/csGL4TwinPSSMFilter.hh>
+#include <csOpenGL/gl4/pipeline/pssm/csGL4PSSMFilter.hh>
+#include <csOpenGL/gl4/pipeline/pssm/iPSSMRenderer.hh>
 #include <csCore/graphics/scene/csGfxSceneCollector.hh>
 #include <csCore/math/csMatrix4f.hh>
 #include <csCore/csRef.hh>
@@ -32,11 +33,18 @@ class csGL4RenderTarget2D;
 class csGL4Texture2DArray;
 
 
-struct csGL4TwinPSSMShadowBufferObject
+struct csGL4TwinPSSMShadowBufferObject : public iPSSMShadowBufferObject
 {
-  csRef<csGL4Texture2DArray> ShadowDepth;
-  csRef<csGL4Texture2DArray> ShadowColor;
-  std::array<csRef<csGL4RenderTarget2D>, 4> ShadowBuffers = {nullptr, nullptr, nullptr, nullptr };
+  struct ShadowBuffer
+  {
+    csRef<csGL4Texture2DArray>                ShadowDepth;
+    csRef<csGL4Texture2DArray>                ShadowColor;
+    std::array<csRef<csGL4RenderTarget2D>, 4> ShadowBuffers = {nullptr, nullptr, nullptr, nullptr};
+  };
+
+  ShadowBuffer View[2];
+
+
 
   csGL4TwinPSSMShadowBufferObject();
   csGL4TwinPSSMShadowBufferObject(const csGL4TwinPSSMShadowBufferObject &sbo);
@@ -47,7 +55,7 @@ struct csGL4TwinPSSMShadowBufferObject
 
 };
 
-class csGL4TwinPSSMRenderer
+class csGL4TwinPSSMRenderer : public iPSSMRenderer
 {
 public:
   csGL4TwinPSSMRenderer();
@@ -55,33 +63,37 @@ public:
 
   void Initialize();
 
-  void SetDepthBuffer(iTexture2D *depthBuffer);
-  void SetDevice(csGL4Device *device);
-  void SetScene(iGfxScene *scene);
-  csOwned<csGL4RenderTarget2D> CreateDirectionalLightShadowMap();
+  void SetDepthBuffer(iTexture2D *depthBuffer) override;
+  void SetDevice(csGL4Device *device) override;
+  void SetScene(iGfxScene *scene) override;
+  csOwned<csGL4RenderTarget2D> CreateDirectionalLightShadowMap() override;
 
-  void SetShadowMap(csGL4RenderTarget2D *shadowMap);
-  csGL4RenderTarget2D *GetShadowMap();
+  void SetShadowMap(csGL4RenderTarget2D *shadowMap) override;
+  csGL4RenderTarget2D *GetShadowMap() override;
 
 
-  csGL4TwinPSSMShadowBufferObject CreateDirectionalLightShadowBuffer();
+  csGL4TwinPSSMShadowBufferObject *CreateDirectionalLightShadowBuffer() override;
+  void DeleteDirectionalLightShadowBuffer(iPSSMShadowBufferObject *sbo) override;
 
-  void SetShadowBuffer(const csGL4TwinPSSMShadowBufferObject &shadowBuffer);
-  const csGL4TwinPSSMShadowBufferObject &GetShadowBuffer();
-  csGL4RenderTarget2D *GetShadowBuffer(size_t splitLayer);
+  void SetShadowBuffer(iPSSMShadowBufferObject *shadowBuffer) override;
+  csGL4TwinPSSMShadowBufferObject *GetShadowBuffer();
+  csGL4RenderTarget2D *GetShadowBuffer(size_t viewSplit, size_t splitLayer);
 
-  void RenderShadow(const csGL4DirectionalLight *directionalLight, const csCamera &camera, const csProjector &projector);
+  void RenderShadow(const csGL4DirectionalLight *directionalLight,
+                    const csCamera &camera,
+                    const csProjector &projector) override;
 
-  bool IsShadowMapValid(csGL4RenderTarget2D *shadowMap) const;
-  bool IsShadowBufferValid(csGL4TwinPSSMShadowBufferObject &shadowMap) const;
+  bool IsShadowMapValid(csGL4RenderTarget2D *shadowMap) const override;
+  bool IsShadowBufferValid(iPSSMShadowBufferObject *shadowMap) const override;
 
-  CS_NODISCARD const std::array<csMatrix4f, 4> &GetMatrices() const;
-  CS_NODISCARD const std::array<float, 4> &GetSplits() const;
 
 private:
   void
-  RenderShadowBuffer(const csGL4DirectionalLight *directionalLight, const csCamera &camera, const csProjector &projector);
-  void RenderShadowMap(const csGL4DirectionalLight *directionalLight, const csCamera &camera, const csProjector &projector);
+  RenderShadowBuffer(const csGL4DirectionalLight *directionalLight,
+                     const csCamera &camera,
+                     const csProjector &projector);
+  void
+  RenderShadowMap(const csGL4DirectionalLight *directionalLight, const csCamera &camera, const csProjector &projector);
   void FilterShadowMap();
 
 
@@ -94,19 +106,19 @@ private:
 
 private:
   csRef<csGL4Device> m_device = nullptr;
-  csRef<iGfxScene> m_scene  = nullptr;
+  csRef<iGfxScene>   m_scene  = nullptr;
 
 
   csAssetRef<iTexture2D> m_depthBuffer = nullptr;
 
-  csGL4TwinPSSMShadowBufferObject m_directionalLightShadowBuffers;
-  size_t                      m_directionalLightShadowBufferSize = 0;
+  csGL4TwinPSSMShadowBufferObject *m_directionalLightShadowBuffers;
+  size_t                          m_directionalLightShadowBufferSize = 0;
 
 
-  csRef<csGL4RenderTarget2D> m_directionalLightShadowMapTemp = nullptr;
-  csRef<csGL4RenderTarget2D> m_directionalLightShadowMap     = nullptr;
-  size_t              m_directionalLightShadowMapWidth = 0;
-  size_t            m_directionalLightShadowMapHeight = 0;
+  csRef<csGL4RenderTarget2D> m_directionalLightShadowMapTemp   = nullptr;
+  csRef<csGL4RenderTarget2D> m_directionalLightShadowMap       = nullptr;
+  size_t                     m_directionalLightShadowMapWidth  = 0;
+  size_t                     m_directionalLightShadowMapHeight = 0;
 
   enum class ShadowSamplingMode
   {
@@ -119,24 +131,25 @@ private:
   float                m_shadowFar;
   std::array<float, 4> m_splits;
 
-  std::array<csMatrix4f, 4> m_shadowMatrices;
+  std::array<csMatrix4f, 8> m_shadowMapViewProjection;
 
-  ShadowSamplingMode m_shadowSamplingMode;
+  ShadowSamplingMode   m_shadowSamplingMode;
   csAssetRef<iSampler> m_shadowMapColorSampler;
   csAssetRef<iSampler> m_shadowBufferColorSampler;
   csAssetRef<iSampler> m_shadowMapDepthSampler;
 
   csAssetRef<iShader> m_shadowMappingShader;
-  iShaderAttribute *m_attrLayersDepth     = nullptr;
-  iShaderAttribute *m_attrLayersBias      = nullptr;
-  iShaderAttribute *m_attrShadowBuffers   = nullptr;
-  iShaderAttribute *m_attrShadowBufferDatas   = nullptr;
-  iShaderAttribute *m_attrDepthBuffer     = nullptr;
+  iShaderAttribute    *m_attrLayersDepth                   = nullptr;
+  iShaderAttribute    *m_attrLayersBias                    = nullptr;
+  iShaderAttribute    *m_attrShadowBuffers                = nullptr;
+  iShaderAttribute    *m_attrShadowBufferDatas             = nullptr;
+  iShaderAttribute    *m_attrDepthBuffer                   = nullptr;
+  iShaderAttribute    *m_attrShadowMapViewProjectionMatrix = nullptr;
 
 
-  csGL4TwinPSSMFilter m_shadowMapFilter;
+  csGL4PSSMFilter m_shadowMapFilter;
 
-  csGfxSceneCollector      m_collector;
+  csGfxSceneCollector m_collector;
 };
 
 

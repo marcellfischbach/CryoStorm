@@ -69,8 +69,8 @@ public:
   void DeleteDirectionalLightShadowBuffer(iPSSMShadowBufferObject *sbo) override;
 
   void SetShadowBuffer(iPSSMShadowBufferObject *shadowBuffer) override;
-  csGL4PSSMShadowBufferObject *GetShadowBuffer() override;
-  csGL4RenderTarget2D *GetShadowBuffer(size_t splitLayer) override;
+  csGL4PSSMShadowBufferObject *GetShadowBuffer();
+  csGL4RenderTarget2D *GetShadowBuffer(size_t splitLayer);
 
   void RenderShadow(const csGL4DirectionalLight *directionalLight,
                     const csCamera &camera,

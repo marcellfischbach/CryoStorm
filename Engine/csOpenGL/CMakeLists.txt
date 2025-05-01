@@ -82,8 +82,6 @@ set(SOURCES
 		gl4/pipeline/pssm/csGL4PSSMFilter.hh
 		gl4/pipeline/pssm/csGL4TwinPSSMRenderer.cc
 		gl4/pipeline/pssm/csGL4TwinPSSMRenderer.hh
-		gl4/pipeline/pssm/csGL4TwinPSSMFilter.cc
-		gl4/pipeline/pssm/csGL4TwinPSSMFilter.hh
 
 		gl4/shadergraph/csGL4ShaderGraphCompiler.cc
 		gl4/shadergraph/csGL4ShaderGraphCompiler_depth.cc

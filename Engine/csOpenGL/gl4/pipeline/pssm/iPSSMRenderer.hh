@@ -39,8 +39,7 @@ struct iPSSMRenderer
   virtual void DeleteDirectionalLightShadowBuffer(iPSSMShadowBufferObject *sbo) = 0;
 
   virtual void SetShadowBuffer(iPSSMShadowBufferObject *shadowBuffer) = 0;
-  virtual iPSSMShadowBufferObject *GetShadowBuffer() = 0;
-  virtual csGL4RenderTarget2D *GetShadowBuffer(size_t splitLayer) = 0;
+
 
   virtual void RenderShadow(const csGL4DirectionalLight *directionalLight,
                             const csCamera &camera,

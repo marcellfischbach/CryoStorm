@@ -5,6 +5,7 @@
 #include <csCore/entity/csTransform.hh>
 #include <csCore/entity/csSpatialState.hh>
 #include <csCore/graphics/csSkeleton.hh>
+#include <csCore/csObjectRegistry.hh>
 
 using namespace cs;
 
@@ -27,7 +28,24 @@ void CameraHandler::Update(float tpf)
 {
   csTransform tr = GetRoot()->GetTransform();
   csVector3f  dir;
-
+  
+  if (csInput::GetKeyboard()->IsKeyPressed(eK_T))
+  {
+    csDebugCache *debugCache = csObjectRegistry::Get<csDebugCache>();
+    if (debugCache)
+    {
+      debugCache->SetTwinPssm(!debugCache->IsTwinPssm());
+      if (debugCache->IsTwinPssm())
+      {
+        printf ("TwinPSSM\n");
+      }
+      else
+      {
+        printf ("PSSM\n");
+      }
+      fflush(stdout);
+    }
+  }
 
 
   iMouse         *pMouse = csInput::GetMouse();

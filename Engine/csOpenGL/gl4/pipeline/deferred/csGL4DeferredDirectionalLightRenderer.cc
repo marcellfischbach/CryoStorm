@@ -12,6 +12,7 @@
 #include <csCore/graphics/scene/iGfxScene.hh>
 #include <csCore/graphics/shading/iShader.hh>
 #include <csCore/graphics/shading/iShaderAttribute.hh>
+#include <csCore/csObjectRegistry.hh>
 
 
 namespace cs::opengl
@@ -20,7 +21,9 @@ namespace cs::opengl
 
 bool csGL4DeferredDirectionalLightRenderer::Initialize()
 {
-  m_pssmRenderer.Initialize();
+  m_standardPSSMRenderer.Initialize();
+  m_twinPSSMRenderer.Initialize();
+  m_pssmRenderer = &m_twinPSSMRenderer;
 
   m_nonShadow.m_shader = csAssetManager::Get()->Get<iShader>(
       csAssetLocator("/graphics/gl4/deferred/directional_light_deferred_no_shadow.shader"));
@@ -75,20 +78,35 @@ void csGL4DeferredDirectionalLightRenderer::Render(const csCamera *camera,
                                                    csGL4DirectionalLight *light,
                                                    iRenderTarget2D *target)
 {
+
+  csDebugCache* debugCache = csObjectRegistry::Get<csDebugCache>();
+  if (debugCache)
+  {
+    if (debugCache->IsTwinPssm())
+    {
+      m_pssmRenderer = &m_twinPSSMRenderer;
+    }
+    else
+    {
+      m_pssmRenderer = &m_standardPSSMRenderer;
+    }
+  }
+
+
   LightRenderShader   *lrs       = &m_nonShadow;
   csGL4RenderTarget2D *shadowMap = nullptr;
   if (light->IsCastShadow())
   {
 
-    m_pssmRenderer.SetDevice(m_device);
-    m_pssmRenderer.SetScene(m_scene);
-    m_pssmRenderer.SetDepthBuffer(gBuffer->GetDepth());
+    m_pssmRenderer->SetDevice(m_device);
+    m_pssmRenderer->SetScene(m_scene);
+    m_pssmRenderer->SetDepthBuffer(gBuffer->GetDepth());
     shadowMap = GetShadowMap();
-    m_pssmRenderer.SetShadowMap(shadowMap);
+    m_pssmRenderer->SetShadowMap(shadowMap);
 
     iPSSMShadowBufferObject *sbo = GetShadowBuffer();
-    m_pssmRenderer.SetShadowBuffer(sbo);
-    m_pssmRenderer.RenderShadow(light, *camera, *projector);
+    m_pssmRenderer->SetShadowBuffer(sbo);
+    m_pssmRenderer->RenderShadow(light, *camera, *projector);
 
     if (m_device->MoreShadowMapsPossible())
     {
@@ -167,23 +185,23 @@ csGL4RenderTarget2D *csGL4DeferredDirectionalLightRenderer::GetShadowMap()
   if (m_device->MoreShadowMapsPossible() && m_lightIdx < m_shadowMaps.size())
   {
     csGL4RenderTarget2D *target = m_shadowMaps[m_lightIdx];
-    if (m_pssmRenderer.IsShadowMapValid(target))
+    if (m_pssmRenderer->IsShadowMapValid(target))
     {
       return target;
     }
 
-    m_shadowMaps[m_lightIdx] = m_pssmRenderer.CreateDirectionalLightShadowMap();
+    m_shadowMaps[m_lightIdx] = m_pssmRenderer->CreateDirectionalLightShadowMap();
     return m_shadowMaps[m_lightIdx];
   }
   else
   {
 
-    if (m_pssmRenderer.IsShadowMapValid(m_shadowMap))
+    if (m_pssmRenderer->IsShadowMapValid(m_shadowMap))
     {
       return m_shadowMap;
     }
 
-    m_shadowMap = m_pssmRenderer.CreateDirectionalLightShadowMap();
+    m_shadowMap = m_pssmRenderer->CreateDirectionalLightShadowMap();
     return m_shadowMap;
   }
 }
@@ -192,20 +210,20 @@ iPSSMShadowBufferObject *csGL4DeferredDirectionalLightRenderer::GetShadowBuffer(
 {
   if (m_device->MoreShadowMapsPossible() && m_lightIdx < m_shadowBuffers.size())
   {
-    if (!m_pssmRenderer.IsShadowBufferValid(m_shadowBuffers[m_lightIdx]))
+    if (!m_pssmRenderer->IsShadowBufferValid(m_shadowBuffers[m_lightIdx]))
     {
-      m_pssmRenderer.DeleteDirectionalLightShadowBuffer(m_shadowBuffers[m_lightIdx]);
-      m_shadowBuffers[m_lightIdx] = m_pssmRenderer.CreateDirectionalLightShadowBuffer();
+      m_pssmRenderer->DeleteDirectionalLightShadowBuffer(m_shadowBuffers[m_lightIdx]);
+      m_shadowBuffers[m_lightIdx] = m_pssmRenderer->CreateDirectionalLightShadowBuffer();
     }
 
     return m_shadowBuffers[m_lightIdx];
   }
   else
   {
-    if (!m_pssmRenderer.IsShadowBufferValid(m_shadowBuffer))
+    if (!m_pssmRenderer->IsShadowBufferValid(m_shadowBuffer))
     {
-      m_pssmRenderer.DeleteDirectionalLightShadowBuffer(m_shadowBuffer);
-      m_shadowBuffer = m_pssmRenderer.CreateDirectionalLightShadowBuffer();
+      m_pssmRenderer->DeleteDirectionalLightShadowBuffer(m_shadowBuffer);
+      m_shadowBuffer = m_pssmRenderer->CreateDirectionalLightShadowBuffer();
     }
 
     return m_shadowBuffer;
