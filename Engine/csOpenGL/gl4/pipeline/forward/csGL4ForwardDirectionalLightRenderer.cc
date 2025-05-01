@@ -102,12 +102,7 @@ void csGL4ForwardDirectionalLightRenderer::RenderShadow(csGL4DirectionalLight *d
     m_pssmRenderer.SetShadowBuffer(*sbo);
     m_pssmRenderer.RenderShadow(directionalLight, camera, projector);
 
-    m_device->AddDirectionalLightShadow(directionalLight,
-                                        target->GetColorTexture(0),
-                                        sbo->ShadowDepth,
-                                        sbo->ShadowColor,
-                                        m_pssmRenderer.GetSplits(),
-                                        m_pssmRenderer.GetMatrices());
+    m_device->AddDirectionalLightShadow(directionalLight, target->GetColorTexture(0));
 //    m_device->SetLightShadowMap(directionalLight, target->GetColorTexture(0));
   }
 }

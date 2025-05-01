@@ -106,20 +106,8 @@ CS_CLASS_GEN;
   virtual bool MoreShadowMapsPossible() const = 0;
 //  virtual void AddShadowMap(iTexture2D *shadowMap) = 0;
 //  virtual iTexture2D *GetShadowMap(unsigned idx) = 0;
-  virtual void SetPointLightShadowMap(size_t lightIdx,
-                                      iPointLight *light,
-                                      iTextureCube *shadowBufferDepth,
-                                      iTextureCube *shadowBufferColor,
-                                      float near,
-                                      float far,
-                                      float bias) = 0;
-
-  virtual void AddDirectionalLightShadow(iDirectionalLight *light,
-                                         iTexture2D *shadowMap,
-                                         iTexture2DArray *shadowBuffersDepth,
-                                         iTexture2DArray *shadowBuffersColor,
-                                         const std::array<float, 4> &layers,
-                                         const std::array<csMatrix4f, 4> &matrices) = 0;
+  virtual void AddPointLightShadowMap(iPointLight *light,iTexture2D *shadowMap) = 0;
+  virtual void AddDirectionalLightShadow(iDirectionalLight *light, iTexture2D *shadowMap) = 0;
 //  virtual void SetLightShadowMap(iLight *light, iTexture2D *shadowMap) = 0;
 
   virtual cs::csOwned<iSampler> CreateSampler() = 0;

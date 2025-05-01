@@ -1070,7 +1070,7 @@ public:
 
   void Update(float tpf) override
   {
-    m_rotation += tpf * 0.1f;
+//    m_rotation += tpf * 0.1f;
 
     csVector3f p = csVector3f(::cos(m_rotation) * 10.0f, 5.0f, ::sin(m_rotation) * 10.0f);
 

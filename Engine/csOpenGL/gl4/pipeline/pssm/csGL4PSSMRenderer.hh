@@ -34,9 +34,9 @@ class csGL4Texture2DArray;
 
 struct csGL4PSSMShadowBufferObject
 {
-  csRef<csGL4Texture2DArray> ShadowDepth;
-  csRef<csGL4Texture2DArray> ShadowColor;
-  std::array<csRef<csGL4RenderTarget2D>, 4> ShadowBuffers = {nullptr, nullptr, nullptr, nullptr };
+  csRef<csGL4Texture2DArray>                ShadowDepth;
+  csRef<csGL4Texture2DArray>                ShadowColor;
+  std::array<csRef<csGL4RenderTarget2D>, 4> ShadowBuffers = {nullptr, nullptr, nullptr, nullptr};
 
   csGL4PSSMShadowBufferObject();
   csGL4PSSMShadowBufferObject(const csGL4PSSMShadowBufferObject &sbo);
@@ -70,18 +70,20 @@ public:
   const csGL4PSSMShadowBufferObject &GetShadowBuffer();
   csGL4RenderTarget2D *GetShadowBuffer(size_t splitLayer);
 
-  void RenderShadow(const csGL4DirectionalLight *directionalLight, const csCamera &camera, const csProjector &projector);
+  void
+  RenderShadow(const csGL4DirectionalLight *directionalLight, const csCamera &camera, const csProjector &projector);
 
   bool IsShadowMapValid(csGL4RenderTarget2D *shadowMap) const;
   bool IsShadowBufferValid(csGL4PSSMShadowBufferObject &shadowMap) const;
 
-  CS_NODISCARD const std::array<csMatrix4f, 4> &GetMatrices() const;
-  CS_NODISCARD const std::array<float, 4> &GetSplits() const;
 
 private:
   void
-  RenderShadowBuffer(const csGL4DirectionalLight *directionalLight, const csCamera &camera, const csProjector &projector);
-  void RenderShadowMap(const csGL4DirectionalLight *directionalLight, const csCamera &camera, const csProjector &projector);
+  RenderShadowBuffer(const csGL4DirectionalLight *directionalLight,
+                     const csCamera &camera,
+                     const csProjector &projector);
+  void
+  RenderShadowMap(const csGL4DirectionalLight *directionalLight, const csCamera &camera, const csProjector &projector);
   void FilterShadowMap();
 
 
@@ -94,7 +96,7 @@ private:
 
 private:
   csRef<csGL4Device> m_device = nullptr;
-  csRef<iGfxScene> m_scene  = nullptr;
+  csRef<iGfxScene>   m_scene  = nullptr;
 
 
   csAssetRef<iTexture2D> m_depthBuffer = nullptr;
@@ -103,10 +105,10 @@ private:
   size_t                      m_directionalLightShadowBufferSize = 0;
 
 
-  csRef<csGL4RenderTarget2D> m_directionalLightShadowMapTemp = nullptr;
-  csRef<csGL4RenderTarget2D> m_directionalLightShadowMap     = nullptr;
-  size_t              m_directionalLightShadowMapWidth = 0;
-  size_t            m_directionalLightShadowMapHeight = 0;
+  csRef<csGL4RenderTarget2D> m_directionalLightShadowMapTemp   = nullptr;
+  csRef<csGL4RenderTarget2D> m_directionalLightShadowMap       = nullptr;
+  size_t                     m_directionalLightShadowMapWidth  = 0;
+  size_t                     m_directionalLightShadowMapHeight = 0;
 
   enum class ShadowSamplingMode
   {
@@ -119,24 +121,25 @@ private:
   float                m_shadowFar;
   std::array<float, 4> m_splits;
 
-  std::array<csMatrix4f, 4> m_shadowMatrices;
+  std::array<csMatrix4f, 4> m_shadowMapViewProjection;
 
-  ShadowSamplingMode m_shadowSamplingMode;
+  ShadowSamplingMode   m_shadowSamplingMode;
   csAssetRef<iSampler> m_shadowMapColorSampler;
   csAssetRef<iSampler> m_shadowBufferColorSampler;
   csAssetRef<iSampler> m_shadowMapDepthSampler;
 
   csAssetRef<iShader> m_shadowMappingShader;
-  iShaderAttribute *m_attrLayersDepth     = nullptr;
-  iShaderAttribute *m_attrLayersBias      = nullptr;
-  iShaderAttribute *m_attrShadowBuffers   = nullptr;
-  iShaderAttribute *m_attrShadowBufferDatas   = nullptr;
-  iShaderAttribute *m_attrDepthBuffer     = nullptr;
+  iShaderAttribute    *m_attrLayersDepth                   = nullptr;
+  iShaderAttribute    *m_attrLayersBias                    = nullptr;
+  iShaderAttribute    *m_attrShadowBuffers                 = nullptr;
+  iShaderAttribute    *m_attrShadowBufferDatas             = nullptr;
+  iShaderAttribute    *m_attrDepthBuffer                   = nullptr;
+  iShaderAttribute    *m_attrShadowMapViewProjectionMatrix = nullptr;
 
 
   csGL4PSSMFilter m_shadowMapFilter;
 
-  csGfxSceneCollector      m_collector;
+  csGfxSceneCollector m_collector;
 };
 
 

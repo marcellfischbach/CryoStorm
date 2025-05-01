@@ -3,7 +3,6 @@ layout(location = 0) out vec4 cs_FragColor;
 
 uniform vec4 cs_LayersDepth;
 uniform float cs_LayersBias;
-uniform mat4 cs_MappingMatrices[4];
 uniform mat4 cs_ShadowMapViewProjectionMatrix[4];
 uniform sampler2DArrayShadow cs_ShadowBuffers;
 uniform sampler2D cs_DepthBuffer;

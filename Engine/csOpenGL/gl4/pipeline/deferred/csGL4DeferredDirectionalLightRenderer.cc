@@ -87,12 +87,7 @@ void csGL4DeferredDirectionalLightRenderer::Render(const csCamera *camera,
 
     if (m_device->MoreShadowMapsPossible())
     {
-      m_device->AddDirectionalLightShadow(light,
-                                          shadowMap->GetColorTexture(0),
-                                          sbo.ShadowDepth,
-                                          sbo.ShadowColor,
-                                          m_pssmRenderer.GetSplits(),
-                                          m_pssmRenderer.GetMatrices());
+      m_device->AddDirectionalLightShadow(light, shadowMap->GetColorTexture(0));
     }
 
     m_lightIdx++;

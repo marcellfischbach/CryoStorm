@@ -82,11 +82,12 @@ void csGL4PSSMRenderer::Initialize()
   }
   if (m_shadowMappingShader)
   {
-    m_attrLayersDepth       = m_shadowMappingShader->GetShaderAttribute("LayersDepth");
-    m_attrLayersBias        = m_shadowMappingShader->GetShaderAttribute("LayersBias");
-    m_attrShadowBuffers     = m_shadowMappingShader->GetShaderAttribute("ShadowBuffers");
-    m_attrShadowBufferDatas = m_shadowMappingShader->GetShaderAttribute("ShadowBufferDatas");
-    m_attrDepthBuffer       = m_shadowMappingShader->GetShaderAttribute("DepthBuffer");
+    m_attrLayersDepth                   = m_shadowMappingShader->GetShaderAttribute("LayersDepth");
+    m_attrLayersBias                    = m_shadowMappingShader->GetShaderAttribute("LayersBias");
+    m_attrShadowBuffers                 = m_shadowMappingShader->GetShaderAttribute("ShadowBuffers");
+    m_attrShadowBufferDatas             = m_shadowMappingShader->GetShaderAttribute("ShadowBufferDatas");
+    m_attrDepthBuffer                   = m_shadowMappingShader->GetShaderAttribute("DepthBuffer");
+    m_attrShadowMapViewProjectionMatrix = m_shadowMappingShader->GetShaderAttribute("ShadowMapViewProjectionMatrix");
   }
 
 }
@@ -243,10 +244,7 @@ void csGL4PSSMRenderer::RenderShadowBuffer(const csGL4DirectionalLight *directio
 
   const csMatrix4f &camMatInv = camera.GetViewMatrixInv();
 
-  csMatrix4f shadowMapView[4];
-  csMatrix4f shadowMapProjection[4];
-  csMatrix4f shadowMapViewInv[4];
-  csMatrix4f shadowMapProjectionInv[4];
+
 
   for (size_t i = 0; i < 4; i++)
   {
@@ -339,12 +337,8 @@ void csGL4PSSMRenderer::RenderShadowBuffer(const csGL4DirectionalLight *directio
 
 //    calc_projection_matrix(m_device, splitPoints[i], splitPoints[i + 1], near, far, view, proj);
 
-    shadowMapView[i]       = view;
-    shadowMapViewInv[i]       = viewInv;
-    shadowMapProjection[i] = proj;
-    shadowMapProjectionInv[i] = projInv;
 
-    m_shadowMatrices[i] = proj * view;
+    m_shadowMapViewProjection[i] = proj * view;
 
     m_device->ResetTextures();
     m_device->SetRenderTarget(GetShadowBuffer(i));
@@ -374,15 +368,7 @@ void csGL4PSSMRenderer::RenderShadowBuffer(const csGL4DirectionalLight *directio
         c++;
       }
     }
-//    printf ("%d ", c);
   }
-//  printf ("\n");
-  // 66 430 580 401
-  // 521 3599 4183 2539
-
-  m_device->SetShadowMapProjectionMatrices(shadowMapProjection,  shadowMapProjectionInv, 4);
-  m_device->SetShadowMapViewMatrices(shadowMapView, shadowMapViewInv, 4);
-
 }
 
 
@@ -432,6 +418,11 @@ void csGL4PSSMRenderer::RenderShadowMap(const csGL4DirectionalLight *directional
   {
     eTextureUnit unit = m_device->BindTexture(m_depthBuffer);
     m_attrDepthBuffer->Bind(unit);
+  }
+  if (m_attrShadowMapViewProjectionMatrix)
+  {
+    m_attrShadowMapViewProjectionMatrix->SetArrayIndex(0);
+    m_attrShadowMapViewProjectionMatrix->Bind(m_shadowMapViewProjection.data(), 4);
   }
 
   m_device->BindMatrices();
@@ -696,14 +687,5 @@ csGL4PSSMShadowBufferObject &csGL4PSSMShadowBufferObject::operator=(const csGL4P
   return *this;
 }
 
-const std::array<csMatrix4f, 4> &csGL4PSSMRenderer::GetMatrices() const
-{
-  return m_shadowMatrices;
-}
-
-const std::array<float, 4> &csGL4PSSMRenderer::GetSplits() const
-{
-  return m_splits;
-}
 
 }
