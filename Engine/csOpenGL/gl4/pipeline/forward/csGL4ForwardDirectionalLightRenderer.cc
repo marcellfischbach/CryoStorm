@@ -32,7 +32,9 @@ csGL4ForwardDirectionalLightRenderer::csGL4ForwardDirectionalLightRenderer()
   for (unsigned i = 0; i < MaxLights; i++)
   {
     m_directionalLightShadowMap[i] = nullptr;
+    m_directionalLightShadowBuffer[i] = nullptr;
   }
+
 }
 
 csGL4ForwardDirectionalLightRenderer::~csGL4ForwardDirectionalLightRenderer()
@@ -94,12 +96,12 @@ void csGL4ForwardDirectionalLightRenderer::RenderShadow(csGL4DirectionalLight *d
                                                         size_t lightIdx)
 {
   csGL4RenderTarget2D         *target = GetDirectionalLightShadowMap(lightIdx);
-  csGL4PSSMShadowBufferObject *sbo    = GetDirectionalLightShadowBuffer(lightIdx);
+  iPSSMShadowBufferObject *sbo    = GetDirectionalLightShadowBuffer(lightIdx);
 
   if (target && sbo)
   {
     m_pssmRenderer.SetShadowMap(target);
-    m_pssmRenderer.SetShadowBuffer(*sbo);
+    m_pssmRenderer.SetShadowBuffer(sbo);
     m_pssmRenderer.RenderShadow(directionalLight, camera, projector);
 
     m_device->AddDirectionalLightShadow(directionalLight, target->GetColorTexture(0));
@@ -141,20 +143,21 @@ csGL4RenderTarget2D *csGL4ForwardDirectionalLightRenderer::GetDirectionalLightSh
   return m_directionalLightShadowMap[lightIdx];
 }
 
-csGL4PSSMShadowBufferObject *csGL4ForwardDirectionalLightRenderer::GetDirectionalLightShadowBuffer(size_t lightIdx)
+iPSSMShadowBufferObject *csGL4ForwardDirectionalLightRenderer::GetDirectionalLightShadowBuffer(size_t lightIdx)
 {
   if (lightIdx >= MaxLights)
   {
     return nullptr;
   }
 
-  csGL4PSSMShadowBufferObject &shadowBuffer = m_directionalLightShadowBuffer[lightIdx];
+  iPSSMShadowBufferObject *shadowBuffer = m_directionalLightShadowBuffer[lightIdx];
   if (!m_pssmRenderer.IsShadowBufferValid(shadowBuffer))
   {
+    m_pssmRenderer.DeleteDirectionalLightShadowBuffer(shadowBuffer);
     m_directionalLightShadowBuffer[lightIdx] = m_pssmRenderer.CreateDirectionalLightShadowBuffer();
   }
 
-  return &m_directionalLightShadowBuffer[lightIdx];
+  return m_directionalLightShadowBuffer[lightIdx];
 }
 
 

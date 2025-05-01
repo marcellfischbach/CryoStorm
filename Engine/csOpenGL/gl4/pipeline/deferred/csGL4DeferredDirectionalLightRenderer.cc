@@ -51,6 +51,11 @@ bool csGL4DeferredDirectionalLightRenderer::Initialize()
     m_shadow.m_attrCameraPosition         = m_shadow.m_shader->GetShaderAttribute("CameraPosition");
   }
 
+  for (size_t i=0; i<m_shadowBuffers.size(); i++)
+  {
+    m_shadowBuffers[i] = nullptr;
+  }
+
   return true;
 }
 
@@ -81,7 +86,7 @@ void csGL4DeferredDirectionalLightRenderer::Render(const csCamera *camera,
     shadowMap = GetShadowMap();
     m_pssmRenderer.SetShadowMap(shadowMap);
 
-    csGL4PSSMShadowBufferObject &sbo = GetShadowBuffer();
+    iPSSMShadowBufferObject *sbo = GetShadowBuffer();
     m_pssmRenderer.SetShadowBuffer(sbo);
     m_pssmRenderer.RenderShadow(light, *camera, *projector);
 
@@ -183,12 +188,13 @@ csGL4RenderTarget2D *csGL4DeferredDirectionalLightRenderer::GetShadowMap()
   }
 }
 
-csGL4PSSMShadowBufferObject &csGL4DeferredDirectionalLightRenderer::GetShadowBuffer()
+iPSSMShadowBufferObject *csGL4DeferredDirectionalLightRenderer::GetShadowBuffer()
 {
   if (m_device->MoreShadowMapsPossible() && m_lightIdx < m_shadowBuffers.size())
   {
     if (!m_pssmRenderer.IsShadowBufferValid(m_shadowBuffers[m_lightIdx]))
     {
+      m_pssmRenderer.DeleteDirectionalLightShadowBuffer(m_shadowBuffers[m_lightIdx]);
       m_shadowBuffers[m_lightIdx] = m_pssmRenderer.CreateDirectionalLightShadowBuffer();
     }
 
@@ -198,6 +204,7 @@ csGL4PSSMShadowBufferObject &csGL4DeferredDirectionalLightRenderer::GetShadowBuf
   {
     if (!m_pssmRenderer.IsShadowBufferValid(m_shadowBuffer))
     {
+      m_pssmRenderer.DeleteDirectionalLightShadowBuffer(m_shadowBuffer);
       m_shadowBuffer = m_pssmRenderer.CreateDirectionalLightShadowBuffer();
     }
 

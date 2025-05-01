@@ -1,6 +1,7 @@
 #pragma once
 
 #include <csOpenGL/gl4/pipeline/pssm/csGL4PSSMFilter.hh>
+#include <csOpenGL/gl4/pipeline/pssm/iPSSMRenderer.hh>
 #include <csCore/graphics/scene/csGfxSceneCollector.hh>
 #include <csCore/math/csMatrix4f.hh>
 #include <csCore/csRef.hh>
@@ -32,7 +33,7 @@ class csGL4RenderTarget2D;
 class csGL4Texture2DArray;
 
 
-struct csGL4PSSMShadowBufferObject
+struct csGL4PSSMShadowBufferObject : public iPSSMShadowBufferObject
 {
   csRef<csGL4Texture2DArray>                ShadowDepth;
   csRef<csGL4Texture2DArray>                ShadowColor;
@@ -47,7 +48,7 @@ struct csGL4PSSMShadowBufferObject
 
 };
 
-class csGL4PSSMRenderer
+class csGL4PSSMRenderer : public iPSSMRenderer
 {
 public:
   csGL4PSSMRenderer();
@@ -55,26 +56,28 @@ public:
 
   void Initialize();
 
-  void SetDepthBuffer(iTexture2D *depthBuffer);
-  void SetDevice(csGL4Device *device);
-  void SetScene(iGfxScene *scene);
-  csOwned<csGL4RenderTarget2D> CreateDirectionalLightShadowMap();
+  void SetDepthBuffer(iTexture2D *depthBuffer) override;
+  void SetDevice(csGL4Device *device) override;
+  void SetScene(iGfxScene *scene) override;
+  csOwned<csGL4RenderTarget2D> CreateDirectionalLightShadowMap() override;
 
-  void SetShadowMap(csGL4RenderTarget2D *shadowMap);
-  csGL4RenderTarget2D *GetShadowMap();
+  void SetShadowMap(csGL4RenderTarget2D *shadowMap) override;
+  csGL4RenderTarget2D *GetShadowMap() override;
 
 
-  csGL4PSSMShadowBufferObject CreateDirectionalLightShadowBuffer();
+  csGL4PSSMShadowBufferObject *CreateDirectionalLightShadowBuffer() override;
+  void DeleteDirectionalLightShadowBuffer(iPSSMShadowBufferObject *sbo) override;
 
-  void SetShadowBuffer(const csGL4PSSMShadowBufferObject &shadowBuffer);
-  const csGL4PSSMShadowBufferObject &GetShadowBuffer();
-  csGL4RenderTarget2D *GetShadowBuffer(size_t splitLayer);
+  void SetShadowBuffer(iPSSMShadowBufferObject *shadowBuffer) override;
+  csGL4PSSMShadowBufferObject *GetShadowBuffer() override;
+  csGL4RenderTarget2D *GetShadowBuffer(size_t splitLayer) override;
 
-  void
-  RenderShadow(const csGL4DirectionalLight *directionalLight, const csCamera &camera, const csProjector &projector);
+  void RenderShadow(const csGL4DirectionalLight *directionalLight,
+                    const csCamera &camera,
+                    const csProjector &projector) override;
 
-  bool IsShadowMapValid(csGL4RenderTarget2D *shadowMap) const;
-  bool IsShadowBufferValid(csGL4PSSMShadowBufferObject &shadowMap) const;
+  bool IsShadowMapValid(csGL4RenderTarget2D *shadowMap) const override;
+  bool IsShadowBufferValid(iPSSMShadowBufferObject *shadowMap) const override;
 
 
 private:
@@ -101,7 +104,7 @@ private:
 
   csAssetRef<iTexture2D> m_depthBuffer = nullptr;
 
-  csGL4PSSMShadowBufferObject m_directionalLightShadowBuffers;
+  csGL4PSSMShadowBufferObject *m_directionalLightShadowBuffers;
   size_t                      m_directionalLightShadowBufferSize = 0;
 
 
