@@ -149,7 +149,7 @@ void csGL4ShaderAttribute::Bind(const csMatrix3f& v)
 
 void csGL4ShaderAttribute::Bind(const csMatrix3f* v, Size count)
 {
-  count = count >= 32 ? 32 : count;
+//  count = count >= 32 ? 32 : count;
   CS_GL_ERROR();
   glUniformMatrix3fv(m_absLocation, (GLsizei)count, false, &v->m00);
   CS_GL_ERROR();
@@ -166,7 +166,7 @@ void csGL4ShaderAttribute::Bind(const csMatrix4f& v)
 
 void csGL4ShaderAttribute::Bind(const csMatrix4f* v, Size count)
 {
-  count = count >= 32 ? 32 : count;
+//  count = count >= 32 ? 32 : count;
   CS_GL_ERROR();
   glUniformMatrix4fv(m_absLocation, (GLsizei)count, false, &v->m00);
   CS_GL_ERROR();

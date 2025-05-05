@@ -37,21 +37,15 @@ struct csGL4TwinPSSMShadowBufferObject : public iPSSMShadowBufferObject
 {
   struct ShadowBuffer
   {
-    csRef<csGL4Texture2DArray>                ShadowDepth;
-    csRef<csGL4Texture2DArray>                ShadowColor;
-    std::array<csRef<csGL4RenderTarget2D>, 4> ShadowBuffers = {nullptr, nullptr, nullptr, nullptr};
+    csRef<csGL4Texture2DArray>      ShadowDepth;
+    csRef<csGL4Texture2DArray>      ShadowColor;
+    csRef<csGL4RenderTarget2DArray> ShadowBuffers;
   };
 
-  ShadowBuffer View[2];
-
+  std::array<ShadowBuffer, 4> Splits;
 
 
   csGL4TwinPSSMShadowBufferObject();
-  csGL4TwinPSSMShadowBufferObject(const csGL4TwinPSSMShadowBufferObject &sbo);
-  csGL4TwinPSSMShadowBufferObject(csGL4TwinPSSMShadowBufferObject &&sbo);
-  ~csGL4TwinPSSMShadowBufferObject();
-
-  csGL4TwinPSSMShadowBufferObject &operator=(const csGL4TwinPSSMShadowBufferObject &sbo);
 
   void DeleteSelf() override;
 };
@@ -77,7 +71,7 @@ public:
 
   void SetShadowBuffer(iPSSMShadowBufferObject *shadowBuffer) override;
   csGL4TwinPSSMShadowBufferObject *GetShadowBuffer();
-  csGL4RenderTarget2D *GetShadowBuffer(size_t viewSplit, size_t splitLayer);
+  csGL4RenderTarget2DArray *GetShadowBuffer(size_t splitLayer);
 
   void RenderShadow(const csGL4DirectionalLight *directionalLight,
                     const csCamera &camera,
@@ -88,12 +82,15 @@ public:
 
 
 private:
-  void
-  RenderShadowBuffer(const csGL4DirectionalLight *directionalLight,
-                     const csCamera &camera,
-                     const csProjector &projector);
-  void
-  RenderShadowMap(const csGL4DirectionalLight *directionalLight, const csCamera &camera, const csProjector &projector);
+  void RenderShadowBuffer(const csGL4DirectionalLight *directionalLight,
+                          const csCamera &camera,
+                          const csProjector &projector);
+  void RenderShadowMap(const csGL4DirectionalLight *directionalLight,
+                       const csCamera &camera,
+                       const csProjector &projector);
+
+  void CalculateSplitPoints(const csProjector &projector, const csMatrix4f &camMatInv, csVector3f splitPoints[5][4]);
+
   void FilterShadowMap();
 
 
@@ -141,7 +138,7 @@ private:
   csAssetRef<iShader> m_shadowMappingShader;
   iShaderAttribute    *m_attrLayersDepth                   = nullptr;
   iShaderAttribute    *m_attrLayersBias                    = nullptr;
-  iShaderAttribute    *m_attrShadowBuffers                = nullptr;
+  iShaderAttribute    *m_attrShadowBuffers                 = nullptr;
   iShaderAttribute    *m_attrShadowBufferDatas             = nullptr;
   iShaderAttribute    *m_attrDepthBuffer                   = nullptr;
   iShaderAttribute    *m_attrShadowMapViewProjectionMatrix = nullptr;

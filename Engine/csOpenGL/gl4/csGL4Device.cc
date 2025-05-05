@@ -490,32 +490,32 @@ void csGL4Device::SetProjectionMatrix(const csMatrix4f &projectionMatrix, const 
 
 void csGL4Device::SetShadowMapViewMatrices(const csMatrix4f *matrices, Size numberOfMatrices)
 {
-//  m_shadowMapMatrixCount = numberOfMatrices;
-//  memcpy(m_shadowMapViewMatrices, matrices, sizeof(csMatrix4f) * numberOfMatrices);
-//  m_shadowMapViewProjectionMatrixDirty = true;
-//  m_shadowMapViewMatrixInvDirty = true;
-//  m_shadowMapViewProjectionMatrixInvDirty = true;
+  m_shadowMapMatrixCount = numberOfMatrices;
+  memcpy(m_shadowMapViewMatrices, matrices, sizeof(csMatrix4f) * numberOfMatrices);
+  m_shadowMapViewProjectionMatrixDirty = true;
+  m_shadowMapViewMatrixInvDirty = true;
+  m_shadowMapViewProjectionMatrixInvDirty = true;
 
 }
 
 void csGL4Device::SetShadowMapProjectionMatrices(const csMatrix4f *matrices, Size numberOfMatrices)
 {
-//  m_shadowMapMatrixCount = numberOfMatrices;
-//  memcpy(m_shadowMapProjectionMatrices, matrices, sizeof(csMatrix4f) * numberOfMatrices);
-//  m_shadowMapViewProjectionMatrixDirty = true;
-//  m_shadowMapProjectionMatrixInvDirty = true;
-//  m_shadowMapViewProjectionMatrixInvDirty = true;
+  m_shadowMapMatrixCount = numberOfMatrices;
+  memcpy(m_shadowMapProjectionMatrices, matrices, sizeof(csMatrix4f) * numberOfMatrices);
+  m_shadowMapViewProjectionMatrixDirty = true;
+  m_shadowMapProjectionMatrixInvDirty = true;
+  m_shadowMapViewProjectionMatrixInvDirty = true;
 }
 
 
 void
 csGL4Device::SetShadowMapViewMatrices(const csMatrix4f *matrices, const csMatrix4f *matricesInv, Size numberOfMatrices)
 {
-//  m_shadowMapMatrixCount = numberOfMatrices;
-//  memcpy(m_shadowMapViewMatrices, matrices, sizeof(csMatrix4f) * numberOfMatrices);
-//  memcpy(m_shadowMapViewMatricesInv, matricesInv, sizeof(csMatrix4f) * numberOfMatrices);
-//  m_shadowMapViewProjectionMatrixDirty = true;
-//  m_shadowMapViewProjectionMatrixInvDirty = true;
+  m_shadowMapMatrixCount = numberOfMatrices;
+  memcpy(m_shadowMapViewMatrices, matrices, sizeof(csMatrix4f) * numberOfMatrices);
+  memcpy(m_shadowMapViewMatricesInv, matricesInv, sizeof(csMatrix4f) * numberOfMatrices);
+  m_shadowMapViewProjectionMatrixDirty = true;
+  m_shadowMapViewProjectionMatrixInvDirty = true;
 
 }
 
@@ -523,11 +523,11 @@ void csGL4Device::SetShadowMapProjectionMatrices(const csMatrix4f *matrices,
                                                  const csMatrix4f *matricesInv,
                                                  Size numberOfMatrices)
 {
-//  m_shadowMapMatrixCount = numberOfMatrices;
-//  memcpy(m_shadowMapProjectionMatrices, matrices, sizeof(csMatrix4f) * numberOfMatrices);
-//  memcpy(m_shadowMapProjectionMatricesInv, matricesInv, sizeof(csMatrix4f) * numberOfMatrices);
-//  m_shadowMapViewProjectionMatrixDirty = true;
-//  m_shadowMapViewProjectionMatrixInvDirty = true;
+  m_shadowMapMatrixCount = numberOfMatrices;
+  memcpy(m_shadowMapProjectionMatrices, matrices, sizeof(csMatrix4f) * numberOfMatrices);
+  memcpy(m_shadowMapProjectionMatricesInv, matricesInv, sizeof(csMatrix4f) * numberOfMatrices);
+  m_shadowMapViewProjectionMatrixDirty = true;
+  m_shadowMapViewProjectionMatrixInvDirty = true;
 }
 
 void csGL4Device::SetSkeletonMatrices(const cs::csMatrix4f *skeletonMatrices, Size numMatrices)
@@ -1524,6 +1524,51 @@ void csGL4Device::BindMatrices()
   {
     attr->Bind(m_skeletonMatrices, m_skeletonMatrixCount);
   }
+
+
+  attr = m_shader->GetShaderAttribute(eSA_ShadowMapViewProjectionMatrix);
+  if (attr)
+  {
+    UpdateShadowMapViewProjectionMatrix();
+    for (Size i = 0; i < m_shadowMapMatrixCount; i++)
+    {
+      attr->SetArrayIndex(i);
+      attr->Bind(m_shadowMapViewProjectionMatrices[i]);
+    }
+  }
+
+  attr = m_shader->GetShaderAttribute(eSA_ShadowMapViewMatrixInv);
+  if (attr)
+  {
+    UpdateShadowMapViewMatrixInv();
+    for (Size i = 0; i < m_shadowMapMatrixCount; i++)
+    {
+      attr->SetArrayIndex(i);
+      attr->Bind(m_shadowMapViewMatricesInv[i]);
+    }
+  }
+
+  attr = m_shader->GetShaderAttribute(eSA_ShadowMapProjectionMatrixInv);
+  if (attr)
+  {
+    UpdateShadowMapProjectionMatrixInv();
+    for (Size i = 0; i < m_shadowMapMatrixCount; i++)
+    {
+      attr->SetArrayIndex(i);
+      attr->Bind(m_shadowMapProjectionMatricesInv[i]);
+    }
+  }
+
+  attr = m_shader->GetShaderAttribute(eSA_ShadowMapViewProjectionMatrixInv);
+  if (attr)
+  {
+    UpdateShadowMapViewProjectionMatrixInv();
+    for (Size i = 0; i < m_shadowMapMatrixCount; i++)
+    {
+      attr->SetArrayIndex(i);
+      attr->Bind(m_shadowMapViewProjectionMatricesInv[i]);
+    }
+  }
 #endif
 }
 
@@ -1612,6 +1657,62 @@ void csGL4Device::UpdateModelViewProjectionMatrixInv()
   m_modelViewProjectionMatrixInv      = m_modelViewProjectionMatrix.Inverted();
   m_modelViewProjectionMatrixInvDirty = false;
 }
+
+
+void csGL4Device::UpdateShadowMapViewProjectionMatrix()
+{
+  if (m_shadowMapViewProjectionMatrixDirty)
+  {
+    for (Size i = 0; i < m_shadowMapMatrixCount; i++)
+    {
+      m_shadowMapViewProjectionMatrices[i] = m_shadowMapProjectionMatrices[i] * m_shadowMapViewMatrices[i];
+
+    }
+    m_shadowMapViewProjectionMatrixDirty = false;
+  }
+}
+
+void csGL4Device::UpdateShadowMapViewMatrixInv()
+{
+  if (m_shadowMapViewMatrixInvDirty)
+  {
+    for (Size i = 0; i < m_shadowMapMatrixCount; i++)
+    {
+      m_shadowMapViewMatricesInv[i] = m_shadowMapViewMatrices[i].Inverted();
+
+    }
+    m_shadowMapViewMatrixInvDirty = false;
+  }
+}
+
+void csGL4Device::UpdateShadowMapProjectionMatrixInv()
+{
+  if (m_shadowMapProjectionMatrixInvDirty)
+  {
+    for (Size i = 0; i < m_shadowMapMatrixCount; i++)
+    {
+      m_shadowMapProjectionMatricesInv[i] = m_shadowMapProjectionMatricesInv[i].Inverted();
+
+    }
+    m_shadowMapProjectionMatrixInvDirty = false;
+  }
+}
+
+void csGL4Device::UpdateShadowMapViewProjectionMatrixInv()
+{
+  if (m_shadowMapViewProjectionMatrixInvDirty)
+  {
+    UpdateShadowMapViewMatrixInv();
+    UpdateShadowMapProjectionMatrixInv();
+    for (Size i = 0; i < m_shadowMapMatrixCount; i++)
+    {
+      m_shadowMapViewProjectionMatricesInv[i] = m_shadowMapProjectionMatricesInv[i] * m_shadowMapViewMatricesInv[i];
+
+    }
+    m_shadowMapViewProjectionMatrixInvDirty = false;
+  }
+}
+
 
 csGL4Program *csGL4Device::FullscreenBlitProgram()
 {

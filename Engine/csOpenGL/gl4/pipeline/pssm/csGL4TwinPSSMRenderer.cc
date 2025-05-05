@@ -93,6 +93,16 @@ void csGL4TwinPSSMRenderer::Initialize()
 
 }
 
+void csGL4TwinPSSMRenderer::RenderShadow(const csGL4DirectionalLight *directionalLight,
+                                         const cs::csCamera &camera,
+                                         const cs::csProjector &projector)
+{
+
+  RenderShadowBuffer(directionalLight, camera, projector);
+  RenderShadowMap(directionalLight, camera, projector);
+//  FilterShadowMap();
+}
+
 
 void csGL4TwinPSSMRenderer::SetDevice(csGL4Device *device)
 {
@@ -142,22 +152,13 @@ csGL4TwinPSSMShadowBufferObject *csGL4TwinPSSMRenderer::GetShadowBuffer()
   return m_directionalLightShadowBuffers;
 }
 
-csGL4RenderTarget2D *csGL4TwinPSSMRenderer::GetShadowBuffer(size_t viewSplit, size_t splitLayer)
+
+csGL4RenderTarget2DArray *csGL4TwinPSSMRenderer::GetShadowBuffer(size_t splitLayer)
 {
-  return m_directionalLightShadowBuffers ? m_directionalLightShadowBuffers->View[viewSplit].ShadowBuffers[splitLayer]
+  return m_directionalLightShadowBuffers ? m_directionalLightShadowBuffers->Splits[splitLayer].ShadowBuffers
                                          : nullptr;
 }
 
-
-void csGL4TwinPSSMRenderer::RenderShadow(const csGL4DirectionalLight *directionalLight,
-                                         const cs::csCamera &camera,
-                                         const cs::csProjector &projector)
-{
-
-  RenderShadowBuffer(directionalLight, camera, projector);
-  RenderShadowMap(directionalLight, camera, projector);
-//  FilterShadowMap();
-}
 
 static void calc_projection_matrix(csGL4Device *device,
                                    csVector3f near[4],
@@ -232,6 +233,25 @@ static void calc_center_position(csVector3f near[4], csVector3f far[4], csVector
   outPos /= 8.0f;
 }
 
+void csGL4TwinPSSMRenderer::CalculateSplitPoints(const csProjector &projector,
+                                                 const csMatrix4f &camMatInv,
+                                                 csVector3f splitPoints[5][4])
+{
+  projector.GetPoints(m_shadowNear, splitPoints[0]);
+  projector.GetPoints(m_splits[0], splitPoints[1]);
+  projector.GetPoints(m_splits[1], splitPoints[2]);
+  projector.GetPoints(m_splits[2], splitPoints[3]);
+  projector.GetPoints(m_splits[3], splitPoints[4]);
+
+  for (size_t layer = 0; layer < 5; layer++)
+  {
+    for (size_t i = 0; i < 4; i++)
+    {
+      splitPoints[layer][i] = csMatrix4f::Transform(camMatInv, splitPoints[layer][i]);
+    }
+  }
+
+}
 
 void csGL4TwinPSSMRenderer::RenderShadowBuffer(const csGL4DirectionalLight *directionalLight,
                                                const cs::csCamera &camera,
@@ -247,93 +267,75 @@ void csGL4TwinPSSMRenderer::RenderShadowBuffer(const csGL4DirectionalLight *dire
                                   projector.GetBottom(), projector.GetTop(),
                                   projector.GetNear(), projector.GetFar());
 
+
   const csMatrix4f &camMatInv = camera.GetViewMatrixInv();
 
+  csVector3f fullSplitPoints[5][4];
+  csVector3f splitPoints[2][5][4];
+  CalculateSplitPoints(projector, camMatInv, fullSplitPoints);
+  CalculateSplitPoints(projectors[0], camMatInv, splitPoints[0]);
+  CalculateSplitPoints(projectors[1], camMatInv, splitPoints[1]);
 
-  csVector3f splitPoints[5][4];
 
-  for (size_t viewSplit = 0; viewSplit < 2; viewSplit++)
+  for (size_t splitLayer = 0; splitLayer < 4; splitLayer++)
   {
-    projectors[viewSplit].GetPoints(m_shadowNear, splitPoints[0]);
-    projectors[viewSplit].GetPoints(m_splits[0], splitPoints[1]);
-    projectors[viewSplit].GetPoints(m_splits[1], splitPoints[2]);
-    projectors[viewSplit].GetPoints(m_splits[2], splitPoints[3]);
-    projectors[viewSplit].GetPoints(m_splits[3], splitPoints[4]);
 
+    csVector3f centerPosition;
+    csMatrix4f view, viewInv, proj, projInv;
 
-    for (size_t i = 0; i < 4; i++)
+    calc_center_position(fullSplitPoints[splitLayer], fullSplitPoints[splitLayer + 1], centerPosition);
+
+    view.SetLookAt(centerPosition, centerPosition + directionalLight->GetDirection(), csVector3f(0, 1, 0));
+    viewInv.SetLookAtInv(centerPosition, centerPosition + directionalLight->GetDirection(), csVector3f(0, 1, 0));
+    calc_projection_matrix_inv(m_device,
+                               fullSplitPoints[splitLayer],
+                               fullSplitPoints[splitLayer + 1],
+                               -1.0f,
+                               1.0f,
+                               view,
+                               projInv);
+
+    csCameraClipper clipper(viewInv, projInv, false, true);
+    float           near = FLT_MAX;
+    float           far  = -FLT_MAX;
+    m_collector.Clear();
+    m_scene->ScanMeshes(&clipper, iGfxScene::eSM_Dynamic | iGfxScene::eSM_Static, m_collector);
+    std::vector<csGfxMesh *> &meshes = m_collector.GetMeshes(eRenderQueue::Default);
+
+    for (const auto &mesh: meshes)
     {
-      splitPoints[0][i] = csMatrix4f::Transform(camMatInv, splitPoints[0][i]);
-      splitPoints[1][i] = csMatrix4f::Transform(camMatInv, splitPoints[1][i]);
-      splitPoints[2][i] = csMatrix4f::Transform(camMatInv, splitPoints[2][i]);
-      splitPoints[3][i] = csMatrix4f::Transform(camMatInv, splitPoints[3][i]);
-      splitPoints[4][i] = csMatrix4f::Transform(camMatInv, splitPoints[4][i]);
+      if (mesh->IsCastShadow())
+      {
+        const csVector3f *bboxPoints = mesh->GetBoundingBox().GetPoints();
+        for (unsigned    j           = 0; j < 8; j++)
+        {
+          csVector3f point = bboxPoints[j];
+          float      v     = csMatrix4f::TransformZ(view, point);
+
+          near = ::fminf(near, v);
+          far  = ::fmaxf(far, v);
+        }
+      }
     }
 
-    size_t      maxShadowCaster = 0;
-    for (size_t i               = 0; i < 4; i++)
+
+    csMatrix4f viewMatrices[2];
+    csMatrix4f projMatrices[2];
+
+    //
+    // calculate the matrices for the left and right
+    for (size_t viewLayer = 0; viewLayer < 2; viewLayer++)
     {
-
-
-      csVector3f centerPosition;
-      csMatrix4f view, viewInv, proj, projInv;
-
-      calc_center_position(splitPoints[i], splitPoints[i + 1], centerPosition);
-
-      view.SetLookAt(centerPosition, centerPosition + directionalLight->GetDirection(), csVector3f(0, 1, 0));
-      viewInv.SetLookAtInv(centerPosition, centerPosition + directionalLight->GetDirection(), csVector3f(0, 1, 0));
-
-//    printf ("%.2f %.2f %.2f -> %.2f %.2f %.2f\n",
-//            centerPosition.x,
-//            centerPosition.y,
-//            centerPosition.z,
-//            directionalLight->GetDirection().x,
-//            directionalLight->GetDirection().y,
-//            directionalLight->GetDirection().z
-//            );
-//    fflush(stdout);
-
       csVector3f xAxis            = viewInv.GetXAxis().Normalize();
       csVector3f yAxis            = viewInv.GetYAxis().Normalize();
-      float      sizeSplit        = GetSplitSize(splitPoints[i], splitPoints[i + 1]) / 2.0f;
+      float      sizeSplit        = GetSplitSize(splitPoints[viewLayer][splitLayer],
+                                                 splitPoints[viewLayer][splitLayer + 1]) / 2.0f;
       auto       shadowBufferSize = static_cast<float>(m_directionalLightShadowBufferSize);
       float      modV             = sizeSplit * 2.0f / shadowBufferSize;
       float      onAxisX          = xAxis.Dot(centerPosition);
       float      onAxisY          = yAxis.Dot(centerPosition);
       float      modX             = fmodf(onAxisX, modV);
       float      modY             = fmodf(onAxisY, modV);
-
-
-      calc_projection_matrix_inv(m_device, splitPoints[i], splitPoints[i + 1], -1.0f, 1.0f, view, projInv);
-
-
-      csCameraClipper clipper(viewInv, projInv, false, false);
-
-
-      float near = FLT_MAX;
-      float far  = -FLT_MAX;
-      m_collector.Clear();
-      m_scene->ScanMeshes(&clipper, iGfxScene::eSM_Dynamic | iGfxScene::eSM_Static, m_collector);
-      std::vector<csGfxMesh *> &meshes = m_collector.GetMeshes(eRenderQueue::Default);
-
-      for (const auto &mesh: meshes)
-      {
-        if (mesh->IsCastShadow())
-        {
-          const csVector3f *bboxPoints = mesh->GetBoundingBox().GetPoints();
-          for (unsigned    j           = 0; j < 8; j++)
-          {
-            csVector3f point = bboxPoints[j];
-            float      v     = csMatrix4f::TransformZ(view, point);
-
-            near = ::fminf(near, v);
-            far  = ::fmaxf(far, v);
-          }
-        }
-      }
-
-      maxShadowCaster = std::max(maxShadowCaster, meshes.size());
-
 
       m_device->GetOrthographicProjection(-sizeSplit - modX,
                                           sizeSplit - modX,
@@ -350,43 +352,45 @@ void csGL4TwinPSSMRenderer::RenderShadowBuffer(const csGL4DirectionalLight *dire
                                              far,
                                              projInv);
 
-//    calc_projection_matrix(m_device, splitPoints[i], splitPoints[i + 1], near, far, view, proj);
+      viewMatrices[viewLayer] = view;
+      projMatrices[viewLayer] = proj;
+      m_shadowMapViewProjection[viewLayer * 4 + splitLayer] = proj * view;
+    }
 
 
-      m_shadowMapViewProjection[viewSplit * 4 + i] = proj * view;
+    m_device->ResetTextures();
+    m_device->SetRenderTarget(GetShadowBuffer(splitLayer));
+    m_device->SetRenderBuffer(0);
+    m_device->SetDepthWrite(true);
+    m_device->SetDepthTest(true);
+    m_device->SetBlending(false);
+    m_device->SetColorWrite(true, true, true, true);
+    m_device->Clear(true, csColor4f(1.0f, 1.0f, 1.0f, 1.0f), true, 1.0f, false, 0);
 
-      m_device->ResetTextures();
-      m_device->SetRenderTarget(GetShadowBuffer(viewSplit, i));
-      m_device->SetRenderBuffer(0);
-      m_device->SetDepthWrite(true);
-      m_device->SetDepthTest(true);
-      m_device->SetBlending(false);
-      m_device->SetColorWrite(true, true, true, true);
-      m_device->Clear(true, csColor4f(1.0f, 1.0f, 1.0f, 1.0f), true, 1.0f, false, 0);
-
-      m_device->SetProjectionMatrix(proj);
-      m_device->SetViewMatrix(view);
+    csMatrix4f ID;
+//    m_device->SetProjectionMatrix(ID);
+//    m_device->SetViewMatrix(ID);
+    m_device->SetShadowMapProjectionMatrices(projMatrices, 2);
+    m_device->SetShadowMapViewMatrices(viewMatrices, 2);
 
 
-      uint64_t    startTime = csTime::GetTime();
-      size_t      c         = 0;
-      eRenderPass pass      = eRP_Depth;
-      if (m_shadowSamplingMode == ShadowSamplingMode::VSM)
+    uint64_t        startTime = csTime::GetTime();
+    size_t          c         = 0;
+    eRenderPass     pass      = eRP_ShadowTwinPSSM;
+//    if (m_shadowSamplingMode == ShadowSamplingMode::VSM)
+//    {
+//      pass = eRP_VSM;
+//    }
+    for (const auto &mesh: meshes)
+    {
+      if (mesh->IsCastShadow())
       {
-        pass = eRP_VSM;
-      }
-      for (const auto &mesh: meshes)
-      {
-        if (mesh->IsCastShadow())
-        {
-          mesh->RenderUnlit(m_device, pass);
-          c++;
-        }
+        mesh->RenderUnlit(m_device, pass);
+        c++;
       }
     }
   }
 }
-
 
 void csGL4TwinPSSMRenderer::RenderShadowMap(const csGL4DirectionalLight *directionalLight,
                                             const cs::csCamera &camera,
@@ -419,9 +423,9 @@ void csGL4TwinPSSMRenderer::RenderShadowMap(const csGL4DirectionalLight *directi
 
   if (m_attrShadowBuffers)
   {
-    for (size_t i = 0; i < 2; i++)
+    for (size_t i = 0; i < 4; i++)
     {
-      eTextureUnit unit = m_device->BindTexture(GetShadowBuffer()->View[i].ShadowDepth);
+      eTextureUnit unit = m_device->BindTexture(GetShadowBuffer()->Splits[i].ShadowDepth);
       m_attrShadowBuffers->SetArrayIndex(i);
       m_attrShadowBuffers->Bind(unit);
     }
@@ -429,9 +433,9 @@ void csGL4TwinPSSMRenderer::RenderShadowMap(const csGL4DirectionalLight *directi
 
   if (m_attrShadowBufferDatas && m_shadowSamplingMode == ShadowSamplingMode::VSM)
   {
-    for (size_t i = 0; i < 2; i++)
+    for (size_t i = 0; i < 4; i++)
     {
-      eTextureUnit unit = m_device->BindTexture(GetShadowBuffer()->View[i].ShadowColor);
+      eTextureUnit unit = m_device->BindTexture(GetShadowBuffer()->Splits[i].ShadowColor);
       m_attrShadowBufferDatas->SetArrayIndex(i);
       m_attrShadowBufferDatas->Bind(unit);
     }
@@ -441,14 +445,16 @@ void csGL4TwinPSSMRenderer::RenderShadowMap(const csGL4DirectionalLight *directi
     eTextureUnit unit = m_device->BindTexture(m_depthBuffer);
     m_attrDepthBuffer->Bind(unit);
   }
+
+
+  m_device->BindMatrices();
+  m_device->BindStandardValues();
+
   if (m_attrShadowMapViewProjectionMatrix)
   {
     m_attrShadowMapViewProjectionMatrix->SetArrayIndex(0);
     m_attrShadowMapViewProjectionMatrix->Bind(m_shadowMapViewProjection.data(), 8);
   }
-
-  m_device->BindMatrices();
-  m_device->BindStandardValues();
 
   m_device->RenderFullscreen();
 }
@@ -470,55 +476,53 @@ csGL4TwinPSSMShadowBufferObject *csGL4TwinPSSMRenderer::CreateDirectionalLightSh
 {
   csGL4TwinPSSMShadowBufferObject *sbo = new csGL4TwinPSSMShadowBufferObject();
 
-  for (size_t viewSplit = 0; viewSplit < 2; viewSplit++)
+  for (size_t viewLayer = 0; viewLayer < 4; viewLayer++)
   {
     if (m_shadowSamplingMode == ShadowSamplingMode::VSM)
     {
       iTexture2DArray::Descriptor colorDesc {};
-      colorDesc.Width                  = m_directionalLightShadowBufferSize;
-      colorDesc.Height                 = m_directionalLightShadowBufferSize;
-      colorDesc.Layers                 = 4;
-      colorDesc.Format                 = ePF_RG32F;
-      colorDesc.MipMaps                = false;
-      sbo->View[viewSplit].ShadowColor = m_device->CreateTexture(colorDesc).Query<csGL4Texture2DArray>();
-      sbo->View[viewSplit].ShadowColor->SetSampler(GetShadowBufferColorSampler());
+      colorDesc.Width                    = m_directionalLightShadowBufferSize;
+      colorDesc.Height                   = m_directionalLightShadowBufferSize;
+      colorDesc.Layers                   = 2;
+      colorDesc.Format                   = ePF_RG32F;
+      colorDesc.MipMaps                  = false;
+      sbo->Splits[viewLayer].ShadowColor = m_device->CreateTexture(colorDesc).Query<csGL4Texture2DArray>();
+      sbo->Splits[viewLayer].ShadowColor->SetSampler(GetShadowBufferColorSampler());
     }
 
     iTexture2DArray::Descriptor depthDesc {};
-    depthDesc.Width                  = m_directionalLightShadowBufferSize;
-    depthDesc.Height                 = m_directionalLightShadowBufferSize;
-    depthDesc.Layers                 = 4;
-    depthDesc.Format                 = ePF_Depth;
-    depthDesc.MipMaps                = false;
-    sbo->View[viewSplit].ShadowDepth = m_device->CreateTexture(depthDesc).Query<csGL4Texture2DArray>();
-    sbo->View[viewSplit].ShadowDepth->SetSampler(GetShadowBufferDepthSampler());
+    depthDesc.Width                    = m_directionalLightShadowBufferSize;
+    depthDesc.Height                   = m_directionalLightShadowBufferSize;
+    depthDesc.Layers                   = 2;
+    depthDesc.Format                   = ePF_Depth;
+    depthDesc.MipMaps                  = false;
+    sbo->Splits[viewLayer].ShadowDepth = m_device->CreateTexture(depthDesc).Query<csGL4Texture2DArray>();
+    sbo->Splits[viewLayer].ShadowDepth->SetSampler(GetShadowBufferDepthSampler());
 
 
-    for (size_t i = 0, in = sbo->View[viewSplit].ShadowBuffers.size(); i < in; i++)
+    iRenderTarget2DArray::Descriptor desc {};
+    desc.Width  = (uint16_t) m_directionalLightShadowBufferSize;
+    desc.Height = (uint16_t) m_directionalLightShadowBufferSize;
+    desc.Layer  = 2;
+    auto shadowRenderTarget = m_device->CreateRenderTarget(desc).Query<csGL4RenderTarget2DArray>();
+
+
+    if (sbo->Splits[viewLayer].ShadowColor)
     {
-      iRenderTarget2D::Descriptor desc {};
-      desc.Width  = (uint16_t) m_directionalLightShadowBufferSize;
-      desc.Height = (uint16_t) m_directionalLightShadowBufferSize;
-      auto shadowRenderTarget = m_device->CreateRenderTarget(desc).Query<csGL4RenderTarget2D>();
-
-
-      if (sbo->View[viewSplit].ShadowColor)
-      {
-        shadowRenderTarget->AddColorTexture(sbo->View[viewSplit].ShadowColor, i);
-      }
-      if (sbo->View[viewSplit].ShadowDepth)
-      {
-        shadowRenderTarget->SetDepthTexture(sbo->View[viewSplit].ShadowDepth, i);
-      }
-
-      if (!shadowRenderTarget->Compile())
-      {
-        printf("Unable to compile\n");
-        shadowRenderTarget = nullptr;
-      }
-
-      sbo->View[viewSplit].ShadowBuffers[i] = shadowRenderTarget;
+      shadowRenderTarget->AddColorTexture(sbo->Splits[viewLayer].ShadowColor);
     }
+    if (sbo->Splits[viewLayer].ShadowDepth)
+    {
+      shadowRenderTarget->SetDepthTexture(sbo->Splits[viewLayer].ShadowDepth);
+    }
+
+    if (!shadowRenderTarget->Compile())
+    {
+      printf("Unable to compile\n");
+      shadowRenderTarget = nullptr;
+    }
+
+    sbo->Splits[viewLayer].ShadowBuffers = shadowRenderTarget;
   }
   return sbo;
 
@@ -538,8 +542,8 @@ bool csGL4TwinPSSMRenderer::IsShadowBufferValid(iPSSMShadowBufferObject *shadowM
   {
     return false;
   }
-  csGL4RenderTarget2D
-      *buffer = reinterpret_cast<csGL4TwinPSSMShadowBufferObject *>(shadowMap)->View[0].ShadowBuffers[0];
+  csGL4RenderTarget2DArray
+      *buffer = reinterpret_cast<csGL4TwinPSSMShadowBufferObject *>(shadowMap)->Splits[0].ShadowBuffers;
   return buffer
          && buffer->GetWidth() == m_directionalLightShadowBufferSize
          && buffer->GetHeight() == m_directionalLightShadowBufferSize;
@@ -669,71 +673,14 @@ iSampler *csGL4TwinPSSMRenderer::GetShadowBufferDepthSampler()
 csGL4TwinPSSMShadowBufferObject::csGL4TwinPSSMShadowBufferObject()
 {
   m_type = 1;
-  for (size_t i = 0; i < 2; i++)
+  for (size_t i = 0; i < 4; i++)
   {
-    View[i].ShadowDepth = nullptr;
-    View[i].ShadowColor = nullptr;
-    View[i].ShadowBuffers[0] = nullptr;
-    View[i].ShadowBuffers[1] = nullptr;
-    View[i].ShadowBuffers[2] = nullptr;
-    View[i].ShadowBuffers[3] = nullptr;
+    Splits[i].ShadowDepth = nullptr;
+    Splits[i].ShadowColor = nullptr;
+    Splits[i].ShadowBuffers = nullptr;
   }
 }
 
-csGL4TwinPSSMShadowBufferObject::csGL4TwinPSSMShadowBufferObject(const csGL4TwinPSSMShadowBufferObject &sbo)
-{
-  m_type = 1;
-  for (size_t i = 0; i < 2; i++)
-  {
-    View[i].ShadowDepth = sbo.View[i].ShadowDepth;
-    View[i].ShadowColor = sbo.View[i].ShadowColor;
-    View[i].ShadowBuffers[0] = sbo.View[i].ShadowBuffers[0];
-    View[i].ShadowBuffers[1] = sbo.View[i].ShadowBuffers[1];
-    View[i].ShadowBuffers[2] = sbo.View[i].ShadowBuffers[2];
-    View[i].ShadowBuffers[3] = sbo.View[i].ShadowBuffers[3];
-  }
-}
-
-csGL4TwinPSSMShadowBufferObject::csGL4TwinPSSMShadowBufferObject(csGL4TwinPSSMShadowBufferObject &&sbo)
-{
-  m_type = 1;
-  for (size_t i = 0; i < 2; i++)
-  {
-    View[i].ShadowDepth = sbo.View[i].ShadowDepth;
-    View[i].ShadowColor = sbo.View[i].ShadowColor;
-    View[i].ShadowBuffers[0] = sbo.View[i].ShadowBuffers[0];
-    View[i].ShadowBuffers[1] = sbo.View[i].ShadowBuffers[1];
-    View[i].ShadowBuffers[2] = sbo.View[i].ShadowBuffers[2];
-    View[i].ShadowBuffers[3] = sbo.View[i].ShadowBuffers[3];
-
-    sbo.View[i].ShadowDepth = nullptr;
-    sbo.View[i].ShadowColor = nullptr;
-    sbo.View[i].ShadowBuffers[0] = nullptr;
-    sbo.View[i].ShadowBuffers[1] = nullptr;
-    sbo.View[i].ShadowBuffers[2] = nullptr;
-    sbo.View[i].ShadowBuffers[3] = nullptr;
-  }
-}
-
-csGL4TwinPSSMShadowBufferObject::~csGL4TwinPSSMShadowBufferObject()
-{
-
-}
-
-csGL4TwinPSSMShadowBufferObject &csGL4TwinPSSMShadowBufferObject::operator=(const csGL4TwinPSSMShadowBufferObject &sbo)
-{
-  m_type = 1;
-  for (size_t i = 0; i < 2; i++)
-  {
-    View[i].ShadowDepth = sbo.View[i].ShadowDepth;
-    View[i].ShadowColor = sbo.View[i].ShadowColor;
-    View[i].ShadowBuffers[0] = sbo.View[i].ShadowBuffers[0];
-    View[i].ShadowBuffers[1] = sbo.View[i].ShadowBuffers[1];
-    View[i].ShadowBuffers[2] = sbo.View[i].ShadowBuffers[2];
-    View[i].ShadowBuffers[3] = sbo.View[i].ShadowBuffers[3];
-  }
-  return *this;
-}
 
 void csGL4TwinPSSMShadowBufferObject::DeleteSelf()
 {

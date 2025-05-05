@@ -175,10 +175,10 @@ private:
   void UpdateModelViewMatrixInv();
   void UpdateViewProjectionMatrixInv();
   void UpdateModelViewProjectionMatrixInv();
-//  void UpdateShadowMapViewProjectionMatrix();
-//  void UpdateShadowMapViewMatrixInv();
-//  void UpdateShadowMapProjectionMatrixInv();
-//  void UpdateShadowMapViewProjectionMatrixInv();
+  void UpdateShadowMapViewProjectionMatrix();
+  void UpdateShadowMapViewMatrixInv();
+  void UpdateShadowMapProjectionMatrixInv();
+  void UpdateShadowMapViewProjectionMatrixInv();
 
   uint8_t      m_colorWrite;
   bool         m_depthWrite;
@@ -222,7 +222,6 @@ private:
   bool m_viewProjectionMatrixInvDirty;
   bool m_modelViewProjectionMatrixInvDirty;
 
-  /*
   Size       m_shadowMapMatrixCount;
   csMatrix4f m_shadowMapViewMatrices[6];
   csMatrix4f m_shadowMapProjectionMatrices[6];
@@ -234,7 +233,6 @@ private:
   bool       m_shadowMapViewMatrixInvDirty;
   bool       m_shadowMapProjectionMatrixInvDirty;
   bool       m_shadowMapViewProjectionMatrixInvDirty;
-  */
 
   Size       m_skeletonMatrixCount;
   csMatrix4f m_skeletonMatrices[256];

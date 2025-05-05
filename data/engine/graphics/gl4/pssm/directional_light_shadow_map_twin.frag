@@ -4,7 +4,7 @@ layout(location = 0) out vec4 cs_FragColor;
 uniform vec4 cs_LayersDepth;
 uniform float cs_LayersBias;
 uniform mat4 cs_ShadowMapViewProjectionMatrix[8];
-uniform sampler2DArrayShadow cs_ShadowBuffers[2];
+uniform sampler2DArrayShadow cs_ShadowBuffers[4];
 uniform sampler2D cs_DepthBuffer;
 
 
@@ -21,27 +21,22 @@ float calc_directional_shadow(int splitView, vec3 world_position, float distance
 
     float fadeOut = 0.0f;
     int layer = 0;
-    int matIndex = splitView * 4;
 
 
     if (distance_to_camera <= layerDepth.x)
     {
-        matIndex += 0;
         layer = 0;
     }
     else if (distance_to_camera <= layerDepth.y)
     {
-        matIndex += 1;
         layer = 1;
     }
     else if (distance_to_camera <= layerDepth.z)
     {
-        matIndex += 2;
         layer = 2;
     }
     else if (distance_to_camera <= layerDepth.w)
     {
-        matIndex += 3;
         layer = 3;
 
         fadeOut = smoothstep(layerDepth.w - (layerDepth.w - layerDepth.z) * 0.1, layerDepth.w, distance_to_camera);
@@ -50,13 +45,14 @@ float calc_directional_shadow(int splitView, vec3 world_position, float distance
     {
         return 1.0;
     }
+    int matIndex = splitView * 4 + layer;
 
     vec4 camSpace = cs_ShadowMapViewProjectionMatrix[matIndex] * vec4(world_position, 1.0);
     camSpace /= camSpace.w;
     camSpace = camSpace * 0.5 + 0.5;
     camSpace.z -= cs_LayersBias;
 
-    float shadow_value = texture(cs_ShadowBuffers[splitView], vec4(camSpace.xy, layer , camSpace.z));
+    float shadow_value = texture(cs_ShadowBuffers[layer], vec4(camSpace.xy, splitView, camSpace.z));
     return mix(shadow_value, 1.0, fadeOut);
 }
 
