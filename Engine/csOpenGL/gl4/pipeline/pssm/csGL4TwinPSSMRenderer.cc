@@ -44,7 +44,7 @@ void csGL4TwinPSSMRenderer::Initialize()
   m_splits[3] = m_shadowNear + (m_shadowFar - m_shadowNear) * splits.w;
 
 
-  m_directionalLightShadowBufferSize = settings.GetInt("directional_light.shadow_map.size", 1024);
+  m_directionalLightShadowBufferSize = settings.GetInt("directional_light.shadow_map.size", 1024) / 2;
   std::string filter = settings.GetText("directional_light.shadow_map.filter.mode", "Plain");
   if (filter == std::string("Plain"))
   {
@@ -295,7 +295,7 @@ void csGL4TwinPSSMRenderer::RenderShadowBuffer(const csGL4DirectionalLight *dire
                                view,
                                projInv);
 
-    csCameraClipper clipper(viewInv, projInv, false, true);
+    csCameraClipper clipper(viewInv, projInv, false, false);
     float           near = FLT_MAX;
     float           far  = -FLT_MAX;
     m_collector.Clear();

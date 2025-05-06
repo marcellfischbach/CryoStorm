@@ -492,8 +492,8 @@ void csGL4Device::SetShadowMapViewMatrices(const csMatrix4f *matrices, Size numb
 {
   m_shadowMapMatrixCount = numberOfMatrices;
   memcpy(m_shadowMapViewMatrices, matrices, sizeof(csMatrix4f) * numberOfMatrices);
-  m_shadowMapViewProjectionMatrixDirty = true;
-  m_shadowMapViewMatrixInvDirty = true;
+  m_shadowMapViewProjectionMatrixDirty    = true;
+  m_shadowMapViewMatrixInvDirty           = true;
   m_shadowMapViewProjectionMatrixInvDirty = true;
 
 }
@@ -502,8 +502,8 @@ void csGL4Device::SetShadowMapProjectionMatrices(const csMatrix4f *matrices, Siz
 {
   m_shadowMapMatrixCount = numberOfMatrices;
   memcpy(m_shadowMapProjectionMatrices, matrices, sizeof(csMatrix4f) * numberOfMatrices);
-  m_shadowMapViewProjectionMatrixDirty = true;
-  m_shadowMapProjectionMatrixInvDirty = true;
+  m_shadowMapViewProjectionMatrixDirty    = true;
+  m_shadowMapProjectionMatrixInvDirty     = true;
   m_shadowMapViewProjectionMatrixInvDirty = true;
 }
 
@@ -514,7 +514,7 @@ csGL4Device::SetShadowMapViewMatrices(const csMatrix4f *matrices, const csMatrix
   m_shadowMapMatrixCount = numberOfMatrices;
   memcpy(m_shadowMapViewMatrices, matrices, sizeof(csMatrix4f) * numberOfMatrices);
   memcpy(m_shadowMapViewMatricesInv, matricesInv, sizeof(csMatrix4f) * numberOfMatrices);
-  m_shadowMapViewProjectionMatrixDirty = true;
+  m_shadowMapViewProjectionMatrixDirty    = true;
   m_shadowMapViewProjectionMatrixInvDirty = true;
 
 }
@@ -526,7 +526,7 @@ void csGL4Device::SetShadowMapProjectionMatrices(const csMatrix4f *matrices,
   m_shadowMapMatrixCount = numberOfMatrices;
   memcpy(m_shadowMapProjectionMatrices, matrices, sizeof(csMatrix4f) * numberOfMatrices);
   memcpy(m_shadowMapProjectionMatricesInv, matricesInv, sizeof(csMatrix4f) * numberOfMatrices);
-  m_shadowMapViewProjectionMatrixDirty = true;
+  m_shadowMapViewProjectionMatrixDirty    = true;
   m_shadowMapViewProjectionMatrixInvDirty = true;
 }
 
@@ -1525,49 +1525,50 @@ void csGL4Device::BindMatrices()
     attr->Bind(m_skeletonMatrices, m_skeletonMatrixCount);
   }
 
+  attr = m_shader->GetShaderAttribute(eSA_ShadowMapViewMatrix);
+  if (attr)
+  {
+    attr->SetArrayIndex(0);
+    attr->Bind(m_shadowMapViewMatrices, m_shadowMapMatrixCount);
+  }
+
+  attr = m_shader->GetShaderAttribute(eSA_ShadowMapProjectionMatrix);
+  if (attr)
+  {
+    attr->SetArrayIndex(0);
+    attr->Bind(m_shadowMapProjectionMatrices, m_shadowMapMatrixCount);
+  }
 
   attr = m_shader->GetShaderAttribute(eSA_ShadowMapViewProjectionMatrix);
   if (attr)
   {
     UpdateShadowMapViewProjectionMatrix();
-    for (Size i = 0; i < m_shadowMapMatrixCount; i++)
-    {
-      attr->SetArrayIndex(i);
-      attr->Bind(m_shadowMapViewProjectionMatrices[i]);
-    }
+    attr->SetArrayIndex(0);
+    attr->Bind(m_shadowMapViewProjectionMatrices, m_shadowMapMatrixCount);
   }
 
   attr = m_shader->GetShaderAttribute(eSA_ShadowMapViewMatrixInv);
   if (attr)
   {
     UpdateShadowMapViewMatrixInv();
-    for (Size i = 0; i < m_shadowMapMatrixCount; i++)
-    {
-      attr->SetArrayIndex(i);
-      attr->Bind(m_shadowMapViewMatricesInv[i]);
-    }
+    attr->SetArrayIndex(0);
+    attr->Bind(m_shadowMapViewMatricesInv, m_shadowMapMatrixCount);
   }
 
   attr = m_shader->GetShaderAttribute(eSA_ShadowMapProjectionMatrixInv);
   if (attr)
   {
     UpdateShadowMapProjectionMatrixInv();
-    for (Size i = 0; i < m_shadowMapMatrixCount; i++)
-    {
-      attr->SetArrayIndex(i);
-      attr->Bind(m_shadowMapProjectionMatricesInv[i]);
-    }
+    attr->SetArrayIndex(0);
+    attr->Bind(m_shadowMapProjectionMatricesInv, m_shadowMapMatrixCount);
   }
 
   attr = m_shader->GetShaderAttribute(eSA_ShadowMapViewProjectionMatrixInv);
   if (attr)
   {
     UpdateShadowMapViewProjectionMatrixInv();
-    for (Size i = 0; i < m_shadowMapMatrixCount; i++)
-    {
-      attr->SetArrayIndex(i);
-      attr->Bind(m_shadowMapViewProjectionMatricesInv[i]);
-    }
+    attr->SetArrayIndex(0);
+    attr->Bind(m_shadowMapViewProjectionMatricesInv, m_shadowMapMatrixCount);
   }
 #endif
 }

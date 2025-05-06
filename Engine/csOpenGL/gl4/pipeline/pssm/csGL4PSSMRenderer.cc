@@ -419,14 +419,14 @@ void csGL4PSSMRenderer::RenderShadowMap(const csGL4DirectionalLight *directional
     eTextureUnit unit = m_device->BindTexture(m_depthBuffer);
     m_attrDepthBuffer->Bind(unit);
   }
+  m_device->BindMatrices();
+  m_device->BindStandardValues();
   if (m_attrShadowMapViewProjectionMatrix)
   {
     m_attrShadowMapViewProjectionMatrix->SetArrayIndex(0);
     m_attrShadowMapViewProjectionMatrix->Bind(m_shadowMapViewProjection.data(), 4);
   }
 
-  m_device->BindMatrices();
-  m_device->BindStandardValues();
 
   m_device->RenderFullscreen();
 }

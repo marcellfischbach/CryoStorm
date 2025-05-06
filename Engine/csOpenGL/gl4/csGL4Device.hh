@@ -222,17 +222,17 @@ private:
   bool m_viewProjectionMatrixInvDirty;
   bool m_modelViewProjectionMatrixInvDirty;
 
-  Size       m_shadowMapMatrixCount;
+  Size       m_shadowMapMatrixCount = 0;
   csMatrix4f m_shadowMapViewMatrices[6];
   csMatrix4f m_shadowMapProjectionMatrices[6];
   csMatrix4f m_shadowMapViewProjectionMatrices[6];
   csMatrix4f m_shadowMapViewMatricesInv[6];
   csMatrix4f m_shadowMapProjectionMatricesInv[6];
   csMatrix4f m_shadowMapViewProjectionMatricesInv[6];
-  bool       m_shadowMapViewProjectionMatrixDirty;
-  bool       m_shadowMapViewMatrixInvDirty;
-  bool       m_shadowMapProjectionMatrixInvDirty;
-  bool       m_shadowMapViewProjectionMatrixInvDirty;
+  bool       m_shadowMapViewProjectionMatrixDirty = false;
+  bool       m_shadowMapViewMatrixInvDirty = false;
+  bool       m_shadowMapProjectionMatrixInvDirty = false;
+  bool       m_shadowMapViewProjectionMatrixInvDirty = false;
 
   Size       m_skeletonMatrixCount;
   csMatrix4f m_skeletonMatrices[256];
