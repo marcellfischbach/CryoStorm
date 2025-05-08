@@ -6,7 +6,6 @@ material {
         shader GBuffer        "../shaders/${rendering-api}/default/Default_GBuffer.shader",
         shader ShadowCube     "../shaders/${rendering-api}/default/Default_PointShadow.shader",
         shader ShadowPSSM     "../shaders/${rendering-api}/default/Default_PSSM.shader",
-        shader ShadowTwinPSSM "../shaders/${rendering-api}/default/Default_TwinPSSM.shader",
         shader Shadow         "../shaders/${rendering-api}/default/Default_Shadow.shader",
         shader VSM            "../shaders/${rendering-api}/default/Default_VSM.shader",
     },

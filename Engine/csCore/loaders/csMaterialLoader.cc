@@ -276,7 +276,6 @@ eRenderPass RenderPass(const std::string &renderPass)
   _IF_(Forward);
   _IF_(Shadow);
   _IF_(ShadowPSSM);
-  _IF_(ShadowTwinPSSM);
   _IF_(ShadowCube);
   _IF_(VSM);
 #undef IF_

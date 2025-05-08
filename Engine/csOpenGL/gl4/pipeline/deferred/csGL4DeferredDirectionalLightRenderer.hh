@@ -1,7 +1,6 @@
 #pragma once
 
 #include <csOpenGL/gl4/pipeline/pssm/csGL4PSSMRenderer.hh>
-#include <csOpenGL/gl4/pipeline/pssm/csGL4TwinPSSMRenderer.hh>
 
 
 namespace cs
@@ -66,9 +65,7 @@ private:
   LightRenderShader m_nonShadow;
   LightRenderShader m_shadow;
 
-  iPSSMRenderer *m_pssmRenderer;
-  csGL4PSSMRenderer m_standardPSSMRenderer;
-  csGL4TwinPSSMRenderer m_twinPSSMRenderer;
+  csGL4PSSMRenderer m_pssmRenderer;
 
   csRef<csGL4RenderTarget2D>                 m_shadowMap  = nullptr;
   iPSSMShadowBufferObject                *m_shadowBuffer;
