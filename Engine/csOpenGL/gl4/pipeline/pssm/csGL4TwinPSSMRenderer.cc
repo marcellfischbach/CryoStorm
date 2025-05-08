@@ -44,7 +44,7 @@ void csGL4TwinPSSMRenderer::Initialize()
   m_splits[3] = m_shadowNear + (m_shadowFar - m_shadowNear) * splits.w;
 
 
-  m_directionalLightShadowBufferSize = settings.GetInt("directional_light.shadow_map.size", 1024) / 2;
+  m_directionalLightShadowBufferSize = settings.GetInt("directional_light.shadow_map.size", 1024);
   std::string filter = settings.GetText("directional_light.shadow_map.filter.mode", "Plain");
   if (filter == std::string("Plain"))
   {
@@ -257,7 +257,6 @@ void csGL4TwinPSSMRenderer::RenderShadowBuffer(const csGL4DirectionalLight *dire
                                                const cs::csCamera &camera,
                                                const cs::csProjector &projector)
 {
-
   csProjector projectors[2];
 
   projectors[0].UpdatePerspective(projector.GetLeft(), 0.0f,
@@ -364,8 +363,8 @@ void csGL4TwinPSSMRenderer::RenderShadowBuffer(const csGL4DirectionalLight *dire
     m_device->SetDepthWrite(true);
     m_device->SetDepthTest(true);
     m_device->SetBlending(false);
-    m_device->SetColorWrite(true, true, true, true);
-    m_device->Clear(true, csColor4f(1.0f, 1.0f, 1.0f, 1.0f), true, 1.0f, false, 0);
+    m_device->SetColorWrite(false, false, false, false);
+    m_device->Clear(false, csColor4f(1.0f, 1.0f, 1.0f, 1.0f), true, 1.0f, false, 0);
 
     csMatrix4f ID;
 //    m_device->SetProjectionMatrix(ID);
@@ -390,6 +389,7 @@ void csGL4TwinPSSMRenderer::RenderShadowBuffer(const csGL4DirectionalLight *dire
       }
     }
   }
+
 }
 
 void csGL4TwinPSSMRenderer::RenderShadowMap(const csGL4DirectionalLight *directionalLight,

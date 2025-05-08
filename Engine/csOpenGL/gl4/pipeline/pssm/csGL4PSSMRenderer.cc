@@ -235,7 +235,6 @@ void csGL4PSSMRenderer::RenderShadowBuffer(const csGL4DirectionalLight *directio
                                            const cs::csCamera &camera,
                                            const cs::csProjector &projector)
 {
-
   csVector3f splitPoints[5][4];
   projector.GetPoints(m_shadowNear, splitPoints[0]);
   projector.GetPoints(m_splits[0], splitPoints[1]);
@@ -340,14 +339,15 @@ void csGL4PSSMRenderer::RenderShadowBuffer(const csGL4DirectionalLight *directio
 
     m_shadowMapViewProjection[i] = proj * view;
 
+    bool needColorBuffer = m_shadowSamplingMode == ShadowSamplingMode::VSM;
     m_device->ResetTextures();
     m_device->SetRenderTarget(GetShadowBuffer(i));
     m_device->SetRenderBuffer(0);
     m_device->SetDepthWrite(true);
     m_device->SetDepthTest(true);
     m_device->SetBlending(false);
-    m_device->SetColorWrite(true, true, true, true);
-    m_device->Clear(true, csColor4f(1.0f, 1.0f, 1.0f, 1.0f), true, 1.0f, false, 0);
+    m_device->SetColorWrite(needColorBuffer, needColorBuffer, needColorBuffer, needColorBuffer);
+    m_device->Clear(needColorBuffer, csColor4f(1.0f, 1.0f, 1.0f, 1.0f), true, 1.0f, false, 0);
 
     m_device->SetProjectionMatrix(proj);
     m_device->SetViewMatrix(view);
@@ -654,7 +654,7 @@ csGL4PSSMShadowBufferObject::csGL4PSSMShadowBufferObject()
 
 csGL4PSSMShadowBufferObject::csGL4PSSMShadowBufferObject(const csGL4PSSMShadowBufferObject &sbo)
 {
-  m_type = 0;
+  m_type      = 0;
   ShadowDepth = sbo.ShadowDepth;
   ShadowColor = sbo.ShadowColor;
   ShadowBuffers[0] = sbo.ShadowBuffers[0];
@@ -665,7 +665,7 @@ csGL4PSSMShadowBufferObject::csGL4PSSMShadowBufferObject(const csGL4PSSMShadowBu
 
 csGL4PSSMShadowBufferObject::csGL4PSSMShadowBufferObject(csGL4PSSMShadowBufferObject &&sbo)
 {
-  m_type = 0;
+  m_type      = 0;
   ShadowDepth = sbo.ShadowDepth;
   ShadowColor = sbo.ShadowColor;
   ShadowBuffers[0] = sbo.ShadowBuffers[0];
@@ -687,7 +687,7 @@ csGL4PSSMShadowBufferObject::~csGL4PSSMShadowBufferObject()
 
 csGL4PSSMShadowBufferObject &csGL4PSSMShadowBufferObject::operator=(const csGL4PSSMShadowBufferObject &sbo)
 {
-  m_type = 0;
+  m_type      = 0;
   ShadowDepth = sbo.ShadowDepth;
   ShadowColor = sbo.ShadowColor;
   ShadowBuffers[0] = sbo.ShadowBuffers[0];

@@ -79,18 +79,19 @@ void csGL4DeferredDirectionalLightRenderer::Render(const csCamera *camera,
                                                    iRenderTarget2D *target)
 {
 
-  csDebugCache* debugCache = csObjectRegistry::Get<csDebugCache>();
-  if (debugCache)
-  {
-    if (debugCache->IsTwinPssm())
-    {
-      m_pssmRenderer = &m_twinPSSMRenderer;
-    }
-    else
-    {
-      m_pssmRenderer = &m_standardPSSMRenderer;
-    }
-  }
+//  csDebugCache* debugCache = csObjectRegistry::Get<csDebugCache>();
+//  if (debugCache)
+//  {
+//    if (debugCache->IsTwinPssm())
+//    {
+//      m_pssmRenderer = &m_twinPSSMRenderer;
+//    }
+//    else
+//    {
+//      m_pssmRenderer = &m_standardPSSMRenderer;
+//    }
+//  }
+  m_pssmRenderer = &m_standardPSSMRenderer;
 
 
   LightRenderShader   *lrs       = &m_nonShadow;
