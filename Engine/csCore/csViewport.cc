@@ -19,6 +19,16 @@ namespace cs
 csViewport::csViewport()
 {
   m_multiSamples = csSettings::Get().Graphics().GetInt("multisamples", 1);
+
+  std::string pipelineText = csSettings::Get().Graphics().GetText("pipeline", "deferred");
+  if (pipelineText == "forward")
+  {
+    m_pipeline = eRenderPipeline::eRP_Forward;
+  }
+  else
+  {
+    m_pipeline = eRenderPipeline::eRP_Deferred;
+  }
 }
 
 csViewport::~csViewport()

@@ -1102,10 +1102,10 @@ void setup_world(cs::csWorld *world)
 {
 
   auto                  assetMan   = cs::csAssetManager::Get();
-  auto                  rawMatData = assetMan->Get<cs::iMaterial>("/materials/Default.mat");
-  auto                  rawMat     = rawMatData.Data();
+  csAssetRef<iMaterial> material = assetMan->Get<cs::iMaterial>("/materials/Default.mat");
+//  auto                  rawMat     = rawMatData.Data();
 //  csAssetPool::Instance().Put(rawMat);
-  csAssetRef<iMaterial> material(rawMat);
+//  csAssetRef<iMaterial> material(rawMat);
 //  csAssetRef<iMaterial> skinnedMaterial = assetMan->Get<cs::iMaterial>("/materials/DefaultSkinned.mat");
 
 

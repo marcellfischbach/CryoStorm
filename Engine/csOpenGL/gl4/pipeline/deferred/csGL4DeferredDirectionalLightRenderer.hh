@@ -43,7 +43,7 @@ public:
 
 private:
   csGL4RenderTarget2D *GetShadowMap();
-  csGL4PSSMShadowBufferObject &GetShadowBuffer();
+  iPSSMShadowBufferObject *GetShadowBuffer();
 
 
   csRef<csGL4Device> m_device;
@@ -68,10 +68,10 @@ private:
   csGL4PSSMRenderer m_pssmRenderer;
 
   csRef<csGL4RenderTarget2D>                 m_shadowMap  = nullptr;
-  csGL4PSSMShadowBufferObject                m_shadowBuffer;
+  iPSSMShadowBufferObject                *m_shadowBuffer;
   size_t                                     m_lightIdx   = 0;
   std::array<csRef<csGL4RenderTarget2D>, 4>  m_shadowMaps = {nullptr, nullptr, nullptr, nullptr};
-  std::array<csGL4PSSMShadowBufferObject, 4> m_shadowBuffers;
+  std::array<iPSSMShadowBufferObject*, 4> m_shadowBuffers;
 
 };
 

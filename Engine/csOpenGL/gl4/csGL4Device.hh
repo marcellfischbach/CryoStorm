@@ -91,22 +91,8 @@ public:
 
   void ClearShadowMaps() override;
   bool MoreShadowMapsPossible() const override;
-//  void AddShadowMap(iTexture2D *shadowMap) override;
-//  iTexture2D *GetShadowMap(unsigned idx) override;
-  void SetPointLightShadowMap(size_t lightIdx,
-                              iPointLight *light,
-                              iTextureCube *shadowBufferDepth,
-                              iTextureCube *shadowBufferColor,
-                              float near,
-                              float far,
-                              float bias) override;
-  void AddDirectionalLightShadow(iDirectionalLight *light,
-                                 iTexture2D *shadowMap,
-                                 iTexture2DArray *shadowBuffersDepth,
-                                 iTexture2DArray *shadowBuffersColor,
-                                 const std::array<float, 4> &layers,
-                                 const std::array<csMatrix4f, 4> &matrices) override;
-//  void SetLightShadowMap(iLight *light, iTexture2D *shadowMap);
+  void AddPointLightShadowMap(iPointLight *light, iTexture2D *shadowMap) override;
+  void AddDirectionalLightShadow(iDirectionalLight *light, iTexture2D *shadowMap) override;
 
   csOwned<iSampler> CreateSampler() override;
   CS_FUNCTION()
@@ -236,17 +222,17 @@ private:
   bool m_viewProjectionMatrixInvDirty;
   bool m_modelViewProjectionMatrixInvDirty;
 
-  Size       m_shadowMapMatrixCount;
+  Size       m_shadowMapMatrixCount = 0;
   csMatrix4f m_shadowMapViewMatrices[6];
   csMatrix4f m_shadowMapProjectionMatrices[6];
   csMatrix4f m_shadowMapViewProjectionMatrices[6];
   csMatrix4f m_shadowMapViewMatricesInv[6];
   csMatrix4f m_shadowMapProjectionMatricesInv[6];
   csMatrix4f m_shadowMapViewProjectionMatricesInv[6];
-  bool       m_shadowMapViewProjectionMatrixDirty;
-  bool       m_shadowMapViewMatrixInvDirty;
-  bool       m_shadowMapProjectionMatrixInvDirty;
-  bool       m_shadowMapViewProjectionMatrixInvDirty;
+  bool       m_shadowMapViewProjectionMatrixDirty = false;
+  bool       m_shadowMapViewMatrixInvDirty = false;
+  bool       m_shadowMapProjectionMatrixInvDirty = false;
+  bool       m_shadowMapViewProjectionMatrixInvDirty = false;
 
   Size       m_skeletonMatrixCount;
   csMatrix4f m_skeletonMatrices[256];
@@ -266,22 +252,6 @@ private:
     iLight     *Light;
     iTexture2D *ShadowMap;
 
-    struct
-    {
-      iTextureCube *ShadowBufferDepth = nullptr;
-      iTextureCube *ShadowBufferColor = nullptr;
-      float        Near;
-      float        Far;
-      float        Bias;
-    }          PointLight;
-
-    struct
-    {
-      iTexture2DArray *ShadowBufferDepth = nullptr;
-      iTexture2DArray *ShadowBufferColor = nullptr;
-      float           Matrices[64];
-      float           Layers[4];
-    }          DirectionalLight;
   };
 
 
