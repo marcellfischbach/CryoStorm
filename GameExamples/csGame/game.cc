@@ -480,7 +480,7 @@ void generate_test_grid(cs::csWorld *world, cs::csAssetRef<cs::iMaterial> &mater
                      .Finish();
       meshStateSphere->SetMesh(mesh);
       entity->AttachState(meshStateSphere);
-#if 1
+#if 0
       auto rnd = (float) rand() / (float) RAND_MAX;
       int  ma  = a % 4;
       switch (ma)
@@ -1070,7 +1070,7 @@ public:
 
   void Update(float tpf) override
   {
-    m_rotation += tpf * 0.1f;
+//    m_rotation += tpf * 0.1f;
 
     csVector3f p = csVector3f(::cos(m_rotation) * 10.0f, 5.0f, ::sin(m_rotation) * 10.0f);
 
@@ -1114,13 +1114,13 @@ void setup_world(cs::csWorld *world)
   generate_camera(world);
   generate_physics(world, material);
 //  generate_batched_test_grid(world, material);
-//  generate_test_grid(world, material);
+  generate_test_grid(world, material);
 //  generate_test_cube(world, material);
-  generate_axis_grid(world);
+//  generate_axis_grid(world);
 //  generate_suzanne(world);
 //  generate_cube_fbx(world);
 
-  add_skeleton_mesh(world);
+//  add_skeleton_mesh(world);
 
 //  bones[0] = add_bone(world, material);
 //  bones[1] = add_bone(world, material);
