@@ -27,20 +27,10 @@ public:
     return m_debug;
   }
 
-  void SetTwinPssm (bool twinPssm)
-  {
-    m_twinPssm = twinPssm;
-  }
-
-  bool IsTwinPssm () const
-  {
-    return m_twinPssm;
-  }
 
 private:
   bool m_debug;
 
-  bool m_twinPssm = true;
 };
 
 
