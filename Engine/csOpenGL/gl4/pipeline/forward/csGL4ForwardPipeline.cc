@@ -32,9 +32,13 @@ namespace cs::opengl
 const float MinLightInfluence = 0.0f;
 
 csGL4ForwardPipeline::csGL4ForwardPipeline()
-    : m_frame(0), m_device(nullptr), m_scene(nullptr), m_target(nullptr)
+    : iForwardRenderPipeline()
+    , m_frame(0),
+    m_device(nullptr),
+    m_scene(nullptr),
+    m_target(nullptr)
 {
-
+  csObjectRegistry::Register<iForwardRenderPipeline>(this);
 }
 
 void csGL4ForwardPipeline::Initialize()

@@ -27,14 +27,14 @@ csGL4Texture2D::~csGL4Texture2D()
   m_name = 0;
 }
 
-void csGL4Texture2D::Bind()
+void csGL4Texture2D::Bind() const
 {
   CS_GL_ERROR();
   glBindTexture(m_target, m_name);
   CS_GL_ERROR();
 }
 
-void csGL4Texture2D::Unbind()
+void csGL4Texture2D::Unbind() const
 {
   CS_GL_ERROR();
   glBindTexture(m_target, 0);

@@ -33,8 +33,8 @@ public:
   iSampler* GetSampler() override;
   const iSampler* GetSampler() const override;
 
-  void Bind();
-  void Unbind();
+  void Bind() const;
+  void Unbind() const;
 
   uint32_t GetWidth() const override { return m_width; }
   uint32_t GetHeight() const override { return m_height; }

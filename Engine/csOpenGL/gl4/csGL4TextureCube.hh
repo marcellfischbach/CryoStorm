@@ -32,8 +32,8 @@ public:
   CS_NODISCARD iSampler* GetSampler() override;
   CS_NODISCARD const iSampler* GetSampler() const override;
 
-  void Bind();
-  void Unbind();
+  void Bind() const;
+  void Unbind() const;
 
   bool Initialize(uint16_t size, ePixelFormat format, bool generateMipMaps) override;
   void Data(eCubeFace face, const csImage * image) override;

@@ -49,7 +49,7 @@ csGL4Sampler::~csGL4Sampler()
   CS_GL_ERROR();
 }
 
-void csGL4Sampler::Bind(eTextureUnit unit)
+void csGL4Sampler::Bind(eTextureUnit unit) const
 {
   CS_GL_ERROR();
   glBindSampler(unit, m_name);

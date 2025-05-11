@@ -30,14 +30,14 @@ csGL4Texture2DArray::~csGL4Texture2DArray()
   m_name = 0;
 }
 
-void csGL4Texture2DArray::Bind()
+void csGL4Texture2DArray::Bind() const
 {
   CS_GL_ERROR()
   glBindTexture(GL_TEXTURE_2D_ARRAY, m_name);
   CS_GL_ERROR()
 }
 
-void csGL4Texture2DArray::Unbind()
+void csGL4Texture2DArray::Unbind() const
 {
   CS_GL_ERROR()
   glBindTexture(GL_TEXTURE_2D_ARRAY, 0);

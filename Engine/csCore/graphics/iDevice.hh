@@ -59,8 +59,8 @@ CS_CLASS_GEN;
   virtual void SetDepthTest(bool depthTest) = 0;
   virtual void SetFillMode(eFillMode fillMode) = 0;
   virtual void SetDepthFunc(eCompareFunc func) = 0;
-  virtual void SetCulling (eCullMode cullMode) = 0;
-  virtual eCullMode GetCulling () const = 0;
+  virtual void SetCulling(eCullMode cullMode) = 0;
+  virtual eCullMode GetCulling() const = 0;
 
   virtual void SetBlending(bool blending) = 0;
   virtual void SetBlendFactor(eBlendFactor srcFactor, eBlendFactor dstFactor) = 0;
@@ -79,8 +79,11 @@ CS_CLASS_GEN;
 
   virtual void SetShadowMapViewMatrices(const csMatrix4f *viewMatrices, Size numMatrices) = 0;
   virtual void SetShadowMapProjectionMatrices(const csMatrix4f *projectionMatrices, Size numMatrices) = 0;
-  virtual void SetShadowMapViewMatrices(const csMatrix4f *viewMatrices, const csMatrix4f *viewMatricesInv, Size numMatrices) = 0;
-  virtual void SetShadowMapProjectionMatrices(const csMatrix4f *projectionMatrices, const csMatrix4f *projectionMatricesInv, Size numMatrices) = 0;
+  virtual void
+  SetShadowMapViewMatrices(const csMatrix4f *viewMatrices, const csMatrix4f *viewMatricesInv, Size numMatrices) = 0;
+  virtual void SetShadowMapProjectionMatrices(const csMatrix4f *projectionMatrices,
+                                              const csMatrix4f *projectionMatricesInv,
+                                              Size numMatrices) = 0;
   virtual void SetSkeletonMatrices(const csMatrix4f *skeletonMatrices, Size numMatrices) = 0;
 
   virtual const csMatrix4f &GetViewMatrix() const = 0;
@@ -90,9 +93,12 @@ CS_CLASS_GEN;
 
 
   virtual csMatrix4f &GetPerspectiveProjection(float l, float r, float b, float t, float n, float f, csMatrix4f &m) = 0;
-  virtual csMatrix4f &GetPerspectiveProjectionInv(float l, float r, float b, float t, float n, float f, csMatrix4f &m) = 0;
-  virtual csMatrix4f &GetOrthographicProjection(float l, float r, float b, float t, float n, float f, csMatrix4f &m) = 0;
-  virtual csMatrix4f &GetOrthographicProjectionInv(float l, float r, float b, float t, float n, float f, csMatrix4f &m) = 0;
+  virtual csMatrix4f &
+  GetPerspectiveProjectionInv(float l, float r, float b, float t, float n, float f, csMatrix4f &m) = 0;
+  virtual csMatrix4f &
+  GetOrthographicProjection(float l, float r, float b, float t, float n, float f, csMatrix4f &m) = 0;
+  virtual csMatrix4f &
+  GetOrthographicProjectionInv(float l, float r, float b, float t, float n, float f, csMatrix4f &m) = 0;
 
   virtual void SetRenderLayer(int8_t renderLayer) = 0;
   virtual int8_t GetRenderLayer() const = 0;
@@ -106,7 +112,7 @@ CS_CLASS_GEN;
   virtual bool MoreShadowMapsPossible() const = 0;
 //  virtual void AddShadowMap(iTexture2D *shadowMap) = 0;
 //  virtual iTexture2D *GetShadowMap(unsigned idx) = 0;
-  virtual void AddPointLightShadowMap(iPointLight *light,iTexture2D *shadowMap) = 0;
+  virtual void AddPointLightShadowMap(iPointLight *light, iTexture2D *shadowMap) = 0;
   virtual void AddDirectionalLightShadow(iDirectionalLight *light, iTexture2D *shadowMap) = 0;
 //  virtual void SetLightShadowMap(iLight *light, iTexture2D *shadowMap) = 0;
 
@@ -125,17 +131,26 @@ CS_CLASS_GEN;
   virtual void ResetTextures() = 0;
   virtual void MarkTexture() = 0;
   virtual void ResetTexturesToMark() = 0;
-  virtual eTextureUnit BindTexture(cs::iTexture *texture) = 0;
+  virtual eTextureUnit BindTexture(const cs::iTexture *texture) = 0;
   virtual bool BindMaterial(iMaterial *material, eRenderPass pass) = 0;
   virtual void Render(iRenderMesh *mesh, eRenderPass pass) = 0;
   virtual void RenderPixel() = 0;
   virtual void RenderFullscreen() = 0;
-  virtual void RenderFullscreen(iTexture2D *texture) = 0;
-  virtual void RenderFullscreen(iTexture2DArray *texture, int layer) = 0;
-  virtual void RenderFullscreen(iTextureCube *texture,
+  virtual void RenderFullscreen(const iTexture2D *texture) = 0;
+  virtual void RenderFullscreen(const iTexture2DArray *texture, int layer) = 0;
+  virtual void RenderFullscreen(const iTextureCube *texture,
                                 eCubeFace face,
                                 const csVector2f &scale = csVector2f(1.0f, 1.0f),
                                 const csVector2f &translation = csVector2f(0.0f, 0.0f)) = 0;
+
+  virtual void RenderPartial(float x0, float y0, float w, float h) = 0;
+  virtual void RenderPartial(const iTexture2D *texture, float x0, float y0, float w, float h) = 0;
+  virtual void RenderPartial(const iTexture2DArray *texture, int layer, float x0, float y0, float w, float h) = 0;
+  virtual void RenderPartial(const iTextureCube *texture,
+                             eCubeFace face,
+                             float x0, float y0, float w, float h,
+                             const csVector2f &scale = csVector2f(1.0f, 1.0f),
+                             const csVector2f &translation = csVector2f(0.0f, 0.0f)) = 0;
 
   virtual void BindForwardLight(const iLight *light, Size idx) = 0;
   virtual void FinishForwardLights(Size numLights) = 0;

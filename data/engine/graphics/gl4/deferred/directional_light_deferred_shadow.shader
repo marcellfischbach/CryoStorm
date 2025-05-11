@@ -12,5 +12,6 @@ program {
         attribute Normal,
         attribute Depth,
         attribute ShadowMap,
+        attribute PartialRect,
     }
 }

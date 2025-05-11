@@ -5,6 +5,7 @@ program {
   }
   attributes {
     attribute "Diffuse",
-    attribute "Samples"
+    attribute "Samples",
+    attribute "PartialRect",
   }
 }

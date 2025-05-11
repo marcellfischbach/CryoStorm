@@ -17,6 +17,7 @@ CS_DEFINE_GAME(Game)
 #include <csCore/csEngine.hh>
 #include <csCore/csSettings.hh>
 #include <csCore/csTicker.hh>
+#include <csCore/csViewport.hh>
 #include <csCore/animation/csSkeletonAnimationStrip.hh>
 #include <csCore/animation/csSkeletonAnimationPlayer.hh>
 #include <csCore/entity/csCameraState.hh>
@@ -1098,6 +1099,48 @@ private:
   float m_rotation = 0.0f;//M_PI_2;
 };
 
+
+iShader *debug_pssm_color_shader = nullptr;
+iShader *get_debug_pssm_color_shader()
+{
+  if (!debug_pssm_color_shader)
+  {
+    debug_pssm_color_shader = csAssetManager::Get()->Load<iShader>("/graphics/gl4/debug/debug_pssm_color.shader").Consume();
+  }
+  return debug_pssm_color_shader;
+}
+
+
+static void debug_callback (iDevice* device)
+{
+  iDeferredRenderPipeline *deferredRenderPipeline = csObjectRegistry::Get<iDeferredRenderPipeline>();
+  if (deferredRenderPipeline)
+  {
+    const iTexture2DArray *colorArray = deferredRenderPipeline->GetPSSMShadowBufferColor(0);
+    if (colorArray)
+    {
+      iShader *shader = get_debug_pssm_color_shader();
+      if (shader)
+      {
+        device->SetShader(shader);
+        device->ResetTextures();
+        eTextureUnit     unit    = device->BindTexture(colorArray);
+        iShaderAttribute *attrib = shader->GetShaderAttribute("Diffuse");
+        if (attrib)
+        {
+          attrib->Bind(unit);
+        }
+        attrib = shader->GetShaderAttribute("ArrayIndex");
+        if (attrib)
+        {
+          attrib->Bind(2.0f);
+        }
+        device->RenderPartial(0.0f, 0.0f, 0.5f, 0.5f);
+      }
+    }
+  }
+}
+
 void setup_world(cs::csWorld *world)
 {
 
@@ -1108,6 +1151,7 @@ void setup_world(cs::csWorld *world)
 //  csAssetRef<iMaterial> material(rawMat);
 //  csAssetRef<iMaterial> skinnedMaterial = assetMan->Get<cs::iMaterial>("/materials/DefaultSkinned.mat");
 
+//csObjectRegistry::Get<csViewport>()->SetDebugCallback(debug_callback);
 
   generate_exit_game(world);
   generate_terrain(world);
@@ -1115,6 +1159,8 @@ void setup_world(cs::csWorld *world)
   generate_physics(world, material);
 //  generate_batched_test_grid(world, material);
   generate_test_grid(world, material);
+
+
 //  generate_test_cube(world, material);
 //  generate_axis_grid(world);
 //  generate_suzanne(world);

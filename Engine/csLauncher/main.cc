@@ -78,19 +78,6 @@ cs::iGame *open_game(const std::string &moduleName)
 
 int main(int argc, char **argv)
 {
-  csQuaternion quat (0.48f, 0.00f, 0.00f, -0.01f);
-  printf ("Quat: %.2f %.2f %.2f @ %.2f\n", quat.x, quat.y, quat.z, quat.w);
-  quat.Normalize();
-  csMatrix4f mat = quat.ToMatrix4();
-  printf ("Quat: %.2f %.2f %.2f @ %.2f\n", quat.x, quat.y, quat.z, quat.w);
-  mat.Debug("Mat");
-
-  if (true)
-  {
-//    return 0;
-  }
-
-  cs::csAssetLocator locator ("/models/metals-static-world/metals-static-world.mesh");
   cs::csClassRegistry::Get();
   std::vector<std::string> args;
   for (int i = 0; i < argc; i++)
@@ -139,6 +126,8 @@ int main(int argc, char **argv)
   world->AddRef();
   csViewport *viewport = new csViewport();
   viewport->AddRef();
+
+  csObjectRegistry::Register<csViewport>(viewport);
 
   viewport->SetWindow(window);
   viewport->SetDevice(csObjectRegistry::Get<iDevice>());

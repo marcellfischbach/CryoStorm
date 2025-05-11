@@ -8,9 +8,10 @@ material {
         shader ShadowPSSM     "../shaders/${rendering-api}/default/Default_PSSM.shader",
         shader Shadow         "../shaders/${rendering-api}/default/Default_Shadow.shader",
         shader VSM            "../shaders/${rendering-api}/default/Default_VSM.shader",
+        shader DeltaSM        "../shaders/${rendering-api}/default/Default_DeltaSM.shader",
     },
     attributes {
-        attribute Texture "Diffuse",
+        attribute Texture "Diffuse" "textures/DefaultDiffuse.tex2d",
         attribute Texture "Normal" "textures/DefaultNormal.tex2d",
         attribute Texture "RoughnessMap" "textures/DefaultRoughness.tex2d",
         attribute Color4 "Color" 0 0 0 0,

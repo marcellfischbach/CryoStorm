@@ -25,7 +25,7 @@ namespace opengl
 class csGL4DeferredDirectionalLightRenderer;
 
 CS_CLASS()
-class CS_OGL_API csGL4DeferredPipeline : public CS_SUPER(iRenderPipeline)
+class CS_OGL_API csGL4DeferredPipeline : public CS_SUPER(iDeferredRenderPipeline)
 {
 CS_CLASS_GEN_OBJECT;
 public:
@@ -57,6 +57,11 @@ public:
   {
     return m_directionalLightRenderer;
   }
+
+  const iTexture2DArray *GetPSSMShadowBufferDepth () const override;
+  const iTexture2DArray *GetPSSMShadowBufferDepth (size_t lightIndex) const override;
+  const iTexture2DArray *GetPSSMShadowBufferColor () const override;
+  const iTexture2DArray *GetPSSMShadowBufferColor (size_t lightIndex) const  override;
 
 private:
 

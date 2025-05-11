@@ -10,6 +10,7 @@ program {
         attribute NegLightDirection,
         attribute DiffuseRoughness,
         attribute Normal,
-        attribute Depth
+        attribute Depth,
+        attribute PartialRect,
     }
 }

@@ -6,5 +6,6 @@ program {
   attributes {
     attribute "Diffuse",
     attribute "ArrayIndex",
+    attribute "PartialRect",
   }
 }

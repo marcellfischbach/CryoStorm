@@ -2,9 +2,12 @@
 #include <csOpenGL/gl4/pipeline/csGL4MeshSorter.hh>
 #include <csOpenGL/gl4/csGL4DirectionalLight.hh>
 #include <csOpenGL/gl4/csGL4PointLight.hh>
+#include <csOpenGL/gl4/csGL4Texture2D.hh>
+#include <csOpenGL/gl4/csGL4Texture2DArray.hh>
 #include <csOpenGL/csGLError.hh>
-#include <csCore/csSettings.hh>
 #include <csCore/csEngine.hh>
+#include <csCore/csSettings.hh>
+#include <csCore/csObjectRegistry.hh>
 #include <csCore/math/iclipper.hh>
 #include <csCore/math/clipper/csCameraClipper.hh>
 #include <csCore/graphics/csCamera.hh>
@@ -27,12 +30,12 @@ namespace cs::opengl
 const float MinLightInfluence = 0.0f;
 
 csGL4DeferredPipeline::csGL4DeferredPipeline()
-    : iRenderPipeline()
+    : iDeferredRenderPipeline()
     , m_gBuffer(new csGBuffer())
     , m_intermediate(nullptr)
     , m_renderMode(0)
 {
-
+  csObjectRegistry::Register<iDeferredRenderPipeline>(this);
 }
 
 csGL4DeferredPipeline::~csGL4DeferredPipeline()
@@ -647,6 +650,25 @@ void csGL4DeferredPipeline::BindCamera()
 
 }
 
+const iTexture2DArray *csGL4DeferredPipeline::GetPSSMShadowBufferDepth () const
+{
+  return m_directionalLightRenderer.GetShadowBufferDepth();
+}
+
+const iTexture2DArray *csGL4DeferredPipeline::GetPSSMShadowBufferDepth (size_t lightIndex) const
+{
+  return m_directionalLightRenderer.GetShadowBufferDepth(lightIndex);
+}
+
+const iTexture2DArray *csGL4DeferredPipeline::GetPSSMShadowBufferColor () const
+{
+  return m_directionalLightRenderer.GetShadowBufferColor();
+}
+
+const iTexture2DArray *csGL4DeferredPipeline::GetPSSMShadowBufferColor (size_t lightIndex) const
+{
+  return m_directionalLightRenderer.GetShadowBufferColor(lightIndex);
+}
 
 static bool transparent_mesh_compare_less(const csGfxMesh *mesh0, const csGfxMesh *mesh1)
 {

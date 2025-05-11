@@ -33,7 +33,7 @@ class csGL4PointLight;
 class csGL4RenderTargetCube;
 
 CS_CLASS()
-class CS_OGL_API csGL4ForwardPipeline : public CS_SUPER(iRenderPipeline)
+class CS_OGL_API csGL4ForwardPipeline : public CS_SUPER(iForwardRenderPipeline)
 {
 CS_CLASS_GEN_OBJECT;
 public:

@@ -28,14 +28,14 @@ csGL4TextureCube::~csGL4TextureCube()
   m_name = 0;
 }
 
-void csGL4TextureCube::Bind()
+void csGL4TextureCube::Bind() const
 {
   CS_GL_ERROR()
   glBindTexture(GL_TEXTURE_CUBE_MAP, m_name);
   CS_GL_ERROR()
 }
 
-void csGL4TextureCube::Unbind()
+void csGL4TextureCube::Unbind() const
 {
   CS_GL_ERROR()
   glBindTexture(GL_TEXTURE_CUBE_MAP, 0);

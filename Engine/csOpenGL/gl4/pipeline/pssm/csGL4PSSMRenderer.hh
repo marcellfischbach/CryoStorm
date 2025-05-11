@@ -1,7 +1,6 @@
 #pragma once
 
 #include <csOpenGL/gl4/pipeline/pssm/csGL4PSSMFilter.hh>
-#include <csOpenGL/gl4/pipeline/pssm/iPSSMRenderer.hh>
 #include <csCore/graphics/scene/csGfxSceneCollector.hh>
 #include <csCore/math/csMatrix4f.hh>
 #include <csCore/csRef.hh>
@@ -33,20 +32,13 @@ class csGL4RenderTarget2D;
 class csGL4Texture2DArray;
 
 
-struct csGL4PSSMShadowBufferObject : public iPSSMShadowBufferObject
+struct csGL4PSSMShadowBufferObject
 {
-  csRef<csGL4Texture2DArray>                ShadowDepth;
-  csRef<csGL4Texture2DArray>                ShadowColor;
+  csRef<csGL4Texture2DArray>                ShadowDepth = nullptr;
+  csRef<csGL4Texture2DArray>                ShadowColor = nullptr;
   std::array<csRef<csGL4RenderTarget2D>, 4> ShadowBuffers = {nullptr, nullptr, nullptr, nullptr};
 
-  csGL4PSSMShadowBufferObject();
-  csGL4PSSMShadowBufferObject(const csGL4PSSMShadowBufferObject &sbo);
-  csGL4PSSMShadowBufferObject(csGL4PSSMShadowBufferObject &&sbo);
-  ~csGL4PSSMShadowBufferObject();
 
-  csGL4PSSMShadowBufferObject &operator=(const csGL4PSSMShadowBufferObject &sbo);
-
-  void DeleteSelf() override;
 };
 
 class csGL4PSSMRenderer
@@ -68,7 +60,7 @@ public:
 
   csGL4PSSMShadowBufferObject *CreateDirectionalLightShadowBuffer();
 
-  void SetShadowBuffer(iPSSMShadowBufferObject *shadowBuffer);
+  void SetShadowBuffer(csGL4PSSMShadowBufferObject *shadowBuffer);
   csGL4PSSMShadowBufferObject *GetShadowBuffer();
   csGL4RenderTarget2D *GetShadowBuffer(size_t splitLayer);
 
@@ -77,7 +69,7 @@ public:
                     const csProjector &projector);
 
   bool IsShadowMapValid(csGL4RenderTarget2D *shadowMap) const;
-  bool IsShadowBufferValid(iPSSMShadowBufferObject *shadowMap) const;
+  bool IsShadowBufferValid(csGL4PSSMShadowBufferObject *shadowMap) const;
 
 
 private:
@@ -117,7 +109,8 @@ private:
   {
     Plain,
     PCF,
-    VSM
+    VSM,
+    DSM,
   };
 
   float                m_shadowNear;

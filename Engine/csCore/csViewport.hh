@@ -18,7 +18,11 @@ struct iDevice;
 struct iFrameRenderer;
 struct iSkyboxRenderer;
 struct iRenderTarget2D;
+struct iTexture2D;
+struct iTexture2DArray;
 struct iWindow;
+
+typedef void (*csViewportDebugCallback)(iDevice*);
 
 
 CS_CLASS(jclass="org.cryo.core.Viewport")
@@ -68,6 +72,9 @@ public:
   CS_NODISCARD const cs::iWindow *GetWindow() const;
 
 
+  void SetDebugCallback (csViewportDebugCallback callback);
+
+
   CS_FUNCTION()
   bool ProcessFrame (cs::iRenderTarget2D *target);
 private:
@@ -85,6 +92,8 @@ private:
   csRef<iSkyboxRenderer> m_skyboxRenderer;
   csRef<iRenderTarget2D> m_renderTarget;
   csRef<iWindow> m_window;
+
+  csViewportDebugCallback m_debugCallback = nullptr;
 
   uint8_t m_multiSamples = 1;
 };

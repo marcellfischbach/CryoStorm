@@ -50,8 +50,8 @@ public:
                       eBlendFactor srcFactorAlpha,
                       eBlendFactor dstFactorColor,
                       eBlendFactor dstFactorAlpha) override;
-  void SetCulling (eCullMode cullMode) override;
-  eCullMode GetCulling () const override;
+  void SetCulling(eCullMode cullMode) override;
+  eCullMode GetCulling() const override;
 
   void SetModelMatrix(const csMatrix4f &modelMatrix) override;
   void SetViewMatrix(const csMatrix4f &viewMatrix) override;
@@ -64,8 +64,12 @@ public:
   void SetShadowMapViewMatrices(const csMatrix4f *viewMatrices, Size numMatrices) override;
   void SetShadowMapProjectionMatrices(const csMatrix4f *projectionMatrices, Size numMatrices) override;
 
-  void SetShadowMapViewMatrices(const csMatrix4f *viewMatrices, const csMatrix4f *viewMatricesInv, Size numMatrices) override;
-  void SetShadowMapProjectionMatrices(const csMatrix4f *projectionMatrices, const csMatrix4f *projectionMatricesInv, Size numMatrices) override;
+  void SetShadowMapViewMatrices(const csMatrix4f *viewMatrices,
+                                const csMatrix4f *viewMatricesInv,
+                                Size numMatrices) override;
+  void SetShadowMapProjectionMatrices(const csMatrix4f *projectionMatrices,
+                                      const csMatrix4f *projectionMatricesInv,
+                                      Size numMatrices) override;
 
   void SetSkeletonMatrices(const csMatrix4f *skeletonMatrices, Size numMatrices) override;
 
@@ -110,20 +114,27 @@ public:
   void ResetTextures() override;
   void MarkTexture() override;
   void ResetTexturesToMark() override;
-  void SetSampler(eTextureUnit unit, iSampler *sampler);
-  eTextureUnit BindTexture(iTexture *texture) override;
+  void SetSampler(eTextureUnit unit, const iSampler *sampler);
+  eTextureUnit BindTexture(const iTexture *texture) override;
   bool BindMaterial(iMaterial *material, eRenderPass pass) override;
   void Render(iRenderMesh *mesh, eRenderPass pass) override;
-  void RenderPixel();
-  void RenderFullscreen();
-  void RenderFullscreen(iTexture2D *texture) override;
-  void RenderFullscreen(iTexture2DArray *texture, int layer) override;
-  void RenderFullscreen(iTextureCube *texture,
+  void RenderPixel() override;
+  void RenderFullscreen() override;
+  void RenderFullscreen(const iTexture2D *texture) override;
+  void RenderFullscreen(const iTexture2DArray *texture, int layer) override;
+  void RenderFullscreen(const iTextureCube *texture,
                         eCubeFace face,
                         const csVector2f &scale,
                         const csVector2f &translation) override;
 
-
+  void RenderPartial(float x0, float y0, float w, float h) override;
+  void RenderPartial(const iTexture2D *texture, float x0, float y0, float w, float h) override;
+  void RenderPartial(const iTexture2DArray *texture, int layer, float x0, float y0, float w, float h) override;
+  void RenderPartial(const iTextureCube *texture,
+                     eCubeFace face,
+                     float x0, float y0, float w, float h,
+                     const csVector2f &scale,
+                     const csVector2f &translation) override;
   void BindForwardLight(const iLight *light, Size idx);
   void FinishForwardLights(Size numLights);
 
@@ -144,8 +155,8 @@ public:
 
 private:
   void SetActiveTexture(uint32_t activeTexture);
-  static void BindUnsafe(iTexture *texture);
-  static void UnbindUnsafe(iTexture *texture);
+  static void BindUnsafe(const iTexture *texture);
+  static void UnbindUnsafe(const iTexture *texture);
 
 private:
   iRenderTarget                     *m_renderTarget = nullptr;
@@ -157,8 +168,8 @@ private:
   eTextureUnit                      m_nextTextureUnit;
   eTextureUnit                      m_markTextureUnit;
   bool                              m_texturesUsed[eTU_COUNT];
-  std::array<iTexture *, eTU_COUNT> m_textures;
-  std::array<iSampler *, eTU_COUNT> m_samplers;
+  std::array<const iTexture *, eTU_COUNT> m_textures;
+  std::array<const iSampler *, eTU_COUNT> m_samplers;
   csRef<iTexture>                   m_tempTexture   = nullptr;
 
 
@@ -191,7 +202,7 @@ private:
   eBlendFactor m_dstFactorColor;
   eBlendFactor m_dstFactorAlpha;
   eCullMode    m_cullMode;
-  bool          m_cullEnabled;
+  bool         m_cullEnabled;
 
   csMatrix4f m_modelMatrix;
   csMatrix4f m_viewMatrix;
@@ -222,16 +233,16 @@ private:
   bool m_viewProjectionMatrixInvDirty;
   bool m_modelViewProjectionMatrixInvDirty;
 
-  Size       m_shadowMapMatrixCount = 0;
+  Size       m_shadowMapMatrixCount                  = 0;
   csMatrix4f m_shadowMapViewMatrices[6];
   csMatrix4f m_shadowMapProjectionMatrices[6];
   csMatrix4f m_shadowMapViewProjectionMatrices[6];
   csMatrix4f m_shadowMapViewMatricesInv[6];
   csMatrix4f m_shadowMapProjectionMatricesInv[6];
   csMatrix4f m_shadowMapViewProjectionMatricesInv[6];
-  bool       m_shadowMapViewProjectionMatrixDirty = false;
-  bool       m_shadowMapViewMatrixInvDirty = false;
-  bool       m_shadowMapProjectionMatrixInvDirty = false;
+  bool       m_shadowMapViewProjectionMatrixDirty    = false;
+  bool       m_shadowMapViewMatrixInvDirty           = false;
+  bool       m_shadowMapProjectionMatrixInvDirty     = false;
   bool       m_shadowMapViewProjectionMatrixInvDirty = false;
 
   Size       m_skeletonMatrixCount;
@@ -272,8 +283,11 @@ private:
    */
   csGL4Program *FullscreenBlitProgram();
   csGL4Program     *m_fullscreenBlitProgram      = nullptr;
+
   csGL4Program *FullscreenBlitMSProgram();
   csGL4Program     *m_fullscreenBlitMSProgram    = nullptr;
+
+
   iRenderMesh *FullscreenBlitRenderMesh();
   iRenderMesh      *m_fullscreenBlitRenderMesh   = nullptr;
   iRenderMesh *PixelRenderMesh();

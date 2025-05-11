@@ -19,7 +19,7 @@ public:
   virtual ~csGL4Sampler();
 
 
-  void Bind(eTextureUnit unit);
+  void Bind(eTextureUnit unit) const;
   static void Unbind(eTextureUnit unit);
 
   void SetFilterMode(eFilterMode filterMode) override;

@@ -8,5 +8,7 @@ program {
         attribute MappingBias,
         attribute ShadowBuffer,
         attribute DepthBuffer,
+        attribute PartialRect,
+
     }
 }

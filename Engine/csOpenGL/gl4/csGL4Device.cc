@@ -1004,14 +1004,14 @@ eTextureUnit csGL4Device::ShiftTextureUnit()
   return unit;
 }
 
-void csGL4Device::SetSampler(eTextureUnit unit, iSampler *sampler)
+void csGL4Device::SetSampler(eTextureUnit unit, const iSampler *sampler)
 {
   if (m_samplers[unit] != sampler)
   {
     m_samplers[unit] = sampler;
     if (sampler)
     {
-      static_cast<csGL4Sampler *>(sampler)->Bind(unit);
+      static_cast<const csGL4Sampler *>(sampler)->Bind(unit);
     }
     else
     {
@@ -1023,7 +1023,7 @@ void csGL4Device::SetSampler(eTextureUnit unit, iSampler *sampler)
 }
 
 
-void csGL4Device::BindUnsafe(iTexture *texture)
+void csGL4Device::BindUnsafe(const iTexture *texture)
 {
   if (!texture)
   {
@@ -1036,20 +1036,20 @@ void csGL4Device::BindUnsafe(iTexture *texture)
     case eTextureType::Texture1DArray:
       break;
     case eTextureType::Texture2D:
-      static_cast<csGL4Texture2D *>(texture)->Bind();
+      static_cast<const csGL4Texture2D *>(texture)->Bind();
       break;
     case eTextureType::Texture2DArray:
-      static_cast<csGL4Texture2DArray *>(texture)->Bind();
+      static_cast<const csGL4Texture2DArray *>(texture)->Bind();
       break;
     case eTextureType::Texture3D:
       break;
     case eTextureType::TextureCube:
-      static_cast<csGL4TextureCube *>(texture)->Bind();
+      static_cast<const csGL4TextureCube *>(texture)->Bind();
       break;
   }
 }
 
-void csGL4Device::UnbindUnsafe(iTexture *texture)
+void csGL4Device::UnbindUnsafe(const iTexture *texture)
 {
   if (!texture)
   {
@@ -1062,21 +1062,21 @@ void csGL4Device::UnbindUnsafe(iTexture *texture)
     case eTextureType::Texture1DArray:
       break;
     case eTextureType::Texture2D:
-      static_cast<csGL4Texture2D *>(texture)->Unbind();
+      static_cast<const csGL4Texture2D *>(texture)->Unbind();
       break;
     case eTextureType::Texture2DArray:
-      static_cast<csGL4Texture2DArray *>(texture)->Unbind();
+      static_cast<const csGL4Texture2DArray *>(texture)->Unbind();
       break;
     case eTextureType::Texture3D:
       break;
     case eTextureType::TextureCube:
-      static_cast<csGL4TextureCube *>(texture)->Unbind();
+      static_cast<const csGL4TextureCube *>(texture)->Unbind();
       break;
   }
 
 }
 
-eTextureUnit csGL4Device::BindTexture(iTexture *texture)
+eTextureUnit csGL4Device::BindTexture(const iTexture *texture)
 {
 #ifndef CS_DISABLE_RENDERING
   if (!texture)
@@ -1105,7 +1105,7 @@ eTextureUnit csGL4Device::BindTexture(iTexture *texture)
 
 
   eTextureUnit unit        = ShiftTextureUnit();
-  iTexture     *oldTexture = m_textures[unit];
+  const iTexture     *oldTexture = m_textures[unit];
   m_textures[unit]     = texture;
   m_texturesUsed[unit] = true;
 
@@ -1182,14 +1182,49 @@ void csGL4Device::RenderPixel()
 
 void csGL4Device::RenderFullscreen()
 {
+  RenderPartial(0.0, 0.0, 1.0, 1.0);
+}
+
+void csGL4Device::RenderPartial(float x0, float y0, float w, float h)
+{
 #ifndef CS_DISABLE_RENDERING
   iRenderMesh *mesh = FullscreenBlitRenderMesh();
+  if (m_shader)
+  {
+    iShaderAttribute *attribute = m_shader->GetShaderAttribute("PartialRect");
+    if (attribute)
+    {
+      attribute->Bind(x0 * 2.0f - 1.0f, y0 * 2.0f - 1.0f, w * 2.0f, h * 2.0f);
+    }
+
+  }
   mesh->Render(this, eRP_Forward);
 #endif
 }
 
 
-void csGL4Device::RenderFullscreen(iTexture2D *texture)
+
+void csGL4Device::RenderFullscreen(const iTexture2D *texture)
+{
+  RenderPartial(texture, 0.0f, 0.0f, 1.0f, 1.0f);
+}
+
+void csGL4Device::RenderFullscreen(const iTexture2DArray *texture, int layer)
+{
+  RenderPartial(texture, layer, 0.0f, 0.0f, 1.0f, 1.0f);
+}
+
+void csGL4Device::RenderFullscreen(const iTextureCube *texture,
+                                   eCubeFace face,
+                                   const csVector2f &scale,
+                                   const csVector2f &translation
+                                  )
+{
+  RenderPartial(texture, face, 0.0f, 0.0f, 1.0f, 1.0f, scale, translation);
+}
+
+
+void csGL4Device::RenderPartial(const iTexture2D *texture, float x0, float y0, float w, float h)
 {
   if (!texture)
   { return; }
@@ -1214,11 +1249,11 @@ void csGL4Device::RenderFullscreen(iTexture2D *texture)
     attrib->Bind(samples);
   }
 
-  return RenderFullscreen();
+  return RenderPartial(x0, y0, w, h);
 #endif
 }
 
-void csGL4Device::RenderFullscreen(iTexture2DArray *texture, int layer)
+void csGL4Device::RenderPartial(const iTexture2DArray *texture, int layer, float x0, float y0, float w, float h)
 {
 #ifndef CS_DISABLE_RENDERING
   SetFillMode(eFillMode::Fill);
@@ -1236,16 +1271,16 @@ void csGL4Device::RenderFullscreen(iTexture2DArray *texture, int layer)
   {
     attrib->Bind((float) layer);
   }
-  RenderFullscreen();
+  return RenderPartial(x0, y0, w, h);
 #endif
 }
 
-void csGL4Device::RenderFullscreen(iTextureCube
-                                   *texture,
-                                   eCubeFace face,
-                                   const csVector2f &scale,
-                                   const csVector2f &translation
-                                  )
+void csGL4Device::RenderPartial(const iTextureCube *texture,
+                                eCubeFace face,
+                                float x0, float y0, float w, float h,
+                                const csVector2f &scale,
+                                const csVector2f &translation
+                               )
 {
 #ifndef CS_DISABLE_RENDERING
   SetFillMode(eFillMode::Fill);
@@ -1274,6 +1309,7 @@ void csGL4Device::RenderFullscreen(iTextureCube
   mesh->Render(this, eRP_Forward);
 #endif
 }
+
 
 void csGL4Device::BindForwardLight(const iLight *light, Size idx)
 {
@@ -1753,9 +1789,9 @@ iRenderMesh *csGL4Device::FullscreenBlitRenderMesh()
     csOwned<iRenderMeshGenerator> gen = csObjectRegistry::Get<iRenderMeshGeneratorFactory>()->Create();
 
     std::vector<csVector4f> vertices4;
-    vertices4.push_back(csVector4f(-1.0f, -1.0f, 0.0f, 1.0f));
-    vertices4.push_back(csVector4f(-1.0f, 1.0f, 0.0f, 1.0f));
-    vertices4.push_back(csVector4f(1.0f, -1.0f, 0.0f, 1.0f));
+    vertices4.push_back(csVector4f(0.0f, 0.0f, 0.0f, 1.0f));
+    vertices4.push_back(csVector4f(0.0f, 1.0f, 0.0f, 1.0f));
+    vertices4.push_back(csVector4f(1.0f, 0.0f, 0.0f, 1.0f));
     vertices4.push_back(csVector4f(1.0f, 1.0f, 0.0f, 1.0f));
     std::vector<csVector2f> uv;
     uv.push_back(csVector2f(0.0f, 0.0f));

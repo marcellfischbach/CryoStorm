@@ -1,10 +1,11 @@
 program {
   shaders {
-    shader "fullscreen_blit.vert",
-    shader "fullscreen_blit.frag",
+    shader "debug_pssm_color.vert",
+    shader "debug_pssm_color.frag",
   }
   attributes {
     attribute "Diffuse",
+    attribute "ArrayIndex",
     attribute "PartialRect",
   }
 }

@@ -187,6 +187,11 @@ create_render_target(cs::iDevice *device, uint32_t width, uint32_t height, uint1
   return csOwned<iRenderTarget2D>(renderTarget);
 }
 
+void csViewport::SetDebugCallback(cs::csViewportDebugCallback callback)
+{
+  m_debugCallback = callback;
+}
+
 
 bool csViewport::ProcessFrame(iRenderTarget2D *renderTarget)
 {
@@ -249,6 +254,15 @@ bool csViewport::ProcessFrame(iRenderTarget2D *renderTarget)
   m_device->SetDepthTest(false);
   m_device->SetBlending(false);
   m_device->RenderFullscreen(finalColor);
+
+
+
+  // render the debug screen
+  if (m_debugCallback)
+  {
+    m_debugCallback(m_device);
+  }
+
   m_device->SetDepthTest(true);
 
   return true;

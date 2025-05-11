@@ -278,6 +278,7 @@ eRenderPass RenderPass(const std::string &renderPass)
   _IF_(ShadowPSSM);
   _IF_(ShadowCube);
   _IF_(VSM);
+  _IF_(DeltaSM);
 #undef IF_
 #undef _IF_
   return eRP_COUNT;

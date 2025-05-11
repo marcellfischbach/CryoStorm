@@ -9,5 +9,6 @@ program {
         attribute ShadowBuffers,
         attribute ShadowBufferDatas,
         attribute DepthBuffer,
+        attribute PartialRect,
     }
 }

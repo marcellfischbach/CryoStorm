@@ -96,7 +96,7 @@ void csGL4ForwardDirectionalLightRenderer::RenderShadow(csGL4DirectionalLight *d
                                                         size_t lightIdx)
 {
   csGL4RenderTarget2D         *target = GetDirectionalLightShadowMap(lightIdx);
-  iPSSMShadowBufferObject *sbo    = GetDirectionalLightShadowBuffer(lightIdx);
+  csGL4PSSMShadowBufferObject *sbo    = GetDirectionalLightShadowBuffer(lightIdx);
 
   if (target && sbo)
   {
@@ -143,20 +143,17 @@ csGL4RenderTarget2D *csGL4ForwardDirectionalLightRenderer::GetDirectionalLightSh
   return m_directionalLightShadowMap[lightIdx];
 }
 
-iPSSMShadowBufferObject *csGL4ForwardDirectionalLightRenderer::GetDirectionalLightShadowBuffer(size_t lightIdx)
+csGL4PSSMShadowBufferObject *csGL4ForwardDirectionalLightRenderer::GetDirectionalLightShadowBuffer(size_t lightIdx)
 {
   if (lightIdx >= MaxLights)
   {
     return nullptr;
   }
 
-  iPSSMShadowBufferObject *shadowBuffer = m_directionalLightShadowBuffer[lightIdx];
+  csGL4PSSMShadowBufferObject *shadowBuffer = m_directionalLightShadowBuffer[lightIdx];
   if (!m_pssmRenderer.IsShadowBufferValid(shadowBuffer))
   {
-    if (shadowBuffer)
-    {
-      shadowBuffer->DeleteSelf();
-    }
+    delete shadowBuffer;
     m_directionalLightShadowBuffer[lightIdx] = m_pssmRenderer.CreateDirectionalLightShadowBuffer();
   }
 

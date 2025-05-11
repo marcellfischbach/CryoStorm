@@ -33,8 +33,8 @@ public:
   iSampler* GetSampler() override;
   const iSampler* GetSampler() const override;
 
-  void Bind();
-  void Unbind();
+  void Bind() const;
+  void Unbind() const;
 
   bool Initialize(uint16_t width, uint16_t height, uint16_t layer, ePixelFormat format, bool generateMipMaps);
 
