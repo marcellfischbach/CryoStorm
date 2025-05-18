@@ -6,8 +6,12 @@ program {
     attributes {
         attribute LayersDepth,
         attribute LayersBias,
+        attribute ShadowDepthRange,
         attribute ShadowBuffers,
         attribute ShadowBufferDatas,
+        attribute ShadowBufferPixelSize,
+        attribute ShadowBufferDepthBias,
+        attribute BlurFactor,
         attribute DepthBuffer,
         attribute PartialRect,
     }

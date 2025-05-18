@@ -117,6 +117,9 @@ private:
   float                m_shadowFar;
   std::array<float, 4> m_splits;
 
+  csVector2f m_shadowDepthBiasFactors;
+  csVector2f m_shadowBlurFactors;
+
   std::array<csMatrix4f, 4> m_shadowMapViewProjection;
 
   ShadowSamplingMode   m_shadowSamplingMode;
@@ -130,7 +133,11 @@ private:
   iShaderAttribute    *m_attrShadowBuffers                 = nullptr;
   iShaderAttribute    *m_attrShadowBufferDatas             = nullptr;
   iShaderAttribute    *m_attrDepthBuffer                   = nullptr;
+  iShaderAttribute    *m_attrDepthRange                    = nullptr;
+  iShaderAttribute    *m_attrBlurFactor                    = nullptr;
   iShaderAttribute    *m_attrShadowMapViewProjectionMatrix = nullptr;
+  iShaderAttribute    *m_attrShadowBufferInvSize           = nullptr;
+  iShaderAttribute    *m_attrShadowBufferDepthBias         = nullptr;
 
 
   csGL4PSSMFilter m_shadowMapFilter;

@@ -8,52 +8,21 @@ uniform mat4 cs_ShadowMapViewProjectionMatrix[4];
 uniform sampler2DArrayShadow cs_ShadowBuffers;
 uniform sampler2DArray cs_ShadowBufferDatas;
 uniform sampler2D cs_DepthBuffer;
+uniform vec2 cs_ShadowDepthRange;
+uniform vec2 cs_ShadowBufferPixelSize;
+uniform vec4 cs_ShadowBufferDepthBias;
+uniform vec2 cs_BlurFactor;
 
 
 uniform mat4 cs_ViewMatrix;
 uniform mat4 cs_ViewProjectionMatrixInv;
 
-const float g_VSMMinVariance = 0.000001;// Minimum variance for VSM
-
-const float g_LBRAmount = 0.5;
 
 in vec2 texCoord;
 
-float linstep(float min, float max, float v)
-{
-    return clamp((v - min) / (max - min), 0, 1);
-}
-
-// Light bleeding reduction
-float LBR(float p)
-{
-    // Lots of options here if we don't care about being an upper bound.
-    // Use whatever falloff function works well for your scene.
-    return linstep(g_LBRAmount, 1, p);
-    //return smoothstep(g_LBRAmount, 1, p);
-}
 
 
-float ChebyshevUpperBound(vec2 shadow_buffer, float distance_to_light, float MinVariance)
-{
-    // Standard shadow map comparison
-    float p = (distance_to_light <= shadow_buffer.x) ? 1.0 : 0.0;
-//    return p;
-
-
-    // Compute variance
-    float Variance = shadow_buffer.y - (shadow_buffer.x * shadow_buffer.x);
-    Variance = max(Variance, MinVariance);
-//    Variance = MinVariance;
-
-    // Compute probabilistic upper bound
-    float d     = distance_to_light - shadow_buffer.x;
-    float p_max = Variance / (Variance + d*d);
-
-    return max(p, p_max);
-}
-
-float calc_directional_shadow(vec3 world_position, float distance_to_camera)
+float calc_directional_shadow(vec3 world_position, float distance_to_camera, vec2 displacement, float addBias)
 {
     vec4 layerDepth = cs_LayersDepth;
 
@@ -91,15 +60,12 @@ float calc_directional_shadow(vec3 world_position, float distance_to_camera)
     vec4 camSpace = cs_ShadowMapViewProjectionMatrix[matIndex] * vec4(world_position, 1.0);
     camSpace /= camSpace.w;
     camSpace = camSpace * 0.5 + 0.5;
-//    camSpace.z -= cs_LayersBias;
+    camSpace.xy += displacement;
 
-    float bias = texture(cs_ShadowBufferDatas, vec3(camSpace.xy, layer)).x;
-    camSpace.z -= (bias + 0.0001);
+    float bias = texture(cs_ShadowBufferDatas, vec3(camSpace.xy, layer)).x; 
+    camSpace.z -= (bias + 0.0001 + addBias);
     float shadow_value = texture(cs_ShadowBuffers, vec4(camSpace.xy, layer , camSpace.z));
     return mix(shadow_value, 1.0, fadeOut);
-
-    //    float shadow_value = texture(cs_ShadowBuffers, vec4(camSpace.xy, layer , camSpace.z));
-    //    return mix(shadow_value, 1.0, fadeOut);
 }
 
 
@@ -119,7 +85,45 @@ void main ()
 
     vec4 camera_space = cs_ViewMatrix * world_position;
 
-    float shadow = calc_directional_shadow(world_position.xyz, camera_space.z);
+    float factor = 0.0;
+    float shadow = 0.0;
+
+    const vec2 offset[] = vec2[](
+        vec2(0.0, 0.0),
+        vec2(-1.0, -1.0),
+        vec2(1.0, -1.0),
+        vec2(-1.0, 1.0),
+        vec2(1.0, 1.0)
+    );
+    const float[] factors = float[](
+        1.0,
+        0.25,
+        0.25,
+        0.25,
+        0.25
+    );
+
+    // cs_ShadowDepthRange 
+    //  x: minimum distance
+    //  y: difference between min and max distance
+
+    float depthFactor = clamp((camera_space.z - cs_ShadowDepthRange.x) / cs_ShadowDepthRange.y, 0.0, 1.0);
+    
+    float bias = cs_ShadowBufferDepthBias.x + cs_ShadowBufferDepthBias.y * depthFactor;
+    
+    float blurFactor = (cs_BlurFactor.x + cs_BlurFactor.y * depthFactor);
+    vec2 blur = blurFactor * cs_ShadowBufferPixelSize;
+
+    for (int i = 0; i < 5; i++)
+    {
+        float f = factors[i];
+        vec2 displacement = offset[i]  * blur;
+        shadow += calc_directional_shadow(world_position.xyz, camera_space.z, displacement, bias) * f;
+        factor += f;
+
+    }
+
+    shadow /= factor;
     cs_FragColor = vec4(shadow, shadow, shadow, 1.0);
 }
 

@@ -55,7 +55,7 @@ bool csGBuffer::Update(cs::iDevice *device, uint16_t width, uint16_t height)
     m_depth->SetSampler(m_depthSampler);
   }
   {
-    iTexture2D::Descriptor desc{ePixelFormat::ePF_RGBA, width, height, false, 1};
+    iTexture2D::Descriptor desc{ePixelFormat::ePF_RGB10A2, width, height, false, 1};
     m_normal = device->CreateTexture(desc);
     m_normal->SetSampler(m_normalSampler);
     m_bufferIds.push_back(bufferId++);
